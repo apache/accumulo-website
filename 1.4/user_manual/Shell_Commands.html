@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE- 2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<title>User Manual: Shell Commands</title>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+  ga('create', 'UA-50934829-1', 'apache.org');
+  ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Accumulo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Project<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_index"><a href="/">Home</a></li>
+          <li id="nav_downloads"><a href="/downloads/">Downloads</a></li>
+          <li id="nav_features"><a href="/notable_features.html">Features</a></li>
+          <li><a href="http://www.apache.org/licenses/LICENSE-2.0"><i class="fa fa-external-link"></i> License</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolved"><a href="/get_involved.html">Get Involved</a></li>
+          <li id="nav_mailinglists"><a href="/mailing_list.html">Mailing Lists</a></li>
+          <li id="nav_people"><a href="/people.html">People</a></li>
+          <li id="nav_blog"><a href="https://blogs.apache.org/accumulo/">Blog</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
+          <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
+          <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
+          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_source"><a href="/source.html">Source &amp; Guide</a></li>
+          <li id="nav_git"><a href="/git.html">Git Workflow</a></li>
+          <li id="nav_versioning"><a href="/versioning.html">Versioning</a></li>
+          <li id="nav_contrib"><a href="/contrib.html">Contrib Projects</a></li>
+          <li id="nav_rb"><a href="/rb.html">Review Board</a></li>
+          <li id="nav_releasing"><a href="/releasing.html">Making Releases</a></li>
+          <li id="nav_verify_release"><a href="/verifying_releases.html">Verifying Releases</a></li>
+          <li><a href="https://issues.apache.org/jira/browse/accumulo"><i class="fa fa-external-link"></i> Issues</a></li>
+          <li><a href="https://builds.apache.org/view/A-D/view/Accumulo/"><i class="fa fa-external-link"></i> Builds</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Manual</li>
+          <li><a href="/1.6/accumulo_user_manual.html">1.6</a></li>
+          <li><a href="/1.7/accumulo_user_manual.html">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Javadoc</li>
+          <li><a href="/1.6/apidocs">1.6</a></li>
+          <li><a href="/1.7/apidocs">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Examples</li>
+          <li id="nav_examples_1_6"><a href="/1.6/examples">1.6</a></li>
+          <li id="nav_examples_1_7"><a href="/1.7/examples">1.7</a></li>
+          <li class="divider"></li>
+          <li id="old_documentation"><a href="/old_documentation.html">Docs for Older Verisons</a></li>
+          <li id="nav_screenshots"><a href="/screenshots.html">Screenshots</a></li>
+          <li id="nav_papers"><a href="/papers.html">Papers &amp; Other Links</a></li>
+          <li id="nav_glossary"><a href="/glossary.html">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Release Notes<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release_notes/1.7.1.html">1.7.1</a></li>
+          <li><a href="/release_notes/1.6.5.html">1.6.5</a></li>
+          <li class="divider"></li>
+          <li><a href="/release_notes/">Archives</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+          <ul class="dropdown-menu">
+            <li><a href="/papers.html">Papers &amp; Presentations</a></li>
+            <li><a href="/projects.html">Community Projects</a></li>
+          </ul>
+          </li>
+          <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">ASF Links<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://www.apache.org"><i class="fa fa-external-link"></i> Apache Software Foundation</a></li>
+            <li><a href="http://www.apache.org/foundation/sponsorship.html"><i class="fa fa-external-link"></i> Sponsorship</a></li>
+            <li><a href="http://www.apache.org/security/"><i class="fa fa-external-link"></i> Security</a></li>
+            <li><a href="http://www.apache.org/foundation/thanks.html"><i class="fa fa-external-link"></i> Thanks</a></li>
+            <li><a href="http://www.apache.org/foundation/policies/conduct.html"><i class="fa fa-external-link"></i> Code of Conduct</a></li>
+          </ul>
+          </li>
+        </ul>
+        <form method="GET" action="http://search-hadoop.com/" class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search"/>
+            <input type="hidden" name="fc_project" value="Accumulo"/>
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2" id="sidebar">
+      <div style="text-align: center">
+        <a href="/"><img id="logo" alt="Apache Accumulo &trade;" class="img-responsive" src="/images/accumulo-logo.png"/></a>
+        <br />
+        Latest 1.7 release: <strong>1.7.1</strong><br />
+        Latest 1.6 release: <strong>1.6.5</strong><br />
+        <br>
+        <a id="download-button-sidebar" class="btn btn-success btn-block" href="/downloads/" role="button">Download</a>
+      </div>
+      <hr>
+      <table class="table" id="sociallinks">
+        <tr><td><img src="/images/Twitter_logo_blue.png" style="height: 1em"></td><td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td></tr>
+        <tr><td><img src="/images/InBug-16px_0.png"></td><td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td></tr>
+        <tr><td><img src="/images/GitHub-Mark-32px.png" style="height: 1em"></td><td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td></tr>
+        <tr><td><span class="glyphicon glyphicon-comment"></span></td><td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td></tr>
+        <tr><td><img src="/favicon.png" width="16" /></td><td><a href="http://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td></tr>
+      </table>
+      <hr>
+      <a id="accumulo-summit-logo" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+
+      <div id="content">
+        
+        <h1 class="title">User Manual: Shell Commands</h1>
+        
+        <p>** Up:** <a href="accumulo_user_manual.html">Apache Accumulo User Manual Version 1.4</a> ** Previous:** <a href="Administration.html">Administration</a>   ** <a href="Contents.html">Contents</a>**</p>
+
+<h2 id="a-idshellcommandsa-shell-commands"><a id="Shell_Commands"></a> Shell Commands</h2>
+
+<p><strong>?</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: ? [ &lt;command&gt; &lt;command&gt; ] [-?] [-np] [-nw]   
+description: provides information about the available commands   
+  -?,-help  display this help   
+  -np,-no-pagination  disables pagination of output   
+  -nw,-no-wrap  disables wrapping of output   
+</code></pre>
+</div>
+
+<p><strong>about</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: about [-?] [-v]   
+description: displays information about this program   
+  -?,-help  display this help   
+  -v,-verbose  displays details session information   
+</code></pre>
+</div>
+
+<p><strong>addsplits</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: addsplits [&lt;split&gt; &lt;split&gt; ] [-?] [-b64] [-sf &lt;filename&gt;] [-t &lt;tableName&gt;]   
+description: add split points to an existing table   
+  -?,-help  display this help   
+  -b64,-base64encoded  decode encoded split points   
+  -sf,-splits-file &lt;filename&gt;  file with newline separated list of rows to add to   
+          table   
+  -t,-table &lt;tableName&gt;  name of a table to add split points to   
+</code></pre>
+</div>
+
+<p><strong>authenticate</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: authenticate &lt;username&gt; [-?]   
+description: verifies a user's credentials   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>bye</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: bye [-?]   
+description: exits the shell   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>classpath</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: classpath [-?]   
+description: lists the current files on the classpath   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>clear</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: clear [-?]   
+description: clears the screen   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>clonetable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: clonetable &lt;current table name&gt; &lt;new table name&gt; [-?] [-e &lt;arg&gt;] [-nf] [-s   
+          &lt;arg&gt;]   
+description: clone a table   
+  -?,-help  display this help   
+  -e,-exclude &lt;arg&gt;  properties that should not be copied from source table.   
+          Expects &lt;prop&gt;,&lt;prop&gt;   
+  -nf,-noFlush  do not flush table data in memory before cloning.   
+  -s,-set &lt;arg&gt;  set initial properties before the table comes online. Expects   
+          &lt;prop&gt;=&lt;value&gt;,&lt;prop&gt;=&lt;value&gt;   
+</code></pre>
+</div>
+
+<p><strong>cls</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: cls [-?]   
+description: clears the screen   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>compact</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: compact [-?] [-b &lt;arg&gt;] [-e &lt;arg&gt;] [-nf] [-p &lt;pattern&gt; | -t &lt;tableName&gt;]   
+          [-w]   
+description: sets all tablets for a table to major compact as soon as possible   
+          (based on current time)   
+  -?,-help  display this help   
+  -b,-begin-row &lt;arg&gt;  begin row   
+  -e,-end-row &lt;arg&gt;  end row   
+  -nf,-noFlush  do not flush table data in memory before compacting.   
+  -p,-pattern &lt;pattern&gt;  regex pattern of table names to flush   
+  -t,-table &lt;tableName&gt;  name of a table to flush   
+  -w,-wait  wait for compact to finish   
+</code></pre>
+</div>
+
+<p><strong>config</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: config [-?] [-d &lt;property&gt; | -f &lt;string&gt; | -s &lt;property=value&gt;]  [-np]  [-t   
+          &lt;table&gt;]   
+description: prints system properties and table specific properties   
+  -?,-help  display this help   
+  -d,-delete &lt;property&gt;  delete a per-table property   
+  -f,-filter &lt;string&gt;  show only properties that contain this string   
+  -np,-no-pagination  disables pagination of output   
+  -s,-set &lt;property=value&gt;  set a per-table property   
+  -t,-table &lt;table&gt;  display/set/delete properties for specified table   
+</code></pre>
+</div>
+
+<p><strong>createtable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: createtable &lt;tableName&gt; [-?] [-a   
+          &lt;&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]=&lt;aggregation class&gt;&gt;] [-b64] [-cc   
+          &lt;table&gt;] [-cs &lt;table&gt; | -sf &lt;filename&gt;] [-evc] [-f &lt;className&gt;] [-ndi]   
+          [-tl | -tm]   
+description: creates a new table, with optional aggregators and optionally pre-split   
+  -?,-help  display this help   
+  -a,-aggregator &lt;&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]=&lt;aggregation class&gt;&gt;  comma   
+          separated column=aggregator   
+  -b64,-base64encoded  decode encoded split points   
+  -cc,-copy-config &lt;table&gt;  table to copy configuration from   
+  -cs,-copy-splits &lt;table&gt;  table to copy current splits from   
+  -evc,-enable-visibility-constraint  prevents users from writing data they can not   
+          read.  When enabling this may want to consider disabling bulk import and   
+          alter table   
+  -f,-formatter &lt;className&gt;  default formatter to set   
+  -ndi,-no-default-iterators  prevents creation of the normal default iterator set   
+  -sf,-splits-file &lt;filename&gt;  file with newline separated list of rows to create a   
+          pre-split table   
+  -tl,-time-logical  use logical time   
+  -tm,-time-millis  use time in milliseconds   
+</code></pre>
+</div>
+
+<p><strong>createuser</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: createuser &lt;username&gt; [-?] [-s &lt;comma-separated-authorizations&gt;]   
+description: creates a new user   
+  -?,-help  display this help   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+</code></pre>
+</div>
+
+<p><strong>debug</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: debug [ on | off ] [-?]   
+description: turns debug logging on or off   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>delete</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: delete &lt;row&gt; &lt;colfamily&gt; &lt;colqualifier&gt; [-?] [-l &lt;expression&gt;] [-t   
+          &lt;timestamp&gt;]   
+description: deletes a record from a table   
+  -?,-help  display this help   
+  -l,-authorization-label &lt;expression&gt;  formatted authorization label expression   
+  -t,-timestamp &lt;timestamp&gt;  timestamp to use for insert   
+</code></pre>
+</div>
+
+<p><strong>deleteiter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deleteiter [-?] [-majc] [-minc] -n &lt;itername&gt; [-scan] [-t &lt;table&gt;]   
+description: deletes a table-specific iterator   
+  -?,-help  display this help   
+  -majc,-major-compaction  applied at major compaction   
+  -minc,-minor-compaction  applied at minor compaction   
+  -n,-name &lt;itername&gt;  iterator to delete   
+  -scan,-scan-time  applied at scan time   
+  -t,-table &lt;table&gt;  tableName   
+</code></pre>
+</div>
+
+<p><strong>deletemany</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deletemany [-?] [-b &lt;start-row&gt;] [-c   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;]   
+          [-e &lt;end-row&gt;] [-f] [-fm &lt;className&gt;] [-np] [-r &lt;row&gt;] [-s   
+          &lt;comma-separated-authorizations&gt;] [-st] [-t &lt;table&gt;]   
+description: scans a table and deletes the resulting records   
+  -?,-help  display this help   
+  -b,-begin-row &lt;start-row&gt;  begin row (inclusive)   
+  -c,-columns   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;   
+          comma-separated columns   
+  -e,-end-row &lt;end-row&gt;  end row (inclusive)   
+  -f,-force  forces deletion without prompting   
+  -fm,-formatter &lt;className&gt;  fully qualified name of the formatter class to use   
+  -np,-no-pagination  disables pagination of output   
+  -r,-row &lt;row&gt;  row to scan   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+          (all user auths are used if this argument is not specified)   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-table &lt;table&gt;  table to be created   
+</code></pre>
+</div>
+
+<p><strong>deleterows</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deleterows [-?] [-b &lt;arg&gt;] [-e &lt;arg&gt;] [-f] [-t &lt;table&gt;]   
+description: delete a range of rows in a table.  Note that rows matching the start   
+          row ARE NOT deleted, but rows matching the end row ARE deleted.   
+  -?,-help  display this help   
+  -b,-begin-row &lt;arg&gt;  begin row   
+  -e,-end-row &lt;arg&gt;  end row   
+  -f,-force  delete data even if start or end are not specified   
+  -t,-tableName &lt;table&gt;  table to delete row range   
+</code></pre>
+</div>
+
+<p><strong>deletescaniter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deletescaniter [-?] [-a] [-n &lt;itername&gt;] [-t &lt;table&gt;]   
+description: deletes a table-specific scan iterator so it is no longer used during   
+          this shell session   
+  -?,-help  display this help   
+  -a,-all  delete all for tableName   
+  -n,-name &lt;itername&gt;  iterator to delete   
+  -t,-table &lt;table&gt;  tableName   
+</code></pre>
+</div>
+
+<p><strong>deletetable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deletetable &lt;tableName&gt; [-?] [-t &lt;arg&gt;]   
+description: deletes a table   
+  -?,-help  display this help   
+  -t,-tableName &lt;arg&gt;  deletes a table   
+</code></pre>
+</div>
+
+<p><strong>deleteuser</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: deleteuser &lt;username&gt; [-?]   
+description: deletes a user   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>droptable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: droptable &lt;tableName&gt; [-?] [-t &lt;arg&gt;]   
+description: deletes a table   
+  -?,-help  display this help   
+  -t,-tableName &lt;arg&gt;  deletes a table   
+</code></pre>
+</div>
+
+<p><strong>dropuser</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: dropuser &lt;username&gt; [-?]   
+description: deletes a user   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>du</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: du &lt;table&gt; &lt;table&gt; [-?] [-p &lt;pattern&gt;]   
+description: Prints how much space is used by files referenced by a table.  When   
+          multiple tables are specified it prints how much space is used by files   
+          shared between tables, if any.   
+  -?,-help  display this help   
+  -p,-pattern &lt;pattern&gt;  regex pattern of table names   
+</code></pre>
+</div>
+
+<p><strong>egrep</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: egrep &lt;regex&gt; &lt;regex&gt; [-?] [-b &lt;start-row&gt;] [-c   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;]   
+          [-e &lt;end-row&gt;] [-f &lt;int&gt;] [-fm &lt;className&gt;] [-np] [-nt &lt;arg&gt;] [-r &lt;row&gt;]   
+          [-s &lt;comma-separated-authorizations&gt;] [-st] [-t &lt;table&gt;]   
+description: searches each row, column family, column qualifier and value, in   
+          parallel, on the server side (using a java Matcher, so put .* before and   
+          after your term if you're not matching the whole element)   
+  -?,-help  display this help   
+  -b,-begin-row &lt;start-row&gt;  begin row (inclusive)   
+  -c,-columns   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;   
+          comma-separated columns   
+  -e,-end-row &lt;end-row&gt;  end row (inclusive)   
+  -f,-show few &lt;int&gt;  Only shows certain amount of characters   
+  -fm,-formatter &lt;className&gt;  fully qualified name of the formatter class to use   
+  -np,-no-pagination  disables pagination of output   
+  -nt,-num-threads &lt;arg&gt;  num threads   
+  -r,-row &lt;row&gt;  row to scan   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+          (all user auths are used if this argument is not specified)   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-tableName &lt;table&gt;  table to grep through   
+</code></pre>
+</div>
+
+<p><strong>execfile</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: execfile [-?] [-v]   
+description: specifies a file containing accumulo commands to execute   
+  -?,-help  display this help   
+  -v,-verbose  displays command prompt as commands are executed   
+</code></pre>
+</div>
+
+<p><strong>exit</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: exit [-?]   
+description: exits the shell   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>flush</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: flush [-?] [-b &lt;arg&gt;] [-e &lt;arg&gt;] [-p &lt;pattern&gt; | -t &lt;tableName&gt;]  [-w]   
+description: flushes a tables data that is currently in memory to disk   
+  -?,-help  display this help   
+  -b,-begin-row &lt;arg&gt;  begin row   
+  -e,-end-row &lt;arg&gt;  end row   
+  -p,-pattern &lt;pattern&gt;  regex pattern of table names to flush   
+  -t,-table &lt;tableName&gt;  name of a table to flush   
+  -w,-wait  wait for flush to finish   
+</code></pre>
+</div>
+
+<p><strong>formatter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: formatter [-?] -f &lt;className&gt; | -l | -r  [-t &lt;table&gt;]   
+description: specifies a formatter to use for displaying table entries   
+  -?,-help  display this help   
+  -f,-formatter &lt;className&gt;  fully qualified name of the formatter class to use   
+  -l,-list  display the current formatter   
+  -r,-remove  remove the current formatter   
+  -t,-table &lt;table&gt;  table to set the formatter on   
+</code></pre>
+</div>
+
+<p><strong>getauths</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: getauths [-?] [-u &lt;user&gt;]   
+description: displays the maximum scan authorizations for a user   
+  -?,-help  display this help   
+  -u,-user &lt;user&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>getgroups</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: getgroups [-?] [-t &lt;table&gt;]   
+description: gets the locality groups for a given table   
+  -?,-help  display this help   
+  -t,-table &lt;table&gt;  get locality groups for specified table   
+</code></pre>
+</div>
+
+<p><strong>getsplits</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: getsplits [-?] [-b64] [-m &lt;num&gt;] [-o &lt;file&gt;] [-t &lt;table&gt;] [-v]   
+description: retrieves the current split points for tablets in the current table   
+  -?,-help  display this help   
+  -b64,-base64encoded  encode the split points   
+  -m,-max &lt;num&gt;  specifies the maximum number of splits to create   
+  -o,-output &lt;file&gt;  specifies a local file to write the splits to   
+  -t,-tableName &lt;table&gt;  table to get splits on   
+  -v,-verbose  print out the tablet information with start/end rows   
+</code></pre>
+</div>
+
+<p><strong>grant</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: grant &lt;permission&gt; [-?] -p &lt;pattern&gt; | -s | -t &lt;table&gt;  -u &lt;username&gt;   
+description: grants system or table permissions for a user   
+  -?,-help  display this help   
+  -p,-pattern &lt;pattern&gt;  regex pattern of tables to grant permissions on   
+  -s,-system  grant a system permission   
+  -t,-table &lt;table&gt;  grant a table permission on this table   
+  -u,-user &lt;username&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>grep</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: grep &lt;term&gt; &lt;term&gt; [-?] [-b &lt;start-row&gt;] [-c   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;]   
+          [-e &lt;end-row&gt;] [-f &lt;int&gt;] [-fm &lt;className&gt;] [-np] [-nt &lt;arg&gt;] [-r &lt;row&gt;]   
+          [-s &lt;comma-separated-authorizations&gt;] [-st] [-t &lt;table&gt;]   
+description: searches each row, column family, column qualifier and value in a table   
+          for a substring (not a regular expression), in parallel, on the server   
+          side   
+  -?,-help  display this help   
+  -b,-begin-row &lt;start-row&gt;  begin row (inclusive)   
+  -c,-columns   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;   
+          comma-separated columns   
+  -e,-end-row &lt;end-row&gt;  end row (inclusive)   
+  -f,-show few &lt;int&gt;  Only shows certain amount of characters   
+  -fm,-formatter &lt;className&gt;  fully qualified name of the formatter class to use   
+  -np,-no-pagination  disables pagination of output   
+  -nt,-num-threads &lt;arg&gt;  num threads   
+  -r,-row &lt;row&gt;  row to scan   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+          (all user auths are used if this argument is not specified)   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-tableName &lt;table&gt;  table to grep through   
+</code></pre>
+</div>
+
+<p><strong>help</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: help [ &lt;command&gt; &lt;command&gt; ] [-?] [-np] [-nw]   
+description: provides information about the available commands   
+  -?,-help  display this help   
+  -np,-no-pagination  disables pagination of output   
+  -nw,-no-wrap  disables wrapping of output   
+</code></pre>
+</div>
+
+<p><strong>history</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: history [-?] [-c]   
+description: Generates a list of commands previously executed   
+  -?,-help  display this help   
+  -c,-Clears History, takes no arguments.  Clears History File   
+</code></pre>
+</div>
+
+<p><strong>importdirectory</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: importdirectory &lt;directory&gt; &lt;failureDirectory&gt; true|false [-?]   
+description: bulk imports an entire directory of data files to the current table.   
+          The boolean argument determines if accumulo sets the time.   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>info</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: info [-?] [-v]   
+description: displays information about this program   
+  -?,-help  display this help   
+  -v,-verbose  displays details session information   
+</code></pre>
+</div>
+
+<p><strong>insert</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: insert &lt;row&gt; &lt;colfamily&gt; &lt;colqualifier&gt; &lt;value&gt; [-?] [-l &lt;expression&gt;] [-t   
+          &lt;timestamp&gt;]   
+description: inserts a record   
+  -?,-help  display this help   
+  -l,-authorization-label &lt;expression&gt;  formatted authorization label expression   
+  -t,-timestamp &lt;timestamp&gt;  timestamp to use for insert   
+</code></pre>
+</div>
+
+<p><strong>listiter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: listiter [-?] [-majc] [-minc] [-n &lt;itername&gt;] [-scan] [-t &lt;table&gt;]   
+description: lists table-specific iterators   
+  -?,-help  display this help   
+  -majc,-major-compaction  applied at major compaction   
+  -minc,-minor-compaction  applied at minor compaction   
+  -n,-name &lt;itername&gt;  iterator to delete   
+  -scan,-scan-time  applied at scan time   
+  -t,-table &lt;table&gt;  tableName   
+</code></pre>
+</div>
+
+<p><strong>listscans</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: listscans [-?] [-np] [-ts &lt;tablet server&gt;]   
+description: list what scans are currently running in accumulo. See the   
+          accumulo.core.client.admin.ActiveScan javadoc for more information about   
+          columns.   
+  -?,-help  display this help   
+  -np,-no-pagination  disables pagination of output   
+  -ts,-tabletServer &lt;tablet server&gt;  list scans for a specific tablet server   
+</code></pre>
+</div>
+
+<p><strong>masterstate</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: masterstate is deprecated, use the command line utility instead [-?]   
+description: DEPRECATED: use the command line utility instead   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>maxrow</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: maxrow [-?] [-b &lt;begin-row&gt;] [-be] [-e &lt;end-row&gt;] [-ee] [-s   
+          &lt;comma-separated-authorizations&gt;] [-t &lt;table&gt;]   
+description: find the max row in a table within a given range   
+  -?,-help  display this help   
+  -b,-begin-row &lt;begin-row&gt;  begin row   
+  -be,-begin-exclusive  make start row exclusive, by defaults it inclusive   
+  -e,-end-row &lt;end-row&gt;  end row   
+  -ee,-end-exclusive  make end row exclusive, by defaults it inclusive   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+          (all user auths are used if this argument is not specified)   
+  -t,-table &lt;table&gt;  table to be created   
+</code></pre>
+</div>
+
+<p><strong>merge</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: merge [-?] [-b &lt;arg&gt;] [-e &lt;arg&gt;] [-f] [-s &lt;arg&gt;] [-t &lt;table&gt;] [-v]   
+description: merge tablets in a table   
+  -?,-help  display this help   
+  -b,-begin-row &lt;arg&gt;  begin row   
+  -e,-end-row &lt;arg&gt;  end row   
+  -f,-force  merge small tablets to large tablets, even if it goes over the given   
+          size   
+  -s,-size &lt;arg&gt;  merge tablets to the given size over the entire table   
+  -t,-tableName &lt;table&gt;  table to be merged   
+  -v,-verbose  verbose output during merge   
+</code></pre>
+</div>
+
+<p><strong>notable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: notable [-?] [-t &lt;arg&gt;]   
+description: returns to a tableless shell state   
+  -?,-help  display this help   
+  -t,-tableName &lt;arg&gt;  Returns to a no table state   
+</code></pre>
+</div>
+
+<p><strong>offline</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: offline [-?] [-p &lt;pattern&gt; | -t &lt;tableName&gt;]   
+description: starts the process of taking table offline   
+  -?,-help  display this help   
+  -p,-pattern &lt;pattern&gt;  regex pattern of table names to flush   
+  -t,-table &lt;tableName&gt;  name of a table to flush   
+</code></pre>
+</div>
+
+<p><strong>online</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: online [-?] [-p &lt;pattern&gt; | -t &lt;tableName&gt;]   
+description: starts the process of putting a table online   
+  -?,-help  display this help   
+  -p,-pattern &lt;pattern&gt;  regex pattern of table names to flush   
+  -t,-table &lt;tableName&gt;  name of a table to flush   
+</code></pre>
+</div>
+
+<p><strong>passwd</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: passwd [-?] [-u &lt;user&gt;]   
+description: changes a user's password   
+  -?,-help  display this help   
+  -u,-user &lt;user&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>quit</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: quit [-?]   
+description: exits the shell   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>renametable</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: renametable &lt;current table name&gt; &lt;new table name&gt; [-?]   
+description: rename a table   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>revoke</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: revoke &lt;permission&gt; [-?] -s | -t &lt;table&gt;  -u &lt;username&gt;   
+description: revokes system or table permissions from a user   
+  -?,-help  display this help   
+  -s,-system  revoke a system permission   
+  -t,-table &lt;table&gt;  revoke a table permission on this table   
+  -u,-user &lt;username&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>scan</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: scan [-?] [-b &lt;start-row&gt;] [-c   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;]   
+          [-e &lt;end-row&gt;] [-f &lt;int&gt;] [-fm &lt;className&gt;] [-np] [-r &lt;row&gt;] [-s   
+          &lt;comma-separated-authorizations&gt;] [-st] [-t &lt;table&gt;]   
+description: scans the table, and displays the resulting records   
+  -?,-help  display this help   
+  -b,-begin-row &lt;start-row&gt;  begin row (inclusive)   
+  -c,-columns   
+          «columnfamily&gt;[:&lt;columnqualifier&gt;],&lt;columnfamily&gt;[:&lt;columnqualifier&gt;]&gt;   
+          comma-separated columns   
+  -e,-end-row &lt;end-row&gt;  end row (inclusive)   
+  -f,-show few &lt;int&gt;  Only shows certain amount of characters   
+  -fm,-formatter &lt;className&gt;  fully qualified name of the formatter class to use   
+  -np,-no-pagination  disables pagination of output   
+  -r,-row &lt;row&gt;  row to scan   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+          (all user auths are used if this argument is not specified)   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-tableName &lt;table&gt;  table to be scanned   
+</code></pre>
+</div>
+
+<p><strong>select</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: select &lt;row&gt; &lt;columnfamily&gt; &lt;columnqualifier&gt; [-?] [-np] [-s   
+          &lt;comma-separated-authorizations&gt;] [-st] [-t &lt;table&gt;]   
+description: scans for and displays a single record   
+  -?,-help  display this help   
+  -np,-no-pagination  disables pagination of output   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-tableName &lt;table&gt;  table   
+</code></pre>
+</div>
+
+<p><strong>selectrow</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: selectrow &lt;row&gt; [-?] [-np] [-s &lt;comma-separated-authorizations&gt;] [-st] [-t   
+          &lt;table&gt;]   
+description: scans a single row and displays all resulting records   
+  -?,-help  display this help   
+  -np,-no-pagination  disables pagination of output   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  scan authorizations   
+  -st,-show-timestamps  enables displaying timestamps   
+  -t,-tableName &lt;table&gt;  table to row select   
+</code></pre>
+</div>
+
+<p><strong>setauths</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: setauths [-?] -c | -s &lt;comma-separated-authorizations&gt;  [-u &lt;user&gt;]   
+description: sets the maximum scan authorizations for a user   
+  -?,-help  display this help   
+  -c,-clear-authorizations  clears the scan authorizations   
+  -s,-scan-authorizations &lt;comma-separated-authorizations&gt;  set the scan   
+          authorizations   
+  -u,-user &lt;user&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>setgroups</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;,&lt;col fam&gt; &lt;group&gt;=&lt;col fam&gt;,&lt;col fam&gt; [-?]   
+          [-t &lt;table&gt;]   
+description: sets the locality groups for a given table (for binary or commas, use   
+          Java API)   
+  -?,-help  display this help   
+  -t,-table &lt;table&gt;  get locality groups for specified table   
+</code></pre>
+</div>
+
+<p><strong>setiter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex | -reqvis | -vers   
+          [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt;  [-scan] [-t &lt;table&gt;]   
+description: sets a table-specific iterator   
+  -?,-help  display this help   
+  -ageoff,-ageoff  an aging off type   
+  -agg,-aggregator  an aggregating type   
+  -class,-class-name &lt;name&gt;  a java class type   
+  -majc,-major-compaction  applied at major compaction   
+  -minc,-minor-compaction  applied at minor compaction   
+  -n,-name &lt;itername&gt;  iterator to set   
+  -p,-priority &lt;pri&gt;  the order in which the iterator is applied   
+  -regex,-regular-expression  a regex matching type   
+  -reqvis,-require-visibility  a type that omits entries with empty visibilities   
+  -scan,-scan-time  applied at scan time   
+  -t,-table &lt;table&gt;  tableName   
+  -vers,-version  a versioning type   
+</code></pre>
+</div>
+
+<p><strong>setscaniter</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: setscaniter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex | -reqvis | -vers   
+          [-n &lt;itername&gt;] -p &lt;pri&gt;  [-t &lt;table&gt;]   
+description: sets a table-specific scan iterator for this shell session   
+  -?,-help  display this help   
+  -ageoff,-ageoff  an aging off type   
+  -agg,-aggregator  an aggregating type   
+  -class,-class-name &lt;name&gt;  a java class type   
+  -n,-name &lt;itername&gt;  iterator to set   
+  -p,-priority &lt;pri&gt;  the order in which the iterator is applied   
+  -regex,-regular-expression  a regex matching type   
+  -reqvis,-require-visibility  a type that omits entries with empty visibilities   
+  -t,-table &lt;table&gt;  tableName   
+  -vers,-version  a versioning type   
+</code></pre>
+</div>
+
+<p><strong>sleep</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: sleep [-?]   
+description: sleep for the given number of seconds   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>systempermissions</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: systempermissions [-?]   
+description: displays a list of valid system permissions   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>table</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: table &lt;tableName&gt; [-?]   
+description: switches to the specified table   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>tablepermissions</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: tablepermissions [-?]   
+description: displays a list of valid table permissions   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>tables</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: tables [-?] [-l]   
+description: displays a list of all existing tables   
+  -?,-help  display this help   
+  -l,-list-ids  display internal table ids along with the table name   
+</code></pre>
+</div>
+
+<p><strong>trace</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: trace [ on | off ] [-?]   
+description: turns trace logging on or off   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>user</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: user &lt;username&gt; [-?]   
+description: switches to the specified user   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>userpermissions</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: userpermissions [-?] [-u &lt;user&gt;]   
+description: displays a user's system and table permissions   
+  -?,-help  display this help   
+  -u,-user &lt;user&gt;  user to operate on   
+</code></pre>
+</div>
+
+<p><strong>users</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: users [-?]   
+description: displays a list of existing users   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<p><strong>whoami</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: whoami [-?]   
+description: reports the current user name   
+  -?,-help  display this help   
+</code></pre>
+</div>
+
+<hr />
+
+<p>** Up:** <a href="accumulo_user_manual.html">Apache Accumulo User Manual Version 1.4</a> ** Previous:** <a href="Administration.html">Administration</a>   ** <a href="Contents.html">Contents</a>**</p>
+
+
+      </div>
+
+      <div id="footer">
+        <a alt="Apache Software Foundation" href="http://www.apache.org">
+          <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
+        </a>
+        <div class="copyright">
+          <p>
+          Copyright &copy; 2011-2016 The Apache Software Foundation, Licensed under
+          the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+          Apache Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
+          project logo are trademarks of the <a href="http://www.apache.org">Apache Software Foundation</a>.<br />
+          Site created with <a href="http://getbootstrap.com/">Bootstrap</a> including icons from <a href="http://glyphicons.com/">GLYPHICONS</a> and <a href="http://fontawesome.io/">Font Awesome</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

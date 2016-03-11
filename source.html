@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE- 2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<title>Source Code and Developers Guide</title>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+  ga('create', 'UA-50934829-1', 'apache.org');
+  ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Accumulo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Project<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_index"><a href="/">Home</a></li>
+          <li id="nav_downloads"><a href="/downloads/">Downloads</a></li>
+          <li id="nav_features"><a href="/notable_features.html">Features</a></li>
+          <li><a href="http://www.apache.org/licenses/LICENSE-2.0"><i class="fa fa-external-link"></i> License</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolved"><a href="/get_involved.html">Get Involved</a></li>
+          <li id="nav_mailinglists"><a href="/mailing_list.html">Mailing Lists</a></li>
+          <li id="nav_people"><a href="/people.html">People</a></li>
+          <li id="nav_blog"><a href="https://blogs.apache.org/accumulo/">Blog</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
+          <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
+          <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
+          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_source"><a href="/source.html">Source &amp; Guide</a></li>
+          <li id="nav_git"><a href="/git.html">Git Workflow</a></li>
+          <li id="nav_versioning"><a href="/versioning.html">Versioning</a></li>
+          <li id="nav_contrib"><a href="/contrib.html">Contrib Projects</a></li>
+          <li id="nav_rb"><a href="/rb.html">Review Board</a></li>
+          <li id="nav_releasing"><a href="/releasing.html">Making Releases</a></li>
+          <li id="nav_verify_release"><a href="/verifying_releases.html">Verifying Releases</a></li>
+          <li><a href="https://issues.apache.org/jira/browse/accumulo"><i class="fa fa-external-link"></i> Issues</a></li>
+          <li><a href="https://builds.apache.org/view/A-D/view/Accumulo/"><i class="fa fa-external-link"></i> Builds</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Manual</li>
+          <li><a href="/1.6/accumulo_user_manual.html">1.6</a></li>
+          <li><a href="/1.7/accumulo_user_manual.html">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Javadoc</li>
+          <li><a href="/1.6/apidocs">1.6</a></li>
+          <li><a href="/1.7/apidocs">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Examples</li>
+          <li id="nav_examples_1_6"><a href="/1.6/examples">1.6</a></li>
+          <li id="nav_examples_1_7"><a href="/1.7/examples">1.7</a></li>
+          <li class="divider"></li>
+          <li id="old_documentation"><a href="/old_documentation.html">Docs for Older Verisons</a></li>
+          <li id="nav_screenshots"><a href="/screenshots.html">Screenshots</a></li>
+          <li id="nav_papers"><a href="/papers.html">Papers &amp; Other Links</a></li>
+          <li id="nav_glossary"><a href="/glossary.html">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Release Notes<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release_notes/1.7.1.html">1.7.1</a></li>
+          <li><a href="/release_notes/1.6.5.html">1.6.5</a></li>
+          <li class="divider"></li>
+          <li><a href="/release_notes/">Archives</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+          <ul class="dropdown-menu">
+            <li><a href="/papers.html">Papers &amp; Presentations</a></li>
+            <li><a href="/projects.html">Community Projects</a></li>
+          </ul>
+          </li>
+          <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">ASF Links<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://www.apache.org"><i class="fa fa-external-link"></i> Apache Software Foundation</a></li>
+            <li><a href="http://www.apache.org/foundation/sponsorship.html"><i class="fa fa-external-link"></i> Sponsorship</a></li>
+            <li><a href="http://www.apache.org/security/"><i class="fa fa-external-link"></i> Security</a></li>
+            <li><a href="http://www.apache.org/foundation/thanks.html"><i class="fa fa-external-link"></i> Thanks</a></li>
+            <li><a href="http://www.apache.org/foundation/policies/conduct.html"><i class="fa fa-external-link"></i> Code of Conduct</a></li>
+          </ul>
+          </li>
+        </ul>
+        <form method="GET" action="http://search-hadoop.com/" class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search"/>
+            <input type="hidden" name="fc_project" value="Accumulo"/>
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2" id="sidebar">
+      <div style="text-align: center">
+        <a href="/"><img id="logo" alt="Apache Accumulo &trade;" class="img-responsive" src="/images/accumulo-logo.png"/></a>
+        <br />
+        Latest 1.7 release: <strong>1.7.1</strong><br />
+        Latest 1.6 release: <strong>1.6.5</strong><br />
+        <br>
+        <a id="download-button-sidebar" class="btn btn-success btn-block" href="/downloads/" role="button">Download</a>
+      </div>
+      <hr>
+      <table class="table" id="sociallinks">
+        <tr><td><img src="/images/Twitter_logo_blue.png" style="height: 1em"></td><td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td></tr>
+        <tr><td><img src="/images/InBug-16px_0.png"></td><td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td></tr>
+        <tr><td><img src="/images/GitHub-Mark-32px.png" style="height: 1em"></td><td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td></tr>
+        <tr><td><span class="glyphicon glyphicon-comment"></span></td><td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td></tr>
+        <tr><td><img src="/favicon.png" width="16" /></td><td><a href="http://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td></tr>
+      </table>
+      <hr>
+      <a id="accumulo-summit-logo" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+
+      <div id="content">
+        
+        <h1 class="title">Source Code and Developers Guide</h1>
+        
+        <div class="panel panel-default pull-right">
+<div class="panel-heading">Quick Links</div>
+<div class="list-group">
+<a href="https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=summary" class="list-group-item"><i class="fa fa-external-link"></i> Accumulo source</a>
+<a href="https://builds.apache.org/job/Accumulo-Master/" class="list-group-item"><i class="fa fa-external-link"></i> Master build on Jenkins</a>
+<a href="https://issues.apache.org/jira/browse/accumulo" class="list-group-item"><i class="fa fa-external-link"></i> Accumulo JIRA</a>
+</div>
+</div>
+
+<h2 id="source-code">Source Code</h2>
+
+<h3 id="apache-accumulo">Apache Accumulo</h3>
+
+<p>Apache Accumulo™ source code is maintained using [Git][git] version control 
+([browse][cgit]|[checkout][anongit]).  It builds with [Apache Maven][maven].</p>
+
+<p>Instructions for configuring git are <a href="https://git-wip-us.apache.org/">here</a>.</p>
+
+<h3 id="contrib-projects">Contrib Projects</h3>
+
+<p>Accumulo has a number of <a href="contrib.html">contrib projects</a> that maintain their own code repositories and release schedules.</p>
+
+<h3 id="website">Website</h3>
+
+<p>Accumulo’s web site is maintained with [Apache Subversion][subversion] [here][sitesvn] using Apache’s [Content Management System][cms].
+Committers may edit the site by following [these instructions][cmsusage].  Non-committers should follow
+[this FAQ entry][cmsanon].</p>
+
+<h2 id="developers-guide">Developer’s Guide</h2>
+
+<h3 id="building">Building</h3>
+
+<h4 id="installing-thrift">Installing Thrift</h4>
+
+<p>If you activate the ‘thrift’ Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate
+stubs. If you activate this profile and don’t have Apache Thrift installed and in your path, you will see a warning and
+your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the ‘thrift’ command is in your path. 
+Watch out for THRIFT-1367; you may need to configure Thrift with –without-ruby. Most developers do not
+need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.</p>
+
+<h4 id="checking-out-from-git">Checking out from Git</h4>
+
+<p>To check out the code:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git clone https://git-wip-us.apache.org/repos/asf/accumulo.git
+</code></pre>
+</div>
+
+<h4 id="running-a-build">Running a Build</h4>
+
+<p>Accumulo uses  [Apache Maven][maven] to handle source building, testing, and packaging. To build Accumulo you will need to use Maven version 3.0.4 or later.</p>
+
+<p>You should familiarize yourself with the [Maven Build Lifecycle][lifecycle], as well as the various plugins we use in our [POM][pom], in order to understand how Maven works and how to use the various build options while building Accumulo.</p>
+
+<p>To build from source (for example, to deploy):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn package -Passemble
+</code></pre>
+</div>
+
+<p>This will create a file accumulo-*-SNAPSHOT-dist.tar.gz in the assemble/target directory. Optionally, append <code class="highlighter-rouge">-DskipTests</code> if you want to skip the build tests.</p>
+
+<p>To build your branch before submitting a pull request, you’ll probably want to run some basic “sunny-day” integration tests to ensure you haven’t made any grave errors, as well as <code class="highlighter-rouge">checkstyle</code> and <code class="highlighter-rouge">findbugs</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn verify -Psunny
+</code></pre>
+</div>
+
+<p>To run specific unit tests, you can run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn package -Dtest=MyTest -DfailIfNoTests=false
+</code></pre>
+</div>
+
+<p>Or to run the specific integration tests MyIT and YourIT (and skip all unit tests), you can run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn package -Dtest=NoSuchTestExists -Dit.test=MyIT,YourIT -DfailIfNoTests=false
+</code></pre>
+</div>
+
+<p>There are plenty of other options. For example, you can skip findbugs with <code class="highlighter-rouge">mvn verify -Dfindbugs.skip</code> or checkstyle <code class="highlighter-rouge">-Dcheckstyle.skip</code>, or control the number of forks to use while executing tests, <code class="highlighter-rouge">-DforkCount=4</code>, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.</p>
+
+<p>If you regularly switch between major development branches, you may receive errors about improperly licensed files from the [RAT plugin][1]. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.</p>
+
+<p>The easiest fix is to ensure all of your current changes are stored in git and then cleaning your workspace.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$&gt; git add path/to/file/that/has/changed
+$&gt; git add path/to/other/file
+$&gt; git clean -df
+</code></pre>
+</div>
+
+<p>Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the “untracked files” section in a <code class="highlighter-rouge">git status</code> command.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$&gt; git status
+# On branch master
+nothing to commit (working directory clean)
+$&gt; mvn package
+{ maven output elided }
+$&gt; git checkout 1.6.1-SNAPSHOT
+Switched to branch '1.6.1-SNAPSHOT'
+$&gt; git status
+# On branch 1.6.1-SNAPSHOT
+# Untracked files:
+#   (use "git add &lt;file&gt;..." to include in what will be committed)
+#
+#	mapreduce/
+#	shell/
+nothing added to commit but untracked files present (use "git add" to track)
+$&gt; git clean -df
+Removing mapreduce/
+Removing shell/
+$&gt; git status
+# On branch 1.6.1-SNAPSHOT
+nothing to commit (working directory clean)
+</code></pre>
+</div>
+
+<h3 id="continuous-integration">Continuous Integration</h3>
+
+<p>Accumulo uses [Jenkins][jenkins] for automatic builds.</p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-Master/lastBuild/buildStatus" style="height: 1.1em" /> [Master][masterbuild]</p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-1.7/lastBuild/buildStatus" style="height: 1.1em" /> [1.7 Branch][17build]</p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-1.6/lastBuild/buildStatus" style="height: 1.1em" /> [1.6 Branch][16build]</p>
+
+<h3 id="issue-tracking">Issue Tracking</h3>
+
+<p>Accumulo [tracks issues][jiraloc] with [JIRA][jira].  Every commit should reference a JIRA ticket of the form ACCUMULO-#.</p>
+
+<h3 id="merging-practices">Merging Practices</h3>
+
+<p>Changes should be merged from earlier branches of Accumulo to later branches.  Ask the [dev list][devlist] for instructions.</p>
+
+<h3 id="public-api">Public API</h3>
+
+<p>Refer to the README in the release you are using to see what packages are in the public API.</p>
+
+<p>Changes to non-private members of those classes are subject to additional scrutiny to minimize compatibility problems across Accumulo versions.</p>
+
+<h3 id="coding-practices">Coding Practices</h3>
+
+<table class="table">
+<tr><th>License Header</th><td>Always add the current ASF license header as described in <a href="http://www.apache.org/legal/src-headers.html">ASF Source Header</a>.</td></tr>
+<tr><th>Trailing Whitespaces</th><td>Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.</td></tr>
+<tr><th>Indentation</th><td>Use 2 space indents and never use tabs!
+<tr><th>Line Wrapping</th><td>Use 160-column line width for Java code and Javadoc.</td></tr>
+<tr><th>Control Structure New Lines</th><td>Use a new line with single statement if/else blocks.</td></tr>
+<tr><th>Author Tags</th><td>Do not use Author Tags. The code is developed and owned by the community.</td></tr>
+
+
+### Code Review
+
+Accumulo has [guidelines for using Review Board][rb] to support code reviews.
+
+### IDE Configuration Tips
+
+#### Eclipse
+
+* Download Eclipse [formatting and style guides for Accumulo][styles].
+* Import Formatter: Preferences &gt; Java &gt; Code Style &gt;  Formatter and import the Eclipse-Accumulo-Codestyle.xml downloaded in the previous step. 
+* Import Template: Preferences &gt; Java &gt; Code Style &gt; Code Templates and import the Eclipse-Accumulo-Template.xml. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
+
+#### IntelliJ
+
+ * Formatter [plugin](https://code.google.com/p/eclipse-code-formatter-intellij-plugin/) that uses eclipse code style xml.
+
+### Release Guide
+
+Accumulo's release guide can be found [here][release].
+
+[subversion]: http://subversion.apache.org/
+[sitesvn]: https://svn.apache.org/repos/asf/accumulo/site/
+[maven]: http://maven.apache.org/
+[srcheaders]: http://www.apache.org/legal/src-headers.html
+[styles]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
+[jenkins]: http://jenkins-ci.org/
+[masterbuild]: https://builds.apache.org/job/Accumulo-Master/
+[17build]: https://builds.apache.org/job/Accumulo-1.7/
+[16build]: https://builds.apache.org/job/Accumulo-1.6/
+[jiraloc]: https://issues.apache.org/jira/browse/accumulo
+[jira]: http://www.atlassian.com/software/jira/overview
+[devlist]: mailto:dev@accumulo.apache.org
+[release]: governance/releasing.html
+[cms]: http://www.apache.org/dev/cms.html
+[cmsusage]: http://www.apache.org/dev/cms.html#usage
+[cmsanon]: http://www.apache.org/dev/cmsref.html#non-committer
+[git]: http://git-scm.com/
+[cgit]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=summary
+[anongit]: git://git.apache.org/accumulo.git
+[rb]: rb.html
+[pom]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
+[lifecycle]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+
+
+  [1]: http://creadur.apache.org/rat/apache-rat-plugin/
+</td></tr></table>
+
+      </div>
+
+      <div id="footer">
+        <a alt="Apache Software Foundation" href="http://www.apache.org">
+          <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
+        </a>
+        <div class="copyright">
+          <p>
+          Copyright &copy; 2011-2016 The Apache Software Foundation, Licensed under
+          the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+          Apache Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
+          project logo are trademarks of the <a href="http://www.apache.org">Apache Software Foundation</a>.<br />
+          Site created with <a href="http://getbootstrap.com/">Bootstrap</a> including icons from <a href="http://glyphicons.com/">GLYPHICONS</a> and <a href="http://fontawesome.io/">Font Awesome</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$("#nav_source").addClass("active");
+
+</script>
+</body>
+</html>

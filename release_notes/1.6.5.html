@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE- 2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<title>Apache Accumulo 1.6.5 Release Notes</title>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+  ga('create', 'UA-50934829-1', 'apache.org');
+  ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Accumulo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Project<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_index"><a href="/">Home</a></li>
+          <li id="nav_downloads"><a href="/downloads/">Downloads</a></li>
+          <li id="nav_features"><a href="/notable_features.html">Features</a></li>
+          <li><a href="http://www.apache.org/licenses/LICENSE-2.0"><i class="fa fa-external-link"></i> License</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolved"><a href="/get_involved.html">Get Involved</a></li>
+          <li id="nav_mailinglists"><a href="/mailing_list.html">Mailing Lists</a></li>
+          <li id="nav_people"><a href="/people.html">People</a></li>
+          <li id="nav_blog"><a href="https://blogs.apache.org/accumulo/">Blog</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
+          <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
+          <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
+          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_source"><a href="/source.html">Source &amp; Guide</a></li>
+          <li id="nav_git"><a href="/git.html">Git Workflow</a></li>
+          <li id="nav_versioning"><a href="/versioning.html">Versioning</a></li>
+          <li id="nav_contrib"><a href="/contrib.html">Contrib Projects</a></li>
+          <li id="nav_rb"><a href="/rb.html">Review Board</a></li>
+          <li id="nav_releasing"><a href="/releasing.html">Making Releases</a></li>
+          <li id="nav_verify_release"><a href="/verifying_releases.html">Verifying Releases</a></li>
+          <li><a href="https://issues.apache.org/jira/browse/accumulo"><i class="fa fa-external-link"></i> Issues</a></li>
+          <li><a href="https://builds.apache.org/view/A-D/view/Accumulo/"><i class="fa fa-external-link"></i> Builds</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Manual</li>
+          <li><a href="/1.6/accumulo_user_manual.html">1.6</a></li>
+          <li><a href="/1.7/accumulo_user_manual.html">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Javadoc</li>
+          <li><a href="/1.6/apidocs">1.6</a></li>
+          <li><a href="/1.7/apidocs">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Examples</li>
+          <li id="nav_examples_1_6"><a href="/1.6/examples">1.6</a></li>
+          <li id="nav_examples_1_7"><a href="/1.7/examples">1.7</a></li>
+          <li class="divider"></li>
+          <li id="old_documentation"><a href="/old_documentation.html">Docs for Older Verisons</a></li>
+          <li id="nav_screenshots"><a href="/screenshots.html">Screenshots</a></li>
+          <li id="nav_papers"><a href="/papers.html">Papers &amp; Other Links</a></li>
+          <li id="nav_glossary"><a href="/glossary.html">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Release Notes<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release_notes/1.7.1.html">1.7.1</a></li>
+          <li><a href="/release_notes/1.6.5.html">1.6.5</a></li>
+          <li class="divider"></li>
+          <li><a href="/release_notes/">Archives</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+          <ul class="dropdown-menu">
+            <li><a href="/papers.html">Papers &amp; Presentations</a></li>
+            <li><a href="/projects.html">Community Projects</a></li>
+          </ul>
+          </li>
+          <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">ASF Links<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://www.apache.org"><i class="fa fa-external-link"></i> Apache Software Foundation</a></li>
+            <li><a href="http://www.apache.org/foundation/sponsorship.html"><i class="fa fa-external-link"></i> Sponsorship</a></li>
+            <li><a href="http://www.apache.org/security/"><i class="fa fa-external-link"></i> Security</a></li>
+            <li><a href="http://www.apache.org/foundation/thanks.html"><i class="fa fa-external-link"></i> Thanks</a></li>
+            <li><a href="http://www.apache.org/foundation/policies/conduct.html"><i class="fa fa-external-link"></i> Code of Conduct</a></li>
+          </ul>
+          </li>
+        </ul>
+        <form method="GET" action="http://search-hadoop.com/" class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search"/>
+            <input type="hidden" name="fc_project" value="Accumulo"/>
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2" id="sidebar">
+      <div style="text-align: center">
+        <a href="/"><img id="logo" alt="Apache Accumulo &trade;" class="img-responsive" src="/images/accumulo-logo.png"/></a>
+        <br />
+        Latest 1.7 release: <strong>1.7.1</strong><br />
+        Latest 1.6 release: <strong>1.6.5</strong><br />
+        <br>
+        <a id="download-button-sidebar" class="btn btn-success btn-block" href="/downloads/" role="button">Download</a>
+      </div>
+      <hr>
+      <table class="table" id="sociallinks">
+        <tr><td><img src="/images/Twitter_logo_blue.png" style="height: 1em"></td><td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td></tr>
+        <tr><td><img src="/images/InBug-16px_0.png"></td><td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td></tr>
+        <tr><td><img src="/images/GitHub-Mark-32px.png" style="height: 1em"></td><td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td></tr>
+        <tr><td><span class="glyphicon glyphicon-comment"></span></td><td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td></tr>
+        <tr><td><img src="/favicon.png" width="16" /></td><td><a href="http://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td></tr>
+      </table>
+      <hr>
+      <a id="accumulo-summit-logo" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+
+      <div id="content">
+        
+        <h1 class="title">Apache Accumulo 1.6.5 Release Notes</h1>
+        
+        <p>Apache Accumulo 1.6.5 is a maintenance release on the 1.6 version branch. This
+release contains changes from 55 issues, comprised of bug-fixes, performance
+improvements, build quality improvements, and more. See <a href="https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12333674">JIRA</a> for a
+complete list.</p>
+
+<p>Users of any previous 1.6.x release are strongly encouraged to update as soon as
+possible to benefit from the improvements with very little concern in change of
+underlying functionality. Users of 1.4 or 1.5 that are seeking to upgrade to 1.6
+should consider 1.6.5 as a starting point.</p>
+
+<h2 id="outstanding-known-issues">Outstanding Known Issues</h2>
+
+<p>Be aware that a small documentation bug exists with the compact command in the
+shell (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4138">ACCUMULO-4138</a>). The documentation for the begin row and
+end row should be described as exclusive and inclusive, respectively, rather
+than the incorrect description of both being inclusive.</p>
+
+<h2 id="highlights">Highlights</h2>
+
+<h3 id="queued-compactions-not-running">Queued Compactions Not Running</h3>
+
+<p>Found and fixed a bug (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4016">ACCUMULO-4016</a>) in which some queued
+compactions would never run if the number of files changed while the tablet was
+queued.</p>
+
+<h3 id="faster-processing-of-conditional-mutations">Faster Processing of Conditional Mutations</h3>
+
+<p>Improved ConditionalMutation processing time by a factor of 3.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4066">ACCUMULO-4066</a>)</p>
+
+<h3 id="slow-gc-while-bulk-importing">Slow GC While Bulk Importing</h3>
+
+<p>Found and worked around an issue where lots of bulk imports creating many new
+files would significantly impair the Accumulo GC service, and possibly prevent
+it from running to completion entirely. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4021">ACCUMULO-4021</a>)</p>
+
+<h3 id="improvements-in-locating-client-configuration-file">Improvements in Locating Client Configuration File</h3>
+
+<p>Fixed some unexpected error messages related to setting
+ACCUMULO_CLIENT_CONF_PATH, and improved the detection of the client.conf file if
+ACCUMULO_CLIENT_CONF_PATH was set to a directory containing client.conf.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4026">ACCUMULO-4026</a>,<a href="https://issues.apache.org/jira/browse/ACCUMULO-4027">ACCUMULO-4027</a>)</p>
+
+<h3 id="transient-zookeeper-disconnect-causes-fate-threads-to-exit">Transient ZooKeeper disconnect causes FATE threads to exit</h3>
+
+<p>ZooKeeper clients are expected to handle the situation where they become
+disconnected from the ZooKeeper server and must wait to be reconnected
+before continuing ZooKeeper operations.</p>
+
+<p>The dedicated threads running inside the Accumulo Master process for FATE
+actions had the potential unexpectedly exit in this disconnected state.
+This caused a scenario where all future FATE-based operations would
+be blocked until the Accumulo Master process was restarted. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4060">ACCUMULO-4060</a>)</p>
+
+<h3 id="incorrect-management-of-certain-thrift-rpcs">Incorrect management of certain Thrift RPCs</h3>
+
+<p>Accumulo relies on Apache Thrift to implement remote procedure calls between
+Accumulo services. Accumulo’s use of Thrift uncovered an unfortunate situation
+where a special RPC (a “oneway” call) would leave unwanted data on the underlying
+Thrift connection. After this extra data was left on connection, all subsequent RPCs
+re-using that connection would fail with “out of sequence response” error messages.
+Accumulo would be left in a bad state until the mishandled connections were released
+or Accumulo services were restarted. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4065">ACCUMULO-4065</a>)</p>
+
+<h2 id="other-notable-changes">Other Notable Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3509">ACCUMULO-3509</a> Fixed some lock contention in TabletServer, preventing resource cleanup</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3734">ACCUMULO-3734</a> Fixed quote-escaping bug in VisibilityConstraint</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4025">ACCUMULO-4025</a> Fixed cleanup of bulk load fate transactions</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4070">ACCUMULO-4070</a> Fixed Kerberos ticket renewal for all Accumulo services</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4098">ACCUMULO-4098</a>,<a href="https://issues.apache.org/jira/browse/ACCUMULO-4113">ACCUMULO-4113</a> Fixed widespread misuse of ByteBuffer</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. <em>Agitation</em> refers to
+randomly restarting Accumulo processes and Hadoop Datanode processes, and, in
+HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing">
+  <tr>
+    <th>OS</th>
+    <th>Hadoop</th>
+    <th>Nodes</th>
+    <th>ZooKeeper</th>
+    <th>HDFS High-Availability</th>
+    <th>Tests</th>
+  </tr>
+  <tr>
+    <td>CentOS 7.1</td>
+    <td>2.6.3</td>
+    <td>9</td>
+    <td>3.4.6</td>
+    <td>No</td>
+    <td>Random walk (All.xml) 18-hour run (2 failures, both conflicting operations on same table in Concurrent test)</td>
+  </tr>
+  <tr>
+    <td>CentOS 7.1</td>
+    <td>2.6.3</td>
+    <td>6</td>
+    <td>3.4.6</td>
+    <td>No</td>
+    <td>Continuous ingest with agitation (2B entries)</td>
+  </tr>
+  <tr>
+    <td>CentOS 6.7</td>
+    <td>2.2.0 and 1.2.1</td>
+    <td>1</td>
+    <td>3.3.6</td>
+    <td>No</td>
+    <td>All unit and integration tests</td>
+  </tr>
+  <tr>
+    <td>CentOS 7.1 (Oracle JDK8)</td>
+    <td>2.6.3</td>
+    <td>9</td>
+    <td>3.4.6</td>
+    <td>No</td>
+    <td>Continuous ingest with agitation (24hrs, 32B entries verified) on EC2 (1 m3.xlarge leader; 8 d2.xlarge workers)</td>
+  </tr>
+</table>
+
+
+      </div>
+
+      <div id="footer">
+        <a alt="Apache Software Foundation" href="http://www.apache.org">
+          <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
+        </a>
+        <div class="copyright">
+          <p>
+          Copyright &copy; 2011-2016 The Apache Software Foundation, Licensed under
+          the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+          Apache Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
+          project logo are trademarks of the <a href="http://www.apache.org">Apache Software Foundation</a>.<br />
+          Site created with <a href="http://getbootstrap.com/">Bootstrap</a> including icons from <a href="http://glyphicons.com/">GLYPHICONS</a> and <a href="http://fontawesome.io/">Font Awesome</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

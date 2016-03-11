@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE- 2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.js"></script>
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<title>User Manual: Writing Accumulo Clients</title>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+  ga('create', 'UA-50934829-1', 'apache.org');
+  ga('send', 'pageview');
+}
+</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Accumulo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Project<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_index"><a href="/">Home</a></li>
+          <li id="nav_downloads"><a href="/downloads/">Downloads</a></li>
+          <li id="nav_features"><a href="/notable_features.html">Features</a></li>
+          <li><a href="http://www.apache.org/licenses/LICENSE-2.0"><i class="fa fa-external-link"></i> License</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolved"><a href="/get_involved.html">Get Involved</a></li>
+          <li id="nav_mailinglists"><a href="/mailing_list.html">Mailing Lists</a></li>
+          <li id="nav_people"><a href="/people.html">People</a></li>
+          <li id="nav_blog"><a href="https://blogs.apache.org/accumulo/">Blog</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
+          <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
+          <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
+          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_source"><a href="/source.html">Source &amp; Guide</a></li>
+          <li id="nav_git"><a href="/git.html">Git Workflow</a></li>
+          <li id="nav_versioning"><a href="/versioning.html">Versioning</a></li>
+          <li id="nav_contrib"><a href="/contrib.html">Contrib Projects</a></li>
+          <li id="nav_rb"><a href="/rb.html">Review Board</a></li>
+          <li id="nav_releasing"><a href="/releasing.html">Making Releases</a></li>
+          <li id="nav_verify_release"><a href="/verifying_releases.html">Verifying Releases</a></li>
+          <li><a href="https://issues.apache.org/jira/browse/accumulo"><i class="fa fa-external-link"></i> Issues</a></li>
+          <li><a href="https://builds.apache.org/view/A-D/view/Accumulo/"><i class="fa fa-external-link"></i> Builds</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Manual</li>
+          <li><a href="/1.6/accumulo_user_manual.html">1.6</a></li>
+          <li><a href="/1.7/accumulo_user_manual.html">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Javadoc</li>
+          <li><a href="/1.6/apidocs">1.6</a></li>
+          <li><a href="/1.7/apidocs">1.7</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Examples</li>
+          <li id="nav_examples_1_6"><a href="/1.6/examples">1.6</a></li>
+          <li id="nav_examples_1_7"><a href="/1.7/examples">1.7</a></li>
+          <li class="divider"></li>
+          <li id="old_documentation"><a href="/old_documentation.html">Docs for Older Verisons</a></li>
+          <li id="nav_screenshots"><a href="/screenshots.html">Screenshots</a></li>
+          <li id="nav_papers"><a href="/papers.html">Papers &amp; Other Links</a></li>
+          <li id="nav_glossary"><a href="/glossary.html">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Release Notes<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release_notes/1.7.1.html">1.7.1</a></li>
+          <li><a href="/release_notes/1.6.5.html">1.6.5</a></li>
+          <li class="divider"></li>
+          <li><a href="/release_notes/">Archives</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+          <ul class="dropdown-menu">
+            <li><a href="/papers.html">Papers &amp; Presentations</a></li>
+            <li><a href="/projects.html">Community Projects</a></li>
+          </ul>
+          </li>
+          <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">ASF Links<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://www.apache.org"><i class="fa fa-external-link"></i> Apache Software Foundation</a></li>
+            <li><a href="http://www.apache.org/foundation/sponsorship.html"><i class="fa fa-external-link"></i> Sponsorship</a></li>
+            <li><a href="http://www.apache.org/security/"><i class="fa fa-external-link"></i> Security</a></li>
+            <li><a href="http://www.apache.org/foundation/thanks.html"><i class="fa fa-external-link"></i> Thanks</a></li>
+            <li><a href="http://www.apache.org/foundation/policies/conduct.html"><i class="fa fa-external-link"></i> Code of Conduct</a></li>
+          </ul>
+          </li>
+        </ul>
+        <form method="GET" action="http://search-hadoop.com/" class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" name="q" class="form-control" placeholder="Search"/>
+            <input type="hidden" name="fc_project" value="Accumulo"/>
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2" id="sidebar">
+      <div style="text-align: center">
+        <a href="/"><img id="logo" alt="Apache Accumulo &trade;" class="img-responsive" src="/images/accumulo-logo.png"/></a>
+        <br />
+        Latest 1.7 release: <strong>1.7.1</strong><br />
+        Latest 1.6 release: <strong>1.6.5</strong><br />
+        <br>
+        <a id="download-button-sidebar" class="btn btn-success btn-block" href="/downloads/" role="button">Download</a>
+      </div>
+      <hr>
+      <table class="table" id="sociallinks">
+        <tr><td><img src="/images/Twitter_logo_blue.png" style="height: 1em"></td><td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td></tr>
+        <tr><td><img src="/images/InBug-16px_0.png"></td><td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td></tr>
+        <tr><td><img src="/images/GitHub-Mark-32px.png" style="height: 1em"></td><td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td></tr>
+        <tr><td><span class="glyphicon glyphicon-comment"></span></td><td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td></tr>
+        <tr><td><img src="/favicon.png" width="16" /></td><td><a href="http://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td></tr>
+      </table>
+      <hr>
+      <a id="accumulo-summit-logo" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+
+      <div id="content">
+        
+        <h1 class="title">User Manual: Writing Accumulo Clients</h1>
+        
+        <p>** Next:** <a href="Development_Clients.html">Development Clients</a> ** Up:** <a href="accumulo_user_manual.html">Apache Accumulo User Manual Version 1.4</a> ** Previous:** <a href="Accumulo_Shell.html">Accumulo Shell</a>   ** <a href="Contents.html">Contents</a>**</p>
+
+<p><a id="CHILD_LINKS"></a><strong>Subsections</strong></p>
+
+<ul>
+  <li><a href="Writing_Accumulo_Clients.html#Running_Client_Code">Running Client Code</a></li>
+  <li><a href="Writing_Accumulo_Clients.html#Connecting">Connecting</a></li>
+  <li><a href="Writing_Accumulo_Clients.html#Writing_Data">Writing Data</a></li>
+  <li><a href="Writing_Accumulo_Clients.html#Reading_Data">Reading Data</a></li>
+  <li><a href="Writing_Accumulo_Clients.html#Proxy">Proxy</a></li>
+</ul>
+
+<hr />
+
+<h2 id="a-idwritingaccumuloclientsa-writing-accumulo-clients"><a id="Writing_Accumulo_Clients"></a> Writing Accumulo Clients</h2>
+
+<h2 id="a-idrunningclientcodea-running-client-code"><a id="Running_Client_Code"></a> Running Client Code</h2>
+
+<p>There are multiple ways to run Java code that uses Accumulo. Below is a list of the different ways to execute client code.</p>
+
+<ul>
+  <li>using java executable</li>
+  <li>using the accumulo script</li>
+  <li>using the tool script</li>
+</ul>
+
+<p>Inorder to run client code written to run against Accumulo, you will need to include the jars that Accumulo depends on in your classpath. Accumulo client code depends on Hadoop and Zookeeper. For Hadoop add the hadoop core jar, all of the jars in the Hadoop lib directory, and the conf directory to the classpath. For Zookeeper 3.3 you only need to add the Zookeeper jar, and not what is in the Zookeeper lib directory. You can run the following command on a configured Accumulo system to see what its using for its classpath.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo classpath
+</code></pre>
+</div>
+
+<p>Another option for running your code is to put a jar file in $ACCUMULO_HOME/lib/ext. After doing this you can use the accumulo script to execute your code. For example if you create a jar containing the class com.foo.Client and placed that in lib/ext, then you could use the command $ACCUMULO_HOME/bin/accumulo com.foo.Client to execute your code.</p>
+
+<p>If you are writing map reduce job that access Accumulo, then you can use the bin/tool.sh script to run those jobs. See the map reduce example.</p>
+
+<h2 id="a-idconnectinga-connecting"><a id="Connecting"></a> Connecting</h2>
+
+<p>All clients must first identify the Accumulo instance to which they will be communicating. Code to do this is as follows:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>String instanceName = "myinstance";
+String zooServers = "zooserver-one,zooserver-two"
+Instance inst = new ZooKeeperInstance(instanceName, zooServers);
+
+Connector conn = inst.getConnector("user", "passwd");
+</code></pre>
+</div>
+
+<h2 id="a-idwritingdataa-writing-data"><a id="Writing_Data"></a> Writing Data</h2>
+
+<p>Data are written to Accumulo by creating Mutation objects that represent all the changes to the columns of a single row. The changes are made atomically in the TabletServer. Clients then add Mutations to a BatchWriter which submits them to the appropriate TabletServers.</p>
+
+<p>Mutations can be created thus:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Text rowID = new Text("row1");
+Text colFam = new Text("myColFam");
+Text colQual = new Text("myColQual");
+ColumnVisibility colVis = new ColumnVisibility("public");
+long timestamp = System.currentTimeMillis();
+
+Value value = new Value("myValue".getBytes());
+
+Mutation mutation = new Mutation(rowID);
+mutation.put(colFam, colQual, colVis, timestamp, value);
+</code></pre>
+</div>
+
+<h3 id="a-idbatchwritera-batchwriter"><a id="BatchWriter"></a> BatchWriter</h3>
+
+<p>The BatchWriter is highly optimized to send Mutations to multiple TabletServers and automatically batches Mutations destined for the same TabletServer to amortize network overhead. Care must be taken to avoid changing the contents of any Object passed to the BatchWriter since it keeps objects in memory while batching.</p>
+
+<p>Mutations are added to a BatchWriter thus:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>long memBuf = 1000000L; // bytes to store before sending a batch
+long timeout = 1000L; // milliseconds to wait before sending
+int numThreads = 10;
+
+BatchWriter writer =
+    conn.createBatchWriter("table", memBuf, timeout, numThreads)
+
+writer.add(mutation);
+
+writer.close();
+</code></pre>
+</div>
+
+<p>An example of using the batch writer can be found at <br />
+accumulo/docs/examples/README.batch</p>
+
+<h2 id="a-idreadingdataa-reading-data"><a id="Reading_Data"></a> Reading Data</h2>
+
+<p>Accumulo is optimized to quickly retrieve the value associated with a given key, and to efficiently return ranges of consecutive keys and their associated values.</p>
+
+<h3 id="a-idscannera-scanner"><a id="Scanner"></a> Scanner</h3>
+
+<p>To retrieve data, Clients use a Scanner, which provides acts like an Iterator over keys and values. Scanners can be configured to start and stop at particular keys, and to return a subset of the columns available.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// specify which visibilities we are allowed to see
+Authorizations auths = new Authorizations("public");
+
+Scanner scan =
+    conn.createScanner("table", auths);
+
+scan.setRange(new Range("harry","john"));
+scan.fetchFamily("attributes");
+
+for(Entry&lt;Key,Value&gt; entry : scan) {
+    String row = e.getKey().getRow();
+    Value value = e.getValue();
+}
+</code></pre>
+</div>
+
+<h3 id="a-idisolatedscannera-isolated-scanner"><a id="Isolated_Scanner"></a> Isolated Scanner</h3>
+
+<p>Accumulo supports the ability to present an isolated view of rows when scanning. There are three possible ways that a row could change in accumulo :</p>
+
+<ul>
+  <li>a mutation applied to a table</li>
+  <li>iterators executed as part of a minor or major compaction</li>
+  <li>bulk import of new files</li>
+</ul>
+
+<p>Isolation guarantees that either all or none of the changes made by these operations on a row are seen. Use the IsolatedScanner to obtain an isolated view of an accumulo table. When using the regular scanner it is possible to see a non isolated view of a row. For example if a mutation modifies three columns, it is possible that you will only see two of those modifications. With the isolated scanner either all three of the changes are seen or none.</p>
+
+<p>The IsolatedScanner buffers rows on the client side so a large row will not crash a tablet server. By default rows are buffered in memory, but the user can easily supply their own buffer if they wish to buffer to disk when rows are large.</p>
+
+<p>For an example, look at the following <br />
+src/examples/src/main/java/org/apache/accumulo/examples/isolation/InterferenceTest.java</p>
+
+<h3 id="a-idbatchscannera-batchscanner"><a id="BatchScanner"></a> BatchScanner</h3>
+
+<p>For some types of access, it is more efficient to retrieve several ranges simultaneously. This arises when accessing a set of rows that are not consecutive whose IDs have been retrieved from a secondary index, for example.</p>
+
+<p>The BatchScanner is configured similarly to the Scanner; it can be configured to retrieve a subset of the columns available, but rather than passing a single Range, BatchScanners accept a set of Ranges. It is important to note that the keys returned by a BatchScanner are not in sorted order since the keys streamed are from multiple TabletServers in parallel.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ArrayList&lt;Range&gt; ranges = new ArrayList&lt;Range&gt;();
+// populate list of ranges ...
+
+BatchScanner bscan =
+    conn.createBatchScanner("table", auths, 10);
+
+bscan.setRanges(ranges);
+bscan.fetchFamily("attributes");
+
+for(Entry&lt;Key,Value&gt; entry : scan)
+    System.out.println(e.getValue());
+</code></pre>
+</div>
+
+<p>An example of the BatchScanner can be found at <br />
+accumulo/docs/examples/README.batch</p>
+
+<h2 id="a-idproxya-proxy"><a id="Proxy"></a> Proxy</h2>
+
+<p>The proxy API allows the interaction with Accumulo with languages other than Java. A proxy server is provided in the codebase and a client can further be generated.</p>
+
+<h3 id="a-idprequisitesa-prequisites"><a id="Prequisites"></a> Prequisites</h3>
+
+<p>The proxy server can live on any node in which the basic client API would work. That means it must be able to communicate with the Master, ZooKeepers, NameNode, and the Data nodes. A proxy client only needs the ability to communicate with the proxy server.</p>
+
+<h3 id="a-idconfigurationa-configuration"><a id="Configuration"></a> Configuration</h3>
+
+<p>The configuration options for the proxy server live inside of a properties file. At the very least, you need to supply the following properties:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
+tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
+port=42424
+instance=test
+zookeepers=localhost:2181
+</code></pre>
+</div>
+
+<p>You can find a sample configuration file in your distribution:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ACCUMULO_HOME/proxy/proxy.properties.
+</code></pre>
+</div>
+
+<p>This sample configuration file further demonstrates an ability to back the proxy server by MockAccumulo or the MiniAccumuloCluster.</p>
+
+<h3 id="a-idrunningtheproxyservera-running-the-proxy-server"><a id="Running_the_Proxy_Server"></a> Running the Proxy Server</h3>
+
+<p>After the properties file holding the configuration is created, the proxy server can be started using the following command in the Accumulo distribution (assuming your properties file is named config.properties):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo proxy -p config.properties
+</code></pre>
+</div>
+
+<h3 id="a-idcreatingaproxyclienta-creating-a-proxy-client"><a id="Creating_a_Proxy_Client"></a> Creating a Proxy Client</h3>
+
+<p>Aside from installing the Thrift compiler, you will also need the language-specific library for Thrift installed to generate client code in that language. Typically, your operating system’s package manager will be able to automatically install these for you in an expected location such as /usr/lib/python/site-packages/thrift.</p>
+
+<p>You can find the thrift file for generating the client:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ACCUMULO_HOME/proxy/proxy.thrift.
+</code></pre>
+</div>
+
+<p>After a client is generated, the port specified in the configuration properties above will be used to connect to the server.</p>
+
+<h3 id="a-idusingaproxyclienta-using-a-proxy-client"><a id="Using_a_Proxy_Client"></a> Using a Proxy Client</h3>
+
+<p>The following examples have been written in Java and the method signatures may be slightly different depending on the language specified when generating client with the Thrift compiler. After initiating a connection to the Proxy (see Apache Thrift’s documentation for examples of connecting to a Thrift service), the methods on the proxy client will be available. The first thing to do is log in:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Map password = new HashMap&lt;String,String&gt;();
+password.put("password", "secret");
+ByteBuffer token = client.login("root", password);
+</code></pre>
+</div>
+
+<p>Once logged in, the token returned will be used for most subsequent calls to the client. Let’s create a table, add some data, scan the table, and delete it.</p>
+
+<p>First, create a table.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>client.createTable(token, "myTable", true, TimeType.MILLIS);
+</code></pre>
+</div>
+
+<p>Next, add some data:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// first, create a writer on the server
+String writer = client.createWriter(token, "myTable", new WriterOptions());
+
+// build column updates
+Map&lt;ByteBuffer, List&lt;ColumnUpdate&gt; cells&gt; cellsToUpdate = //...
+
+// send updates to the server
+client.updateAndFlush(writer, "myTable", cellsToUpdate);
+
+client.closeWriter(writer);
+</code></pre>
+</div>
+
+<p>Scan for the data and batch the return of the results on the server:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>String scanner = client.createScanner(token, "myTable", new ScanOptions());
+ScanResult results = client.nextK(scanner, 100);
+
+for(KeyValue keyValue : results.getResultsIterator()) {
+  // do something with results
+}
+
+client.closeScanner(scanner);
+</code></pre>
+</div>
+
+<hr />
+
+<p>** Next:** <a href="Development_Clients.html">Development Clients</a> ** Up:** <a href="accumulo_user_manual.html">Apache Accumulo User Manual Version 1.4</a> ** Previous:** <a href="Accumulo_Shell.html">Accumulo Shell</a>   ** <a href="Contents.html">Contents</a>**</p>
+
+
+      </div>
+
+      <div id="footer">
+        <a alt="Apache Software Foundation" href="http://www.apache.org">
+          <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
+        </a>
+        <div class="copyright">
+          <p>
+          Copyright &copy; 2011-2016 The Apache Software Foundation, Licensed under
+          the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+          Apache Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
+          project logo are trademarks of the <a href="http://www.apache.org">Apache Software Foundation</a>.<br />
+          Site created with <a href="http://getbootstrap.com/">Bootstrap</a> including icons from <a href="http://glyphicons.com/">GLYPHICONS</a> and <a href="http://fontawesome.io/">Font Awesome</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
