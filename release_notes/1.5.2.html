@@ -49,7 +49,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
 </script>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
@@ -83,7 +83,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
           <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
           <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
           <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
-          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_govreleasing"><a href="/governance/releasing.html">Releasing</a></li>
           <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
         </ul>
         </li>
@@ -132,7 +132,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
         </ul>
         </li>
         <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/papers.html">Papers &amp; Presentations</a></li>
             <li><a href="/projects.html">Community Projects</a></li>
@@ -211,7 +211,7 @@ over earlier versions in the 1.5 line.</p>
 
 <p>The Write-Ahead Log (WAL) files are used to ensure durability of updates made to Accumulo.
 A sync is called on the file in HDFS to make sure that the changes to the WAL are persisted
-to disk, which allows Accumulo to recover in the case of failure. [ACCUMULO-2766][9] fixed
+to disk, which allows Accumulo to recover in the case of failure. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2766">ACCUMULO-2766</a> fixed
 an issue where an operation against a WAL would unnecessarily wait for multiple syncs, slowing
 down the ingest on the system.</p>
 
@@ -220,14 +220,14 @@ down the ingest on the system.</p>
 <p>On a system with ample memory provided to Accumulo, long hold-times were observed which
 blocks the ingest of new updates. Trying to free more server-side memory by running minor
 compactions more frequently increased the overall throughput on the node. These changes
-were made in [ACCUMULO-2905][10].</p>
+were made in <a href="https://issues.apache.org/jira/browse/ACCUMULO-2905">ACCUMULO-2905</a>.</p>
 
 <h3 id="heapiterator-optimization">HeapIterator optimization</h3>
 
 <p>Iterators, a notable feature of Accumulo, are provided to users as a server-side programming
 construct, but are also used internally for numerous server operations. One of these system iterator 
 is the HeapIterator which implements a PriorityQueue of other Iterators. One way this iterator is
-used is to merge multiple files in HDFS to present a single, sorted stream of Key-Value pairs. [ACCUMULO-2827][11]
+used is to merge multiple files in HDFS to present a single, sorted stream of Key-Value pairs. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2827">ACCUMULO-2827</a>
 introduces a performance optimization to the HeapIterator which can improve the speed of the
 HeapIterator in common cases.</p>
 
@@ -242,7 +242,7 @@ from the Datanodes that the sync finished, where <em>hsync</em> does. To provide
 a variety of situations (notably, unexpected power outages).</p>
 
 <p>The downside is that performance tends to suffer because waiting for a sync to disk is a very
-expensive operation. [ACCUMULO-2842][12] introduces a new system property, tserver.wal.sync.method,
+expensive operation. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2842">ACCUMULO-2842</a> introduces a new system property, tserver.wal.sync.method,
 that lets users to change the HDFS sync implementation from <em>hsync</em> to <em>hflush</em>. Using <em>hflush</em> instead
 of <em>hsync</em> may result in about a 30% increase in ingest performance.</p>
 
@@ -257,7 +257,7 @@ of this change is that it will cause TabletServers to use additional memory per 
 the value of this parameter defaulted to a conservative 256K, which resulted in sub-par ingest
 performance.</p>
 
-<p>1.5.2 and [ACCUMULO-3018][13] increases this buffer to 1M which has a noticeable positive impact on
+<p>1.5.2 and <a href="https://issues.apache.org/jira/browse/ACCUMULO-3018">ACCUMULO-3018</a> increases this buffer to 1M which has a noticeable positive impact on
 ingest performance with a minimal increase in TabletServer memory usage.</p>
 
 <h2 id="notable-bug-fixes">Notable Bug Fixes</h2>
@@ -266,15 +266,15 @@ ingest performance with a minimal increase in TabletServer memory usage.</p>
 
 <p>1.5.1 inadvertently included a change to RangeInputSplit which created an incompatibility
 with 1.5.0. The original class has been restored to ensure that users accessing
-the RangeInputSplit class do not have to alter their client code. See [ACCUMULO-2586][1] for
+the RangeInputSplit class do not have to alter their client code. See <a href="https://issues.apache.org/jira/browse/ACCUMULO-2586">ACCUMULO-2586</a> for
 more information</p>
 
 <h3 id="add-configurable-maximum-frame-size-to-thrift-proxy">Add configurable maximum frame size to Thrift proxy</h3>
 
 <p>The Thrift proxy server was subject to memory exhaustion, typically
 due to bad input, where the server would attempt to allocate a very large
-buffer and die in the process. [ACCUMULO-2658][2] introduces a configuration
-parameter, like [ACCUMULO-2360][3], to prevent this error.</p>
+buffer and die in the process. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2658">ACCUMULO-2658</a> introduces a configuration
+parameter, like <a href="https://issues.apache.org/jira/browse/ACCUMULO-2360">ACCUMULO-2360</a>, to prevent this error.</p>
 
 <h3 id="offline-tables-can-prevent-tablet-balancing">Offline tables can prevent tablet balancing</h3>
 
@@ -282,7 +282,7 @@ parameter, like [ACCUMULO-2360][3], to prevent this error.</p>
 taken offline, tablet balancing may have stoppped. This would happen if there
 were tablet migrations for the table, because the migrations couldn’t occur.
 The balancer will not run when there are outstanding migrations; therefore, a
-system could become unbalanced. [ACCUMULO-2694][4] introduces a fix to ensure
+system could become unbalanced. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2694">ACCUMULO-2694</a> introduces a fix to ensure
 that offline tables do not block balancing and improves the server-side
 logging.</p>
 
@@ -290,19 +290,19 @@ logging.</p>
 
 <p>MiniAccumuloCluster had a few issues which could cause deadlock or a method that
 never returns. Most of these are related to management of the Accumulo processes
-([ACCUMULO-2764][5], [ACCUMULO-2985][6], and [ACCUMULO-3055][7]).</p>
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-2764">ACCUMULO-2764</a>, <a href="https://issues.apache.org/jira/browse/ACCUMULO-2985">ACCUMULO-2985</a>, and <a href="https://issues.apache.org/jira/browse/ACCUMULO-3055">ACCUMULO-3055</a>).</p>
 
 <h3 id="iteratorsettings-not-correctly-serialized-in-rangeinputsplit">IteratorSettings not correctly serialized in RangeInputSplit</h3>
 
 <p>The Writable interface methods on the RangeInputSplit class accidentally omitted
-calls to serialize the IteratorSettings configured for the Job. [ACCUMULO-2962][8]
+calls to serialize the IteratorSettings configured for the Job. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2962">ACCUMULO-2962</a>
 fixes the serialization and adds some additional tests.</p>
 
 <h3 id="constraint-violation-causes-hung-scans">Constraint violation causes hung scans</h3>
 
 <p>A failed bulk import transaction had the ability to create an infinitely retrying
 loop due to a constraint violation. This directly prevents scans from completing,
-but will also hang compactions. [ACCUMULO-3096][14] fixes the issue so that the
+but will also hang compactions. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3096">ACCUMULO-3096</a> fixes the issue so that the
 constraint no longer hangs the entire system.</p>
 
 <h2 id="documentation">Documentation</h2>
@@ -310,18 +310,18 @@ constraint no longer hangs the entire system.</p>
 <p>The following documentation updates were made:</p>
 
 <ul>
-  <li>[ACCUMULO-2540][15]</li>
-  <li>[ACCUMULO-2767][16]</li>
-  <li>[ACCUMULO-2796][17]</li>
-  <li>[ACCUMULO-2443][18]</li>
-  <li>[ACCUMULO-3008][19]</li>
-  <li>[ACCUMULO-2919][20]</li>
-  <li>[ACCUMULO-2874][21]</li>
-  <li>[ACCUMULO-2653][22]</li>
-  <li>[ACCUMULO-2437][23]</li>
-  <li>[ACCUMULO-3097][24]</li>
-  <li>[ACCUMULO-2499][25]</li>
-  <li>[ACCUMULO-1669][26]</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2540">ACCUMULO-2540</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2767">ACCUMULO-2767</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2796">ACCUMULO-2796</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2443">ACCUMULO-2443</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3008">ACCUMULO-3008</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2919">ACCUMULO-2919</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2874">ACCUMULO-2874</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2653">ACCUMULO-2653</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2437">ACCUMULO-2437</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3097">ACCUMULO-3097</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2499">ACCUMULO-2499</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1669">ACCUMULO-1669</a></li>
 </ul>
 
 <h2 id="testing">Testing</h2>
@@ -339,13 +339,13 @@ and, in HDFS High-Availability instances, forcing NameNode failover.</p>
     <th>Tests</th>
   </tr>
   <tr>
-    <td>Gentoo
+    <td>Gentoo</td>
     <td>Apache 2.6.0-SNAPSHOT</td>
     <td>1</td>
     <td>Apache 3.4.5</td>
     <td>No</td>
     <td>Unit and Functional Tests, ContinuousIngest w/ verification (1B entries)</td>
-  
+  </tr>
   <tr>
     <td>CentOS 6</td>
     <td>Apache 2.3.0</td>
@@ -354,41 +354,13 @@ and, in HDFS High-Availability instances, forcing NameNode failover.</p>
     <td>No</td>
     <td>24/hr RandomWalk, 24/hr ContinuousIngest w/ verification w/ and w/o agitation (30B and 23B entries)</td>
   </tr>
+</table>
 
-
-
-[1]: https://issues.apache.org/jira/browse/ACCUMULO-2586
-[2]: https://issues.apache.org/jira/browse/ACCUMULO-2658
-[3]: https://issues.apache.org/jira/browse/ACCUMULO-2360
-[4]: https://issues.apache.org/jira/browse/ACCUMULO-2694
-[5]: https://issues.apache.org/jira/browse/ACCUMULO-2764
-[6]: https://issues.apache.org/jira/browse/ACCUMULO-2985
-[7]: https://issues.apache.org/jira/browse/ACCUMULO-3055
-[8]: https://issues.apache.org/jira/browse/ACCUMULO-2962
-[9]: https://issues.apache.org/jira/browse/ACCUMULO-2766
-[10]: https://issues.apache.org/jira/browse/ACCUMULO-2905
-[11]: https://issues.apache.org/jira/browse/ACCUMULO-2827
-[12]: https://issues.apache.org/jira/browse/ACCUMULO-2842
-[13]: https://issues.apache.org/jira/browse/ACCUMULO-3018
-[14]: https://issues.apache.org/jira/browse/ACCUMULO-3096
-[15]: https://issues.apache.org/jira/browse/ACCUMULO-2540
-[16]: https://issues.apache.org/jira/browse/ACCUMULO-2767
-[17]: https://issues.apache.org/jira/browse/ACCUMULO-2796
-[18]: https://issues.apache.org/jira/browse/ACCUMULO-2443
-[19]: https://issues.apache.org/jira/browse/ACCUMULO-3008
-[20]: https://issues.apache.org/jira/browse/ACCUMULO-2919
-[21]: https://issues.apache.org/jira/browse/ACCUMULO-2874
-[22]: https://issues.apache.org/jira/browse/ACCUMULO-2653
-[23]: https://issues.apache.org/jira/browse/ACCUMULO-2437
-[24]: https://issues.apache.org/jira/browse/ACCUMULO-3097
-[25]: https://issues.apache.org/jira/browse/ACCUMULO-2499
-[26]: https://issues.apache.org/jira/browse/ACCUMULO-1669
-</td></tr></table>
 
       </div>
 
       <div id="footer">
-        <a alt="Apache Software Foundation" href="http://www.apache.org">
+        <a href="http://www.apache.org">
           <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
         </a>
         <div class="copyright">

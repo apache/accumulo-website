@@ -49,7 +49,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
 </script>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
@@ -83,7 +83,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
           <li id="nav_bylaws"><a href="/bylaws.html">Bylaws</a></li>
           <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding.html">Consensus Building</a></li>
           <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus.html">Lazy Consensus</a></li>
-          <li id="nav_releasing"><a href="/governance/releasing.html">Releasing</a></li>
+          <li id="nav_govreleasing"><a href="/governance/releasing.html">Releasing</a></li>
           <li id="nav_voting"><a href="/governance/voting.html">Voting</a></li>
         </ul>
         </li>
@@ -132,7 +132,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
         </ul>
         </li>
         <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret" /></a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/papers.html">Papers &amp; Presentations</a></li>
             <li><a href="/projects.html">Community Projects</a></li>
@@ -193,7 +193,7 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
 1.5 release, with development shifting towards newer release lines. We recommend upgrading
 to a newer version to continue to get bug fixes and new features.</p>
 
-<p>In the context of Accumulo’s [Semantic Versioning][semver] [guidelines][api],
+<p>In the context of Accumulo’s <a href="http://semver.org">Semantic Versioning</a> <a href="https://github.com/apache/accumulo/blob/1.7.0/README.md#api">guidelines</a>,
 this is a “patch version”. This means that there should be no public API changes. Any
 changes which were made were done in a backwards-compatible manner. Code that
 runs against 1.5.2 should run against 1.5.3.</p>
@@ -204,28 +204,28 @@ greatly appreciated.</p>
 
 <h2 id="security-changes">Security Changes</h2>
 
-<h3 id="sslv3-disabled-poodleaccumulo-3316">[SSLv3 disabled (POODLE)][ACCUMULO-3316]</h3>
+<h3 id="sslv3-disabled-poodleaccumulo-3316"><a href="https://issues.apache.org/jira/browse/ACCUMULO-3316">SSLv3 disabled (POODLE)</a></h3>
 
 <p>Many Accumulo services were capable of enabling wire encryption using
-SSL connectors. To be safe, [ACCUMULO-3316] disables the problematic SSLv3 version by default which was
-potentially susceptible to the man-in-the-middle attack. [ACCUMULO-3317] also disables SSLv3 in the monitor,
+SSL connectors. To be safe, <a href="https://issues.apache.org/jira/browse/ACCUMULO-3316">ACCUMULO-3316</a> disables the problematic SSLv3 version by default which was
+potentially susceptible to the man-in-the-middle attack. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3317">ACCUMULO-3317</a> also disables SSLv3 in the monitor,
 so it will not accept SSLv3 client connections, when running it with https.</p>
 
 <h2 id="notable-bug-fixes">Notable Bug Fixes</h2>
 
-<h3 id="sourceswitchingiterator-deadlockaccumulo-3745">[SourceSwitchingIterator Deadlock][ACCUMULO-3745]</h3>
+<h3 id="sourceswitchingiterator-deadlockaccumulo-3745"><a href="https://issues.apache.org/jira/browse/ACCUMULO-3745">SourceSwitchingIterator Deadlock</a></h3>
 
 <p>An instance of SourceSwitchingIterator, the Accumulo iterator which transparently manages
 whether data for a tablet read from memory (the in-memory map) or disk (HDFS after a minor
 compaction), was found deadlocked in a production system.</p>
 
 <p>This deadlock prevented the scan and the minor compaction from ever successfully completing
-without restarting the tablet server. [ACCUMULO-3745] fixes the inconsistent synchronization
+without restarting the tablet server. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3745">ACCUMULO-3745</a> fixes the inconsistent synchronization
 inside of the SourceSwitchingIterator to prevent this deadlock from happening in the future.</p>
 
 <p>The only mitigation of this bug was to restart the tablet server that is deadlocked.</p>
 
-<h3 id="table-flush-blocked-indefinitelyaccumulo-3597">[Table flush blocked indefinitely][ACCUMULO-3597]</h3>
+<h3 id="table-flush-blocked-indefinitelyaccumulo-3597"><a href="https://issues.apache.org/jira/browse/ACCUMULO-3597">Table flush blocked indefinitely</a></h3>
 
 <p>While running the Accumulo RandomWalk distributed test, it was observed that all activity in
 Accumulo had stopped and there was an offline Accumulo metadata table tablet. The system first
@@ -237,7 +237,7 @@ a deadlock occurred.</p>
 <p>This deadlock happened because the synchronous flush call could not complete before the load
 tablet call completed, but the load tablet call couldn’t run because of connection caching we
 perform in Accumulo’s RPC layer to reduce the quantity of sockets we need to create to send data.
-[ACCUMULO-3597] prevents this deadlock by forcing the use of a non-cached connection for the RPC
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3597">ACCUMULO-3597</a> prevents this deadlock by forcing the use of a non-cached connection for the RPC
 message requesting a metadata tablet to be loaded.</p>
 
 <p>While this feature does result in additional network resources to be used, the concern is minimal
@@ -246,22 +246,22 @@ tablets in the system.</p>
 
 <p>The only mitigation of this bug was to restart the tablet server that is hung.</p>
 
-<h3 id="rpc-connections-not-cachedaccumulo-3574">[RPC Connections not cached][ACCUMULO-3574]</h3>
+<h3 id="rpc-connections-not-cachedaccumulo-3574"><a href="https://issues.apache.org/jira/browse/ACCUMULO-3574">RPC Connections not cached</a></h3>
 
 <p>It was observed that the underlying connection for invoking RPCs were not actually being cached,
 despite it being requested that they should be cached. While this did not result in a noticed
-performance impact, it was deficiency. [ACCUMULO-3574] ensures that connections are cached when
+performance impact, it was deficiency. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3574">ACCUMULO-3574</a> ensures that connections are cached when
 it is requested that they are.</p>
 
-<h3 id="deletes-on-thrift-proxy-api-ignoredaccumulo-3474">[Deletes on Thrift Proxy API ignored][ACCUMULO-3474]</h3>
+<h3 id="deletes-on-thrift-proxy-api-ignoredaccumulo-3474"><a href="https://issues.apache.org/jira/browse/ACCUMULO-3474">Deletes on Thrift Proxy API ignored</a></h3>
 
 <p>A user noted that when trying to specify a delete using the Accumulo Thrift Proxy, the delete
-was treated as an update. [ACCUMULO-3474] fixes the Proxy server such that deletes are properly
+was treated as an update. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3474">ACCUMULO-3474</a> fixes the Proxy server such that deletes are properly
 respected as specified by the client.</p>
 
 <h2 id="other-changes">Other Changes</h2>
 
-<p>Other changes for this version can be found [in JIRA][CHANGES].</p>
+<p>Other changes for this version can be found <a href="https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12328662">in JIRA</a>.</p>
 
 <h2 id="testing">Testing</h2>
 
@@ -275,7 +275,7 @@ with HDFS using Apache Hadoop 2.6.0 when restarting Accumulo processes and
 HDFS datanodes. The developers investigated these issues as a part of the
 normal release testing procedures, but were unable to find a definitive cause
 of these failures. Users are encouraged to follow
-[ACCUMULO-2388][ACCUMULO-2388] if they wish to follow any future developments.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a> if they wish to follow any future developments.
 One possible workaround is to increase the <code class="highlighter-rouge">general.rpc.timeout</code> in the
 Accumulo configuration from <code class="highlighter-rouge">120s</code> to <code class="highlighter-rouge">240s</code>.</p>
 
@@ -289,41 +289,28 @@ Accumulo configuration from <code class="highlighter-rouge">120s</code> to <code
     <th>Tests</th>
   </tr>
   <tr>
-    <td>Gentoo
+    <td>Gentoo</td>
     <td>2.6.0</td>
     <td>1</td>
     <td>3.4.5</td>
     <td>No</td>
     <td>Unit and Integration Tests</td>
-  
+  </tr>
   <tr>
-    <td>Centos 6.5
+    <td>Centos 6.5</td>
     <td>2.7.1</td>
     <td>6</td>
     <td>3.4.5</td>
     <td>No</td>
     <td>Continuous Ingest and Verify</td>
-  
+  </tr>
+</table>
 
-
-[ACCUMULO-3316]: https://issues.apache.org/jira/browse/ACCUMULO-3316
-[ACCUMULO-3317]: https://issues.apache.org/jira/browse/ACCUMULO-3317
-[ACCUMULO-2388]: https://issues.apache.org/jira/browse/ACCUMULO-2388
-[ACCUMULO-3474]: https://issues.apache.org/jira/browse/ACCUMULO-3474
-[ACCUMULO-3574]: https://issues.apache.org/jira/browse/ACCUMULO-3574
-[ACCUMULO-3597]: https://issues.apache.org/jira/browse/ACCUMULO-3597
-[ACCUMULO-3745]: https://issues.apache.org/jira/browse/ACCUMULO-3745
-[api]: https://github.com/apache/accumulo/blob/1.7.0/README.md#api
-[readme]: https://github.com/apache/accumulo/blob/1.5.3/README.md
-[semver]: http://semver.org
-[CHANGES]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12328662
-[REL_152]: /release_notes/1.5.2.html
-</td></tr></td></tr></table>
 
       </div>
 
       <div id="footer">
-        <a alt="Apache Software Foundation" href="http://www.apache.org">
+        <a href="http://www.apache.org">
           <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
         </a>
         <div class="copyright">
