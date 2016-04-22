@@ -23,37 +23,49 @@
 <link href="/css/bootstrap.min.css" rel="stylesheet">
 <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
 <link href="/css/dataTables.bootstrap.css" rel="stylesheet">
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<title>Apache Accumulo 1.5.4 Release Notes</title>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/dataTables.bootstrap.js"></script>
-<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-<title>Apache Accumulo 1.5.4 Release Notes</title>
-
 <script>
-$(function() {
-  var host = window.location.host;
-  if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
-    $('#non-canonical').show();
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
   }
-});
-</script>
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
-  ga('create', 'UA-50934829-1', 'apache.org');
-  ga('send', 'pageview');
-}
 </script>
 </head>
 <body>
@@ -181,13 +193,34 @@ if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
         <a id="download-button-sidebar" class="btn btn-success btn-block" href="/downloads/" role="button">Download</a>
       </div>
       <hr>
-      <table class="table" id="sociallinks">
-        <tr><td><img src="/images/Twitter_logo_blue.png" style="height: 1em"></td><td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td></tr>
-        <tr><td><img src="/images/InBug-16px_0.png"></td><td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td></tr>
-        <tr><td><img src="/images/GitHub-Mark-32px.png" style="height: 1em"></td><td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td></tr>
-        <tr><td><span class="glyphicon glyphicon-comment"></span></td><td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td></tr>
-        <tr><td><img src="/favicon.png" width="16" /></td><td><a href="https://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td></tr>
-      </table>
+      
+<table class="table" id="sociallinks">
+  <tbody>
+    <tr>
+      <td><img src="/images/Twitter_logo_blue.png" alt="Twitter" style="height: 1em" /></td>
+      <td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td>
+    </tr>
+    <tr>
+      <td><img src="/images/InBug-16px_0.png" alt="Linked in" /></td>
+      <td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td>
+    </tr>
+    <tr>
+      <td><img src="/images/GitHub-Mark-32px.png" alt="GitHub" style="height: 1em" /></td>
+      <td><a href="https://github.com/apache/accumulo">apache / accumulo</a></td>
+    </tr>
+    <tr>
+      <td><span class="glyphicon glyphicon-comment"></span></td>
+      <td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td>
+    </tr>
+    <tr>
+      <td><img src="/favicon.png" alt="Blog" width="16" /></td>
+      <td><a href="https://blogs.apache.org/accumulo">Apache Accumulo Blog</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
       <hr>
       <a id="accumulo-summit-logo" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
     </div>
@@ -282,38 +315,26 @@ HDFS High-Availability instances, forcing NameNode fail-over.</p>
 
       </div>
 
-      <div id="footer">
-        <a href="https://www.apache.org">
-          <img id="asf-logo" alt="Apache Software Foundation" src="/images/feather-small.gif" height="100">
-        </a>
-        <div class="copyright">
-          <p>
-          Copyright &copy; 2011-2016 The Apache Software Foundation, Licensed under
-          the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
-          Apache Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
-          project logo are trademarks of the <a href="https://www.apache.org">Apache Software Foundation</a>.<br />
-          Site created with <a href="https://getbootstrap.com/">Bootstrap</a> including icons from <a href="https://glyphicons.com/">GLYPHICONS</a> and <a href="http://fontawesome.io/">Font Awesome</a>.
-          </p>
-        </div>
-      </div>
+      
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software
+Foundation, Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>. Apache
+Accumulo, Accumulo, Apache, the Apache feather logo, and the Apache Accumulo
+project logo are trademarks of the <a href="https://www.apache.org">Apache Software Foundation</a>.</p>
+
+  <p>Site created with <a href="https://getbootstrap.com">Bootstrap</a> including icons from
+<a href="https://glyphicons.com">GLYPHICONS</a> and <a href="http://fontawesome.io">Font Awesome</a>.</p>
+
+</footer>
+
+
     </div>
 
   </div>
 </div>
 
-<script type="text/javascript">
-
-$(function() {
-  return $("h2, h3, h4, h5, h6").each(function(i, el) {
-    var $el, icon, id;
-    $el = $(el);
-    id = $el.attr('id');
-    icon = '<i class="fa fa-link"></i>';
-    if (id) {
-      return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
-    }
-  });
-});
-</script>
 </body>
 </html>
