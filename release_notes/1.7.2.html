@@ -205,9 +205,13 @@ upgrade to 1.7 should consider 1.7.2 as a starting point.</p>
 
 <p>An improvement was introduced to allow a max age before WAL files would be automatically rolled. Without a max age, they could stay open for writing indefinitely, blocking the Hadoop DataNode decomissioning process. For more information, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4004">ACCUMULO-4004</a>.</p>
 
-<h3 id="remove-copy-of-cached-rfile-index-blocks">Remove copy of cached RFile index blocks</h3>
+<h3 id="remove-unnecessary-copy-of-cached-rfile-index-blocks">Remove unnecessary copy of cached RFile index blocks</h3>
 
 <p>Accumulo maintains an cache for file blocks in-memory as a performance optimization. This can be done safely because Accumulo RFiles are immutable, thus their blocks are also immutable. There are two types of these blocks: index and data blocks. Index blocks refer to the b-tree style index inside of each Accumulo RFile, while data blocks contain the sorted Key-Value pairs. In previous versions, when Accumulo extracted an Index block from the in-memory cache, it would copy the data. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4164">ACCUMULO-4164</a> removes this unnecessary copy as the contents are immutable and can be passed by reference. Ensuring that the Index blocks are not copied when accessed from the cache is a big performance gain at the file-access level.</p>
+
+<h3 id="analyze-key-length-to-avoid-choosing-large-keys-for-rfile-index-blocks">Analyze Key-length to avoid choosing large Keys for RFile Index blocks</h3>
+
+<p>Accumulo’s RFile index blocks are made up of a Key which exists in the file and points to that specific location in the corresponding RFile data block. Thus, the size of the RFile index blocks is largely dominated by the size of the Keys which are used by the index. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4314">ACCUMULO-4314</a> is an improvement which uses statistics on the length of the Keys in the Rfile to avoid choosing Keys for the index whose length is greater than three standard deviations for the RFile. By choosing smaller Keys for the index, Accumulo can access the RFile index faster and keep more Index blocks cached in memory. Initial tests showed that with this change, the RFile index size was nearly cut in half.</p>
 
 <h3 id="minor-performance-improvements">Minor performance improvements.</h3>
 
