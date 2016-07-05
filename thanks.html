@@ -26,7 +26,7 @@
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<title>Isolation Example</title>
+<title>Thanks</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -41,6 +41,11 @@
     }
   });
 
+  
+  // decorate menu with currently navigated page
+  $(function() {
+    $("#nav_thanks").addClass("active");
+  });
   
 
   $(function() {
@@ -171,59 +176,17 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Isolation Example</h1>
+          <h1 class="title">Thanks</h1>
           
-          <p>This example shows running a simple reservation system implemented using
-conditional mutations. This system guarantees that only one concurrent user can
-reserve a resource. The example’s reserve command allows multiple users to be
-specified. When this is done, it creates a separate reservation thread for each
-user. In the example below threads are spun up for alice, bob, eve, mallory,
-and trent to reserve room06 on 20140101. Bob ends up getting the reservation
-and everyone else is put on a wait list. The example code will take any string
-for what, when and who.</p>
+          <p>First off, thanks to our parent organization, the <a href="https://www.apache.org">Apache Software Foundation</a> and <a href="https://www.apache.org/foundation/sponsorship">all who sponsor</a> them.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.reservations.ARS
-&gt;connect test16 localhost root secret ars
-  connected
-&gt;
-  Commands :
-    reserve &lt;what&gt; &lt;when&gt; &lt;who&gt; {who}
-    cancel &lt;what&gt; &lt;when&gt; &lt;who&gt;
-    list &lt;what&gt; &lt;when&gt;
-&gt;reserve room06 20140101 alice bob eve mallory trent
-                   bob : RESERVED
-               mallory : WAIT_LISTED
-                 alice : WAIT_LISTED
-                 trent : WAIT_LISTED
-                   eve : WAIT_LISTED
-&gt;list room06 20140101
-  Reservation holder : bob
-  Wait list : [mallory, alice, trent, eve]
-&gt;cancel room06 20140101 alice
-&gt;cancel room06 20140101 bob
-&gt;list room06 20140101
-  Reservation holder : mallory
-  Wait list : [trent, eve]
-&gt;quit
-</code></pre>
-</div>
+<p>Additionally, we would like to thank the following organizations for resources that they provide:</p>
 
-<p>Scanning the table in the Accumulo shell after running the example shows the
-following:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>root@test16&gt; table ars
-root@test16 ars&gt; scan
-room06:20140101 res:0001 []    mallory
-room06:20140101 res:0003 []    trent
-room06:20140101 res:0004 []    eve
-room06:20140101 tx:seq []    6
-</code></pre>
-</div>
-
-<p>The tx:seq column is incremented for each update to the row allowing for
-detection of concurrent changes. For an update to go through, the sequence
-number must not have changed since the data was read. If it does change,
-the conditional mutation will fail and the example code will retry.</p>
+<ul>
+  <li>ej-technologies for allowing us to use their <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">Java profiler</a></li>
+  <li>YourKit for allowing us use of their <a href="https://www.yourkit.com/java/profiler/features/">Java Profiler</a></li>
+  <li>Coverity for running <a href="https://scan.coverity.com/projects/accumulo">static analysis</a></li>
+</ul>
 
 
         </div>
