@@ -26,7 +26,7 @@
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<title>Apache Accumulo™</title>
+<title>DRAFT Apache Accumulo 1.8.0 Release Notes DRAFT</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -41,6 +41,11 @@
     }
   });
 
+  
+  // decorate menu with currently navigated page
+  $(function() {
+    $("#nav_rn_180").addClass("active");
+  });
   
 
   $(function() {
@@ -171,7 +176,7 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo™</h1>
+          <h1 class="title">DRAFT Apache Accumulo 1.8.0 Release Notes DRAFT</h1>
           
           <p><em>THIS DOCUMENT IS A DRAFT</em></p>
 
@@ -185,70 +190,80 @@ features related to security, availability, and extensibility. Over
 <p>In the context of Accumulo’s <a href="http://semver.org">Semantic Versioning</a> <a href="https://github.com/apache/accumulo/blob/1.8/README.md#api">guidelines</a>,
 this is a “minor version”. This means that new APIs have been created, some
 deprecations may have been added, but no deprecated APIs have been removed.
-Code written against 1.7.x should work against 1.8.0, likely binary-compatible
-but definitely source-compatible. As always, the Accumulo developers take API compatibility
+Code written against 1.7.x should work against 1.8.0 – binary compatibility
+has been preserved with one exception of an already-deprecated Mock Accumulo
+utility class. As always, the Accumulo developers take API compatibility
 very seriously and have invested much time to ensure that we meet the promises set forth to our users.</p>
 
 <h2 id="major-changes">Major Changes</h2>
 
 <h3 id="speed-up-wal-roll-overs">Speed up WAL roll overs</h3>
 
-<p>By creating an active and standby writeahead log entry, the roll becomes just swapping writers.  This was a substantial refactor
-in they way WALs worked, but seems to provide a increase in write speed as shown by the simple test below.  The top entry is before
-<a href="https://issues.apache.org/jira/browse/ACCUMULO-3423">ACCUMULO-3423</a> and the bottom graph is after the refactor.</p>
+<p>By creating active and standby Write-Ahead Log (WAL) files, switching to a new WAL is simplified to an atomic
+reference switch of the WAL writer objects. This was a substantial refactor
+in they way WALs worked, but smoothes overal ingest performance in addition to provides a increase in write speed
+as shown by the simple test below. The top entry is before <a href="https://issues.apache.org/jira/browse/ACCUMULO-3423">ACCUMULO-3423</a> and the bottom graph is after the refactor.</p>
 
 <p><img src="https://issues.apache.org/jira/secure/attachment/12705402/WAL-slowdown-graphs.jpg" alt="Graph of WAL speed up after ACCUMULO-3423" title="Graph of WAL speed up after ACCUMULO-3423" /></p>
 
 <h3 id="user-level-api-for-rfile">User level API for RFile</h3>
 
 <p>Previously the only public API available to write RFiles was via the AccumuloFileOutputFormat. There was no way to read RFiles in the public
-API. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4165">ACCUMULO-4165</a> exposes new public API for reading and writing RFiles as well as cleans up some of the internal APIs.</p>
+API. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4165">ACCUMULO-4165</a> exposes a brand new public API for reading and writing RFiles as well as cleans up some of the internal APIs.</p>
 
 <h3 id="suspend-tablet-assignment-for-rolling-restarts">Suspend Tablet assignment for rolling restarts</h3>
 
 <p>When a tablet server dies, Accumulo attempted to reassign the tablets as quickly as possible to maintain availability.
-A new configuration property <code class="highlighter-rouge">table.suspend.duration</code> with a default of 0s now controls how long to wait before reassigning
-a tablet from a dead tserver.  The property is configurable in Zookeeper, so you can set it, do a rolling restart, and then
-set it back to 0.  A new state as introduced, TableState.SUSPENDED to support this feature.  By default, metadata tablet
+A new configuration property <code class="highlighter-rouge">table.suspend.duration</code> (with a default of zero seconds) now controls how long to wait before reassigning
+a tablet from a dead tserver. The property is configurable in Zookeeper, so you can set it, do a rolling restart, and then
+set it back to 0. A new state as introduced, TableState.SUSPENDED to support this feature. By default, metadata tablet
 reassignment is not suspended, but that can also be changed with the <code class="highlighter-rouge">master.metadata.suspendable</code> property that is false by
-default.  Root tablet assignment can not be suspended.  See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4353">ACCUMULO-4353</a> for more info.</p>
+default. Root tablet assignment can not be suspended. See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4353">ACCUMULO-4353</a> for more info.</p>
 
 <h3 id="run-multiple-tablet-servers-on-one-node">Run multiple Tablet Servers on one node</h3>
 
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4328">ACCUMULO-4328</a> introduces the capability of running multiple tservers on a single node.  This intended for nodes with a large
-amount of memory.  This feature is disabled by default.  There are several related tickets: <a href="https://issues.apache.org/jira/browse/ACCUMULO-4072">ACCUMULO-4072</a>, <a href="https://issues.apache.org/jira/browse/ACCUMULO-4331">ACCUMULO-4331</a>
-and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4406">ACCUMULO-4406</a>.  Note, this changes the names of the log files.  Previous log file names were defined in the
-generic_logger.xml as <code class="highlighter-rouge">${org.apache.accumulo.core.application}_${instance}_${org.apache.accumulo.core.ip.localhost.hostname}.log</code>.
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4328">ACCUMULO-4328</a> introduces the capability of running multiple tservers on a single node. This intended for nodes with a large
+amount of memory. This feature is disabled by default. There are several related tickets: <a href="https://issues.apache.org/jira/browse/ACCUMULO-4072">ACCUMULO-4072</a>, <a href="https://issues.apache.org/jira/browse/ACCUMULO-4331">ACCUMULO-4331</a>
+and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4406">ACCUMULO-4406</a>. Note that when this is enabled, the names of the log files change. Previous log file names were defined in the
+generic_logger.xml as <code class="highlighter-rouge">${org.apache.accumulo.core.application}_{org.apache.accumulo.core.ip.localhost.hostname}.log</code>.
 The files will now include the instance id after the application with
-<code class="highlighter-rouge">${org.apache.accumulo.core.application}_${instance}_${org.apache.accumulo.core.ip.localhost.hostname}.log</code>.  For example:
-master_1_localhost.log instead of master_localhost.log.  The same change was made to the debug logs as well.</p>
+<code class="highlighter-rouge">${org.apache.accumulo.core.application}_${instance}_${org.apache.accumulo.core.ip.localhost.hostname}.log</code>.</p>
+
+<p>For example: tserver_host.domain.com.log will become tserver_1_host.domain.log when multiple TabletServers
+are run per host. The same change also applies to the debug logs provided in the example configurations. The log
+names do not change if this feature is not used.</p>
 
 <h3 id="rate-limiting-major-compactions">Rate limiting Major Compactions</h3>
 
-<p>Major Compactions can overwhelm a tablet server, rendering it nearly unresponsive. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4187">ACCUMULO-4187</a> take a cue from Apache
-Cassandra and restrict how quickly we perform major compactions by rate limiting reads and writes.  This has a direct affect
-on the IO load caused by major compactions, and should also indirectly affect the CPU load.  This behavior is controlled
+<p>Major Compactions can significantly increase the amount of load on TabletServers. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4187">ACCUMULO-4187</a> take a cue from Apache
+Cassandra and restricts the rate at which data is read and written when performing major compactions. This has a direct effect
+on the IO load caused by major compactions with a similar effect on the CPU utilization. This behavior is controlled
 by a new property <code class="highlighter-rouge">tserver.compaction.major.throughput</code> with a defaults of 0B which disables the rate limiting.</p>
 
 <h3 id="upgrade-to-apache-thrift-093">Upgrade to Apache Thrift 0.9.3</h3>
 
 <p>Accumulo relies on Apache Thrift to implement remote procedure calls between Accumulo services.
-Ticket <a href="https://issues.apache.org/jira/browse/ACCUMULO-4077">ACCUMULO-4077</a> updates our dependency to 0.9.3.  See the <a href="https://github.com/apache/thrift/blob/0.9.3/CHANGES">Apache Thrift 0.9.3 Release Notes</a> for details
+Ticket <a href="https://issues.apache.org/jira/browse/ACCUMULO-4077">ACCUMULO-4077</a> updates our dependency to 0.9.3. See the <a href="https://github.com/apache/thrift/blob/0.9.3/CHANGES">Apache Thrift 0.9.3 Release Notes</a> for details
 on the changes to Thrift.</p>
 
-<h3 id="iterator-fuzz-testing">Iterator fuzz testing</h3>
+<h3 id="iterator-test-harness">Iterator Test Harness</h3>
 
-<p>Users often write iterators without fully understanding its limits and lifetime. Accumulo should have an
-iterator fuzz-tester which will take user data and run the iterator under extreme conditions. For example,
-it should re-create and re-seek the iterator with every key returned. It could automatically compare results
-of such a run with the naive run, which seeks to the beginning and scans all the data.  See
-<a href="https://issues.apache.org/jira/browse/ACCUMULO-626">ACCUMULO-626</a> for more details.</p>
+<p>Users often write iterators without fully understanding its limits and lifetime. Previously, Accumulo did
+not provide any means in which a user could test iterators to catch common issues that only become apparant
+in multi-node production deployments. <a href="https://issues.apache.org/jira/browse/ACCUMULO-626">ACCUMULO-626</a> provides a framework and a collection of initial tests
+which can be used to simulate common issues with Iterators that only appear in production deployments. This test
+harness can be used directly by users as a supplemental tool to unit tests and integration tests with MiniAccumuloCluster.</p>
+
+<p>Please see the <a href="https://accumulo.apache.org/1.8/accumulo_user_manual.html#_iterator_testing">Accumulo User Manual chapter on Iterator Testing</a> for more information</p>
 
 <h3 id="default-port-for-monitor-changed-to-9995">Default port for Monitor changed to 9995</h3>
 
-<p>Previously, the default port for the monitor was 50095.  You will need to update your links to point to port 9995.  The default port for the GC process was also changed from 50091 to 9998, although this mostly used internally.  Ticket <a href="https://issues.apache.org/jira/browse/ACCUMULO-3409">ACCUMULO-3409</a>
-documents why the defaults where changed  to something outside the range of ephemeral ports.  These values are still configurable by setting <code class="highlighter-rouge">monitor.port.client</code>
-and <code class="highlighter-rouge">gc.port.client</code> in the accumulo-site.xml</p>
+<p>Previously, the default port for the monitor was 50095. You will need to update your links to point to port 9995. The default
+port for the GC process was also changed from 50091 to 9998, although this an RPC port used internally and automatically discovered.
+These default ports were changed because the previous defaults fell in the Linux Ephemeral port range. This means that the operating
+system, when a port in this range was unusued, would allocate this port for dynamic network communication. This has the side-effect of
+temporal bind issues when trying to start these services (as the operating system might have allocated them elsewhere). By moving These
+defaults out of the ephemeral range, we can guarantee that the Monitor and GC will reliably start. These values are still configurable by setting <code class="highlighter-rouge">monitor.port.client</code>and <code class="highlighter-rouge">gc.port.client</code> in the accumulo-site.xml</p>
 
 <h2 id="other-notable-changes">Other Notable Changes</h2>
 
@@ -318,6 +333,7 @@ HDFS High-Availability instances, forcing NameNode failover.</p>
 </table>
 
 <p><em>THIS DOCUMENT IS A DRAFT</em></p>
+
 
         </div>
 
