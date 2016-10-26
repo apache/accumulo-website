@@ -3,7 +3,6 @@
 Apache Accumulo uses [Jekyll](http://jekyllrb.com/) to build their website. It is recommended
 that you use [Bundler](http://bundler.io/) to manage any dependencies of the build for you.
 
-
 ## Install Bundler and dependencies
 
 `gem install bundler`

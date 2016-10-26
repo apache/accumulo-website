@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
+
+<title>The Accumulo ClassLoader</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.6/jqc-1.12.3/dt-1.10.12/datatables.min.js"></script>
+
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">1.8.0 Release (Latest)</li>
+          <li id="nav_rn_180"><a href="/release_notes/1.8.0">Release Notes</a></li>
+          <li><a href="/1.8/accumulo_user_manual">User Manual</a></li>
+          <li><a href="/1.8/apidocs">Javadoc</a></li>
+          <li id="nav_examples_18"><a href="/1.8/examples">Examples</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">1.7.2 Release</li>
+          <li id="nav_rn_172"><a href="/release_notes/1.7.2">Release Notes</a></li>
+          <li><a href="/1.7/accumulo_user_manual">User Manual</a></li>
+          <li><a href="/1.7/apidocs">Javadoc</a></li>
+          <li id="nav_examples_17"><a href="/1.7/examples">Examples</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">1.6.6 Release</li>
+          <li id="nav_rn_166"><a href="/release_notes/1.6.6">Release Notes</a></li>
+          <li><a href="/1.6/accumulo_user_manual">User Manual</a></li>
+          <li><a href="/1.6/apidocs">Javadoc</a></li>
+          <li id="nav_examples_16"><a href="/1.6/examples">Examples</a></li>
+          <li class="divider"></li>
+          <li id="nav_features"><a href="/notable_features">Features</a></li>
+          <li id="nav_rn"><a href="/release_notes">Release Notes Archive</a></li>
+          <li id="old_documentation"><a href="/old_documentation">Documentation Archive</a></li>
+          <li id="nav_screenshots"><a href="/screenshots">Screenshots</a></li>
+          <li id="nav_papers"><a href="/papers">Papers &amp; Presentations</a></li>
+          <li id="nav_glossary"><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li id="nav_getinvolved"><a href="/get_involved">Get Involved</a></li>
+          <li id="nav_mailinglists"><a href="/mailing_list">Mailing Lists</a></li>
+          <li id="nav_people"><a href="/people">People</a></li>
+          <li id="nav_news"><a href="/news/">News Archive</a></li>
+          <li id="nav_projects"><a href="/projects">Community Projects</a></li>
+          <li id="nav_thanks"><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li id="nav_bylaws"><a href="/bylaws">Bylaws</a></li>
+          <li id="nav_consensusbuilding"><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li id="nav_lazyconsensus"><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li id="nav_govreleasing"><a href="/governance/releasing">Releasing</a></li>
+          <li id="nav_voting"><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li id="nav_source"><a href="/source">Source &amp; Guide</a></li>
+          <li id="nav_git"><a href="/git">Git Workflow</a></li>
+          <li id="nav_versioning"><a href="/versioning">Versioning</a></li>
+          <li id="nav_contrib"><a href="/contrib">Contrib Projects</a></li>
+          <li id="nav_rb"><a href="/rb">Review Board</a></li>
+          <li id="nav_releasing"><a href="/releasing">Making Releases</a></li>
+          <li id="nav_verify_release"><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">The Accumulo ClassLoader</h1>
+          
+          <h5>Dave Marion - 03 May 2014 </h5>
+
+<p>Originally posted at <a href="https://blogs.apache.org/accumulo/">https://blogs.apache.org/accumulo/</a></p>
+
+<p>The Accumulo classloader is an integral part of the software. The classloader is created before each of the services (master, tserver, gc, etc) are started and it is set as the classloader for that service. The classloader was rewritten in version 1.5 and this article will explain the new behavior.</p>
+
+<h3 id="first-some-history">First, some history</h3>
+
+<p>The classloader in version 1.4 used a simple hierarchy of two classloaders that would load classes from locations specified by two properties. The locations specified by the “general.classpaths” property would be used to create a parent classloader and locations specified by the “general.dynamic.classpaths” property were used to create a child classloader. The child classloader would monitor the specified locations for changes and when a change occurred the child classloader would be replaced with a new instance. Classes that referenced the orphaned child classloader would continue to work and the classloader would be garbage collected when no longer referenced. The diagram below shows the relationship between the classloaders in Accumulo 1.4.</p>
+
+<p>The only place where the dynamic classloader would come into play is for user iterators and their dependencies. The general advice for using this classloader would be to put the jars containing your iterators in the dynamic location. Everything else that does not change very often or would require a restart should be put into the non-dynamic location.</p>
+
+<p>There are a couple of things to note about the classloader in 1.4. First, if you modified the dynamic locations too often, you would run out of perm-gen space. This is likely due to unreferenced classes not being unloaded from the JVM. This is captured in <a href="https://issues.apache.org/jira/browse/ACCUMULO-599">ACCUMULO-599</a>. Secondly, when you modified files in dynamic locations within the same cycle, it would on occasion miss the second change.</p>
+
+<h3 id="out-with-the-old-in-with-the-new">Out with the old, in with the new</h3>
+
+<p>The Accumulo classloader was rewritten in version 1.5. It maintains the same dynamic capability and includes a couple of new features. The classloader uses <a href="http://commons.apache.org/proper/commons-vfs/">Commons VFS</a> so that it can load jars and classes from a variety of sources, including HDFS. Being able to load jars from one location (hdfs, http, etc) will make it easier to deploy changes to your cluster. Additionally, we introduced the notion of classloader contexts into Accumulo. This is not a new concept for anyone that has used an application server, but the implementation is a little different for Accumulo.</p>
+
+<p>The hierarchy set up by the new classloader uses the same property names as the old classloader. In the most basic configuration the locations specified by “general.classpaths” are used to create the root of the application classloader hierarchy. This classloader is a <a href="http://docs.oracle.com/javase/6/docs/api/java/net/URLClassLoader.html">URLClassLoader</a> and it does not support dynamic reloading. If you only specify this property, then you are loading all of your jars from the local file system and they will not be monitored for changes. We will call this top level application classloader the SYSTEM classloader. Next, a classloader is created that supports VFS sources and reloading. The parent of this classloader is the SYSTEM classloader and we will call this the VFS classloader. If the “general.vfs.classpaths” property is set, the VFS classloader will use this location. If the property is not set, it will use the value of “general.dynamic.classpaths” with a default value of $ACCUMULO_HOME/lib/ext to support backwards compatibility. The diagram below shows the relationship between the classloaders in Accumulo 1.5.</p>
+
+<h3 id="running-accumulo-from-hdfs">Running Accumulo From HDFS</h3>
+
+<p>If you have defined “general.vfs.classpaths” in your Accumulo configuration, then you can use the bootstrap_hdfs.sh script in the bin directory to seed HDFS with the Accumulo jars. A couple of jars will remain on the local file system for starting services. Now when you start up Accumulo the master, gc, tracer, and all of the tablet servers will get their jars and classes from HDFS. The bootstrap_hdfs.sh script sets the replication on the directory, but you may want to set it higher after bootstrapping. An example configuration setting would be:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>general.vfs.classpaths<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/accumulo/system-classpath<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Configuration for a system level vfs classloader. Accumulo jars can be configured here and loaded out of HDFS.<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="about-contexts">About Contexts</h3>
+
+<p>You can also define classloader contexts in your accumulo-site.xml file. A context is defined by a user supplied name and it references locations like the other classloader properties. When a context is defined in the configuration, it can then be applied to one or more tables. When a context is applied to a table, then a classloader is created for that context. If multiple tables use the same context, then they share the context classloader. The context classloader is a child to the VFS classloader created above.</p>
+
+<p>The goal here is to enable multiple tenants to share the same Accumulo instance. For example, we may have a context called ‘app1’ which references the jars for application A. We may also have another context called app2 which references the jars for application B. By default the context classloader delegates to the VFS classloader. This behavior may be overridden as seen in the app2 example below. The context classloader also supports reloading like the VFS classloader.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app2.delegation=post<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationB/classpath/.*.jar,http://my-webserver/applicationB/.*.jar<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Application B classpath, loads jars from HDFS and HTTP, does not delegate to parent first<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>Context classloaders do not have to be defined in the accumulo-site.xml file. The “general.vfs.context.classpath.{context}” property can be defined on the table either programatically or manually in the shell. Then set the “table.classpath.context” property on your table.</p>
+
+<h3 id="known-issues">Known Issues</h3>
+
+<p>Remember the two issues I mentioned above? Well, they are still a problem.</p>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1507">ACCUMULO-1507</a> is tracking <a href="https://issues.apache.org/jira/browse/VFS-487">VFS-487</a> for frequent modifications to files.</li>
+  <li>If you start running out of perm-gen space, take a look at <a href="https://issues.apache.org/jira/browse/ACCUMULO-599">ACCUMULO-599</a> and try applying the JVM settings for class unloading.</li>
+  <li>Additionally, there is an issue with the bootstrap_hdfs.sh script detailed in <a href="https://issues.apache.org/jira/browse/ACCUMULO-2761">ACCUMULO-2761</a>. There is a workaround listed in the issue.</li>
+</ul>
+
+<p>Please email the <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;">dev</a> list for comments and questions.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news/">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
