@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.7.0</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/user-manual/">User Manuals</a></li>
+          <li><a href="/javadocs/">Javadocs</a></li>
+          <li><a href="/examples/">Examples</a></li>
+          <li><a href="/notable_features">Features</a></li>
+          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/papers">Papers &amp; Presentations</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/news">News Archive</a></li>
+          <li><a href="/projects">Community Projects</a></li>
+          <li><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li><a href="/bylaws">Bylaws</a></li>
+          <li><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li><a href="/governance/releasing">Releasing</a></li>
+          <li><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li><a href="/source">Source &amp; Guide</a></li>
+          <li><a href="/git">Git Workflow</a></li>
+          <li><a href="/versioning">Versioning</a></li>
+          <li><a href="/contrib">Contrib Projects</a></li>
+          <li><a href="/rb">Review Board</a></li>
+          <li><a href="/releasing">Making Releases</a></li>
+          <li><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.7.0</h1>
+          
+          <p>18 May 2015</p>
+
+<p>Apache Accumulo 1.7.0 is a significant release that includes many important
+milestone features which expand the functionality of Accumulo. These include
+features related to security, availability, and extensibility. Nearly 700 JIRA
+issues were resolved in this version. Approximately two-thirds were bugs and
+one-third were improvements.</p>
+
+<p>In the context of Accumulo’s <a href="http://semver.org">Semantic Versioning</a> <a href="https://github.com/apache/accumulo/blob/1.7.0/README.md#api">guidelines</a>,
+this is a “minor version”. This means that new APIs have been created, some
+deprecations may have been added, but no deprecated APIs have been removed.
+Code written against 1.6.x should work against 1.7.0, likely binary-compatible
+but definitely source-compatible. As always, the Accumulo developers take API compatibility
+very seriously and have invested much time to ensure that we meet the promises set forth to our users.</p>
+
+<h1 id="major-changes">Major Changes</h1>
+
+<h2 id="updated-minimum-requirements">Updated Minimum Requirements</h2>
+
+<p>Apache Accumulo 1.7.0 comes with an updated set of minimum requirements.</p>
+
+<ul>
+  <li>Java7 is required. Java6 support is dropped.</li>
+  <li>Hadoop 2.2.0 or greater is required. Hadoop 1.x support is dropped.</li>
+  <li>ZooKeeper 3.4.x or greater is required.</li>
+</ul>
+
+<h2 id="client-authentication-with-kerberos">Client Authentication with Kerberos</h2>
+
+<p>Kerberos is the de-facto means to provide strong authentication across Hadoop
+and other related components. Kerberos requires a centralized key distribution
+center to authentication users who have credentials provided by an
+administrator. When Hadoop is configured for use with Kerberos, all users must
+provide Kerberos credentials to interact with the filesystem, launch YARN
+jobs, or even view certain web pages.</p>
+
+<p>While Accumulo has long supported operating on Kerberos-enabled HDFS, it still
+required Accumulo users to use password-based authentication to authenticate
+with Accumulo. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2815">ACCUMULO-2815</a> added support for allowing
+Accumulo clients to use the same Kerberos credentials to authenticate to
+Accumulo that they would use to authenticate to other Hadoop components,
+instead of a separate user name and password just for Accumulo.</p>
+
+<p>This authentication leverages <a href="https://en.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer">Simple Authentication and Security Layer
+(SASL)</a> and <a href="https://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface">GSSAPI</a> to support Kerberos authentication over the
+existing Apache Thrift-based RPC infrastructure that Accumulo employs.</p>
+
+<p>These additions represent a significant forward step for Accumulo, bringing
+its client-authentication up to speed with the rest of the Hadoop ecosystem.
+This results in a much more cohesive authentication story for Accumulo that
+resonates with the battle-tested cell-level security and authorization model
+already familiar to Accumulo users.</p>
+
+<p>More information on configuration, administration, and application of Kerberos
+client authentication can be found in the <a href="/1.7/accumulo_user_manual#_kerberos">Kerberos chapter</a> of the
+Accumulo User Manual.</p>
+
+<h2 id="data-center-replication">Data-Center Replication</h2>
+
+<p>In previous releases, Accumulo only operated within the constraints of a
+single installation. Because single instances of Accumulo often consist of
+many nodes and Accumulo’s design scales (near) linearly across many nodes, it
+is typical that one Accumulo is run per physical installation or data-center.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-378">ACCUMULO-378</a> introduces support in Accumulo to automatically
+copy data from one Accumulo instance to another.</p>
+
+<p>This data-center replication feature is primarily applicable to users wishing
+to implement a disaster recovery strategy. Data can be automatically copied
+from a primary instance to one or more other Accumulo instances. In contrast
+to normal Accumulo operation, in which ingest and query are strongly
+consistent, data-center replication is a lazy, eventually consistent
+operation. This is desirable for replication, as it prevents additional
+latency for ingest operations on the primary instance. Additionally, the
+implementation of this feature can sustain prolonged outages between the
+primary instance and replicas without any administrative overhead.</p>
+
+<p>The Accumulo User Manual contains a <a href="/1.7/accumulo_user_manual#_replication">new chapter on replication</a>
+which details the design and implementation of the feature, explains how users
+can configure replication, and describes special cases to consider when
+choosing to integrate the feature into a user application.</p>
+
+<h2 id="user-initiated-compaction-strategies">User-Initiated Compaction Strategies</h2>
+
+<p>Per-table compaction strategies were added in 1.6.0 to provide custom logic to
+decide which files are involved in a major compaction. In 1.7.0, the ability
+to specify a compaction strategy for a user-initiated compaction was added in
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-1798">ACCUMULO-1798</a>. This allows surgical compactions on a subset
+of tablet files. Previously, a user-initiated compaction would compact all
+files in a tablet.</p>
+
+<p>In the Java API, this new feature can be accessed in the following way:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Connection conn = ...
+CompactionStrategyConfig csConfig = new CompactionStrategyConfig(strategyClassName).setOptions(strategyOpts);
+CompactionConfig compactionConfig = new CompactionConfig().setCompactionStrategy(csConfig);
+connector.tableOperations().compact(tableName, compactionConfig)
+</code></pre>
+</div>
+
+<p>In <a href="https://issues.apache.org/jira/browse/ACCUMULO-3134">ACCUMULO-3134</a>, the shell’s <code class="highlighter-rouge">compact</code> command was modified
+to enable selecting which files to compact based on size, name, and path.
+Options were also added to the shell’s compaction command to allow setting
+RFile options for the compaction output. Setting the output options could be
+useful for testing. For example, one tablet to be compacted using snappy
+compression.</p>
+
+<p>The following is an example shell command that compacts all files less than
+10MB, if the tablet has at least two files that meet this criteria. If a
+tablet had a 100MB, 50MB, 7MB, and 5MB file then the 7MB and 5MB files would
+be compacted. If a tablet had a 100MB and 5MB file, then nothing would be done
+because there are not at least two files meeting the selection criteria.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>compact -t foo --min-files 2 --sf-lt-esize 10M
+</code></pre>
+</div>
+
+<p>The following is an example shell command that compacts all bulk imported
+files in a table.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>compact -t foo --sf-ename I.*
+</code></pre>
+</div>
+
+<p>These provided convenience options to select files execute using a specialized
+compaction strategy. Options were also added to the shell to specify an
+arbitrary compaction strategy. The option to specify an arbitrry compaction
+strategy is mutually exclusive with the file selection and file creation
+options, since those options are unique to the specialized compaction strategy
+provided. See <code class="highlighter-rouge">compact --help</code> in the shell for the available options.</p>
+
+<h2 id="api-clarification">API Clarification</h2>
+
+<p>The declared API in 1.6.x was incomplete. Some important classes like
+ColumnVisibility were not declared as Accumulo API. Significant work was done
+under <a href="https://issues.apache.org/jira/browse/ACCUMULO-3657">ACCUMULO-3657</a> to correct the API statement and clean up
+the API to be representative of all classes which users are intended to
+interact with. The expanded and simplified API statement is in the
+<a href="https://github.com/apache/accumulo/blob/1.7.0/README.md#api">README</a>.</p>
+
+<p>In some places in the API, non-API types were used. Ideally, public API
+members would only use public API types. A tool called <a href="http://code.revelc.net/apilyzer-maven-plugin">APILyzer</a>
+was created to find all API members that used non-API types. Many of the
+violations found by this tool were deprecated to clearly communicate that a
+non-API type was used. One example is a public API method that returned a
+class called <code class="highlighter-rouge">KeyExtent</code>. <code class="highlighter-rouge">KeyExtent</code> was never intended to be in the public
+API because it contains code related to Accumulo internals. <code class="highlighter-rouge">KeyExtent</code> and
+the API methods returning it have since been deprecated. These were replaced
+with a new class for identifying tablets that does not expose internals.
+Deprecating a type like this from the API makes the API more stable while also
+making it easier for contributors to change Accumulo internals without
+impacting the API.</p>
+
+<p>The changes in <a href="https://issues.apache.org/jira/browse/ACCUMULO-3657">ACCUMULO-3657</a> also included an Accumulo API
+regular expression for use with checkstyle. Starting with 1.7.0, projects
+building on Accumulo can use this checkstyle rule to ensure they are only
+using Accumulo’s public API. The regular expression can be found in the
+<a href="https://github.com/apache/accumulo/blob/1.7.0/README.md#api">README</a>.</p>
+
+<h1 id="performance-improvements">Performance Improvements</h1>
+
+<h2 id="configurable-threadpool-size-for-assignments">Configurable Threadpool Size for Assignments</h2>
+
+<p>During start-up, the Master quickly assigns tablets to Tablet Servers. However,
+Tablet Servers load those assigned tablets one at a time. In 1.7, the servers
+will be more aggressive, and will load tablets in parallel, so long as they do
+not have mutations that need to be recovered.</p>
+
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-1085">ACCUMULO-1085</a> allows the size of the threadpool used in the Tablet Servers 
+for assignment processing to be configurable.</p>
+
+<h2 id="group-commit-threshold-as-a-factor-of-data-size">Group-Commit Threshold as a Factor of Data Size</h2>
+
+<p>When ingesting data into Accumulo, the majority of time is spent in the
+write-ahead log. As such, this is a common place that optimizations are added.
+One optimization is known as “group-commit”. When multiple clients are
+writing data to the same Accumulo tablet, it is not efficient for each of them
+to synchronize the WAL, flush their updates to disk for durability, and then
+release the lock. The idea of group-commit is that multiple writers can queue
+the write for their mutations to the WAL and then wait for a sync that will
+satisfy the durability constraints of their batch of updates. This has a
+drastic improvement on performance, since many threads writing batches
+concurrently can “share” the same <code class="highlighter-rouge">fsync</code>.</p>
+
+<p>In previous versions, Accumulo controlled the frequency in which this
+group-commit sync was performed as a factor of the number of clients writing
+to Accumulo. This was both confusing to correctly configure and also
+encouraged sub-par performance with few write threads.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-1950">ACCUMULO-1950</a> introduced a new configuration property
+<code class="highlighter-rouge">tserver.total.mutation.queue.max</code> which defines the amount of data that is
+queued before a group-commit is performed in such a way that is agnostic of
+the number of writers. This new configuration property is much easier to
+reason about than the previous (now deprecated) <code class="highlighter-rouge">tserver.mutation.queue.max</code>.
+Users who have set <code class="highlighter-rouge">tserver.mutation.queue.max</code> in the past are encouraged
+to start using the new <code class="highlighter-rouge">tserver.total.mutation.queue.max</code> property.</p>
+
+<h1 id="other-improvements">Other improvements</h1>
+
+<h2 id="balancing-groups-of-tablets">Balancing Groups of Tablets</h2>
+
+<p>By default, Accumulo evenly spreads each table’s tablets across a cluster. In
+some situations, it is advantageous for query or ingest to evenly spreads
+groups of tablets within a table. For <a href="https://issues.apache.org/jira/browse/ACCUMULO-3439">ACCUMULO-3439</a>, a new
+balancer was added to evenly spread groups of tablets to optimize performance.
+This <a href="https://blogs.apache.org/accumulo/entry/balancing_groups_of_tablets">blog post</a> provides more details about when and why
+users may desire to leverage this feature..</p>
+
+<h2 id="user-specified-durability">User-specified Durability</h2>
+
+<p>Accumulo constantly tries to balance durability with performance. Guaranteeing
+durability of every write to Accumulo is very difficult in a
+massively-concurrent environment that requires high throughput. One common
+area of focus is the write-ahead log, since it must eventually call <code class="highlighter-rouge">fsync</code> on
+the local filesystem to guarantee that data written is durable in the face of
+unexpected power failures. In some cases where durability can be sacrificed,
+either due to the nature of the data itself or redundant power supplies,
+ingest performance improvements can be attained.</p>
+
+<p>Prior to 1.7, a user could only configure the level of durability for
+individual tables. With the implementation of <a href="https://issues.apache.org/jira/browse/ACCUMULO-1957">ACCUMULO-1957</a>,
+the durability can be specified by the user when creating a <code class="highlighter-rouge">BatchWriter</code>,
+giving users control over durability at the level of the individual writes.
+Every <code class="highlighter-rouge">Mutation</code> written using that <code class="highlighter-rouge">BatchWriter</code> will be written with the
+provided durability. This can result in substantially faster ingest rates when
+the durability can be relaxed.</p>
+
+<h2 id="waitforbalance-api">waitForBalance API</h2>
+
+<p>When creating a new Accumulo table, the next step is typically adding splits
+to that table before starting ingest. This can be extremely important since a
+table without any splits will only be hosted on a single tablet server and
+create a ingest bottleneck until the table begins to naturally split. Adding
+many splits before ingesting will ensure that a table is distributed across
+many servers and result in high throughput when ingest first starts.</p>
+
+<p>Adding splits to a table has long been a synchronous operation, but the
+assignment of those splits was asynchronous. A large number of splits could be
+processed, but it was not guaranteed that they would be evenly distributed
+resulting in the same problem as having an insufficient number of splits.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-2998">ACCUMULO-2998</a> adds a new method to <code class="highlighter-rouge">InstanceOperations</code> which
+allows users to wait for all tablets to be balanced. This method lets users
+wait until tablets are appropriately distributed so that ingest can be run at
+full-bore immediately.</p>
+
+<h2 id="hadoop-metrics2-support">Hadoop Metrics2 Support</h2>
+
+<p>Accumulo has long had its own metrics system implemented using Java MBeans.
+This enabled metrics to be reported by Accumulo services, but consumption by
+other systems often required use of an additional tool like jmxtrans to read
+the metrics from the MBeans and send them to some other system.</p>
+
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-1817">ACCUMULO-1817</a> replaces this custom metrics system Accumulo
+with Hadoop Metrics2. Metrics2 has a number of benefits, the most common of
+which is invalidating the need for an additional process to send metrics to
+common metrics storage and visualization tools. With Metrics2 support,
+Accumulo can send its metrics to common tools like Ganglia and Graphite.</p>
+
+<p>For more information on enabling Hadoop Metrics2, see the <a href="/1.7/accumulo_user_manual#_metrics">Metrics
+Chapter</a> in the Accumulo User Manual.</p>
+
+<h2 id="distributed-tracing-with-htrace">Distributed Tracing with HTrace</h2>
+
+<p>HTrace has recently started gaining traction as a standalone project,
+especially with its adoption in HDFS. Accumulo has long had distributed
+tracing support via its own “Cloudtrace” library, but this wasn’t intended for
+use outside of Accumulo.</p>
+
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-898">ACCUMULO-898</a> replaces Accumulo’s Cloudtrace code with HTrace.
+This has the benefit of adding timings (spans) from HDFS into Accumulo spans
+automatically.</p>
+
+<p>Users who inspect traces via the Accumulo Monitor (or another system) will begin
+to see timings from HDFS during operations like Major and Minor compactions when
+running with at least Apache Hadoop 2.6.0.</p>
+
+<h2 id="versions-file-present-in-binary-distribution">VERSIONS file present in binary distribution</h2>
+
+<p>In the pre-built binary distribution or distributions built by users from the
+official source release, users will now see a <code class="highlighter-rouge">VERSIONS</code> file present in the
+<code class="highlighter-rouge">lib/</code> directory alongside the Accumulo server-side jars. Because the created
+tarball strips off versions from the jar file names, it can require extra work
+to actually find what the version of each dependent jar (typically inspecting
+the jar’s manifest).</p>
+
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-2863">ACCUMULO-2863</a> adds a <code class="highlighter-rouge">VERSIONS</code> file to the <code class="highlighter-rouge">lib/</code> directory
+which contains the Maven groupId, artifactId, and verison (GAV) information for
+each jar file included in the distribution.</p>
+
+<h2 id="per-table-volume-chooser">Per-Table Volume Chooser</h2>
+
+<p>The <code class="highlighter-rouge">VolumeChooser</code> interface is a server-side extension point that allows user
+tables to provide custom logic in choosing where its files are written when
+multiple HDFS instances are available. By default, a randomized volume chooser
+implementation is used to evenly balance files across all HDFS instances.</p>
+
+<p>Previously, this VolumeChooser logic was instance-wide which meant that it would
+affect all tables. This is potentially undesirable as it might unintentionally
+impact other users in a multi-tenant system. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3177">ACCUMULO-3177</a>
+introduces a new per-table property which supports configuration of a
+<code class="highlighter-rouge">VolumeChooser</code>. This ensures that the implementation to choose how HDFS
+utilization happens when multiple are available is limited to the expected
+subset of all tables.</p>
+
+<h2 id="table-and-namespace-custom-properties">Table and namespace custom properties</h2>
+
+<p>In order to avoid errors caused by mis-typed configuration properties, Accumulo was strict about which configuration properties 
+could be set. However, this prevented users from setting arbitrary properties that could be used by custom balancers, compaction 
+strategies, volume choosers, and iterators. Under <a href="https://issues.apache.org/jira/browse/ACCUMULO-2841">ACCUMULO-2841</a>, the ability to set arbitrary table and 
+namespace properties was added. The properties need to be prefixed with <code class="highlighter-rouge">table.custom.</code>.  The changes made in 
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3177">ACCUMULO-3177</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-3439">ACCUMULO-3439</a> leverage this new feature.</p>
+
+<h1 id="notable-bug-fixes">Notable Bug Fixes</h1>
+
+<h2 id="sourceswitchingiterator-deadlock">SourceSwitchingIterator Deadlock</h2>
+
+<p>An instance of SourceSwitchingIterator, the Accumulo iterator which
+transparently manages whether data for a tablet read from memory (the
+in-memory map) or disk (HDFS after a minor compaction), was found deadlocked
+in a production system.</p>
+
+<p>This deadlock prevented the scan and the minor compaction from ever
+successfully completing without restarting the tablet server.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3745">ACCUMULO-3745</a> fixes the inconsistent synchronization inside
+of the SourceSwitchingIterator to prevent this deadlock from happening in the
+future.</p>
+
+<p>The only mitigation of this bug was to restart the tablet server that is
+deadlocked.</p>
+
+<h2 id="table-flush-blocked-indefinitely">Table flush blocked indefinitely</h2>
+
+<p>While running the Accumulo RandomWalk distributed test, it was observed that
+all activity in Accumulo had stopped and there was an offline Accumulo
+metadata table tablet. The system first tried to flush a user tablet, but the
+metadata table was not online (likely due to the agitation process which stops
+and starts Accumulo processes during the test). After this call, a call to
+load the metadata tablet was queued but could not complete until the previous
+flush call. Thus, a deadlock occurred.</p>
+
+<p>This deadlock happened because the synchronous flush call could not complete
+before the load tablet call completed, but the load tablet call couldn’t run
+because of connection caching we perform in Accumulo’s RPC layer to reduce the
+quantity of sockets we need to create to send data.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3597">ACCUMULO-3597</a> prevents this deadlock by forcing the use of a
+non-cached connection for the RPC message requesting a metadata tablet to be
+loaded.</p>
+
+<p>While this feature does result in additional network resources to be used, the
+concern is minimal because the number of metadata tablets is typically very
+small with respect to the total number of tablets in the system.</p>
+
+<p>The only mitigation of this bug was to restart the tablet server that is hung.</p>
+
+<h1 id="testing">Testing</h1>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. <em>Agitation</em> refers to
+randomly restarting Accumulo processes and Hadoop DataNode processes, and, in
+HDFS High-Availability instances, forcing NameNode fail-over.</p>
+
+<p>During testing, multiple Accumulo developers noticed some stability issues
+with HDFS using Apache Hadoop 2.6.0 when restarting Accumulo processes and
+HDFS datanodes. The developers investigated these issues as a part of the
+normal release testing procedures, but were unable to find a definitive cause
+of these failures. Users are encouraged to follow
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a> if they wish to follow any future developments.
+One possible workaround is to increase the <code class="highlighter-rouge">general.rpc.timeout</code> in the
+Accumulo configuration from <code class="highlighter-rouge">120s</code> to <code class="highlighter-rouge">240s</code>.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Gentoo</td>
+      <td>N/A</td>
+      <td>1</td>
+      <td>N/A</td>
+      <td>No</td>
+      <td>Unit and Integration Tests</td>
+    </tr>
+    <tr>
+      <td>Gentoo</td>
+      <td>2.6.0</td>
+      <td>1 (2 TServers)</td>
+      <td>3.4.5</td>
+      <td>No</td>
+      <td>24hr CI w/ agitation and verification, 24hr RW w/o agitation.</td>
+    </tr>
+    <tr>
+      <td>Centos 6.6</td>
+      <td>2.6.0</td>
+      <td>3</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>24hr RW w/ agitation, 24hr CI w/o agitation, 72hr CI w/ and w/o agitation</td>
+    </tr>
+    <tr>
+      <td>Amazon Linux</td>
+      <td>2.6.0</td>
+      <td>20 m1large</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>24hr CI w/o agitation</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

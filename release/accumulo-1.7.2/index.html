@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.7.2</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/user-manual/">User Manuals</a></li>
+          <li><a href="/javadocs/">Javadocs</a></li>
+          <li><a href="/examples/">Examples</a></li>
+          <li><a href="/notable_features">Features</a></li>
+          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/papers">Papers &amp; Presentations</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/news">News Archive</a></li>
+          <li><a href="/projects">Community Projects</a></li>
+          <li><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li><a href="/bylaws">Bylaws</a></li>
+          <li><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li><a href="/governance/releasing">Releasing</a></li>
+          <li><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li><a href="/source">Source &amp; Guide</a></li>
+          <li><a href="/git">Git Workflow</a></li>
+          <li><a href="/versioning">Versioning</a></li>
+          <li><a href="/contrib">Contrib Projects</a></li>
+          <li><a href="/rb">Review Board</a></li>
+          <li><a href="/releasing">Making Releases</a></li>
+          <li><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.7.2</h1>
+          
+          <p>22 Jun 2016</p>
+
+<p>Apache Accumulo 1.7.2 is a maintenance release on the 1.7 version branch. This
+release contains changes from more than 150 issues, comprised of bug-fixes,
+performance improvements, build quality improvements, and more. See
+<a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;version=12333776">JIRA</a> for a complete list.</p>
+
+<p>Below are resources for this release:</p>
+
+<ul>
+  <li><a href="/1.7/accumulo_user_manual.html">User Manual</a></li>
+  <li><a href="/1.7/apidocs">Javadocs</a></li>
+  <li><a href="/1.7/examples">Examples</a></li>
+</ul>
+
+<p>Users of any previous 1.7.x release are strongly encouraged to update as soon
+as possible to benefit from the improvements with very little concern in change
+of underlying functionality. Users of 1.6 or earlier that are seeking to
+upgrade to 1.7 should consider 1.7.2 as a starting point.</p>
+
+<h2 id="highlights">Highlights</h2>
+
+<h3 id="write-ahead-logs-can-be-prematurely-deleted">Write-Ahead Logs can be prematurely deleted</h3>
+
+<p>There were cases where the Accumulo Garbage Collector may inadvertently delete a WAL for a tablet server that it has erroneously determined to be down, causing data loss. This has been corrected. See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4157">ACCUMULO-4157</a> for additional detail.</p>
+
+<h3 id="upgrade-to-commons-vfs-21">Upgrade to Commons-VFS 2.1</h3>
+
+<p>Upgrading to Apache Commons VFS 2.1 fixes several issues with classloading out of HDFS. For further detail see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4146">ACCUMULO-4146</a>. Additional fixes to a potential HDFS class loading deadlock situation were made in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4341">ACCUMULO-4341</a>.</p>
+
+<h3 id="native-map-failed-to-increment-mutation-count-properly">Native Map failed to increment mutation count properly</h3>
+
+<p>There was a bug (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4148">ACCUMULO-4148</a>) where multiple put calls with identical keys and no timestamp would exhibit different behaviour depending on whether native maps were enabled or not. This behaviour would result in hidden mutations with native maps, and has been corrected.</p>
+
+<h3 id="open-wal-files-could-prevent-datanode-decomission">Open WAL files could prevent DataNode decomission</h3>
+
+<p>An improvement was introduced to allow a max age before WAL files would be automatically rolled. Without a max age, they could stay open for writing indefinitely, blocking the Hadoop DataNode decomissioning process. For more information, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4004">ACCUMULO-4004</a>.</p>
+
+<h3 id="remove-unnecessary-copy-of-cached-rfile-index-blocks">Remove unnecessary copy of cached RFile index blocks</h3>
+
+<p>Accumulo maintains an cache for file blocks in-memory as a performance optimization. This can be done safely because Accumulo RFiles are immutable, thus their blocks are also immutable. There are two types of these blocks: index and data blocks. Index blocks refer to the b-tree style index inside of each Accumulo RFile, while data blocks contain the sorted Key-Value pairs. In previous versions, when Accumulo extracted an Index block from the in-memory cache, it would copy the data. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4164">ACCUMULO-4164</a> removes this unnecessary copy as the contents are immutable and can be passed by reference. Ensuring that the Index blocks are not copied when accessed from the cache is a big performance gain at the file-access level.</p>
+
+<h3 id="analyze-key-length-to-avoid-choosing-large-keys-for-rfile-index-blocks">Analyze Key-length to avoid choosing large Keys for RFile Index blocks</h3>
+
+<p>Accumulo’s RFile index blocks are made up of a Key which exists in the file and points to that specific location in the corresponding RFile data block. Thus, the size of the RFile index blocks is largely dominated by the size of the Keys which are used by the index. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4314">ACCUMULO-4314</a> is an improvement which uses statistics on the length of the Keys in the Rfile to avoid choosing Keys for the index whose length is greater than three standard deviations for the RFile. By choosing smaller Keys for the index, Accumulo can access the RFile index faster and keep more Index blocks cached in memory. Initial tests showed that with this change, the RFile index size was nearly cut in half.</p>
+
+<h3 id="minor-performance-improvements">Minor performance improvements.</h3>
+
+<p>Tablet servers would previously always hsync at the start of a minor compaction, causing delays in the write pipeline. These additional syncs were determined to provide no additional durability guarantees and have been removed. See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4112">ACCUMULO-4112</a> for additional detail.</p>
+
+<p>A performance issue was identified and corrected (<a href="https://issues.apache.org/jira/browse/ACCUMULO-1755">ACCUMULO-1755</a>) where the BatchWriter would block calls to addMutation while looking up destination tablet server metadata. The writer has been fixed to allow both operations in parallel.</p>
+
+<h2 id="other-notable-changes">Other Notable Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3923">ACCUMULO-3923</a> bootstrap_hdfs.sh script would copy incorrect jars to hdfs.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4146">ACCUMULO-4146</a> Avoid copy of RFile Index Blocks when already in cache.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4155">ACCUMULO-4155</a> No longer publish javadoc for non-public API to website. (Still available in javadoc jars in maven)</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4173">ACCUMULO-4173</a> Provide balancer to balance table within subset of hosts.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4334">ACCUMULO-4334</a> Ingest rates reported through JMX did not match rates reported by Monitor.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4335">ACCUMULO-4335</a> Error conditions that result in a Halt should ensure non-zero process exit code.</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. <em>Agitation</em> refers to
+randomly restarting Accumulo processes and Hadoop Datanode processes, and, in
+HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS/Environment</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CentOS 7; EC2 m3.xlarge, d2.xlarge workers</td>
+      <td>2.6.3</td>
+      <td>9</td>
+      <td>3.4.8</td>
+      <td>No</td>
+      <td>24 HR Continuous Ingest with and without Agitation.</td>
+    </tr>
+    <tr>
+      <td>CentOS 6: EC2 m3.2xlarge</td>
+      <td>2.6.1</td>
+      <td>1</td>
+      <td>3.4.5</td>
+      <td>No</td>
+      <td>Unit tests and Integration Tests</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

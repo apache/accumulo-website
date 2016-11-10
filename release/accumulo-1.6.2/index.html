@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.6.2</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/user-manual/">User Manuals</a></li>
+          <li><a href="/javadocs/">Javadocs</a></li>
+          <li><a href="/examples/">Examples</a></li>
+          <li><a href="/notable_features">Features</a></li>
+          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/papers">Papers &amp; Presentations</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/news">News Archive</a></li>
+          <li><a href="/projects">Community Projects</a></li>
+          <li><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li><a href="/bylaws">Bylaws</a></li>
+          <li><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li><a href="/governance/releasing">Releasing</a></li>
+          <li><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li><a href="/source">Source &amp; Guide</a></li>
+          <li><a href="/git">Git Workflow</a></li>
+          <li><a href="/versioning">Versioning</a></li>
+          <li><a href="/contrib">Contrib Projects</a></li>
+          <li><a href="/rb">Review Board</a></li>
+          <li><a href="/releasing">Making Releases</a></li>
+          <li><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.6.2</h1>
+          
+          <p>16 Feb 2015</p>
+
+<p>Apache Accumulo 1.6.2 is a maintenance release on the 1.6 version branch.
+This release contains changes from over 150 issues, comprised of bug-fixes, performance
+improvements and better test cases. Apache Accumulo 1.6.2 is the first release since the
+community has adopted <a href="https://semver.org">Semantic Versioning</a> which means that all changes to the <a href="https://github.com/apache/accumulo#api">public API</a>
+are guaranteed to be made without adding to or removing from the public API. This ensures
+that client code that runs against 1.6.1 is guaranteed to run against 1.6.2 and vice versa.</p>
+
+<p>Users of 1.6.0 or 1.6.1 are strongly encouraged to update as soon as possible to benefit from
+the improvements with very little concern in change of underlying functionality. Users of 1.4 or 1.6
+are seeking to upgrade to 1.6 should consider 1.6.2 the starting point over 1.6.0 or 1.6.1. For
+information about improvements since Accumulo 1.5, see the <a href="/release_notes/1.6.0">1.6.0</a> and <a href="/release_notes/1.6.1">1.6.1</a> release notes.</p>
+
+<h2 id="notable-bug-fixes">Notable Bug Fixes</h2>
+
+<h3 id="only-first-zookeeper-server-is-used">Only first ZooKeeper server is used</h3>
+
+<p>In constructing a <code class="highlighter-rouge">ZooKeeperInstance</code>, the user provides a comma-separated list of addresses for ZooKeeper
+servers. 1.6.0 and 1.6.1 incorrectly truncated the provided list of ZooKeeper servers used to the first. This
+would cause clients to fail when the first ZooKeeper server in the list became unavailable and not properly
+load balance requests to all available servers in the quorum. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3218">ACCUMULO-3218</a> fixes the parsing of
+the ZooKeeper quorum list to use all servers, not just the first.</p>
+
+<h3 id="incorrectly-handled-zookeeper-exception">Incorrectly handled ZooKeeper exception</h3>
+
+<p>Use of ZooKeeper’s API requires very careful exception handling as some thrown exceptions from the ZooKeeper
+API are considered “normal” and must be retried by the client. In 1.6.1, Accumulo improved its handling of
+these “expected failures” to better insulate calls to ZooKeeper; however, the wrapper which sets data to a ZNode
+incorrectly handled all cases. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3448">ACCUMULO-3448</a> fixed the implementation of <code class="highlighter-rouge">ZooUtil.putData(...)</code> to handle
+the expected error conditions correctly.</p>
+
+<h3 id="scanid-is-not-set-in-activescan"><code class="highlighter-rouge">scanId</code> is not set in <code class="highlighter-rouge">ActiveScan</code></h3>
+
+<p>The <code class="highlighter-rouge">ActiveScan</code> class is the returned object by <code class="highlighter-rouge">InstanceOperations.listScans</code>. This class represents a
+“scan” running on Accumulo servers, either from a <code class="highlighter-rouge">Scanner</code> or <code class="highlighter-rouge">BatchScanner</code>. The <code class="highlighter-rouge">ActiveScan</code> class 
+is meant to represent all of the information that represents the scan and can be useful to administrators
+or DevOps-types to observe and act on scans which are running for excessive periods of time. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2641">ACCUMULO-2641</a>
+fixes <code class="highlighter-rouge">ActiveScan</code> to ensure that the internal identifier <code class="highlighter-rouge">scanId</code> is properly set.</p>
+
+<h3 id="table-state-change-doesnt-wait-when-requested">Table state change doesn’t wait when requested</h3>
+
+<p>An Accumulo table has two states: <code class="highlighter-rouge">ONLINE</code> and <code class="highlighter-rouge">OFFLINE</code>. An offline table in Accumulo consumes no TabletServer
+resources, only HDFS resources, which makes it useful to save infrequently used data. The Accumulo methods provided
+to transition a state from <code class="highlighter-rouge">ONLINE</code> to <code class="highlighter-rouge">OFFLINE</code> and vice versa did not respect the <code class="highlighter-rouge">wait=true</code> parameter
+when set. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3301">ACCUMULO-3301</a> fixes the underlying implementation to ensure that when <code class="highlighter-rouge">wait=true</code> is provided,
+the method will not return until the table’s state transition has fully completed.</p>
+
+<h3 id="keyvalue-doesnt-implement-hashcode-or-equals">KeyValue doesn’t implement <code class="highlighter-rouge">hashCode()</code> or <code class="highlighter-rouge">equals()</code></h3>
+
+<p>The <code class="highlighter-rouge">KeyValue</code> class is an implementation of <code class="highlighter-rouge">Entry&lt;Key,Value&gt;</code> which is returned by the classes like
+<code class="highlighter-rouge">Scanner</code> and <code class="highlighter-rouge">BatchScanner</code>. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3217">ACCUMULO-3217</a> adds these methods which ensure that the returned <code class="highlighter-rouge">Entry&lt;Key,Value&gt;</code>
+operates as expected with <code class="highlighter-rouge">HashMaps</code> and <code class="highlighter-rouge">HashSets</code>.</p>
+
+<h3 id="potential-deadlock-in-tabletserver">Potential deadlock in TabletServer</h3>
+
+<p>Internal to the TabletServer, there are methods to construct instances of configuration objects for tables
+and namespaces. The locking on these methods was not correctly implemented which created the possibility to
+have concurrent requests to a TabletServer to deadlock. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3372">ACCUMULO-3372</a> found this problem while performing
+bulk imports of RFiles into Accumulo. Additional synchronization was added server-side to prevent this deadlock
+from happening in the future.</p>
+
+<h3 id="the-datelexicoder-incorrectly-serialized-dates-prior-1970">The <code class="highlighter-rouge">DateLexicoder</code> incorrectly serialized <code class="highlighter-rouge">Dates</code> prior 1970</h3>
+
+<p>The <code class="highlighter-rouge">DateLexicode</code>, a part of the <code class="highlighter-rouge">Lexicoders</code> classes which implement methods to convert common type primitives
+into lexicographically sorting Strings/bytes, incorrectly converted <code class="highlighter-rouge">Date</code> objects for dates prior to 1970.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3385">ACCUMULO-3385</a> fixed the <code class="highlighter-rouge">DateLexicoder</code> to correctly (de)serialize data <code class="highlighter-rouge">Date</code> objects. For users with
+data stored in Accumulo using the broken implementation, the following can be performed to read the old data.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  Lexicoder lex = new ULongLexicoder();
+  for (Entry&lt;Key, Value&gt; e : scanner) {
+    Date d = new Date(lex.decode(TextUtil.getBytes(e.getKey().getRow())));
+    // ...
+  }
+</code></pre>
+</div>
+
+<h3 id="reduce-miniaccumulocluster-failures-due-to-random-port-allocations">Reduce MiniAccumuloCluster failures due to random port allocations</h3>
+
+<p><code class="highlighter-rouge">MiniAccumuloCluster</code> has had issues where it fails to properly start due to the way it attempts to choose
+a random, unbound port on the local machine to start the ZooKeeper and Accumulo processes. Improvements have
+been made, including retry logic, to withstand a few failed port choices. The changes made by <a href="https://issues.apache.org/jira/browse/ACCUMULO-3233">ACCUMULO-3233</a>
+and the related issues should eliminate sporadic failures users of <code class="highlighter-rouge">MiniAccumuloCluster</code> might have observed.</p>
+
+<h3 id="tracer-doesnt-handle-trace-table-state-transition">Tracer doesn’t handle trace table state transition</h3>
+
+<p>The Tracer is an optional Accumulo server process that serializes Spans, elements of a distributed trace,
+to the trace table for later inspection and correlation with other Spans. By default, the Tracer writes
+to a “trace” table. In earlier versions of Accumulo, if this table was put offline, the Tracer would fail
+to write new Spans to the table when it came back online. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3351">ACCUMULO-3351</a> ensures that the Tracer process
+will resume writing Spans to the trace table when it transitions to online after being offline.</p>
+
+<h3 id="tablet-not-major-compacting">Tablet not major compacting</h3>
+
+<p>It was noticed that a system performing many bulk imports, there was a tablet with hundreds of files which
+was not major compacting nor was scheduled to be major compacted. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3462">ACCUMULO-3462</a> identified as fix
+server-side which would prevent this from happening in the future.</p>
+
+<h3 id="yarn-job-submission-fails-with-hadoop-260">YARN job submission fails with Hadoop-2.6.0</h3>
+
+<p>Hadoop 2.6.0 introduced a new component, the TimelineServer, which is a centralized metrics service designed
+for other Hadoop components to leverage. MapReduce jobs submitted via <code class="highlighter-rouge">accumulo</code> and <code class="highlighter-rouge">tool.sh</code> failed to
+run the job because it attempted to contact the TimelineServer and Accumulo was missing a dependency on 
+the classpath to communicate with the TimelineServer. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3230">ACCUMULO-3230</a> updates the classpath in the example
+configuration files to include the necessary dependencies for the TimelineServer to ensure that YARN job
+submission operates as previously.</p>
+
+<h2 id="performance-improvements">Performance Improvements</h2>
+
+<h3 id="user-scans-can-block-root-and-metadata-table-scans">User scans can block root and metadata table scans</h3>
+
+<p>The TabletServer provides a feature to limit the number of open files as a resource management configuration.
+To perform a scan against a normal table, the metadata and root table, when not cached, need to be consulted
+first. With a sufficient number of concurrent scans against normal tables, adding to the open file count,
+scans against the metadata and root tables could be blocked from running because no files can be opened. 
+This prevents other system operations from happening as expected. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3297">ACCUMULO-3297</a> fixes the internal semaphore
+used to implement this resource management to ensure that root and metadata table scans can proceed.</p>
+
+<h2 id="other-improvements">Other improvements</h2>
+
+<h3 id="limit-available-ciphers-for-ssltls">Limit available ciphers for SSL/TLS</h3>
+
+<p>Since Apache Accumulo 1.5.2 and 1.6.1, the <a href="https://en.wikipedia.org/wiki/POODLE">POODLE</a> man-in-the-middle attack was found which exploits a client’s
+ability to fallback to the SSLv3.0 protocol. The main mitigation strategy was to prevent the use of old ciphers/protocols
+when using SSL connectors. In Accumulo, both the Apache Thrift RPC servers and Jetty server for the Accumulo
+monitor have the ability to enable SSL. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3316">ACCUMULO-3316</a> is the parent issue which provides new configuration
+properties in accumulo-site.xml which can limit the accepted ciphers/protocols. By default, insecure or out-dated
+protocols have been removed from the default set in order to protect users by default.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>Documentation was added to the Administration chapter for moving from a Non-HA Namenode setup to an HA Namenode setup. 
+New chapters were added for the configuration of SSL and for summaries of Implementation Details (initially describing 
+FATE operations). A section was added to the Configuration chapter for describing how to arrive at optimal settings
+for configuring an instance with native maps.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run 
+on any number of nodes. <em>Agitation</em> refers to randomly restarting Accumulo processes and Hadoop Datanode processes,
+and, in HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Gentoo</td>
+      <td>N/A</td>
+      <td>1</td>
+      <td>N/A</td>
+      <td>No</td>
+      <td>Unit and Integration Tests</td>
+    </tr>
+    <tr>
+      <td>Mac OSX</td>
+      <td>N/A</td>
+      <td>1</td>
+      <td>N/A</td>
+      <td>No</td>
+      <td>Unit and Integration Tests</td>
+    </tr>
+    <tr>
+      <td>Fedora 21</td>
+      <td>N/A</td>
+      <td>1</td>
+      <td>N/A</td>
+      <td>No</td>
+      <td>Unit and Integration Tests</td>
+    </tr>
+    <tr>
+      <td>CentOS 6</td>
+      <td>2.6</td>
+      <td>20</td>
+      <td>3.4.5</td>
+      <td>No</td>
+      <td>ContinuousIngest w/ verification w/ and w/o agitation (31B and 21B entries, respectively)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

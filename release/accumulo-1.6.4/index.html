@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.6.4</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/user-manual/">User Manuals</a></li>
+          <li><a href="/javadocs/">Javadocs</a></li>
+          <li><a href="/examples/">Examples</a></li>
+          <li><a href="/notable_features">Features</a></li>
+          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/papers">Papers &amp; Presentations</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/news">News Archive</a></li>
+          <li><a href="/projects">Community Projects</a></li>
+          <li><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li><a href="/bylaws">Bylaws</a></li>
+          <li><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li><a href="/governance/releasing">Releasing</a></li>
+          <li><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li><a href="/source">Source &amp; Guide</a></li>
+          <li><a href="/git">Git Workflow</a></li>
+          <li><a href="/versioning">Versioning</a></li>
+          <li><a href="/contrib">Contrib Projects</a></li>
+          <li><a href="/rb">Review Board</a></li>
+          <li><a href="/releasing">Making Releases</a></li>
+          <li><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.6.4</h1>
+          
+          <p>03 Oct 2015</p>
+
+<p>Apache Accumulo 1.6.4 is a maintenance release on the 1.6 version branch.
+This release contains changes from 21 issues, comprised of bug-fixes,
+performance improvements and better test cases. See <a href="https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12332840">JIRA</a> for a
+complete list.</p>
+
+<p>Users of any previous 1.6.x release are strongly encouraged to update as soon as
+possible to benefit from the improvements with very little concern in change
+of underlying functionality. Users of 1.4 or 1.5 that are seeking to upgrade
+to 1.6 should consider 1.6.4 as a starting point.</p>
+
+<h2 id="silent-data-loss-via-bulk-imported-files">Silent data-loss via bulk imported files</h2>
+
+<p>A user recently reported that a simple bulk-import application would occasionally
+lose some records. Through investigation, it was found that when bulk imports into
+a table failed the initial assignment, the logic that automatically retries the
+imports was incorrectly choosing the tablets to import the files into. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3967">ACCUMULO-3967</a>
+contains more information on the cause and identification of the bug. The data-loss
+condition would only affect entire files. If records from a file exist in Accumulo,
+it is still guaranteed that all records within that imported file were successful.</p>
+
+<p>As such, users who have bulk import applications using previous versions of Accumulo
+should verify that all of their data was correctly ingested into Accumulo and
+immediately update to Accumulo 1.6.4.</p>
+
+<h2 id="other-bug-fixes">Other bug fixes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3979">ACCUMULO-3979</a> Fixed an issue where the BulkImporter failed
+with an error message “QUERY_METADATA already started”.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3965">ACCUMULO-3965</a> The <code class="highlighter-rouge">listscans</code> shell command did not contain
+the <code class="highlighter-rouge">scanId</code> attribute for currently running scans.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3946">ACCUMULO-3946</a> Verified that all user-facing operations contained
+appropriate audit messages.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3977">ACCUMULO-3977</a> Isolated scans with Iterators in use incorrectly
+fail around invocation of <code class="highlighter-rouge">deepCopy</code>.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3905">ACCUMULO-3905</a> RowDeletingIterator functions incorrectly when
+columns are provided by the client. This restores intended functionality without
+the need for a <a href="https://issues.apache.org/jira/browse/ACCUMULO-1801?focusedCommentId=13970204&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13970204">workaround</a>.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3959">ACCUMULO-3959</a> <a href="https://issues.apache.org/jira/browse/ACCUMULO-3934">ACCUMULO-3934</a> Multiple documentation
+improvements to <code class="highlighter-rouge">BatchScanner</code>.</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. <em>Agitation</em> refers to
+randomly restarting Accumulo processes and Hadoop Datanode processes, and, in
+HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Amazon Linux 2014.09</td>
+      <td>2.6.0</td>
+      <td>20</td>
+      <td>3.4.5</td>
+      <td>No</td>
+      <td>ContinuousIngest w/ verification w/ and w/o agitation (37B entries)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.5.1</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/user-manual/">User Manuals</a></li>
+          <li><a href="/javadocs/">Javadocs</a></li>
+          <li><a href="/examples/">Examples</a></li>
+          <li><a href="/notable_features">Features</a></li>
+          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/papers">Papers &amp; Presentations</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/news">News Archive</a></li>
+          <li><a href="/projects">Community Projects</a></li>
+          <li><a href="/thanks">Thanks</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Governance</li>
+          <li><a href="/bylaws">Bylaws</a></li>
+          <li><a href="/governance/consensusBuilding">Consensus Building</a></li>
+          <li><a href="/governance/lazyConsensus">Lazy Consensus</a></li>
+          <li><a href="/governance/releasing">Releasing</a></li>
+          <li><a href="/governance/voting">Voting</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
+          <li class="divider"></li>
+          <li class="dropdown-header">Guides</li>
+          <li><a href="/source">Source &amp; Guide</a></li>
+          <li><a href="/git">Git Workflow</a></li>
+          <li><a href="/versioning">Versioning</a></li>
+          <li><a href="/contrib">Contrib Projects</a></li>
+          <li><a href="/rb">Review Board</a></li>
+          <li><a href="/releasing">Making Releases</a></li>
+          <li><a href="/verifying_releases">Verifying Releases</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.5.1</h1>
+          
+          <p>06 Mar 2014</p>
+
+<p>Apache Accumulo 1.5.1 is a maintenance release on the 1.5 version branch.
+This release contains changes from over 200 issues, comprised of bug fixes
+(client side and server side), new test cases, and updated Hadoop support
+contributed by over 30 different contributors and committers.
+As this is a maintenance release, Apache Accumulo 1.5.1 has no client API 
+incompatibilities over Apache Accumulo 1.5.0 and requires no manual upgrade 
+process. Users of 1.5.0 are strongly encouraged to update as soon as possible 
+to benefit from the improvements.</p>
+
+<h2 id="notable-improvements">Notable Improvements</h2>
+
+<p>While new features are typically not added in a bug-fix release as 1.5.1, the
+community does create a variety of improvements that are API compatible. Contained
+here are some of the more notable improvements.</p>
+
+<h3 id="permgen-leak-from-client-api">PermGen Leak from Client API</h3>
+
+<p>Accumulo’s client code creates background threads that users presently cannot 
+stop through the API. This is quick to cause problems when invoking the Accumulo
+API in application containers such as Apache Tomcat or JBoss and repeatedly 
+redeploying an application. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2128">ACCUMULO-2128</a> introduces a static utility, 
+org.apache.accumulo.core.util.CleanUp, that users can invoke as part of a 
+teardown hook in their container that will stop these threads and avoid 
+the eventual OutOfMemoryError “PermGen space”.</p>
+
+<h3 id="prefer-ipv4-when-starting-accumulo-processes">Prefer IPv4 when starting Accumulo processes</h3>
+
+<p>While Hadoop <a href="https://wiki.apache.org/hadoop/HadoopIPv6">does not support IPv6 networks</a>, attempting to run on a 
+system that does not have IPv6 completely disabled can cause strange failures.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-2262">ACCUMULO-2262</a> invokes the JVM-provided configuration parameter at process
+startup to prefer IPv4 over IPv6.</p>
+
+<h3 id="memory-units-in-configuration">Memory units in configuration</h3>
+
+<p>In previous versions, units of memory had to be provided as upper-case (e.g. ‘2G’, not ‘2g’).
+Additionally, a non-intuitive error was printed when a lower-case unit was provided.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-1933">ACCUMULO-1933</a> allows lower-case memory units in all Accumulo configurations.</p>
+
+<h3 id="apache-thrift-maximum-frame-size">Apache Thrift maximum frame size</h3>
+
+<p>Apache Thrift is used as the internal RPC service. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2360">ACCUMULO-2360</a> allows 
+users to configure the maximum frame size an Accumulo server will read. This 
+prevents non Accumulo client from connecting and causing memory exhaustion.</p>
+
+<h3 id="multitablebatchwriter-concurrency">MultiTableBatchWriter concurrency</h3>
+
+<p>The MultiTableBatchWriter is a class which allows multiple tables to be written to
+from a single object that maintains a single buffer for caching Mutations across all tables. This is desirable
+as it greatly simplifies the JVM heap usage from caching Mutations across
+many tables. Sadly, in Apache Accumulo 1.5.0, concurrent access to a single MultiTableBatchWriter
+heavily suffered from synchronization issues. <a href="https://issues.apache.org/jira/browse/ACCUMULO-1833">ACCUMULO-1833</a> introduces a fix
+which alleviates the blocking and idle-wait that previously occurred when multiple threads accessed
+a single MultiTableBatchWriter instance concurrently.</p>
+
+<h3 id="hadoop-versions">Hadoop Versions</h3>
+
+<p>Since Apache Accumulo 1.5.0 was released, Apache Hadoop 2.2.0 was also released
+as the first generally available (GA) Hadoop 2 release. This was a very exciting release
+for a number of reasons, but this also caused additional effort on Accumulo’s part to
+ensure that Apache Accumulo continues to work across multiple Hadoop versions. Apache Accumulo 1.5.1
+should function with any recent Hadoop 1 or Hadoop 2 without any special steps, tricks or instructions
+required.</p>
+
+<h2 id="notable-bug-fixes">Notable Bug Fixes</h2>
+
+<p>As with any Apache Accumulo release, we have numerous bug fixes that have been fixed. Most
+are very subtle and won’t affect the common user; however, some notable bugs were resolved 
+as a part of 1.5.1 that are rather common.</p>
+
+<h3 id="failure-of-zookeeper-server-in-quorum-kills-connected-accumulo-services">Failure of ZooKeeper server in quorum kills connected Accumulo services</h3>
+
+<p>Apache ZooKeeper provides a number of wonderful features that Accumulo uses to accomplish
+a variety of tasks, most notably a distributed locking service. Typically, multiple ZooKeeper
+servers are run to provide resilience against a certain number of node failures. <a href="https://issues.apache.org/jira/browse/ACCUMULO-1572">ACCUMULO-1572</a>
+resolves an issue where Accumulo processes would kill themselves when the ZooKeeper server they
+were communicating with died instead of failing over to another ZooKeeper server in the quorum.</p>
+
+<h3 id="monitor-table-state-isnt-updated">Monitor table state isn’t updated</h3>
+
+<p>The Accumulo Monitor contains a column for the state of each table in the Accumulo instance.
+The previous resolution was to restart the Monitor process when it got in this state.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-1920">ACCUMULO-1920</a> resolves an issue where the Monitor would not see updates from ZooKeeper.</p>
+
+<h3 id="two-locations-for-the-same-extent">Two locations for the same extent</h3>
+
+<p>The !METADATA table is the brains behind the data storage for each table, tracking information
+like which files comprise a Tablet, and which TabletServers are hosting which Tablets. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2057">ACCUMULO-2057</a>
+fixes an issue where the !METADATA table contained multiple locations (hosting server) for
+a single Tablet.</p>
+
+<h3 id="deadlock-on-metadata-tablet-unload">Deadlock on !METADATA tablet unload</h3>
+
+<p>Tablets are unloaded, typically, when a shutdown request is issued. <a href="https://issues.apache.org/jira/browse/ACCUMULO-1143">ACCUMULO-1143</a> resolves
+a potential deadlock issue when a merging-minor compaction is issued to flush in-memory data
+to disk before unloading a Tablet.</p>
+
+<h3 id="other-notable-fixes">Other notable fixes</h3>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1800">ACCUMULO-1800</a> Fixed deletes made via the Proxy.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1994">ACCUMULO-1994</a> Fixed ranges in the Proxy.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2234">ACCUMULO-2234</a> Fixed offline map reduce over non default HDFS location.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1615">ACCUMULO-1615</a> Fixed <code class="highlighter-rouge">service accumulo-tserver stop</code>.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1876">ACCUMULO-1876</a> Fixed issues depending on Accumulo using Apache Ivy.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2261">ACCUMULO-2261</a> Duplicate locations for a Tablet.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2037">ACCUMULO-2037</a> Tablets assigned to previous location.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1821">ACCUMULO-1821</a> Avoid recovery on recovering Tablets.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2078">ACCUMULO-2078</a> Incorrectly computed ACCUMULO_LOG_HOST in example configurations.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1985">ACCUMULO-1985</a> Configuration to bind Monitor on all network interfaces.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1999">ACCUMULO-1999</a> Allow ‘0’ to signify random port for the Master.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1630">ACCUMULO-1630</a> Fixed GC to interpret any IP/hostname.</li>
+</ul>
+
+<h2 id="known-issues">Known Issues</h2>
+
+<p>When using Accumulo 1.5 and Hadoop 2, Accumulo will call hsync() on HDFS.
+Calling hsync improves durability by ensuring data is on disk (where other older 
+Hadoop versions might lose data in the face of power failure); however, calling
+hsync frequently does noticably slow writes. A simple work around is to increase 
+the value of the tserver.mutation.queue.max configuration parameter via accumulo-site.xml.</p>
+
+<p>A value of “4M” is a better recommendation, and memory consumption will increase by
+the number of concurrent writers to that TabletServer. For example, a value of 4M with
+50 concurrent writers would equate to approximately 200M of Java heap being used for
+mutation queues.</p>
+
+<p>For more information, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-1950">ACCUMULO-1950</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-1905?focusedCommentId=13915208&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13915208">this comment</a>.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>The following documentation updates were made:</p>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1956">ACCUMULO-1956</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1428">ACCUMULO-1428</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1687">ACCUMULO-1687</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2141">ACCUMULO-2141</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1946">ACCUMULO-1946</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2223">ACCUMULO-2223</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2226">ACCUMULO-2226</a></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1470">ACCUMULO-1470</a></li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Below is a list of all platforms that 1.5.1 was tested against by developers. Each Apache Accumulo release
+has a set of tests that must be run before the candidate is capable of becoming an official release. That list includes the following:</p>
+
+<ol>
+  <li>Successfully run all unit tests</li>
+  <li>Successfully run all functional test (test/system/auto)</li>
+  <li>Successfully complete two 24-hour RandomWalk tests (LongClean module), with and without “agitation”</li>
+  <li>Successfully complete two 24-hour Continuous Ingest tests, with and without “agitation”, with data verification</li>
+  <li>Successfully complete two 72-hour Continuous Ingest tests, with and without “agitation”</li>
+</ol>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run 
+on any number of nodes. <em>Agitation</em> refers to randomly restarting Accumulo processes and Hadoop Datanode processes,
+and, in HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS High-Availability</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CentOS 6.5</td>
+      <td>HDP 2.0 (Apache 2.2.0)</td>
+      <td>6</td>
+      <td>HDP 2.0 (Apache 3.4.5)</td>
+      <td>Yes (QJM)</td>
+      <td>All required tests</td>
+    </tr>
+    <tr>
+      <td>CentOS 6.4</td>
+      <td>CDH 4.5.0 (2.0.0+cdh4.5.0)</td>
+      <td>7</td>
+      <td>CDH 4.5.0 (3.4.5+cdh4.5.0)</td>
+      <td>Yes (QJM)</td>
+      <td>Unit, functional and 24hr Randomwalk w/ agitation</td>
+    </tr>
+    <tr>
+      <td>CentOS 6.4</td>
+      <td>CDH 4.5.0 (2.0.0+cdh4.5.0)</td>
+      <td>7</td>
+      <td>CDH 4.5.0 (3.4.5+cdh4.5.0)</td>
+      <td>Yes (QJM)</td>
+      <td>2x 24/hr continuous ingest w/ verification</td>
+    </tr>
+    <tr>
+      <td>CentOS 6.3</td>
+      <td>Apache 1.0.4</td>
+      <td>1</td>
+      <td>Apache 3.3.5</td>
+      <td>No</td>
+      <td>Local testing, unit and functional tests</td>
+    </tr>
+    <tr>
+      <td>RHEL 6.4</td>
+      <td>Apache 2.2.0</td>
+      <td>10</td>
+      <td>Apache 3.4.5</td>
+      <td>No</td>
+      <td>Functional tests</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
