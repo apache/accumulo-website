@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Examples Archive</title>
+<title>Verifying a Release</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -93,13 +93,13 @@
         <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href="/user-manual/">User Manuals</a></li>
-          <li><a href="/javadocs/">Javadocs</a></li>
-          <li><a href="/examples/">Examples</a></li>
-          <li><a href="/notable_features">Features</a></li>
-          <li><a href="/screenshots">Screenshots</a></li>
+          <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+          <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+          <li><a href="/1.8/examples">Examples (1.8)</a></li>
+          <li><a href="/features">Features</a></li>
           <li><a href="/papers">Papers &amp; Presentations</a></li>
           <li><a href="/glossary">Glossary</a></li>
+          <li><a href="/docs-archive/">Archive</a></li>
         </ul>
         </li>
         <li class="dropdown">
@@ -108,28 +108,9 @@
           <li><a href="/get_involved">Get Involved</a></li>
           <li><a href="/mailing_list">Mailing Lists</a></li>
           <li><a href="/people">People</a></li>
-          <li><a href="/news">News Archive</a></li>
-          <li><a href="/projects">Community Projects</a></li>
-          <li><a href="/thanks">Thanks</a></li>
+          <li><a href="/projects">Related Projects</a></li>
+          <li><a href="/contributor/">Contributor Guide</a></li>
           <li><a href="/governance/">Governance</a></li>
-        </ul>
-        </li>
-        <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="https://issues.apache.org/jira/browse/ACCUMULO">Issue Tracker <i class="fa fa-external-link"></i></a></li>
-          <li><a href="https://github.com/apache/accumulo/pulls">Pull Requests <i class="fa fa-external-link"></i></a></li>
-          <li><a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins Builds <i class="fa fa-external-link"></i></a></li>
-          <li><a href="https://travis-ci.org/apache/accumulo">TravisCI Builds <i class="fa fa-external-link"></i></a></li>
-          <li class="divider"></li>
-          <li class="dropdown-header">Guides</li>
-          <li><a href="/source">Source &amp; Guide</a></li>
-          <li><a href="/git">Git Workflow</a></li>
-          <li><a href="/versioning">Versioning</a></li>
-          <li><a href="/contrib">Contrib Projects</a></li>
-          <li><a href="/rb">Review Board</a></li>
-          <li><a href="/releasing">Making Releases</a></li>
-          <li><a href="/verifying_releases">Verifying Releases</a></li>
         </ul>
         </li>
       </ul>
@@ -160,15 +141,94 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Accumulo Examples Archive</h1>
+          <h1 class="title">Verifying a Release</h1>
           
-          <ul>
-  <li><a href="/1.8/examples">Apache Accumulo 1.8 Examples</a></li>
-  <li><a href="/1.7/examples">Apache Accumulo 1.7 Examples</a></li>
-  <li><a href="/1.6/examples">Apache Accumulo 1.6 Examples</a></li>
-  <li><a href="/1.5/examples">Apache Accumulo 1.5 Examples</a></li>
-  <li><a href="/1.4/examples">Apache Accumulo 1.4 Examples</a></li>
+          <p>This is a guide for the verification of a release candidate of Apache Accumulo. These steps are meant to encapsulate
+the requirements of the PMC set forth by the Foundation itself.</p>
+
+<p>The information here is meant to be an application of Foundation policy. When in doubt or conflict, any Foundation-level
+trumps anything written here.</p>
+
+<p>Verification of a release candidate can be broken down into three categories.</p>
+
+<h2 id="accumulo-correctness">Accumulo Correctness</h2>
+
+<p>Testing a distributed database is, arguably, the easiest of these requirements.</p>
+
+<p>Accumulo contains unit and integration tests which can be automatically run via Maven. These tests can be invoked
+by issues the following commands:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ mvn verify
+</code></pre>
+</div>
+
+<p>Additionally, Accumulo contains multiple distributed tests, most notably the RandomWalk and ContinuousIngest tests.
+Information on these tests can be found in their respective directories, <code class="highlighter-rouge">test/system/randomwalk</code> and
+ <code class="highlighter-rouge">test/system/continuous</code>, which include instructions on how to run the tests. These tests are intended to be run
+for days on end while injecting faults into the system. These are the tests that truly verify the correctness of
+Accumulo on real systems.</p>
+
+<p>More information on these tests, and the requirements in running them for a given release, can be found on the
+<a href="/governance/releasing#testing">governance page on releasing</a></p>
+
+<h2 id="foundation-level-requirements">Foundation Level Requirements</h2>
+
+<p>The ASF requires that all artifacts in a release are cryptographically signed and distributed with hashes.</p>
+
+<p>OpenPGP is an asymmetric encryption scheme which lends itself well to the globally distributed nature of Apache.
+Verification of a release artifact can be done using the signature and the release-maker’s public key. Hashes
+can be verified using the appropriate command (e.g. <code class="highlighter-rouge">sha1sum</code>, <code class="highlighter-rouge">md5sum</code>).</p>
+
+<p>An Apache release must contain a source-only artifact. This is the official release artifact. While a release of
+an Apache project can contain other artifacts that do contain binary files. These non-source artifacts are for
+user convenience only, but still must adhere to the same licensing rules.</p>
+
+<p>PMC members should take steps to verify that the source-only artifact does not contain any binary files. There is
+some leeway in this rule. For example, test-only binary artifacts (such as test files or jars) are acceptable as long
+as they are only used for testing the software and not running it.</p>
+
+<p>The following are the aforementioned Foundation-level documents provided for reference:</p>
+
+<ul>
+  <li><a href="https://www.apache.org/dev/apply-license">Applying the Apache Software License</a></li>
+  <li><a href="https://www.apache.org/legal/src-headers">Legal’s license application guidelines</a></li>
+  <li><a href="https://www.apache.org/legal/resolved">Common legal-discuss mailing list questions/resolutions</a></li>
+  <li><a href="https://www.apache.org/legal">ASF Legal Affairs Page</a></li>
 </ul>
+
+<h2 id="apache-software-license-application">Apache Software License Application</h2>
+
+<p>Application of the Apache Software License v2 consists of the following steps on each artifact in a release. It’s
+important to remember that for artifacts that contain other artifacts (e.g. a tarball that contains JAR files or
+an RPM which contains JAR files), both the tarball, RPM and JAR files are subject to the following roles.</p>
+
+<p>The difficulty in verifying each artifact is that, often times, each artifact requires a different LICENSE and NOTICE
+file. For example, the Accumulo binary tarball must contain appropriate LICENSE and NOTICE files considering the bundled
+jar files in <code class="highlighter-rouge">lib/</code>. The Accumulo source tarball would not contain these same contents in the LICENSE and NOTICE files
+as it does not contain those same JARs.</p>
+
+<h3 id="license-file">LICENSE file</h3>
+
+<p>The LICENSE file should be present at the top-level of the artifact. This file should be explicitly named <code class="highlighter-rouge">LICENSE</code>,
+however <code class="highlighter-rouge">LICENSE.txt</code> is acceptable but not preferred. This file contains the text of the Apache Software License 
+at the top of the file. At the bottom of the file, all other open source licenses <em>contained in the given
+artifact</em> must be listed at the bottom of the LICENSE file. Contained components that are licensed with the ASL themselves
+do not need to be included in this file. It is common to see inclusions in file such as the MIT License of 3-clause
+BSD License.</p>
+
+<h3 id="notice-file">NOTICE file</h3>
+
+<p>The NOTICE file should be present at the top-level of the artifact beside the LICENSE file. This file should be explicitly
+name <code class="highlighter-rouge">NOTICE</code>, while <code class="highlighter-rouge">NOTICE.txt</code> is also acceptable but not preferred. This file contains the copyright notice for
+the artifact being released. As a reminder, the copyright is held by the Apache Software Foundation, not the individual
+project.</p>
+
+<p>The second purpose this file serves is to distribute third-party notices from dependent software. Specifically, other code
+which is licensed with the ASLv2 may also contain a NOTICE file. If such an artifact which contains a NOTICE file is
+contained in artifact being verified for releases, the contents of the contained artifact’s NOTICE file should be appended
+to this artifact’s NOTICE file. For example, Accumulo bundles the Apache Thrift libthrift JAR file which also have its
+own NOTICE file. The contents of the Apache Thrift NOTICE file should be included within Accumulo’s NOTICE file.</p>
+
 
         </div>
 
