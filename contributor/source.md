@@ -29,7 +29,7 @@ Accumulo has a number of [contrib projects][contrib] that maintain their own cod
 ### Website
 
 Accumulo's web site is developed using [Jekyll][jekyll]. Development is
-performed by editing the contents of the [gh-pages][gh-pages] branch, either
+performed by editing the contents of the [accumulo-website master][website-branch] branch, either
 directly by a committer, with a pull request to [GitHub][github], or a patch
 submitted to [JIRA][jiraloc]. The rendered site can be previewed locally or on
 [GitHub][site-mirror], and the rendered site (in the `_site` directory) will be
@@ -66,7 +66,7 @@ For preview convenience and consistent builds and testing, build using a
 version which looks the same locally and on GitHub.
 
 A [post-commit hook][hook] is available for you to automatically create a
-commit in the `asf-site` branch locally each time you commit to the `gh-pages`
+commit in the `asf-site` branch locally each time you commit to the `master`
 branch. You can also run this command manually:
 
     ./_devtools/git-hooks/post-commit
@@ -213,11 +213,11 @@ Accumulo's release guide can be found [here][release].
 [cgit]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=summary
 [contrib]: {{ "/contributor/contrib-projects" | relative_url }}
 [devlist]: mailto:dev@accumulo.apache.org
-[gh-pages]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=tree;h=gh-pages
+[website-branch]: https://git-wip-us.apache.org/repos/asf?p=accumulo-website.git;a=tree;h=master
 [git-instr]: https://git-wip-us.apache.org
 [git]: https://git-scm.com
 [github]: https://github.com/apache/accumulo
-[hook]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=_devtools/git-hooks/post-commit;hb=gh-pages
+[hook]: https://git-wip-us.apache.org/repos/asf?p=accumulo-website.git;a=blob_plain;f=_devtools/git-hooks/post-commit;hb=master
 [intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
 [jekyll]: https://jekyllrb.com
 [jenkins]: https://jenkins.io
