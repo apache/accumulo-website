@@ -9,9 +9,26 @@ them visibility to a larger audience. To have you project listed here, send a re
 
 ## Open source projects using Accumulo
 
-#### Fluo
+#### Apache Fluo
 
 [Fluo](https://fluo.apache.org) builds on Accumulo and enables low latency, continuous incremental processing of big data.
+
+#### Apache Gora
+
+[Gora](https://gora.apache.org/) open source framework provides an in-memory data model and persistence for big data.  Accumulo's continuous ingest test suite was adapted to Gora and called [Goraci](http://gora.apache.org/current/index.html#goraci-integration-testsing-suite).
+
+#### Apache Hive
+
+[Hive](https://hive.apache.org/) data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL.
+Hive has the ability to read and write data in Accumulo using the [AccumuloStorageHandler](https://cwiki.apache.org/confluence/display/Hive/AccumuloIntegration).
+
+#### Apache Pig
+
+[Pig](http://pig.apache.org/) is a platform for analyzing large data sets that consists of a high-level language for expressing data analysis programs, coupled with infrastructure for evaluating these programs.  Pig has the ability to read and write data in Accumulo using [AccumuloStorage](http://pig.apache.org/docs/r0.16.0/func.html#AccumuloStorage).
+
+#### Apache Rya
+
+[Rya](http://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
 
 #### Geomesa
 
@@ -19,33 +36,16 @@ them visibility to a larger audience. To have you project listed here, send a re
 
 #### Geowave
 
-[Geowave](https://ngageoint.github.io/geowave/) is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore. 
-
-#### Gora
-
-[Gora](https://gora.apache.org/) open source framework provides an in-memory data model and persistence for big data.  Accumulo's continuous ingest test suite was adapted to Gora and called [Goraci](http://gora.apache.org/current/index.html#goraci-integration-testsing-suite).
+[Geowave](https://ngageoint.github.io/geowave/) is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore.
 
 #### Graphulo
 
 Graphulo is a Java library for Apache Accumulo which delivers server-side sparse matrix math primitives that
 enable higher-level graph algorithms and analytics. [Code](https://github.com/Accla/graphulo).
 
-#### Hive
-
-[Hive](https://hive.apache.org/) data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL.
-Hive has the ability to read and write data in Accumulo using the [AccumuloStorageHandler](https://cwiki.apache.org/confluence/display/Hive/AccumuloIntegration).
-
-#### Pig
-
-[Pig](http://pig.apache.org/) is a platform for analyzing large data sets that consists of a high-level language for expressing data analysis programs, coupled with infrastructure for evaluating these programs.  Pig has the ability to read and write data in Accumulo using [AccumuloStorage](http://pig.apache.org/docs/r0.16.0/func.html#AccumuloStorage).
-
 #### Presto
 
 [Presto](https://prestodb.io/) is an open source distributed SQL query engine for running interactive analytic queries against data sources of all sizes, ranging from gigabytes to petabytes.  Through the use of the new Accumulo connector for Presto, users are able to execute traditional SQL queries against new and existing tables in Accumulo.  For more information, see the [Accumulo Connector](https://prestodb.io/docs/current/connector/accumulo.html) documentation.
-
-#### Rya
-
-[Rya](http://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
 
 #### Timely
 
@@ -61,7 +61,7 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 [Trendulo](http://trendulo.com/) is Twitter trend analysis using Apache Accumulo. The [source code](https://github.com/jaredwinick/Trendulo) is publicly available.
 
-#### Wikisearch 
+#### Wikisearch
 
 The [Wikisearch project]({{ site.baseurl }}/example/wikisearch) is a rough example of generalized secondary indexing, both ingest
 and search, built on top of Apache Accumulo. This write contains more information on the project as well as some
