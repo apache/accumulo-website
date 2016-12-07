@@ -77,6 +77,13 @@ ProxyInstance is a Java Instance implementation of the Accumulo Instance interfa
 an Accumulo cluster via Accumulo's Apache Thrift proxy server. [Documentation](https://jhuapl.github.io/accumulo-proxy-instance/proxy_instance_user_manual) and
 [code](https://github.com/JHUAPL/accumulo-proxy-instance) are available.
 
+#### AccumuloGraph
+
+ProxyInstance is an implementation of the TinkerPop Blueprints 2.6 API using
+Apache Accumulo as the backend.
+[Documentation](https://jhuapl.github.io/AccumuloGraph/) and
+[code](https://github.com/JHUAPL/AccumuloGraph) are available.
+
 ## Github
 
 [Github](https://github.com/search?q=accumulo&type=Repositories) also contains many projects that use/reference Accumulo
