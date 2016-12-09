@@ -1,6 +1,7 @@
 ---
 title: People
 skiph1fortitle: true
+permalink: /people/
 ---
 
 ## PMC and Committers

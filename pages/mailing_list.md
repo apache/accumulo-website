@@ -1,5 +1,6 @@
 ---
 title: Mailing Lists
+permalink: /mailing_list/
 ---
 
 All Accumulo mailing lists are in the accumulo.apache.org domain. Please note

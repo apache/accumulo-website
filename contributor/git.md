@@ -349,9 +349,7 @@ API.
 By convention, the branch containing the changes `z'` should be named
 `x.y` (where the changes for `z'` are commits since `x.y.z`. The steps to take are as follows:
 
-1. Prepare the release candidate. [Release
-   Guide]({{ site.baseurl }}/governance/releasing), [Maven
-   Instructions]({{ site.baseurl }}/releasing)
+1. [Make a release candidate][making]
 2. Create a branch for the release candidate from the `x.y` branch,
    named something like `x.y.z'-RCN`.
 3. Test and Vote
@@ -371,7 +369,7 @@ the `z` value back to `0`.
 
 The steps to create a new major release are very similar to a minor release:
 
-1. Prepare the release candidate. _reference release instructions_
+1. [Make a release candidate][making]
 2. Create a tag of the release candidate from the `x.y` branch,
    named something like `x.y.0-RCN`.
 3. Test and Vote
@@ -450,4 +448,4 @@ For the sake of clarity, some examples of common situations are included below.
 
 
 [1]: https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow
-
+[making]: {{ site.baseurl }}/contributor/making-release

@@ -1,6 +1,8 @@
 ---
 title: Bylaws
-redirect_from: /bylaws
+redirect_from: 
+  - /bylaws
+  - /governance/bylaws
 ---
 
 This is version 3 of the bylaws. Community work actively continues on the bylaws, and so key segments of them are subject to change.
@@ -87,7 +89,7 @@ At a minimum, a release manager is responsible for packaging a release candidate
 * determine if a re-plan may be needed and, if so, call a vote
 * call votes on release candidates
 
-[Release guidelines][release-guidelines] and [details on the mechanics of creating an Accumulo release][release-mechanics] are available on the Accumulo project site.
+Details on [making][making] and [verifying][verifying] a release are available on the Accumulo website.
 
 # Decision Making
 
@@ -184,10 +186,10 @@ All dates in a plan are estimates, as unforeseen issues may require delays. The 
 [pmc-guide]: https://www.apache.org/dev/pmc
 [release-pub]: https://www.apache.org/dev/release-publishing
 [release-manager]: https://www.apache.org/dev/release-publishing#release_manager
-[release-guidelines]: governance/releasing
-[release-mechanics]: releasing
-[voting]: governance/voting
+[making]: {{ "/contributor/making-release" | relative_url }}
+[verifying]: {{ "/contributor/verifying-release" | relative_url }}
+[voting]: {{ "/contributor/voting" | relative_url }}
 [ctr]: #commit-then-review-ctr
 [committer-terms]: https://www.apache.org/dev/committers#committer-set-term
 [pmc-removal]: https://www.apache.org/dev/pmc#pmc-removal
-[lazy]: governance/lazyConsensus
+[lazy]: {{ "/contributor/lazyConsensus" | relative_url }}

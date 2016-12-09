@@ -2,28 +2,48 @@
 title: Contributor Guide
 ---
 
-This page contains resources and documentation for Accumulo contributors.
+This page contains resources and documentation for Accumulo contributors. Any documentation that is helpful
+to Accumulo users should go in the [Accumulo User Manual][manual].
 
-Any documentation that is helpful to Accumulo users should be placed in the [user manual][manual].
+## External project resources
 
-* [JIRA] - Accumulo's Issue Tracker
-* [GitHub] - Pull requests can be made on GitHub
-* [Jenkins] & [TravisCI] - Accumulo build servers
-* [Source Guide]({{ "/contributor/source" | relative_url }})
-* [Git Workflow]({{ "/contributor/git" | relative_url }})
-* [Versioning]({{ "/contributor/versioning" | relative_url }})
-* [Contrib Projects]({{ "/contributor/contrib-projects" | relative_url }})
-* [Review Board]({{ "/contributor/rb" | relative_url }})
+* [JIRA] for tracking issues
+* [GitHub] for code reviews (via pull requests)
+* [Jenkins] & [TravisCI] for automated builds
 
-Below are resources for Accumulo committers which may also be helpful to contributors.
+## Development docs
 
-* [Making Releases][making]
-* [Verifying Releases][verifying]
+* [Source Guide][source]
+* [Git Workflow][git]
+* [Versioning][versioning]
+* [Contrib Projects][contrib-projects]
+* [Review Board][rb]
+
+## Release guides
+
+* [Making a release][making]
+* [Verifying a release][verifying]
+
+## Project governance
+
+* [Bylaws](/contributor/bylaws)
+* [Consensus Building](/contributor/consensusBuilding)
+* [Lazy Consensus](/contributor/lazyConsensus)
+* [Voting](/contributor/voting)
 
 [manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
 [JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [TravisCI]: https://travis-ci.org/apache/accumulo
-[making]: {{ "/contributor/releasing" | relative_url }}
-[verifying]: {{ "/contributor/verifying_releases" | relative_url }}
+[source]: {{ "/contributor/source" | relative_url }}
+[git]: {{ "/contributor/git" | relative_url }}
+[versioning]: {{ "/contributor/versioning" | relative_url }}
+[contrib-projects]: {{ "/contributor/contrib-projects" | relative_url }}
+[rb]: {{ "/contributor/rb" | relative_url }}
+[making]: {{ "/contributor/making-release" | relative_url }}
+[verifying]: {{ "/contributor/verifying-release" | relative_url }}
+[bylaws]: {{ "/contributor/bylaws" | relative_url }}
+[consensus-building]: {{ "/contributor/consensusBuilding" | relative_url }}
+[lazyConsensus]: {{ "/contributor/lazyConsensus" | relative_url }}
+[voting]: {{ "/contributor/voting" | relative_url }}

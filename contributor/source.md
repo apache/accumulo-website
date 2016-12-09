@@ -202,10 +202,6 @@ Accumulo has [guidelines for using Review Board][rb] to support code reviews.
 
  * Formatter [plugin][intellij-formatter] that uses eclipse code style xml.
 
-### Release Guide
-
-Accumulo's release guide can be found [here][release].
-
 [16build]: https://builds.apache.org/job/Accumulo-1.6
 [17build]: https://builds.apache.org/job/Accumulo-1.7
 [1]: https://creadur.apache.org/rat/apache-rat-plugin
@@ -228,7 +224,6 @@ Accumulo's release guide can be found [here][release].
 [maven]: https://maven.apache.org
 [pom]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
 [rb]: {{ "/contributor/rb" | relative_url }}
-[release]: {{ "/governance/releasing" | relative_url }}
 [site-canon]: https://accumulo.apache.org
 [site-mirror]: http://apache.github.io/accumulo
 [srcheaders]: https://www.apache.org/legal/src-headers

@@ -1,9 +1,9 @@
 ---
 title: Release Archive
-permalink: "/release/"
+permalink: /release/
 redirect_from: 
-  - "/release_notes/"
-  - "/release_notes.html"
+  - /release_notes/
+  - /release_notes.html
 ---
 
 <div>

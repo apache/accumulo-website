@@ -1,5 +1,6 @@
 ---
 title: News Archive
+permalink: /news/
 redirect_from: /blog/
 ---
 

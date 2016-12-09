@@ -1,6 +1,9 @@
 ---
 title: Making a Release
-redirect_from: /releasing
+redirect_from: 
+  - /releasing
+  - /contributor/releasing
+  - /governance/releasing
 ---
 
 This is a guide for the creation of a release of Apache Accumulo. 
@@ -66,11 +69,21 @@ will make it publicly available for other members to inspect.
 ## Vote
 
 At this point, you should have a closed repository that's ready to vote on. Send a message to [the dev
-list](mailto:dev@accumulo.apache.org) and get the ball rolling. If the vote ultimately fails, you delete
-the staged repository, clean up the branch you created (or wait until the release ultimately passes if you
-choose), and fix what needs fixing.
+list](mailto:dev@accumulo.apache.org) and get the ball rolling. Developers should test and verify the
+release candidate on their own. Accumulo has a guide for [verifying releases][verify].
 
-If the vote passes, huzzah, you're almost done.
+Lazy consensus is not sufficient for a release; at least 3 +1 votes from PMC members are required. All
+checksums and signatures need to be verified before any voter can +1 it. Voting shall last 72 hours. Voters
+SHOULD include with their vote details on the tests from the testing section they have successfully run.
+If given, said details for each test MUST include: the number of worker nodes in the cluster, the operating system
+and version, the Hadoop version, and the Zookeeper version.  For testing done on a version other than the release
+candidate that is deemed relevant, include the commit hash. All such gathered testing information will be included
+in the release notes. 
+
+If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
+until the release ultimately passes if you choose), and fix what needs fixing.
+
+If the vote passes, follow the steps below.
 
 ## Promote the artifacts 
 
@@ -83,7 +96,6 @@ The Git repository should also contain a tag which refers to the final commit wh
 should also be signed with your GPG key. To ensure proper retention on release (stemming from ASF policy
 requirements), This final tag *must* being with "rel/". For example, a release of 1.7.0 should have a corresponding
 tag name of "rel/1.7.0".
-
 
 ## Copy artifacts to dist.apache.org
 
@@ -103,9 +115,8 @@ After a successful vote, this website needs to be updated with the new artifacts
 
   * Copy Accumulo User Manual (HTML version exists in >=1.7.0)
   * Update downloads page
-  * Create release notes (ensure notes contain link to JIRA changes for that version)
+  * Create a post in `_posts/release/` containing release notes (ensure notes contain link to JIRA changes for that version)
   * Remove previous bug-fix release (if applicable)
-  * Update examples README files
   * Update doap_Accumulo.rdf
 
 ### Javadocs
@@ -125,6 +136,15 @@ to avoid known [vulnerabilities][7]), follow these steps:
 10. Don't forget to push both the `master` and `asf-site` branches back to the accumulo-website repo
 11. Verify that javadocs have been updated on the production site (e.g. https://accumulo.apache.org/1.6/apidocs/)
 
+## Update Accumulo Examples
+
+After the release has been made, the Accumulo version used by [Accumulo Examples][examples] should be updated
+if this is the latest release of Accumulo.
+
+ * Update the `accumulo.version` property in `pom.xml` of accumulo-examples
+ * Run `mvn clean verify` to confirm that nothing breaks
+ * Run one of the examples for additinal testing.
+
 ## References
 
 Some good references that explain a few things:
@@ -132,15 +152,14 @@ Some good references that explain a few things:
 - [Christopher talks about making releases][3]
 - [Publishing Maven Artifacts][4]
 - [Publishing Releases][5]
-- [Accumulo Release Guide][6]
-
 
 [1]: https://www.apache.org/dev/release-signing
 [2]: https://repository.apache.org
 [3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
 [4]: https://www.apache.org/dev/publishing-maven-artifacts
 [5]: https://www.apache.org/dev/release-publishing
-[6]: {{ site.baseurl }}/governance/releasing
 [7]: https://www.kb.cert.org/vuls/id/225657
 [8]: https://www.apache.org/dev/cmsref#extpaths
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
+[verify]: {{ "/contributor/verifying-release" | relative_url }}
+[examples]: https://github.com/apache/accumulo-examples

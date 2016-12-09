@@ -1,6 +1,10 @@
 ---
-title: Related Links
+title: External Documentation
+permalink: /external-docs/
+redirect_from: /papers
 ---
+
+This page contains links to external documentation that may be useful to Accumulo users.
 
 ## Papers and Presentations
 
@@ -40,19 +44,16 @@ $("#citationtable").dataTable();
 });
 </script>
 
-## Conferences and Meetups
- - Accumulo Summit:
-    - [Summit Website](http://accumulosummit.com)
-    - [2014 Accumulo Summit Slides](https://www.slideshare.net/AccumuloSummit)
- - IEEE HPEC
-    - [Conference Website](http://ieee-hpec.org/)
+## Slides from Conferences and Meetups
+
+ - [Accumulo Summit Slides](https://www.slideshare.net/AccumuloSummit)
  - Strata + Hadoop World Meetup 24 Oct 2012
     - [Accumulo standalone AMI](https://aws.amazon.com/amis/accumulo-standalone-20121019)
     - [Large-scale web analytics with Accumulo (and Nutch/Gora, Pig, and Storm)](https://www.slideshare.net/jasontrost/accumulo-at-endgame)
     - [Compaction and Splitting in Accumulo](https://www.slideshare.net/hortonworks/compaction-and-splitting-in-apache-accumulo)
 
-
 ## Blog Posts and Writeups
+
  - [Codebits Blogs](http://affy.blogspot.com/search?q=accumulo&by-date=true)
     - [Implement Word Count in Accumulo](http://affy.blogspot.com/2012/04/implement-word-count-in-accumulo.html)
     - [Using Accumulo To Calculate Seven Day Rolling Average](http://affy.blogspot.com/2012/04/using-accumulo-to-calculate-seven-day.html)
@@ -64,21 +65,18 @@ $("#citationtable").dataTable();
  - [Accumulo on EC2](http://www.accumulodata.com/ec2.html)
 
 ## Books
+
  - [Apache Accumulo for Developers (Packt Publishing)](https://www.packtpub.com/apache-accumulo-for-developers/book)
  - [Accumulo: Application Development, Table Design, and Best Practices (O'Reilly Media)](https://shop.oreilly.com/product/0636920032304.do)
 
-## Meetup Groups
- - [Accumulo Users Group - DC VA MD](https://www.meetup.com/Accumulo-Users-DC/)
- - [Search for more](https://www.meetup.com/find/?keywords=accumulo)
-
 ## Reference
+
  - [Log-Structured Merge Tree](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&rep=rep1&type=pdf)
  - [BigTable](https://research.google.com/archive/bigtable.html)
  - [GFS](https://research.google.com/archive/gfs.html)
  - [Chubby](https://research.google.com/archive/chubby.html)
  - [Dapper](https://research.google.com/pubs/pub36356.html)
  - [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter)
-
 
 [p01]: https://arxiv.org/abs/1506.08506
 [p02]: https://arxiv.org/abs/1506.08505

@@ -1,5 +1,7 @@
 ---
 title: Related Projects
+permalink: /related-projects/
+redirect_from: /projects
 ---
 
 The Apache Accumulo community is happy to promote and encourage use of Accumulo in ways that are novel and reusable

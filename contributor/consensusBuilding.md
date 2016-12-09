@@ -1,5 +1,6 @@
 ---
 title: Consensus Building
+redirect_from: /governance/consensusBuilding
 ---
 
 In some cases there is no obvious path to take, or you might be a new community, 
@@ -49,4 +50,4 @@ or not.
 Once there is a clear consensus members of the community can proceed with 
 the work under the [lazy consensus][1] model.
 
-[1]: {{ site.baseurl }}/governance/lazyConsensus
+[1]: {{ site.baseurl }}/contributor/lazyConsensus

@@ -1,5 +1,6 @@
 ---
 title: Get Involved
+permalink: /get_involved/
 ---
 
 You don't need to be a software developer to contribute to 
@@ -29,17 +30,22 @@ as easy as possible for people to get involved.
 
 Want to get started now? Check out [open issues labeled for "newbies"][1]. If you need help, use the mailing list information below to reach out. If the issue you choose deals with code, you should read the developer's guide section.
 
-## Mailing lists and Meetups
+## Mailing lists and chat
 
 Your first engagement with the project should be to subscribe to our
-[mailing lists][2].  You can also [look for Accumulo Meetups][3] in your area. 
-Apache Accumulo developers and community members hang out in the #accumulo 
-channel on irc.freenode.net.
+[mailing lists][2].  Apache Accumulo developers and community members
+hang out in the #accumulo channel on irc.freenode.net.
 
 ## Contributor Guide
 
 See the [contributor guide][4] for recommended practices in interacting with our source code.
 Take a look at [Accumulo's Ohloh page][5] for an analysis of the code base.
+
+## Conferences and Meetups
+
+* [Accumulo Summit](http://accumulosummit.com)
+* [Accumulo Users Group - DC VA MD](https://www.meetup.com/Accumulo-Users-DC/)
+* Look for [Accumulo Meetups in your area](https://www.meetup.com/find/?keywords=accumulo)
 
 ## Community Interaction
 
@@ -87,7 +93,7 @@ to approve a release.
 [4]: {{ site.baseurl }}/contributor/
 [5]: https://www.ohloh.net/p/accumulo
 [6]: http://www.betaversion.org/~stefano/papers/ac2006.2.pdf
-[7]: {{ site.baseurl }}/governance/lazyConsensus
-[8]: {{ site.baseurl }}/governance/consensusBuilding
-[9]: {{ site.baseurl }}/governance/lazyConsensus
-[10]: {{ site.baseurl }}/governance/voting
+[7]: {{ site.baseurl }}/contributor/lazyConsensus
+[8]: {{ site.baseurl }}/contributor/consensusBuilding
+[9]: {{ site.baseurl }}/contributor/lazyConsensus
+[10]: {{ site.baseurl }}/contributor/voting
