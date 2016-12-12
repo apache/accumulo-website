@@ -1,5 +1,6 @@
 ---
 title: Downloads
+permalink: /downloads/
 ---
 
 <script type="text/javascript">

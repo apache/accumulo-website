@@ -42,8 +42,8 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### Graphulo
 
-Graphulo is a Java library for Apache Accumulo which delivers server-side sparse matrix math primitives that
-enable higher-level graph algorithms and analytics. [Code](https://github.com/Accla/graphulo).
+[Graphulo](https://github.com/Accla/graphulo) is a Java library for Apache Accumulo which delivers server-side sparse matrix math primitives that
+enable higher-level graph algorithms and analytics.
 
 #### Presto
 
@@ -51,7 +51,7 @@ enable higher-level graph algorithms and analytics. [Code](https://github.com/Ac
 
 #### Timely
 
-[Timely](https://nationalsecurityagency.github.io/timely/) : A secure time series database based on Accumulo and Grafana.
+[Timely](https://nationalsecurityagency.github.io/timely/) is a secure time series database based on Accumulo and Grafana.
 
 #### Uno and Muchos
 
@@ -65,7 +65,7 @@ enable higher-level graph algorithms and analytics. [Code](https://github.com/Ac
 
 #### Wikisearch
 
-The [Wikisearch project]({{ site.baseurl }}/example/wikisearch) is a rough example of generalized secondary indexing, both ingest
+[Wikisearch](https://github.com/apache/accumulo-wikisearch) is a rough example of generalized secondary indexing, both ingest
 and search, built on top of Apache Accumulo. This write contains more information on the project as well as some
 general performance numbers of the project.
 

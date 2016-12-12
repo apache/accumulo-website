@@ -33,8 +33,8 @@ stack. The Wikisearch application provides an example of indexing and querying
 Wikipedia data within Accumulo. It is a great place to start if you want to get
 familiar with good development practices building on Accumulo. 
 
-For details on setting up the application, see the project&apos;s README. You can
-also read [an overview and some performance numbers][wikisearch].
+For details on setting up the application, see the project&apos;s [README.md][wiki-readme]
+where you can also read an overview and some performance numbers.
 
 The Apache Accumulo Wikisearch Example uses [Git][gitbook] version control
 ([browse][wikisearch-browse]|[checkout][wikisearch-checkout]). It builds with
@@ -74,7 +74,7 @@ codebase][examples-simple] and the related published documentation for versions
 [instamo-browse]: https://git-wip-us.apache.org/repos/asf?p=accumulo-instamo-archetype.git;a=summary
 [instamo-checkout]: https://git-wip-us.apache.org/repos/asf/accumulo-instamo-archetype.git
 [maven-proj]: https://maven.apache.org
-[wikisearch]: example/wikisearch
+[wiki-readme]: https://github.com/apache/accumulo-wikisearch/blob/master/README.md
 [wikisearch-browse]: https://git-wip-us.apache.org/repos/asf?p=accumulo-wikisearch.git;a=summary
 [wikisearch-checkout]: https://git-wip-us.apache.org/repos/asf/accumulo-wikisearch.git
 [bsp-alg]: https://hama.apache.org/hama_bsp_tutorial
