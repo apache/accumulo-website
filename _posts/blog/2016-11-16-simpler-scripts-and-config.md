@@ -1,7 +1,6 @@
 ---
 title: "Simpler scripts and configuration coming in Accumulo 2.0.0"
 author: Mike Walch
-reviewers: Josh Elser, Chistopher Tubbs
 ---
 
 For the upcoming 2.0.0 release, Accumulo's scripts and configuration [were refactored][ACCUMULO-4490]
