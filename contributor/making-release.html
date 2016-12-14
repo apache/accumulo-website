@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Making a Release</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+          <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+          <li><a href="/1.8/examples">Examples (1.8)</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+          <li><a href="/external-docs">External Docs</a></li>
+          <li><a href="/docs-archive/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/related-projects">Related Projects</a></li>
+          <li><a href="/contributor/">Contributor Guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Making a Release</h1>
+          
+          <p>This is a guide for the creation of a release of Apache Accumulo.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>There are number of things that are required before attempting to build a release.</p>
+
+<ol>
+  <li>Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn’t require re-authentication mid-build, as it will cause things to fail. For example, you can add <code class="highlighter-rouge">default-cache-ttl 6000</code> to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough <a href="https://www.apache.org/dev/release-signing">ASF release signing documentation</a>.</li>
+  <li>Ensure that you’re using the correct major release of Java (check javadoc too).</li>
+  <li>Ensure that you’re building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
+the maven-release-plugin and staging the release candidate).</li>
+  <li>Update the CHANGES file so that it’s in sync with Jira (manual process).</li>
+  <li>Ensure that you have a texlive distribution installed so you are able to build the documentation.</li>
+  <li>Have a clean workspace before starting.</li>
+</ol>
+
+<p>Given all of this, it’s recommended that you only attempt making a release from a GNU/Linux machine.</p>
+
+<h2 id="create-the-candidate">Create the candidate</h2>
+
+<p><strong>TL;DR</strong></p>
+
+<ul>
+  <li><code class="highlighter-rouge">./assemble/build.sh --create-release-candidate</code> to make the release candidate</li>
+  <li><code class="highlighter-rouge">git tag $version $version-rcN</code> to create an RC tag from the actual tag</li>
+  <li><code class="highlighter-rouge">git tag -d $version</code> make sure you don’t accidentally push a “release” tag</li>
+  <li><code class="highlighter-rouge">git push origin $version-rcN</code> push the RC tag</li>
+  <li><code class="highlighter-rouge">git checkout -b $version-rcN-branch</code> save off the branch from the Maven release plugin</li>
+  <li><strong>VOTE</strong></li>
+  <li><em>If vote fails</em>, fix the original branch and start over.</li>
+  <li><em>If vote passes</em>, <code class="highlighter-rouge">git merge $version-rcN-branch</code> back into the original branch you released from.</li>
+  <li><code class="highlighter-rouge">git tag -s $version-rcN $version</code> make a GPG-signed tag</li>
+  <li><code class="highlighter-rouge">git push origin $version</code> push the signed tag.</li>
+</ul>
+
+<p><strong>Long-winded explanation</strong></p>
+
+<p>You should use the provided script assemble/build.sh to create the release candidate. This script is
+desirable as it activates all necessary maven profiles in addition to verifying that certain preconditions
+are met, like RPM signing availablilty and the ability to sign files using GPG. The –test option can 
+be used as a dry run for creating a release candidate. The –create-release-candidate option should be 
+used to create the actual release candidate.</p>
+
+<p>When invoking build.sh with the –create-release-candidate option, the majority of the work will be performed
+by the maven-release-plugin, invoking <em>release:clean</em>, <em>release:prepare</em>, and <em>release:perform</em>. These will
+guide you through choosing the correct versions. The default options provided should be what you choose.
+It is highly recommended that an ‘RC’ suffix is <em>not</em> appended to the release version the plugin prompts
+you for, as that will result in that version string being placed into the poms, which then would require 
+voting to occur on artifacts that cannot be directly promoted. After the build.sh script finishes (this will 
+likely take at least 15 minutes, even on recent hardware), your current branch will be on the “next” version 
+that you provided to the release plugin.</p>
+
+<p>One unwanted side-effect of this approach is that after creating this branch, but <em>before invoking release:perform</em>,
+you must edit the release.properties to add the <em>-rcN</em> suffix to the value of scm.tag. Otherwise, the release
+plugin will complain that it cannot find the branch for the release. With a successful invocation of <em>mvn release:perform</em>,
+a staging repository will be made for you on the <a href="https://repository.apache.org">ASF Nexus server</a> which you can log into with your ASF 
+credentials.</p>
+
+<p>After you log into Nexus, click on <em>Staging Repositories</em> in the <em>Build Promotion</em> toolbar on the left side of
+the screen. Assuming your build went according to plan, you should have a new staging repository made for
+you. At this point, you should inspect the artifacts that were staged to ensure that they are as you expect
+them to be. When you’re ready to present those artifacts for voting, you need to close that repository which
+will make it publicly available for other members to inspect.</p>
+
+<h2 id="vote">Vote</h2>
+
+<p>At this point, you should have a closed repository that’s ready to vote on. Send a message to <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;">the dev
+list</a> and get the ball rolling. Developers should test and verify the
+release candidate on their own. Accumulo has a guide for <a href="/contributor/verifying-release">verifying releases</a>.</p>
+
+<p>Lazy consensus is not sufficient for a release; at least 3 +1 votes from PMC members are required. All
+checksums and signatures need to be verified before any voter can +1 it. Voting shall last 72 hours. Voters
+SHOULD include with their vote details on the tests from the testing section they have successfully run.
+If given, said details for each test MUST include: the number of worker nodes in the cluster, the operating system
+and version, the Hadoop version, and the Zookeeper version.  For testing done on a version other than the release
+candidate that is deemed relevant, include the commit hash. All such gathered testing information will be included
+in the release notes.</p>
+
+<p>If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
+until the release ultimately passes if you choose), and fix what needs fixing.</p>
+
+<p>If the vote passes, follow the steps below.</p>
+
+<h2 id="promote-the-artifacts">Promote the artifacts</h2>
+
+<p>Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
+a process to get the release out to all of the mirrors.</p>
+
+<h2 id="create-the-final-git-tag">Create the final Git tag</h2>
+
+<p>The Git repository should also contain a tag which refers to the final commit which made up a release. This tag
+should also be signed with your GPG key. To ensure proper retention on release (stemming from ASF policy
+requirements), This final tag <em>must</em> being with “rel/”. For example, a release of 1.7.0 should have a corresponding
+tag name of “rel/1.7.0”.</p>
+
+<h2 id="copy-artifacts-to-distapacheorg">Copy artifacts to dist.apache.org</h2>
+
+<p>An SVN server is running at https://dist.apache.org/repos/dist/release/accumulo. You need to upload the release
+tarballs, the GPG signatures and checksum files to the correct directory (based on the release number). If you
+are releasing a bug-fix release, be sure to delete the previous release in the same line (e.g. if you release
+1.6.2, remove 1.6.1). The old tarballs removed from dist.apache.org will still be preserved in archive.apache.org
+automatically.</p>
+
+<h2 id="update-projectsapacheorg">Update projects.apache.org</h2>
+
+<p>Fill out the <a href="https://reporter.apache.org/addrelease?accumulo">add release</a> form to update the projects website.</p>
+
+<h2 id="update-the-website">Update the Website</h2>
+
+<p>After a successful vote, this website needs to be updated with the new artifacts.</p>
+
+<ul>
+  <li>Copy Accumulo User Manual (HTML version exists in &gt;=1.7.0)</li>
+  <li>Update downloads page</li>
+  <li>Create a post in <code class="highlighter-rouge">_posts/release/</code> containing release notes (ensure notes contain link to JIRA changes for that version)</li>
+  <li>Remove previous bug-fix release (if applicable)</li>
+  <li>Update doap_Accumulo.rdf</li>
+</ul>
+
+<h3 id="javadocs">Javadocs</h3>
+
+<p>Javadocs are easy to update. Using the latest JDK7 or later (at least JDK 7u21
+to avoid known <a href="https://www.kb.cert.org/vuls/id/225657">vulnerabilities</a>), follow these steps:</p>
+
+<ol>
+  <li>Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release</li>
+  <li>Build the javadocs with <code class="highlighter-rouge">mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs</code></li>
+  <li>Take note that the javadocs you will need to copy are the entire contents of <code class="highlighter-rouge">./target/site/apidocs/</code></li>
+  <li>In a different directory, checkout the <code class="highlighter-rouge">master</code> branch of the accumulo-website repo</li>
+  <li>Remove any existing apidocs from the appropriate version folder (e.g. 1.6/apidocs for a 1.6.x release)</li>
+  <li>Copy the entire contents of the new apidocs directory (identified in step 3) to the destination in the website branch (e.g. to 1.6/apidocs)</li>
+  <li>Continue updating the site content, as needed</li>
+  <li>Commit the changes</li>
+  <li>Update the site using jekyll with <code class="highlighter-rouge">./_devtools/git-hooks/post-commit</code> (if you don’t have the commit hook already configured)</li>
+  <li>Don’t forget to push both the <code class="highlighter-rouge">master</code> and <code class="highlighter-rouge">asf-site</code> branches back to the accumulo-website repo</li>
+  <li>Verify that javadocs have been updated on the production site (e.g. https://accumulo.apache.org/1.6/apidocs/)</li>
+</ol>
+
+<h2 id="update-accumulo-examples">Update Accumulo Examples</h2>
+
+<p>After the release has been made, the Accumulo version used by <a href="https://github.com/apache/accumulo-examples">Accumulo Examples</a> should be updated
+if this is the latest release of Accumulo.</p>
+
+<ul>
+  <li>Update the <code class="highlighter-rouge">accumulo.version</code> property in <code class="highlighter-rouge">pom.xml</code> of accumulo-examples</li>
+  <li>Run <code class="highlighter-rouge">mvn clean verify</code> to confirm that nothing breaks</li>
+  <li>Run one of the examples for additinal testing.</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<p>Some good references that explain a few things:</p>
+
+<ul>
+  <li><a href="https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E">Christopher talks about making releases</a></li>
+  <li><a href="https://www.apache.org/dev/publishing-maven-artifacts">Publishing Maven Artifacts</a></li>
+  <li><a href="https://www.apache.org/dev/release-publishing">Publishing Releases</a></li>
+</ul>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

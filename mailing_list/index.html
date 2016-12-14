@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Verifying a Release</title>
+<title>Mailing Lists</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -97,8 +97,8 @@
           <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
           <li><a href="/1.8/examples">Examples (1.8)</a></li>
           <li><a href="/features">Features</a></li>
-          <li><a href="/papers">Papers &amp; Presentations</a></li>
           <li><a href="/glossary">Glossary</a></li>
+          <li><a href="/external-docs">External Docs</a></li>
           <li><a href="/docs-archive/">Archive</a></li>
         </ul>
         </li>
@@ -108,9 +108,8 @@
           <li><a href="/get_involved">Get Involved</a></li>
           <li><a href="/mailing_list">Mailing Lists</a></li>
           <li><a href="/people">People</a></li>
-          <li><a href="/projects">Related Projects</a></li>
+          <li><a href="/related-projects">Related Projects</a></li>
           <li><a href="/contributor/">Contributor Guide</a></li>
-          <li><a href="/governance/">Governance</a></li>
         </ul>
         </li>
       </ul>
@@ -141,93 +140,53 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Verifying a Release</h1>
+          <h1 class="title">Mailing Lists</h1>
           
-          <p>This is a guide for the verification of a release candidate of Apache Accumulo. These steps are meant to encapsulate
-the requirements of the PMC set forth by the Foundation itself.</p>
+          <p>All Accumulo mailing lists are in the accumulo.apache.org domain. Please note
+that search providers linked on this page are not part of the <a href="https://lists.apache.org">official Apache
+mailing list archives</a>.</p>
 
-<p>The information here is meant to be an application of Foundation policy. When in doubt or conflict, any Foundation-level
-trumps anything written here.</p>
-
-<p>Verification of a release candidate can be broken down into three categories.</p>
-
-<h2 id="accumulo-correctness">Accumulo Correctness</h2>
-
-<p>Testing a distributed database is, arguably, the easiest of these requirements.</p>
-
-<p>Accumulo contains unit and integration tests which can be automatically run via Maven. These tests can be invoked
-by issues the following commands:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>$ mvn verify
-</code></pre>
-</div>
-
-<p>Additionally, Accumulo contains multiple distributed tests, most notably the RandomWalk and ContinuousIngest tests.
-Information on these tests can be found in their respective directories, <code class="highlighter-rouge">test/system/randomwalk</code> and
- <code class="highlighter-rouge">test/system/continuous</code>, which include instructions on how to run the tests. These tests are intended to be run
-for days on end while injecting faults into the system. These are the tests that truly verify the correctness of
-Accumulo on real systems.</p>
-
-<p>More information on these tests, and the requirements in running them for a given release, can be found on the
-<a href="/governance/releasing#testing">governance page on releasing</a></p>
-
-<h2 id="foundation-level-requirements">Foundation Level Requirements</h2>
-
-<p>The ASF requires that all artifacts in a release are cryptographically signed and distributed with hashes.</p>
-
-<p>OpenPGP is an asymmetric encryption scheme which lends itself well to the globally distributed nature of Apache.
-Verification of a release artifact can be done using the signature and the release-maker’s public key. Hashes
-can be verified using the appropriate command (e.g. <code class="highlighter-rouge">sha1sum</code>, <code class="highlighter-rouge">md5sum</code>).</p>
-
-<p>An Apache release must contain a source-only artifact. This is the official release artifact. While a release of
-an Apache project can contain other artifacts that do contain binary files. These non-source artifacts are for
-user convenience only, but still must adhere to the same licensing rules.</p>
-
-<p>PMC members should take steps to verify that the source-only artifact does not contain any binary files. There is
-some leeway in this rule. For example, test-only binary artifacts (such as test files or jars) are acceptable as long
-as they are only used for testing the software and not running it.</p>
-
-<p>The following are the aforementioned Foundation-level documents provided for reference:</p>
-
-<ul>
-  <li><a href="https://www.apache.org/dev/apply-license">Applying the Apache Software License</a></li>
-  <li><a href="https://www.apache.org/legal/src-headers">Legal’s license application guidelines</a></li>
-  <li><a href="https://www.apache.org/legal/resolved">Common legal-discuss mailing list questions/resolutions</a></li>
-  <li><a href="https://www.apache.org/legal">ASF Legal Affairs Page</a></li>
-</ul>
-
-<h2 id="apache-software-license-application">Apache Software License Application</h2>
-
-<p>Application of the Apache Software License v2 consists of the following steps on each artifact in a release. It’s
-important to remember that for artifacts that contain other artifacts (e.g. a tarball that contains JAR files or
-an RPM which contains JAR files), both the tarball, RPM and JAR files are subject to the following roles.</p>
-
-<p>The difficulty in verifying each artifact is that, often times, each artifact requires a different LICENSE and NOTICE
-file. For example, the Accumulo binary tarball must contain appropriate LICENSE and NOTICE files considering the bundled
-jar files in <code class="highlighter-rouge">lib/</code>. The Accumulo source tarball would not contain these same contents in the LICENSE and NOTICE files
-as it does not contain those same JARs.</p>
-
-<h3 id="license-file">LICENSE file</h3>
-
-<p>The LICENSE file should be present at the top-level of the artifact. This file should be explicitly named <code class="highlighter-rouge">LICENSE</code>,
-however <code class="highlighter-rouge">LICENSE.txt</code> is acceptable but not preferred. This file contains the text of the Apache Software License 
-at the top of the file. At the bottom of the file, all other open source licenses <em>contained in the given
-artifact</em> must be listed at the bottom of the LICENSE file. Contained components that are licensed with the ASL themselves
-do not need to be included in this file. It is common to see inclusions in file such as the MIT License of 3-clause
-BSD License.</p>
-
-<h3 id="notice-file">NOTICE file</h3>
-
-<p>The NOTICE file should be present at the top-level of the artifact beside the LICENSE file. This file should be explicitly
-name <code class="highlighter-rouge">NOTICE</code>, while <code class="highlighter-rouge">NOTICE.txt</code> is also acceptable but not preferred. This file contains the copyright notice for
-the artifact being released. As a reminder, the copyright is held by the Apache Software Foundation, not the individual
-project.</p>
-
-<p>The second purpose this file serves is to distribute third-party notices from dependent software. Specifically, other code
-which is licensed with the ASLv2 may also contain a NOTICE file. If such an artifact which contains a NOTICE file is
-contained in artifact being verified for releases, the contents of the contained artifact’s NOTICE file should be appended
-to this artifact’s NOTICE file. For example, Accumulo bundles the Apache Thrift libthrift JAR file which also have its
-own NOTICE file. The contents of the Apache Thrift NOTICE file should be included within Accumulo’s NOTICE file.</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Read</th>
+      <th>Follow</th>
+      <th>Post</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>user</strong></td>
+      <td>General user questions, help, and announcements</td>
+      <td><a class="btn btn-primary btn-xs" href="https://lists.apache.org/list.html?user@accumulo.apache.org"><span class="glyphicon glyphicon-search"></span> Archive</a></td>
+      <td><a class="btn btn-success btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#117;&#115;&#101;&#114;&#045;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-plus"></span> Subscribe</a> <a class="btn btn-danger btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#117;&#115;&#101;&#114;&#045;&#117;&#110;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</a></td>
+      <td><a class="btn btn-warning btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#117;&#115;&#101;&#114;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-envelope"></span> Post</a></td>
+    </tr>
+    <tr>
+      <td><strong>dev</strong></td>
+      <td>Contributor discussions and development activity</td>
+      <td><a class="btn btn-primary btn-xs" href="https://lists.apache.org/list.html?dev@accumulo.apache.org"><span class="glyphicon glyphicon-search"></span> Archive</a></td>
+      <td><a class="btn btn-success btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#045;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-plus"></span> Subscribe</a> <a class="btn btn-danger btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#045;&#117;&#110;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</a></td>
+      <td><a class="btn btn-warning btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#118;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-envelope"></span> Post</a></td>
+    </tr>
+    <tr>
+      <td><strong>commits</strong></td>
+      <td>Code changes</td>
+      <td><a class="btn btn-primary btn-xs" href="https://lists.apache.org/list.html?commits@accumulo.apache.org"><span class="glyphicon glyphicon-search"></span> Archive</a></td>
+      <td><a class="btn btn-success btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#111;&#109;&#109;&#105;&#116;&#115;&#045;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-plus"></span> Subscribe</a> <a class="btn btn-danger btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#111;&#109;&#109;&#105;&#116;&#115;&#045;&#117;&#110;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</a></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>notifications</strong></td>
+      <td>Automated notifications (JIRA, etc.)</td>
+      <td><a class="btn btn-primary btn-xs" href="https://lists.apache.org/list.html?notifications@accumulo.apache.org"><span class="glyphicon glyphicon-search"></span> Archive</a></td>
+      <td><a class="btn btn-success btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#110;&#111;&#116;&#105;&#102;&#105;&#099;&#097;&#116;&#105;&#111;&#110;&#115;&#045;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-plus"></span> Subscribe</a> <a class="btn btn-danger btn-xs" href="&#109;&#097;&#105;&#108;&#116;&#111;:&#110;&#111;&#116;&#105;&#102;&#105;&#099;&#097;&#116;&#105;&#111;&#110;&#115;&#045;&#117;&#110;&#115;&#117;&#098;&#115;&#099;&#114;&#105;&#098;&#101;&#064;&#097;&#099;&#099;&#117;&#109;&#117;&#108;&#111;&#046;&#097;&#112;&#097;&#099;&#104;&#101;&#046;&#111;&#114;&#103;"><span class="glyphicon glyphicon-remove"></span> Unsubscribe</a></td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 
         </div>
