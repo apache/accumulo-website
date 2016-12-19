@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Running Accumulo on Fedora 25</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"/></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/release/accumulo-1.8.0/">1.8.0 (Latest)</a></li>
+          <li><a href="/release/accumulo-1.7.2/">1.7.2</a></li>
+          <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+          <li><a href="/release/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+          <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+          <li><a href="/1.8/examples">Examples (1.8)</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/glossary">Glossary</a></li>
+          <li><a href="/external-docs">External Docs</a></li>
+          <li><a href="/docs-archive/">Archive</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/get_involved">Get Involved</a></li>
+          <li><a href="/mailing_list">Mailing Lists</a></li>
+          <li><a href="/people">People</a></li>
+          <li><a href="/related-projects">Related Projects</a></li>
+          <li><a href="/contributor/">Contributor Guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+          <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Running Accumulo on Fedora 25</h1>
+          
+          <table>
+<tr><td><b>Author</b></td><td>&nbsp;&nbsp;Christopher Tubbs and Mike Miller </td></tr>
+<tr><td><b>Date </b></td><td> &nbsp;&nbsp;19 Dec 2016 </td></tr>
+<tr><td><b>Reviewer(s) </b></td><td> &nbsp;&nbsp;Keith Turner, Mike Walch </td></tr>
+</table>
+<p>
+
+<p>Apache Accumulo has been available in <a href="https://getfedora.org/">Fedora</a> since F20. Recently, the Fedora
+packages have been updated to Accumulo version <code class="highlighter-rouge">1.6.6</code> and have made some
+improvements to the default configuration and launch scripts to provide a good
+out-of-box experience. This post will discuss the basic setup procedures for
+running Accumulo in the latest version, <code class="highlighter-rouge">Fedora 25</code>.</p>
+
+<h2 id="prepare-the-system">Prepare the system</h2>
+
+<p><strong>WARNING</strong>: Before you start, be sure you’ve got plenty of free disk space.
+Otherwise, you could run into this <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1404888">bug</a> or see other problems.</p>
+
+<p>These instructions will assume you’re using Fedora 25, fully up-to-date (<code class="highlighter-rouge">sudo
+dnf --refresh upgrade</code>).</p>
+
+<h3 id="install-packages">Install packages</h3>
+
+<p>Fedora provides a meta-package to install Accumulo and all of its dependencies.
+It’s a good idea to install the JDK, so you’ll have access to the <code class="highlighter-rouge">jps</code>
+command, and <code class="highlighter-rouge">tuned</code> for setting system performance tuning parameters from a
+profile. It’s also a good idea to ensure the optional hadoop native libraries
+are installed, and you have a good editor (replace <code class="highlighter-rouge">vim</code> with your preferred
+editor):</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo dnf install accumulo java-1.8.0-openjdk-devel tuned vim hadoop-common-native
+</code></pre>
+</div>
+
+<p>It is possible to install only a specific Accumulo service. For the single node
+setup, almost everything is needed. For the multi-node setup, it might make
+more sense to be selective about which you choose to install on each node (for
+example, to only install <code class="highlighter-rouge">accumulo-tserver</code>).</p>
+
+<h3 id="set-up-tuned">Set up tuned</h3>
+
+<p>(Optional) <code class="highlighter-rouge">tuned</code> can optimize your server settings, adjusting things like
+your <code class="highlighter-rouge">vm.swappiness</code>. To set up <code class="highlighter-rouge">tuned</code>, do:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start tuned.service     <span class="c"># start service</span>
+sudo tuned-adm profile network-latency <span class="c"># pick a good profile</span>
+sudo tuned-adm active                  <span class="c"># verify the selected profile</span>
+sudo systemctl <span class="nb">enable </span>tuned.service    <span class="c"># auto-start on reboots</span>
+</code></pre>
+</div>
+
+<h3 id="set-up-zookeeper">Set up ZooKeeper</h3>
+
+<p>You’ll need to set up ZooKeeper, regardless of whether you’ll be running a
+single node or many. So, let’s create its configuration file (the defaults are
+fine):</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
+</code></pre>
+</div>
+
+<p>Now, let’s start ZooKeeper (and set it to run on reboot):</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start zookeeper.service
+sudo systemctl <span class="nb">enable </span>zookeeper.service
+</code></pre>
+</div>
+
+<p>Note that the default port for ZooKeeper is <code class="highlighter-rouge">2181</code>. Remember the hostname of
+the node where ZooKeeper is running, referred to as <code class="highlighter-rouge">&lt;zk-dns-name&gt;</code> later.</p>
+
+<h2 id="running-a-single-node">Running a single node</h2>
+
+<h3 id="configure-accumulo">Configure Accumulo</h3>
+
+<p>To run on a single node, you don’t need to run HDFS. Accumulo can use the local
+filesystem as a volume instead. By default, it uses <code class="highlighter-rouge">/tmp/accumulo</code>. Let’s
+change that to something which will survive a reboot:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/accumulo/accumulo-site.xml
+</code></pre>
+</div>
+
+<p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> property from <code class="highlighter-rouge">file:///tmp/accumulo</code>
+to <code class="highlighter-rouge">file:///var/tmp/accumulo</code> in the configuration file (or another preferred
+location).</p>
+
+<p>While you are editing the Accumulo configuration file, you should also change
+the default <code class="highlighter-rouge">instance.secret</code> from <code class="highlighter-rouge">DEFAULT</code> to something else. You can also
+change the credentials used by the <code class="highlighter-rouge">tracer</code> service now, too. If you use the
+<code class="highlighter-rouge">root</code> user, you’ll have to set its password to the same one you’ll use later
+when you initialize Accumulo. If you use another user name, you’ll have to
+create that user later.</p>
+
+<h3 id="configure-hadoop-client">Configure Hadoop client</h3>
+
+<p>Hadoop’s default local filesystem handler isn’t very good at ensuring files are
+written to disk when services are stopped. So, let’s use a better filesystem
+implementation for <code class="highlighter-rouge">file://</code> locations. This implementation may not be as
+robust as a full HDFS instance, but it’s more reliable than the default. Even
+though you’re not going to be running HDFS, the Hadoop client code used in
+Accumulo can still be configured by modifying Hadoop’s configuration file:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/hadoop/core-site.xml
+</code></pre>
+</div>
+
+<p>Add a new property:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.file.impl<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>org.apache.hadoop.fs.RawLocalFileSystem<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="initialize-accumulo">Initialize Accumulo</h3>
+
+<p>Now, initialize Accumulo. You’ll need to do this as the <code class="highlighter-rouge">accumulo</code> user,
+because the Accumulo services run as the <code class="highlighter-rouge">accumulo</code> user. This user is created
+automatically by the RPMs if it doesn’t exist when the RPMs are installed. If
+you already have a user and/or group by this name, it will probably not be a
+problem, but be aware that this user will have permissions for the server
+configuration files. To initialize Accumulo as a specific user, use <code class="highlighter-rouge">sudo -u</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u accumulo accumulo init
+</code></pre>
+</div>
+
+<p>As expected, this command will fail if ZooKeeper is not running, or if the
+destination volume (<code class="highlighter-rouge">file:///var/tmp/accumulo</code>) already exists.</p>
+
+<h3 id="start-accumulo-services">Start Accumulo services</h3>
+
+<p>Now that Accumulo is initialized, you can start its services:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre>
+</div>
+
+<p>Enable the commands to start at boot:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre>
+</div>
+
+<h2 id="running-multiple-nodes">Running multiple nodes</h2>
+
+<h3 id="amazon-ec2-setup">Amazon EC2 setup</h3>
+
+<p>For a multi-node setup, the authors tested these instructions with a Fedora 25
+Cloud AMI on Amazon EC2 with the following characteristics:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">us-east-1</code> availability zone</li>
+  <li><code class="highlighter-rouge">ami-e5757bf2</code> (latest in <code class="highlighter-rouge">us-east-1</code> at time of writing)</li>
+  <li><code class="highlighter-rouge">HVM</code> virtualization type</li>
+  <li><code class="highlighter-rouge">gp2</code> disk type</li>
+  <li><code class="highlighter-rouge">64GB EBS</code> root volume (no additional storage)</li>
+  <li><code class="highlighter-rouge">m4.large</code> and <code class="highlighter-rouge">m4.xlarge</code> instance types (tested on both)</li>
+  <li><code class="highlighter-rouge">3</code> nodes</li>
+</ul>
+
+<p>For this setup, you should have a name service configured properly. For
+convenience, we used the EC2 provided internal DNS, with internal IP addresses.
+Make sure the nodes can communicate with each other using these names. If
+you’re using EC2, this means making sure they are in the same security group,
+and the security group has an inbound rule for “All traffic” with the source
+set to itself (<code class="highlighter-rouge">sg-xxxxxxxx</code>).</p>
+
+<p>The default user is <code class="highlighter-rouge">fedora</code> for the Fedora Cloud AMIs. For the best
+experience, don’t forget to make sure they are fully up-to-date (<code class="highlighter-rouge">sudo dnf
+--refresh upgrade</code>).</p>
+
+<h3 id="configure-and-run-hadoop">Configure and run Hadoop</h3>
+
+<p>Configuring HDFS is the primary difference between the single and multi-node
+setup. For both Hadoop and Accumulo, you can edit the configuration files on
+one machine, and copy them to the others.</p>
+
+<p>Pick a server to be the NameNode and identify its DNS name,
+(<code class="highlighter-rouge">&lt;namenode-dns-name&gt;</code>). Edit Hadoop’s configuration to set the default
+filesystem name to this location:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/hadoop/core-site.xml
+</code></pre>
+</div>
+
+<p>Set the value for the property <code class="highlighter-rouge">fs.default.name</code> to
+<code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020</code>.</p>
+
+<p>Distribute copies of the changed configuration files to each node.</p>
+
+<p>Now, format the NameNode. You’ll need to do this as the <code class="highlighter-rouge">hdfs</code> user on the
+NameNode instance:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs namenode -format
+</code></pre>
+</div>
+
+<p>On the NameNode, start the NameNode service and enable it on reboot:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start hadoop-namenode.service
+sudo systemctl <span class="nb">enable </span>hadoop-namenode.service
+</code></pre>
+</div>
+
+<p>On each DataNode, start the DataNode service:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start hadoop-datanode.service
+sudo systemctl <span class="nb">enable </span>hadoop-datanode.service
+</code></pre>
+</div>
+
+<h3 id="configure-and-run-accumulo">Configure and run Accumulo</h3>
+
+<p>Update Accumulo’s configuration to use this HDFS filesystem:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/accumulo/accumulo-site.xml
+</code></pre>
+</div>
+
+<p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> to
+<code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020/accumulo</code> in the configuration file. Don’t
+forget to also change the default <code class="highlighter-rouge">instance.secret</code> and the trace user’s
+credentials, if necessary. Also, since you will have multiple nodes, you cannot
+use <code class="highlighter-rouge">localhost:2181</code> for ZooKeeper, so set <code class="highlighter-rouge">instance.zookeeper.host</code> to
+<code class="highlighter-rouge">&lt;zk-dns-name&gt;:2181</code>.</p>
+
+<p>Distribute copies of the changed configuration files to each node.</p>
+
+<p>With HDFS now running, make sure Accumulo has permission to create its
+directory in HDFS, and initialize Accumulo:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs dfs -chmod 777 /
+sudo -u accumulo accumulo init
+</code></pre>
+</div>
+
+<p>After Accumulo has created its directory structure, you can change the
+permissions for the root back to what they were:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs dfs -chmod 755 /
+</code></pre>
+</div>
+
+<p>Now, you can start Accumulo.</p>
+
+<p>On the NameNode, start all the Accumulo services and enable on reboot:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+sudo systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre>
+</div>
+
+<p>On each DataNode, start just the <code class="highlighter-rouge">tserver</code> and enable it on reboot:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-tserver.service
+sudo systemctl <span class="nb">enable </span>accumulo-tserver.service
+</code></pre>
+</div>
+
+<h2 id="watching-and-using-accumulo">Watching and using Accumulo</h2>
+
+<h3 id="run-the-shell">Run the shell</h3>
+
+<p>Run a shell as Accumulo’s root user (the instance name and root password are
+the ones you selected during the initialize step above:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>accumulo shell -u root -zh &lt;zk-dns-name&gt;:2181 -zi &lt;instanceName&gt;
+</code></pre>
+</div>
+
+<h3 id="view-the-monitor-pages">View the monitor pages</h3>
+
+<p>You should also be able to view the NameNode monitor page and the Accumulo
+monitor pages. If you are running this in EC2, you can view these over an SSH
+tunnel using the NameNode’s public IP address. If you didn’t give this node a
+public IP address, you can allocate one in EC2 and associate it with this node:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh -L50070:localhost:50070 -L50095:localhost:50095 &lt;user&gt;@&lt;host&gt;
+</code></pre>
+</div>
+
+<p>Replace <code class="highlighter-rouge">&lt;user&gt;</code> with your username (probably <code class="highlighter-rouge">fedora</code> if using the Fedora
+AMI), and <code class="highlighter-rouge">&lt;host&gt;</code> with the public IP or hostname for your EC2 instance. Now,
+in your local browser, you should be able to navigate to these addresses in
+your localhost: <a href="http://localhost:50070">Hadoop monitor (http://localhost:50070)</a> and <a href="http://localhost:50095">Accumulo
+monitor (http://localhost:50095)</a>.</p>
+
+<h2 id="debugging-commands">Debugging commands</h2>
+
+<p>Check the status of a service:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl status &lt;ServiceName&gt;.service
+</code></pre>
+</div>
+
+<p>Check running Java processes:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo jps -ml
+</code></pre>
+</div>
+
+<p>Check the system logs for a specific service within the last 10 minutes:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo journalctl -u &lt;ServiceName&gt; --since <span class="s1">'10 minutes ago'</span>
+</code></pre>
+</div>
+
+<p>Check listening ports:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo netstat -tlnp
+</code></pre>
+</div>
+
+<p>Check DNS name for a given IP address:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>getent hosts &lt;ipaddress&gt; <span class="c"># OR</span>
+hostname -A
+</code></pre>
+</div>
+
+<p>Perform forward and reverse DNS lookups:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo dnf install <span class="nb">bind</span>-utils
+dig +short &lt;hostname&gt;     <span class="c"># forward DNS lookup</span>
+dig +short -x &lt;ipaddress&gt; <span class="c"># reverse DNS lookup</span>
+</code></pre>
+</div>
+
+<p>Find the instance ID for your instance name:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>zkCli.sh -server &lt;host&gt;:2181     <span class="c"># replace &lt;host&gt; with your ZooKeeper server DNS name</span>
+<span class="gp">&gt; </span>get /accumulo/instances/&lt;name&gt; <span class="c"># replace &lt;name&gt; with your instance name</span>
+<span class="gp">&gt; </span>quit
+</code></pre>
+</div>
+
+<p>If the NameNode is listening on the loopback address, you’ll probably need to
+restart the service manually, as well as any Accumulo services which failed.
+This is a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1406165">known issue with Hadoop</a>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl restart hadoop-namenode.service
+</code></pre>
+</div>
+
+<p>Some helpful rpm commands:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>rpm -q -i &lt;installed-package-name&gt;              <span class="c"># to see info about an installed package</span>
+rpm -q -i -p &lt;rpm-file-name&gt;                    <span class="c"># to see info about an rpm file</span>
+rpm -q --provides &lt;installed-package-name&gt;      <span class="c"># see what a package provides</span>
+rpm -q --requires &lt;installed-package-name&gt;      <span class="c"># see what a package requires</span>
+rpm -q -l &lt;installed-package-name&gt;              <span class="c"># list package files</span>
+rpm -q --whatprovides &lt;file&gt;                    <span class="c"># find rpm which owns &lt;file&gt;</span>
+rpm -q --whatrequires <span class="s1">'mvn(groupId:artifactId)'</span> <span class="c"># find rpm which requires maven coords</span>
+</code></pre>
+</div>
+
+<h2 id="helping-out">Helping out</h2>
+
+<p>Feel free to get involved with the <a href="https://fedoraproject.org/wiki/Join_the_package_collection_maintainers">Fedora</a> or <a href="https://fedoraproject.org/wiki/EPEL">Fedora EPEL</a>
+(for RHEL/CentOS users) packaging. Contact the Fedora <a href="https://admin.fedoraproject.org/pkgdb/package/rpms/accumulo/">maintainers</a> (user <code class="highlighter-rouge">at</code>
+fedoraproject <code class="highlighter-rouge">dot</code> org) for the Accumulo packages to see how you can help
+patching bugs, adapting the upstream packages to the Fedora packaging
+standards, testing updates, maintaining dependency packages, and more.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org"><img src="/images/feather-small.gif" alt="Apache Software Foundation" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2016 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
