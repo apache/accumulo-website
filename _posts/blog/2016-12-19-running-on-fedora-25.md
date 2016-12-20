@@ -243,7 +243,7 @@ sudo -u hdfs hdfs dfs -chmod 755 /
 
 _Note: we only choose to do the above because this is a developer/testing
 environment. Temporarily changing ownership of HDFS is not recommended for
-the root of HDFS. _
+the root of HDFS._
 
 Now, you can start Accumulo.
 
