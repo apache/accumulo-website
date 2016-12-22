@@ -18,13 +18,14 @@ build_jekyll_site() {
   . "$(git --exec-path)/git-sh-setup" || return 1
 
   # ensure target branch exists
-  local target_branch; target_branch=$(git rev-parse --symbolic-full-name "$tgt_br" 2>/dev/null) || die "fatal: $tgt_br is not a branch"
+  local not_a_branch_msg; not_a_branch_msg="$tgt_br is not a branch; this script can only update branches named $tgt_br (try: git checkout -t origin/$tgt_br)"
+  local target_branch; target_branch=$(git rev-parse --symbolic-full-name "$tgt_br" 2>/dev/null) || die "fatal: $not_a_branch_msg"
   case "$target_branch" in
     refs/heads/*)
       true
       ;;
     *)
-      die "fatal: $tgt_br is not a branch"
+      die "fatal: $not_a_branch_msg"
       ;;
   esac
 
