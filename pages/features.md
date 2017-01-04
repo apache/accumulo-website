@@ -52,7 +52,7 @@ internally by Accumulo.
 
 ### Volume support
 
-Accumulo 1.6.0 migrated the HDFS configuration from a single HDFS host and directory 
+Accumulo 1.6.0 migrated its HDFS configuration from a single HDFS host and directory 
 to a collection of HDFS URIs (host and path). This allows Accumulo to operate over 
 multiple disjoint HDFS instances and scale beyond the limits of a single namenode. When 
 used in conjunction with HDFS federation, multiple namenodes can share a pool 
