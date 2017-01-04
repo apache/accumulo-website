@@ -34,7 +34,7 @@ Constraints are written in Java and configurable on a per table basis.
 ### Sharding
 
 Through the use of specialized iterators, Accumulo can be a parallel sharded
-document store. For example wikipedia could be stored and searched for
+document store. For example, Wikipedia could be stored and searched for
 documents containing certain words.
 
 ### Large Rows
@@ -52,11 +52,11 @@ internally by Accumulo.
 
 ### Volume support
 
-Accumulo 1.6.0 migrated away from configuration of HDFS by using a single HDFS host and
-directory, to a collection of HDFS URIs (host and path) which allows Accumulo to operate
-over multiple disjoint HDFS instances.  This allows Accumulo to scale beyond the limits
-of a single namenode.  When used in conjunction with HDFS federation, multiple namenodes
-can share a pool of datanodes.
+Accumulo 1.6.0 migrated the HDFS configuration from a single HDFS host and directory 
+to a collection of HDFS URIs (host and path). This allows Accumulo to operate over 
+multiple disjoint HDFS instances and scale beyond the limits of a single namenode. When 
+used in conjunction with HDFS federation, multiple namenodes can share a pool 
+of datanodes.
 
 ## Integrity/Availability
 
@@ -72,7 +72,7 @@ and Zookeeper (see [FATE][FATE]).
 A mechanism to ensure that server set times never go backwards, even when time
 across the cluster is incorrect. This ensures that updates and deletes are not
 lost. If a tablet is served on machine with time a year in the future, then the
-tablet will continue to issue new timestamps a year in the future even when it
+tablet will continue to issue new timestamps a year in the future, even when it
 moves to another server. In this case the timestamps preserve ordering, but
 lose their meaning. In addition to logical time, Accumulo has master
 authoritative time. The master averages the time of all of the tablet servers
@@ -101,7 +101,7 @@ Fault Tolerant Executor. A framework for executing operations in a fault
 tolerant manner. In the previous release, if the master process died in the
 middle of creating a table it could leave the system in an inconsistent state.
 With this new framework, if the master dies in the middle of create table it
-will continue on restart. Also the client requesting the create table operation
+will continue on restart. Also, the client requesting the create table operation
 will never know anything happened. The framework serializes work in Zookeeper
 before attempting to do the work. Clients start a FATE transaction, seed it
 with work, and then wait for it to finish. Most table operations are executed
@@ -123,12 +123,12 @@ Scans will not see data inserted into a row after the scan of that row begins.
 If consecutive keys have identical portions (row, colf, colq, or colvis), there
 is a flag to indicate that a portion is the same as that of the previous key.
 This is applied when keys are stored on disk and when transferred over the
-network.  Starting with 1.5, prefix erasure is supported.  When its cost 
+network.  Starting with 1.5, prefix erasure is supported.  When it is cost 
 effective, prefixes repeated in subsequent key fields are not repeated.
 
 ### Native In-Memory Map
 
-By default data written is stored outside of Java managed memory into a C++ STL
+By default, data written is stored outside of Java managed memory into a C++ STL
 map of maps.  It maps rows to columns to values.  This hierarchical structure
 improves performance of inserting a mutation with multiple column values in a
 single row. A custom STL allocator is used to avoid the global malloc lock and
@@ -149,8 +149,8 @@ indexes and data.  Caching can be turned on and off for individual tables.
 
 ### Multi-level RFile Index
 
-RFiles store an index of the last key in each block. For large files the index
-can become quite large. When the index is large a lot of memory is consumed and
+RFiles store an index of the last key in each block. For large files, the index
+can become quite large. When the index is large, a lot of memory is consumed and
 files take a long time to open. To avoid this problem, RFiles have a
 multi-level index tree. Index blocks can point to other index blocks or data
 blocks. The entire index never has to be resident, even when the file is
@@ -160,11 +160,11 @@ per table basis.
 
 ### Binary search in RFile blocks
 
-RFile uses its index to locate a block of key values.  Once it reaches a block 
-it performs a linear scan to find a key on interest.  Accumulo will generate
-indexes of cached blocks in an adaptive manner.  Accumulo indexes the blocks
-that are read most frequently.  When a block is read a few times, a small index
-is generated.  As a block is read more, larger indexes are generated making
+RFile uses its index to locate a block of key values.  Once it reaches a block, 
+it performs a linear scan to find a key of interest.  Accumulo will generate
+indexes of cached blocks in an adaptive manner.  Accumulo indexes the most 
+frequently read blocks.  When a block is read a few times, a small index
+is generated.  As a block is read more, larger indexes are generated, making
 future seeks faster. This strategy allows Accumulo to dynamically respond to
 read patterns without precomputing block indexes when RFiles are written.
 
@@ -186,8 +186,8 @@ instance more closely.
 
 Using the Mini Accumulo Cluster in unit and integration tests is a great way for
 developers to test their applications against Accumulo in an environment that is
-much closer to physical deployments than Mock Accumulo provided. Accumulo 1.6.0 also
-introduced a [maven-accumulo-plugin][M-A-P] which
+much closer to physical deployments than a Mock Accumulo environment. 
+Accumulo 1.6.0 also introduced a [maven-accumulo-plugin][M-A-P] which
 can be used to start a Mini Accumulo Cluster instance as a part of the Maven
 lifecycle that your application tests can use.
 
@@ -241,7 +241,7 @@ Instead of writing individual mutations to Accumulo, entire files of sorted key
 value pairs can be imported. These files are moved into the Accumulo directory
 and referenced by Accumulo. This feature is useful for ingesting a large amount
 of data. This method of ingest usually offers higher throughput at the cost of
-higher latency for data availability for scans.  Usually the data is sorted
+higher latency for data availability for scans.  Usually, the data is sorted
 using map reduce and then bulk imported. This method of ingest also allows for
 flexibility in resource allocation.  The nodes running map reduce to sort data
 could be different from the Accumulo nodes.
@@ -262,7 +262,7 @@ available to other languages like Python, Ruby, C++, etc.
 
 In version 1.6.0, Accumulo introduced [ConditionalMutations][7]
 which allow users to perform efficient, atomic read-modify-write operations on rows. Conditions can
-be defined using on equality checks of the values in a column or the absence of a column. For more
+be defined using equality checks of the values in a column or the absence of a column. For more
 information on using this feature, users can reference the Javadoc for [ConditionalMutation][CMUT] and
 [ConditionalWriter][CWRI].
 
@@ -314,7 +314,7 @@ can be used to optimize the data that compactions will write.
 
 ### Monitor page
 
-A simple web server provides basic information about the system health and
+A simple web server that provides basic information about the system health and
 performance.  It displays table sizes, ingest and query statistics, server
 load, and last-update information.  It also allows the user to view recent
 diagnostic logs and traces.
@@ -349,7 +349,7 @@ Groups columns within a single file. There is a default locality group so that
 not all columns need be specified. The locality groups can be restructured
 while the table is online and the changes will take effect on the next
 compaction.  A tablet can have files with different locality group
-configurations.  In this case scans may be suboptimal, but correct, until
+configurations.  In this case, scans may be suboptimal, but correct until
 compactions rewrite all files.  After reconfiguring locality groups, a user can
 force a table to compact in order to write all data into the new locality
 groups.  Alternatively, the change could be allowed to happen over time as
@@ -367,7 +367,7 @@ are considered for compaction.  This is done until there are no files to merge.
 
 When a max number of files per tablet is reached, minor compactions will merge
 data from the in-memory map with the smallest file instead of creating new
-files.  This throttles ingest.  In previous releases new files were just created
+files.  This throttles ingest.  In previous releases, new files were just created
 even if major compactions were falling behind and the number of tablets per file
 was growing.  Without this feature, ingest performance can roughly continue at a
 constant rate, even as scan performance decreases because tablets have too many
@@ -376,15 +376,15 @@ files.
 ### Loading jars using VFS
 
 User written iterators are a useful way to manipulate data in data in Accumulo. 
-Before 1.5., users had to copy their iterators to each tablet server.  Starting 
-with 1.5 Accumulo can load iterators from HDFS using Apache commons VFS.
+Before 1.5, users had to copy their iterators to each tablet server.  Starting 
+with 1.5, Accumulo can load iterators from HDFS using Apache commons VFS.
 
 ### Encryption
 
 Still a work in progress, Accumulo 1.6.0 introduced encryption at rest (RFiles
-and WriteAheadLogs) and wire encryption (Thrift over SSL) to provide enhance the
-level of security that Accumulo provides. It is still a work in progress because
-the intermediate files created by Accumulo when recovering from a TabletServer
+and WriteAheadLogs) and wire encryption (Thrift over SSL) to enhance the level 
+of security that Accumulo provides. It is still a work in progress because the 
+intermediate files created by Accumulo when recovering from a TabletServer
 failure are not encrypted.
 
 ## On-demand Data Management
@@ -415,7 +415,7 @@ tablets can be merged.
 Allows users to quickly create a new table that references an existing table's
 data and copies its configuration. A cloned table and its source table can be
 mutated independently. Testing was the motivating reason behind this new
-feature. For example to test a new filtering iterator, clone the table, add the
+feature. For example, to test a new filtering iterator, clone the table, add the
 filter to the clone, and force a major compaction.
 
 ### Import/Export Table
@@ -457,7 +457,7 @@ The following screenshot shows the monitor master page.  This page gives informa
 </div>
 </div>
 
-The data generated by the continuous ingest test suite looks like the following.  The data is random, but forms many giant linked list.  Each ingest client continually generates linked list containing 25 million nodes.  In the shell session below a few scans are issued to start following the linked list that the first node in the table is part of.
+The data generated by the continuous ingest test suite looks like the following.  The data is random, but forms many giant linked list.  Each ingest client continually generates linked list containing 25 million nodes.  In the shell session below, a few scans are issued to start following the linked list that the first node in the table is part of.
 
     root@test15 ci> scan 
     000000000135fbbe 074c:569c []    2db1de18-cd37-407d-b060-481a0a214c90:000000002b2bcfe1:2e15cb9f62fd22ab:fe6f84c7

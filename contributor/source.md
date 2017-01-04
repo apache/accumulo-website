@@ -96,7 +96,7 @@ To check out the code:
 
 #### Running a Build
 
-Accumulo uses  [Apache Maven][maven] to handle source building, testing, and packaging. To build Accumulo you will need to use Maven version 3.0.5 or later.
+Accumulo uses  [Apache Maven][maven] to handle source building, testing, and packaging. To build Accumulo, you will need to use Maven version 3.0.5 or later.
 
 You should familiarize yourself with the [Maven Build Lifecycle][lifecycle], as well as the various plugins we use in our [POM][pom], in order to understand how Maven works and how to use the various build options while building Accumulo.
 

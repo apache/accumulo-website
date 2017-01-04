@@ -3,8 +3,8 @@ title: Consensus Building
 redirect_from: /governance/consensusBuilding
 ---
 
-In some cases there is no obvious path to take, or you might be a new community, 
-or a new member of an existing community. In these cases people will often 
+In some cases, there is no obvious path to take, or you might be a new community, 
+or a new member of an existing community. In these cases, people will often 
 need to build consensus by making proposals and eliciting responses.
 
 We want to avoid unnecessary discussion and the creation of significant
@@ -47,7 +47,7 @@ that when someone wants to summarise a discussion thread they can mentally
 add up the strength of feeling of the community and decide if there is consensus
 or not.
 
-Once there is a clear consensus members of the community can proceed with 
+Once there is a clear consensus, members of the community can proceed with 
 the work under the [lazy consensus][1] model.
 
 [1]: {{ site.baseurl }}/contributor/lazyConsensus
