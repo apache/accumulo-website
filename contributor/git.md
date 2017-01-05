@@ -6,12 +6,12 @@ redirect_from: /git
 [Git](https://git-scm.com) is an open source, distributed version control system
 which has become very popular in large, complicated software projects due to
 its efficient handling of multiple, simultaneously and independently developed
-branches of source code.\
+branches of source code.
 
 
 ## Workflow Background
 
-Likely the most contested subject matter regarding switching an active team
+The most likely contested subject matter regarding switching an active team
 from one SCM tool to another is a shift in the development paradigm.
 
 Some background, the common case, as is present with this team, is that
@@ -250,7 +250,7 @@ commit. See the [Git
 manual](https://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging)
 for more information on merging. When merging a pull-request, it's best to **not**
 include a signoff on the commit(s) as it changes the final commit ID in the
-Accumulo repository. This also has the negative of not automatically closing
+Accumulo repository. This also has the negative effect of not automatically closing
 the Pull-Request when the changes are made public.
 
 ### Feature Branches
@@ -330,7 +330,7 @@ releases, changes which are different in implementation due to API changes, or
 any number of other cases. Whatever the actual case is, the developer who made
 the first set of changes (you) is the one responsible for performing the merge
 through the rest of the active versions. Even when the merge may results in a
-zero-length change in content, this is incredibly important to record as you
+zero-length change in content, this is incredibly important to record, as you
 are the one who knows that this zero-length change in content is correct!
 
 ## Release Management
@@ -405,11 +405,11 @@ of work necessary in opening multiple INFRA tickets.
 
 ## Mirroring
 
-It should be noted in the INFRA requst that each repository will also need to
+It should be noted in the INFRA request that each repository will also need to
 be configured to properly mirror to the [ASF Github](https://github.com/apache)
 account to provide the same functionality with current have via the git+svn
-mirror. This should be noted in the INFRA request. Same change needs to be
-applied for the [Apache hosted](https://git.apache.org) mirror'ing.
+mirror. Same change needs to be applied for the [Apache hosted](https://git.apache.org) 
+mirror'ing.
 
 ## Mailing lists
 

@@ -35,7 +35,7 @@ and cares.
 
 Sometimes a member of the community will believe a specific action is the correct 
 one for the community but are not sure enough to proceed with the work under the 
-lazy consensus model. In these circumstances they can state Lazy Consensus is in 
+lazy consensus model. In these circumstances, they can state Lazy Consensus is in 
 operation.
 
 What this means is that they make a proposal and state that they will start 

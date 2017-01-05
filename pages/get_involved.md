@@ -4,8 +4,8 @@ permalink: /get_involved/
 ---
 
 You don't need to be a software developer to contribute to 
-Apache Accumulo. To be successful this project 
-requires a huge range of different skills, levels of involvement and degrees of 
+Apache Accumulo. To be successful, this project 
+requires a huge range of different skills, levels of involvement, and degrees of 
 technical expertise. So, if you want to get involved in Apache Accumulo, there 
 is almost certainly a role for you. 
 
@@ -23,7 +23,7 @@ We are looking for people to:
   - translate to different languages
   - anything you can see that needs doing
 
-All of these contributions help to keep a project active and strengthen 
+All of these contributions help to keep the project active and strengthen 
 the community. The project team and the broader community will 
 therefore welcome and encourage participation, and attempt to make it 
 as easy as possible for people to get involved.
@@ -57,7 +57,7 @@ The most important thing about engaging with any Apache project is that everyone
 is equal. All people with an opinion are entitled to express that opinion and, where 
 appropriate, have it considered by the community.
 
-To some the idea of having to establish consensus in a large and distributed team 
+To some, the idea of having to establish consensus in a large and distributed team 
 sounds inefficient and frustrating. Don't despair though, The Apache Way has a
 set of simple processes to ensure things proceed at a good pace.
 
@@ -68,17 +68,17 @@ Most of the time we work with the consensus building techniques documented below
 ### Lazy Consensus
 
 [Lazy consensus][7] is the first, and possibly the most important, consensus building 
-tool we have. Essentially lazy consensus means that you don't need to get explicit
+tool we have. Essentially, lazy consensus means that you don't need to get explicit
 approval to proceed, but you need to be prepared to listen if someone objects.
 
 ### Consensus Building
 
-Sometimes lazy consensus is not appropriate. In such cases it is necessary to
+Sometimes, lazy consensus is not appropriate. In such cases, it is necessary to
 make a proposal to the mailing list and discuss options. There are mechanisms
 for quickly showing your support or otherwise for a proposal and 
 [building consensus][8] amongst the community.
 
-Once there is a consensus people can proceed with the work under the [lazy 
+Once there is a consensus, people can proceed with the work under the [lazy 
 consensus][9] model.
 
 ### Voting

@@ -4,7 +4,7 @@ redirect_from: /contrib
 ---
 
 Apache Accumulo is a complex distributed system. In order to minimize that
-complexity for both operators and developers the project maintains contrib
+complexity, for both operators and developers, the project maintains contrib
 repositories for instructive applications and code that builds interoperability
 between Accumulo and other systems. This helps minimize the set of dependencies
 needed when building or installing Accumulo, keeps the build time down, and

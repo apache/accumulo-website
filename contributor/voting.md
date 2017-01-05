@@ -9,10 +9,10 @@ release.
 
 ## Preparing for a Vote
 
-Before calling a vote it is important to ensure that the community is given time to
+Before calling a vote, it is important to ensure that the community is given time to
 discuss the upcoming vote. This will be done by posting an email to the list
 indicating the intention to call a vote and the options available. By the time a
-vote is called there should already be [consensus in the community][1]. The vote 
+vote is called, there should already be [consensus in the community][1]. The vote 
 itself is, normally, a formality.
 
 ## Calling a Vote
