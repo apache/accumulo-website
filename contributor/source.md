@@ -17,7 +17,7 @@ redirect_from: /source
 
 ### Apache Accumulo
 
-Apache Accumulo&trade; source code is maintained using [Git][git] version control 
+Apache Accumulo&reg; source code is maintained using [Git][git] version control
 ([browse][cgit]|[checkout][anongit]).  It builds with [Apache Maven][maven].
 
 Instructions for configuring git are [here][git-instr].

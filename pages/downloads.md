@@ -85,7 +85,7 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 ### 1.8.0 **latest**{: .label .label-primary }
 
-The most recent Apache Accumulo&trade; release is version 1.8.0. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
+The most recent Apache Accumulo&reg; release is version 1.8.0. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
 
 For convenience, [MD5][MD5SUM_18] and [SHA1][SHA1SUM_18] hashes are also available.
 
@@ -102,7 +102,7 @@ For convenience, [MD5][MD5SUM_18] and [SHA1][SHA1SUM_18] hashes are also availab
 
 ### 1.7.2
 
-The most recent 1.7.x release of Apache Accumulo&trade; is version 1.7.2. See the [release notes][REL_NOTES_17] and [CHANGES][CHANGES_17].
+The most recent 1.7.x release of Apache Accumulo&reg; is version 1.7.2. See the [release notes][REL_NOTES_17] and [CHANGES][CHANGES_17].
 
 For convenience, [MD5][MD5SUM_17] and [SHA1][SHA1SUM_17] hashes are also available.
 
@@ -118,7 +118,7 @@ For convenience, [MD5][MD5SUM_17] and [SHA1][SHA1SUM_17] hashes are also availab
 
 ### 1.6.6
 
-The most recent 1.6.x release of Apache Accumulo&trade; is version 1.6.6. See the [release notes][REL_NOTES_16] and [CHANGES][CHANGES_16].
+The most recent 1.6.x release of Apache Accumulo&reg; is version 1.6.6. See the [release notes][REL_NOTES_16] and [CHANGES][CHANGES_16].
 
 For convenience, [MD5][MD5SUM_16] and [SHA1][SHA1SUM_16] hashes are also available.
 
