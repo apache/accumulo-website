@@ -49,6 +49,10 @@ enable higher-level graph algorithms and analytics.
 
 [Presto](https://prestodb.io/) is an open source distributed SQL query engine for running interactive analytic queries against data sources of all sizes, ranging from gigabytes to petabytes.  Through the use of the new Accumulo connector for Presto, users are able to execute traditional SQL queries against new and existing tables in Accumulo.  For more information, see the [Accumulo Connector](https://prestodb.io/docs/current/connector/accumulo.html) documentation.
 
+#### Sharkbite
+
+[Sharkbite](https://github.com/phrocker/sharkbite/) is a native Key/Value client that support direct Accumulo access.
+
 #### Timely
 
 [Timely](https://nationalsecurityagency.github.io/timely/) is a secure time series database based on Accumulo and Grafana.

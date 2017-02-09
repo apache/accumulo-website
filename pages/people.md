@@ -32,7 +32,7 @@ permalink: /people/
 | mjwall        | Michael Wall      | [Objective Solutions, Inc.][OBJECTIVE] | [ET][ET] |
 | mmiller       | Michael Miller    | [Centroid, LLC][CENTROID]              | [ET][ET] |
 | mwalch        | Mike Walch        | [Peterson Technologies][PETERSON]      | [ET][ET] |
-| phrocker      | Marc Parisi       | [WaveStrike LLC][WAVE]                 | [ET][ET] |
+| phrocker      | Marc Parisi       | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | rweeks        | Russ Weeks        | [PHEMI][PHEMI]                         | [PT][PT] |
 | shickey       | Sean Hickey       |                                        | [PT][PT] |
 | ujustgotbilld | William Slacum    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
