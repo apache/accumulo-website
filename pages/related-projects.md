@@ -51,7 +51,7 @@ enable higher-level graph algorithms and analytics.
 
 #### Sharkbite
 
-[Sharkbite](https://github.com/phrocker/sharkbite/) is a native Key/Value client that support direct Accumulo access.
+[Sharkbite](https://github.com/phrocker/sharkbite/) is a native Key/Value client that supports direct Accumulo access without the need for a proxy.
 
 #### Timely
 
