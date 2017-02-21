@@ -6,9 +6,182 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 08 Feb 2017 20:14:09 -0500</pubDate>
-    <lastBuildDate>Wed, 08 Feb 2017 20:14:09 -0500</lastBuildDate>
+    <pubDate>Tue, 21 Feb 2017 13:45:07 -0500</pubDate>
+    <lastBuildDate>Tue, 21 Feb 2017 13:45:07 -0500</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
+    
+      <item>
+        <title>DRAFT Apache Accumulo 1.8.1</title>
+        <description>&lt;p&gt;(DRAFT Release Notes)
+Apache Accumulo 1.8. is a maintenance release on the 1.8 version branch. This
+release contains changes from more then 40 issues, comprised of bug-fixes,
+performance improvements, build quality improvements, and more. See
+&lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;amp;version=12335830&quot;&gt;JIRA&lt;/a&gt; for a complete list.&lt;/p&gt;
+
+&lt;p&gt;Below are resources for this release:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.8/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.8/apidocs&quot;&gt;Javadocs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.8/examples&quot;&gt;Examples&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In the context of Accumulo’s &lt;a href=&quot;http://semver.org&quot;&gt;Semantic Versioning&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/blob/1.8/README.md#api&quot;&gt;guidelines&lt;/a&gt;,
+this is a “minor version”. This means that new APIs have been created, some
+deprecations may have been added, but no deprecated APIs have been removed.
+Code written against 1.7.x should work against 1.8.0 – binary compatibility
+has been preserved with one exception of an already-deprecated Mock Accumulo
+utility class. As always, the Accumulo developers take API compatibility
+very seriously and have invested much time to ensure that we meet the promises set forth to our users.&lt;/p&gt;
+
+&lt;h2 id=&quot;major-changes&quot;&gt;Major Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;problem-with-scans-right-after-minor-compaction&quot;&gt;Problem with scans right after minor compaction&lt;/h3&gt;
+
+&lt;p&gt;A bug was found when 2 or more concurrent scans run on a tablet that
+has just undergone minor compaction. The minor compaction thread
+writes the in-memory map to a local temporary rfile and tries to
+switch the current iterators to use it instead of the native map. The
+iterator code in the scan thread may also switch itself to use the local
+temporary rfile it if notices it before the minor compaction threads
+performs the switch. The bug happened shortly after the switch when
+one of the iterator threads will get a NegativeArraySizeException.
+See &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4483&quot;&gt;ACCUMULO-4483&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h3 id=&quot;tablet-server-performance-improvement&quot;&gt;Tablet Server Performance Improvement&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4458&quot;&gt;ACCUMULO-4458&lt;/a&gt; mitigated some contention on the Hadoop 
+configuration instance backing the XML configs read for SiteConfiguration.&lt;br /&gt;
+This should improve overall Tablet Server performance.&lt;/p&gt;
+
+&lt;h3 id=&quot;synchronization-issue-with-deep-copies-of-sources&quot;&gt;Synchronization issue with deep copies of sources&lt;/h3&gt;
+
+&lt;p&gt;Deep copies of iterator sources were not thread safe and threw
+exceptions, mostly down in the ZlibDecompressor library.  The real bug
+was in the BoundedRangeFileInputStream.  The read() method
+synchronizes on the underlying FSDataInputStream, however the
+available() method did not.   See &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4391&quot;&gt;ACCUMULO-4391&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;system-permission-bug-in-thrift-proxy&quot;&gt;System permission bug in Thrift Proxy&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo Proxy lacked support for the following system permissions:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;System.CREATE_NAMESPACE&lt;/li&gt;
+  &lt;li&gt;System.DROP_NAMESPACE&lt;/li&gt;
+  &lt;li&gt;System.ALTER_NAMESPACE&lt;/li&gt;
+  &lt;li&gt;System.OBTAIN_DELEGATION_TOKEN&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ticket is &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4519&quot;&gt;ACCUMULO-4519&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;shell-compaction-file-selection-options-can-block&quot;&gt;Shell compaction file selection options can block&lt;/h3&gt;
+
+&lt;p&gt;The block happens when the tablet lock is held.  The tablet lock is
+meant to protect changes to the tablets internal metadata, and
+blocking operations should not occur while this lock is held.  The
+compaction command has options to select files based on some
+criteria, some of which required blocking operations.  This issue is
+fixed in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4572&quot;&gt;ACCUMULO-4572&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;hostregextableloadbalancer-used-stale-information&quot;&gt;HostRegexTableLoadBalancer used stale information&lt;/h3&gt;
+
+&lt;p&gt;The HostRegexTableLoadBalander maintains an internal mapping of tablet
+server pools and tablet server status. It was updated at a
+configurable interval initially as an optimization. Unfortunately it
+had the negative side effect of providing the assignment and balance
+operations with stale information.  This lead to a constant shuffling
+of tablets.  The configuration property was removed so that
+assign/balance methods get updated information every time.  See
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4576&quot;&gt;ACCUMULO-4576&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;modify-tableoperations-onlineoffline-to-check-for-table-state&quot;&gt;Modify TableOperations online/offline to check for table state&lt;/h3&gt;
+
+&lt;p&gt;The table operations online and offline operations execute as a fate
+operation. If a transaction lock for the table is currently held,
+these operation will block even if no action is needed. 
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4574&quot;&gt;ACCUMULO-4574&lt;/a&gt; changes the behavior of the online and 
+offline operation to a NOOP if the table is already in the requested state.&lt;br /&gt;
+This returns immediately without queuing a fate operation.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-notable-changes&quot;&gt;Other Notable Changes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4488&quot;&gt;ACCUMULO-4488&lt;/a&gt; Fix gap in user manual on Kerberos for clients&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-2724&quot;&gt;ACCUMULO-2724&lt;/a&gt; CollectTabletStats had multiple -t parameter&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4431&quot;&gt;ACCUMULO-4431&lt;/a&gt; Log what random is chosen for a tserver.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4494&quot;&gt;ACCUMULO-4494&lt;/a&gt; Include column family seeks in the Iterator Test Harness&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4549&quot;&gt;ACCUMULO-4549&lt;/a&gt; Remove duplicate init functions in TabletBalancer&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4467&quot;&gt;ACCUMULO-4467&lt;/a&gt; Random Walk broken because of unmet dependency on commons-math&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4578&quot;&gt;ACCUMULO-4578&lt;/a&gt; Cancel compaction FATE operation does not release namespace lock&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4505&quot;&gt;ACCUMULO-4505&lt;/a&gt; Shell still reads accumulo-site.xml when using Zookeeper CLI options&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4535&quot;&gt;ACCUMULO-4535&lt;/a&gt; HostRegexTableLoadBalancer fails with NullPointerException&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4575&quot;&gt;ACCUMULO-4575&lt;/a&gt; Concurrent table delete operations leave orphan fate transaction locks&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;Upgrades from 1.7 to 1.8 are possible with little effort as no changes were made at the data layer and RPC changes
+were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.7, perform the Accumulo upgrade to
+1.8, and then start 1.8. Like previous versions, after 1.8 is started on a 1.7 instance, a one-time upgrade will
+happen by the Master which will prevent a downgrade back to 1.7. Upgrades are still one way. Upgrades from versions
+prior to 1.7 to 1.8 should follow the below path to 1.7 and then perform the upgrade to 1.8 – direct upgrades to 1.8
+for versions other than 1.7 are untested.&lt;/p&gt;
+
+&lt;p&gt;Existing configuration files from 1.7 should be compared against the examples provided in 1.8. The 1.7 configuration
+files should all function with 1.8 code, but you will likely want to include changes found in the 
+&lt;a href=&quot;/release/accumulo-1.8.0/&quot;&gt;1.8.0 release notes&lt;/a&gt; and these release notes for 1.8.1.&lt;/p&gt;
+
+&lt;p&gt;For upgrades from prior to 1.7, follow the upgrade instructions to 1.7 first.&lt;/p&gt;
+
+&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
+
+&lt;p&gt;Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. &lt;em&gt;Agitation&lt;/em&gt; refers to
+randomly restarting Accumulo processes and Hadoop Datanode processes, and, in
+HDFS High-Availability instances, forcing NameNode failover.&lt;/p&gt;
+
+&lt;table id=&quot;release_notes_testing&quot; class=&quot;table&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;OS/Environment&lt;/th&gt;
+      &lt;th&gt;Hadoop&lt;/th&gt;
+      &lt;th&gt;Nodes&lt;/th&gt;
+      &lt;th&gt;ZooKeeper&lt;/th&gt;
+      &lt;th&gt;HDFS HA&lt;/th&gt;
+      &lt;th&gt;Tests&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CentOS7/openJDK1.8.0_121/EC2; 1 m3.xlarge leader, 8 d2.xlarge workers&lt;/td&gt;
+      &lt;td&gt;2.7.3&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;3.4.9&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;24 HR Continuous Ingest without Agitation.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CentOS7/openJDK1.8.0_121/EC2; 1 m3.xlarge leader, 8 d2.xlarge workers&lt;/td&gt;
+      &lt;td&gt;2.7.3&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;3.4.9&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;24 HR Continuous Ingest with Agitation.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;(DRAFT Release Notes)&lt;/p&gt;
+</description>
+        <pubDate>Mon, 20 Feb 2017 00:00:00 -0500</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.8.1/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.8.1/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Running Accumulo on Fedora 25</title>
@@ -1640,109 +1813,6 @@ HDFS High-Availability instances, forcing NameNode failover.&lt;/p&gt;
         <pubDate>Sat, 03 Oct 2015 00:00:00 -0400</pubDate>
         <link>https://accumulo.apache.org/release/accumulo-1.6.4/</link>
         <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.6.4/</guid>
-        
-        
-        <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>Apache Accumulo 1.5.4</title>
-        <description>&lt;p&gt;Apache Accumulo 1.5.4 is one more bug-fix release for the 1.5 series. Like 1.5.3 before it, this release contains a
-very small changeset when considering the normal size of changes in a release.&lt;/p&gt;
-
-&lt;p&gt;Below are resources for this release:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;/1.5/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/1.5/apidocs&quot;&gt;Javadocs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;/1.5/examples&quot;&gt;Examples&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This release contains no changes to the &lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7.0/README.md#api&quot;&gt;public API&lt;/a&gt;. As such, there are no concerns
-for the compatibility of user code running against 1.5.3. All users are encourage to upgrade
-immediately without concern of stability and compatibility.&lt;/p&gt;
-
-&lt;p&gt;A full list of changes is available via &lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;amp;version=12333106&quot;&gt;CHANGES&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;We’d like to thank all of the committers and contributors which had a part in
-making this release, from code contributions to testing. Everyone’s efforts are
-greatly appreciated.&lt;/p&gt;
-
-&lt;h2 id=&quot;correctness-bugs&quot;&gt;Correctness Bugs&lt;/h2&gt;
-
-&lt;h3 id=&quot;silent-data-loss-via-bulk-imported-files&quot;&gt;Silent data-loss via bulk imported files&lt;/h3&gt;
-
-&lt;p&gt;A user recently reported that a simple bulk-import application would occasionally lose some records. Through investigation,
-it was found that when bulk imports into a table failed the initial assignment, the logic that automatically retries
-the imports was incorrectly choosing the tablets to import the files into. &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3967&quot;&gt;ACCUMULO-3967&lt;/a&gt; contains
-more information on the cause and identification of the bug. The data-loss condition would only affect entire files.
-If records from a file exist in Accumulo, it is still guaranteed that all records within that imported file were
-successful.&lt;/p&gt;
-
-&lt;p&gt;As such, users who have bulk import applications using previous versions of Accumulo should verify that all of their
-data was correctly ingested into Accumulo and immediately update to Accumulo 1.5.4.&lt;/p&gt;
-
-&lt;p&gt;Thanks to Edward Seidl for reporting this bug to us!&lt;/p&gt;
-
-&lt;h2 id=&quot;server-side-auditing-changes&quot;&gt;Server-side auditing changes&lt;/h2&gt;
-
-&lt;p&gt;Thanks to James Mello for reporting and providing the fixes to the following server-side auditing issues.&lt;/p&gt;
-
-&lt;h3 id=&quot;incorrect-audit-initialization&quot;&gt;Incorrect audit initialization&lt;/h3&gt;
-
-&lt;p&gt;It was observed that the implementation used to audit user API requests on Accumulo server processes
-was not being correctly initialized which caused audit messages to never be generated. This was rectified
-in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3939&quot;&gt;ACCUMULO-3939&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;missing-audit-implementations&quot;&gt;Missing audit implementations&lt;/h3&gt;
-
-&lt;p&gt;It was also observed that some server-side API implementations did not include audit messages which resulted
-in an incomplete historical picture on what operations a user might have invoked. The missing audits (and those
-that were added) are described in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3946&quot;&gt;ACCUMULO-3946&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
-
-&lt;p&gt;Each unit and functional test only runs on a single node, while the RandomWalk
-and Continuous Ingest tests run on any number of nodes. &lt;em&gt;Agitation&lt;/em&gt; refers to
-randomly restarting Accumulo processes and Hadoop DataNode processes, and, in
-HDFS High-Availability instances, forcing NameNode fail-over.&lt;/p&gt;
-
-&lt;table id=&quot;release_notes_testing&quot; class=&quot;table&quot;&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;OS&lt;/th&gt;
-      &lt;th&gt;Hadoop&lt;/th&gt;
-      &lt;th&gt;Nodes&lt;/th&gt;
-      &lt;th&gt;ZooKeeper&lt;/th&gt;
-      &lt;th&gt;HDFS High-Availability&lt;/th&gt;
-      &lt;th&gt;Tests&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;OSX&lt;/td&gt;
-      &lt;td&gt;2.6.0&lt;/td&gt;
-      &lt;td&gt;1&lt;/td&gt;
-      &lt;td&gt;3.4.5&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Unit and Functional Tests&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Centos 6.5&lt;/td&gt;
-      &lt;td&gt;2.7.1&lt;/td&gt;
-      &lt;td&gt;6&lt;/td&gt;
-      &lt;td&gt;3.4.5&lt;/td&gt;
-      &lt;td&gt;No&lt;/td&gt;
-      &lt;td&gt;Continuous Ingest and Verify (10B entries), Randomwalk (24hrs)&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-</description>
-        <pubDate>Mon, 21 Sep 2015 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/release/accumulo-1.5.4/</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.5.4/</guid>
         
         
         <category>release</category>
