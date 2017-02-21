@@ -8,13 +8,14 @@ redirect_from:
 
 <div>
 <hr>
-<h3>{{ site.categories.release[0].date | date: "%Y" }}</h3>
+{% assign header_year = site.categories.release[0].date | date: "%Y" %}
+<h3>{{header_year}}</h3>
 {% for release in site.categories.release %}
-  {% assign release_year = release.date | date: "%Y" %}
-  {% assign newer_release_year = release.next.date | date: "%Y" %}
-  {% if release_year != newer_release_year %}
+  {% assign current_release_year = release.date | date: "%Y" %}
+  {% if current_release_year != header_year %}
+    {% assign header_year = current_release_year %}
     <hr>
-    <h3>{{ release_year }}</h3>
+    <h3>{{ header_year }}</h3>
   {% endif %}
   <div class="row" style="margin-top: 15px">
     <div class="col-md-1">{{ release.date | date: "%b %d" }}</div>

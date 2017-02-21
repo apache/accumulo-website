@@ -5,12 +5,14 @@ redirect_from: /blog/
 ---
 
 <div>
+{% assign header_year = site.posts[0].date | date: "%Y" %}
+<h3>{{header_year}}</h3>
 {% for post in site.posts %}
   {% assign post_year = post.date | date: "%Y" %}
-  {% assign newer_post_year = post.next.date | date: "%Y" %}
-  {% if post_year != newer_post_year %}
+  {% if post_year != header_year %}
+    {% assign header_year = post_year %}
     <hr>
-    <h3>{{ post_year }}</h3>
+    <h3>{{ header_year }}</h3>
   {% endif %}
   <div class="row" style="margin-top: 15px">
     <div class="col-md-1">{{ post.date | date: "%b %d" }}</div>
