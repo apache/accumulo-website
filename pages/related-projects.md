@@ -32,6 +32,10 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 [Rya](http://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
 
+#### Gaffer
+
+[Gaffer](https://github.com/gchq/Gaffer) is an open source framework for constructing and querying very large graphs based on a variety of data storage platforms, including Accumulo.
+
 #### Geomesa
 
 [Geomesa](http://www.geomesa.org/) is an open-source, distributed, spatio-temporal database built on a number of distributed cloud data storage systems, including Accumulo, HBase, Cassandra, and Kafka.
