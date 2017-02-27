@@ -83,15 +83,15 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 ## Current Releases
 
-### 1.8.0 **latest**{: .label .label-primary }
+### 1.8.1 **latest**{: .label .label-primary }
 
-The most recent Apache Accumulo&reg; release is version 1.8.0. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
+The most recent Apache Accumulo&reg; release is version 1.8.1. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
 
 For convenience, [MD5][MD5SUM_18] and [SHA1][SHA1SUM_18] hashes are also available.
 
 {: .table }
-| **Generic Binaries** | [accumulo-1.8.0-bin.tar.gz][BIN_18] | [ASC][ASC_BIN_18] |
-| **Source**           | [accumulo-1.8.0-src.tar.gz][SRC_18] | [ASC][ASC_SRC_18] |
+| **Generic Binaries** | [accumulo-1.8.1-bin.tar.gz][BIN_18] | [ASC][ASC_BIN_18] |
+| **Source**           | [accumulo-1.8.1-src.tar.gz][SRC_18] | [ASC][ASC_SRC_18] |
 
 #### 1.8 Documentation
 * [README][README_18]
@@ -148,8 +148,8 @@ Older releases can be found in the [archives][ARCHIVES].
 [ASC_BIN_17]: https://www.apache.org/dist/accumulo/1.7.2/accumulo-1.7.2-bin.tar.gz.asc
 [ASC_SRC_17]: https://www.apache.org/dist/accumulo/1.7.2/accumulo-1.7.2-src.tar.gz.asc
 
-[ASC_BIN_18]: https://www.apache.org/dist/accumulo/1.8.0/accumulo-1.8.0-bin.tar.gz.asc
-[ASC_SRC_18]: https://www.apache.org/dist/accumulo/1.8.0/accumulo-1.8.0-src.tar.gz.asc
+[ASC_BIN_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz.asc
+[ASC_SRC_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz.asc
 
 [BIN_16]: https://www.apache.org/dyn/closer.lua/accumulo/1.6.6/accumulo-1.6.6-bin.tar.gz
 {: .download_external link-suffix="/accumulo/1.6.6/accumulo-1.6.6-bin.tar.gz" id="/downloads/accumulo-1.6.6-bin.tar.gz" }
@@ -161,16 +161,16 @@ Older releases can be found in the [archives][ARCHIVES].
 [SRC_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.2/accumulo-1.7.2-src.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.2/accumulo-1.7.2-src.tar.gz" id="/downloads/accumulo-1.7.2-src.tar.gz" }
 
-[BIN_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.0/accumulo-1.8.0-bin.tar.gz
-{: .download_external link-suffix="/accumulo/1.8.0/accumulo-1.8.0-bin.tar.gz" id="/downloads/accumulo-1.8.0-bin.tar.gz" }
-[SRC_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.0/accumulo-1.8.0-src.tar.gz
-{: .download_external link-suffix="/accumulo/1.8.0/accumulo-1.8.0-src.tar.gz" id="/downloads/accumulo-1.8.0-src.tar.gz" }
+[BIN_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz
+{: .download_external link-suffix="/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz" id="/downloads/accumulo-1.8.1-bin.tar.gz" }
+[SRC_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz
+{: .download_external link-suffix="/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz" id="/downloads/accumulo-1.8.1-src.tar.gz" }
 
 [README_16]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=README;hb=rel/1.6.6
 {: .download_external id="/1.6/README" }
 [README_17]: https://github.com/apache/accumulo/blob/rel/1.7.2/README.md
 {: .download_external id="/1.7/README" }
-[README_18]: https://github.com/apache/accumulo/blob/rel/1.8.0/README.md
+[README_18]: https://github.com/apache/accumulo/blob/rel/1.8.1/README.md
 {: .download_external id="/1.8/README" }
 
 [JAVADOC_16]: {{ site.baseurl }}/1.6/apidocs/
@@ -192,16 +192,16 @@ Older releases can be found in the [archives][ARCHIVES].
 
 [CHANGES_16]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12334846 "1.6.6 CHANGES"
 [CHANGES_17]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12333776 "1.7.2 CHANGES"
-[CHANGES_18]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12329879 "1.8.0 CHANGES"
+[CHANGES_18]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12335830 "1.8.1 CHANGES"
 
 [REL_NOTES_16]: {{ site.baseurl }}/release/accumulo-1.6.6/ "1.6.6 Release Notes"
 [REL_NOTES_17]: {{ site.baseurl }}/release/accumulo-1.7.2/ "1.7.2 Release Notes"
-[REL_NOTES_18]: {{ site.baseurl }}/release/accumulo-1.8.0/ "1.8.0 Release Notes"
+[REL_NOTES_18]: {{ site.baseurl }}/release/accumulo-1.8.1/ "1.8.1 Release Notes"
 
 [MD5SUM_16]: https://www.apache.org/dist/accumulo/1.6.6/MD5SUM "1.6.6 MD5 file hashes"
 [MD5SUM_17]: https://www.apache.org/dist/accumulo/1.7.2/MD5SUM "1.7.2 MD5 file hashes"
-[MD5SUM_18]: https://www.apache.org/dist/accumulo/1.8.0/MD5SUM "1.8.0 MD5 file hashes"
+[MD5SUM_18]: https://www.apache.org/dist/accumulo/1.8.1/MD5SUM "1.8.1 MD5 file hashes"
 
 [SHA1SUM_16]: https://www.apache.org/dist/accumulo/1.6.6/SHA1SUM "1.6.6 SHA1 file hashes"
 [SHA1SUM_17]: https://www.apache.org/dist/accumulo/1.7.2/SHA1SUM "1.7.2 SHA1 file hashes"
-[SHA1SUM_18]: https://www.apache.org/dist/accumulo/1.8.0/SHA1SUM "1.8.0 SHA1 file hashes"
+[SHA1SUM_18]: https://www.apache.org/dist/accumulo/1.8.1/SHA1SUM "1.8.1 SHA1 file hashes"
