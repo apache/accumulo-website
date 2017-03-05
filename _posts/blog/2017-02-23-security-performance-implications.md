@@ -29,11 +29,11 @@ Each test used one of the following security configurations:
 
 * No security - Default
 * Two way SSL
-* Kerberos/SASL with Auth
-  * Auth is just Kerberos authentication between client and server.  Each end of the RPC definitively knows who the other is.
-* Kerberos/SASL with Auth-Int
-  * Builds on Auth, also providing message integrity checks of the data going across the wire. You also know that the message you received was not altered.
-* Kerberos/SASL with Auth-Conf
+* Kerberos/SASL with auth
+  * auth is just Kerberos authentication between client and server.  Each end of the RPC definitively knows who the other is.
+* Kerberos/SASL with auth-int
+  * Builds on auth, also providing message integrity checks of the data going across the wire. You also know that the message you received was not altered.
+* Kerberos/SASL with auth-conf
   * Builds on auth-int, also providing confidentiality of the message that was sent to prevent others from reading it (aka wire-encryption).
 
 For each test, five iterations were run to obtain a min, max, and median
@@ -41,8 +41,9 @@ time elapsed at each security configuration. After each iteration,
 Hadoop, and Zookeeper processes were restarted, Accumulo tables are
 wiped clean and tables are recreated. In addition, pagecache, dentries
 and inodes are dropped by issuing a ‘3’ command on
-/proc/sys/vm/drop\_caches to free up memory that is no longer used. The
-following sequence was performed between iterations:
+/proc/sys/vm/drop\_caches to ensure that the OS is not caching things to disk
+that might affect the benchmark. The following sequence was performed 
+between iterations:
 
 1.  Bring down Accumulo
 2.  Bring down Zookeeper
@@ -57,7 +58,7 @@ following sequence was performed between iterations:
 
 For each iteration, the results were stored, fed into [Timely](https://nationalsecurityagency.github.io/timely/), and viewed with Grafana.
 Since the runs were executed sequentially, the start epochs for each run did not align.
-To mitigate, we inserted the entries for each run 
+To mitigate, the entries for each run were inserted 
 with the same relative epoch for convenient comparison in Grafana.
 
 The table configurations for Accumulo remain the same throughout the
@@ -97,15 +98,15 @@ Table 1 – AWS Instance Types, Role, Details, and Quantities
 
 The median, max, and min of the milliseconds elapsed
 time of all iterations for each test is displayed below. The percentage change
-columns compare the Median, Max, and Min respectively from the No
-Security level to each security configuration (e.g. No Security Median
-vs. Auth-Int Median, No Security Max vs. Auth-Int Max).
+columns compare the Median, Max, and Min respectively from the no
+security level to each security configuration (e.g. no security Median
+vs. auth-int Median, no security Max vs. auth-int Max).
 
 
 {: #results .table }
 | Security Level |  Median  |  Standard Deviation  |  Max   |    Min   |    % Change (nosec Median vs. Median) |  % Change (nosec Max vs. Max) |  % Change (nosec Min vs. Min)  | Delta from Previous Level (Median)|
 | ---------------- |---------: |---------:|----------:| ---------:| ------------------------------------: |------------------------------:| ------------------------------:| ------------------------------------:|
-| No security  |    7829394  |  139340  | 8143035|   7764309  | 0.00%    |                            0.00%    |                      0.00%    |                      0.00%|
+| no security  |    7829394  |  139340  | 8143035|   7764309  | 0.00%    |                            0.00%    |                      0.00%    |                      0.00%|
 |ssl        |      8292760  |     87012   |  8464060  | 8204955 |  5.92% |                               3.94%      |                    5.68%           |               5.92%|
 | auth        |     8859552 |    134109    | 9047971|   8657618  | 13.16%    |                           11.11%           |              11.51%            |             6.83%|
 | auth-int     |    9500737 |    155968    |   9753424  | 9282371  | 21.34%       |                        19.78%               |          19.55%         |                7.24%|
@@ -153,13 +154,20 @@ AVG_FILES/TABLET.
 The biggest performance 
 hits to run duration median (compared to default security) were ~21% for 
 auth-int and auth-conf.  Interesting to note that SSL's median run duration was 
-lower than all SASL configs and that auth-conf's was lower than auth-int. Initial 
-speculation for these oddities revolved around the [Thrift server](https://github.com/m1ch1/mapkeeper/wiki/Thrift-Java-Servers-Compared) 
-implementations, but the Thrift differences will not explain the auth-conf/int disparity as they both utilize TThreadPoolServer.
+lower than all SASL configs and that auth-conf's was lower than auth-int. 
+Initial  speculation for these oddities revolved around the 
+[Thrift server](https://github.com/m1ch1/mapkeeper/wiki/Thrift-Java-Servers-Compared) 
+implementations, but the Thrift differences will not explain the auth-conf/int 
+disparity since both utilize TThreadPoolServer.  It was certainly unexpected that the 
+addition of wire encryption would yield a faster median run duration.  This result 
+prompted, as a sanity check, sniffing the net traffic (in a contrived example 
+not during a timed run) in both auth-conf and auth-int to ensure that the message 
+contents were actually obfuscated in auth-conf (they were) and not obfuscated in 
+auth-int (they weren't).
 
 
 ## Future Work
 
-Part 2 of this series will consist of the same continuous ingest loads and configurations
-with the addition of a query load on the system.
+Part 2 of this series will consist of the same continuous ingest loads and 
+configurations with the addition of a query load on the system.
 
