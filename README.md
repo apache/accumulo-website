@@ -28,4 +28,3 @@ This can be done easily by invoking the post-commit hook (either by hand, or aut
 Git to invoke the post-commit hook).
 
 `./_devtools/git-hooks/post-commit`
-
