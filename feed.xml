@@ -6,8 +6,8 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 21 Mar 2017 14:15:52 -0400</pubDate>
-    <lastBuildDate>Tue, 21 Mar 2017 14:15:52 -0400</lastBuildDate>
+    <pubDate>Fri, 24 Mar 2017 13:37:16 -0400</pubDate>
+    <lastBuildDate>Fri, 24 Mar 2017 13:37:16 -0400</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
@@ -890,36 +890,23 @@ bootstrap_hdfs.sh    config.sh                start-daemon.sh                  s
 
 &lt;p&gt;The number of scripts made it difficult to know which scripts to use.  If you added the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory to your 
 &lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt;, it could add unecessary commands to your PATH or cause commands to be overriden due generic names
-(like ‘start-all.sh’). The number of scripts were reduced using the following methods:&lt;/p&gt;
+(like ‘start-all.sh’). The number of scripts were reduced by removing scripts that are no longer used and combining
+scripts with similiar functionality.&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;Scripts that are only called by other scripts were moved to a new &lt;code class=&quot;highlighter-rouge&quot;&gt;libexec/&lt;/code&gt; directory in the Accumulo binary tarball&lt;/li&gt;
-  &lt;li&gt;Scripts with similiar functionality were combined&lt;/li&gt;
-  &lt;li&gt;Extra/optional scripts were move to a new &lt;code class=&quot;highlighter-rouge&quot;&gt;contrib/&lt;/code&gt; directory in the binary tarball&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Starting with 2.0.0, Accumulo will only have 3 scripts in its &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory:&lt;/p&gt;
+&lt;p&gt;Starting with 2.0.0, Accumulo will only have 4 scripts in its &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ls accumulo-2.0.0/bin/
-accumulo  accumulo-cluster  accumulo-service
+accumulo  accumulo-cluster  accumulo-service  accumulo-util
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Below are some notes on this change:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;The ‘accumulo’ script was left alone except for improved usage and the addition of ‘create-config’ and ‘build-native’
-commands to replace ‘bootstrap_config.sh’ and ‘build_native_library.sh’.&lt;/li&gt;
+  &lt;li&gt;The ‘accumulo’ script was mostly left alone except for improved usage.&lt;/li&gt;
   &lt;li&gt;The ‘accumulo-service’ script was created to manage Accumulo processes as services&lt;/li&gt;
   &lt;li&gt;The ‘accumulo-cluster’ command was created to manage Accumulo on cluster and replaces ‘start-all.sh’ and ‘stop-all.sh’.&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;All optional scripts in &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; were moved to &lt;code class=&quot;highlighter-rouge&quot;&gt;contrib/&lt;/code&gt;:&lt;/p&gt;
-
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls accumulo-2.0.0/contrib/
-bootstrap-hdfs.sh  check-tservers  gen-monitor-cert.sh  tool.sh
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
+  &lt;li&gt;The ‘accumulo-util’ command combines many utility scripts such as ‘build_native_library.sh’, ‘tool.sh’, etc into one script.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;less-configuration&quot;&gt;Less configuration&lt;/h3&gt;
@@ -935,28 +922,22 @@ accumulo-site.xml        gc            log4j.properties                     moni
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;While all of these files have a purpose, many are only used in rare situations. Therefore, the
-‘accumulo create-config’ (which replaces ‘bootstrap_config.sh’) now only generates a minimum
-set of configuration files needed to run Accumulo.&lt;/p&gt;
+&lt;p&gt;While all of these files have a purpose, many are only used in rare situations. For Accumulo 2.0, the ‘conf/’
+directory now only contains a minimum set of configuration files needed to run Accumulo.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;accumulo-2.0.0
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./bin/accumulo create-config
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ls conf/
-accumulo-env.sh  accumulo-site.xml  client.conf  examples
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ls accumulo-2.0.0/conf/
+accumulo-env.sh  accumulo-site.xml  client.conf  log4j-monitor.properties  log4j.properties  log4j-service.properties  templates
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;The ‘accumulo create-config’ command does not generate host files (i.e ‘tservers’, ‘monitor’, etc) to run processes locally.
-These files are only required by the ‘accumulo-cluster’ command which has a command to generate them.&lt;/p&gt;
+&lt;p&gt;The Accumulo tarball does contain host files (i.e ‘tservers’, ‘monitor’, etc) by default as these files are only required by
+the ‘accumulo-cluster’ command. However, the script has a command to generate them.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;accumulo-2.0.0/
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./bin/accumulo-cluster create-config
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ls conf/
-accumulo-env.sh  accumulo-site.xml  client.conf  examples  gc  masters  monitor  tracers  tservers
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./bin/accumulo-cluster create-config
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Any less common configuration files that were not generated above can still be found in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/examples&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Any less common configuration files can still be found in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/templates&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;better-usage&quot;&gt;Better usage&lt;/h3&gt;
 
@@ -974,11 +955,11 @@ created in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/&lt;/code&gt; by
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./accumulo-2.0.0/bin/accumulo help
 
-Usage: accumulo &amp;lt;command&amp;gt; (&amp;lt;argument&amp;gt; ...)
+Usage: accumulo &amp;lt;command&amp;gt; [-h] (&amp;lt;argument&amp;gt; ...)
+
+  -h   Prints usage for specified command
 
 Core Commands:
-  create-config                  Creates Accumulo configuration
-  build-native                   Builds Accumulo native libraries
   init                           Initializes Accumulo
   shell                          Runs Accumulo shell
   classpath                      Prints Accumulo classpath
@@ -986,7 +967,6 @@ Core Commands:
   admin                          Executes administrative commands
   info                           Prints Accumulo cluster info
   help                           Prints usage
-  jar &amp;lt;jar&amp;gt; [&amp;lt;main class&amp;gt;] args  Runs Java &amp;lt;main class&amp;gt; in &amp;lt;jar&amp;gt; using Accumulo classpath
   &amp;lt;main class&amp;gt; args              Runs Java &amp;lt;main class&amp;gt; located on Accumulo classpath
 
 Process Commands:
@@ -1030,11 +1010,18 @@ $ ./accumulo-2.0.0/bin/accumulo-cluster
 Usage: accumulo-cluster &amp;lt;command&amp;gt; (&amp;lt;argument&amp;gt; ...)
 
 Commands:
-  create-config   Creates cluster config
-  start           Starts Accumulo cluster
-  stop            Stops Accumulo cluster
+  create-config       Creates cluster config
+  start               Starts Accumulo cluster
+  stop                Stops Accumulo cluster
+  start-non-tservers  Starts all services except tservers
+  start-tservers      Starts all tservers on cluster
+  stop-tservers       Stops all tservers on cluster
+  start-here          Starts all services on this node
+  stop-here           Stops all services on this node
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;This post was updated on March 24, 2017 to reflect changes to Accumulo 2.0&lt;/em&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 16 Nov 2016 00:00:00 -0500</pubDate>

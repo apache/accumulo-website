@@ -168,36 +168,23 @@ bootstrap_hdfs.sh    config.sh                start-daemon.sh                  s
 
 <p>The number of scripts made it difficult to know which scripts to use.  If you added the <code class="highlighter-rouge">bin/</code> directory to your 
 <code class="highlighter-rouge">PATH</code>, it could add unecessary commands to your PATH or cause commands to be overriden due generic names
-(like ‘start-all.sh’). The number of scripts were reduced using the following methods:</p>
+(like ‘start-all.sh’). The number of scripts were reduced by removing scripts that are no longer used and combining
+scripts with similiar functionality.</p>
 
-<ul>
-  <li>Scripts that are only called by other scripts were moved to a new <code class="highlighter-rouge">libexec/</code> directory in the Accumulo binary tarball</li>
-  <li>Scripts with similiar functionality were combined</li>
-  <li>Extra/optional scripts were move to a new <code class="highlighter-rouge">contrib/</code> directory in the binary tarball</li>
-</ul>
-
-<p>Starting with 2.0.0, Accumulo will only have 3 scripts in its <code class="highlighter-rouge">bin/</code> directory:</p>
+<p>Starting with 2.0.0, Accumulo will only have 4 scripts in its <code class="highlighter-rouge">bin/</code> directory:</p>
 
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ls accumulo-2.0.0/bin/
-accumulo  accumulo-cluster  accumulo-service
+accumulo  accumulo-cluster  accumulo-service  accumulo-util
 </code></pre>
 </div>
 
 <p>Below are some notes on this change:</p>
 
 <ul>
-  <li>The ‘accumulo’ script was left alone except for improved usage and the addition of ‘create-config’ and ‘build-native’
-commands to replace ‘bootstrap_config.sh’ and ‘build_native_library.sh’.</li>
+  <li>The ‘accumulo’ script was mostly left alone except for improved usage.</li>
   <li>The ‘accumulo-service’ script was created to manage Accumulo processes as services</li>
   <li>The ‘accumulo-cluster’ command was created to manage Accumulo on cluster and replaces ‘start-all.sh’ and ‘stop-all.sh’.</li>
-  <li>
-    <p>All optional scripts in <code class="highlighter-rouge">bin/</code> were moved to <code class="highlighter-rouge">contrib/</code>:</p>
-
-    <div class="highlighter-rouge"><pre class="highlight"><code>$ ls accumulo-2.0.0/contrib/
-bootstrap-hdfs.sh  check-tservers  gen-monitor-cert.sh  tool.sh
-</code></pre>
-    </div>
-  </li>
+  <li>The ‘accumulo-util’ command combines many utility scripts such as ‘build_native_library.sh’, ‘tool.sh’, etc into one script.</li>
 </ul>
 
 <h3 id="less-configuration">Less configuration</h3>
@@ -213,28 +200,22 @@ accumulo-site.xml        gc            log4j.properties                     moni
 </code></pre>
 </div>
 
-<p>While all of these files have a purpose, many are only used in rare situations. Therefore, the
-‘accumulo create-config’ (which replaces ‘bootstrap_config.sh’) now only generates a minimum
-set of configuration files needed to run Accumulo.</p>
+<p>While all of these files have a purpose, many are only used in rare situations. For Accumulo 2.0, the ‘conf/’
+directory now only contains a minimum set of configuration files needed to run Accumulo.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd </span>accumulo-2.0.0
-<span class="gp">$ </span>./bin/accumulo create-config
-<span class="gp">$ </span>ls conf/
-accumulo-env.sh  accumulo-site.xml  client.conf  examples
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ls accumulo-2.0.0/conf/
+accumulo-env.sh  accumulo-site.xml  client.conf  log4j-monitor.properties  log4j.properties  log4j-service.properties  templates
 </code></pre>
 </div>
 
-<p>The ‘accumulo create-config’ command does not generate host files (i.e ‘tservers’, ‘monitor’, etc) to run processes locally.
-These files are only required by the ‘accumulo-cluster’ command which has a command to generate them.</p>
+<p>The Accumulo tarball does contain host files (i.e ‘tservers’, ‘monitor’, etc) by default as these files are only required by
+the ‘accumulo-cluster’ command. However, the script has a command to generate them.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd </span>accumulo-2.0.0/
-<span class="gp">$ </span>./bin/accumulo-cluster create-config
-<span class="gp">$ </span>ls conf/
-accumulo-env.sh  accumulo-site.xml  client.conf  examples  gc  masters  monitor  tracers  tservers
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>./bin/accumulo-cluster create-config
 </code></pre>
 </div>
 
-<p>Any less common configuration files that were not generated above can still be found in <code class="highlighter-rouge">conf/examples</code>.</p>
+<p>Any less common configuration files can still be found in <code class="highlighter-rouge">conf/templates</code>.</p>
 
 <h3 id="better-usage">Better usage</h3>
 
@@ -252,11 +233,11 @@ created in <code class="highlighter-rouge">conf/</code> by the <code class="high
 
 <div class="highlighter-rouge"><pre class="highlight"><code>$ ./accumulo-2.0.0/bin/accumulo help
 
-Usage: accumulo &lt;command&gt; (&lt;argument&gt; ...)
+Usage: accumulo &lt;command&gt; [-h] (&lt;argument&gt; ...)
+
+  -h   Prints usage for specified command
 
 Core Commands:
-  create-config                  Creates Accumulo configuration
-  build-native                   Builds Accumulo native libraries
   init                           Initializes Accumulo
   shell                          Runs Accumulo shell
   classpath                      Prints Accumulo classpath
@@ -264,7 +245,6 @@ Core Commands:
   admin                          Executes administrative commands
   info                           Prints Accumulo cluster info
   help                           Prints usage
-  jar &lt;jar&gt; [&lt;main class&gt;] args  Runs Java &lt;main class&gt; in &lt;jar&gt; using Accumulo classpath
   &lt;main class&gt; args              Runs Java &lt;main class&gt; located on Accumulo classpath
 
 Process Commands:
@@ -308,11 +288,18 @@ $ ./accumulo-2.0.0/bin/accumulo-cluster
 Usage: accumulo-cluster &lt;command&gt; (&lt;argument&gt; ...)
 
 Commands:
-  create-config   Creates cluster config
-  start           Starts Accumulo cluster
-  stop            Stops Accumulo cluster
+  create-config       Creates cluster config
+  start               Starts Accumulo cluster
+  stop                Stops Accumulo cluster
+  start-non-tservers  Starts all services except tservers
+  start-tservers      Starts all tservers on cluster
+  stop-tservers       Stops all tservers on cluster
+  start-here          Starts all services on this node
+  stop-here           Stops all services on this node
 </code></pre>
 </div>
+
+<p><em>This post was updated on March 24, 2017 to reflect changes to Accumulo 2.0</em></p>
 
 
 
