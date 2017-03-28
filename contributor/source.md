@@ -31,10 +31,9 @@ Accumulo has a number of [contrib projects][contrib] that maintain their own cod
 Accumulo's web site is developed using [Jekyll][jekyll]. Development is
 performed by editing the contents of the [accumulo-website master][website-branch] branch, either
 directly by a committer, with a pull request to [GitHub][github], or a patch
-submitted to [JIRA][jiraloc]. The rendered site can be previewed locally or on
-[GitHub][site-mirror], and the rendered site (in the `_site` directory) will be
-merged into the `asf-site` branch to update our [official/canonical
-site][site-canon] after being built.
+submitted to [JIRA][jiraloc]. The rendered site can be previewed locally and
+the rendered site (in the `_site` directory) will be merged into the `asf-site`
+branch to update our [official/canonical site][site-canon] after being built.
 
 To manage any Gem dependencies, it is highly recommended to use [Bundler](https://bundler.io).
 To start using Bundler, install it and then the dependencies for the website:
@@ -225,6 +224,5 @@ Accumulo has [guidelines for using Review Board][rb] to support code reviews.
 [pom]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
 [rb]: {{ "/contributor/rb" | relative_url }}
 [site-canon]: https://accumulo.apache.org
-[site-mirror]: http://apache.github.io/accumulo
 [srcheaders]: https://www.apache.org/legal/src-headers
 [styles]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD

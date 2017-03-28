@@ -60,7 +60,6 @@ $("#citationtable").dataTable();
  - [covert.io blogs](http://www.covert.io/)
     - [Accumulo, Nutch, and Gora](http://www.covert.io/post/18414889381/accumulo-nutch-and-gora)
     - [Accumulo and Pig](http://www.covert.io/post/18605091231/accumulo-and-pig)
- - [Accumulo on MapR](https://www.mapr.com/blog/accumulo-on-mapr) [More Accumulo on MapR](http://blog.stavi.sh/instructions-for-running-accumulo-on-mapr-m5)
  - [Accumulo on Ubuntu VirtualBox](https://gist.github.com/1535657)
  - [Accumulo on EC2](http://www.accumulodata.com/ec2.html)
 

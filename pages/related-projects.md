@@ -17,7 +17,7 @@ them visibility to a larger audience. To have you project listed here, send a re
 
 #### Apache Gora
 
-[Gora](https://gora.apache.org/) open source framework provides an in-memory data model and persistence for big data.  Accumulo's continuous ingest test suite was adapted to Gora and called [Goraci](http://gora.apache.org/current/index.html#goraci-integration-testsing-suite).
+[Gora](https://gora.apache.org/) open source framework provides an in-memory data model and persistence for big data.  Accumulo's continuous ingest test suite was adapted to Gora and called [Goraci](https://gora.apache.org/current/index.html#goraci-integration-testsing-suite).
 
 #### Apache Hive
 
@@ -26,11 +26,11 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### Apache Pig
 
-[Pig](http://pig.apache.org/) is a platform for analyzing large data sets that consists of a high-level language for expressing data analysis programs, coupled with infrastructure for evaluating these programs.  Pig has the ability to read and write data in Accumulo using [AccumuloStorage](http://pig.apache.org/docs/r0.16.0/func.html#AccumuloStorage).
+[Pig](https://pig.apache.org/) is a platform for analyzing large data sets that consists of a high-level language for expressing data analysis programs, coupled with infrastructure for evaluating these programs.  Pig has the ability to read and write data in Accumulo using [AccumuloStorage](https://pig.apache.org/docs/r0.16.0/func.html#AccumuloStorage).
 
 #### Apache Rya
 
-[Rya](http://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
+[Rya](https://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
 
 #### Gaffer
 

@@ -35,7 +35,7 @@ legal_notice: Apache Accumulo, Accumulo, Apache Hadoop, Apache Thrift, Apache, t
         {% capture social-include %}{% include social.md %}{% endcapture %}{{ social-include | markdownify }}
       </div>
     </div>
-    <a id="apachecon" href="http://www.apache.org/events/current-event.html"><img src="http://www.apache.org/events/current-event-234x60.png"/></a>
+    <a id="apachecon" href="https://www.apache.org/events/current-event"><img src="https://www.apache.org/events/current-event-234x60.png"/></a>
     <a id="accumulo-summit-logo" a href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="{{ site.baseurl }}/images/accumulo-summit.png"></a>
   </div>
 </div>
