@@ -14,27 +14,27 @@ Execute the following command in the shell.
 
 Execute following in Accumulo shell to setup classpath context
 
-    root@test16> config -s general.vfs.context.classpath.cx1=hdfs://<namenode host>:<namenode port>/user1/lib
+    root@test17> config -s general.vfs.context.classpath.cx1=hdfs://<namenode host>:<namenode port>/user1/lib
 
 Create a table
 
-    root@test16> createtable nofoo
+    root@test17> createtable nofoo
 
 The following command makes this table use the configured classpath context
 
-    root@test16 nofoo> config -t nofoo -s table.classpath.context=cx1
+    root@test17 nofoo> config -t nofoo -s table.classpath.context=cx1
 
 The following command configures an iterator thats in FooFilter.jar
 
-    root@test16 nofoo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
+    root@test17 nofoo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
     Filter accepts or rejects each Key/Value pair
     ----------> set FooFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method: false
 
 The commands below show the filter is working.
 
-    root@test16 nofoo> insert foo1 f1 q1 v1
-    root@test16 nofoo> insert noo1 f1 q1 v2
-    root@test16 nofoo> scan
+    root@test17 nofoo> insert foo1 f1 q1 v1
+    root@test17 nofoo> insert noo1 f1 q1 v2
+    root@test17 nofoo> scan
     noo1 f1:q1 []    v2
     root@test15 nofoo>
 
@@ -42,11 +42,11 @@ Below, an attempt is made to add the FooFilter to a table thats not configured
 to use the clasppath context cx1. This fails util the table is configured to
 use cx1.
 
-    root@test16 nofoo> createtable nofootwo
-    root@test16 nofootwo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
+    root@test17 nofoo> createtable nofootwo
+    root@test17 nofootwo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
     2013-05-03 12:49:35,943 [shell.Shell] ERROR: java.lang.IllegalArgumentException: org.apache.accumulo.test.FooFilter
-    root@test16 nofootwo> config -t nofootwo -s table.classpath.context=cx1
-    root@test16 nofootwo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
+    root@test17 nofootwo> config -t nofootwo -s table.classpath.context=cx1
+    root@test17 nofootwo> setiter -n foofilter -p 10 -scan -minc -majc -class org.apache.accumulo.test.FooFilter
     Filter accepts or rejects each Key/Value pair
     ----------> set FooFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method: false
 

@@ -10,7 +10,7 @@ put a trivial amount of data into accumulo using the accumulo shell:
 
     $ ./bin/accumulo shell -u username -p password
     Shell - Apache Accumulo Interactive Shell
-    - version: 1.6.0
+    - version: 1.7.3
     - instance name: instance
     - instance id: 00000000-0000-0000-0000-000000000000
     -
@@ -37,5 +37,5 @@ The following will search for any rows in the input table that starts with "dog"
 
 We can see the output of our little map-reduce job:
 
-    $ hadoop fs -text /tmp/output/output/part-m-00000
+    $ hadoop fs -text /tmp/output/part-m-00000
     dogrow dogcf:dogcq [] 1357844987994 false    dogvalue

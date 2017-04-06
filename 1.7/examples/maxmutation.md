@@ -13,7 +13,7 @@ large mutations.
 
     Shell - Apache Accumulo Interactive Shell
     -
-    - version: 1.6.0
+    - version: 1.7.3
     - instance name: instance
     - instance id: 00000000-0000-0000-0000-000000000000
     -
@@ -26,7 +26,8 @@ large mutations.
 
 Now the table will reject any mutation that is larger than 1/256th of the
 working memory of the tablet server. The following command attempts to ingest
-a single row with 10000 columns, which exceeds the memory limit:
+a single row with 10000 columns, which exceeds the memory limit.
+Depending on the amount of Java heap your tserver(s) are given, you may have to increase the number of columns provided to see the failure.
 
     $ ./bin/accumulo org.apache.accumulo.test.TestIngest -i instance -z zookeepers -u username -p password --rows 1 --cols 10000
     ERROR : Constraint violates : ConstraintViolationSummary(constrainClass:org.apache.accumulo.examples.simple.constraints.MaxMutationSize, violationCode:0, violationDescription:mutation exceeded maximum size of 188160, numberOfViolatingMutations:1)

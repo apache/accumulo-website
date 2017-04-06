@@ -15,7 +15,7 @@ tar distribution.
 
     Shell - Apache Accumulo Interactive Shell
     -
-    - version: 1.6.0
+    - version: 1.7.3
     - instance name: instance
     - instance id: 00000000-0000-0000-0000-000000000000
     -
