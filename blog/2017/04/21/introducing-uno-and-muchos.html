@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo</title>
+<title>Introducing Uno and Muchos</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -140,92 +140,108 @@
         </div>
         <div id="content">
           
-          <div class="row">
-  <div class="col-md-8">
-    <div class="jumbotron" style="text-align: center">
-      <h3>Apache Accumulo&reg; is a sorted, distributed key/value store that provides robust, scalable data storage and retrieval.</h3>
-      <a class="btn btn-success" href="downloads/" role="button"><i class="fa fa-download fa-lg"></i> Download</a>
-    </div>
-    <div>
-      <p id="home-description">Apache Accumulo is based on the design of Google's <a href="https://research.google.com/archive/bigtable.html">BigTable</a> and is powered by <a href="https://hadoop.apache.org">Apache Hadoop</a>, <a href="https://zookeeper.apache.org">Apache Zookeeper</a>, and <a href="https://thrift.apache.org">Apache Thrift</a>.<br /><br />Accumulo has several <a href="/features/">novel features</a> such as cell-based access control and a server-side programming mechanism that can modify key/value pairs at various points in the data management process.</p>
-    </div>
-  </div>
-  <div class="col-md-4" id="sidebar">
-    <div class="row">
-      <div class="col-sm-12 panel panel-default">
-        <p style="font-size: 24px; margin-bottom: 0px;">Latest News</p>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Apr 2017</span>
-           <a href="/blog/2017/04/21/introducing-uno-and-muchos.html">Introducing Uno and Muchos</a>
-          </div>
-        </div>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Apr 2017</span>
-           <a href="/release/accumulo-1.7.3/">Apache Accumulo 1.7.3</a>
-          </div>
-        </div>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Mar 2017</span>
-           <a href="/blog/2017/03/21/happy-anniversary-accumulo.html">Happy Anniversary Accumulo</a>
-          </div>
-        </div>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Mar 2017</span>
-           <a href="/blog/2017/03/06/security-performance-implications.html">Security Performance Implications</a>
-          </div>
-        </div>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Feb 2017</span>
-           <a href="/release/accumulo-1.8.1/">Apache Accumulo 1.8.1</a>
-          </div>
-        </div>
-        
-        <div id="news-archive-link">
-         <p>View all posts in the <a href="/news">news archive</a></p>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 panel panel-default">
-        
-<table class="table" id="sociallinks">
-  <tbody>
-    <tr>
-      <td><img src="/images/Twitter_logo_blue.png" alt="Twitter" style="height: 1em" /></td>
-      <td><a href="https://twitter.com/apacheaccumulo">@ApacheAccumulo</a></td>
-    </tr>
-    <tr>
-      <td><img src="/images/InBug-16px_0.png" alt="Linked in" /></td>
-      <td><a href="https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913">Apache Accumulo Professionals</a></td>
-    </tr>
-    <tr>
-      <td><img src="/images/GitHub-Mark-32px.png" alt="GitHub" style="height: 1em" /></td>
-      <td><a href="https://github.com/apache/accumulo">Apache Accumulo on GitHub</a></td>
-    </tr>
-    <tr>
-      <td><span class="glyphicon glyphicon-comment"></span></td>
-      <td><a href="irc://chat.freenode.net/accumulo">#accumulo @ freenode</a></td>
-    </tr>
-  </tbody>
+          <h1 class="title">Introducing Uno and Muchos</h1>
+          
+          <table>
+<tr><td><b>Author</b></td><td>&nbsp;&nbsp;Mike Walch </td></tr>
+<tr><td><b>Date </b></td><td> &nbsp;&nbsp;21 Apr 2017 </td></tr>
+
 </table>
+<p>
 
+<p>While <a href="https://github.com/apache/accumulo/blob/master/INSTALL.md">Accumulo’s installation instructions</a> are simple, it can be time consuming to install Accumulo
+given its requirement on <a href="https://hadoop.apache.org/">Hadoop</a> and <a href="https://zookeeper.apache.org/">Zookeeper</a> being installed and running. For a one-time production
+installation, this set up time (which can take up to an hour) is not much of an inconvenience. However, it can become a burden
+for developers who need to frequently set up Accumulo to test code changes, switch between different
+versions, or start a fresh instance on a laptop.</p>
 
-      </div>
-    </div>
-    <a id="apachecon" href="https://www.apache.org/events/current-event"><img src="https://www.apache.org/events/current-event-234x60.png" /></a>
-    <a id="accumulo-summit-logo" a="" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png" /></a>
-  </div>
+<p><a href="https://github.com/astralway/uno">Uno</a> and <a href="https://github.com/astralway/muchos">Muchos</a> are tools that ease the burden on developers of installing Accumulo and its dependencies.
+The names of Uno and Muchos indicate their use case. Uno is designed for running
+Accumulo on a single node while Muchos is designed for running Accumulo on a cluster. While Uno and
+Muchos are configured by default to install the most recent stable binary tarball release of Accumulo, Hadoop,
+and Zookeeper from Apache mirrors, it is easy to configure different versions to match a production cluster.</p>
+
+<p>The sections below show how to use these tools. For more complete documentation, view their respective GitHub
+pages.</p>
+
+<h2 id="uno">Uno</h2>
+
+<p><a href="https://github.com/astralway/uno">Uno</a> is a command line tool that sets up Accumulo on a single machine. It can be installed by cloning the
+Uno git repo.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/astralway/uno.git
+<span class="nb">cd </span>uno
+</code></pre>
 </div>
+
+<p>Uno works out of the box but it can be customized by modifying <code class="highlighter-rouge">conf/uno.conf</code>.</p>
+
+<p>First, download the Accumulo, Hadoop, and Zookeeper tarballs from Apache by using the command below:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>./bin/uno fetch accumulo
+</code></pre>
+</div>
+
+<p>The fetch command places all tarballs in the <code class="highlighter-rouge">downloads/</code> directory. Uno can be configured (in <code class="highlighter-rouge">conf/uno.conf</code>)
+to build an Accumulo tarball from a local git repo when <code class="highlighter-rouge">fetch</code> is called.</p>
+
+<p>After downloading tarballs, the command below sets up Accumulo, Hadoop &amp; Zookeeper in the <code class="highlighter-rouge">install/</code> directory.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>./bin/uno setup accumulo
+</code></pre>
+</div>
+
+<p>Accumulo, Hadoop, &amp; Zookeeper are now ready to use. You can view the Accumulo monitor at
+<a href="http://localhost:9995">http://localhost:9995</a>. You can configure your shell using the command below:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="k">$(</span>./bin/uno env<span class="k">)</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p>Run <code class="highlighter-rouge">uno stop accumulo</code> to cleanly stop your cluster and <code class="highlighter-rouge">uno start accumulo</code> to start it again.</p>
+
+<p>If you need a fresh cluster, you can run <code class="highlighter-rouge">uno setup accumulo</code> again. To kill your cluster, run <code class="highlighter-rouge">uno kill</code>.</p>
+
+<h2 id="muchos">Muchos</h2>
+
+<p><a href="https://github.com/astralway/muchos">Muchos</a> is a command line tool that launches an AWS EC2 cluster with Accumulo set up on it. It is installed by
+cloning its git repo.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/astralway/muchos.git
+<span class="nb">cd </span>muchos
+</code></pre>
+</div>
+
+<p>Before using Muchos, create <code class="highlighter-rouge">muchos.props</code> in <code class="highlighter-rouge">conf/</code> and edit it for your AWS environment.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>cp conf/muchos.props.example conf/muchos.props
+vim conf/muchos.props
+</code></pre>
+</div>
+
+<p>Next, run the command below to launch a cluster in AWS.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>muchos launch -c mycluster
+</code></pre>
+</div>
+
+<p>After launching the cluster, set up Accumulo on it using the following command.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>muchos setup
+</code></pre>
+</div>
+
+<p>Use <code class="highlighter-rouge">muchos ssh</code> to ssh to the cluster and <code class="highlighter-rouge">muchos terminate</code> to terminate all EC2 nodes when you are finished.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Uno and Muchos automate installing Accumulo for developmment and testing. While not recommended for production
+use at this time, Muchos is a great reference for running Accumulo in production. System admistrators can
+reference the <a href="https://www.ansible.com/">Ansible</a> code in Muchos to automate management of their own clusters.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
 
         </div>
 
@@ -235,8 +251,6 @@
   <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
 
   <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
-
-  <p>Apache Accumulo, Accumulo, Apache Hadoop, Apache Thrift, Apache, the Apache feather logo, and the Accumulo project logo are trademarks of the <a href="https://www.apache.org">Apache Software Foundation</a>.</p>
 
 </footer>
 
