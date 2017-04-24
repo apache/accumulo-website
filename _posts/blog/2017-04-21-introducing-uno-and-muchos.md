@@ -10,10 +10,10 @@ for developers who need to frequently set up Accumulo to test code changes, swit
 versions, or start a fresh instance on a laptop.
 
 [Uno] and [Muchos] are tools that ease the burden on developers of installing Accumulo and its dependencies.
-The names of Uno and Muchos indicate their use case. Uno is designed for running
-Accumulo on a single node while Muchos is designed for running Accumulo on a cluster. While Uno and
-Muchos are configured by default to install the most recent stable binary tarball release of Accumulo, Hadoop,
-and Zookeeper from Apache mirrors, it is easy to configure different versions to match a production cluster.
+The names of Uno and Muchos indicate their use case. Uno is designed for running Accumulo on a single node
+while Muchos is designed for running Accumulo on a cluster. While Uno and Muchos will install by default the most
+recent stable release of Accumulo, Hadoop, and Zookeeper, it is easy to configure different versions to
+match a production cluster.
 
 The sections below show how to use these tools. For more complete documentation, view their respective GitHub
 pages.
