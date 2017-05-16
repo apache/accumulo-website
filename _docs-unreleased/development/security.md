@@ -1,19 +1,8 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== Security
+---
+title: Security
+category: development
+order: 6
+---
 
 Accumulo extends the BigTable data model to implement a security mechanism
 known as cell-level security. Every key-value pair has its own security label, stored
@@ -22,14 +11,13 @@ a given user meets the security requirements to read the value. This enables dat
 various security levels to be stored within the same row, and users of varying
 degrees of access to query the same table, while preserving data confidentiality.
 
-=== Security Label Expressions
+## Security Label Expressions
 
 When mutations are applied, users can specify a security label for each value. This is
 done as the Mutation is created by passing a ColumnVisibility object to the put()
 method:
 
-[source,java]
-----
+```java
 Text rowID = new Text("row1");
 Text colFam = new Text("myColFam");
 Text colQual = new Text("myColQual");
@@ -40,14 +28,14 @@ Value value = new Value("myValue");
 
 Mutation mutation = new Mutation(rowID);
 mutation.put(colFam, colQual, colVis, timestamp, value);
-----
+```
 
-=== Security Label Expression Syntax
+## Security Label Expression Syntax
 
 Security labels consist of a set of user-defined tokens that are required to read the
 value the label is associated with. The set of tokens required can be specified using
-syntax that supports logical AND +&+ and OR +|+ combinations of terms, as
-well as nesting groups +()+ of terms together.
+syntax that supports logical AND `&` and OR `|` combinations of terms, as
+well as nesting groups `()` of terms together.
 
 Each term is comprised of one to many alpha-numeric characters, hyphens, underscores or
 periods. Optionally, each term may be wrapped in quotation marks
@@ -58,13 +46,13 @@ with a backslash.
 For example, suppose within our organization we want to label our data values with
 security labels defined in terms of user roles. We might have tokens such as:
 
-  admin
-  audit
-  system
+    admin
+    audit
+    system
 
 These can be specified alone or combined using logical operators:
 
-----
+```
 // Users must have admin privileges
 admin
 
@@ -76,12 +64,12 @@ admin|audit
 
 // Users must have audit and one or both of admin or system
 (admin|system)&audit
-----
+```
 
-When both +|+ and +&+ operators are used, parentheses must be used to specify
+When both `|` and `&` operators are used, parentheses must be used to specify
 precedence of the operators.
 
-=== Authorization
+## Authorization
 
 When clients attempt to read data from Accumulo, any security labels present are
 examined against the set of authorizations passed by the client code when the
@@ -91,15 +79,14 @@ results sent back to the client.
 
 Authorizations are specified as a comma-separated list of tokens the user possesses:
 
-[source,java]
-----
+```java
 // user possesses both admin and system level access
 Authorization auths = new Authorization("admin","system");
 
 Scanner s = connector.createScanner("table", auths);
-----
+```
 
-=== User Authorizations
+## User Authorizations
 
 Each Accumulo user has a set of associated security labels. To manipulate
 these in the shell while using the default authorizor, use the setuaths and getauths commands.
@@ -115,13 +102,13 @@ enable this constraint. For existing tables use the following shell command to
 enable the visibility constraint. Ensure the constraint number does not
 conflict with any existing constraints.
 
-  config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
+    config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
 
 Any user with the alter table permission can add or remove this constraint.
 This constraint is not applied to bulk imported data, if this a concern then
 disable the bulk import permission.
 
-=== Pluggable Security
+## Pluggable Security
 
 New in 1.5 of Accumulo is a pluggable security mechanism. It can be broken into three actions --
 authentication, authorization, and permission handling. By default all of these are handled in
@@ -132,9 +119,9 @@ deprecation cycle.
 Authentication simply handles the ability for a user to verify their integrity. A combination of
 principal and authentication token are used to verify a user is who they say they are. An
 authentication token should be constructed, either directly through its constructor, but it is
-advised to use the +init(Property)+ method to populate an authentication token. It is expected that a
+advised to use the `init(Property)` method to populate an authentication token. It is expected that a
 user knows what the appropriate token to use for their system is. The default token is
-+PasswordToken+.
+`PasswordToken`.
 
 Once a user is authenticated by the Authenticator, the user has access to the other actions within
 Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission
@@ -148,7 +135,7 @@ could be used to determine if a user has a specific permission, and then it may 
 default ZookeeperAuthorizor to determine what Authorizations a user is ultimately allowed to use.
 This is a pluggable system so custom components can be created depending on your need.
 
-=== Secure Authorizations Handling
+## Secure Authorizations Handling
 
 For applications serving many users, it is not expected that an Accumulo user
 will be created for each application user. In this case an Accumulo user with
@@ -164,7 +151,7 @@ requires users to specify only the information necessary to authenticate themsel
 to the system. Once user identity is established, their credentials can be accessed by
 the client code and passed to Accumulo outside of the reach of the user.
 
-=== Query Services Layer
+## Query Services Layer
 
 Since the primary method of interaction with Accumulo is through the Java API,
 production environments often call for the implementation of a Query layer. This

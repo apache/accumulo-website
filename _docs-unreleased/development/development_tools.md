@@ -1,26 +1,15 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== Development Clients
+---
+title: Development Tools
+category: development
+order: 3
+---
 
 Normally, Accumulo consists of lots of moving parts. Even a stand-alone version of
 Accumulo requires Hadoop, Zookeeper, the Accumulo master, a tablet server, etc. If
 you want to write a unit test that uses Accumulo, you need a lot of infrastructure
 in place before your test can run.
 
-=== Mock Accumulo
+## Mock Accumulo
 
 Mock Accumulo supplies mock implementations for much of the client API. It presently
 does not enforce users, logins, permissions, etc. It does support Iterators and Combiners.
@@ -29,19 +18,21 @@ settings between runs.
 
 While normal interaction with the Accumulo client looks like this:
 
-[source,java]
+```java
 Instance instance = new ZooKeeperInstance(...);
 Connector conn = instance.getConnector(user, passwordToken);
+```
 
 To interact with the MockAccumulo, just replace the ZooKeeperInstance with MockInstance:
 
-[source,java]
+```java
 Instance instance = new MockInstance();
+```
 
-In fact, you can use the +--fake+ option to the Accumulo shell and interact with
+In fact, you can use the `--fake` option to the Accumulo shell and interact with
 MockAccumulo:
 
-----
+```
 $ accumulo shell --fake -u root -p ''
 
 Shell - Apache Accumulo Interactive Shell
@@ -68,17 +59,18 @@ root@fake test> scan -b row2 -e row2
 row2 cf:cq []    value2
 
 root@fake test>
-----
+```
 
 When testing Map Reduce jobs, you can also set the Mock Accumulo on the AccumuloInputFormat
 and AccumuloOutputFormat classes:
 
-[source,java]
+```java
 // ... set up job configuration
 AccumuloInputFormat.setMockInstance(job, "mockInstance");
 AccumuloOutputFormat.setMockInstance(job, "mockInstance");
+```
 
-=== Mini Accumulo Cluster
+## Mini Accumulo Cluster
 
 While the Mock Accumulo provides a lightweight implementation of the client API for unit
 testing, it is often necessary to write more realistic end-to-end integration tests that
@@ -89,19 +81,22 @@ up HDFS.
 
 To start it up, you will need to supply an empty directory and a root password as arguments:
 
-[source,java]
+```java
 File tempDirectory = // JUnit and Guava supply mechanisms for creating temp directories
 MiniAccumuloCluster accumulo = new MiniAccumuloCluster(tempDirectory, "password");
 accumulo.start();
+```
 
 Once we have our mini cluster running, we will want to interact with the Accumulo client API:
 
-[source,java]
+```java
 Instance instance = new ZooKeeperInstance(accumulo.getInstanceName(), accumulo.getZooKeepers());
 Connector conn = instance.getConnector("root", new PasswordToken("password"));
+```
 
 Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:
 
-[source,java]
+```java
 accumulo.stop();
 // delete your temporary folder
+```

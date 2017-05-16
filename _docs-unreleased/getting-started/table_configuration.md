@@ -1,26 +1,16 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== Table Configuration
+---
+title: Table Configuration
+category: getting-started
+order: 5
+---
 
 Accumulo tables have a few options that can be configured to alter the default
 behavior of Accumulo as well as improve performance based on the data stored.
 These include locality groups, constraints, bloom filters, iterators, and block
-cache.  For a complete list of available configuration options, see <<configuration>>.
+cache.  See the [configuration documentation][config] for a complete list of
+available configuration options.
 
-=== Locality Groups
+## Locality Groups
 
 Accumulo supports storing sets of column families separately on disk to allow
 clients to efficiently scan over columns that are frequently used together and to avoid
@@ -32,19 +22,18 @@ By default, tables place all column families into the same ``default'' locality 
 Additional locality groups can be configured at any time via the shell or
 programmatically as follows:
 
-==== Managing Locality Groups via the Shell
+### Managing Locality Groups via the Shell
 
-  usage: setgroups <group>=<col fam>{,<col fam>}{ <group>=<col fam>{,<col fam>}}
-      [-?] -t <table>
+    usage: setgroups <group>=<col fam>{,<col fam>}{ <group>=<col fam>{,<col fam>}}
+        [-?] -t <table>
 
-  user@myinstance mytable> setgroups group_one=colf1,colf2 -t mytable
+    user@myinstance mytable> setgroups group_one=colf1,colf2 -t mytable
 
-  user@myinstance mytable> getgroups -t mytable
+    user@myinstance mytable> getgroups -t mytable
 
-==== Managing Locality Groups via the Client API
+### Managing Locality Groups via the Client API
 
-[source,java]
-----
+```java
 Connector conn;
 
 HashMap<String,Set<Text>> localityGroups = new HashMap<String, Set<Text>>();
@@ -65,7 +54,7 @@ conn.tableOperations().setLocalityGroups("mytable", localityGroups);
 // existing locality groups can be obtained as follows
 Map<String, Set<Text>> groups =
     conn.tableOperations().getLocalityGroups("mytable");
-----
+```
 
 The assignment of Column Families to Locality Groups can be changed at any time. The
 physical movement of column families into their new locality groups takes place via
@@ -73,9 +62,9 @@ the periodic Major Compaction process that takes place continuously in the
 background. Major Compaction can also be scheduled to take place immediately
 through the shell:
 
-  user@myinstance mytable> compact -t mytable
+    user@myinstance mytable> compact -t mytable
 
-=== Constraints
+## Constraints
 
 Accumulo supports constraints applied on mutations at insert time. This can be
 used to disallow certain inserts according to a user defined policy. Any mutation
@@ -84,29 +73,29 @@ client.
 
 Constraints can be enabled by setting a table property as follows:
 
-----
+```
 user@myinstance mytable> constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
 
 user@myinstance mytable> constraint -l
 com.test.ExampleConstraint=1
 com.test.AnotherConstraint=2
-----
+```
 
 Currently there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
 the following interface:
 
-  org.apache.accumulo.core.constraints.Constraint
+     org.apache.accumulo.core.constraints.Constraint
 
 To deploy a new constraint, create a jar file containing the class implementing the
 new constraint and place it in the lib directory of the Accumulo installation. New
 constraint jars can be added to Accumulo and enabled without restarting but any
 change to an existing constraint class requires Accumulo to be restarted.
 
-See the https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md[constraints example]
+See the [contraints examples](https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md)
 for example code.
 
-=== Bloom Filters
+## Bloom Filters
 
 As mutations are applied to an Accumulo table, several files are created per tablet. If
 bloom filters are enabled, Accumulo will create and load a small data structure into
@@ -115,45 +104,45 @@ This can speed up lookups considerably.
 
 To enable bloom filters, enter the following command in the Shell:
 
-  user@myinstance> config -t mytable -s table.bloom.enabled=true
+    user@myinstance> config -t mytable -s table.bloom.enabled=true
 
-The https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md[bloom filter example]
+The [bloom filter examples](https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md)
 contains an extensive example of using Bloom Filters.
 
-=== Iterators
+## Iterators
 
 Iterators provide a modular mechanism for adding functionality to be executed by
 TabletServers when scanning or compacting data. This allows users to efficiently
 summarize, filter, and aggregate data. In fact, the built-in features of cell-level
 security and column fetching are implemented using Iterators.
 Some useful Iterators are provided with Accumulo and can be found in the
-*+org.apache.accumulo.core.iterators.user+* package.
+*`org.apache.accumulo.core.iterators.user`* package.
 In each case, any custom Iterators must be included in Accumulo's classpath,
-typically by including a jar in +lib/+ or +lib/ext/+, although the VFS classloader
+typically by including a jar in `lib/` or `lib/ext/`, although the VFS classloader
 allows for classpath manipulation using a variety of schemes including URLs and HDFS URIs.
 
-==== Setting Iterators via the Shell
+### Setting Iterators via the Shell
 
 Iterators can be configured on a table at scan, minor compaction and/or major
 compaction scopes. If the Iterator implements the OptionDescriber interface, the
 setiter command can be used which will interactively prompt the user to provide
 values for the given necessary options.
 
-  usage: setiter [-?] -ageoff | -agg | -class <name> | -regex |
-      -reqvis | -vers   [-majc] [-minc] [-n <itername>] -p <pri>
-      [-scan] [-t <table>]
+    usage: setiter [-?] -ageoff | -agg | -class <name> | -regex |
+        -reqvis | -vers   [-majc] [-minc] [-n <itername>] -p <pri>
+        [-scan] [-t <table>]
 
-  user@myinstance mytable> setiter -t mytable -scan -p 15 -n myiter -class com.company.MyIterator
+    user@myinstance mytable> setiter -t mytable -scan -p 15 -n myiter -class com.company.MyIterator
 
 The config command can always be used to manually configure iterators which is useful
 in cases where the Iterator does not implement the OptionDescriber interface.
 
-  config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
-  config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
-  config -t mytable -s table.iterator.majc.myiter=15,com.company.MyIterator
-  config -t mytable -s table.iterator.scan.myiter.opt.myoptionname=myoptionvalue
-  config -t mytable -s table.iterator.minc.myiter.opt.myoptionname=myoptionvalue
-  config -t mytable -s table.iterator.majc.myiter.opt.myoptionname=myoptionvalue
+    config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
+    config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
+    config -t mytable -s table.iterator.majc.myiter=15,com.company.MyIterator
+    config -t mytable -s table.iterator.scan.myiter.opt.myoptionname=myoptionvalue
+    config -t mytable -s table.iterator.minc.myiter.opt.myoptionname=myoptionvalue
+    config -t mytable -s table.iterator.majc.myiter.opt.myoptionname=myoptionvalue
 
 Typically, a table will have multiple iterators. Accumulo configures a set of
 system level iterators for each table. These iterators provide core
@@ -163,28 +152,30 @@ Priority is a user configured integer; iterators with lower numbers go first,
 passing the results of their iteration on to the other iterators up the
 stack.
 
-==== Setting Iterators Programmatically
+### Setting Iterators Programmatically
 
-[source,java]
+```java
 scanner.addIterator(new IteratorSetting(
     15, // priority
     "myiter", // name this iterator
     "com.company.MyIterator" // class name
 ));
+```
 
 Some iterators take additional parameters from client code, as in the following
 example:
 
-[source,java]
+```java
 IteratorSetting iter = new IteratorSetting(...);
 iter.addOption("myoptionname", "myoptionvalue");
 scanner.addIterator(iter)
+```
 
 Tables support separate Iterator settings to be applied at scan time, upon minor
 compaction and upon major compaction. For most uses, tables will have identical
 iterator settings for all three to avoid inconsistent results.
 
-==== Versioning Iterators and Timestamps
+### Versioning Iterators and Timestamps
 
 Accumulo provides the capability to manage versioned data through the use of
 timestamps within the Key. If a timestamp is not specified in the key created by the
@@ -200,23 +191,24 @@ given date. The default is to return the one most recent version.
 The version policy can be changed by changing the VersioningIterator options for a
 table as follows:
 
-----
+```
 user@myinstance mytable> config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
 
 user@myinstance mytable> config -t mytable -s table.iterator.minc.vers.opt.maxVersions=3
 
 user@myinstance mytable> config -t mytable -s table.iterator.majc.vers.opt.maxVersions=3
-----
+```
 
 When a table is created, by default its configured to use the
 VersioningIterator and keep one version. A table can be created without the
 VersioningIterator with the -ndi option in the shell. Also the Java API
 has the following method
 
-[source,java]
+```java
 connector.tableOperations.create(String tableName, boolean limitVersion);
+```
 
-===== Logical Time
+#### Logical Time
 
 Accumulo 1.2 introduces the concept of logical time. This ensures that timestamps
 set by Accumulo always move forward. This helps avoid problems caused by
@@ -228,9 +220,9 @@ always move forward and never backwards.
 
 A table can be configured to use logical timestamps at creation time as follows:
 
-  user@myinstance> createtable -tl logical
+    user@myinstance> createtable -tl logical
 
-===== Deletes
+#### Deletes
 
 Deletes are special keys in Accumulo that get sorted along will all the other data.
 When a delete key is inserted, Accumulo will not show anything that has a
@@ -238,20 +230,20 @@ timestamp less than or equal to the delete key. During major compaction, any key
 older than a delete key are omitted from the new file created, and the omitted keys
 are removed from disk as part of the regular garbage collection process.
 
-==== Filters
+### Filters
 
 When scanning over a set of key-value pairs it is possible to apply an arbitrary
 filtering policy through the use of a Filter. Filters are types of iterators that return
 only key-value pairs that satisfy the filter logic. Accumulo has a few built-in filters
 that can be configured on any table: AgeOff, ColumnAgeOff, Timestamp, NoVis, and RegEx. More can be added
 by writing a Java class that extends the
-+org.apache.accumulo.core.iterators.Filter+ class.
+`org.apache.accumulo.core.iterators.Filter` class.
 
 The AgeOff filter can be configured to remove data older than a certain date or a fixed
 amount of time from the present. The following example sets a table to delete
 everything inserted over 30 seconds ago:
 
-----
+```
 user@myinstance> createtable filtertest
 
 user@myinstance filtertest> setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -ageoff
@@ -277,29 +269,29 @@ user@myinstance filtertest> sleep 4
 user@myinstance filtertest> scan
 
 user@myinstance filtertest>
-----
+```
 
 To see the iterator settings for a table, use:
 
-  user@example filtertest> config -t filtertest -f iterator
-  ---------+---------------------------------------------+------------------
-  SCOPE    | NAME                                        | VALUE
-  ---------+---------------------------------------------+------------------
-  table    | table.iterator.majc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
-  table    | table.iterator.majc.myfilter.opt.ttl ...... | 30000
-  table    | table.iterator.majc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
-  table    | table.iterator.majc.vers.opt.maxVersions .. | 1
-  table    | table.iterator.minc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
-  table    | table.iterator.minc.myfilter.opt.ttl ...... | 30000
-  table    | table.iterator.minc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
-  table    | table.iterator.minc.vers.opt.maxVersions .. | 1
-  table    | table.iterator.scan.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
-  table    | table.iterator.scan.myfilter.opt.ttl ...... | 30000
-  table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
-  table    | table.iterator.scan.vers.opt.maxVersions .. | 1
-  ---------+---------------------------------------------+------------------
+    user@example filtertest> config -t filtertest -f iterator
+    ---------+---------------------------------------------+------------------
+    SCOPE    | NAME                                        | VALUE
+    ---------+---------------------------------------------+------------------
+    table    | table.iterator.majc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+    table    | table.iterator.majc.myfilter.opt.ttl ...... | 30000
+    table    | table.iterator.majc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+    table    | table.iterator.majc.vers.opt.maxVersions .. | 1
+    table    | table.iterator.minc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+    table    | table.iterator.minc.myfilter.opt.ttl ...... | 30000
+    table    | table.iterator.minc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+    table    | table.iterator.minc.vers.opt.maxVersions .. | 1
+    table    | table.iterator.scan.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+    table    | table.iterator.scan.myfilter.opt.ttl ...... | 30000
+    table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+    table    | table.iterator.scan.vers.opt.maxVersions .. | 1
+    ---------+---------------------------------------------+------------------
 
-==== Combiners
+### Combiners
 
 Accumulo supports on the fly lazy aggregation of data using Combiners. Aggregation is
 done at compaction and scan time. No lookup is done at insert time, which` greatly
@@ -314,17 +306,17 @@ the values associated with a particular key.
 For example, if a summing combiner were configured on a table and the following
 mutations were inserted:
 
-  Row     Family Qualifier Timestamp  Value
-  rowID1  colfA  colqA     20100101   1
-  rowID1  colfA  colqA     20100102   1
+    Row     Family Qualifier Timestamp  Value
+    rowID1  colfA  colqA     20100101   1
+    rowID1  colfA  colqA     20100102   1
 
 The table would reflect only one aggregate value:
 
-  rowID1  colfA  colqA     -          2
+    rowID1  colfA  colqA     -          2
 
 Combiners can be enabled for a table using the setiter command in the shell. Below is an example.
 
-----
+```
 root@a14 perDayCounts> setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
                        -class org.apache.accumulo.core.iterators.user.SummingCombiner
 TypedValueCombiner can interpret Values as a variety of number encodings
@@ -343,19 +335,19 @@ root@a14 perDayCounts> scan
 bar day:20080101 []    2
 foo day:20080101 []    2
 foo day:20080103 []    1
-----
+```
 
 Accumulo includes some useful Combiners out of the box. To find these look in
-the *+org.apache.accumulo.core.iterators.user+* package.
+the *`org.apache.accumulo.core.iterators.user`* package.
 
 Additional Combiners can be added by creating a Java class that extends
-+org.apache.accumulo.core.iterators.Combiner+ and adding a jar containing that
+`org.apache.accumulo.core.iterators.Combiner` and adding a jar containing that
 class to Accumulo's lib/ext directory.
 
-See the https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md[combiner example]
+See the [combiner example](https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md)
 for example code.
 
-=== Block Cache
+## Block Cache
 
 In order to increase throughput of commonly accessed entries, Accumulo employs a block cache.
 This block cache buffers data in memory so that it doesn't have to be read off of disk.
@@ -365,18 +357,18 @@ Typical queries to Accumulo result in a binary search over several index blocks 
 The block cache can be configured on a per-table basis, and all tablets hosted on a tablet server share a single resource pool.
 To configure the size of the tablet server's block cache, set the following properties:
 
-  tserver.cache.data.size: Specifies the size of the cache for file data blocks.
-  tserver.cache.index.size: Specifies the size of the cache for file indices.
+    tserver.cache.data.size: Specifies the size of the cache for file data blocks.
+    tserver.cache.index.size: Specifies the size of the cache for file indices.
 
 To enable the block cache for your table, set the following properties:
 
-  table.cache.block.enable: Determines whether file (data) block cache is enabled.
-  table.cache.index.enable: Determines whether index cache is enabled.
+    table.cache.block.enable: Determines whether file (data) block cache is enabled.
+    table.cache.index.enable: Determines whether index cache is enabled.
 
 The block cache can have a significant effect on alleviating hot spots, as well as reducing query latency.
 It is enabled by default for the metadata tables.
 
-=== Compaction
+## Compaction
 
 As data is written to Accumulo it is buffered in memory. The data buffered in
 memory is eventually written to HDFS on a per tablet basis. Files can also be
@@ -386,7 +378,7 @@ decide which tablets to compact and which files within a tablet to compact.
 This decision is made using the compaction ratio, which is configurable on a
 per table basis. To configure this ratio modify the following property:
 
-  table.compaction.major.ratio
+    table.compaction.major.ratio
 
 Increasing this ratio will result in more files per tablet and less compaction
 work. More files per tablet means more higher query latency. So adjusting
@@ -403,12 +395,12 @@ compaction is triggered or there are no files left to consider.
 The number of background threads tablet servers use to run major compactions is
 configurable. To configure this modify the following property:
 
-  tserver.compaction.major.concurrent.max
+    tserver.compaction.major.concurrent.max
 
 Also, the number of threads tablet servers use for minor compactions is
 configurable. To configure this modify the following property:
 
-  tserver.compaction.minor.concurrent.max
+    tserver.compaction.minor.concurrent.max
 
 The numbers of minor and major compactions running and queued is visible on the
 Accumulo monitor page. This allows you to see if compactions are backing up
@@ -432,7 +424,7 @@ be done.
 Another option to deal with the files per tablet growing too large is to adjust
 the following property:
 
-  table.file.max
+    table.file.max
 
 When a tablet reaches this number of files and needs to flush its in-memory
 data to disk, it will choose to do a merging minor compaction. A merging minor
@@ -458,16 +450,16 @@ table. In 1.4 the ability to compact a range of a table was added. To use this
 feature specify start and stop rows for the compact command. This will only
 compact tablets that overlap the given row range.
 
-==== Compaction Strategies
+### Compaction Strategies
 
 The default behavior of major compactions is defined in the class DefaultCompactionStrategy. 
 This behavior can be changed by overriding the following property with a fully qualified class name:
 
-  table.majc.compaction.strategy
+    table.majc.compaction.strategy
 
 Custom compaction strategies can have additional properties that are specified following the prefix property:
 
-  table.majc.compaction.strategy.opts.*
+    table.majc.compaction.strategy.opts.*
 
 Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
 org.apache.accumulo.tserver.compaction.* package. EverythingCompactionStrategy will simply compact all files. This is the 
@@ -480,7 +472,7 @@ compression type will be used. The larger compression type is specified in table
 Otherwise, the configured table compression will be used. To use this strategy with minor compactions set table.file.compress.type=snappy 
 and set a different compress type in table.majc.compaction.strategy.opts.file.large.compress.type for larger files.
 
-=== Pre-splitting tables
+## Pre-splitting tables
 
 Accumulo will balance and distribute tables across servers. Before a
 table gets large, it will be maintained as a single tablet on a single
@@ -490,8 +482,8 @@ is new, or small, you can add split points and generate new tablets.
 
 In the shell:
 
-  root@myinstance> createtable newTable
-  root@myinstance> addsplits -t newTable g n t
+    root@myinstance> createtable newTable
+    root@myinstance> addsplits -t newTable g n t
 
 This will create a new table with 4 tablets. The table will be split
 on the letters ``g'', ``n'', and ``t'' which will work nicely if the
@@ -501,7 +493,7 @@ distribution of the row information is not flat, then you would pick
 different split points. Now ingest and query can proceed on 4 nodes
 which can improve performance.
 
-=== Merging tablets
+## Merging tablets
 
 Over time, a table can get very large, so large that it has hundreds
 of thousands of split points. Once there are enough tablets to spread
@@ -515,36 +507,36 @@ Accumulo supports tablet merging, which can be used to reduce
 the number of split points. The following command will merge all rows
 from ``A'' to ``Z'' into a single tablet:
 
-  root@myinstance> merge -t myTable -s A -e Z
+    root@myinstance> merge -t myTable -s A -e Z
 
 If the result of a merge produces a tablet that is larger than the
 configured split size, the tablet may be split by the tablet server.
 Be sure to increase your tablet size prior to any merges if the goal
 is to have larger tablets:
 
-  root@myinstance> config -t myTable -s table.split.threshold=2G
+    root@myinstance> config -t myTable -s table.split.threshold=2G
 
 In order to merge small tablets, you can ask Accumulo to merge
 sections of a table smaller than a given size.
 
-  root@myinstance> merge -t myTable -s 100M
+    root@myinstance> merge -t myTable -s 100M
 
 By default, small tablets will not be merged into tablets that are
 already larger than the given size. This can leave isolated small
 tablets. To force small tablets to be merged into larger tablets use
-the +--force+ option:
+the `--force` option:
 
-  root@myinstance> merge -t myTable -s 100M --force
+    root@myinstance> merge -t myTable -s 100M --force
 
 Merging away small tablets works on one section at a time. If your
 table contains many sections of small split points, or you are
 attempting to change the split size of the entire table, it will be
 faster to set the split point and merge the entire table:
 
-  root@myinstance> config -t myTable -s table.split.threshold=256M
-  root@myinstance> merge -t myTable
+    root@myinstance> config -t myTable -s table.split.threshold=256M
+    root@myinstance> merge -t myTable
 
-=== Delete Range
+## Delete Range
 
 Consider an indexing scheme that uses date information in each row.
 For example ``20110823-15:20:25.013'' might be a row that specifies a
@@ -553,21 +545,21 @@ this date, say to remove all the data older than the current year.
 Accumulo supports a delete range operation which efficiently
 removes data between two rows. For example:
 
-  root@myinstance> deleterange -t myTable -s 2010 -e 2011
+    root@myinstance> deleterange -t myTable -s 2010 -e 2011
 
 This will delete all rows starting with ``2010'' and it will stop at
 any row starting ``2011''. You can delete any data prior to 2011
 with:
 
-  root@myinstance> deleterange -t myTable -e 2011 --force
+    root@myinstance> deleterange -t myTable -e 2011 --force
 
 The shell will not allow you to delete an unbounded range (no start)
-unless you provide the +--force+ option.
+unless you provide the `--force` option.
 
 Range deletion is implemented using splits at the given start/end
 positions, and will affect the number of splits in the table.
 
-=== Cloning Tables
+## Cloning Tables
 
 A new table can be created that points to an existing table's data. This is a
 very quick metadata operation, no data is actually copied. The cloned table
@@ -591,7 +583,7 @@ created, only the user that created the clone can read and write to it.
 In the following example we see that data inserted after the clone operation is
 not visible in the clone.
 
-----
+```
 root@a14> createtable people
 
 root@a14 people> insert 890435 name last Doe
@@ -615,7 +607,7 @@ root@a14 test> scan
 890435 name:last []    Doe
 
 root@a14 test>
-----
+```
 
 The du command in the shell shows how much space a table is using in HDFS.
 This command can also show how much overlapping space two cloned tables have in
@@ -625,7 +617,7 @@ inserted into cic and its flushed, du shows the two tables still share 428M but
 cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
 that each table uses 428M.
 
-----
+```
 root@a14> du ci
              428,482,573 [ci]
 
@@ -656,9 +648,9 @@ root@a14 cic> du ci cic
              428,482,612 [cic]
 
 root@a14 cic>
-----
+```
 
-=== Exporting Tables
+## Exporting Tables
 
 Accumulo supports exporting tables for the purpose of copying tables to another
 cluster. Exporting and importing tables preserves the tables configuration,
@@ -666,5 +658,7 @@ splits, and logical time. Tables are exported and then copied via the hadoop
 distcp command. To export a table, it must be offline and stay offline while
 discp runs. The reason it needs to stay offline is to prevent files from being
 deleted. A table can be cloned and the clone taken offline inorder to avoid
-losing access to the table. See the https://github.com/apache/accumulo-examples/blob/master/docs/export.md[export example]
+losing access to the table. See the [export example](https://github.com/apache/accumulo-examples/blob/master/docs/export.md)
 for example code.
+
+[config]: /docs/{{ page.version }}/config/

@@ -1,19 +1,8 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== High-Speed Ingest
+---
+title: High-Speed Ingest
+category: development
+order: 7
+---
 
 Accumulo is often used as part of a larger data processing and storage system. To
 maximize the performance of a parallel system involving Accumulo, the ingestion
@@ -22,7 +11,7 @@ concurrency to avoid creating bottlenecks for users and other systems writing to
 and reading from Accumulo. There are several ways to achieve high ingest
 performance.
 
-=== Pre-Splitting New Tables
+## Pre-Splitting New Tables
 
 New tables consist of a single tablet by default. As mutations are applied, the table
 grows and splits into multiple tablets which are balanced by the Master across
@@ -34,7 +23,7 @@ Pre-splitting a table ensures that there are as many tablets as desired availabl
 before ingest begins to take advantage of all the parallelism possible with the cluster
 hardware. Tables can be split at any time by using the shell:
 
-  user@myinstance mytable> addsplits -sf /local_splitfile -t mytable
+    user@myinstance mytable> addsplits -sf /local_splitfile -t mytable
 
 For the purposes of providing parallelism to ingest it is not necessary to create more
 tablets than there are physical machines within the cluster as the aggregate ingest
@@ -43,7 +32,7 @@ rate is still subject to the number of machines running ingest clients, and the
 distribution of rowIDs across the table. The aggregation ingest rate will be
 suboptimal if there are many inserts into a small number of rowIDs.
 
-=== Multiple Ingester Clients
+## Multiple Ingester Clients
 
 Accumulo is capable of scaling to very high rates of ingest, which is dependent upon
 not just the number of TabletServers in operation but also the number of ingest
@@ -58,7 +47,7 @@ configured to dedicate some number of machines solely to running Ingester Client
 The exact ratio of clients to TabletServers necessary for optimum ingestion rates
 will vary according to the distribution of resources per machine and by data type.
 
-=== Bulk Ingest
+## Bulk Ingest
 
 Accumulo supports the ability to import files produced by an external process such
 as MapReduce into an existing table. In some cases it may be faster to load data this
@@ -73,29 +62,29 @@ data. The split points can be obtained from the shell and used by the MapReduce
 RangePartitioner. Note that this is only useful if the existing table is already split
 into multiple tablets.
 
-  user@myinstance mytable> getsplits
-  aa
-  ab
-  ac
-  ...
-  zx
-  zy
-  zz
+    user@myinstance mytable> getsplits
+    aa
+    ab
+    ac
+    ...
+    zx
+    zy
+    zz
 
 Run the MapReduce job, using the AccumuloFileOutputFormat to create the files to
 be introduced to Accumulo. Once this is complete, the files can be added to
 Accumulo via the shell:
 
-  user@myinstance mytable> importdirectory /files_dir /failures
+    user@myinstance mytable> importdirectory /files_dir /failures
 
 Note that the paths referenced are directories within the same HDFS instance over
 which Accumulo is running. Accumulo places any files that failed to be added to the
 second directory specified.
 
-See the https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md[Bulk Ingest example]
+See the [bulk ingest example](https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md)
 for a complete example.
 
-=== Logical Time for Bulk Ingest
+## Logical Time for Bulk Ingest
 
 Logical time is important for bulk imported data, for which the client code may
 be choosing a timestamp. At bulk import time, the user can choose to enable
@@ -115,10 +104,10 @@ except for the timestamp. In this case, the sort order of the keys will be
 undefined. This could occur if an insert and an update were in the same bulk
 import file.
 
-=== MapReduce Ingest
+## MapReduce Ingest
 
 It is possible to efficiently write many mutations to Accumulo in parallel via a
 MapReduce job. In this scenario the MapReduce is written to process data that lives
 in HDFS and write mutations to Accumulo using the AccumuloOutputFormat. See
-the MapReduce section under Analytics for details. The https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md[MapReduce example]
+the MapReduce section under Analytics for details. The [MapReduce example](https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md)
 is also a good reference for example code.

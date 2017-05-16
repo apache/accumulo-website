@@ -1,21 +1,10 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+---
+title: Sampling
+category: development
+order: 4
+---
 
-== Sampling
-
-=== Overview
+## Overview
 
 Accumulo has the ability to generate and scan a per table set of sample data.
 This sample data is kept up to date as a table is mutated.  What key values are
@@ -32,16 +21,16 @@ will be accurate even when querying the most recently written data.
 An example of a query optimization is an iterator using sample data to get an
 estimate, and then making decisions based on the estimate.
 
-=== Configuring
+## Configuring
 
 Inorder to use sampling, an Accumulo table must be configured with a class that
-implements +org.apache.accumulo.core.sample.Sampler+ along with options for
+implements `org.apache.accumulo.core.sample.Sampler` along with options for
 that class.  For guidance on implementing a Sampler see that interface's
 javadoc.  Accumulo provides a few implementations out of the box.   For
 information on how to use the samplers that ship with Accumulo look in the
 package `org.apache.accumulo.core.sample` and consult the javadoc of the
-classes there.  See the https://github.com/apache/accumulo-examples/blob/master/docs/sample.md[sampling example]
-for examples of how to configure a Sampler on a table.
+classes there.  See the [sampling example][example] for examples of how to
+configure a Sampler on a table.
 
 Once a table is configured with a sampler all writes after that point will
 generate sample data.  For data written before sampling was configured sample
@@ -54,33 +43,33 @@ generating new sample data with the new configuration.   However old data will
 still have sample data generated with the previous configuration.  A selective
 compaction can also be issued in this case to regenerate the sample data.
 
-=== Scanning sample data
+## Scanning sample data
 
-Inorder to scan sample data, use the +setSamplerConfiguration(...)+  method on
-+Scanner+ or +BatchScanner+.  Please consult this methods javadocs for more
+Inorder to scan sample data, use the `setSamplerConfiguration(...)`  method on
+`Scanner` or `BatchScanner`.  Please consult this methods javadocs for more
 information.
 
-Sample data can also be scanned from within an Accumulo +SortedKeyValueIterator+.
-To see how to do this, look at the example iterator referenced in the
-https://github.com/apache/accumulo-examples/blob/master/docs/sample.md[sampling example].
-Also, consult the javadoc on +org.apache.accumulo.core.iterators.IteratorEnvironment.cloneWithSamplingEnabled()+.
+Sample data can also be scanned from within an Accumulo `SortedKeyValueIterator`.
+To see how to do this, look at the example iterator referenced in the [sampling example][example].
+Also, consult the javadoc on `org.apache.accumulo.core.iterators.IteratorEnvironment.cloneWithSamplingEnabled()`.
 
-Map reduce jobs using the +AccumuloInputFormat+ can also read sample data.  See
-the javadoc for the +setSamplerConfiguration()+ method on
-+AccumuloInputFormat+.
+Map reduce jobs using the `AccumuloInputFormat` can also read sample data.  See
+the javadoc for the `setSamplerConfiguration()` method on
+`AccumuloInputFormat`.
 
-Scans over sample data will throw a +SampleNotPresentException+ in the following cases :
+Scans over sample data will throw a `SampleNotPresentException` in the following cases :
 
-. sample data is not present,
-. sample data is present but was generated with multiple configurations
-. sample data is partially present
+1. sample data is not present,
+2. sample data is present but was generated with multiple configurations
+3. sample data is partially present
 
 So a scan over sample data can only succeed if all data written has sample data
 generated with the same configuration.
 
-=== Bulk import
+## Bulk import
 
 When generating rfiles to bulk import into Accumulo, those rfiles can contain
 sample data.  To use this feature, look at the javadoc on the
-+AccumuloFileOutputFormat.setSampler(...)+ method.
+`AccumuloFileOutputFormat.setSampler(...)` method.
 
+[example]: https://github.com/apache/accumulo-examples/blob/master/docs/sample.md

@@ -1,0 +1,47 @@
+---
+layout: default
+skiph1fortitle: true
+---
+
+<div class="alert alert-danger" role="alert">This documentation is for an unreleased version of Apache Accumulo that is currently under development! Check out the <a href="{{ site.baseurl }}/docs-{{ site.latest_minor_release }}/">documentation for the latest release</a>.</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+      {% assign mydocs = site.docs-unreleased | group_by: 'category' %}
+      {% assign categories = "getting-started,development,administration,troubleshooting" | split: "," %}
+      {% for pcat in categories %}
+        {% for dcat in mydocs %}
+          {% if pcat == dcat.name %}
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ pcat }}" aria-expanded="{% if pcat == page.category %}true{% else %}false{% endif %}" aria-controls="collapse{{ pcat }}">
+                  {{ pcat | capitalize | replace: "-", " " }}
+                </a>
+              </h4>
+            </div>
+            <div id="collapse{{pcat}}" class="panel-collapse collapse{% if pcat == page.category %} in{% endif %}" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                {% assign items = dcat.items | sort: 'order' %}
+                {% for item in items %}
+                <div class="row doc-sidebar-link"><a href="{{ item.url }}">{{ item.title }}</a></div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    {% if page.category %}
+    <p><a href="{{ site.baseurl }}/docs/{{ page.version }}/">Accumulo {{ page.version }} docs</a> &nbsp;&gt;&gt;&nbsp; {{ page.category | capitalize | replace: "-", " " }} &nbsp;&gt;&gt;&nbsp; {{ page.title }}</p>
+    {% endif %}
+    {% unless page.nodoctitle %}
+    <h1>{{ page.title }}</h1>
+    {% endunless %}
+    {{ content }}
+  </div>
+</div>

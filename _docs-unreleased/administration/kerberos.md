@@ -1,21 +1,10 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+---
+title: Kerberos
+category: administration
+order: 4
+---
 
-== Kerberos
-
-=== Overview
+## Overview
 
 Kerberos is a network authentication protocol that provides a secure way for
 peers to prove their identity over an unsecure network in a client-server model.
@@ -39,13 +28,13 @@ one of which is GSSAPI. Thus, SASL provides the transport which authenticates
 using GSSAPI that Kerberos implements.
 
 Kerberos is a very complicated software application and is deserving of much
-more description than can be provided here. An http://www.roguelynn.com/words/explain-like-im-5-kerberos/[explain like
-I'm 5] blog post is very good at distilling the basics, while http://web.mit.edu/kerberos/[MIT Kerberos's project page]
+more description than can be provided here. An [explain like I`m 5](http://www.roguelynn.com/words/explain-like-im-5-kerberos/)
+blog post is very good at distilling the basics, while [MIT Keberos's project page](http://web.mit.edu/kerberos/)
 contains lots of documentation for users or administrators. Various Hadoop "vendors"
 also provide free documentation that includes step-by-step instructions for
 configuring Hadoop and ZooKeeper (which will be henceforth considered as prerequisites).
 
-=== Within Hadoop
+## Within Hadoop
 
 Out of the box, HDFS and YARN have no ability to enforce that a user is who
 they claim they are. Thus, any basic Hadoop installation should be treated as
@@ -73,7 +62,7 @@ password, at the cost of needing to protect the keytab file. These principals
 will apply directly to authentication for clients accessing Accumulo and the
 Accumulo processes accessing HDFS.
 
-=== Delegation Tokens
+## Delegation Tokens
 
 MapReduce, a common way that clients interact with Accumulo, does not map well to the
 client-server model that Kerberos was originally designed to support. Specifically, the parallelization
@@ -94,7 +83,7 @@ compromised in the case of the token being compromised as opposed to the entire
 Kerberos credential. Additional details for clients and servers will be covered
 in subsequent sections.
 
-=== Configuring Accumulo
+## Configuring Accumulo
 
 To configure Accumulo for use with Kerberos, both client-facing and server-facing
 changes must be made for a functional system on secured Hadoop. As previously mentioned,
@@ -106,123 +95,80 @@ Note that on an existing cluster the server side changes will require a full clu
 wait to restart the TraceServers until after you've completed the rest of the cluster set up and provisioned
 a trace user with appropriate permissions.
 
-==== Servers
+### Servers
 
 The first step is to obtain a Kerberos identity for the Accumulo server processes.
 When running Accumulo with Kerberos enabled, a valid Kerberos identity will be required
 to initiate any RPC between Accumulo processes (e.g. Master and TabletServer) in addition
 to any HDFS action (e.g. client to HDFS or TabletServer to HDFS).
 
-===== Generate Principal and Keytab
+#### Generate Principal and Keytab
 
-In the +kadmin.local+ shell or using the +-q+ option on +kadmin.local+, create a
+In the `kadmin.local` shell or using the `-q` option on `kadmin.local`, create a
 principal for Accumulo for all hosts that are running Accumulo processes. A Kerberos
 principal is of the form "primary/instance@REALM". "accumulo" is commonly the "primary"
 (although not required) and the "instance" is the fully-qualified domain name for
 the host that will be running the Accumulo process -- this is required.
 
-----
+```
 kadmin.local -q "addprinc -randkey accumulo/host.domain.com"
-----
+```
 
 Perform the above for each node running Accumulo processes in the instance, modifying
-"host.domain.com" for your network. The +randkey+ option generates a random password
+"host.domain.com" for your network. The `randkey` option generates a random password
 because we will use a keytab for authentication, not a password, since the Accumulo
 server processes don't have an interactive console to enter a password into.
 
-----
+```
 kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
-----
+```
 
 To simplify deployments, at thet cost of security, all Accumulo principals could
 be globbed into a single keytab
 
-----
+```
 kadmin.local -q "xst -k accumulo.service.keytab -glob accumulo*"
-----
+```
 
 To ensure that the SASL handshake can occur from clients to servers and servers to servers,
 all Accumulo servers must share the same instance and realm principal components as the
 "client" needs to know these to set up the connection with the "server".
 
-===== Server Configuration
+#### Server Configuration
 
 A number of properties need to be changed to account to properly configure servers
-in +accumulo-site.xml+.
+in `accumulo-site.xml`.
 
-[options="header"]
-|=================================================================
 |Key | Default Value | Description
-|general.kerberos.keytab                 |/etc/security/keytabs/accumulo.service.keytab |
-The path to the keytab for Accumulo on local filesystem. Change the value to the actual path on your system.
-
-|general.kerberos.principal              |accumulo/_HOST@REALM |
-The Kerberos principal for Accumulo, needs to match the keytab. "_HOST" can be used instead of the actual hostname in the principal and will be automatically expanded to the current FQDN which reduces the configuration file burden.
-
-|instance.rpc.sasl.enabled               |true |
-Enables SASL for the Thrift Servers (supports GSSAPI)
-
-|rpc.sasl.qop                            |auth |
-One of "auth", "auth-int", or "auth-conf". These map to the SASL defined properties for
-quality of protection. "auth" is authentication only. "auth-int" is authentication and data
-integrity. "auth-conf" is authentication, data integrity and confidentiality.
-
-
-|instance.security.authenticator         |
-org.apache.accumulo.server.security.
-handler.KerberosAuthenticator |
-Configures Accumulo to use the Kerberos principal as the Accumulo username/principal
-
-|instance.security.authorizor            |
-org.apache.accumulo.server.security.
-handler.KerberosAuthorizor |
-Configures Accumulo to use the Kerberos principal for authorization purposes
-
-|instance.security.permissionHandler     |
-org.apache.accumulo.server.security.
-handler.KerberosPermissionHandler|
-Configures Accumulo to use the Kerberos principal for permission purposes
-
-|trace.token.type                        |
-org.apache.accumulo.core.client.
-security.tokens.KerberosToken |
-Configures the Accumulo Tracer to use the KerberosToken for authentication when serializing traces to the trace table.
-
-|trace.user                              |accumulo/_HOST@REALM |
-The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are
-creating a SystemToken from the provided keytab and principal, we can still use a normal KerberosToken and the same
-keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted
-to the trace.user. The same +_HOST+ replacement is performed on this value, substituted the FQDN for +_HOST+.
-
-|trace.token.property.keytab             ||
-You can optionally specify the path to a keytab file for the principal given in the +trace.user+ property. If you don't
-set this path, it will default to the value given in +general.kerberos.principal+.
-
-|general.delegation.token.lifetime       |7d |
-The length of time that the server-side secret used to create delegation tokens is valid. After a server-side secret
-expires, a delegation token created with that secret is no longer valid.
-
-|general.delegation.token.update.interval|1d |
-The frequency in which new server-side secrets should be generated to create delegation tokens for clients. Generating
-new secrets reduces the likelihood of cryptographic attacks.
-
-|=================================================================
+|----|---------------|-------------
+| general.kerberos.keytab | /etc/security/keytabs/accumulo.service.keytab | The path to the keytab for Accumulo on local filesystem. Change the value to the actual path on your system.
+| general.kerberos.principal | accumulo/_HOST@REALM | The Kerberos principal for Accumulo, needs to match the keytab. "_HOST" can be used instead of the actual hostname in the principal and will be automatically expanded to the current FQDN which reduces the configuration file burden.
+|instance.rpc.sasl.enabled | true | Enables SASL for the Thrift Servers (supports GSSAPI)
+|rpc.sasl.qop | auth | One of "auth", "auth-int", or "auth-conf". These map to the SASL defined properties for quality of protection. "auth" is authentication only. "auth-int" is authentication and data integrity. "auth-conf" is authentication, data integrity and confidentiality.
+|instance.security.authenticator | org.apache.accumulo.server.security.handler.KerberosAuthenticator | Configures Accumulo to use the Kerberos principal as the Accumulo username/principal
+|instance.security.authorizor | org.apache.accumulo.server.security.handler.KerberosAuthorizor | Configures Accumulo to use the Kerberos principal for authorization purposes
+|instance.security.permissionHandler | org.apache.accumulo.server.security.handler.KerberosPermissionHandler| Configures Accumulo to use the Kerberos principal for permission purposes
+|trace.token.type | org.apache.accumulo.core.client.security.tokens.KerberosToken | Configures the Accumulo Tracer to use the KerberosToken for authentication when serializing traces to the trace table.
+|trace.user | accumulo/_HOST@REALM | The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal KerberosToken and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same `_HOST` replacement is performed on this value, substituted the FQDN for `_HOST`.
+|trace.token.property.keytab | | You can optionally specify the path to a keytab file for the principal given in the `trace.user` property. If you don't set this path, it will default to the value given in `general.kerberos.principal`.
+|general.delegation.token.lifetime | 7d | The length of time that the server-side secret used to create delegation tokens is valid. After a server-side secret expires, a delegation token created with that secret is no longer valid.
+|general.delegation.token.update.interval| 1d | The frequency in which new server-side secrets should be generated to create delegation tokens for clients. Generating new secrets reduces the likelihood of cryptographic attacks.
 
 Although it should be a prerequisite, it is ever important that you have DNS properly
 configured for your nodes and that Accumulo is configured to use the FQDN. It
 is extremely important to use the FQDN in each of the "hosts" files for each
-Accumulo process: +masters+, +monitors+, +tservers+, +tracers+, and +gc+.
+Accumulo process: `masters`, `monitors`, `tservers`, `tracers`, and `gc`.
 
-Normally, no changes are needed in +accumulo-env.sh+ to enable Kerberos. Typically, the +krb5.conf+
-is installed on the local machine in +/etc/+, and the Java library implementations will look
+Normally, no changes are needed in `accumulo-env.sh` to enable Kerberos. Typically, the `krb5.conf`
+is installed on the local machine in `/etc/`, and the Java library implementations will look
 here to find the necessary configuration to communicate with the KDC. Some installations
-may require a different +krb5.conf+ to be used for Accumulo which can be accomplished 
-by adding the JVM system property +-Djava.security.krb5.conf=/path/to/other/krb5.conf+ to
-+JAVA_OPTS+ in +accumulo-env.sh+.
+may require a different `krb5.conf` to be used for Accumulo which can be accomplished 
+by adding the JVM system property `-Djava.security.krb5.conf=/path/to/other/krb5.conf` to
+`JAVA_OPTS` in `accumulo-env.sh`.
 
-===== KerberosAuthenticator
+#### KerberosAuthenticator
 
-The +KerberosAuthenticator+ is an implementation of the pluggable security interfaces
+The `KerberosAuthenticator` is an implementation of the pluggable security interfaces
 that Accumulo provides. It builds on top of what the default ZooKeeper-based implementation,
 but removes the need to create user accounts with passwords in Accumulo for clients. As
 long as a client has a valid Kerberos identity, they can connect to and interact with
@@ -230,15 +176,15 @@ Accumulo, but without any permissions (e.g. cannot create tables or write data).
 ZooKeeper removes the need to change the permission handler and authorizor, so other Accumulo
 functions regarding permissions and cell-level authorizations do not change.
 
-It is extremely important to note that, while user operations like +SecurityOperations.listLocalUsers()+,
-+SecurityOperations.dropLocalUser()+, and +SecurityOperations.createLocalUser()+ will not return
+It is extremely important to note that, while user operations like `SecurityOperations.listLocalUsers()`,
+`SecurityOperations.dropLocalUser()`, and `SecurityOperations.createLocalUser()` will not return
 errors, these methods are not equivalent to normal installations, as they will only operate on
 users which have, at one point in time, authenticated with Accumulo using their Kerberos identity.
 The KDC is still the authoritative entity for user management. The previously mentioned methods
 are provided as they simplify management of users within Accumulo, especially with respect
 to granting Authorizations and Permissions to new users.
 
-===== Administrative User
+#### Administrative User
 
 Out of the box (without Kerberos enabled), Accumulo has a single user with administrative permissions "root".
 This users is used to "bootstrap" other users, creating less-privileged users for applications using
@@ -254,15 +200,15 @@ also be given by the `-u` or `--user` options.
 If you are enabling Kerberos on an existing cluster, you will need to reinitialize the security system in
 order to replace the existing "root" user with one that can be used with Kerberos. These steps should be
 completed after you have done the previously described configuration changes and will require access to
-a complete +accumulo-site.xml+, including the instance secret. Note that this process will delete all
+a complete `accumulo-site.xml`, including the instance secret. Note that this process will delete all
 existing users in the system; you will need to reassign user permissions based on Kerberos principals.
 
 1. Ensure Accumulo is not running.
-2. Given the path to a +accumulo-site.xml+ with the instance secret, run the security reset tool. If you are
+2. Given the path to a `accumulo-site.xml` with the instance secret, run the security reset tool. If you are
 prompted for a password you can just hit return, since it won't be used.
 3. Start the Accumulo cluster
 
-----
+```
 $ accumulo-cluster stop
 ...
 $ accumulo init --reset-security
@@ -272,21 +218,20 @@ Enter initial password for accumulo_admin@EXAMPLE.COM (this may not be applicabl
 Confirm initial password for accumulo_admin@EXAMPLE.COM:
 $ accumulo-cluster start
 ...
-$
-----
+```
 
-===== Verifying secure access
+#### Verifying secure access
 
 To verify that servers have correctly started with Kerberos enabled, ensure that the processes
 are actually running (they should exit immediately if login fails) and verify that you see
 something similar to the following in the application log.
 
-----
+```
 2015-01-07 11:57:56,826 [security.SecurityUtil] INFO : Attempting to login with keytab as accumulo/hostname@EXAMPLE.COM
 2015-01-07 11:57:56,830 [security.UserGroupInformation] INFO : Login successful for user accumulo/hostname@EXAMPLE.COM using keytab file /etc/security/keytabs/accumulo.service.keytab
-----
+```
 
-===== Impersonation
+#### Impersonation
 
 Impersonation is functionality which allows a certain user to act as another. One direct application
 of this concept within Accumulo is the Thrift proxy. The Thrift proxy is configured to accept
@@ -302,7 +247,7 @@ site configuration file. These two properties are semi-colon separated propertie
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.
 
-----
+```xml
 <property>
   <name>instance.rpc.sasl.allowed.user.impersonation</name>
   <value>$PROXY_USER:*</value>
@@ -312,14 +257,14 @@ in the host impersonation property value, etc.
   <name>instance.rpc.sasl.allowed.host.impersonation</name>
   <value>*</value>
 </property>
-----
+```
 
-Here, +$PROXY_USER+ can impersonate any user from any host.
+Here, `$PROXY_USER` can impersonate any user from any host.
 
-The following is an example of specifying a subset of users +$PROXY_USER+ can impersonate and also
-limiting the hosts from which +$PROXY_USER+ can initiate requests from.
+The following is an example of specifying a subset of users `$PROXY_USER` can impersonate and also
+limiting the hosts from which `$PROXY_USER` can initiate requests from.
 
-----
+```xml
 <property>
   <name>instance.rpc.sasl.allowed.user.impersonation</name>
   <value>$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4</value>
@@ -329,16 +274,16 @@ limiting the hosts from which +$PROXY_USER+ can initiate requests from.
   <name>instance.rpc.sasl.allowed.host.impersonation</name>
   <value>host1.domain.com,host2.domain.com;*</value>
 </property>
-----
+```
 
-Here, +$PROXY_USER+ can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
-+$PROXY_USER2+ can impersonate user2 and user4 from any host.
+Here, `$PROXY_USER` can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
+`$PROXY_USER2` can impersonate user2 and user4 from any host.
 
-In these examples, the value +$PROXY_USER+ is the Kerberos principal of the server which is acting on behalf of a user.
+In these examples, the value `$PROXY_USER` is the Kerberos principal of the server which is acting on behalf of a user.
 Impersonation is enforced by the Kerberos principal and the host from which the RPC originated (from the perspective
 of the Accumulo TabletServers/Masters). An asterisk (*) can be used to specify all users or all hosts (depending on the context).
 
-===== Delegation Tokens
+#### Delegation Tokens
 
 Within Accumulo services, the primary task to implement delegation tokens is the generation and distribution
 of a shared secret among all Accumulo tabletservers and the master. The secret key allows for generation
@@ -358,25 +303,25 @@ users with the system permission are allowed to obtain delegation tokens. It is 
 to configure confidentiality with SASL, using the `rpc.sasl.qop=auth-conf` configuration property, to
 ensure that prying eyes cannot view the `DelegationToken` as it passes over the network.
 
-----
+```
 # Check a user's permissions
 admin@REALM@accumulo> userpermissions -u user@REALM
 
 # Grant the DELEGATION_TOKEN system permission to a user
 admin@REALM@accumulo> grant System.DELEGATION_TOKEN -s -u user@REALM
-----
+```
 
-==== Clients
+### Clients
 
-===== Create client principal
+#### Create client principal
 
 Like the Accumulo servers, clients must also have a Kerberos principal created for them. The
 primary difference between a server principal is that principals for users are created
 with a password and also not qualified to a specific instance (host).
 
-----
+```
 kadmin.local -q "addprinc $user"
-----
+```
 
 The above will prompt for a password for that user which will be used to identify that $user.
 The user can verify that they can authenticate with the KDC using the command `kinit $user`.
@@ -385,7 +330,7 @@ to authenticate with Accumulo, access HDFS, etc.
 
 The user can verify the state of their local credentials cache by using the command `klist`.
 
-----
+```shell
 $ klist
 Ticket cache: FILE:/tmp/krb5cc_123
 Default principal: user@EXAMPLE.COM
@@ -393,34 +338,34 @@ Default principal: user@EXAMPLE.COM
 Valid starting       Expires              Service principal
 01/07/2015 11:56:35  01/08/2015 11:56:35  krbtgt/EXAMPLE.COM@EXAMPLE.COM
 	renew until 01/14/2015 11:56:35
-----
+```
 
-===== Configuration
+#### Configuration
 
 The second thing clients need to do is to set up their client configuration file. By
-default, this file is stored in +~/.accumulo/config+ or +/path/to/accumulo/client.conf+.
+default, this file is stored in `~/.accumulo/config` or `/path/to/accumulo/client.conf`.
 Accumulo utilities also allow you to provide your own copy of this file in any location
-using the +--config-file+ command line option.
+using the `--config-file` command line option.
 
 Three items need to be set to enable access to Accumulo:
 
-* +instance.rpc.sasl.enabled+=_true_
-* +rpc.sasl.qop+=_auth_
-* +kerberos.server.primary+=_accumulo_
+* `instance.rpc.sasl.enabled`=_true_
+* `rpc.sasl.qop`=_auth_
+* `kerberos.server.primary`=_accumulo_
 
 Each of these properties *must* match the configuration of the accumulo servers; this is
 required to set up the SASL transport.
 
-===== Verifying Administrative Access
+#### Verifying Administrative Access
 
 At this point you should have enough configured on the server and client side to interact with
 the system. You should verify that the administrative user you chose earlier can successfully
 interact with the sytem.
 
-While this example logs in via +kinit+ with a password, any login method that caches Kerberos tickets
+While this example logs in via `kinit` with a password, any login method that caches Kerberos tickets
 should work.
 
-----
+```shell
 $ kinit accumulo_admin@EXAMPLE.COM
 Password for accumulo_admin@EXAMPLE.COM: ******************************
 $ accumulo shell
@@ -445,9 +390,9 @@ Table permissions (accumulo.root): Table.READ, Table.ALTER_TABLE
 accumulo_admin@EXAMPLE.COM@MYACCUMULO> quit
 $ kdestroy
 $
-----
+```
 
-===== DelegationTokens with MapReduce
+#### DelegationTokens with MapReduce
 
 To use DelegationTokens in a custom MapReduce job, the call to `setConnectorInfo()` method
 on `AccumuloInputFormat` or `AccumuloOutputFormat` should be the only necessary change. Instead
@@ -457,8 +402,7 @@ using a `Connector` obtained with that `KerberosToken`, and pass the `Delegation
 the MapReduce job is already logged in via Kerberos via a keytab or via a locally-cached
 Kerberos ticket-granting-ticket (TGT).
 
-[source,java]
-----
+```java
 Instance instance = getInstance();
 KerberosToken kt = new KerberosToken();
 Connector conn = instance.getConnector(principal, kt);
@@ -469,7 +413,7 @@ AccumuloInputFormat.setConnectorInfo(job, principal, dt);
 
 // Writing to Accumulo
 AccumuloOutputFormat.setConnectorInfo(job, principal, dt);
-----
+```
 
 If the user passes a `KerberosToken` to the `setConnectorInfo` method, the implementation will
 attempt to obtain a `DelegationToken` automatically, but this does have limitations
@@ -484,15 +428,14 @@ of time dependent on Accumulo's configuration (`general.delegation.token.lifetim
 It is also possible to obtain and use `DelegationToken`s outside of the context
 of MapReduce.
 
-[source,java]
-----
+```java
 String principal = "user@REALM";
 Instance instance = getInstance();
 Connector connector = instance.getConnector(principal, new KerberosToken());
 DelegationToken delegationToken = connector.securityOperations().getDelegationToken();
 
 Connector dtConnector = instance.getConnector(principal, delegationToken);
-----
+```
 
 Use of the `dtConnector` will perform each operation as the original user, but without
 their Kerberos credentials.
@@ -502,20 +445,20 @@ to protect the `DelegationToken` from prying eyes as it can be used by any user 
 the user who requested the `DelegationToken`. YARN ensures that passing the delegation token from the client
 JVM to each YARN task is secure, even in multi-tenant instances.
 
-==== Debugging
+### Debugging
 
-*Q*: I have valid Kerberos credentials and a correct client configuration file but
+**Q**: I have valid Kerberos credentials and a correct client configuration file but
 I still get errors like:
 
-----
+```
 java.io.IOException: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
-----
+```
 
-*A*: When you have a valid client configuration and Kerberos TGT, it is possible that the search
+**A**: When you have a valid client configuration and Kerberos TGT, it is possible that the search
 path for your local credentials cache is incorrect. Check the value of the KRB5CCNAME environment
 value, and ensure it matches the value reported by `klist`.
 
-----
+```
 $ echo $KRB5CCNAME
 
 $ klist
@@ -528,31 +471,31 @@ Valid starting       Expires              Service principal
 $ export KRB5CCNAME=/tmp/krb5cc_123
 $ echo $KRB5CCNAME
 /tmp/krb5cc_123
-----
+```
 
-*Q*: I thought I had everything configured correctly, but my client/server still fails to log in.
+**Q**: I thought I had everything configured correctly, but my client/server still fails to log in.
 I don't know what is actually failing.
 
-*A*: Add the following system property to the JVM invocation:
+**A**: Add the following system property to the JVM invocation:
 
-----
+```
 -Dsun.security.krb5.debug=true
-----
+```
 
 This will enable lots of extra debugging at the JVM level which is often sufficient to
 diagnose some high-level configuration problem. Client applications can add this system property by
 hand to the command line and Accumulo server processes or applications started using the `accumulo`
-script by adding the property to +JAVA_OPTS+ in +accumulo-env.sh+.
+script by adding the property to `JAVA_OPTS` in `accumulo-env.sh`.
 
-Additionally, you can increase the log4j levels on +org.apache.hadoop.security+, which includes the
-Hadoop +UserGroupInformation+ class, which will include some high-level debug statements. This
-can be controlled in your client application, or using +log4j-service.properties+
+Additionally, you can increase the log4j levels on `org.apache.hadoop.security`, which includes the
+Hadoop `UserGroupInformation` class, which will include some high-level debug statements. This
+can be controlled in your client application, or using `log4j-service.properties`
 
-*Q*: All of my Accumulo processes successfully start and log in with their
+**Q**: All of my Accumulo processes successfully start and log in with their
 keytab, but they are unable to communicate with each other, showing the
 following errors:
 
-----
+```
 2015-01-12 14:47:27,055 [transport.TSaslTransport] ERROR: SASL negotiation failure
 javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Server not found in Kerberos database (7) - LOOKING_UP_SERVER)]
         at com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)
@@ -593,11 +536,11 @@ Caused by: KrbException: Identifier doesn't match expected value (906)
         at sun.security.krb5.internal.TGSRep.<init>(TGSRep.java:61)
         at sun.security.krb5.KrbTgsRep.<init>(KrbTgsRep.java:55)
         ... 25 more
-----
+```
 
 or
 
-----
+```
 2015-01-12 14:47:29,440 [server.TThreadPoolServer] ERROR: Error occurred during processing of message.
 java.lang.RuntimeException: org.apache.thrift.transport.TTransportException: Peer indicated failure: GSS initiate failed
         at org.apache.thrift.transport.TSaslServerTransport$Factory.getTransport(TSaslServerTransport.java:219)
@@ -618,46 +561,45 @@ Caused by: org.apache.thrift.transport.TTransportException: Peer indicated failu
         at org.apache.thrift.transport.TSaslServerTransport.open(TSaslServerTransport.java:41)
         at org.apache.thrift.transport.TSaslServerTransport$Factory.getTransport(TSaslServerTransport.java:216)
         ... 10 more
-----
+```
 
-*A*: As previously mentioned, the hostname, and subsequently the address each Accumulo process is bound/listening
+**A**: As previously mentioned, the hostname, and subsequently the address each Accumulo process is bound/listening
 on, is extremely important when negotiating an SASL connection. This problem commonly arises when the Accumulo
 servers are not configured to listen on the address denoted by their FQDN.
 
-The values in the Accumulo "hosts" files (In +accumulo/conf+: +masters+, +monitors+, +tservers+, +tracers+,
-and +gc+) should match the instance componentof the Kerberos server principal (e.g. +host+ in +accumulo/host@EXAMPLE.COM+).
+The values in the Accumulo "hosts" files (In `accumulo/conf`: `masters`, `monitors`, `tservers`, `tracers`,
+and `gc`) should match the instance componentof the Kerberos server principal (e.g. `host` in `accumulo/host@EXAMPLE.COM`).
 
-*Q*: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
+**Q**: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
 when I attempt to use the "Recent Traces" page on the Monitor UI I get a stacktrace similar to:
 
-----
-                                                                         java.lang.AssertionError: AuthenticationToken should not be null
-                                                                   at org.apache.accumulo.monitor.servlets.trace.Basic.getScanner(Basic.java:139)
-                                                                  at org.apache.accumulo.monitor.servlets.trace.Summary.pageBody(Summary.java:164)
-                                                                  at org.apache.accumulo.monitor.servlets.BasicServlet.doGet(BasicServlet.java:63)
-                                                                           at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
-                                                                           at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
-                                                                      at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:738)
-                                                                    at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:551)
-                                                                  at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
-                                                                   at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:568)
-                                                                at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:221)
-                                                                at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1111)
-                                                                    at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:478)
-                                                                 at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:183)
-                                                                at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1045)
-                                                                  at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
-                                                                  at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)
-                                                                             at org.eclipse.jetty.server.Server.handle(Server.java:462)
-                                                                        at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:279)
-                                                                   at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:232)
-                                                                    at org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:534)
-                                                                 at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:607)
-                                                                 at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:536)
-                                                                                      at java.lang.Thread.run(Thread.java:745)
+```
+java.lang.AssertionError: AuthenticationToken should not be null
+    at org.apache.accumulo.monitor.servlets.trace.Basic.getScanner(Basic.java:139)
+    at org.apache.accumulo.monitor.servlets.trace.Summary.pageBody(Summary.java:164)
+    at org.apache.accumulo.monitor.servlets.BasicServlet.doGet(BasicServlet.java:63)
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+    at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:738)
+    at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:551)
+    at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+    at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:568)
+    at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:221)
+    at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1111)
+    at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:478)
+    at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:183)
+    at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1045)
+    at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+    at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)
+    at org.eclipse.jetty.server.Server.handle(Server.java:462)
+    at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:279)
+    at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:232)
+    at org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:534)
+    at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:607)
+    at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:536)
+    at java.lang.Thread.run(Thread.java:745)
+```
 
-----
+**A**: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the `trace` table. Accumulo allows the TraceServer to rely on the property `general.kerberos.keytab` as a fallback when logging in the trace user if the `trace.token.property.keytab` property isn't defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor's use of the trace user. The end result is that if you configure `general.kerberos.keytab` and not `trace.token.property.keytab` you will end up with a system that properly logs trace information but can't view it.
 
-*A*: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the +trace+ table. Accumulo allows the TraceServer to rely on the property +general.kerberos.keytab+ as a fallback when logging in the trace user if the +trace.token.property.keytab+ property isn't defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor's use of the trace user. The end result is that if you configure +general.kerberos.keytab+ and not +trace.token.property.keytab+ you will end up with a system that properly logs trace information but can't view it.
-
-Ensure you have set +trace.token.property.keytab+ to point to a keytab for the principal defined in +trace.user+ in the +accumulo-site.xml+ file for the Monitor, since that should work in all versions of Accumulo.
+Ensure you have set `trace.token.property.keytab` to point to a keytab for the principal defined in `trace.user` in the `accumulo-site.xml` file for the Monitor, since that should work in all versions of Accumulo.

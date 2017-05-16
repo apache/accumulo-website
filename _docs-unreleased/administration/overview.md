@@ -1,21 +1,10 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+---
+title: Overview
+category: administration
+order: 1
+---
 
-== Administration
-
-=== Hardware
+## Hardware
 
 Because we are running essentially two or three systems simultaneously layered
 across the cluster: HDFS, Accumulo and MapReduce, it is typical for hardware to
@@ -31,7 +20,7 @@ machine -- i.e. DataNode and TabletServer or DataNode and MapReduce worker but
 not all three. The constraint here is having enough available heap space for all the
 processes on a machine.
 
-=== Network
+## Network
 
 Accumulo communicates via remote procedure calls over TCP/IP for both passing
 data and control messages. In addition, Accumulo uses HDFS clients to
@@ -42,11 +31,8 @@ In addition to needing access to ports associated with HDFS and ZooKeeper, Accum
 use the following default ports. Please make sure that they are open, or change
 their value in accumulo-site.xml.
 
-.Accumulo default ports
-[width="75%",cols=">,^2,^2"]
-[options="header"]
-|====
 |Port | Description | Property Name
+|-----|-------------|--------------
 |4445 | Shutdown Port (Accumulo MiniCluster) | n/a
 |4560 | Accumulo monitor (for centralized log display) | monitor.port.log4j
 |9995 | Accumulo HTTP monitor | monitor.port.client
@@ -57,27 +43,26 @@ their value in accumulo-site.xml.
 |42424 | Accumulo Proxy Server | n/a
 |10001 | Master Replication service | master.replication.coordinator.port
 |10002 | TabletServer Replication service | replication.receipt.service.port
-|====
 
-In addition, the user can provide +0+ and an ephemeral port will be chosen instead. This
+In addition, the user can provide `0` and an ephemeral port will be chosen instead. This
 ephemeral port is likely to be unique and not already bound. Thus, configuring ports to
-use +0+ instead of an explicit value, should, in most cases, work around any issues of
+use `0` instead of an explicit value, should, in most cases, work around any issues of
 running multiple distinct Accumulo instances (or any other process which tries to use the
 same default ports) on the same hardware. Finally, the *.port.client properties will work
 with the port range syntax (M-N) allowing the user to specify a range of ports for the
 service to attempt to bind. The ports in the range will be tried in a 1-up manner starting
 at the low end of the range to, and including, the high end of the range.
 
-=== Installation
+## Installation
 
 Download a binary distribution of Accumulo and install it to a directory on a disk with
 sufficient space:
 
-  cd <install directory>
-  tar xzf accumulo-X.Y.Z-bin.tar.gz   # Replace 'X.Y.Z' with your Accumulo version
-  cd accumulo-X.Y.Z
+    cd <install directory>
+    tar xzf accumulo-X.Y.Z-bin.tar.gz   # Replace 'X.Y.Z' with your Accumulo version
+    cd accumulo-X.Y.Z
 
-Repeat this step on each machine in your cluster. Typically, the same +<install directory>+
+Repeat this step on each machine in your cluster. Typically, the same `<install directory>`
 is chosen for all machines in the cluster.
 
 There are four scripts in the `bin/` directory that are used to manage Accumulo:
@@ -89,7 +74,7 @@ There are four scripts in the `bin/` directory that are used to manage Accumulo:
 
 These scripts will be used in the remaining instructions to configure and run Accumulo.
 
-=== Dependencies
+## Dependencies
 
 Accumulo requires HDFS and ZooKeeper to be configured and running
 before starting. Password-less SSH should be configured between at least the
@@ -97,41 +82,41 @@ Accumulo master and TabletServer machines. It is also a good idea to run Network
 Time Protocol (NTP) within the cluster to ensure nodes' clocks don't get too out of
 sync, which can cause problems with automatically timestamped data.
 
-=== Configuration
+## Configuration
 
-The Accumulo tarball contains a +conf/+ directory where Accumulo looks for configuration. If you
-installed Accumulo using downstream packaging, the +conf/+ could be something else like
-+/etc/accumulo/+.
+The Accumulo tarball contains a `conf/` directory where Accumulo looks for configuration. If you
+installed Accumulo using downstream packaging, the `conf/` could be something else like
+`/etc/accumulo/`.
 
-Before starting Accumulo, the configuration files +accumulo-env.sh+ and +accumulo-site.xml+ must
-exist in +conf/+ and be properly configured. If you are using +accumulo-cluster+ to launch
-a cluster, the `conf/` directory must also contain hosts file for Accumulo services (i.e +gc+,
-+masters+, +monitor+, +tservers+, +tracers+). You can either create these files manually or run
-+accumulo-cluster create-config+.
+Before starting Accumulo, the configuration files `accumulo-env.sh` and `accumulo-site.xml` must
+exist in `conf/` and be properly configured. If you are using `accumulo-cluster` to launch
+a cluster, the `conf/` directory must also contain hosts file for Accumulo services (i.e `gc`,
+`masters`, `monitor`, `tservers`, `tracers`). You can either create these files manually or run
+`accumulo-cluster create-config`.
 
-Logging is configured in +accumulo-env.sh+ to use three log4j configuration files in +conf/+. The
+Logging is configured in `accumulo-env.sh` to use three log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e Master, TabletServer, Garbage Collector) is configured by +log4j-service.properties+ except for
-the Monitor which is configured by +log4j-monitor.properties+. All Accumulo commands (i.e +init+,
-+shell+, etc) are configured by +log4j.properties+.
+(i.e Master, TabletServer, Garbage Collector) is configured by `log4j-service.properties` except for
+the Monitor which is configured by `log4j-monitor.properties`. All Accumulo commands (i.e `init`,
+`shell`, etc) are configured by `log4j.properties`.
 
-==== Configure accumulo-env.sh
+### Configure accumulo-env.sh
 
 Accumulo needs to know where to find the software it depends on. Edit accumulo-env.sh
 and specify the following:
 
-. Enter the location of Hadoop for +$HADOOP_PREFIX+
-. Enter the location of ZooKeeper for +$ZOOKEEPER_HOME+
-. Optionally, choose a different location for Accumulo logs using +$ACCUMULO_LOG_DIR+
+1. Enter the location of Hadoop for `$HADOOP_PREFIX`
+2. Enter the location of ZooKeeper for `$ZOOKEEPER_HOME`
+3. Optionally, choose a different location for Accumulo logs using `$ACCUMULO_LOG_DIR`
 
-Accumulo uses +HADOOP_PREFIX+ and +ZOOKEEPER_HOME+ to locate Hadoop and Zookeeper jars
-and add them the +CLASSPATH+ variable. If you are running a vendor-specific release of Hadoop
-or Zookeeper, you may need to change how your +CLASSPATH+ is built in +accumulo-env.sh+. If
-Accumulo has problems later on finding jars, run +accumulo classpath -d+ to debug and print
+Accumulo uses `HADOOP_PREFIX` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
+and add them the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
+or Zookeeper, you may need to change how your `CLASSPATH` is built in `accumulo-env.sh`. If
+Accumulo has problems later on finding jars, run `accumulo classpath -d` to debug and print
 Accumulo's classpath.
 
 You may want to change the default memory settings for Accumulo's TabletServer which are
-by set in the +JAVA_OPTS+ settings for 'tservers' in +accumulo-env.sh+. Note the
+by set in the `JAVA_OPTS` settings for 'tservers' in `accumulo-env.sh`. Note the
 syntax is that of the Java JVM command line options. This value should be less than the
 physical memory of the machines running TabletServers.
 
@@ -149,7 +134,7 @@ machines to allow them to use more heap space. If you are running these on the
 same machine on a small cluster, likewise make sure their heap space settings fit
 within the available memory.
 
-==== Native Map
+### Native Map
 
 The tablet server uses a data structure called a MemTable to store sorted key/value
 pairs in memory when they are first received from the client. When a minor compaction
@@ -159,101 +144,103 @@ speed up performance by utilizing the memory space of the native operating syste
 native map also avoids the performance implications brought on by garbage collection
 in the JVM by causing it to pause much less frequently.
 
-===== Building
+#### Building
 
 32-bit and 64-bit Linux and Mac OS X versions of the native map can be built by executing
-+accumulo-util build-native+. If your system's default compiler options are insufficient,
+`accumulo-util build-native`. If your system's default compiler options are insufficient,
 you can add additional compiler options to the command line, such as options for the
-architecture. These will be passed to the Makefile in the environment variable +USERFLAGS+.
+architecture. These will be passed to the Makefile in the environment variable `USERFLAGS`.
 
 Examples:
 
-  accumulo-util build-native
-  accumulo-util build-native -m32
+    accumulo-util build-native
+    accumulo-util build-native -m32
 
 After building the native map from the source, you will find the artifact in
-+lib/native+. Upon starting up, the tablet server will look
+`lib/native`. Upon starting up, the tablet server will look
 in this directory for the map library. If the file is renamed or moved from its
 target directory, the tablet server may not be able to find it. The system can
-also locate the native maps shared library by setting +LD_LIBRARY_PATH+
-(or +DYLD_LIBRARY_PATH+ on Mac OS X) in +accumulo-env.sh+.
+also locate the native maps shared library by setting `LD_LIBRARY_PATH`
+(or `DYLD_LIBRARY_PATH` on Mac OS X) in `accumulo-env.sh`.
 
-===== Native Maps Configuration
+#### Native Maps Configuration
 
 As mentioned, Accumulo will use the native libraries if they are found in the expected
-location and +tserver.memory.maps.native.enabled+ is set to +true+ (which is the default).
+location and `tserver.memory.maps.native.enabled` is set to `true` (which is the default).
 Using the native maps over JVM Maps nets a noticeable improvement in ingest rates; however,
 certain configuration variables are important to modify when increasing the size of the
 native map.
 
-To adjust the size of the native map, increase the value of +tserver.memory.maps.max+.
+To adjust the size of the native map, increase the value of `tserver.memory.maps.max`.
 By default, the maximum size of the native map is 1GB. When increasing this value, it is
-also important to adjust the values of +table.compaction.minor.logs.threshold+ and
-+tserver.walog.max.size+. +table.compaction.minor.logs.threshold+ is the maximum
+also important to adjust the values of `table.compaction.minor.logs.threshold` and
+`tserver.walog.max.size`. `table.compaction.minor.logs.threshold` is the maximum
 number of write-ahead log files that a tablet can reference before they will be automatically
-minor compacted. +tserver.walog.max.size+ is the maximum size of a write-ahead log.
+minor compacted. `tserver.walog.max.size` is the maximum size of a write-ahead log.
 
 The maximum size of the native maps for a server should be less than the product
 of the write-ahead log maximum size and minor compaction threshold for log files:
 
-+$table.compaction.minor.logs.threshold * $tserver.walog.max.size >= $tserver.memory.maps.max+
+`$table.compaction.minor.logs.threshold * $tserver.walog.max.size >= $tserver.memory.maps.max`
 
 This formula ensures that minor compactions won't be automatically triggered before the native
 maps can be completely saturated.
 
 Subsequently, when increasing the size of the write-ahead logs, it can also be important
 to increase the HDFS block size that Accumulo uses when creating the files for the write-ahead log.
-This is controlled via +tserver.wal.blocksize+. A basic recommendation is that when
-+tserver.walog.max.size+ is larger than 2GB in size, set +tserver.wal.blocksize+ to 2GB.
+This is controlled via `tserver.wal.blocksize`. A basic recommendation is that when
+`tserver.walog.max.size` is larger than 2GB in size, set `tserver.wal.blocksize` to 2GB.
 Increasing the block size to a value larger than 2GB can result in decreased write
 performance to the write-ahead log file which will slow ingest.
 
-==== Cluster Specification
+### Cluster Specification
 
-If you are using +accumulo-cluster+ to start a cluster, configure the following on the
+If you are using `accumulo-cluster` to start a cluster, configure the following on the
 machine that will serve as the Accumulo master:
 
-. Write the IP address or domain name of the Accumulo Master to the +conf/masters+ file.
-. Write the IP addresses or domain name of the machines that will be TabletServers in +conf/tservers+, one per line.
+1. Write the IP address or domain name of the Accumulo Master to the `conf/masters` file.
+2. Write the IP addresses or domain name of the machines that will be TabletServers in `conf/tservers`, one per line.
 
 Note that if using domain names rather than IP addresses, DNS must be configured
 properly for all machines participating in the cluster. DNS can be a confusing source
 of errors.
 
-==== Configure accumulo-site.xml
+### Configure accumulo-site.xml
 
-Specify appropriate values for the following settings in +accumulo-site.xml+:
+Specify appropriate values for the following settings in `accumulo-site.xml`:
 
-[source,xml]
+```xml
 <property>
     <name>instance.zookeeper.host</name>
     <value>zooserver-one:2181,zooserver-two:2181</value>
     <description>list of zookeeper servers</description>
 </property>
+```
 
 This enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper to coordinate
 settings between processes and helps finalize TabletServer failure.
 
-[source,xml]
+```xml
 <property>
     <name>instance.secret</name>
     <value>DEFAULT</value>
 </property>
+```
 
 The instance needs a secret to enable secure communication between servers. Configure your
-secret and make sure that the +accumulo-site.xml+ file is not readable to other users.
-For alternatives to storing the +instance.secret+ in plaintext, please read the
-+Sensitive Configuration Values+ section.
+secret and make sure that the `accumulo-site.xml` file is not readable to other users.
+For alternatives to storing the `instance.secret` in plaintext, please read the
+`Sensitive Configuration Values` section.
 
 Some settings can be modified via the Accumulo shell and take effect immediately, but
-some settings require a process restart to take effect. See the configuration documentation
-(available in the docs directory of the tarball and in <<configuration>>) for details.
+some settings require a process restart to take effect. See the [configuration management][config-mgmt]
+documentation for details.
 
-==== Hostnames in configuration files
+### Hostnames in configuration files
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
-network. All of the "host" configuration files for Accumulo (+gc+, +masters+, +tservers+, +monitor+,
-+tracers+) as well as +instance.volumes+ in accumulo-site.xml must contain some host reference.
+network. All of the "host" configuration files for Accumulo (`gc`, `masters`, `tservers`, `monitor`,
+`tracers`) as well as `instance.volumes` in accumulo-site.xml must contain some host reference.
 
 While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid, it
 is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop cluster.
@@ -264,15 +251,15 @@ Master coordinates moving the input files to Bulk Ingest to an Accumulo-managed 
 Accumulo cannot safely move files across different Hadoop FileSystems. This is problematic because
 Accumulo also cannot make reliable assertions across what is the same FileSystem which is specified
 with different names. Naively, while 127.0.0.1:8020 might be a valid identifier for an HDFS instance,
-Accumulo identifies +localhost:8020+ as a different HDFS instance than +127.0.0.1:8020+.
+Accumulo identifies `localhost:8020` as a different HDFS instance than `127.0.0.1:8020`.
 
-==== Deploy Configuration
+### Deploy Configuration
 
-Copy accumulo-env.sh and accumulo-site.xml from the +conf/+ directory on the master to all Accumulo
-tablet servers.  The "host" configuration files files +accumulo-cluster+ only need to be on servers
+Copy accumulo-env.sh and accumulo-site.xml from the `conf/` directory on the master to all Accumulo
+tablet servers.  The "host" configuration files files `accumulo-cluster` only need to be on servers
 where that command is run.
 
-==== Sensitive Configuration Values
+### Sensitive Configuration Values
 
 Accumulo has a number of properties that can be specified via the accumulo-site.xml
 file which are sensitive in nature, instance.secret and trace.token.property.password
@@ -281,35 +268,36 @@ to result in data being leaked to users who should not have access to that data.
 
 In Hadoop-2.6.0, a new CredentialProvider class was introduced which serves as a common
 implementation to abstract away the storage and retrieval of passwords from plaintext
-storage in configuration files. Any Property marked with the +Sensitive+ annotation
+storage in configuration files. Any Property marked with the `Sensitive` annotation
 is a candidate for use with these CredentialProviders. For version of Hadoop which lack
 these classes, the feature will just be unavailable for use.
 
 A comma separated list of CredentialProviders can be configured using the Accumulo Property
-+general.security.credential.provider.paths+. Each configured URL will be consulted
+`general.security.credential.provider.paths`. Each configured URL will be consulted
 when the Configuration object for accumulo-site.xml is accessed.
 
-==== Using a JavaKeyStoreCredentialProvider for storage
+### Using a JavaKeyStoreCredentialProvider for storage
 
 One of the implementations provided in Hadoop-2.6.0 is a Java KeyStore CredentialProvider.
 Each entry in the KeyStore is the Accumulo Property key name. For example, to store the
 `instance.secret`, the following command can be used:
 
-  hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
+    hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
 
 The command will then prompt you to enter the secret to use and create a keystore in: 
 
-  /path/to/accumulo/conf/accumulo.jceks
+    /path/to/accumulo/conf/accumulo.jceks
 
 Then, accumulo-site.xml must be configured to use this KeyStore as a CredentialProvider:
 
-[source,xml]
+```xml
 <property>
     <name>general.security.credential.provider.paths</name>
     <value>jceks://file/path/to/accumulo/conf/accumulo.jceks</value>
 </property>
+```
 
-This configuration will then transparently extract the +instance.secret+ from
+This configuration will then transparently extract the `instance.secret` from
 the configured KeyStore and alleviates a human readable storage of the sensitive
 property.
 
@@ -317,8 +305,7 @@ A KeyStore can also be stored in HDFS, which will make the KeyStore readily avai
 all Accumulo servers. If the local filesystem is used, be aware that each Accumulo server
 will expect the KeyStore in the same location.
 
-[[ClientConfiguration]]
-==== Client Configuration
+### Client Configuration
 
 In version 1.6.0, Accumulo included a new type of configuration file known as a client
 configuration file. One problem with the traditional "site.xml" file that is prevalent
@@ -330,23 +317,22 @@ The client configuration file is a subset of the information stored in accumulo-
 meant only for consumption by clients of Accumulo. By default, Accumulo checks a number
 of locations for a client configuration by default:
 
-* +/path/to/accumulo/conf/client.conf+
-* +/etc/accumulo/client.conf+
-* +/etc/accumulo/conf/client.conf+
-* +~/.accumulo/config+
+* `/path/to/accumulo/conf/client.conf`
+* `/etc/accumulo/client.conf`
+* `/etc/accumulo/conf/client.conf`
+* `~/.accumulo/config`
 
-These files are https://en.wikipedia.org/wiki/.properties[Java Properties files]. These files
+These files are [Java Properties files](https://en.wikipedia.org/wiki/.properties). These files
 can currently contain information about ZooKeeper servers, RPC properties (such as SSL or SASL
-connectors), distributed tracing properties. Valid properties are defined by the
-https://github.com/apache/accumulo/blob/f1d0ec93d9f13ff84844b5ac81e4a7b383ced467/core/src/main/java/org/apache/accumulo/core/client/ClientConfiguration.java#L54[ClientProperty]
+connectors), distributed tracing properties. Valid properties are defined by the [ClientProperty](https://github.com/apache/accumulo/blob/f1d0ec93d9f13ff84844b5ac81e4a7b383ced467/core/src/main/java/org/apache/accumulo/core/client/ClientConfiguration.java#L54)
 enum contained in the client API.
 
-==== Custom Table Tags
+#### Custom Table Tags
 
 Accumulo has the ability for users to add custom tags to tables.  This allows
 applications to set application-level metadata about a table.  These tags can be
 anything from a table description, administrator notes, date created, etc.
-This is done by naming and setting a property with a prefix +table.custom.*+.
+This is done by naming and setting a property with a prefix `table.custom.*`.
 
 Currently, table properties are stored in ZooKeeper. This means that the number
 and size of custom properties should be restricted on the order of 10's of properties
@@ -355,58 +341,60 @@ very sensitive to an excessive number of nodes and the sizes of the nodes. Appli
 which leverage the user of custom properties should take these warnings into
 consideration. There is no enforcement of these warnings via the API.
 
-==== Configuring the ClassLoader
+#### Configuring the ClassLoader
 
-Accumulo builds its Java classpath in +accumulo-env.sh+.  After an Accumulo application has started, it will load classes from the locations
-specified in the deprecated +general.classpaths+ property. Additionally, Accumulo will load classes from the locations specified in the
-+general.dynamic.classpaths+ property and will monitor and reload them if they change. The reloading  feature is useful during the development
+Accumulo builds its Java classpath in `accumulo-env.sh`.  After an Accumulo application has started, it will load classes from the locations
+specified in the deprecated `general.classpaths` property. Additionally, Accumulo will load classes from the locations specified in the
+`general.dynamic.classpaths` property and will monitor and reload them if they change. The reloading  feature is useful during the development
 and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
 /
 Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
 uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
-+general.classpaths+ property in the same manner described above. It differs in that you need to configure the
-+general.vfs.classpaths+ property instead of the +general.dynamic.classpath+ property. As in the default configuration, this alternate
+`general.classpaths` property in the same manner described above. It differs in that you need to configure the
+`general.vfs.classpaths` property instead of the `general.dynamic.classpath` property. As in the default configuration, this alternate
 configuration will also monitor the vfs locations for changes and reload if necessary.
 
-The Accumulo classpath can be viewed in human readable format by running +accumulo classpath -d+.
+The Accumulo classpath can be viewed in human readable format by running `accumulo classpath -d`.
 
-===== ClassLoader Contexts
+##### ClassLoader Contexts
 
 With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A context is identified
 by a name and references a set of locations from which to load classes and can be specified in the accumulo-site.xml file or added
-using the +config+ command in the shell. Below is an example for specify the app1 context in the accumulo-site.xml file:
+using the `config` command in the shell. Below is an example for specify the app1 context in the accumulo-site.xml file:
 
-[source,xml]
+```xml
 <property>
   <name>general.vfs.context.classpath.app1</name>
   <value>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar</value>
   <description>Application A classpath, loads jars from HDFS and local file system</description>
 </property>
+```
 
 The default behavior follows the Java ClassLoader contract in that classes, if they exists, are loaded from the parent classloader first.
 You can override this behavior by delegating to the parent classloader after looking in this classloader first. An example of this
 configuration is:
 
-[source,xml]
+```xml
 <property>
   <name>general.vfs.context.classpath.app1.delegation=post</name>
   <value>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar</value>
   <description>Application A classpath, loads jars from HDFS and local file system</description>
 </property>
+```
 
-To use contexts in your application you can set the +table.classpath.context+ on your tables or use the +setClassLoaderContext()+ method on Scanner
+To use contexts in your application you can set the `table.classpath.context` on your tables or use the `setClassLoaderContext()` method on Scanner
 and BatchScanner passing in the name of the context, app1 in the example above. Setting the property on the table allows your minc, majc, and scan 
 iterators to load classes from the locations defined by the context. Passing the context name to the scanners allows you to override the table setting
 to load only scan time iterators from a different location. 
 
-=== Initialization
+## Initialization
 
 Accumulo must be initialized to create the structures it uses internally to locate
 data across the cluster. HDFS is required to be configured and running before
 Accumulo can be initialized.
 
 Once HDFS is started, initialization can be performed by executing
-+accumulo init+ . This script will prompt for a name
+`accumulo init` . This script will prompt for a name
 for this instance of Accumulo. The instance name is used to identify a set of tables
 and instance-specific settings. The script will then write some information into
 HDFS so Accumulo can start properly.
@@ -414,80 +402,79 @@ HDFS so Accumulo can start properly.
 The initialization script will prompt you to set a root password. Once Accumulo is
 initialized it can be started.
 
-=== Running
+## Running
 
-==== Starting Accumulo
+### Starting Accumulo
 
 Make sure Hadoop is configured on all of the machines in the cluster, including
 access to a shared HDFS instance. Make sure HDFS and ZooKeeper are running.
 Make sure ZooKeeper is configured and running on at least one machine in the
 cluster.
-Start Accumulo using +accumulo-cluster start+.
+Start Accumulo using `accumulo-cluster start`.
 
-To verify that Accumulo is running, check the Status page as described in
-<<monitoring>>. In addition, the Shell can provide some information about the status of
-tables via reading the metadata tables.
+To verify that Accumulo is running, check the [Accumulo monitor][monitor].
+In addition, the Shell can provide some information about the status of tables via reading the metadata tables.
 
-==== Stopping Accumulo
+### Stopping Accumulo
 
-To shutdown cleanly, run +accumulo-cluster stop+ and the master will orchestrate the
+To shutdown cleanly, run `accumulo-cluster stop` and the master will orchestrate the
 shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may
 take some time for particular configurations.
 
-==== Adding a Tablet Server
+### Adding a Tablet Server
 
-Update your +conf/tservers+ file to account for the addition.
+Update your `conf/tservers` file to account for the addition.
 
 Next, ssh to each of the hosts you want to add and run:
 
-  accumulo-service tserver start
+    accumulo-service tserver start
 
 Make sure the host in question has the new configuration, or else the tablet
 server won't start; at a minimum this needs to be on the host(s) being added,
 but in practice it's good to ensure consistent configuration across all nodes.
 
-==== Decomissioning a Tablet Server
+### Decomissioning a Tablet Server
 
 If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.
 
-  accumulo admin stop <host(s)> {<host> ...}
+    accumulo admin stop <host(s)> {<host> ...}
 
 Alternatively, you can ssh to each of the hosts you want to remove and run:
 
-  accumulo-service tserver stop
+    accumulo-service tserver stop
 
-Be sure to update your +conf/tservers+ file to
+Be sure to update your `conf/tservers` file to
 account for the removal of these hosts. Bear in mind that the monitor will not re-read the
 tservers file automatically, so it will report the decommissioned servers as down; it's
 recommended that you restart the monitor so that the node list is up to date.
 
 The steps described to decommission a node can also be used (without removal of the host
-from the +conf/tservers+ file) to gracefully stop a node. This will
+from the `conf/tservers` file) to gracefully stop a node. This will
 ensure that the tabletserver is cleanly stopped and recovery will not need to be performed
 when the tablets are re-hosted.
 
-==== Restarting process on a node
+### Restarting process on a node
 
 Occasionally, it might be necessary to restart the processes on a specific node. In addition
-to the +accumulo-cluster+ script, Accumulo has a +accumulo-service+ script that
+to the `accumulo-cluster` script, Accumulo has a `accumulo-service` script that
 can be use to start/stop processes on a node.
 
-===== A note on rolling restarts
+#### A note on rolling restarts
 
 For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant 
 load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting 
-+table.suspend.duration+ to a positive value.  
+`table.suspend.duration` to a positive value.  
 
-With +table.suspend.duration+ set to, say, +5m+, Accumulo will wait 
+With `table.suspend.duration` set to, say, `5m`, Accumulo will wait 
 for 5 minutes for any dead TabletServer to return before reassigning that TabletServer's responsibilities to other TabletServers.
 If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer 
 its original responsibilities.
 
-It is important not to choose too large a value for +table.suspend.duration+, as during this time, all scans against the 
+It is important not to choose too large a value for `table.suspend.duration`, as during this time, all scans against the 
 data that TabletServer had hosted will block (or time out).
 
-==== Running multiple TabletServers on a single node
+### Running multiple TabletServers on a single node
 
 With very powerful nodes, it may be beneficial to run more than one TabletServer on a given
 node. This decision should be made carefully and with much deliberation as Accumulo is designed
@@ -495,9 +482,10 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment variable
-+ACCUMULO_SERVICE_INSTANCE+ to an instance number (i.e 1, 2) for each instance that is started. Also, set
-these properties in +accumulo-site.xml+:
+`ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is started. Also, set
+these properties in `accumulo-site.xml`:
 
+```xml
   <property>
     <name>tserver.port.search</name>
     <value>true</value>
@@ -506,14 +494,15 @@ these properties in +accumulo-site.xml+:
     <name>replication.receipt.service.port</name>
     <value>0</value>
   </property>
+```
 
-[[monitoring]]
-=== Monitoring
+## Monitoring
 
-==== Accumulo Monitor
+### Accumulo Monitor
+
 The Accumulo Monitor provides an interface for monitoring the status and health of
 Accumulo components. The Accumulo Monitor provides a web UI for accessing this information at
-+http://_monitorhost_:9995/+.
+`http://_monitorhost_:9995/`.
 
 Things highlighted in yellow may be in need of attention.
 If anything is highlighted in red on the monitor page, it is something that definitely needs attention.
@@ -533,57 +522,58 @@ The Overall Avg metric is only used on the Server Activity page, and represents 
 Similarly, the Overall Max metric picks the metric with the maximum normalized value.
 
 The Garbage Collector page displays a list of garbage collection cycles, the number of files found of each type (including deletion candidates in use and files actually deleted), and the length of the deletion cycle.
-The Traces page displays data for recent traces performed (see the following section for information on <<tracing>>).
+The Traces page displays data for recent traces performed (see the following section for information on [tracing][tracing]).
 The Recent Logs page displays warning and error logs forwarded to the monitor from all Accumulo processes.
 Also, the XML and JSON links provide metrics in XML and JSON formats, respectively.
 
-==== SSL
-SSL may be enabled for the monitor page by setting the following properties in the +accumulo-site.xml+ file:
+### SSL
 
-  monitor.ssl.keyStore
-  monitor.ssl.keyStorePassword
-  monitor.ssl.trustStore
-  monitor.ssl.trustStorePassword
+SSL may be enabled for the monitor page by setting the following properties in the `accumulo-site.xml` file:
 
-If the Accumulo conf directory has been configured (in particular the +accumulo-env.sh+ file must be set up), the 
-+accumulo-util gen-monitor-cert+ command can be used to create the keystore and truststore files with random passwords. The command
-will print out the properties that need to be added to the +accumulo-site.xml+ file. The stores can also be generated manually with the
-Java +keytool+ command, whose usage can be seen in the +accumulo-util+ script.
+    monitor.ssl.keyStore
+    monitor.ssl.keyStorePassword
+    monitor.ssl.trustStore
+    monitor.ssl.trustStorePassword
 
-If desired, the SSL ciphers allowed for connections can be controlled via the following properties in +accumulo-site.xml+:
+If the Accumulo conf directory has been configured (in particular the `accumulo-env.sh` file must be set up), the 
+`accumulo-util gen-monitor-cert` command can be used to create the keystore and truststore files with random passwords. The command
+will print out the properties that need to be added to the `accumulo-site.xml` file. The stores can also be generated manually with the
+Java `keytool` command, whose usage can be seen in the `accumulo-util` script.
 
-  monitor.ssl.include.ciphers
-  monitor.ssl.exclude.ciphers
+If desired, the SSL ciphers allowed for connections can be controlled via the following properties in `accumulo-site.xml`:
+
+    monitor.ssl.include.ciphers
+    monitor.ssl.exclude.ciphers
 
 If SSL is enabled, the monitor URL can only be accessed via https.
 This also allows you to access the Accumulo shell through the monitor page.
 The left navigation bar will have a new link to Shell.
 An Accumulo user name and password must be entered for access to the shell.
 
-=== Metrics
+## Metrics
 
 Accumulo can expose metrics through a legacy metrics library and using the Hadoop Metrics2 library.
 
-==== Legacy Metrics
+### Legacy Metrics
 
 Accumulo has a legacy metrics library that can be exposes metrics using JMX endpoints or file-based logging. These metrics can
-be enabled by setting +general.legacy.metrics+ to +true+ in +accumulo-site.xml+ and placing the +accumulo-metrics.xml+
-configuration file on the classpath (which is typically done by placing the file in the +conf/+ directory). A template for
-+accumulo-metrics.xml+ can be found in +conf/templates+ of the Accumulo tarball.
+be enabled by setting `general.legacy.metrics` to `true` in `accumulo-site.xml` and placing the `accumulo-metrics.xml`
+configuration file on the classpath (which is typically done by placing the file in the `conf/` directory). A template for
+`accumulo-metrics.xml` can be found in `conf/templates` of the Accumulo tarball.
 
-==== Hadoop Metrics2
+### Hadoop Metrics2
 
 Hadoop Metrics2 is a library which allows for routing of metrics generated by registered MetricsSources to
 configured MetricsSinks. Examples of sinks that are implemented by Hadoop include file-based logging, Graphite and Ganglia.
 All metric sources are exposed via JMX when using Metrics2.
 
-Metrics2 is configured by examining the classpath for a file that matches +hadoop-metrics2*.properties+. The Accumulo tarball 
-contains an example +hadoop-metrics2-accumulo.properties+ file in +conf/templates+ which can be copied to +conf/+ to place
+Metrics2 is configured by examining the classpath for a file that matches `hadoop-metrics2*.properties`. The Accumulo tarball 
+contains an example `hadoop-metrics2-accumulo.properties` file in `conf/templates` which can be copied to `conf/` to place
 on classpath. This file is used to enable file, Graphite or Ganglia sinks (some minimal configuration required for Graphite
 and Ganglia). Because the Hadoop configuration is also on the Accumulo classpath, be sure that you do not have multiple
 Metrics2 configuration files. It is recommended to consolidate metrics in a single properties file in a central location to
-remove ambiguity. The contents of +hadoop-metrics2-accumulo.properties+ can be added to a central +hadoop-metrics2.properties+
-in +$HADOOP_CONF_DIR+.
+remove ambiguity. The contents of `hadoop-metrics2-accumulo.properties` can be added to a central `hadoop-metrics2.properties`
+in `$HADOOP_CONF_DIR`.
 
 As a note for configuring the file sink, the provided path should be absolute. A relative path or file name will be created relative
 to the directory in which the Accumulo process was started. External tools, such as logrotate, can be used to prevent these files
@@ -592,11 +582,9 @@ from growing without bound.
 Each server process should have log messages from the Metrics2 library about the sinks that were created. Be sure to check
 the Accumulo processes log files when debugging missing metrics output.
 
-For additional information on configuring Metrics2, visit the
-https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html[Javadoc page for Metrics2].
+For additional information on configuring Metrics2, visit the [Javadoc page for Metrics2](https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html).
 
-[[tracing]]
-=== Tracing
+## Tracing
 
 It can be difficult to determine why some operations are taking longer
 than expected. For example, you may be looking up items with very low
@@ -610,36 +598,35 @@ enabled follows all the requests made on behalf of the user throughout
 the distributed infrastructure of accumulo, and across all threads of
 execution.
 
-These time spans will be inserted into the +trace+ table in
+These time spans will be inserted into the `trace` table in
 Accumulo. You can browse recent traces from the Accumulo monitor
-page. You can also read the +trace+ table directly like any
+page. You can also read the `trace` table directly like any
 other table.
 
-The design of Accumulo's distributed tracing follows that of
-http://research.google.com/pubs/pub36356.html[Google's Dapper].
+The design of Accumulo's distributed tracing follows that of [Google's Dapper](http://research.google.com/pubs/pub36356.html).
 
-==== Tracers
+### Tracers
 
-To collect traces, Accumulo needs at least one tracer server running. If you are using +accumulo-cluster+ to start your cluster,
-configure your server in +conf/tracers+. The server collects traces from clients and writes them to the +trace+ table. The Accumulo
-user that the tracer connects to Accumulo with can be configured with the following properties (see the <<configuration,Configuration>> 
-section for setting Accumulo server properties)
+To collect traces, Accumulo needs at least one tracer server running. If you are using `accumulo-cluster` to start your cluster,
+configure your server in `conf/tracers`. The server collects traces from clients and writes them to the `trace` table. The Accumulo
+user that the tracer connects to Accumulo with can be configured with the following properties (see the [configuration management][config-mgmt] 
+page for setting Accumulo server properties)
 
-  trace.user
-  trace.token.property.password
+    trace.user
+    trace.token.property.password
 
 Other tracer configuration properties include
 
-  trace.port.client - port tracer listens on
-  trace.table - table tracer writes to
-  trace.zookeeper.path - zookeeper path where tracers register
+    trace.port.client - port tracer listens on
+    trace.table - table tracer writes to
+    trace.zookeeper.path - zookeeper path where tracers register
 
 The zookeeper path is configured to /tracers by default.  If
 multiple Accumulo instances are sharing the same ZooKeeper
 quorum, take care to configure Accumulo with unique values for
 this property.
 
-==== Configuring Tracing
+### Configuring Tracing
 
 Traces are collected via SpanReceivers. The default SpanReceiver
 configured is org.apache.accumulo.core.trace.ZooTraceClient, which
@@ -648,7 +635,7 @@ previous section. This default can be changed to a different span
 receiver, or additional span receivers can be added in a
 comma-separated list, by modifying the property
 
-  trace.span.receivers
+    trace.span.receivers
 
 Individual span receivers may require their own configuration
 parameters, which are grouped under the trace.span.receiver.*
@@ -657,12 +644,12 @@ three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
 trace.span.receiver. when set in the Accumulo configuration.
 
-  tracer.zookeeper.host - populated from instance.zookeepers
-  tracer.zookeeper.timeout - populated from instance.zookeeper.timeout
-  tracer.zookeeper.path - populated from trace.zookeeper.path
-  tracer.send.timer.millis - timer for flushing send queue (in ms, default 1000)
-  tracer.queue.size - max queue size (default 5000)
-  tracer.span.min.ms - minimum span length to store (in ms, default 1)
+    tracer.zookeeper.host - populated from instance.zookeepers
+    tracer.zookeeper.timeout - populated from instance.zookeeper.timeout
+    tracer.zookeeper.path - populated from trace.zookeeper.path
+    tracer.send.timer.millis - timer for flushing send queue (in ms, default 1000)
+    tracer.queue.size - max queue size (default 5000)
+    tracer.span.min.ms - minimum span length to store (in ms, default 1)
 
 Note that to configure an Accumulo client for tracing, including
 the Accumulo shell, the client configuration must be given the same
@@ -679,6 +666,7 @@ The zookeeper timeout defaults to 30000 (30 seconds), and the
 zookeeper path defaults to /tracers.  An example of configuring
 Hadoop to send traces to ZooTraceClient is
 
+```xml
   <property>
     <name>hadoop.htrace.spanreceiver.classes</name>
     <value>org.apache.accumulo.core.trace.ZooTraceClient</value>
@@ -695,29 +683,30 @@ Hadoop to send traces to ZooTraceClient is
     <name>hadoop.htrace.tracer.span.min.ms</name>
     <value>1</value>
   </property>
+```
 
 The accumulo-core, accumulo-tracer, accumulo-fate and libthrift
 jars must also be placed on Hadoop's classpath.
 
-===== Adding additional SpanReceivers
-https://github.com/openzipkin/zipkin[Zipkin]
-has a SpanReceiver supported by HTrace and popularized by Twitter
+##### Adding additional SpanReceivers
+
+[Zipkin](https://github.com/openzipkin/zipkin) has a SpanReceiver supported by HTrace and popularized by Twitter
 that users looking for a more graphical trace display may opt to use.
-The following steps configure Accumulo to use +org.apache.htrace.impl.ZipkinSpanReceiver+
+The following steps configure Accumulo to use `org.apache.htrace.impl.ZipkinSpanReceiver`
 in addition to the Accumulo's default ZooTraceClient, and they serve as a template
 for adding any SpanReceiver to Accumulo:
 
 1. Add the Jar containing the ZipkinSpanReceiver class file to the
-+lib/+ directory.  It is critical that the Jar is placed in
-+lib/+ and NOT in +lib/ext/+ so that the new SpanReceiver class
+`lib/` directory.  It is critical that the Jar is placed in
+`lib/` and NOT in `lib/ext/` so that the new SpanReceiver class
 is visible to the same class loader of htrace-core.
 
-2. Add the following to +accumulo-site.xml+:
+2. Add the following to `accumulo-site.xml`:
 
-  <property>
-    <name>trace.span.receivers</name>
-    <value>org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver</value>
-  </property>
+        <property>
+          <name>trace.span.receivers</name>
+          <value>org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver</value>
+        </property>
 
 3. Restart your Accumulo tablet servers.
 
@@ -726,24 +715,24 @@ In order to use ZipkinSpanReceiver from a client as well as the Accumulo server,
 1. Ensure your client can see the ZipkinSpanReceiver class at runtime. For Maven projects,
 this is easily done by adding to your client's pom.xml (taking care to specify a good version)
 
-  <dependency>
-    <groupId>org.apache.htrace</groupId>
-    <artifactId>htrace-zipkin</artifactId>
-    <version>3.1.0-incubating</version>
-    <scope>runtime</scope>
-  </dependency>
+        <dependency>
+          <groupId>org.apache.htrace</groupId>
+          <artifactId>htrace-zipkin</artifactId>
+          <version>3.1.0-incubating</version>
+          <scope>runtime</scope>
+        </dependency>
 
-2. Add the following to your ClientConfiguration
-(see the <<ClientConfiguration>> section)
+2. Add the following to your client configuration.
 
-  trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
+        trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 
 3. Instrument your client as in the next section.
 
 Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in the ClientConfiguration (if applicable) and Accumulo's +accumulo-site.xml+.
+be placed in the ClientConfiguration (if applicable) and Accumulo's `accumulo-site.xml`.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are
 
+```xml
   <property>
     <name>trace.span.receiver.zipkin.collector-hostname</name>
     <value>localhost</value>
@@ -752,23 +741,26 @@ Two such properties for ZipkinSpanReceiver, listed with their default values, ar
     <name>trace.span.receiver.zipkin.collector-port</name>
     <value>9410</value>
   </property>
+```
 
-==== Instrumenting a Client
+#### Instrumenting a Client
+
 Tracing can be used to measure a client operation, such as a scan, as
 the operation traverses the distributed system. To enable tracing for
 your application call
 
-[source,java]
+```java
 import org.apache.accumulo.core.trace.DistributedTrace;
 ...
 DistributedTrace.enable(hostname, "myApplication");
 // do some tracing
 ...
 DistributedTrace.disable();
+```
 
 Once tracing has been enabled, a client can wrap an operation in a trace.
 
-[source,java]
+```java
 import org.apache.htrace.Sampler;
 import org.apache.htrace.Trace;
 import org.apache.htrace.TraceScope;
@@ -779,16 +771,17 @@ BatchScanner scanner = conn.createBatchScanner(...);
 for (Entry entry : scanner) {
 }
 scope.close();
+```
 
 The user can create additional Spans within a Trace.
 
-The sampler (such as +Sampler.ALWAYS+) for the trace should only be specified with a top-level span,
+The sampler (such as `Sampler.ALWAYS`) for the trace should only be specified with a top-level span,
 and subsequent spans will be collected depending on whether that first span was sampled.
 Don't forget to specify a Sampler at the top-level span
 because the default Sampler only samples when part of a pre-existing trace,
 which will never occur in a client that never specifies a Sampler.
 
-[source,java]
+```java
 TraceScope scope = Trace.startSpan("Client Update", Sampler.ALWAYS);
 ...
 TraceScope readScope = Trace.startSpan("Read");
@@ -799,11 +792,12 @@ TraceScope writeScope = Trace.startSpan("Write");
 ...
 writeScope.close();
 scope.close();
+```
 
 Like Dapper, Accumulo tracing supports user defined annotations to associate additional data with a Trace.
 Checking whether currently tracing is necessary when using a sampler other than Sampler.ALWAYS.
 
-[source,java]
+```java
 ...
 int numberOfEntriesRead = 0;
 TraceScope readScope = Trace.startSpan("Read");
@@ -812,20 +806,22 @@ TraceScope readScope = Trace.startSpan("Read");
 if (Trace.isTracing)
   readScope.getSpan().addKVAnnotation("Number of Entries Read".getBytes(StandardCharsets.UTF_8),
       String.valueOf(numberOfEntriesRead).getBytes(StandardCharsets.UTF_8));
+```
 
 It is also possible to add timeline annotations to your spans.
 This associates a string with a given timestamp between the start and stop times for a span.
 
-[source,java]
+```java
 ...
 writeScope.getSpan().addTimelineAnnotation("Initiating Flush");
+```
 
 Some client operations may have a high volume within your
 application. As such, you may wish to only sample a percentage of
 operations for tracing. As seen below, the CountSampler can be used to
 help enable tracing for 1-in-1000 operations
 
-[source,java]
+```java
 import org.apache.htrace.impl.CountSampler;
 ...
 Sampler sampler = new CountSampler(HTraceConfiguration.fromMap(
@@ -834,19 +830,21 @@ Sampler sampler = new CountSampler(HTraceConfiguration.fromMap(
 TraceScope readScope = Trace.startSpan("Read", sampler);
 ...
 readScope.close();
+```
 
 Remember to close all spans and disable tracing when finished.
 
-[source,java]
+```java
 DistributedTrace.disable();
+```
 
-==== Viewing Collected Traces
+### Viewing Collected Traces
 
 To view collected traces, use the "Recent Traces" link on the Monitor
 UI. You can also programmatically access and print traces using the
-+TraceDump+ class.
+`TraceDump` class.
 
-===== Trace Table Format
+#### Trace Table Format
 
 This section is for developers looking to use data recorded in the trace table
 directly, above and beyond the default services of the Accumulo monitor.
@@ -864,19 +862,19 @@ In the description, a token in quotes is a String literal,
 whereas other other tokens are span variables.
 Parentheses group parts together, to distinguish colon characters inside the
 column family or qualifier from the colon that separates column family and qualifier.
-We use the format +row columnFamily:columnQualifier columnVisibility    value+
+We use the format `row columnFamily:columnQualifier columnVisibility    value`
 (omitting timestamp which records the time an entry is written to the trace table).
 
 Span entries take the following form:
 
-  traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
-  63b318de80de96d1 span:4b8f66077df89de1:3778c6739afe4e1 []    %18;%09;...
+    traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
+    63b318de80de96d1 span:4b8f66077df89de1:3778c6739afe4e1 []    %18;%09;...
 
 The parentSpanId is "" for the root span of a trace.
 The spanBinaryEncoding is a compact Apache Thrift encoding of the original Span object.
 This allows clients (and the Accumulo monitor) to recover all the details of the original Span
 at a later time, by scanning the trace table and decoding the value of span entries
-via +TraceFormatter.getRemoteSpan(entry)+.
+via `TraceFormatter.getRemoteSpan(entry)`.
 
 The trace table has a formatter class by default (org.apache.accumulo.tracer.TraceFormatter)
 that changes how span entries appear from the Accumulo shell.
@@ -885,11 +883,11 @@ it exists only to make span entries easier to view inside the Accumulo shell.
 
 Index entries take the following form:
 
-  "idx":service:startTime description:sender  []    traceId:elapsedTime
-  idx:tserver:14f3828f58b startScan:localhost []    63b318de80de96d1:1
+    "idx":service:startTime description:sender  []    traceId:elapsedTime
+    idx:tserver:14f3828f58b startScan:localhost []    63b318de80de96d1:1
 
 The service and sender are set by the first call of each Accumulo process
-(and instrumented client processes) to +DistributedTrace.enable(...)+
+(and instrumented client processes) to `DistributedTrace.enable(...)`
 (the sender is autodetected if not specified).
 The description is specified in each span.
 Start time and the elapsed time (start - stop, 1 millisecond in the example above)
@@ -897,20 +895,20 @@ are recorded in milliseconds as long values serialized to a string in hex.
 
 Start time entries take the following form:
 
-  "start":startTime "id":traceId        []    spanBinaryEncoding
-  start:14f3828a351 id:63b318de80de96d1 []    %18;%09;...
+    "start":startTime "id":traceId        []    spanBinaryEncoding
+    start:14f3828a351 id:63b318de80de96d1 []    %18;%09;...
 
 The following classes may be run while Accumulo is running to provide insight into trace statistics. These require
-accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (+lib/ext+ is fine).
+accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (`lib/ext` is fine).
 
-  $ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
-  $ accumulo org.apache.accumulo.tracer.TraceDump -u username -p password -i instancename -r
+    $ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
+    $ accumulo org.apache.accumulo.tracer.TraceDump -u username -p password -i instancename -r
 
-==== Tracing from the Shell
+### Tracing from the Shell
 You can enable tracing for operations run from the shell by using the
-+trace on+ and +trace off+ commands.
+`trace on` and `trace off` commands.
 
-----
+```
 root@test test> trace on
 
 root@test test> scan
@@ -926,14 +924,14 @@ Time  Start  Service@Location       Name
     7+1691       shell@localhost scan:location
     6+1692         tserver@localhost startScan
     5+1692           tserver@localhost tablet read ahead 6
-----
+```
 
-=== Logging
+## Logging
 
 Accumulo processes each write to a set of log files. By default, these logs are found at directory
-set by +ACCUMULO_LOG_DIR+ in +accumulo-env.sh+.
+set by `ACCUMULO_LOG_DIR` in `accumulo-env.sh`.
 
-=== Recovery
+## Recovery
 
 In the event of TabletServer failure or error on shutting Accumulo down, some
 mutations may not have been minor compacted to HDFS properly. In this case,
@@ -952,12 +950,12 @@ The Accumulo client library is configured to retry failed mutations and in many
 cases clients will be able to continue processing after the recovery process without
 throwing an exception.
 
-=== Migrating Accumulo from non-HA Namenode to HA Namenode
+## Migrating Accumulo from non-HA Namenode to HA Namenode
 
 The following steps will allow a non-HA instance to be migrated to an HA instance. Consider an HDFS URL
-+hdfs://namenode.example.com:8020+ which is going to be moved to +hdfs://nameservice1+.
+`hdfs://namenode.example.com:8020` which is going to be moved to `hdfs://nameservice1`.
 
-Before moving HDFS over to the HA namenode, use +accumulo admin volumes+ to confirm
+Before moving HDFS over to the HA namenode, use `accumulo admin volumes` to confirm
 that the only volume displayed is the volume from the current namenode's HDFS URL.
 
     Listing volumes referenced in zookeeper
@@ -974,13 +972,13 @@ that the only volume displayed is the volume from the current namenode's HDFS UR
 
 After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.
 
-Edit +accumulo-site.xml+ to notify accumulo that a volume is being replaced. First,
-add the new nameservice volume to the +instance.volumes+ property. Next, add the
-+instance.volumes.replacements+ property in the form of +old new+. It's important to not include
-the volume that's being replaced in +instance.volumes+, otherwise it's possible accumulo could continue
+Edit `accumulo-site.xml` to notify accumulo that a volume is being replaced. First,
+add the new nameservice volume to the `instance.volumes` property. Next, add the
+`instance.volumes.replacements` property in the form of `old new`. It's important to not include
+the volume that's being replaced in `instance.volumes`, otherwise it's possible accumulo could continue
 to write to the volume.
 
-[source,xml]
+```xml
 <!-- instance.dfs.uri and instance.dfs.dir should not be set-->
 <property>
   <name>instance.volumes</name>
@@ -990,10 +988,10 @@ to write to the volume.
   <name>instance.volumes.replacements</name>
   <value>hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo</value>
 </property>
+```
 
-Run +accumulo init --add-volumes+ and start up the accumulo cluster. Verify that the
-new nameservice volume shows up with +accumulo admin volumes+.
-
+Run `accumulo init --add-volumes` and start up the accumulo cluster. Verify that the
+new nameservice volume shows up with `accumulo admin volumes`.
 
     Listing volumes referenced in zookeeper
             Volume : hdfs://namenode.example.com:8020/accumulo
@@ -1012,7 +1010,7 @@ new nameservice volume shows up with +accumulo admin volumes+.
 Some erroneous GarbageCollector messages may still be seen for a small period while data is transitioning to
 the new volumes. This is expected and can usually be ignored.
 
-=== Achieving Stability in a VM Environment
+## Achieving Stability in a VM Environment
 
 For testing, demonstration, and even operation uses, Accumulo is often
 installed and run in a virtual machine (VM) environment. The majority of
@@ -1024,7 +1022,7 @@ over well to VM environments. This guide covers general recommendations for
 maximizing stability in a VM environment, including some of the common failure
 modes that are more common when running in VMs.
 
-==== Known failure modes: Setup and Troubleshooting
+### Known failure modes: Setup and Troubleshooting
 
 In addition to the general failure modes of running Accumulo, VMs can introduce a
 couple of environmental challenges that can affect process stability. Clock
@@ -1037,7 +1035,7 @@ deals well with constrained resources from a stability perspective (optimizing
 performance will require additional tuning, which is not covered in this
 section), however there are some limits.
 
-===== Physical Memory
+#### Physical Memory
 
 One of those limits has to do with the Linux out of memory killer. A common
 failure mode in VM environments (and in some bare metal installations) is when
@@ -1069,7 +1067,7 @@ add the maximum heap size (often limited by a -Xmx... argument, such as in
 accumulo-site.xml) and the off-heap memory usage. Off-heap memory usage
 includes the following:
 
-* "Permanent Space", where the JVM stores Classes, Methods, and other code elements. This can be limited by a JVM flag such as +-XX:MaxPermSize:100m+, and is typically tens of megabytes.
+* "Permanent Space", where the JVM stores Classes, Methods, and other code elements. This can be limited by a JVM flag such as `-XX:MaxPermSize:100m`, and is typically tens of megabytes.
 * Code generation space, where the JVM stores just-in-time compiled code. This is typically small enough to ignore
 * Socket buffers, where the JVM stores send and receive buffers for each socket.
 * Thread stacks, where the JVM allocates memory to manage each thread.
@@ -1080,14 +1078,14 @@ You can assume that each Hadoop and Accumulo process will use ~100-150MB for
 Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
 simple calculation for physical memory requirements follows:
 
-....
+```
   Physical memory needed
-    = (per-process off-heap memory) + (heap memory) + (other processes) + (margin) 
+    = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
     = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process) + (total applications memory, provisioning memory, etc.) + (1G)
     = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
     = (2150M) + (7G) + (2G) + (1G)
     = ~12GB
-....
+```
 
 These calculations can add up quickly with the large number of processes,
 especially in constrained VM environments. To reduce the physical memory
@@ -1097,7 +1095,8 @@ turn off the ResourceManager and NodeManager. If you're not expecting to
 re-provision the cluster frequently you can turn off or reduce provisioning
 processes such as Salt Stack minions and masters.
 
-===== Disk Space
+#### Disk Space
+
 Disk space is primarily used for two operations: storing data and storing logs.
 While Accumulo generally stores all of its key/value data in HDFS, Accumulo,
 Hadoop, and Zookeeper all store a significant amount of logs in a directory on
@@ -1119,7 +1118,8 @@ unbounded, so it is important to set these limits in the logging configuration
 files for each subsystem. Consult the user manual for each system for
 instructions on how to limit generated logs.
 
-===== Zookeeper Interaction
+#### Zookeeper Interaction
+
 Accumulo is designed to scale up to thousands of nodes. At that scale,
 intermittent interruptions in network service and other rare failures of
 compute nodes become more common. To limit the impact of node failures on
@@ -1130,7 +1130,8 @@ are true interruptions to availability and some of which are false positives.
 Several of these conditions become more common in VM environments, where they
 can be exacerbated by resource constraints and clock drift.
 
-==== Tested Versions
+#### Tested Versions
+
 Each release of Accumulo is built with a specific version of Apache
 Hadoop, Apache ZooKeeper and Apache Thrift.  We expect Accumulo to
 work with versions that are API compatible with those versions.
@@ -1143,3 +1144,8 @@ same version your Accumulo is built with.
 
 Please check the release notes for your Accumulo version or use the
 mailing lists at https://accumulo.apache.org for more info.
+
+[tracing]: {{page.docs_baseurl}}/administration/overview#tracing
+[monitor]: {{page.docs_baseurl}}/administration/overview#monitoring
+[config-mgmt]: {{page.docs_baseurl}}/administration/configuration-management
+[config-props]: {{page.docs_baseurl}}/administration/configuration-properties

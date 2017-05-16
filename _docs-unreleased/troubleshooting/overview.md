@@ -1,59 +1,46 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+---
+title: Overview
+category: troubleshooting
+order: 1
+---
 
-## Troubleshooting
+## Logs
 
-### Logs
-
-*Q*: The tablet server does not seem to be running!? What happened?
+**The tablet server does not seem to be running!? What happened?**
 
 Accumulo is a distributed system.  It is supposed to run on remote
 equipment, across hundreds of computers.  Each program that runs on
 these remote computers writes down events as they occur, into a local
-file. By default, this is defined in +conf/accumulo-env.sh+ as +ACCUMULO_LOG_DIR+.
+file. By default, this is defined in `conf/accumulo-env.sh` as `ACCUMULO_LOG_DIR`.
+Look in the `$ACCUMULO_LOG_DIR/tserver*.log` file.  Specifically, check the end of the file.
 
-*A*: Look in the +$ACCUMULO_LOG_DIR/tserver*.log+ file.  Specifically, check the end of the file.
-
-*Q*: The tablet server did not start and the debug log does not exists!  What happened?
+**The tablet server did not start and the debug log does not exists!  What happened?**
 
 When the individual programs are started, the stdout and stderr output
-of these programs are stored in +.out+ and +.err+ files in
-+$ACCUMULO_LOG_DIR+.  Often, when there are missing configuration
+of these programs are stored in `.out` and `.err` files in
+`$ACCUMULO_LOG_DIR`.  Often, when there are missing configuration
 options, files or permissions, messages will be left in these files.
+Probably a start-up problem.  Look in `$ACCUMULO_LOG_DIR/tserver*.err`
 
-*A*: Probably a start-up problem.  Look in +$ACCUMULO_LOG_DIR/tserver*.err+
+## Monitor
 
-### Monitor
-
-*Q*: Accumulo is not working, what's wrong?
+**Accumulo is not working, what's wrong?**
 
 There's a small web server that collects information about all the
 components that make up a running Accumulo instance. It will highlight
 unusual or unexpected conditions.
 
-*A*: Point your browser to the monitor (typically the master host, on port 9995).  Is anything red or yellow?
+Point your browser to the monitor (typically the master host, on port 9995).  Is anything red or yellow?
 
-*Q*: My browser is reporting connection refused, and I cannot get to the monitor
+**My browser is reporting connection refused, and I cannot get to the monitor**
 
 The monitor program's output is also written to .err and .out files in
-the +$ACCUMULO_LOG_DIR+. Look for problems in this file if the
-+$ACCUMULO_LOG_DIR/monitor*.log+ file does not exist.
+the `$ACCUMULO_LOG_DIR`. Look for problems in this file if the
+`$ACCUMULO_LOG_DIR/monitor*.log` file does not exist.
 
-*A*: The monitor program is probably not running.  Check the log files for errors.
+The monitor program is probably not running.  Check the log files for errors.
 
-*Q*: My browser hangs trying to talk to the monitor.
+**My browser hangs trying to talk to the monitor.**
 
 Your browser needs to be able to reach the monitor program.  Often
 large clusters are firewalled, or use a VPN for internal
@@ -66,22 +53,20 @@ monitor while on the machine running the monitor:
 
     $ links http://localhost:9995
 
-*A*: Verify that you are not firewalled from the monitor if it is running on a remote host.
+Verify that you are not firewalled from the monitor if it is running on a remote host.
 
-*Q*: The monitor responds, but there are no numbers for tservers and tables.  The summary page says the master is down.
+**The monitor responds, but there are no numbers for tservers and tables.  The summary page says the master is down.**
 
 The monitor program gathers all the details about the master and the
 tablet servers through the master. It will be mostly blank if the
-master is down.
+master is down. Check for a running master.
 
-*A*: Check for a running master.
-
-### HDFS
+## HDFS
 
 Accumulo reads and writes to the Hadoop Distributed File System.
 Accumulo needs this file system available at all times for normal operations.
 
-*Q*: Accumulo is having problems ``getting a block blk_1234567890123.'' How do I fix it?
+**Accumulo is having problems "getting a block blk_1234567890123". How do I fix it?**
 
 This troubleshooting guide does not cover HDFS, but in general, you
 want to make sure that all the datanodes are running and an fsck check
@@ -100,17 +85,18 @@ system issues on those nodes.
 
 On a larger cluster, you may need to increase the number of Xcievers for HDFS DataNodes:
 
-[source,xml]
+```xml
 <property>
     <name>dfs.datanode.max.xcievers</name>
     <value>4096</value>
 </property>
+```
 
-*A*: Verify HDFS is healthy, check the datanode logs.
+Verify HDFS is healthy, check the datanode logs.
 
-### Zookeeper
+## Zookeeper
 
-*Q*: +accumulo init+ is hanging.  It says something about talking to zookeeper.
+** The"accumulo init" command is hanging.  It says something about talking to zookeeper.**
 
 Zookeeper is also a distributed service.  You will need to ensure that
 it is up.  You can run the zookeeper command line tool to connect to
@@ -120,14 +106,14 @@ any one of the zookeeper servers:
     ...
     [zk: zoohost:2181(CONNECTED) 0]
 
-It is important to see the word +CONNECTED+!  If you only see
-+CONNECTING+ you will need to diagnose zookeeper errors.
+It is important to see the word `CONNECTED`!  If you only see
+`CONNECTING` you will need to diagnose zookeeper errors.
 
-*A*: Check to make sure that zookeeper is up, and that
-+accumulo-site.xml+ has been pointed to
+Check to make sure that zookeeper is up, and that
+`accumulo-site.xml` has been pointed to
 your zookeeper server(s).
 
-*Q*: Zookeeper is running, but it does not say +CONNECTED+
+**Zookeeper is running, but it does not say CONNECTED**
 
 Zookeeper processes talk to each other to elect a leader.  All updates
 go through the leader and propagate to a majority of all the other
@@ -138,9 +124,9 @@ and can be reached in some everything-on-one-machine test configurations.
 
 You can check the election status and connection status of clients by
 asking the zookeeper nodes for their status.  You connect to zookeeper
-and ask it with the four-letter +stat+ command:
+and ask it with the four-letter `stat` command:
 
-----
+```
 $ nc zoohost 2181
 stat
 Zookeeper version: 3.4.5-1392090, built on 09/30/2012 17:52 GMT
@@ -156,11 +142,11 @@ Outstanding: 0
 Zxid: 0x621a3b
 Mode: standalone
 Node count: 22524
-----
+```
 
-*A*: Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.
+Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.
 
-*Q*: My tablet server crashed!  The logs say that it lost its zookeeper lock.
+**My tablet server crashed!  The logs say that it lost its zookeeper lock.**
 
 Tablet servers reserve a lock in zookeeper to maintain their ownership
 over the tablets that have been assigned to them.  Part of their
@@ -172,12 +158,12 @@ zookeeper, it will assume its lock has been lost, too.  If a tablet
 server loses its lock, it kills itself: everything assumes it is dead
 already.
 
-*A*: Investigate why the tablet server did not send a timely message to
+Investigate why the tablet server did not send a timely message to
 zookeeper.
 
-#### Keeping the tablet server lock
+### Keeping the tablet server lock
 
-*Q*: My tablet server lost its lock.  Why?
+**My tablet server lost its lock.  Why?**
 
 The primary reason a tablet server loses its lock is that it has been pushed into swap.
 
@@ -189,10 +175,9 @@ access this memory, the OS will begin flushing disk buffers to return that
 memory to the VM.  This can cause the entire process to block long
 enough for the zookeeper lock to be lost.
 
-*A*: Configure your system to reduce the kernel parameter _swappiness_ from the default (60) to zero.
+Configure your system to reduce the kernel parameter _swappiness_ from the default (60) to zero.
 
-*Q*: My tablet server lost its lock, and I have already set swappiness to
-zero.  Why?
+**My tablet server lost its lock, and I have already set swappiness to zero.  Why?**
 
 Be careful not to over-subscribe memory.  This can be easy to do if
 your accumulo processes run on the same nodes as hadoop's map-reduce
@@ -208,9 +193,9 @@ framework.  Remember to add up:
 If a 16G node can run 2 mappers and 2 reducers, and each can be 2G,
 then there is only 8G for the data node, tserver, task tracker and OS.
 
-*A*: Reduce the memory footprint of each component until it fits comfortably.
+Reduce the memory footprint of each component until it fits comfortably.
 
-*Q*: My tablet server lost its lock, swappiness is zero, and my node has lots of unused memory!
+**My tablet server lost its lock, swappiness is zero, and my node has lots of unused memory!**
 
 The JVM memory garbage collector may fall behind and cause a
 "stop-the-world" garbage collection. On a large memory virtual
@@ -221,14 +206,14 @@ of the tablet server.  You will see lines like this:
     2013-06-20 13:43:20,607 [tabletserver.TabletServer] DEBUG: gc ParNew=0.00(+0.00) secs
         ConcurrentMarkSweep=0.00(+0.00) secs freemem=1,868,325,952(+1,868,325,952) totalmem=2,040,135,680
 
-When +freemem+ becomes small relative to the amount of memory
+When `freemem` becomes small relative to the amount of memory
 needed, the JVM will spend more time finding free memory than
 performing work.  This can cause long delays in sending keep-alive
 messages to zookeeper.
 
-*A*: Ensure the tablet server JVM is not running low on memory.
+Ensure the tablet server JVM is not running low on memory.
 
-*Q*: I'm seeing errors in tablet server logs that include the words "MutationsRejectedException" and "# constraint violations: 1". Moments after that the server died.
+**I'm seeing errors in tablet server logs that include the words "MutationsRejectedException" and "# constraint violations: 1". Moments after that the server died.**
 
 The error you are seeing is part of a failing tablet server scenario.
 This is a bit complicated, so name two of your tablet servers A and B.
@@ -262,9 +247,9 @@ This prevents tablet server A from making updates to m-tablet when it no long ha
 The "MutationsRejectedException" error is from tablet server A making an update to tablet server B's m-tablet.
 It's getting a constraint violation: tablet server A has lost its zookeeper session, and will fail momentarily.
 
-*A*: Ensure that memory is not over-allocated.  Monitor swap usage, or turn swap off.
+Ensure that memory is not over-allocated.  Monitor swap usage, or turn swap off.
 
-*Q*: My accumulo client is getting a MutationsRejectedException. The monitor is displaying "No Such SessionID" errors.
+**My accumulo client is getting a MutationsRejectedException. The monitor is displaying "No Such SessionID" errors.**
 
 When your client starts sending mutations to accumulo, it creates a session. Once the session is created,
 mutations are streamed to accumulo, without acknowledgement, against this session.  Once the client is done,
@@ -281,9 +266,9 @@ to pause.
 The most frequent source of these pauses are java garbage collection pauses
 due to the JVM running out of memory, or being swapped out to disk.
 
-*A*: Ensure your client has adequate memory and is not being swapped out to disk.
+Ensure your client has adequate memory and is not being swapped out to disk.
 
-### Tools
+## Tools
 
 The accumulo script can be used to run classes from the command line.
 This section shows how a few of the utilities work, but there are many
@@ -292,7 +277,7 @@ more.
 There's a class that will examine an accumulo storage file and print
 out basic metadata.
 
-----
+```
 $ accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/1/default_tablet/A000000n.rf
 2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
 Locality group         : <DEFAULT>
@@ -317,9 +302,9 @@ Meta block     : RFile.index
       Raw size             : 780 bytes
       Compressed size      : 344 bytes
       Compression type     : gz
-----
+```
 
-When trying to diagnose problems related to key size, the +PrintInfo+ tool can provide a histogram of the individual key sizes:
+When trying to diagnose problems related to key size, the `PrintInfo` tool can provide a histogram of the individual key sizes:
 
     $ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --histogram /accumulo/tables/1/default_tablet/A000000n.rf
     ...
@@ -335,21 +320,21 @@ When trying to diagnose problems related to key size, the +PrintInfo+ tool can p
      1000000000 :          0   0.00%
     10000000000 :          0   0.00%
 
-Likewise, +PrintInfo+ will dump the key-value pairs and show you the contents of the RFile:
+Likewise, `PrintInfo` will dump the key-value pairs and show you the contents of the RFile:
 
     $ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --dump /accumulo/tables/1/default_tablet/A000000n.rf
     row columnFamily:columnQualifier [visibility] timestamp deleteFlag -> Value
     ...
 
-*Q*: Accumulo is not showing me any data!
+**Accumulo is not showing me any data!**
 
-*A*: Do you have your auths set so that it matches your visibilities?
+Do you have your auths set so that it matches your visibilities?
 
-*Q*: What are my visibilities?
+**What are my visibilities?**
 
-*A*: Use +PrintInfo+ on a representative file to get some idea of the visibilities in the underlying data.
+Use `PrintInfo` on a representative file to get some idea of the visibilities in the underlying data.
 
-Note that the use of +PrintInfo+ is an administrative tool and can only
+Note that the use of `PrintInfo` is an administrative tool and can only
 by used by someone who can access the underlying Accumulo data. It
 does not provide the normal access controls in Accumulo.
 
@@ -358,42 +343,42 @@ If you would like to backup, or otherwise examine the contents of Zookeeper, the
     $ accumulo org.apache.accumulo.server.util.DumpZookeeper --root /accumulo >dump.xml
     $ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite < dump.xml
 
-*Q*: How can I get the information in the monitor page for my cluster monitoring system?
+**How can I get the information in the monitor page for my cluster monitoring system?**
 
-*A*: Use GetMasterStats:
+Use GetMasterStats:
 
     $ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
      OS Load Average: 0.27
 
-*Q*: The monitor page is showing an offline tablet.  How can I find out which tablet it is?
+**The monitor page is showing an offline tablet.  How can I find out which tablet it is?**
 
-*A*: Use FindOfflineTablets:
+Use FindOfflineTablets:
 
     $ accumulo org.apache.accumulo.server.util.FindOfflineTablets
     2<<@(null,null,localhost:9997) is UNASSIGNED  #walogs:2
 
 Here's what the output means:
 
-+2<<+::
+* `2<<` -
     This is the tablet from (-inf, pass:[+]inf) for the
-    table with id 2.  The command +tables -l+ in the shell will show table ids for
+    table with id 2.  The command `tables -l` in the shell will show table ids for
     tables.
 
-+@(null, null, localhost:9997)+::
+* `@(null, null, localhost:9997)` -
     Location information.  The
-    format is +@(assigned, hosted, last)+.  In this case, the
+    format is `@(assigned, hosted, last)`.  In this case, the
     tablet has not been assigned, is not hosted anywhere, and was once
     hosted on localhost.
 
-+#walogs:2+::
+* `#walogs:2` -
      The number of write-ahead logs that this tablet requires for recovery.
 
 An unassigned tablet with write-ahead logs is probably waiting for
 logs to be sorted for efficient recovery.
 
-*Q*: How can I be sure that the metadata tables are up and consistent?
+**How can I be sure that the metadata tables are up and consistent?**
 
-*A*: +CheckForMetadataProblems+ will verify the start/end of
+`CheckForMetadataProblems` will verify the start/end of
 every tablet matches, and the start and stop for the table is empty:
 
     $ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
@@ -401,9 +386,9 @@ every tablet matches, and the start and stop for the table is empty:
     All is well for table !0
     All is well for table 1
 
-*Q*: My hadoop cluster has lost a file due to a NameNode failure.  How can I remove the file?
+**My hadoop cluster has lost a file due to a NameNode failure.  How can I remove the file?**
 
-*A*: There's a utility that will check every file reference and ensure
+There's a utility that will check every file reference and ensure
 that the file exists in HDFS.  Optionally, it will remove the
 reference:
 
@@ -413,24 +398,24 @@ reference:
      is missing
     2013-07-16 13:10:57,296 [util.RemoveEntriesForMissingFiles] INFO : 1 files of 3 missing
 
-*Q*: I have many entries in zookeeper for old instances I no longer need.  How can I remove them?
+**I have many entries in zookeeper for old instances I no longer need.  How can I remove them?**
 
-*A*: Use CleanZookeeper:
+Use CleanZookeeper:
 
     $ accumulo org.apache.accumulo.server.util.CleanZookeeper
 
-This command will not delete the instance pointed to by the local +accumulo-site.xml+ file.
+This command will not delete the instance pointed to by the local `accumulo-site.xml` file.
 
-*Q*: I need to decommission a node.  How do I stop the tablet server on it?
+**I need to decommission a node.  How do I stop the tablet server on it?**
 
-*A*: Use the admin command:
+Use the admin command:
 
     $ accumulo admin stop hostname:9997
     2013-07-16 13:15:38,403 [util.Admin] INFO : Stopping server 12.34.56.78:9997
 
-*Q*: I cannot login to a tablet server host, and the tablet server will not shut down.  How can I kill the server?
+**I cannot login to a tablet server host, and the tablet server will not shut down.  How can I kill the server?**
 
-*A*: Sometimes you can kill a "stuck" tablet server by deleting its lock in zookeeper:
+Sometimes you can kill a "stuck" tablet server by deleting its lock in zookeeper:
 
     $ accumulo org.apache.accumulo.server.util.TabletServerLocks --list
                       127.0.0.1:9997 TSERV_CLIENT=127.0.0.1:9997
@@ -440,17 +425,16 @@ This command will not delete the instance pointed to by the local +accumulo-site
 
 You can find the master and instance id for any accumulo instances using the same zookeeper instance:
 
-----
+```
 $ accumulo org.apache.accumulo.server.util.ListInstances
 INFO : Using ZooKeepers localhost:2181
 
  Instance Name       | Instance ID                          | Master
 ---------------------+--------------------------------------+-------------------------------
               "test" | 6140b72e-edd8-4126-b2f5-e74a8bbe323b |                127.0.0.1:9999
-----
+```
 
-[[metadata]]
-### System Metadata Tables
+## System Metadata Tables
 
 Accumulo tracks information about tables in metadata tables. The metadata for
 most tables is contained within the metadata table in the accumulo namespace,
@@ -461,19 +445,19 @@ table, such as its location and write-ahead logs, are stored in ZooKeeper.
 
 Let's create a table and put some data into it:
 
-----
+```
 shell> createtable test
 
 shell> tables -l
 accumulo.metadata    =>        !0
-accumulo.root        =>        +r
+accumulo.root        =>        `r
 test                 =>         2
 trace                =>         1
 
 shell> insert a b c d
 
 shell> flush -w
-----
+```
 
 Now let's take a look at the metadata for this table:
 
@@ -491,101 +475,102 @@ Now let's take a look at the metadata for this table:
 
 Let's decode this little session:
 
-+scan -b 3; -e 3<+::   Every tablet gets its own row. Every row starts with the table id followed by
-    +;+ or +<+, and followed by the end row split point for that tablet.
+* `scan -b 3; -e 3<` -   Every tablet gets its own row. Every row starts with the table id followed by
+    `;` or `<`, and followed by the end row split point for that tablet.
 
-+file:/default_tablet/F000009y.rf [] 186,1+::
+* `file:/default_tablet/F000009y.rf [] 186,1` -
     File entry for this tablet.  This tablet contains a single file reference. The
-    file is +/accumulo/tables/3/default_tablet/F000009y.rf+.  It contains 1
+    file is `/accumulo/tables/3/default_tablet/F000009y.rf`.  It contains 1
     key/value pair, and is 186 bytes long.
 
-+last:13fe86cd27101e5 []    127.0.0.1:9997+::
+* `last:13fe86cd27101e5 []    127.0.0.1:9997` -
     Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
-    unique tablet server lock data was +13fe86cd27101e5+. The default balancer
+    unique tablet server lock data was `13fe86cd27101e5+. The default balancer
     will tend to put tablets back on their last location.
 
-+loc:13fe86cd27101e5 []    127.0.0.1:9997+::
+* `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
     The current location of this tablet.
 
-+log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0. ...+::
+* `log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0. ...` -
     This tablet has a reference to a single write-ahead log. This file can be found in
-    +/accumulo/wal/127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995+. The value
+    `/accumulo/wal/127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995`. The value
     of this entry could refer to multiple files. This tablet's data is encoded as
-    +6+ within the log.
+    `6` within the log.
 
-+srv:dir []    /default_tablet+::
+* `srv:dir []    /default_tablet` -
     Files written for this tablet will be placed into
-    +/accumulo/tables/3/default_tablet+.
+    `/accumulo/tables/3/default_tablet`.
 
-+srv:flush []    1+::
+* `srv:flush []    1` -
     Flush id.  This table has successfully completed the flush with the id of +1+.
 
-+srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5+::
+* `srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5` -
     This is the lock information for the tablet holding the present lock.  This
     information is checked against zookeeper whenever this is updated, which
     prevents a metadata update from a tablet server that no longer holds its
     lock.
 
-+srv:time []    M1373998392323+::
+* `srv:time []    M1373998392323` -
     This indicates the time time type (+M+ for milliseconds or +L+ for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server's system time.
 
-`~tab:~pr []    \x00`::
+* `~tab:~pr []    \x00` -
     The end-row marker for the previous tablet (prev-row).  The first byte
-    indicates the presence of a prev-row.  This tablet has the range (-inf, +inf),
+    indicates the presence of a prev-row.  This tablet has the range (-inf, `inf),
     so it has no prev-row (or end row).
 
 Besides these columns, you may see:
 
-+rowId future:zooKeeperID location+::
+* `rowId future:zooKeeperID location` -
     Tablet has been assigned to a tablet, but not yet loaded.
 
-+~del:filename+::
+* `~del:filename` -
     When a tablet server is done use a file, it will create a delete marker in the appropriate metadata table, unassociated with any tablet.  The garbage collector will remove the marker, and the file, when no other reference to the file exists.
 
-+~blip:txid+::
+* `~blip:txid` -
     Bulk-Load In Progress marker.
 
-+rowId loaded:filename+::
+* `rowId loaded:filename` -
     A file has been bulk-loaded into this tablet, however the bulk load has not yet completed on other tablets, so this marker prevents the file from being loaded multiple times.
 
-+rowId !cloned+::
+* `rowId !cloned` -
     A marker that indicates that this tablet has been successfully cloned.
 
-+rowId splitRatio:ratio+::
+* `rowId splitRatio:ratio` -
     A marker that indicates a split is in progress, and the files are being split at the given ratio.
 
-+rowId chopped+::
+* `rowId chopped` -
     A marker that indicates that the files in the tablet do not contain keys outside the range of the tablet.
 
-+rowId scan+::
+* `rowId scan` -
     A marker that prevents a file from being removed while there are still active scans using it.
 
-### Simple System Recovery
+## Simple System Recovery
 
-*Q*: One of my Accumulo processes died. How do I bring it back?
+**One of my Accumulo processes died. How do I bring it back?**
 
-The easiest way to bring all services online for an Accumulo instance is to run the +accumulo-cluster+ script.
+The easiest way to bring all services online for an Accumulo instance is to run the `accumulo-cluster` script.
 
     $ accumulo-cluster start
 
-This process will check the process listing, using +jps+ on each host before attempting to restart a service on the given host.
+This process will check the process listing, using `jps` on each host before attempting to restart a service on the given host.
 Typically, this check is sufficient except in the face of a hung/zombie process. For large clusters, it may be
-undesirable to ssh to every node in the cluster to ensure that all hosts are running the appropriate processes and +accumulo-service+ may be of use.
+undesirable to ssh to every node in the cluster to ensure that all hosts are running the appropriate processes and `accumulo-service` may be of use.
 
     $ ssh host_with_dead_process
     $ accumulo-service tserver start
 
-*Q*: My process died again. Should I restart it via +cron+ or tools like +supervisord+?
+**My process died again. Should I restart it via `cron` or tools like `supervisord`?**
 
-*A*: A repeatedly dying Accumulo process is a sign of a larger problem. Typically these problems are due to a
+A repeatedly dying Accumulo process is a sign of a larger problem. Typically these problems are due to a
 misconfiguration of Accumulo or over-saturation of resources. Blind automation of any service restart inside of Accumulo
 is generally an undesirable situation as it is indicative of a problem that is being masked and ignored. Accumulo
 processes should be stable on the order of months and not require frequent restart.
 
-### Advanced System Recovery
+## Advanced System Recovery
 
-#### HDFS Failure
-*Q*: I had disasterous HDFS failure.  After bringing everything back up, several tablets refuse to go online.
+### HDFS Failure
+
+**I had disasterous HDFS failure.  After bringing everything back up, several tablets refuse to go online.**
 
 Data written to tablets is written into memory before being written into indexed files.  In case the server
 is lost before the data is saved into a an indexed file, all data stored in memory is first written into a
@@ -596,37 +581,36 @@ If a write-ahead log cannot be read, then the tablet is not re-assigned.  All it
 the blocks in the write-ahead log to be missing.  This is unlikely unless multiple data nodes in HDFS have been
 lost.
 
-*A*: Get the WAL files online and healthy.  Restore any data nodes that may be down.
+Get the WAL files online and healthy.  Restore any data nodes that may be down.
 
-*Q*: How do find out which tablets are offline?
+**How do find out which tablets are offline?**
 
-*A*: Use +accumulo admin checkTablets+
+Use `accumulo admin checkTablets`
 
     $ accumulo admin checkTablets
 
-*Q*: I lost three data nodes, and I'm missing blocks in a WAL.  I don't care about data loss, how
-can I get those tablets online?
+**I lost three data nodes, and I'm missing blocks in a WAL.  I don't care about data loss, how
+can I get those tablets online?**
 
 See the discussion in <<metadata>>, which shows a typical metadata table listing.
-The entries with a column family of +log+ are references to the WAL for that tablet.
+The entries with a column family of `log` are references to the WAL for that tablet.
 If you know what WAL is bad, you can find all the references with a grep in the shell:
 
     shell> grep 0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
     3< log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995|6
 
-*A*: You can remove the WAL references in the metadata table.
+You can remove the WAL references in the metadata table.
 
     shell> grant -u root Table.WRITE -t accumulo.metadata
     shell> delete 3< log 127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
 
-Note: the colon (+:+) is omitted when specifying the _row cf cq_ for the delete command.
+Note: the colon (`:`) is omitted when specifying the _row cf cq_ for the delete command.
 
 The master will automatically discover the tablet no longer has a bad WAL reference and will
 assign the tablet.  You will need to remove the reference from all the tablets to get them
 online.
 
-
-*Q*: The metadata (or root) table has references to a corrupt WAL.
+**The metadata (or root) table has references to a corrupt WAL.**
 
 This is a much more serious state, since losing updates to the metadata table will result
 in references to old files which may not exist, or lost references to new files, resulting
@@ -639,15 +623,15 @@ the old instance into a new tables.
 A complete set of instructions for doing this is outside the scope of this guide,
 but the basic approach is:
 
-* Use +tables -l+ in the shell to discover the table name to table id mapping
+* Use `tables -l` in the shell to discover the table name to table id mapping
 * Stop all accumulo processes on all nodes
 * Move the accumulo directory in HDFS out of the way:
        $ hadoop fs -mv /accumulo /corrupt
 * Re-initalize accumulo
 * Recreate tables, users and permissions
-* Import the directories under +/corrupt/tables/<id>+ into the new instance
+* Import the directories under `/corrupt/tables/<id>` into the new instance
 
-*Q*: One or more HDFS Files under /accumulo/tables are corrupt
+**One or more HDFS Files under /accumulo/tables are corrupt**
 
 Accumulo maintains multiple references into the tablet files in the metadata
 tables and within the tablet server hosting the file, this makes it difficult to
@@ -655,19 +639,19 @@ reliably just remove those references.
 
 The directory structure in HDFS for tables will follow the general structure:
 
-  /accumulo
-  /accumulo/tables/
-  /accumulo/tables/!0
-  /accumulo/tables/!0/default_tablet/A000001.rf
-  /accumulo/tables/!0/t-00001/A000002.rf
-  /accumulo/tables/1
-  /accumulo/tables/1/default_tablet/A000003.rf
-  /accumulo/tables/1/t-00001/A000004.rf
-  /accumulo/tables/1/t-00001/A000005.rf
-  /accumulo/tables/2/default_tablet/A000006.rf
-  /accumulo/tables/2/t-00001/A000007.rf
+    /accumulo
+    /accumulo/tables/
+    /accumulo/tables/!0
+    /accumulo/tables/!0/default_tablet/A000001.rf
+    /accumulo/tables/!0/t-00001/A000002.rf
+    /accumulo/tables/1
+    /accumulo/tables/1/default_tablet/A000003.rf
+    /accumulo/tables/1/t-00001/A000004.rf
+    /accumulo/tables/1/t-00001/A000005.rf
+    /accumulo/tables/2/default_tablet/A000006.rf
+    /accumulo/tables/2/t-00001/A000007.rf
 
-If files under +/accumulo/tables+ are corrupt, the best course of action is to
+If files under `/accumulo/tables` are corrupt, the best course of action is to
 recover those files in hdsf see the section on HDFS. Once these recovery efforts
 have been exhausted, the next step depends on where the missing file(s) are
 located. Different actions are required when the bad files are in Accumulo data
@@ -681,19 +665,19 @@ references to the file in the METADATA table and within the tablet server
 hosting the file can be resolved by Accumulo. An empty file can be created using
 the CreateEmpty utiity:
 
-  $ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
+    $ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
 
 The process is to delete the corrupt file and then move the empty file into its
 place (The generated empty file can be copied and used multiple times if necessary and does not need
 to be regenerated each time)
 
-  $ hadoop fs –rm /accumulo/tables/corrupt/file/thename.rf; \
-  hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/tables/corrupt/file/thename.rf
+    $ hadoop fs –rm /accumulo/tables/corrupt/file/thename.rf; \
+    hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/tables/corrupt/file/thename.rf
 
 *Metadata File Corruption*
 
 If the corrupt files are metadata files, see <<metadata>> (under the path
-+/accumulo/tables/!0+) then you will need to rebuild
+`/accumulo/tables/!0`) then you will need to rebuild
 the metadata table by initializing a new instance of Accumulo and then importing
 all of the existing data into the new instance.  This is the same procedure as
 recovering from a zookeeper failure (see <<zookeeper_failure>>), except that
@@ -705,7 +689,7 @@ before creating the new instance.  You will not be able to use RestoreZookeeper
 because the table names and references are likely to be different between the
 original and the new instances, but it can serve as a reference.
 
-*A*: If the files cannot be recovered, replace corrupt data files with a empty
+If the files cannot be recovered, replace corrupt data files with a empty
 rfiles to allow references in the metadata table and in the tablet servers to be
 resolved. Rebuild the metadata table if the corrupt files are metadata files.
 
@@ -722,7 +706,7 @@ metadat table!), the following process can be followed to create an valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
-  $ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' > empty.wal
+    $ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' > empty.wal
 
 The above creates a file with the text "--- Log File Header (v2) ---" and then
 four bytes. You should verify the contents of the file with a hexdump tool.
@@ -730,17 +714,17 @@ four bytes. You should verify the contents of the file with a hexdump tool.
 Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
 with the empty WAL.
 
-  $ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
-  $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
+    $ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
+    $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
 
 After the corrupt WAL file has been replaced, the system should automatically recover.
 It may be necessary to restart the Accumulo Master process as an exponential
 backup policy is used which could lead to a long wait before Accumulo will
 try to re-load the WAL file.
 
-[[zookeeper_failure]]
-#### ZooKeeper Failure
-*Q*: I lost my ZooKeeper quorum (hardware failure), but HDFS is still intact. How can I recover my Accumulo instance?
+### ZooKeeper Failure
+
+**I lost my ZooKeeper quorum (hardware failure), but HDFS is still intact. How can I recover my Accumulo instance?**
 
 ZooKeeper, in addition to its lock-service capabilities, also serves to bootstrap an Accumulo
 instance from some location in HDFS. It contains the pointers to the root tablet in HDFS which
@@ -766,80 +750,71 @@ The directory structure in HDFS for tables will follow the general structure:
     /accumulo/tables/2/t-00001/A000005.rf
 
 For each table, make a new directory that you can move (or copy if you have the HDFS space to do so)
-all of the rfiles for a given table into. For example, to process the table with an ID of +1+, make a new directory,
-say +/new-table-1+ and then copy all files from +/accumulo/tables/1/\*/*.rf+ into that directory. Additionally,
-make a directory, +/new-table-1-failures+, for any failures during the import process. Then, issue the import
+all of the rfiles for a given table into. For example, to process the table with an ID of `1`, make a new directory,
+say `/new-table-1` and then copy all files from `/accumulo/tables/1/\*/*.rf` into that directory. Additionally,
+make a directory, `/new-table-1-failures`, for any failures during the import process. Then, issue the import
 command using the Accumulo shell into the new table, telling Accumulo to not re-set the timestamp:
 
     user@instance new_table> importdirectory /new-table-1 /new-table-1-failures false
 
-Any RFiles which were failed to be loaded will be placed in +/new-table-1-failures+. Rfiles that were successfully
-imported will no longer exist in +/new-table-1+. For failures, move them back to the import directory and retry
-the +importdirectory+ command.
+Any RFiles which were failed to be loaded will be placed in `/new-table-1-failures`. Rfiles that were successfully
+imported will no longer exist in `/new-table-1`. For failures, move them back to the import directory and retry
+the `importdirectory` command.
 
 It is *extremely* important to note that this approach may introduce stale data back into
 the tables. For a few reasons, RFiles may exist in the table directory which are candidates for deletion but have
 not yet been deleted. Additionally, deleted data which was not compacted away, but still exists in write-ahead logs if
 the original instance was somehow recoverable, will be re-introduced in the new instance. Table splits and merges
 (which also include the deleteRows API call on TableOperations, are also vulnerable to this problem. This process should
-*not* be used if these are unacceptable risks. It is possible to try to re-create a view of the +accumulo.metadata+
+*not* be used if these are unacceptable risks. It is possible to try to re-create a view of the `accumulo.metadata`
 table to prune out files that are candidates for deletion, but this is a difficult task that also may not be entirely accurate.
 
 Likewise, it is also possible that data loss may occur from write-ahead log (WAL) files which existed on the old table but
 were not minor-compacted into an RFile. Again, it may be possible to reconstruct the state of these WAL files to
 replay data not yet in an RFile; however, this is a difficult task and is not implemented in any automated fashion.
 
-*A*: The +importdirectory+ shell command can be used to import RFiles from the old instance into a newly created instance,
+The `importdirectory` shell command can be used to import RFiles from the old instance into a newly created instance,
 but extreme care should go into the decision to do this as it may result in reintroduction of stale data or the
 omission of new data.
 
-### Upgrade Issues
+## Upgrade Issues
 
-*Q*: I upgraded from 1.4 to 1.5 to 1.6 but still have some WAL files on local disk. Do I have any way to recover them?
+**I upgraded from 1.4 to 1.5 to 1.6 but still have some WAL files on local disk. Do I have any way to recover them?**
 
-*A*: Yes, you can recover them by running the LocalWALRecovery utility (not available in 1.8 and later) on each node that needs recovery performed. The utility
-will default to using the directory specified by +logger.dir.walog+ in your configuration, or can be
-overriden by using the +--local-wal-directories+ option on the tool. It can be invoked as follows:
+Yes, you can recover them by running the LocalWALRecovery utility (not available in 1.8 and later) on each node that needs recovery performed. The utility
+will default to using the directory specified by `logger.dir.walog` in your configuration, or can be
+overriden by using the `--local-wal-directories` option on the tool. It can be invoked as follows:
 
-  accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+    accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 
-### File Naming Conventions
+## File Naming Conventions
 
-*Q*: Why are files named like they are? Why do some start with +C+ and others with +F+?
+**Why are files named like they are? Why do some start with `C` and others with `F`?**
 
-*A*: The file names give you a basic idea for the source of the file.
+The file names give you a basic idea for the source of the file.
 
 The base of the filename is a base-36 unique number. All filenames in accumulo are coordinated
 with a counter in zookeeper, so they are always unique, which is useful for debugging.
 
 The leading letter gives you an idea of how the file was created:
 
-+F+::
-    Flush: entries in memory were written to a file (Minor Compaction)
-
-+M+::
-    Merging compaction: entries in memory were combined with the smallest file to create one new file
-
-+C+::
-    Several files, but not all files, were combined to produce this file (Major Compaction)
-
-+A+::
-    All files were compacted, delete entries were dropped
-
-+I+::
-    Bulk import, complete, sorted index files. Always in a directory starting with +b-+
+* `F` - Flush: entries in memory were written to a file (Minor Compaction)
+* `M` - Merging compaction: entries in memory were combined with the smallest file to create one new file
+* `C` - Several files, but not all files, were combined to produce this file (Major Compaction)
+* `A` - All files were compacted, delete entries were dropped
+* `I` - Bulk import, complete, sorted index files. Always in a directory starting with `b-`
 
 This simple file naming convention allows you to see the basic structure of the files from just
 their filenames, and reason about what should be happening to them next, just
 by scanning their entries in the metadata tables.
 
-For example, if you see multiple files with +M+ prefixes, the tablet is, or was, up against its
+For example, if you see multiple files with `M` prefixes, the tablet is, or was, up against its
 maximum file limit, so it began merging memory updates with files to keep the file count reasonable.  This
 slows down ingest performance, so knowing there are many files like this tells you that the system
 is struggling to keep up with ingest vs the compaction strategy which reduces the number of files.
 
-### HDFS Decommissioning Issues
+## HDFS Decommissioning Issues
 
-*Q*: My Hadoop DataNode is hung for hours trying to decommission.
+**My Hadoop DataNode is hung for hours trying to decommission.**
 
-*A*: Write Ahead Logs stay open until they hit the size threshold, which could be many hours or days in some cases. These open files will prevent a DN from finishing its decommissioning process (HDFS-3599) in some versions of Hadoop 2. If you stop the DN, then the WALog file will not be closed and you could lose data. To work around this issue, we now close WALogs on a time period specified by the property +tserver.walog.max.age+ with a default period of 24 hours.
+Write Ahead Logs stay open until they hit the size threshold, which could be many hours or days in some cases. These open files will prevent a DN from finishing its decommissioning process (HDFS-3599) in some versions of Hadoop 2. If you stop the DN, then the WALog file will not be closed and you could lose data. To work around this issue, we now close WALogs on a time period specified by the property `tserver.walog.max.age` with a default period of 24 hours.

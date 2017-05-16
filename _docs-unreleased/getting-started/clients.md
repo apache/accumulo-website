@@ -1,74 +1,62 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+---
+title: Accumulo Clients
+category: getting-started
+order: 2
+---
 
-== Writing Accumulo Clients
-
-=== Running Client Code
+## Running Client Code
 
 There are multiple ways to run Java code that uses Accumulo. Below is a list
 of the different ways to execute client code.
 
-* using the +java+ command
-* using the +accumulo+ command
-* using the +accumulo-util hadoop-jar+ command
+* using the `java` command
+* using the `accumulo` command
+* using the `accumulo-util hadoop-jar` command
 
-==== Using the java command
+### Using the java command
 
-To run Accumulo client code using the +java+ command, use the +accumulo classpath+ command 
+To run Accumulo client code using the `java` command, use the `accumulo classpath` command 
 to include all of Accumulo's dependencies on your classpath:
 
-  java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
+    java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
 
-If you would like to review which jars are included, the +accumulo classpath+ command can
-output a more human readable format using the +-d+ option which enables debugging:
+If you would like to review which jars are included, the `accumulo classpath` command can
+output a more human readable format using the `-d` option which enables debugging:
 
-  accumulo classpath -d
+    accumulo classpath -d
 
-==== Using the accumulo command
+### Using the accumulo command
 
 Another option for running your code is to use the Accumulo script which can execute a
 main class (if it exists on its classpath):
 
-  accumulo com.foo.Client arg1 arg2
+    accumulo com.foo.Client arg1 arg2
 
 While the Accumulo script will add all of Accumulo's dependencies to the classpath, you
 will need to add any jars that your create or depend on beyond what Accumulo already
-depends on. This can be accomplished by either adding the jars to the +lib/ext+ directory
+depends on. This can be accomplished by either adding the jars to the `lib/ext` directory
 of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
 the accumulo command.
 
-  export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
+    export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
 
-==== Using the 'accumulo-util hadoop-jar' command
+### Using the 'accumulo-util hadoop-jar' command
 
 If you are writing map reduce job that accesses Accumulo, then you can use
-+accumulo-util hadoop-jar+ to run those jobs. See the map reduce example.
+`accumulo-util hadoop-jar` to run those jobs. See the map reduce example.
 
-=== Connecting
+## Connecting
 
 All clients must first identify the Accumulo instance to which they will be
 communicating. Code to do this is as follows:
 
-[source,java]
-----
+```java
 String instanceName = "myinstance";
 String zooServers = "zooserver-one,zooserver-two"
 Instance inst = new ZooKeeperInstance(instanceName, zooServers);
 
 Connector conn = inst.getConnector("user", new PasswordToken("passwd"));
-----
+```
 
 The PasswordToken is the most common implementation of an `AuthenticationToken`.
 This general interface allow authentication as an Accumulo user to come from
@@ -80,18 +68,17 @@ KeyStore to alleviate passwords stored in cleartext. When stored in HDFS, a sing
 KeyStore can be used across an entire instance. Be aware that KeyStores stored on
 the local filesystem must be made available to all nodes in the Accumulo cluster.
 
-[source,java]
-----
+```java
 KerberosToken token = new KerberosToken();
 Connector conn = inst.getConnector(token.getPrincipal(), token);
-----
+```
 
 The KerberosToken can be provided to use the authentication provided by Kerberos.
 Using Kerberos requires external setup and additional configuration, but provides
 a single point of authentication through HDFS, YARN and ZooKeeper and allowing
 for password-less authentication with Accumulo.
 
-=== Writing Data
+## Writing Data
 
 Data are written to Accumulo by creating Mutation objects that represent all the
 changes to the columns of a single row. The changes are made atomically in the
@@ -100,8 +87,7 @@ the appropriate TabletServers.
 
 Mutations can be created thus:
 
-[source,java]
-----
+```java
 Text rowID = new Text("row1");
 Text colFam = new Text("myColFam");
 Text colQual = new Text("myColQual");
@@ -112,9 +98,9 @@ Value value = new Value("myValue".getBytes());
 
 Mutation mutation = new Mutation(rowID);
 mutation.put(colFam, colQual, colVis, timestamp, value);
-----
+```
 
-==== BatchWriter
+### BatchWriter
 
 The BatchWriter is highly optimized to send Mutations to multiple TabletServers
 and automatically batches Mutations destined for the same TabletServer to
@@ -124,8 +110,7 @@ batching.
 
 Mutations are added to a BatchWriter thus:
 
-[source,java]
-----
+```java
 // BatchWriterConfig has reasonable defaults
 BatchWriterConfig config = new BatchWriterConfig();
 config.setMaxMemory(10000000L); // bytes available to batchwriter for buffering mutations
@@ -135,11 +120,11 @@ BatchWriter writer = conn.createBatchWriter("table", config)
 writer.addMutation(mutation);
 
 writer.close();
-----
+```
 
-For more example code, see the https://github.com/apache/accumulo-examples/blob/master/docs/batch.md[batch writing and scanning example].
+For more example code, see the [batch writing and scanning example](https://github.com/apache/accumulo-examples/blob/master/docs/batch.md).
 
-==== ConditionalWriter
+### ConditionalWriter
 
 The ConditionalWriter enables efficient, atomic read-modify-write operations on
 rows.  The ConditionalWriter writes special Mutations which have a list of per
@@ -162,10 +147,10 @@ and possibly sending another conditional mutation.  If this is not sufficient,
 then a higher level of abstraction can be built by storing transactional
 information within a row.
 
-See the https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md[reservations example]
+See the [reservations example](https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md)
 for example code that uses the conditional writer.
 
-==== Durability
+### Durability
 
 By default, Accumulo writes out any updates to the Write-Ahead Log (WAL). Every change
 goes into a file in HDFS and is sync'd to disk for maximum durability. In
@@ -186,8 +171,7 @@ writing, the user can configure the BatchWriter or ConditionalWriter to use
 a different level of durability for the session. This will override the
 default durability setting.
 
-[source,java]
-----
+```java
 BatchWriterConfig cfg = new BatchWriterConfig();
 // We don't care about data loss with these writes:
 // This is DANGEROUS:
@@ -195,22 +179,20 @@ cfg.setDurability(Durability.NONE);
 
 Connection conn = ... ;
 BatchWriter bw = conn.createBatchWriter(table, cfg);
+```
 
-----
-
-=== Reading Data
+## Reading Data
 
 Accumulo is optimized to quickly retrieve the value associated with a given key, and
 to efficiently return ranges of consecutive keys and their associated values.
 
-==== Scanner
+### Scanner
 
 To retrieve data, Clients use a Scanner, which acts like an Iterator over
 keys and values. Scanners can be configured to start and stop at particular keys, and
 to return a subset of the columns available.
 
-[source,java]
-----
+```java
 // specify which visibilities we are allowed to see
 Authorizations auths = new Authorizations("public");
 
@@ -224,9 +206,9 @@ for(Entry<Key,Value> entry : scan) {
     Text row = entry.getKey().getRow();
     Value value = entry.getValue();
 }
-----
+```
 
-==== Isolated Scanner
+### Isolated Scanner
 
 Accumulo supports the ability to present an isolated view of rows when
 scanning. There are three possible ways that a row could change in Accumulo :
@@ -247,10 +229,10 @@ crash a tablet server. By default rows are buffered in memory, but the user
 can easily supply their own buffer if they wish to buffer to disk when rows are
 large.
 
-See the https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md[isolation example]
+See the [isolation example](https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md)
 for example code that uses the IsolatedScanner.
 
-==== BatchScanner
+### BatchScanner
 
 For some types of access, it is more efficient to retrieve several ranges
 simultaneously. This arises when accessing a set of rows that are not consecutive
@@ -262,8 +244,7 @@ BatchScanners accept a set of Ranges. It is important to note that the keys retu
 by a BatchScanner are not in sorted order since the keys streamed are from multiple
 TabletServers in parallel.
 
-[source,java]
-----
+```java
 ArrayList<Range> ranges = new ArrayList<Range>();
 // populate list of ranges ...
 
@@ -275,16 +256,16 @@ bscan.fetchColumnFamily("attributes");
 for(Entry<Key,Value> entry : bscan) {
     System.out.println(entry.getValue());
 }
-----
+```
 
-For more example code, see the https://github.com/apache/accumulo-examples/blob/master/docs/batch.md[batch writing and scanning example].
+For more example code, see the [batch writing and scanning example](https://github.com/apache/accumulo-examples/blob/master/docs/batch.md).
 
 At this time, there is no client side isolation support for the BatchScanner.
 You may consider using the WholeRowIterator with the BatchScanner to achieve
 isolation. The drawback of this approach is that entire rows are read into
 memory on the server side. If a row is too big, it may crash a tablet server.
 
-=== Proxy
+## Proxy
 
 The proxy API allows the interaction with Accumulo with languages other than Java.
 A proxy server is provided in the codebase and a client can further be generated.
@@ -292,49 +273,49 @@ The proxy API can also be used instead of the traditional ZooKeeperInstance clas
 provide a single TCP port in which clients can be securely routed through a firewall,
 without requiring access to all tablet servers in the cluster.
 
-==== Prerequisites
+### Prerequisites
 
 The proxy server can live on any node in which the basic client API would work. That
 means it must be able to communicate with the Master, ZooKeepers, NameNode, and the
 DataNodes. A proxy client only needs the ability to communicate with the proxy server.
 
-==== Configuration
+### Configuration
 
 The configuration options for the proxy server live inside of a properties file. At
 the very least, you need to supply the following properties:
 
-  protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
-  tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
-  port=42424
-  instance=test
-  zookeepers=localhost:2181
+    protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
+    tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
+    port=42424
+    instance=test
+    zookeepers=localhost:2181
 
-You can find a sample configuration file in your distribution at +proxy/proxy.properties+.
+You can find a sample configuration file in your distribution at `proxy/proxy.properties`.
 
 This sample configuration file further demonstrates an ability to back the proxy server
 by MockAccumulo or the MiniAccumuloCluster.
 
-==== Running the Proxy Server
+### Running the Proxy Server
 
 After the properties file holding the configuration is created, the proxy server
 can be started using the following command in the Accumulo distribution (assuming
-your properties file is named +config.properties+):
+your properties file is named `config.properties`):
 
-  accumulo proxy -p config.properties
+    accumulo proxy -p config.properties
 
-==== Creating a Proxy Client
+### Creating a Proxy Client
 
 Aside from installing the Thrift compiler, you will also need the language-specific library
 for Thrift installed to generate client code in that language. Typically, your operating
 system's package manager will be able to automatically install these for you in an expected
-location such as +/usr/lib/python/site-packages/thrift+.
+location such as `/usr/lib/python/site-packages/thrift`.
 
-You can find the thrift file for generating the client at +proxy/proxy.thrift+.
+You can find the thrift file for generating the client at `proxy/proxy.thrift`.
 
 After a client is generated, the port specified in the configuration properties above will be
 used to connect to the server.
 
-==== Using a Proxy Client
+### Using a Proxy Client
 
 The following examples have been written in Java and the method signatures may be
 slightly different depending on the language specified when generating client with
@@ -342,25 +323,24 @@ the Thrift compiler. After initiating a connection to the Proxy (see Apache Thri
 documentation for examples of connecting to a Thrift service), the methods on the
 proxy client will be available. The first thing to do is log in:
 
-[source,java]
+```java
 Map password = new HashMap<String,String>();
 password.put("password", "secret");
 ByteBuffer token = client.login("root", password);
+```
 
 Once logged in, the token returned will be used for most subsequent calls to the client.
 Let's create a table, add some data, scan the table, and delete it.
 
-
 First, create a table.
 
-[source,java]
+```java
 client.createTable(token, "myTable", true, TimeType.MILLIS);
-
+```
 
 Next, add some data:
 
-[source,java]
-----
+```java
 // first, create a writer on the server
 String writer = client.createWriter(token, "myTable", new WriterOptions());
 
@@ -385,13 +365,11 @@ cellsToUpdate.put(rowid, updates);
 client.updateAndFlush(writer, "myTable", cellsToUpdate);
 
 client.closeWriter(writer);
-----
-
+```
 
 Scan for the data and batch the return of the results on the server:
 
-[source,java]
-----
+```java
 String scanner = client.createScanner(token, "myTable", new ScanOptions());
 ScanResult results = client.nextK(scanner, 100);
 
@@ -400,4 +378,4 @@ for(KeyValue keyValue : results.getResultsIterator()) {
 }
 
 client.closeScanner(scanner);
-----
+```

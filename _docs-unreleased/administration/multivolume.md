@@ -1,19 +1,8 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements.  See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License.  You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== Multi-Volume Installations
+---
+title: Multi-Volume Installations
+category: administration
+order: 7
+---
 
 This is an advanced configuration setting for very large clusters
 under a lot of write pressure.
@@ -35,15 +24,16 @@ routinely runs in less than a minute, the NameNode is performing well.
 
 However, if you do begin to experience slow-down and poor GC
 performance, Accumulo can be configured to use multiple NameNode
-servers.  The configuration ``instance.volumes'' should be set to a
+servers.  The configuration `instance.volumes` should be set to a
 comma-separated list, using full URI references to different NameNode
 servers:
 
-[source,xml]
+```xml
 <property>
     <name>instance.volumes</name>
     <value>hdfs://ns1:9001,hdfs://ns2:9001</value>
 </property>
+```
 
 The introduction of multiple volume support in 1.6 changed the way Accumulo
 stores pointers to files.  It now stores fully qualified URI references to
@@ -61,11 +51,12 @@ example configuration below will replace ns1 with nsA and ns2 with nsB in
 Accumulo metadata.  For this property to take affect, Accumulo will need to be
 restarted.
 
-[source,xml]
+```xml
 <property>
     <name>instance.volumes.replacements</name>
     <value>hdfs://ns1:9001 hdfs://nsA:9001, hdfs://ns2:9001 hdfs://nsB:9001</value>
 </property>
+```
 
 Using viewfs or HA namenode, introduced in Hadoop 2, offers another option for
 managing the fully qualified URIs stored in Accumulo.  Viewfs and HA namenode

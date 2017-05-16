@@ -1,19 +1,8 @@
-// Licensed to the Apache Software Foundation (ASF) under one or more
-// contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership.
-// The ASF licenses this file to You under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with
-// the License. You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-== Iterator Design
+---
+title: Iterator Design
+category: development
+order: 1
+---
 
 Accumulo SortedKeyValueIterators, commonly referred to as Iterators for short, are server-side programming constructs
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
@@ -33,7 +22,7 @@ understanding of this as the interface provides clear definitions about what eac
 chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
 pitfalls.
 
-=== Instantiation
+## Instantiation
 
 To invoke an Accumulo Iterator inside of the TabletServer, the Iterator class must be on the classpath of every
 TabletServer. For production environments, it is common to place a JAR file which contains the Iterator in
@@ -46,12 +35,11 @@ manual.
 Accumulo references the Iterator class by name and uses Java reflection to instantiate the Iterator. This means that
 Iterators must have a public no-args constructor.
 
-=== Interface
+## Interface
 
 A normal implementation of the SortedKeyValueIterator defines functionality for the following methods:
 
-[source,java]
-----
+```java
 void init(SortedKeyValueIterator<Key,Value> source, Map<String,String> options, IteratorEnvironment env) throws IOException;
 
 boolean hasTop();
@@ -65,9 +53,9 @@ Key getTopKey();
 Value getTopValue();
 
 SortedKeyValueIterator<Key,Value> deepCopy(IteratorEnvironment env);
-----
+```
 
-==== `init`
+### init
 
 The `init` method is called by the TabletServer after it constructs an instance of the Iterator.  This method should
 clear/reset any internal state in the Iterator and prepare it to process data.  The first argument, the `source`, is the
@@ -86,7 +74,7 @@ knows that it is running in the context of a full-major compaction (reading all 
 (which may strongly limit the number of columns), the Iterator might make different algorithmic decisions in an attempt to
 optimize itself.
 
-==== `seek`
+### seek
 
 The `seek` method is likely the most confusing method on the Iterator interface. The purpose of this method is to
 advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
@@ -123,7 +111,7 @@ reading more Key-Value pairs. Ignoring this typically does not affect scans from
 will result in duplicate keys emitting from a BatchScan if the scanned table has more than one tablet.
 Best practice is to never emit entries outside the seek range.
 
-==== `next`
+### next
 
 The `next` method is analogous to the `next` method on a Java Iterator: this method should advance
 the Iterator to the next Key-Value pair. For implementations that perform some filtering or complex
@@ -135,14 +123,14 @@ can later return. While there is another Key-Value pair to return, `hasTop` shou
 If there are no more Key-Value pairs to return from this Iterator since the last call to
 `seek`, `hasTop` should return false.
 
-==== `hasTop`
+### hasTop
 
 The `hasTop` method is similar to the `hasNext` method on a Java Iterator in that it informs
 the caller if there is a Key-Value pair to be returned. If there is no pair to return, this method
 should return false. Like a Java Iterator, multiple calls to `hasTop` (without calling `next`) should not
 alter the internal state of the Iterator.
 
-==== `getTopKey` and `getTopValue`
+### getTopKey and getTopValue
 
 These methods simply return the current Key-Value pair for this iterator. If `hasTop` returns true,
 both of these methods should return non-null objects. If `hasTop` returns false, it is undefined
@@ -162,7 +150,7 @@ In both cases, copying the Key/Value's data into a new object ensures iterator c
 it is safe to not copy the Key/Value.  The general guideline is to be aware of who else may use Key/Value objects
 returned from `getTopKey`/`getTopValue`.
 
-==== `deepCopy`
+### deepCopy
 
 The `deepCopy` method is similar to the `clone` method from the Java `Cloneable` interface.
 Implementations of this method should return a new object of the same type as the Accumulo Iterator
@@ -182,69 +170,66 @@ early programming assignments which implement their own tree data structures. `d
 copy on its sources (the children), copies itself, attaches the copies of the children, and
 then returns itself.
 
-=== TabletServer invocation of Iterators
+## TabletServer invocation of Iterators
 
 The following code is a general outline for how TabletServers invoke Iterators.
 
-[source,java]
-----
- List<KeyValue> batch;
- Range range = getRangeFromClient();
- while(!overSizeLimit(batch)){
-   SortedKeyValueIterator source = getSystemIterator();
+```java
+List<KeyValue> batch;
+Range range = getRangeFromClient();
+while(!overSizeLimit(batch)){
+ SortedKeyValueIterator source = getSystemIterator();
 
-   for(String clzName : getUserIterators()){
-    Class<?> clz = Class.forName(clzName);
-    SortedKeyValueIterator iter = (SortedKeyValueIterator) clz.newInstance();
-    iter.init(source, opts, env);
-    source = iter;
-   }
+ for(String clzName : getUserIterators()){
+  Class<?> clz = Class.forName(clzName);
+  SortedKeyValueIterator iter = (SortedKeyValueIterator) clz.newInstance();
+  iter.init(source, opts, env);
+  source = iter;
+ }
 
-   // read a batch of data to return to client
-   // the last iterator, the "top"
-   SortedKeyValueIterator topIter = source;
-   topIter.seek(getRangeFromUser(), ...)
+ // read a batch of data to return to client
+ // the last iterator, the "top"
+ SortedKeyValueIterator topIter = source;
+ topIter.seek(getRangeFromUser(), ...)
 
-   while(topIter.hasTop() && !overSizeLimit(batch)){
-     key = topIter.getTopKey()
-     val = topIter.getTopValue()
-     batch.add(new KeyValue(key, val)
-     if(systemDataSourcesChanged()){
-       // code does not show isolation case, which will
-       // keep using same data sources until a row boundry is hit 
-       range = new Range(key, false, range.endKey(), range.endKeyInclusive());
-       break;
-     }
+ while(topIter.hasTop() && !overSizeLimit(batch)){
+   key = topIter.getTopKey()
+   val = topIter.getTopValue()
+   batch.add(new KeyValue(key, val)
+   if(systemDataSourcesChanged()){
+     // code does not show isolation case, which will
+     // keep using same data sources until a row boundry is hit 
+     range = new Range(key, false, range.endKey(), range.endKeyInclusive());
+     break;
    }
  }
- //return batch of key values to client
-----
+}
+//return batch of key values to client
+```
 
 Additionally, the obtuse "re-seek" case can be outlined as the following:
 
-[source,java]
-----
-  // Given the above
-  List<KeyValue> batch = getNextBatch();
+```java
+// Given the above
+List<KeyValue> batch = getNextBatch();
 
-  // Store off lastKeyReturned for this client
-  lastKeyReturned = batch.get(batch.size() - 1).getKey();
+// Store off lastKeyReturned for this client
+lastKeyReturned = batch.get(batch.size() - 1).getKey();
 
-  // thread goes away (client stops asking for the next batch).
+// thread goes away (client stops asking for the next batch).
 
-  // Eventually client comes back
-  // Setup as before...
+// Eventually client comes back
+// Setup as before...
 
-  Range userRange = getRangeFromUser();
-  Range actualRange = new Range(lastKeyReturned, false
-      userRange.getEndKey(), userRange.isEndKeyInclusive());
+Range userRange = getRangeFromUser();
+Range actualRange = new Range(lastKeyReturned, false
+    userRange.getEndKey(), userRange.isEndKeyInclusive());
 
-  // Use the actualRange, not the user provided one
-  topIter.seek(actualRange);
-----
+// Use the actualRange, not the user provided one
+topIter.seek(actualRange);
+```
 
-
-=== Isolation
+## Isolation
 
 Accumulo provides a feature which clients can enable to prevent the viewing of partially
 applied mutations within the context of rows. If a client is submitting multiple column
@@ -258,14 +243,14 @@ may be reclaimed. When the user does not request isolation this can occur after 
 Isolation, this will only occur after a new row is returned, in which case it will re-seek to the very beginning of the
 next possible row.
 
-=== Abstract Iterators
+## Abstract Iterators
 
 A number of Abstract implementations of Iterators are provided to allow for faster creation
 of common patterns. The most commonly used abstract implementations are the `Filter` and
 `Combiner` classes. When possible these classes should be used instead as they have been
 thoroughly tested inside Accumulo itself.
 
-==== Filter
+### Filter
 
 The `Filter` abstract Iterator provides a very simple implementation which allows implementations
 to define whether or not a Key-Value pair should be returned via an `accept(Key, Value)` method.
@@ -285,7 +270,7 @@ As such, the `Filter` class functions well for filtering small amounts of data, 
 inefficient for filtering large amounts of data. The decision to use a `Filter` strongly
 depends on the use case and distribution of data being filtered.
 
-==== Combiner
+### Combiner
 
 The `Combiner` class is another common abstract Iterator. Similar to the `Combiner` interface
 define in Hadoop's MapReduce framework, implementations of this abstract class reduce
@@ -309,13 +294,13 @@ Combiner at a priority less than the Combiner (the Versioning Iterator is added 
 Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
 pair that has the largest timestamp.
 
-=== Best practices
+## Best practices
 
 Because of the flexibility that the `SortedKeyValueInterface` provides, it doesn't directly disallow
 many implementations which are poor design decisions. The following are some common recommendations to
 follow and pitfalls to avoid in Iterator implementations.
 
-==== Avoid special logic encoded in Ranges
+#### Avoid special logic encoded in Ranges
 
 Commonly, granular Ranges that a client passes to an Iterator from a `Scanner` or `BatchScanner` are unmodified.
 If a `Range` falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
@@ -331,7 +316,7 @@ the point to resume the iteration (to avoid returning duplicate Key-Value pairs)
 from the original but is shortened by setting the startKey of the original Range to the Key last returned by the Scan,
 non-inclusive.
 
-==== `seek`'ing backwards
+### `seek`'ing backwards
 
 The ability for an Iterator to "skip over" large blocks of Key-Value pairs is a major tenet behind Iterators.
 By `seek`'ing when it is known that there is a collection of Key-Value pairs which can be ignored can
@@ -351,7 +336,7 @@ Thus, `seek`'s should always be thought of as making "forward progress" in the v
 `Range` should always retain the original `endKey` (and `endKey` inclusivity) of the last `Range` seen by your
 Iterator's implementation of seek.
 
-==== Take caution in constructing new data in an Iterator
+### Take caution in constructing new data in an Iterator
 
 Implementations of Iterator might be tempted to open BatchWriters inside of an Iterator as a means
 to implement triggers for writing additional data outside of their client application. The lifecycle of an Iterator
@@ -371,16 +356,16 @@ of Key-Value pairs back into a single Key-Value pair.
 Any other situation is likely not guaranteed to ensure that the caller (a Scan or a Compaction) will
 always see all intended data that is generated.
 
-=== Final things to remember
+## Final things to remember
 
 Some simple recommendations/points to keep in mind:
 
-==== Method call order
+### Method call order
 
 On an instance of an Iterator: `init` is always called before `seek`, `seek` is always called before `hasTop`,
 `getTopKey` and `getTopValue` will not be called if `hasTop` returns false.
 
-==== Teardown
+### Teardown
 
 As mentioned, instance of Iterators may be torn down inside of the server transparently. When a complex
 collection of iterators is performing some advanced functionality, they will not be torn down until a Key-Value
@@ -389,7 +374,7 @@ to the caller). Being torn-down is equivalent to a new instance of the Iterator 
 being called on the new instance with the old instance provided as the argument to `deepCopy`. References
 to the old instance are removed and the object is lazily garbage collected by the JVM.
 
-=== Compaction-time Iterators
+## Compaction-time Iterators
 
 When Iterators are configured to run during compactions, at the `minc` or `majc` scope, these Iterators sometimes need
 to make different assertions than those who only operate at scan time. Iterators won't see the delete entries; however,
