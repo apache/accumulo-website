@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Tracing</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" role="alert">This documentation is for an unreleased version of Apache Accumulo that is currently under development! Check out the <a href="/1.8/accumulo_user_manual.html">documentation for the latest release</a>.</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/installation">Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Tracing</p>
+    
+    
+    <h1>Tracing</h1>
+    
+    <p>It can be difficult to determine why some operations are taking longer
+than expected. For example, you may be looking up items with very low
+latency, but sometimes the lookups take much longer. Determining the
+cause of the delay is difficult because the system is distributed, and
+the typical lookup is fast.</p>
+
+<p>Accumulo has been instrumented to record the time that various
+operations take when tracing is turned on. The fact that tracing is
+enabled follows all the requests made on behalf of the user throughout
+the distributed infrastructure of accumulo, and across all threads of
+execution.</p>
+
+<p>These time spans will be inserted into the <code class="highlighter-rouge">trace</code> table in
+Accumulo. You can browse recent traces from the Accumulo monitor
+page. You can also read the <code class="highlighter-rouge">trace</code> table directly like any
+other table.</p>
+
+<p>The design of Accumulo’s distributed tracing follows that of <a href="http://research.google.com/pubs/pub36356.html">Google’s Dapper</a>.</p>
+
+<h2 id="tracers">Tracers</h2>
+
+<p>To collect traces, Accumulo needs at least one tracer server running. If you are using <code class="highlighter-rouge">accumulo-cluster</code> to start your cluster,
+configure your server in <code class="highlighter-rouge">conf/tracers</code>. The server collects traces from clients and writes them to the <code class="highlighter-rouge">trace</code> table. The Accumulo
+user that the tracer connects to Accumulo with can be configured with the following properties (see the <a href="/docs/unreleased/administration/configuration-management">configuration management</a> 
+page for setting Accumulo server properties)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>trace.user
+trace.token.property.password
+</code></pre>
+</div>
+
+<p>Other tracer configuration properties include</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>trace.port.client - port tracer listens on
+trace.table - table tracer writes to
+trace.zookeeper.path - zookeeper path where tracers register
+</code></pre>
+</div>
+
+<p>The zookeeper path is configured to /tracers by default.  If
+multiple Accumulo instances are sharing the same ZooKeeper
+quorum, take care to configure Accumulo with unique values for
+this property.</p>
+
+<h2 id="configuring-tracing">Configuring Tracing</h2>
+
+<p>Traces are collected via SpanReceivers. The default SpanReceiver
+configured is org.apache.accumulo.core.trace.ZooTraceClient, which
+sends spans to an Accumulo Tracer process, as discussed in the
+previous section. This default can be changed to a different span
+receiver, or additional span receivers can be added in a
+comma-separated list, by modifying the property</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>trace.span.receivers
+</code></pre>
+</div>
+
+<p>Individual span receivers may require their own configuration
+parameters, which are grouped under the trace.span.receiver.*
+prefix.  ZooTraceClient uses the following properties.  The first
+three properties are populated from other Accumulo properties,
+while the remaining ones should be prefixed with
+trace.span.receiver. when set in the Accumulo configuration.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tracer.zookeeper.host - populated from instance.zookeepers
+tracer.zookeeper.timeout - populated from instance.zookeeper.timeout
+tracer.zookeeper.path - populated from trace.zookeeper.path
+tracer.send.timer.millis - timer for flushing send queue (in ms, default 1000)
+tracer.queue.size - max queue size (default 5000)
+tracer.span.min.ms - minimum span length to store (in ms, default 1)
+</code></pre>
+</div>
+
+<p>Note that to configure an Accumulo client for tracing, including
+the Accumulo shell, the client configuration must be given the same
+trace.span.receivers, trace.span.receiver.*, and trace.zookeeper.path
+properties as the servers have.</p>
+
+<p>Hadoop can also be configured to send traces to Accumulo, as of
+Hadoop 2.6.0, by setting properties in Hadoop’s core-site.xml
+file.  Instead of using the trace.span.receiver.* prefix, Hadoop
+uses hadoop.htrace.*.  The Hadoop configuration does not have
+access to Accumulo’s properties, so the
+hadoop.htrace.tracer.zookeeper.host property must be specified.
+The zookeeper timeout defaults to 30000 (30 seconds), and the
+zookeeper path defaults to /tracers.  An example of configuring
+Hadoop to send traces to ZooTraceClient is</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>hadoop.htrace.spanreceiver.classes<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>org.apache.accumulo.core.trace.ZooTraceClient<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>hadoop.htrace.tracer.zookeeper.host<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>zookeeperHost:2181<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>hadoop.htrace.tracer.zookeeper.path<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>/tracers<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>hadoop.htrace.tracer.span.min.ms<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>1<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>The accumulo-core, accumulo-tracer, accumulo-fate and libthrift
+jars must also be placed on Hadoop’s classpath.</p>
+
+<h3 id="adding-additional-spanreceivers">Adding additional SpanReceivers</h3>
+
+<p><a href="https://github.com/openzipkin/zipkin">Zipkin</a> has a SpanReceiver supported by HTrace and popularized by Twitter
+that users looking for a more graphical trace display may opt to use.
+The following steps configure Accumulo to use <code class="highlighter-rouge">org.apache.htrace.impl.ZipkinSpanReceiver</code>
+in addition to the Accumulo’s default ZooTraceClient, and they serve as a template
+for adding any SpanReceiver to Accumulo:</p>
+
+<ol>
+  <li>
+    <p>Add the Jar containing the ZipkinSpanReceiver class file to the
+<code class="highlighter-rouge">lib/</code> directory.  It is critical that the Jar is placed in
+<code class="highlighter-rouge">lib/</code> and NOT in <code class="highlighter-rouge">lib/ext/</code> so that the new SpanReceiver class
+is visible to the same class loader of htrace-core.</p>
+  </li>
+  <li>
+    <p>Add the following to <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &lt;property&gt;
+   &lt;name&gt;trace.span.receivers&lt;/name&gt;
+   &lt;value&gt;org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver&lt;/value&gt;
+ &lt;/property&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Restart your Accumulo tablet servers.</p>
+  </li>
+</ol>
+
+<p>In order to use ZipkinSpanReceiver from a client as well as the Accumulo server,</p>
+
+<ol>
+  <li>
+    <p>Ensure your client can see the ZipkinSpanReceiver class at runtime. For Maven projects,
+this is easily done by adding to your client’s pom.xml (taking care to specify a good version)</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &lt;dependency&gt;
+   &lt;groupId&gt;org.apache.htrace&lt;/groupId&gt;
+   &lt;artifactId&gt;htrace-zipkin&lt;/artifactId&gt;
+   &lt;version&gt;3.1.0-incubating&lt;/version&gt;
+   &lt;scope&gt;runtime&lt;/scope&gt;
+ &lt;/dependency&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Add the following to your client configuration.</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Instrument your client as in the next section.</p>
+  </li>
+</ol>
+
+<p>Your SpanReceiver may require additional properties, and if so these should likewise
+be placed in the ClientConfiguration (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo-site.xml</code>.
+Two such properties for ZipkinSpanReceiver, listed with their default values, are</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-hostname<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>localhost<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-port<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>9410<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="instrumenting-a-client">Instrumenting a Client</h3>
+
+<p>Tracing can be used to measure a client operation, such as a scan, as
+the operation traverses the distributed system. To enable tracing for
+your application call</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.accumulo.core.trace.DistributedTrace</span><span class="o">;</span>
+<span class="o">...</span>
+<span class="n">DistributedTrace</span><span class="o">.</span><span class="na">enable</span><span class="o">(</span><span class="n">hostname</span><span class="o">,</span> <span class="s">"myApplication"</span><span class="o">);</span>
+<span class="c1">// do some tracing</span>
+<span class="o">...</span>
+<span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>Once tracing has been enabled, a client can wrap an operation in a trace.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.Sampler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.htrace.Trace</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.htrace.TraceScope</span><span class="o">;</span>
+<span class="o">...</span>
+<span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Scan"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
+<span class="n">BatchScanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(...);</span>
+<span class="c1">// Configure your scanner</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">Entry</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
+<span class="o">}</span>
+<span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>The user can create additional Spans within a Trace.</p>
+
+<p>The sampler (such as <code class="highlighter-rouge">Sampler.ALWAYS</code>) for the trace should only be specified with a top-level span,
+and subsequent spans will be collected depending on whether that first span was sampled.
+Don’t forget to specify a Sampler at the top-level span
+because the default Sampler only samples when part of a pre-existing trace,
+which will never occur in a client that never specifies a Sampler.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Update"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
+<span class="o">...</span>
+<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
+<span class="o">...</span>
+<span class="n">readScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="o">...</span>
+<span class="n">TraceScope</span> <span class="n">writeScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Write"</span><span class="o">);</span>
+<span class="o">...</span>
+<span class="n">writeScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>Like Dapper, Accumulo tracing supports user defined annotations to associate additional data with a Trace.
+Checking whether currently tracing is necessary when using a sampler other than Sampler.ALWAYS.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="o">...</span>
+<span class="kt">int</span> <span class="n">numberOfEntriesRead</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
+<span class="c1">// Do the read, update the counter</span>
+<span class="o">...</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">Trace</span><span class="o">.</span><span class="na">isTracing</span><span class="o">)</span>
+  <span class="n">readScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addKVAnnotation</span><span class="o">(</span><span class="s">"Number of Entries Read"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">),</span>
+      <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">numberOfEntriesRead</span><span class="o">).</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">));</span>
+</code></pre>
+</div>
+
+<p>It is also possible to add timeline annotations to your spans.
+This associates a string with a given timestamp between the start and stop times for a span.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="o">...</span>
+<span class="n">writeScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addTimelineAnnotation</span><span class="o">(</span><span class="s">"Initiating Flush"</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<p>Some client operations may have a high volume within your
+application. As such, you may wish to only sample a percentage of
+operations for tracing. As seen below, the CountSampler can be used to
+help enable tracing for 1-in-1000 operations</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.impl.CountSampler</span><span class="o">;</span>
+<span class="o">...</span>
+<span class="n">Sampler</span> <span class="n">sampler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountSampler</span><span class="o">(</span><span class="n">HTraceConfiguration</span><span class="o">.</span><span class="na">fromMap</span><span class="o">(</span>
+    <span class="n">Collections</span><span class="o">.</span><span class="na">singletonMap</span><span class="o">(</span><span class="n">CountSampler</span><span class="o">.</span><span class="na">SAMPLER_FREQUENCY_CONF_KEY</span><span class="o">,</span> <span class="s">"1000"</span><span class="o">)));</span>
+<span class="o">...</span>
+<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">,</span> <span class="n">sampler</span><span class="o">);</span>
+<span class="o">...</span>
+<span class="n">readScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>Remember to close all spans and disable tracing when finished.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<h2 id="viewing-collected-traces">Viewing Collected Traces</h2>
+
+<p>To view collected traces, use the “Recent Traces” link on the Monitor
+UI. You can also programmatically access and print traces using the
+<code class="highlighter-rouge">TraceDump</code> class.</p>
+
+<h3 id="trace-table-format">Trace Table Format</h3>
+
+<p>This section is for developers looking to use data recorded in the trace table
+directly, above and beyond the default services of the Accumulo monitor.
+Please note the trace table format and its supporting classes
+are not in the public API and may be subject to change in future versions.</p>
+
+<p>Each span received by a tracer’s ZooTraceClient is recorded in the trace table
+in the form of three entries: span entries, index entries, and start time entries.
+Span and start time entries record full span information,
+whereas index entries provide indexing into span information
+useful for quickly finding spans by type or start time.</p>
+
+<p>Each entry is illustrated by a description and sample of data.
+In the description, a token in quotes is a String literal,
+whereas other other tokens are span variables.
+Parentheses group parts together, to distinguish colon characters inside the
+column family or qualifier from the colon that separates column family and qualifier.
+We use the format <code class="highlighter-rouge">row columnFamily:columnQualifier columnVisibility    value</code>
+(omitting timestamp which records the time an entry is written to the trace table).</p>
+
+<p>Span entries take the following form:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
+63b318de80de96d1 span:4b8f66077df89de1:3778c6739afe4e1 []    %18;%09;...
+</code></pre>
+</div>
+
+<p>The parentSpanId is “” for the root span of a trace.
+The spanBinaryEncoding is a compact Apache Thrift encoding of the original Span object.
+This allows clients (and the Accumulo monitor) to recover all the details of the original Span
+at a later time, by scanning the trace table and decoding the value of span entries
+via <code class="highlighter-rouge">TraceFormatter.getRemoteSpan(entry)</code>.</p>
+
+<p>The trace table has a formatter class by default (org.apache.accumulo.tracer.TraceFormatter)
+that changes how span entries appear from the Accumulo shell.
+Normal scans to the trace table do not use this formatter representation;
+it exists only to make span entries easier to view inside the Accumulo shell.</p>
+
+<p>Index entries take the following form:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"idx":service:startTime description:sender  []    traceId:elapsedTime
+idx:tserver:14f3828f58b startScan:localhost []    63b318de80de96d1:1
+</code></pre>
+</div>
+
+<p>The service and sender are set by the first call of each Accumulo process
+(and instrumented client processes) to <code class="highlighter-rouge">DistributedTrace.enable(...)</code>
+(the sender is autodetected if not specified).
+The description is specified in each span.
+Start time and the elapsed time (start - stop, 1 millisecond in the example above)
+are recorded in milliseconds as long values serialized to a string in hex.</p>
+
+<p>Start time entries take the following form:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"start":startTime "id":traceId        []    spanBinaryEncoding
+start:14f3828a351 id:63b318de80de96d1 []    %18;%09;...
+</code></pre>
+</div>
+
+<p>The following classes may be run while Accumulo is running to provide insight into trace statistics. These require
+accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (<code class="highlighter-rouge">lib/ext</code> is fine).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
+$ accumulo org.apache.accumulo.tracer.TraceDump -u username -p password -i instancename -r
+</code></pre>
+</div>
+
+<h3 id="tracing-from-the-shell">Tracing from the Shell</h3>
+<p>You can enable tracing for operations run from the shell by using the
+<code class="highlighter-rouge">trace on</code> and <code class="highlighter-rouge">trace off</code> commands.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@test test&gt; trace on
+
+root@test test&gt; scan
+a b:c []    d
+
+root@test test&gt; trace off
+Waiting for trace information
+Waiting for trace information
+Trace started at 2013/08/26 13:24:08.332
+Time  Start  Service@Location       Name
+ 3628+0      shell@localhost shell:root
+    8+1690     shell@localhost scan
+    7+1691       shell@localhost scan:location
+    6+1692         tserver@localhost startScan
+    5+1692           tserver@localhost tablet read ahead 6
+</code></pre>
+</div>
+
+
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

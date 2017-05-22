@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - SSL</title>
+<title>Accumulo Documentation - System Metadata Tables</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -231,12 +231,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
                   Administration
                 </a>
               </h4>
             </div>
-            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -285,12 +285,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
                   Troubleshooting
                 </a>
               </h4>
             </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsetroubleshooting" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -312,135 +312,145 @@
   </div>
   <div class="col-md-9">
     
-    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; SSL</p>
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Troubleshooting &nbsp;&gt;&gt;&nbsp; System Metadata Tables</p>
     
     
-    <h1>SSL</h1>
+    <h1>System Metadata Tables</h1>
     
-    <p>Accumulo, through Thrift’s TSSLTransport, provides the ability to encrypt
-wire communication between Accumulo servers and clients using secure
-sockets layer (SSL). SSL certifcates signed by the same certificate authority
-control the “circle of trust” in which a secure connection can be established.
-Typically, each host running Accumulo processes would be given a certificate
-which identifies itself.</p>
+    <p>Accumulo tracks information about tables in metadata tables. The metadata for
+most tables is contained within the metadata table in the accumulo namespace,
+while metadata for that table is contained in the root table in the accumulo
+namespace. The root table is composed of a single tablet, which does not
+split, so it is also called the root tablet. Information about the root
+table, such as its location and write-ahead logs, are stored in ZooKeeper.</p>
 
-<p>Clients can optionally also be given a certificate, when client-auth is enabled,
-which prevents unwanted clients from accessing the system. The SSL integration
-presently provides no authentication support within Accumulo (an Accumulo username
-and password are still required) and is only used to establish a means for
-secure communication.</p>
+<p>Let’s create a table and put some data into it:</p>
 
-<h2 id="server-configuration">Server configuration</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>shell&gt; createtable test
 
-<p>As previously mentioned, the circle of trust is established by the certificate
-authority which created the certificates in use. Because of the tight coupling
-of certificate generation with an organization’s policies, Accumulo does not
-provide a method in which to automatically create the necessary SSL components.</p>
+shell&gt; tables -l
+accumulo.metadata    =&gt;        !0
+accumulo.root        =&gt;        `r
+test                 =&gt;         2
+trace                =&gt;         1
 
-<p>Administrators without existing infrastructure built on SSL are encourage to
-use OpenSSL and the <code class="highlighter-rouge">keytool</code> command. An example of these commands are
-included in a section below. Accumulo servers require a certificate and keystore,
-in the form of Java KeyStores, to enable SSL. The following configuration assumes
-these files already exist.</p>
+shell&gt; insert a b c d
 
-<p>In <code class="highlighter-rouge">accumulo-site.xml</code>, the following properties are required:</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.keyStore</strong>=<em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.keyStorePassword</strong>=<em>The password for the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStore</strong>=<em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStorePassword</strong>=<em>The password for the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>instance.rpc.ssl.enabled</strong>=<em>true</em></li>
-</ul>
-
-<p>Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
-<code class="highlighter-rouge">instance.rpc.ssl.clientAuth=true</code> in <code class="highlighter-rouge">accumulo-site.xml</code>.
-This requires that each client has access to  valid certificate to set up a secure connection
-to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
-their own certificate.</p>
-
-<h2 id="client-configuration">Client configuration</h2>
-
-<p>To establish a connection to Accumulo servers, each client must also have
-special configuration. This is typically accomplished through the use of
-the client configuration file whose default location is <code class="highlighter-rouge">~/.accumulo/config</code>.</p>
-
-<p>The following properties must be set to connect to an Accumulo instance using SSL:</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.trustStore</strong>=<em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStorePassword</strong>=<em>The password for the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>instance.rpc.ssl.enabled</strong>=<em>true</em></li>
-</ul>
-
-<p>If two-way SSL if enabled (<code class="highlighter-rouge">instance.rpc.ssl.clientAuth=true</code>) for the instance, the client must also define
-their own certificate and enable client authenticate as well.</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.keyStore</strong>=<em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.keyStorePassword</strong>=<em>The password for the keystore containing the server’s certificate</em></li>
-  <li><strong>instance.rpc.ssl.clientAuth</strong>=<em>true</em></li>
-</ul>
-
-<h2 id="generating-ssl-material-using-openssl">Generating SSL material using OpenSSL</h2>
-
-<p>The following is included as an example for generating your own SSL material (certificate authority and server/client
-certificates) using OpenSSL and Java’s KeyTool command.</p>
-
-<h3 id="generate-a-certificate-authority">Generate a certificate authority</h3>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a private key</span>
-openssl genrsa -des3 -out root.key 4096
-
-<span class="c"># Create a certificate request using the private key</span>
-openssl req -x509 -new -key root.key -days 365 -out root.pem
-
-<span class="c"># Generate a Base64-encoded version of the PEM just created</span>
-openssl x509 -outform der -in root.pem -out root.der
-
-<span class="c"># Import the key into a Java KeyStore</span>
-keytool -import -alias root-key -keystore truststore.jks -file root.der
-
-<span class="c"># Remove the DER formatted key file (as we don't need it anymore)</span>
-rm root.der
+shell&gt; flush -w
 </code></pre>
 </div>
 
-<p>The <code class="highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
+<p>Now let’s take a look at the metadata for this table:</p>
 
-<h3 id="generate-a-certificatekeystore-per-host">Generate a certificate/keystore per host</h3>
-
-<p>It’s common that each host in the instance is issued its own certificate (notably to ensure that revocation procedures
-can be easily followed). The following steps can be taken for each host.</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create the private key for our server</span>
-openssl genrsa -out server.key 4096
-
-<span class="c"># Generate a certificate signing request (CSR) with our private key</span>
-openssl req -new -key server.key -out server.csr
-
-<span class="c"># Use the CSR and the CA to create a certificate for the server (a reply to the CSR)</span>
-openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial <span class="se">\</span>
-    -out server.crt -days 365
-
-<span class="c"># Use the certificate and the private key for our server to create PKCS12 file</span>
-openssl pkcs12 -export -in server.crt -inkey server.key -certfile server.crt <span class="se">\</span>
-    -name <span class="s1">'server-key'</span> -out server.p12
-
-<span class="c"># Create a Java KeyStore for the server using the PKCS12 file (private key)</span>
-keytool -importkeystore -srckeystore server.p12 -srcstoretype pkcs12 -destkeystore <span class="se">\</span>
-    server.jks -deststoretype JKS
-
-<span class="c"># Remove the PKCS12 file as we don't need it</span>
-rm server.p12
-
-<span class="c"># Import the CA-signed certificate to the keystore</span>
-keytool -import -trustcacerts -alias server-crt -file server.crt -keystore server.jks
+<div class="highlighter-rouge"><pre class="highlight"><code>shell&gt; table accumulo.metadata
+shell&gt; scan -b 3; -e 3&lt;
+3&lt; file:/default_tablet/F000009y.rf []    186,1
+3&lt; last:13fe86cd27101e5 []    127.0.0.1:9997
+3&lt; loc:13fe86cd27101e5 []    127.0.0.1:9997
+3&lt; log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995|6
+3&lt; srv:dir []    /default_tablet
+3&lt; srv:flush []    1
+3&lt; srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001$13fe86cd27101e5
+3&lt; srv:time []    M1373998392323
+3&lt; ~tab:~pr []    \x00
 </code></pre>
 </div>
 
-<p>The <code class="highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
-methods are equivalent whether the certficate is generate for an Accumulo server or a client.</p>
+<p>Let’s decode this little session:</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">scan -b 3; -e 3&lt;</code> -   Every tablet gets its own row. Every row starts with the table id followed by
+  <code class="highlighter-rouge">;</code> or <code class="highlighter-rouge">&lt;</code>, and followed by the end row split point for that tablet.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">file:/default_tablet/F000009y.rf [] 186,1</code> -
+  File entry for this tablet.  This tablet contains a single file reference. The
+  file is <code class="highlighter-rouge">/accumulo/tables/3/default_tablet/F000009y.rf</code>.  It contains 1
+  key/value pair, and is 186 bytes long.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">last:13fe86cd27101e5 []    127.0.0.1:9997</code> -
+  Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
+  unique tablet server lock data was `13fe86cd27101e5+. The default balancer
+  will tend to put tablets back on their last location.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">loc:13fe86cd27101e5 []    127.0.0.1:9997</code> -
+  The current location of this tablet.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0. ...</code> -
+  This tablet has a reference to a single write-ahead log. This file can be found in
+  <code class="highlighter-rouge">/accumulo/wal/127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995</code>. The value
+  of this entry could refer to multiple files. This tablet’s data is encoded as
+  <code class="highlighter-rouge">6</code> within the log.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">srv:dir []    /default_tablet</code> -
+  Files written for this tablet will be placed into
+  <code class="highlighter-rouge">/accumulo/tables/3/default_tablet</code>.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">srv:flush []    1</code> -
+  Flush id.  This table has successfully completed the flush with the id of +1+.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5</code> -
+  This is the lock information for the tablet holding the present lock.  This
+  information is checked against zookeeper whenever this is updated, which
+  prevents a metadata update from a tablet server that no longer holds its
+  lock.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">srv:time []    M1373998392323</code> -
+  This indicates the time time type (+M+ for milliseconds or +L+ for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server’s system time.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">~tab:~pr []    \x00</code> -
+  The end-row marker for the previous tablet (prev-row).  The first byte
+  indicates the presence of a prev-row.  This tablet has the range (-inf, `inf),
+  so it has no prev-row (or end row).</p>
+  </li>
+</ul>
+
+<p>Besides these columns, you may see:</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">rowId future:zooKeeperID location</code> -
+  Tablet has been assigned to a tablet, but not yet loaded.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">~del:filename</code> -
+  When a tablet server is done use a file, it will create a delete marker in the appropriate metadata table, unassociated with any tablet.  The garbage collector will remove the marker, and the file, when no other reference to the file exists.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">~blip:txid</code> -
+  Bulk-Load In Progress marker.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">rowId loaded:filename</code> -
+  A file has been bulk-loaded into this tablet, however the bulk load has not yet completed on other tablets, so this marker prevents the file from being loaded multiple times.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">rowId !cloned</code> -
+  A marker that indicates that this tablet has been successfully cloned.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">rowId splitRatio:ratio</code> -
+  A marker that indicates a split is in progress, and the files are being split at the given ratio.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">rowId chopped</code> -
+  A marker that indicates that the files in the tablet do not contain keys outside the range of the tablet.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">rowId scan</code> -
+  A marker that prevents a file from being removed while there are still active scans using it.</p>
+  </li>
+</ul>
+
 
   </div>
 </div>

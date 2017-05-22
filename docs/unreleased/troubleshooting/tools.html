@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - SSL</title>
+<title>Accumulo Documentation - Troubleshooting Tools</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -231,12 +231,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
                   Administration
                 </a>
               </h4>
             </div>
-            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -285,12 +285,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
                   Troubleshooting
                 </a>
               </h4>
             </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsetroubleshooting" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -312,135 +312,160 @@
   </div>
   <div class="col-md-9">
     
-    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; SSL</p>
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Troubleshooting &nbsp;&gt;&gt;&nbsp; Troubleshooting Tools</p>
     
     
-    <h1>SSL</h1>
+    <h1>Troubleshooting Tools</h1>
     
-    <p>Accumulo, through Thrift’s TSSLTransport, provides the ability to encrypt
-wire communication between Accumulo servers and clients using secure
-sockets layer (SSL). SSL certifcates signed by the same certificate authority
-control the “circle of trust” in which a secure connection can be established.
-Typically, each host running Accumulo processes would be given a certificate
-which identifies itself.</p>
+    <p>The <code class="highlighter-rouge">accumulo</code> command can be used to run classes from the command line.</p>
 
-<p>Clients can optionally also be given a certificate, when client-auth is enabled,
-which prevents unwanted clients from accessing the system. The SSL integration
-presently provides no authentication support within Accumulo (an Accumulo username
-and password are still required) and is only used to establish a means for
-secure communication.</p>
+<h2 id="printinfo">PrintInfo</h2>
 
-<h2 id="server-configuration">Server configuration</h2>
+<p>The <code class="highlighter-rouge">PrintInfo</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
 
-<p>As previously mentioned, the circle of trust is established by the certificate
-authority which created the certificates in use. Because of the tight coupling
-of certificate generation with an organization’s policies, Accumulo does not
-provide a method in which to automatically create the necessary SSL components.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/1/default_tablet/A000000n.rf
+2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
+Locality group         : &lt;DEFAULT&gt;
+        Start block          : 0
+        Num   blocks         : 1
+        Index level 0        : 62 bytes  1 blocks
+        First key            : 288be9ab4052fe9e span:34078a86a723e5d3:3da450f02108ced5 [] 1373373521623 false
+        Last key             : start:13fc375709e id:615f5ee2dd822d7a [] 1373373821660 false
+        Num entries          : 466
+        Column families      : [waitForCommits, start, md major compactor 1, md major compactor 2, md major compactor 3,
+                                 bringOnline, prep, md major compactor 4, md major compactor 5, md root major compactor 3,
+                                 minorCompaction, wal, compactFiles, md root major compactor 4, md root major compactor 1,
+                                 md root major compactor 2, compact, id, client:update, span, update, commit, write,
+                                 majorCompaction]
 
-<p>Administrators without existing infrastructure built on SSL are encourage to
-use OpenSSL and the <code class="highlighter-rouge">keytool</code> command. An example of these commands are
-included in a section below. Accumulo servers require a certificate and keystore,
-in the form of Java KeyStores, to enable SSL. The following configuration assumes
-these files already exist.</p>
+Meta block     : BCFile.index
+      Raw size             : 4 bytes
+      Compressed size      : 12 bytes
+      Compression type     : gz
 
-<p>In <code class="highlighter-rouge">accumulo-site.xml</code>, the following properties are required:</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.keyStore</strong>=<em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.keyStorePassword</strong>=<em>The password for the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStore</strong>=<em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStorePassword</strong>=<em>The password for the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>instance.rpc.ssl.enabled</strong>=<em>true</em></li>
-</ul>
-
-<p>Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
-<code class="highlighter-rouge">instance.rpc.ssl.clientAuth=true</code> in <code class="highlighter-rouge">accumulo-site.xml</code>.
-This requires that each client has access to  valid certificate to set up a secure connection
-to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
-their own certificate.</p>
-
-<h2 id="client-configuration">Client configuration</h2>
-
-<p>To establish a connection to Accumulo servers, each client must also have
-special configuration. This is typically accomplished through the use of
-the client configuration file whose default location is <code class="highlighter-rouge">~/.accumulo/config</code>.</p>
-
-<p>The following properties must be set to connect to an Accumulo instance using SSL:</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.trustStore</strong>=<em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>rpc.javax.net.ssl.trustStorePassword</strong>=<em>The password for the keystore containing the certificate authority’s public key</em></li>
-  <li><strong>instance.rpc.ssl.enabled</strong>=<em>true</em></li>
-</ul>
-
-<p>If two-way SSL if enabled (<code class="highlighter-rouge">instance.rpc.ssl.clientAuth=true</code>) for the instance, the client must also define
-their own certificate and enable client authenticate as well.</p>
-
-<ul>
-  <li><strong>rpc.javax.net.ssl.keyStore</strong>=<em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
-  <li><strong>rpc.javax.net.ssl.keyStorePassword</strong>=<em>The password for the keystore containing the server’s certificate</em></li>
-  <li><strong>instance.rpc.ssl.clientAuth</strong>=<em>true</em></li>
-</ul>
-
-<h2 id="generating-ssl-material-using-openssl">Generating SSL material using OpenSSL</h2>
-
-<p>The following is included as an example for generating your own SSL material (certificate authority and server/client
-certificates) using OpenSSL and Java’s KeyTool command.</p>
-
-<h3 id="generate-a-certificate-authority">Generate a certificate authority</h3>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a private key</span>
-openssl genrsa -des3 -out root.key 4096
-
-<span class="c"># Create a certificate request using the private key</span>
-openssl req -x509 -new -key root.key -days 365 -out root.pem
-
-<span class="c"># Generate a Base64-encoded version of the PEM just created</span>
-openssl x509 -outform der -in root.pem -out root.der
-
-<span class="c"># Import the key into a Java KeyStore</span>
-keytool -import -alias root-key -keystore truststore.jks -file root.der
-
-<span class="c"># Remove the DER formatted key file (as we don't need it anymore)</span>
-rm root.der
+Meta block     : RFile.index
+      Raw size             : 780 bytes
+      Compressed size      : 344 bytes
+      Compression type     : gz
 </code></pre>
 </div>
 
-<p>The <code class="highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
+<p>When trying to diagnose problems related to key size, the <code class="highlighter-rouge">PrintInfo</code> tool can provide a histogram of the individual key sizes:</p>
 
-<h3 id="generate-a-certificatekeystore-per-host">Generate a certificate/keystore per host</h3>
-
-<p>It’s common that each host in the instance is issued its own certificate (notably to ensure that revocation procedures
-can be easily followed). The following steps can be taken for each host.</p>
-
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create the private key for our server</span>
-openssl genrsa -out server.key 4096
-
-<span class="c"># Generate a certificate signing request (CSR) with our private key</span>
-openssl req -new -key server.key -out server.csr
-
-<span class="c"># Use the CSR and the CA to create a certificate for the server (a reply to the CSR)</span>
-openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial <span class="se">\</span>
-    -out server.crt -days 365
-
-<span class="c"># Use the certificate and the private key for our server to create PKCS12 file</span>
-openssl pkcs12 -export -in server.crt -inkey server.key -certfile server.crt <span class="se">\</span>
-    -name <span class="s1">'server-key'</span> -out server.p12
-
-<span class="c"># Create a Java KeyStore for the server using the PKCS12 file (private key)</span>
-keytool -importkeystore -srckeystore server.p12 -srcstoretype pkcs12 -destkeystore <span class="se">\</span>
-    server.jks -deststoretype JKS
-
-<span class="c"># Remove the PKCS12 file as we don't need it</span>
-rm server.p12
-
-<span class="c"># Import the CA-signed certificate to the keystore</span>
-keytool -import -trustcacerts -alias server-crt -file server.crt -keystore server.jks
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+...
+Up to size      count      %-age
+         10 :        222  28.23%
+        100 :        244  71.77%
+       1000 :          0   0.00%
+      10000 :          0   0.00%
+     100000 :          0   0.00%
+    1000000 :          0   0.00%
+   10000000 :          0   0.00%
+  100000000 :          0   0.00%
+ 1000000000 :          0   0.00%
+10000000000 :          0   0.00%
 </code></pre>
 </div>
 
-<p>The <code class="highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
-methods are equivalent whether the certficate is generate for an Accumulo server or a client.</p>
+<p>Likewise, <code class="highlighter-rouge">PrintInfo</code> will dump the key-value pairs and show you the contents of the RFile:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --dump /accumulo/tables/1/default_tablet/A000000n.rf
+row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
+...
+</code></pre>
+</div>
+
+<h2 id="getmasterstats">GetMasterStats</h2>
+
+<p>The <code class="highlighter-rouge">GetMasterStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
+ OS Load Average: 0.27
+</code></pre>
+</div>
+
+<h2 id="findofflinetablets">FindOfflineTablets</h2>
+
+<p>If the Accumulo monitor shows an offline tablet, use <code class="highlighter-rouge">FindOfflineTablets</code> to find out which
+tablet it is.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.FindOfflineTablets
+2&lt;&lt;@(null,null,localhost:9997) is UNASSIGNED  #walogs:2
+</code></pre>
+</div>
+
+<p>Here’s what the output means:</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">2&lt;&lt;</code> -
+  This is the tablet from (-inf, pass:[+]inf) for the
+  table with id 2.  The command <code class="highlighter-rouge">tables -l</code> in the shell will show table ids for
+  tables.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">@(null, null, localhost:9997)</code> -
+  Location information.  The
+  format is <code class="highlighter-rouge">@(assigned, hosted, last)</code>.  In this case, the
+  tablet has not been assigned, is not hosted anywhere, and was once
+  hosted on localhost.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">#walogs:2</code> -
+   The number of write-ahead logs that this tablet requires for recovery.</p>
+  </li>
+</ul>
+
+<p>An unassigned tablet with write-ahead logs is probably waiting for
+logs to be sorted for efficient recovery.</p>
+
+<h2 id="checkformetadataproblems">CheckForMetadataProblems</h2>
+
+<p>The <code class="highlighter-rouge">CheckForMetadataProblems</code> tool can be used to make sure metadata
+tables are up and consistent. It will verify the start/end of
+every tablet matches, and the start and stop for the table is empty:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
+Enter the connection password:
+All is well for table !0
+All is well for table 1
+</code></pre>
+</div>
+
+<h2 id="removeentriesformissingfiles">RemoveEntriesForMissingFiles</h2>
+
+<p>If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove the
+the file reference using <code class="highlighter-rouge">RemoveEntriesForMissingFiles</code>. It will check every file reference
+and ensure that the file exists in HDFS.  Optionally, it will remove the reference:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RemoveEntriesForMissingFiles -u root --password
+Enter the connection password:
+2013-07-16 13:10:57,293 [util.RemoveEntriesForMissingFiles] INFO : File /accumulo/tables/2/default_tablet/F0000005.rf
+ is missing
+2013-07-16 13:10:57,296 [util.RemoveEntriesForMissingFiles] INFO : 1 files of 3 missing
+</code></pre>
+</div>
+
+<h2 id="cleanzookeeper">CleanZookeeper</h2>
+
+<p>If you have entries in zookeeper for old instances that you no longer need, remove them using CleanZookeeper:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CleanZookeeper
+</code></pre>
+</div>
+
+<p>This command will not delete the instance pointed to by the local <code class="highlighter-rouge">accumulo-site.xml</code> file.</p>
+
+<h2 id="dumpzookeeper--restorezookeeper">DumpZookeeper &amp; RestoreZookeeper</h2>
+
+<p>If you would like to backup, or otherwise examine the contents of Zookeeper, there are commands to dump and load to/from XML.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper --root /accumulo &gt;dump.xml
+$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
+</code></pre>
+</div>
+
 
   </div>
 </div>
