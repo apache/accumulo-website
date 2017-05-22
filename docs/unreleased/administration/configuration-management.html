@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Configuration Management</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" role="alert">This documentation is for an unreleased version of Apache Accumulo that is currently under development! Check out the <a href="/docs-1.8/">documentation for the latest release</a>.</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/overview">Overview</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/overview">Overview</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Configuration Management</p>
+    
+    
+    <h1>Configuration Management</h1>
+    
+    <h2 id="configuration-overview">Configuration Overview</h2>
+
+<p>All accumulo properties have a default value in the source code.  Properties can also be set
+in accumulo-site.xml and in zookeeper on per-table or system-wide basis.  If properties are set in more than one location,
+accumulo will choose the property with the highest precedence.  This order of precedence is described
+below (from highest to lowest):</p>
+
+<h3 id="zookeeper-table-properties">Zookeeper table properties</h3>
+
+<p>Table properties are applied to the entire cluster when set in zookeeper using the accumulo API or shell.  While table properties take precedent over system properties, both will override properties set in accumulo-site.xml</p>
+
+<p>Table properties consist of all properties with the table.* prefix.  Table properties are configured on a per-table basis using the following shell command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
+</code></pre>
+</div>
+
+<h3 id="zookeeper-system-properties">Zookeeper system properties</h3>
+
+<p>System properties are applied to the entire cluster when set in zookeeper using the accumulo API or shell.  System properties consist of all properties with a <code class="highlighter-rouge">yes</code> in the <em>Zookeeper Mutable</em> column in the table below.  They are set with the following shell command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>config -s PROPERTY=VALUE
+</code></pre>
+</div>
+
+<p>If a table.* property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).</p>
+
+<p>While most system properties take effect immediately, some require a restart of the process which is indicated in <em>Zookeeper Mutable</em>.</p>
+
+<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+
+<p>Accumulo processes (master, tserver, etc) read their local accumulo-site.xml on start up.  Therefore, changes made to accumulo-site.xml must synced across the cluster and processes must be restarted to apply changes.</p>
+
+<p>Certain properties (indicated by a <code class="highlighter-rouge">no</code> in <em>Zookeeper Mutable</em>) cannot be set in zookeeper and only set in this file.  The accumulo-site.xml also allows you to configure tablet servers with different settings.</p>
+
+<h3 id="default-values">Default Values</h3>
+
+<p>All properties have a default value in the source code.  This value has the lowest precedence and is overridden if set in accumulo-site.xml or zookeeper.</p>
+
+<p>While the default value is usually optimal, there are cases where a change can increase query and ingest performance.</p>
+
+<h3 id="zookeeper-property-considerations">ZooKeeper Property Considerations</h3>
+
+<p>Any properties that are stored in ZooKeeper should consider the limitations of ZooKeeper itself with respect to the
+number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
+are two areas in which there aren’t any fail safes built into the API that can prevent the user from making this mistake.</p>
+
+<p>While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
+into these warnings should be reconsidered.</p>
+
+<h2 id="configuration-in-the-shell">Configuration in the Shell</h2>
+
+<p>The <code class="highlighter-rouge">config</code> command in the shell allows you to view the current system configuration.  You can also use the <code class="highlighter-rouge">-t</code> option to view a table’s configuration as below:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo shell -u root
+Enter current password for 'root'@'accumulo-instance': ******
+
+Shell - Apache Accumulo Interactive Shell
+-
+- version: 2.x.x
+- instance name: accumulo-instance
+- instance id: 4f48fa03-f692-43ce-ae03-94c9ea8b7181
+-
+- type 'help' for a list of available commands
+-
+root@accumulo-instance&gt; config -t foo
+---------+---------------------------------------------+------------------------------------------------------
+SCOPE    | NAME                                        | VALUE
+---------+---------------------------------------------+------------------------------------------------------
+default  | table.balancer ............................ | org.apache.accumulo.server.master.balancer.DefaultLoadBalancer
+default  | table.bloom.enabled ....................... | false
+default  | table.bloom.error.rate .................... | 0.5%
+default  | table.bloom.hash.type ..................... | murmur
+default  | table.bloom.key.functor ................... | org.apache.accumulo.core.file.keyfunctor.RowFunctor
+default  | table.bloom.load.threshold ................ | 1
+default  | table.bloom.size .......................... | 1048576
+default  | table.cache.block.enable .................. | false
+default  | table.cache.index.enable .................. | false
+default  | table.compaction.major.everything.at ...... | 19700101000000GMT
+default  | table.compaction.major.everything.idle .... | 1h
+default  | table.compaction.major.ratio .............. | 1.3
+site     |    @override .............................. | 1.4
+system   |    @override .............................. | 1.5
+table    |    @override .............................. | 1.6
+default  | table.compaction.minor.idle ............... | 5m
+default  | table.compaction.minor.logs.threshold ..... | 3
+default  | table.failures.ignore ..................... | false
+</code></pre>
+</div>
+
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

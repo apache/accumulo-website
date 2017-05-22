@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Iterator Design</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" role="alert">This documentation is for an unreleased version of Apache Accumulo that is currently under development! Check out the <a href="/docs-1.8/">documentation for the latest release</a>.</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="true" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/overview">Overview</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/overview">Overview</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Iterator Design</p>
+    
+    
+    <h1>Iterator Design</h1>
+    
+    <p>Accumulo SortedKeyValueIterators, commonly referred to as Iterators for short, are server-side programming constructs
+that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
+brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
+Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
+in the iteration, Accumulo Iterators must also support the ability to “move” (<code class="highlighter-rouge">seek</code>) to an specified point in the
+iteration (the Accumulo table). Accumulo Iterators are designed to be concatenated together, similar to applying a
+series of transformations to a list of elements. Accumulo Iterators can duplicate their underlying source to create
+multiple “pointers” over the same underlying data (which is extremely powerful since each stream is sorted) or they can
+merge multiple Iterators into a single view. In this sense, a collection of Iterators operating in tandem is close to
+a tree-structure than a list, but there is always a sense of a flow of Key-Value pairs through some Iterators. Iterators
+are not designed to act as triggers nor are they designed to operate outside of the purview of a single table.</p>
+
+<p>Understanding how TabletServers invoke the methods on a SortedKeyValueIterator can be obtuse as the actual code is
+buried within the implementation of the TabletServer; however, it is generally unnecessary to have a strong
+understanding of this as the interface provides clear definitions about what each action each method should take. This
+chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
+pitfalls.</p>
+
+<h2 id="instantiation">Instantiation</h2>
+
+<p>To invoke an Accumulo Iterator inside of the TabletServer, the Iterator class must be on the classpath of every
+TabletServer. For production environments, it is common to place a JAR file which contains the Iterator in
+<code class="highlighter-rouge">lib/</code>.  In development environments, it is convenient to instead place the JAR file in <code class="highlighter-rouge">lib/ext/</code> as JAR files
+in this directory are dynamically reloaded by the TabletServers alleviating the need to restart Accumulo while
+testing an Iterator. Advanced classloader features which enable other types of filesystems and per-table classpath
+configurations (as opposed to process-wide classpaths). These features are not covered here, but elsewhere in the user
+manual.</p>
+
+<p>Accumulo references the Iterator class by name and uses Java reflection to instantiate the Iterator. This means that
+Iterators must have a public no-args constructor.</p>
+
+<h2 id="interface">Interface</h2>
+
+<p>A normal implementation of the SortedKeyValueIterator defines functionality for the following methods:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+
+<span class="kt">boolean</span> <span class="nf">hasTop</span><span class="o">();</span>
+
+<span class="kt">void</span> <span class="nf">next</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+
+<span class="kt">void</span> <span class="nf">seek</span><span class="o">(</span><span class="n">Range</span> <span class="n">range</span><span class="o">,</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">ByteSequence</span><span class="o">&gt;</span> <span class="n">columnFamilies</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">inclusive</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+
+<span class="n">Key</span> <span class="nf">getTopKey</span><span class="o">();</span>
+
+<span class="n">Value</span> <span class="nf">getTopValue</span><span class="o">();</span>
+
+<span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">deepCopy</span><span class="o">(</span><span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<h3 id="init">init</h3>
+
+<p>The <code class="highlighter-rouge">init</code> method is called by the TabletServer after it constructs an instance of the Iterator.  This method should
+clear/reset any internal state in the Iterator and prepare it to process data.  The first argument, the <code class="highlighter-rouge">source</code>, is the
+Iterator “below” this Iterator (where the client is at “top” and the Iterator for files in HDFS are at the “bottom”).
+The “source” Iterator provides the Key-Value pairs which this Iterator will operate upon.</p>
+
+<p>The second argument, a Map of options, is made up of options provided by the user, options set in the table’s
+configuration, and/or options set in the containing namespace’s configuration.
+These options allow for Iterators to dynamically configure themselves on the fly. If no options are used in the current context
+(a Scan or Compaction), the Map will be empty. An example of a configuration item for an Iterator could be a pattern used to filter
+Key-Value pairs in a regular expression Iterator.</p>
+
+<p>The third argument, the <code class="highlighter-rouge">IteratorEnvironment</code>, is a special object which provides information to this Iterator about the
+context in which it was invoked. Commonly, this information is not necessary to inspect. For example, if an Iterator
+knows that it is running in the context of a full-major compaction (reading all of the data) as opposed to a user scan
+(which may strongly limit the number of columns), the Iterator might make different algorithmic decisions in an attempt to
+optimize itself.</p>
+
+<h3 id="seek">seek</h3>
+
+<p>The <code class="highlighter-rouge">seek</code> method is likely the most confusing method on the Iterator interface. The purpose of this method is to
+advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
+the implementation of this method returns some additional processing is performed which may further advance the current
+position past the <code class="highlighter-rouge">startKey</code> of the <code class="highlighter-rouge">Range</code>. This, however, is dependent on the functionality the iterator provides. For
+example, a filtering iterator would consume a number Key-Value pairs which do not meets its criteria before <code class="highlighter-rouge">seek</code>
+returns. The important condition for <code class="highlighter-rouge">seek</code> to meet is that this Iterator should be ready to return the first Key-Value
+pair, or none if no such pair is available, when the method returns. The Key-Value pair would be returned by <code class="highlighter-rouge">getTopKey</code>
+and <code class="highlighter-rouge">getTopValue</code>, respectively, and <code class="highlighter-rouge">hasTop</code> should return a boolean denoting whether or not there is
+a Key-Value pair to return.</p>
+
+<p>The arguments passed to seek are as follows:</p>
+
+<p>The TabletServer first provides a <code class="highlighter-rouge">Range</code>, an object which defines some collection of Accumulo <code class="highlighter-rouge">Key</code>s, which defines the
+Key-Value pairs that this Iterator should return. Each <code class="highlighter-rouge">Range</code> has a <code class="highlighter-rouge">startKey</code> and <code class="highlighter-rouge">endKey</code> with an inclusive flag for
+both. While this Range is often similar to the Range(s) set by the client on a Scanner or BatchScanner, it is not
+guaranteed to be a Range that the client set. Accumulo will split up larger ranges and group them together based on
+Tablet boundaries per TabletServer. Iterators should not attempt to implement any custom logic based on the Range(s)
+provided to <code class="highlighter-rouge">seek</code> and Iterators should not return any Keys that fall outside of the provided Range.</p>
+
+<p>The second argument, a <code class="highlighter-rouge">Collection&lt;ByteSequence&gt;</code>, is the set of column families which should be retained or
+excluded by this Iterator. The third argument, a boolean, defines whether the collection of column families
+should be treated as an inclusion collection (true) or an exclusion collection (false).</p>
+
+<p>It is likely that all implementations of <code class="highlighter-rouge">seek</code> will first make a call to the <code class="highlighter-rouge">seek</code> method on the
+“source” Iterator that was provided in the <code class="highlighter-rouge">init</code> method. The collection of column families and
+the boolean <code class="highlighter-rouge">include</code> argument should be passed down as well as the <code class="highlighter-rouge">Range</code>. Somewhat commonly, the Iterator will
+also implement some sort of additional logic to find or compute the first Key-Value pair in the provided
+Range. For example, a regular expression Iterator would consume all records which do not match the given
+pattern before returning from <code class="highlighter-rouge">seek</code>.</p>
+
+<p>It is important to retain the original Range passed to this method to know when this Iterator should stop
+reading more Key-Value pairs. Ignoring this typically does not affect scans from a Scanner, but it
+will result in duplicate keys emitting from a BatchScan if the scanned table has more than one tablet.
+Best practice is to never emit entries outside the seek range.</p>
+
+<h3 id="next">next</h3>
+
+<p>The <code class="highlighter-rouge">next</code> method is analogous to the <code class="highlighter-rouge">next</code> method on a Java Iterator: this method should advance
+the Iterator to the next Key-Value pair. For implementations that perform some filtering or complex
+logic, this may result in more than one Key-Value pair being inspected. This method alters
+some internal state that is exposed via the <code class="highlighter-rouge">hasTop</code>, <code class="highlighter-rouge">getTopKey</code>, and <code class="highlighter-rouge">getTopValue</code> methods.</p>
+
+<p>The result of this method is commonly caching a Key-Value pair which <code class="highlighter-rouge">getTopKey</code> and <code class="highlighter-rouge">getTopValue</code>
+can later return. While there is another Key-Value pair to return, <code class="highlighter-rouge">hasTop</code> should return true.
+If there are no more Key-Value pairs to return from this Iterator since the last call to
+<code class="highlighter-rouge">seek</code>, <code class="highlighter-rouge">hasTop</code> should return false.</p>
+
+<h3 id="hastop">hasTop</h3>
+
+<p>The <code class="highlighter-rouge">hasTop</code> method is similar to the <code class="highlighter-rouge">hasNext</code> method on a Java Iterator in that it informs
+the caller if there is a Key-Value pair to be returned. If there is no pair to return, this method
+should return false. Like a Java Iterator, multiple calls to <code class="highlighter-rouge">hasTop</code> (without calling <code class="highlighter-rouge">next</code>) should not
+alter the internal state of the Iterator.</p>
+
+<h3 id="gettopkey-and-gettopvalue">getTopKey and getTopValue</h3>
+
+<p>These methods simply return the current Key-Value pair for this iterator. If <code class="highlighter-rouge">hasTop</code> returns true,
+both of these methods should return non-null objects. If <code class="highlighter-rouge">hasTop</code> returns false, it is undefined
+what these methods should return. Like <code class="highlighter-rouge">hasTop</code>, multiple calls to these methods should not alter
+the state of the Iterator.</p>
+
+<p>Users should take caution when either</p>
+
+<ol>
+  <li>caching the Key/Value from <code class="highlighter-rouge">getTopKey</code>/<code class="highlighter-rouge">getTopValue</code>, for use after calling <code class="highlighter-rouge">next</code> on the source iterator.
+In this case, the cached Key/Value object is aliased to the reference returned by the source iterator.
+Iterators may reuse the same Key/Value object in a <code class="highlighter-rouge">next</code> call for performance reasons, changing the data
+that the cached Key/Value object references and resulting in a logic bug.</li>
+  <li>modifying the Key/Value from <code class="highlighter-rouge">getTopKey</code>/<code class="highlighter-rouge">getTopValue</code>. If the source iterator reuses data stored in the Key/Value,
+then the source iterator may use the modified data that the Key/Value references. This may/may not result in a logic bug.</li>
+</ol>
+
+<p>In both cases, copying the Key/Value’s data into a new object ensures iterator correctness. If neither case applies,
+it is safe to not copy the Key/Value.  The general guideline is to be aware of who else may use Key/Value objects
+returned from <code class="highlighter-rouge">getTopKey</code>/<code class="highlighter-rouge">getTopValue</code>.</p>
+
+<h3 id="deepcopy">deepCopy</h3>
+
+<p>The <code class="highlighter-rouge">deepCopy</code> method is similar to the <code class="highlighter-rouge">clone</code> method from the Java <code class="highlighter-rouge">Cloneable</code> interface.
+Implementations of this method should return a new object of the same type as the Accumulo Iterator
+instance it was called on. Any internal state from the instance <code class="highlighter-rouge">deepCopy</code> was called
+on should be carried over to the returned copy. The returned copy should be ready to have
+<code class="highlighter-rouge">seek</code> called on it. The SortedKeyValueIterator interface guarantees that <code class="highlighter-rouge">init</code> will be called on
+an iterator before <code class="highlighter-rouge">deepCopy</code> and that <code class="highlighter-rouge">init</code> will not be called on the iterator returned by
+<code class="highlighter-rouge">deepCopy</code>.</p>
+
+<p>Typically, implementations of <code class="highlighter-rouge">deepCopy</code> call a copy-constructor which will initialize
+internal data structures. As with <code class="highlighter-rouge">seek</code>, it is common for the <code class="highlighter-rouge">IteratorEnvironment</code>
+argument to be ignored as most Iterator implementations can be written without the explicit
+information the environment provides.</p>
+
+<p>In the analogy of a series of Iterators representing a tree, <code class="highlighter-rouge">deepCopy</code> can be thought of as
+early programming assignments which implement their own tree data structures. <code class="highlighter-rouge">deepCopy</code> calls
+copy on its sources (the children), copies itself, attaches the copies of the children, and
+then returns itself.</p>
+
+<h2 id="tabletserver-invocation-of-iterators">TabletServer invocation of Iterators</h2>
+
+<p>The following code is a general outline for how TabletServers invoke Iterators.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span><span class="o">;</span>
+<span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
+<span class="k">while</span><span class="o">(!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">)){</span>
+ <span class="n">SortedKeyValueIterator</span> <span class="n">source</span> <span class="o">=</span> <span class="n">getSystemIterator</span><span class="o">();</span>
+
+ <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">clzName</span> <span class="o">:</span> <span class="n">getUserIterators</span><span class="o">()){</span>
+  <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clz</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">clzName</span><span class="o">);</span>
+  <span class="n">SortedKeyValueIterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">)</span> <span class="n">clz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+  <span class="n">iter</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="n">opts</span><span class="o">,</span> <span class="n">env</span><span class="o">);</span>
+  <span class="n">source</span> <span class="o">=</span> <span class="n">iter</span><span class="o">;</span>
+ <span class="o">}</span>
+
+ <span class="c1">// read a batch of data to return to client</span>
+ <span class="c1">// the last iterator, the "top"</span>
+ <span class="n">SortedKeyValueIterator</span> <span class="n">topIter</span> <span class="o">=</span> <span class="n">source</span><span class="o">;</span>
+ <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">getRangeFromUser</span><span class="o">(),</span> <span class="o">...)</span>
+
+ <span class="k">while</span><span class="o">(</span><span class="n">topIter</span><span class="o">.</span><span class="na">hasTop</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">)){</span>
+   <span class="n">key</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopKey</span><span class="o">()</span>
+   <span class="n">val</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopValue</span><span class="o">()</span>
+   <span class="n">batch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">KeyValue</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span>
+   <span class="k">if</span><span class="o">(</span><span class="n">systemDataSourcesChanged</span><span class="o">()){</span>
+     <span class="c1">// code does not show isolation case, which will</span>
+     <span class="c1">// keep using same data sources until a row boundry is hit </span>
+     <span class="n">range</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">range</span><span class="o">.</span><span class="na">endKey</span><span class="o">(),</span> <span class="n">range</span><span class="o">.</span><span class="na">endKeyInclusive</span><span class="o">());</span>
+     <span class="k">break</span><span class="o">;</span>
+   <span class="o">}</span>
+ <span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//return batch of key values to client</span>
+</code></pre>
+</div>
+
+<p>Additionally, the obtuse “re-seek” case can be outlined as the following:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// Given the above</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">getNextBatch</span><span class="o">();</span>
+
+<span class="c1">// Store off lastKeyReturned for this client</span>
+<span class="n">lastKeyReturned</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">batch</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">).</span><span class="na">getKey</span><span class="o">();</span>
+
+<span class="c1">// thread goes away (client stops asking for the next batch).</span>
+
+<span class="c1">// Eventually client comes back</span>
+<span class="c1">// Setup as before...</span>
+
+<span class="n">Range</span> <span class="n">userRange</span> <span class="o">=</span> <span class="n">getRangeFromUser</span><span class="o">();</span>
+<span class="n">Range</span> <span class="n">actualRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">lastKeyReturned</span><span class="o">,</span> <span class="kc">false</span>
+    <span class="n">userRange</span><span class="o">.</span><span class="na">getEndKey</span><span class="o">(),</span> <span class="n">userRange</span><span class="o">.</span><span class="na">isEndKeyInclusive</span><span class="o">());</span>
+
+<span class="c1">// Use the actualRange, not the user provided one</span>
+<span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">actualRange</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<h2 id="isolation">Isolation</h2>
+
+<p>Accumulo provides a feature which clients can enable to prevent the viewing of partially
+applied mutations within the context of rows. If a client is submitting multiple column
+updates to rows at a time, isolation would ensure that a client would either see all of
+updates made to that row or none of the updates (until they are all applied).</p>
+
+<p>When using Isolation, there are additional concerns in iterator design. A scan time iterator in accumulo
+reads from a set of data sources. While an iterator is reading data it has an isolated view. However, after it returns a
+key/value it is possible that accumulo may switch data sources and re-seek the iterator. This is done so that resources
+may be reclaimed. When the user does not request isolation this can occur after any key is returned. When a user enables
+Isolation, this will only occur after a new row is returned, in which case it will re-seek to the very beginning of the
+next possible row.</p>
+
+<h2 id="abstract-iterators">Abstract Iterators</h2>
+
+<p>A number of Abstract implementations of Iterators are provided to allow for faster creation
+of common patterns. The most commonly used abstract implementations are the <code class="highlighter-rouge">Filter</code> and
+<code class="highlighter-rouge">Combiner</code> classes. When possible these classes should be used instead as they have been
+thoroughly tested inside Accumulo itself.</p>
+
+<h3 id="filter">Filter</h3>
+
+<p>The <code class="highlighter-rouge">Filter</code> abstract Iterator provides a very simple implementation which allows implementations
+to define whether or not a Key-Value pair should be returned via an <code class="highlighter-rouge">accept(Key, Value)</code> method.</p>
+
+<p>Filters are extremely simple to implement; however, when the implementation is filtering a
+large percentage of Key-Value pairs with respect to the total number of pairs examined,
+it can be very inefficient. For example, if a Filter implementation can determine after examining
+part of the row that no other pairs in this row will be accepted, there is no mechanism to
+efficiently skip the remaining Key-Value pairs. Concretely, take a row which is comprised of
+1000 Key-Value pairs. After examining the first 10 Key-Value pairs, it is determined
+that no other Key-Value pairs in this row will be accepted. The Filter must still examine each
+remaining 990 Key-Value pairs in this row. Another way to express this deficiency is that
+Filters have no means to leverage the <code class="highlighter-rouge">seek</code> method to efficiently skip large portions
+of Key-Value pairs.</p>
+
+<p>As such, the <code class="highlighter-rouge">Filter</code> class functions well for filtering small amounts of data, but is
+inefficient for filtering large amounts of data. The decision to use a <code class="highlighter-rouge">Filter</code> strongly
+depends on the use case and distribution of data being filtered.</p>
+
+<h3 id="combiner">Combiner</h3>
+
+<p>The <code class="highlighter-rouge">Combiner</code> class is another common abstract Iterator. Similar to the <code class="highlighter-rouge">Combiner</code> interface
+define in Hadoop’s MapReduce framework, implementations of this abstract class reduce
+multiple Values for different versions of a Key (Keys which only differ by timestamps) into one Key-Value pair.
+Combiners provide a simple way to implement common operations like summation and
+aggregation without the need to implement the entire Accumulo Iterator interface.</p>
+
+<p>One important consideration when choosing to design a Combiner is that the “reduction” operation
+is often best represented when it is associative and commutative. Operations which do not meet
+these criteria can be implemented; however, the implementation can be difficult.</p>
+
+<p>A second consideration is that a Combiner is not guaranteed to see every Key-Value pair
+which differ only by timestamp every time it is invoked. For example, if there are 5 Key-Value
+pairs in a table which only differ by the timestamps 1, 2, 3, 4, and 5, it is not guaranteed that
+every invocation of the Combiner will see 5 timestamps. One invocation might see the Values for
+Keys with timestamp 1 and 4, while another invocation might see the Values for Keys with the
+timestamps 1, 2, 4 and 5.</p>
+
+<p>Finally, when configuring an Accumulo table to use a Combiner, be sure to disable the Versioning Iterator or set the
+Combiner at a priority less than the Combiner (the Versioning Iterator is added at a priority of 20 by default). The
+Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
+pair that has the largest timestamp.</p>
+
+<h2 id="best-practices">Best practices</h2>
+
+<p>Because of the flexibility that the <code class="highlighter-rouge">SortedKeyValueInterface</code> provides, it doesn’t directly disallow
+many implementations which are poor design decisions. The following are some common recommendations to
+follow and pitfalls to avoid in Iterator implementations.</p>
+
+<h4 id="avoid-special-logic-encoded-in-ranges">Avoid special logic encoded in Ranges</h4>
+
+<p>Commonly, granular Ranges that a client passes to an Iterator from a <code class="highlighter-rouge">Scanner</code> or <code class="highlighter-rouge">BatchScanner</code> are unmodified.
+If a <code class="highlighter-rouge">Range</code> falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
+<code class="highlighter-rouge">seek</code> method. However, there is no guarantee that the <code class="highlighter-rouge">Range</code> will remain unaltered from client to server. As such, Iterators
+should <em>never</em> make assumptions about the current state/context based on the <code class="highlighter-rouge">Range</code>.</p>
+
+<p>The common failure condition is referred to as a “re-seek”. In the context of a Scan, TabletServers construct the
+“stack” of Iterators and batch up Key-Value pairs to send back to the client. When a sufficient number of Key-Value
+pairs are collected, it is common for the Iterators to be “torn down” until the client asks for the next batch of
+Key-Value pairs. This is done by the TabletServer to add fairness in ensuring one Scan does not monopolize the available
+resources. When the client asks for the next batch, the implementation modifies the original Range so that servers know
+the point to resume the iteration (to avoid returning duplicate Key-Value pairs). Specifically, the new Range is created
+from the original but is shortened by setting the startKey of the original Range to the Key last returned by the Scan,
+non-inclusive.</p>
+
+<h3 id="seeking-backwards"><code class="highlighter-rouge">seek</code>‘ing backwards</h3>
+
+<p>The ability for an Iterator to “skip over” large blocks of Key-Value pairs is a major tenet behind Iterators.
+By <code class="highlighter-rouge">seek</code>‘ing when it is known that there is a collection of Key-Value pairs which can be ignored can
+greatly increase the speed of a scan as many Key-Value pairs do not have to be deserialized and processed.</p>
+
+<p>While the <code class="highlighter-rouge">seek</code> method provides the <code class="highlighter-rouge">Range</code> that should be used to <code class="highlighter-rouge">seek</code> the underlying source Iterator,
+there is no guarantee that the implementing Iterator uses that <code class="highlighter-rouge">Range</code> to perform the <code class="highlighter-rouge">seek</code> on its
+“source” Iterator. As such, it is possible to seek to any <code class="highlighter-rouge">Range</code> and the interface has no assertions
+to prevent this from happening.</p>
+
+<p>Since Iterators are allowed to <code class="highlighter-rouge">seek</code> to arbitrary Keys, it also allows Iterators to create infinite loops
+inside Scans that will repeatedly read the same data without end. If an arbitrary Range is constructed, it should
+construct a completely new Range as it allows for bugs to be introduced which will break Accumulo.</p>
+
+<p>Thus, <code class="highlighter-rouge">seek</code>’s should always be thought of as making “forward progress” in the view of the total iteration. The
+<code class="highlighter-rouge">startKey</code> of a <code class="highlighter-rouge">Range</code> should always be greater than the current Key seen by the Iterator while the <code class="highlighter-rouge">endKey</code> of the
+<code class="highlighter-rouge">Range</code> should always retain the original <code class="highlighter-rouge">endKey</code> (and <code class="highlighter-rouge">endKey</code> inclusivity) of the last <code class="highlighter-rouge">Range</code> seen by your
+Iterator’s implementation of seek.</p>
+
+<h3 id="take-caution-in-constructing-new-data-in-an-iterator">Take caution in constructing new data in an Iterator</h3>
+
+<p>Implementations of Iterator might be tempted to open BatchWriters inside of an Iterator as a means
+to implement triggers for writing additional data outside of their client application. The lifecycle of an Iterator
+is <em>not</em> managed in such a way that guarantees that this is safe nor efficient. Specifically, there
+is no way to guarantee that the internal ThreadPool inside of the BatchWriter is closed (and the thread(s)
+are reaped) without calling the close() method. <code class="highlighter-rouge">close</code>‘ing and recreating a <code class="highlighter-rouge">BatchWriter</code> after every
+Key-Value pair is also prohibitively performance limiting to be considered an option.</p>
+
+<p>The only safe way to generate additional data in an Iterator is to alter the current Key-Value pair.
+For example, the <code class="highlighter-rouge">WholeRowIterator</code> serializes the all of the Key-Values pairs that fall within each
+row. A safe way to generate more data in an Iterator would be to construct an Iterator that is
+“higher” (at a larger priority) than the <code class="highlighter-rouge">WholeRowIterator</code>, that is, the Iterator receives the Key-Value pairs which are
+a serialization of many Key-Value pairs. The custom Iterator could deserialize the pairs, compute
+some function, and add a new Key-Value pair to the original collection, re-serializing the collection
+of Key-Value pairs back into a single Key-Value pair.</p>
+
+<p>Any other situation is likely not guaranteed to ensure that the caller (a Scan or a Compaction) will
+always see all intended data that is generated.</p>
+
+<h2 id="final-things-to-remember">Final things to remember</h2>
+
+<p>Some simple recommendations/points to keep in mind:</p>
+
+<h3 id="method-call-order">Method call order</h3>
+
+<p>On an instance of an Iterator: <code class="highlighter-rouge">init</code> is always called before <code class="highlighter-rouge">seek</code>, <code class="highlighter-rouge">seek</code> is always called before <code class="highlighter-rouge">hasTop</code>,
+<code class="highlighter-rouge">getTopKey</code> and <code class="highlighter-rouge">getTopValue</code> will not be called if <code class="highlighter-rouge">hasTop</code> returns false.</p>
+
+<h3 id="teardown">Teardown</h3>
+
+<p>As mentioned, instance of Iterators may be torn down inside of the server transparently. When a complex
+collection of iterators is performing some advanced functionality, they will not be torn down until a Key-Value
+pair is returned out of the “stack” of Iterators (and added into the batch of Key-Values to be returned
+to the caller). Being torn-down is equivalent to a new instance of the Iterator being creating and <code class="highlighter-rouge">deepCopy</code>
+being called on the new instance with the old instance provided as the argument to <code class="highlighter-rouge">deepCopy</code>. References
+to the old instance are removed and the object is lazily garbage collected by the JVM.</p>
+
+<h2 id="compaction-time-iterators">Compaction-time Iterators</h2>
+
+<p>When Iterators are configured to run during compactions, at the <code class="highlighter-rouge">minc</code> or <code class="highlighter-rouge">majc</code> scope, these Iterators sometimes need
+to make different assertions than those who only operate at scan time. Iterators won’t see the delete entries; however,
+Iterators will not necessarily see all of the Key-Value pairs in ever invocation. Because compactions often do not rewrite
+all files (only a subset of them), it is possible that the logic take this into consideration.</p>
+
+<p>For example, a Combiner that runs over data at during compactions, might not see all of the values for a given Key. The
+Combiner must recognize this and not perform any function that would be incorrect due
+to the missing values.</p>
+
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

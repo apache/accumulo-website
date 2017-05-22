@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Table Design</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+  
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" role="alert">This documentation is for an unreleased version of Apache Accumulo that is currently under development! Check out the <a href="/docs-1.8/">documentation for the latest release</a>.</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="true" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/overview">Overview</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/overview">Overview</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Getting started &nbsp;&gt;&gt;&nbsp; Table Design</p>
+    
+    
+    <h1>Table Design</h1>
+    
+    <h3 id="basic-table">Basic Table</h3>
+
+<p>Since Accumulo tables are sorted by row ID, each table can be thought of as being
+indexed by the row ID. Lookups performed by row ID can be executed quickly, by doing
+a binary search, first across the tablets, and then within a tablet. Clients should
+choose a row ID carefully in order to support their desired application. A simple rule
+is to select a unique identifier as the row ID for each entity to be stored and assign
+all the other attributes to be tracked to be columns under this row ID. For example,
+if we have the following data in a comma-separated file:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>userid,age,address,account-balance
+</code></pre>
+</div>
+
+<p>We might choose to store this data using the userid as the rowID, the column
+name in the column family, and a blank column qualifier:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Mutation</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">userid</span><span class="o">);</span>
+<span class="kd">final</span> <span class="n">String</span> <span class="n">column_qualifier</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+<span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"age"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">age</span><span class="o">);</span>
+<span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"address"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">address</span><span class="o">);</span>
+<span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"balance"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">account_balance</span><span class="o">);</span>
+
+<span class="n">writer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<p>We could then retrieve any of the columns for a specific userid by specifying the
+userid as the range of a scanner and fetching specific columns:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Range</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">userid</span><span class="o">,</span> <span class="n">userid</span><span class="o">);</span> <span class="c1">// single row</span>
+<span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"userdata"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
+<span class="n">s</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
+<span class="n">s</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"age"</span><span class="o">));</span>
+
+<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="rowid-design">RowID Design</h3>
+
+<p>Often it is necessary to transform the rowID in order to have rows ordered in a way
+that is optimal for anticipated access patterns. A good example of this is reversing
+the order of components of internet domain names in order to group rows of the
+same parent domain together:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code
+com.google.labs
+com.google.mail
+com.yahoo.mail
+com.yahoo.research
+</code></pre>
+</div>
+
+<p>Some data may result in the creation of very large rows - rows with many columns.
+In this case the table designer may wish to split up these rows for better load
+balancing while keeping them sorted together for scanning purposes. This can be
+done by appending a random substring at the end of the row:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_00
+com.google.code_01
+com.google.code_02
+com.google.labs_00
+com.google.mail_00
+com.google.mail_01
+</code></pre>
+</div>
+
+<p>It could also be done by adding a string representation of some period of time such as date to the week
+or month:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_201003
+com.google.code_201004
+com.google.code_201005
+com.google.labs_201003
+com.google.mail_201003
+com.google.mail_201004
+</code></pre>
+</div>
+
+<p>Appending dates provides the additional capability of restricting a scan to a given
+date range.</p>
+
+<h3 id="lexicoders">Lexicoders</h3>
+<p>Since Keys in Accumulo are sorted lexicographically by default, it’s often useful to encode
+common data types into a byte format in which their sort order corresponds to the sort order
+in their native form. An example of this is encoding dates and numerical data so that they can
+be better seeked or searched in ranges.</p>
+
+<p>The lexicoders are a standard and extensible way of encoding Java types. Here’s an example
+of a lexicoder that encodes a java Date object so that it sorts lexicographically:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// create new date lexicoder</span>
+<span class="n">DateLexicoder</span> <span class="n">dateEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DateLexicoder</span><span class="o">();</span>
+
+<span class="c1">// truncate time to hours</span>
+<span class="kt">long</span> <span class="n">epoch</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<span class="n">Date</span> <span class="n">hour</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">(</span><span class="n">epoch</span> <span class="o">-</span> <span class="o">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="mi">3600000</span><span class="o">));</span>
+
+<span class="c1">// encode the rowId so that it is sorted lexicographically</span>
+<span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">dateEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">hour</span><span class="o">));</span>
+<span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colf"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colq"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Value</span><span class="o">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]{}));</span>
+</code></pre>
+</div>
+
+<p>If we want to return the most recent date first, we can reverse the sort order
+with the reverse lexicoder:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// create new date lexicoder and reverse lexicoder</span>
+<span class="n">DateLexicoder</span> <span class="n">dateEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DateLexicoder</span><span class="o">();</span>
+<span class="n">ReverseLexicoder</span> <span class="n">reverseEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReverseLexicoder</span><span class="o">(</span><span class="n">dateEncoder</span><span class="o">);</span>
+
+<span class="c1">// truncate date to hours</span>
+<span class="kt">long</span> <span class="n">epoch</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<span class="n">Date</span> <span class="n">hour</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">(</span><span class="n">epoch</span> <span class="o">-</span> <span class="o">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="mi">3600000</span><span class="o">));</span>
+
+<span class="c1">// encode the rowId so that it sorts in reverse lexicographic order</span>
+<span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">reverseEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">hour</span><span class="o">));</span>
+<span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colf"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colq"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Value</span><span class="o">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]{}));</span>
+</code></pre>
+</div>
+
+<h3 id="indexing">Indexing</h3>
+
+<p>In order to support lookups via more than one attribute of an entity, additional
+indexes can be built. However, because Accumulo tables can support any number of
+columns without specifying them beforehand, a single additional index will often
+suffice for supporting lookups of records in the main table. Here, the index has, as
+the rowID, the Value or Term from the main table, the column families are the same,
+and the column qualifier of the index table contains the rowID from the main table.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RowID</th>
+      <th>Column Family</th>
+      <th>Column Qualifier</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Term</td>
+      <td>Field Name</td>
+      <td>MainRowID</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note: We store rowIDs in the column qualifier rather than the Value so that we can
+have more than one rowID associated with a particular term within the index. If we
+stored this in the Value we would only see one of the rows in which the value
+appears since Accumulo is configured by default to return the one most recent
+value associated with a key.</p>
+
+<p>Lookups can then be done by scanning the Index Table first for occurrences of the
+desired values in the columns specified, which returns a list of row ID from the main
+table. These can then be used to retrieve each matching record, in their entirety, or a
+subset of their columns, from the Main Table.</p>
+
+<p>To support efficient lookups of multiple rowIDs from the same table, the Accumulo
+client library provides a BatchScanner. Users specify a set of Ranges to the
+BatchScanner, which performs the lookups in multiple threads to multiple servers
+and returns an Iterator over all the rows retrieved. The rows returned are NOT in
+sorted order, as is the case with the basic Scanner interface.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// first we scan the index for IDs of rows matching our query</span>
+<span class="n">Text</span> <span class="n">term</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"mySearchTerm"</span><span class="o">);</span>
+
+<span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">matchingRows</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
+
+<span class="n">Scanner</span> <span class="n">indexScanner</span> <span class="o">=</span> <span class="n">createScanner</span><span class="o">(</span><span class="s">"index"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
+<span class="n">indexScanner</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">term</span><span class="o">,</span> <span class="n">term</span><span class="o">));</span>
+
+<span class="c1">// we retrieve the matching rowIDs and create a set of ranges</span>
+<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">indexScanner</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">matchingRows</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getColumnQualifier</span><span class="o">()));</span>
+<span class="o">}</span>
+
+<span class="c1">// now we pass the set of rowIDs to the batch scanner to retrieve them</span>
+<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
+<span class="n">bscan</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">matchingRows</span><span class="o">);</span>
+<span class="n">bscan</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">));</span>
+
+<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>One advantage of the dynamic schema capabilities of Accumulo is that different
+fields may be indexed into the same physical table. However, it may be necessary to
+create different index tables if the terms must be formatted differently in order to
+maintain proper sort order. For example, real numbers must be formatted
+differently than their usual notation in order to be sorted correctly. In these cases,
+usually one index per unique data type will suffice.</p>
+
+<h3 id="entity-attribute-and-graph-tables">Entity-Attribute and Graph Tables</h3>
+
+<p>Accumulo is ideal for storing entities and their attributes, especially of the
+attributes are sparse. It is often useful to join several datasets together on common
+entities within the same table. This can allow for the representation of graphs,
+including nodes, their attributes, and connections to other nodes.</p>
+
+<p>Rather than storing individual events, Entity-Attribute or Graph tables store
+aggregate information about the entities involved in the events and the
+relationships between entities. This is often preferrable when single events aren’t
+very useful and when a continuously updated summarization is desired.</p>
+
+<p>The physical schema for an entity-attribute or graph table is as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RowID</th>
+      <th>Column Family</th>
+      <th>Column Qualifier</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EntityID</td>
+      <td>Attribute Name</td>
+      <td>Attribute Value</td>
+      <td>Weight</td>
+    </tr>
+    <tr>
+      <td>EntityID</td>
+      <td>Edge Type</td>
+      <td>Related EntityID</td>
+      <td>Weight</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For example, to keep track of employees, managers and products the following
+entity-attribute table could be used. Note that the weights are not always necessary
+and are set to 0 when not used.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RowID</th>
+      <th>Column Family</th>
+      <th>Column Qualifier</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>E001</td>
+      <td>name</td>
+      <td>bob</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E001</td>
+      <td>department</td>
+      <td>sales</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E001</td>
+      <td>hire_date</td>
+      <td>20030102</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E001</td>
+      <td>units_sold</td>
+      <td>P001</td>
+      <td>780</td>
+    </tr>
+    <tr>
+      <td>E002</td>
+      <td>name</td>
+      <td>george</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E002</td>
+      <td>department</td>
+      <td>sales</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E002</td>
+      <td>manager_of</td>
+      <td>E001</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E002</td>
+      <td>manager_of</td>
+      <td>E003</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E003</td>
+      <td>name</td>
+      <td>harry</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E003</td>
+      <td>department</td>
+      <td>accounts_recv</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E003</td>
+      <td>hire_date</td>
+      <td>20000405</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>E003</td>
+      <td>units_sold</td>
+      <td>P002</td>
+      <td>566</td>
+    </tr>
+    <tr>
+      <td>E003</td>
+      <td>units_sold</td>
+      <td>P001</td>
+      <td>232</td>
+    </tr>
+    <tr>
+      <td>P001</td>
+      <td>product_name</td>
+      <td>nike_airs</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>P001</td>
+      <td>product_type</td>
+      <td>shoe</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>P001</td>
+      <td>in_stock</td>
+      <td>germany</td>
+      <td>900</td>
+    </tr>
+    <tr>
+      <td>P001</td>
+      <td>in_stock</td>
+      <td>brazil</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>P002</td>
+      <td>product_name</td>
+      <td>basic_jacket</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>P002</td>
+      <td>product_type</td>
+      <td>clothing</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>P002</td>
+      <td>in_stock</td>
+      <td>usa</td>
+      <td>3454</td>
+    </tr>
+    <tr>
+      <td>P002</td>
+      <td>in_stock</td>
+      <td>germany</td>
+      <td>700</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To allow efficient updating of edge weights, an aggregating iterator can be
+configured to add the value of all mutations applied with the same key. These types
+of tables can easily be created from raw events by simply extracting the entities,
+attributes, and relationships from individual events and inserting the keys into
+Accumulo each with a count of 1. The aggregating iterator will take care of
+maintaining the edge weights.</p>
+
+<h3 id="document-partitioned-indexing">Document-Partitioned Indexing</h3>
+
+<p>Using a simple index as described above works well when looking for records that
+match one of a set of given criteria. When looking for records that match more than
+one criterion simultaneously, such as when looking for documents that contain all of
+the words ‘the’ and ‘white’ and ‘house’, there are several issues.</p>
+
+<p>First is that the set of all records matching any one of the search terms must be sent
+to the client, which incurs a lot of network traffic. The second problem is that the
+client is responsible for performing set intersection on the sets of records returned
+to eliminate all but the records matching all search terms. The memory of the client
+may easily be overwhelmed during this operation.</p>
+
+<p>For these reasons Accumulo includes support for a scheme known as sharded
+indexing, in which these set operations can be performed at the TabletServers and
+decisions about which records to include in the result set can be made without
+incurring network traffic.</p>
+
+<p>This is accomplished via partitioning records into bins that each reside on at most
+one TabletServer, and then creating an index of terms per record within each bin as
+follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RowID</th>
+      <th>Column Family</th>
+      <th>Column Qualifier</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>BinID</td>
+      <td>Term</td>
+      <td>DocID</td>
+      <td>Weight</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Documents or records are mapped into bins by a user-defined ingest application. By
+storing the BinID as the RowID we ensure that all the information for a particular
+bin is contained in a single tablet and hosted on a single TabletServer since
+Accumulo never splits rows across tablets. Storing the Terms as column families
+serves to enable fast lookups of all the documents within this bin that contain the
+given term.</p>
+
+<p>Finally, we perform set intersection operations on the TabletServer via a special
+iterator called the Intersecting Iterator. Since documents are partitioned into many
+bins, a search of all documents must search every bin. We can use the BatchScanner
+to scan all bins in parallel. The Intersecting Iterator should be enabled on a
+BatchScanner within user query code as follows:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Text</span><span class="o">[]</span> <span class="n">terms</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"the"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"white"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"house"</span><span class="o">)};</span>
+
+<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">20</span><span class="o">);</span>
+
+<span class="n">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="s">"ii"</span><span class="o">,</span> <span class="n">IntersectingIterator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="n">IntersectingIterator</span><span class="o">.</span><span class="na">setColumnFamilies</span><span class="o">(</span><span class="n">iter</span><span class="o">,</span> <span class="n">terms</span><span class="o">);</span>
+
+<span class="n">bscan</span><span class="o">.</span><span class="na">addScanIterator</span><span class="o">(</span><span class="n">iter</span><span class="o">);</span>
+<span class="n">bscan</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">Collections</span><span class="o">.</span><span class="na">singleton</span><span class="o">(</span><span class="k">new</span> <span class="n">Range</span><span class="o">()));</span>
+
+<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">" "</span> <span class="o">+</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getColumnQualifier</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>This code effectively has the BatchScanner scan all tablets of a table, looking for
+documents that match all the given terms. Because all tablets are being scanned for
+every query, each query is more expensive than other Accumulo scans, which
+typically involve a small number of TabletServers. This reduces the number of
+concurrent queries supported and is subject to what is known as the ‘straggler’
+problem in which every query runs as slow as the slowest server participating.</p>
+
+<p>Of course, fast servers will return their results to the client which can display them
+to the user immediately while they wait for the rest of the results to arrive. If the
+results are unordered this is quite effective as the first results to arrive are as good
+as any others to the user.</p>
+
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
