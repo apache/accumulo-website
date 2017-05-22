@@ -1,7 +1,7 @@
 ---
 title: Replication
 category: administration
-order: 5
+order: 10
 ---
 
 ## Overview
