@@ -23,20 +23,19 @@ estimate, and then making decisions based on the estimate.
 
 ## Configuring
 
-Inorder to use sampling, an Accumulo table must be configured with a class that
-implements `org.apache.accumulo.core.sample.Sampler` along with options for
-that class.  For guidance on implementing a Sampler see that interface's
-javadoc.  Accumulo provides a few implementations out of the box.   For
-information on how to use the samplers that ship with Accumulo look in the
-package `org.apache.accumulo.core.sample` and consult the javadoc of the
-classes there.  See the [sampling example][example] for examples of how to
-configure a Sampler on a table.
+In order to use sampling, an Accumulo table must be configured with a class that
+implements [Sampler] along with options for that class.  For guidance on
+implementing a Sampler, see the [Sampler interface javadoc][Sampler]. Accumulo provides a few
+implementations of Sampler out of the box. For information on how to use the samplers that
+ship with Accumulo, look in the package [org.apache.accumulo.core.client.sample][sample-package]
+and consult the javadoc of the classes there. See the [sampling example][example]
+for examples of how to configure a [Sampler] on a table.
 
-Once a table is configured with a sampler all writes after that point will
-generate sample data.  For data written before sampling was configured sample
+Once a table is configured with a [Sampler], all writes after that point will
+generate sample data.  For data written before sampling was configured, sample
 data will not be present.  A compaction can be initiated that only compacts the
-files in the table that do not have sample data.   The example readme shows how
-to do this.
+files in the table that do not have sample data.  The [sampling example][example] 
+shows how to do this.
 
 If the sampling configuration of a table is changed, then Accumulo will start
 generating new sample data with the new configuration.   However old data will
@@ -45,19 +44,18 @@ compaction can also be issued in this case to regenerate the sample data.
 
 ## Scanning sample data
 
-Inorder to scan sample data, use the `setSamplerConfiguration(...)`  method on
-`Scanner` or `BatchScanner`.  Please consult this methods javadocs for more
+In order to scan sample data, use `setSamplerConfiguration(...)` method of
+[Scanner] or [BatchScanner].  Please consult the javadoc of this method for more
 information.
 
-Sample data can also be scanned from within an Accumulo `SortedKeyValueIterator`.
+Sample data can also be scanned from within an Accumulo [SortedKeyValueIterator][skv-iterator].
 To see how to do this, look at the example iterator referenced in the [sampling example][example].
-Also, consult the javadoc on `org.apache.accumulo.core.iterators.IteratorEnvironment.cloneWithSamplingEnabled()`.
+Also, consult the javadoc on [IteratorEnvironment.cloneWithSamplingEnabled()][clone-sampling].
 
-Map reduce jobs using the `AccumuloInputFormat` can also read sample data.  See
-the javadoc for the `setSamplerConfiguration()` method on
-`AccumuloInputFormat`.
+Map reduce jobs using the [AccumuloInputFormat] can also read sample data.  See
+the javadoc for the `setSamplerConfiguration()` method of [AccumuloInputFormat].
 
-Scans over sample data will throw a `SampleNotPresentException` in the following cases :
+Scans over sample data will throw a [SampleNotPresentException] in the following cases :
 
 1. sample data is not present,
 2. sample data is present but was generated with multiple configurations
@@ -69,7 +67,16 @@ generated with the same configuration.
 ## Bulk import
 
 When generating rfiles to bulk import into Accumulo, those rfiles can contain
-sample data.  To use this feature, look at the javadoc on the
-`AccumuloFileOutputFormat.setSampler(...)` method.
+sample data.  To use this feature, look at the javadoc of the `setSampler(...)`
+method of [AccumuloFileOutputFormat].
 
 [example]: https://github.com/apache/accumulo-examples/blob/master/docs/sample.md
+[Sampler]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/sample/Sampler.html
+[sample-package]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/sample/package-summary.html
+[skv-iterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html
+[clone-sampling]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/IteratorEnvironment.html#cloneWithSamplingEnabled()
+[AccumuloInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html
+[AccumuloFileOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html
+[SampleNotPresentException]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/SampleNotPresentException.html
+[BatchScanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchScanner.html
+[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html

@@ -83,17 +83,14 @@ com.test.AnotherConstraint=2
 
 Currently there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
-the following interface:
+the [Constraint][constraint] interface.
 
-     org.apache.accumulo.core.constraints.Constraint
-
-To deploy a new constraint, create a jar file containing the class implementing the
-new constraint and place it in the lib directory of the Accumulo installation. New
+To deploy a new constraint, create a jar file containing a class implementing [Constraint][constraint]
+and place it in the `lib/` directory of the Accumulo installation. New
 constraint jars can be added to Accumulo and enabled without restarting but any
 change to an existing constraint class requires Accumulo to be restarted.
 
-See the [contraints examples](https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md)
-for example code.
+See the [constraints examples][constraints-example] for example code.
 
 ## Bloom Filters
 
@@ -106,8 +103,7 @@ To enable bloom filters, enter the following command in the Shell:
 
     user@myinstance> config -t mytable -s table.bloom.enabled=true
 
-The [bloom filter examples](https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md)
-contains an extensive example of using Bloom Filters.
+The [bloom filter examples][bloom-filter-example] contains an extensive example of using Bloom Filters.
 
 ## Iterators
 
@@ -116,7 +112,7 @@ TabletServers when scanning or compacting data. This allows users to efficiently
 summarize, filter, and aggregate data. In fact, the built-in features of cell-level
 security and column fetching are implemented using Iterators.
 Some useful Iterators are provided with Accumulo and can be found in the
-*`org.apache.accumulo.core.iterators.user`* package.
+[org.apache.accumulo.core.iterators.user][iterators-user] package.
 In each case, any custom Iterators must be included in Accumulo's classpath,
 typically by including a jar in `lib/` or `lib/ext/`, although the VFS classloader
 allows for classpath manipulation using a variety of schemes including URLs and HDFS URIs.
@@ -124,7 +120,7 @@ allows for classpath manipulation using a variety of schemes including URLs and 
 ### Setting Iterators via the Shell
 
 Iterators can be configured on a table at scan, minor compaction and/or major
-compaction scopes. If the Iterator implements the OptionDescriber interface, the
+compaction scopes. If the Iterator implements the [OptionDescriber][option-describer] interface, the
 setiter command can be used which will interactively prompt the user to provide
 values for the given necessary options.
 
@@ -135,7 +131,7 @@ values for the given necessary options.
     user@myinstance mytable> setiter -t mytable -scan -p 15 -n myiter -class com.company.MyIterator
 
 The config command can always be used to manually configure iterators which is useful
-in cases where the Iterator does not implement the OptionDescriber interface.
+in cases where the Iterator does not implement the [OptionDescriber][option-describer] interface.
 
     config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
     config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
@@ -233,11 +229,10 @@ are removed from disk as part of the regular garbage collection process.
 ### Filters
 
 When scanning over a set of key-value pairs it is possible to apply an arbitrary
-filtering policy through the use of a Filter. Filters are types of iterators that return
+filtering policy through the use of a [Filter][filter]. Filters are types of iterators that return
 only key-value pairs that satisfy the filter logic. Accumulo has a few built-in filters
 that can be configured on any table: AgeOff, ColumnAgeOff, Timestamp, NoVis, and RegEx. More can be added
-by writing a Java class that extends the
-`org.apache.accumulo.core.iterators.Filter` class.
+by writing a Java class that extends the [Filter][filter] class.
 
 The AgeOff filter can be configured to remove data older than a certain date or a fixed
 amount of time from the present. The following example sets a table to delete
@@ -338,14 +333,12 @@ foo day:20080103 []    1
 ```
 
 Accumulo includes some useful Combiners out of the box. To find these look in
-the *`org.apache.accumulo.core.iterators.user`* package.
+the [org.apache.accumulo.core.iterators.user][iterators-user] package.
 
 Additional Combiners can be added by creating a Java class that extends
-`org.apache.accumulo.core.iterators.Combiner` and adding a jar containing that
-class to Accumulo's lib/ext directory.
+[Combiner][combiner] and adding a jar containing that class to Accumulo's `lib/ext` directory.
 
-See the [combiner example](https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md)
-for example code.
+See the [combiner example][combiner-example] for example code.
 
 ## Block Cache
 
@@ -661,4 +654,12 @@ deleted. A table can be cloned and the clone taken offline inorder to avoid
 losing access to the table. See the [export example](https://github.com/apache/accumulo-examples/blob/master/docs/export.md)
 for example code.
 
+[bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md
 [config]: /docs/{{ page.version }}/config/
+[constraint]: {{ page.javadoc_core }}/org/apache/accumulo/core/constraints/Constraint.html
+[constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md
+[iterators-user]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/package-summary.html
+[option-describer]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/OptionDescriber.html
+[combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
+[combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
+[filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
