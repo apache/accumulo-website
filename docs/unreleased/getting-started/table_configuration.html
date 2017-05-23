@@ -400,19 +400,14 @@ com.test.AnotherConstraint=2
 
 <p>Currently there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
-the following interface:</p>
+the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a> interface.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code> org.apache.accumulo.core.constraints.Constraint
-</code></pre>
-</div>
-
-<p>To deploy a new constraint, create a jar file containing the class implementing the
-new constraint and place it in the lib directory of the Accumulo installation. New
+<p>To deploy a new constraint, create a jar file containing a class implementing <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a>
+and place it in the <code class="highlighter-rouge">lib/</code> directory of the Accumulo installation. New
 constraint jars can be added to Accumulo and enabled without restarting but any
 change to an existing constraint class requires Accumulo to be restarted.</p>
 
-<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md">contraints examples</a>
-for example code.</p>
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md">constraints examples</a> for example code.</p>
 
 <h2 id="bloom-filters">Bloom Filters</h2>
 
@@ -427,8 +422,7 @@ This can speed up lookups considerably.</p>
 </code></pre>
 </div>
 
-<p>The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md">bloom filter examples</a>
-contains an extensive example of using Bloom Filters.</p>
+<p>The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md">bloom filter examples</a> contains an extensive example of using Bloom Filters.</p>
 
 <h2 id="iterators">Iterators</h2>
 
@@ -437,7 +431,7 @@ TabletServers when scanning or compacting data. This allows users to efficiently
 summarize, filter, and aggregate data. In fact, the built-in features of cell-level
 security and column fetching are implemented using Iterators.
 Some useful Iterators are provided with Accumulo and can be found in the
-<em><code class="highlighter-rouge">org.apache.accumulo.core.iterators.user</code></em> package.
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.
 In each case, any custom Iterators must be included in Accumulo’s classpath,
 typically by including a jar in <code class="highlighter-rouge">lib/</code> or <code class="highlighter-rouge">lib/ext/</code>, although the VFS classloader
 allows for classpath manipulation using a variety of schemes including URLs and HDFS URIs.</p>
@@ -445,7 +439,7 @@ allows for classpath manipulation using a variety of schemes including URLs and 
 <h3 id="setting-iterators-via-the-shell">Setting Iterators via the Shell</h3>
 
 <p>Iterators can be configured on a table at scan, minor compaction and/or major
-compaction scopes. If the Iterator implements the OptionDescriber interface, the
+compaction scopes. If the Iterator implements the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface, the
 setiter command can be used which will interactively prompt the user to provide
 values for the given necessary options.</p>
 
@@ -458,7 +452,7 @@ user@myinstance mytable&gt; setiter -t mytable -scan -p 15 -n myiter -class com.
 </div>
 
 <p>The config command can always be used to manually configure iterators which is useful
-in cases where the Iterator does not implement the OptionDescriber interface.</p>
+in cases where the Iterator does not implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
@@ -560,11 +554,10 @@ are removed from disk as part of the regular garbage collection process.</p>
 <h3 id="filters">Filters</h3>
 
 <p>When scanning over a set of key-value pairs it is possible to apply an arbitrary
-filtering policy through the use of a Filter. Filters are types of iterators that return
+filtering policy through the use of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/Filter.html">Filter</a>. Filters are types of iterators that return
 only key-value pairs that satisfy the filter logic. Accumulo has a few built-in filters
 that can be configured on any table: AgeOff, ColumnAgeOff, Timestamp, NoVis, and RegEx. More can be added
-by writing a Java class that extends the
-<code class="highlighter-rouge">org.apache.accumulo.core.iterators.Filter</code> class.</p>
+by writing a Java class that extends the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/Filter.html">Filter</a> class.</p>
 
 <p>The AgeOff filter can be configured to remove data older than a certain date or a fixed
 amount of time from the present. The following example sets a table to delete
@@ -671,14 +664,12 @@ foo day:20080103 []    1
 </div>
 
 <p>Accumulo includes some useful Combiners out of the box. To find these look in
-the <em><code class="highlighter-rouge">org.apache.accumulo.core.iterators.user</code></em> package.</p>
+the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.</p>
 
 <p>Additional Combiners can be added by creating a Java class that extends
-<code class="highlighter-rouge">org.apache.accumulo.core.iterators.Combiner</code> and adding a jar containing that
-class to Accumulo’s lib/ext directory.</p>
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> and adding a jar containing that class to Accumulo’s <code class="highlighter-rouge">lib/ext</code> directory.</p>
 
-<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md">combiner example</a>
-for example code.</p>
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md">combiner example</a> for example code.</p>
 
 <h2 id="block-cache">Block Cache</h2>
 

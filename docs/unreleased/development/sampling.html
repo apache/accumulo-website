@@ -336,20 +336,19 @@ estimate, and then making decisions based on the estimate.</p>
 
 <h2 id="configuring">Configuring</h2>
 
-<p>Inorder to use sampling, an Accumulo table must be configured with a class that
-implements <code class="highlighter-rouge">org.apache.accumulo.core.sample.Sampler</code> along with options for
-that class.  For guidance on implementing a Sampler see that interface’s
-javadoc.  Accumulo provides a few implementations out of the box.   For
-information on how to use the samplers that ship with Accumulo look in the
-package <code class="highlighter-rouge">org.apache.accumulo.core.sample</code> and consult the javadoc of the
-classes there.  See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a> for examples of how to
-configure a Sampler on a table.</p>
+<p>In order to use sampling, an Accumulo table must be configured with a class that
+implements <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a> along with options for that class.  For guidance on
+implementing a Sampler, see the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler interface javadoc</a>. Accumulo provides a few
+implementations of Sampler out of the box. For information on how to use the samplers that
+ship with Accumulo, look in the package <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/package-summary.html">org.apache.accumulo.core.client.sample</a>
+and consult the javadoc of the classes there. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a>
+for examples of how to configure a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a> on a table.</p>
 
-<p>Once a table is configured with a sampler all writes after that point will
-generate sample data.  For data written before sampling was configured sample
+<p>Once a table is configured with a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a>, all writes after that point will
+generate sample data.  For data written before sampling was configured, sample
 data will not be present.  A compaction can be initiated that only compacts the
-files in the table that do not have sample data.   The example readme shows how
-to do this.</p>
+files in the table that do not have sample data.  The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a> 
+shows how to do this.</p>
 
 <p>If the sampling configuration of a table is changed, then Accumulo will start
 generating new sample data with the new configuration.   However old data will
@@ -358,19 +357,18 @@ compaction can also be issued in this case to regenerate the sample data.</p>
 
 <h2 id="scanning-sample-data">Scanning sample data</h2>
 
-<p>Inorder to scan sample data, use the <code class="highlighter-rouge">setSamplerConfiguration(...)</code>  method on
-<code class="highlighter-rouge">Scanner</code> or <code class="highlighter-rouge">BatchScanner</code>.  Please consult this methods javadocs for more
+<p>In order to scan sample data, use <code class="highlighter-rouge">setSamplerConfiguration(...)</code> method of
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a>.  Please consult the javadoc of this method for more
 information.</p>
 
-<p>Sample data can also be scanned from within an Accumulo <code class="highlighter-rouge">SortedKeyValueIterator</code>.
+<p>Sample data can also be scanned from within an Accumulo <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a>.
 To see how to do this, look at the example iterator referenced in the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a>.
-Also, consult the javadoc on <code class="highlighter-rouge">org.apache.accumulo.core.iterators.IteratorEnvironment.cloneWithSamplingEnabled()</code>.</p>
+Also, consult the javadoc on <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/IteratorEnvironment.html#cloneWithSamplingEnabled()">IteratorEnvironment.cloneWithSamplingEnabled()</a>.</p>
 
-<p>Map reduce jobs using the <code class="highlighter-rouge">AccumuloInputFormat</code> can also read sample data.  See
-the javadoc for the <code class="highlighter-rouge">setSamplerConfiguration()</code> method on
-<code class="highlighter-rouge">AccumuloInputFormat</code>.</p>
+<p>Map reduce jobs using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html">AccumuloInputFormat</a> can also read sample data.  See
+the javadoc for the <code class="highlighter-rouge">setSamplerConfiguration()</code> method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
 
-<p>Scans over sample data will throw a <code class="highlighter-rouge">SampleNotPresentException</code> in the following cases :</p>
+<p>Scans over sample data will throw a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/SampleNotPresentException.html">SampleNotPresentException</a> in the following cases :</p>
 
 <ol>
   <li>sample data is not present,</li>
@@ -384,8 +382,8 @@ generated with the same configuration.</p>
 <h2 id="bulk-import">Bulk import</h2>
 
 <p>When generating rfiles to bulk import into Accumulo, those rfiles can contain
-sample data.  To use this feature, look at the javadoc on the
-<code class="highlighter-rouge">AccumuloFileOutputFormat.setSampler(...)</code> method.</p>
+sample data.  To use this feature, look at the javadoc of the <code class="highlighter-rouge">setSampler(...)</code>
+method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.</p>
 
 
   </div>
