@@ -58,12 +58,12 @@ Instance inst = new ZooKeeperInstance(instanceName, zooServers);
 Connector conn = inst.getConnector("user", new PasswordToken("passwd"));
 ```
 
-The PasswordToken is the most common implementation of an `AuthenticationToken`.
+The [PasswordToken] is the most common implementation of an [AuthenticationToken].
 This general interface allow authentication as an Accumulo user to come from
-a variety of sources or means. The CredentialProviderToken leverages the Hadoop
+a variety of sources or means. The [CredentialProviderToken] leverages the Hadoop
 CredentialProviders (new in Hadoop 2.6).
 
-For example, the CredentialProviderToken can be used in conjunction with a Java
+For example, the [CredentialProviderToken] can be used in conjunction with a Java
 KeyStore to alleviate passwords stored in cleartext. When stored in HDFS, a single
 KeyStore can be used across an entire instance. Be aware that KeyStores stored on
 the local filesystem must be made available to all nodes in the Accumulo cluster.
@@ -73,16 +73,16 @@ KerberosToken token = new KerberosToken();
 Connector conn = inst.getConnector(token.getPrincipal(), token);
 ```
 
-The KerberosToken can be provided to use the authentication provided by Kerberos.
+The [KerberosToken] can be provided to use the authentication provided by Kerberos.
 Using Kerberos requires external setup and additional configuration, but provides
 a single point of authentication through HDFS, YARN and ZooKeeper and allowing
 for password-less authentication with Accumulo.
 
 ## Writing Data
 
-Data are written to Accumulo by creating Mutation objects that represent all the
+Data are written to Accumulo by creating [Mutation] objects that represent all the
 changes to the columns of a single row. The changes are made atomically in the
-TabletServer. Clients then add Mutations to a BatchWriter which submits them to
+TabletServer. Clients then add Mutations to a [BatchWriter] which submits them to
 the appropriate TabletServers.
 
 Mutations can be created thus:
@@ -102,7 +102,7 @@ mutation.put(colFam, colQual, colVis, timestamp, value);
 
 ### BatchWriter
 
-The BatchWriter is highly optimized to send Mutations to multiple TabletServers
+The [BatchWriter] is highly optimized to send Mutations to multiple TabletServers
 and automatically batches Mutations destined for the same TabletServer to
 amortize network overhead. Care must be taken to avoid changing the contents of
 any Object passed to the BatchWriter since it keeps objects in memory while
@@ -126,11 +126,11 @@ For more example code, see the [batch writing and scanning example](https://gith
 
 ### ConditionalWriter
 
-The ConditionalWriter enables efficient, atomic read-modify-write operations on
+The [ConditionalWriter] enables efficient, atomic read-modify-write operations on
 rows.  The ConditionalWriter writes special Mutations which have a list of per
 column conditions that must all be met before the mutation is applied.  The
 conditions are checked in the tablet server while a row lock is
-held (Mutations written by the BatchWriter will not obtain a row
+held (Mutations written by the [BatchWriter] will not obtain a row
 lock).  The conditions that can be checked for a column are equality and
 absence.  For example a conditional mutation can require that column A is
 absent inorder to be applied.  Iterators can be applied when checking
@@ -188,7 +188,7 @@ to efficiently return ranges of consecutive keys and their associated values.
 
 ### Scanner
 
-To retrieve data, Clients use a Scanner, which acts like an Iterator over
+To retrieve data, Clients use a [Scanner], which acts like an Iterator over
 keys and values. Scanners can be configured to start and stop at particular keys, and
 to return a subset of the columns available.
 
@@ -218,13 +218,13 @@ scanning. There are three possible ways that a row could change in Accumulo :
 * bulk import of new files
 
 Isolation guarantees that either all or none of the changes made by these
-operations on a row are seen. Use the IsolatedScanner to obtain an isolated
+operations on a row are seen. Use the [IsolatedScanner] to obtain an isolated
 view of an Accumulo table. When using the regular scanner it is possible to see
 a non isolated view of a row. For example if a mutation modifies three
 columns, it is possible that you will only see two of those modifications.
 With the isolated scanner either all three of the changes are seen or none.
 
-The IsolatedScanner buffers rows on the client side so a large row will not
+The [IsolatedScanner] buffers rows on the client side so a large row will not
 crash a tablet server. By default rows are buffered in memory, but the user
 can easily supply their own buffer if they wish to buffer to disk when rows are
 large.
@@ -238,10 +238,10 @@ For some types of access, it is more efficient to retrieve several ranges
 simultaneously. This arises when accessing a set of rows that are not consecutive
 whose IDs have been retrieved from a secondary index, for example.
 
-The BatchScanner is configured similarly to the Scanner; it can be configured to
-retrieve a subset of the columns available, but rather than passing a single Range,
+The [BatchScanner] is configured similarly to the [Scanner]; it can be configured to
+retrieve a subset of the columns available, but rather than passing a single [Range],
 BatchScanners accept a set of Ranges. It is important to note that the keys returned
-by a BatchScanner are not in sorted order since the keys streamed are from multiple
+by a [BatchScanner] are not in sorted order since the keys streamed are from multiple
 TabletServers in parallel.
 
 ```java
@@ -260,8 +260,8 @@ for(Entry<Key,Value> entry : bscan) {
 
 For more example code, see the [batch writing and scanning example](https://github.com/apache/accumulo-examples/blob/master/docs/batch.md).
 
-At this time, there is no client side isolation support for the BatchScanner.
-You may consider using the WholeRowIterator with the BatchScanner to achieve
+At this time, there is no client side isolation support for the [BatchScanner].
+You may consider using the [WholeRowIterator] with the BatchScanner to achieve
 isolation. The drawback of this approach is that entire rows are read into
 memory on the server side. If a row is too big, it may crash a tablet server.
 
@@ -379,3 +379,16 @@ for(KeyValue keyValue : results.getResultsIterator()) {
 
 client.closeScanner(scanner);
 ```
+
+[PasswordToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html
+[AuthenticationToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
+[CredentialProviderToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html
+[KerberosToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/KerberosToken.html
+[Mutation]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
+[BatchWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
+[ConditionalWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html
+[Scanner]: {{ page.javadoc_core }}org/apache/accumulo/core/client/Scanner.html
+[IsolatedScanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/IsolatedScanner.html
+[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
+[Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
+[WholeRowIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html
