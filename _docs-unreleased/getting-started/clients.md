@@ -387,7 +387,7 @@ client.closeScanner(scanner);
 [Mutation]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
 [BatchWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
 [ConditionalWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html
-[Scanner]: {{ page.javadoc_core }}org/apache/accumulo/core/client/Scanner.html
+[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
 [IsolatedScanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/IsolatedScanner.html
 [BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
 [Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html

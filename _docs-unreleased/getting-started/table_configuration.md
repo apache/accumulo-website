@@ -7,18 +7,18 @@ order: 5
 Accumulo tables have a few options that can be configured to alter the default
 behavior of Accumulo as well as improve performance based on the data stored.
 These include locality groups, constraints, bloom filters, iterators, and block
-cache.  See the [configuration documentation][config] for a complete list of
-available configuration options.
+cache.  See the [configuration properties documentation][config-properties] for
+a complete list of available configuration options.
 
 ## Locality Groups
 
 Accumulo supports storing sets of column families separately on disk to allow
 clients to efficiently scan over columns that are frequently used together and to avoid
 scanning over column families that are not requested. After a locality group is set,
-Scanner and BatchScanner operations will automatically take advantage of them
+[Scanner] and [BatchScanner] operations will automatically take advantage of them
 whenever the fetchColumnFamilies() method is used.
 
-By default, tables place all column families into the same ``default'' locality group.
+By default, tables place all column families into the same `default` locality group.
 Additional locality groups can be configured at any time via the shell or
 programmatically as follows:
 
@@ -446,24 +446,23 @@ compact tablets that overlap the given row range.
 ### Compaction Strategies
 
 The default behavior of major compactions is defined in the class DefaultCompactionStrategy. 
-This behavior can be changed by overriding the following property with a fully qualified class name:
-
-    table.majc.compaction.strategy
+This behavior can be changed by overriding [table.majc.compaction.strategy] with a fully
+qualified class name.
 
 Custom compaction strategies can have additional properties that are specified following the prefix property:
 
     table.majc.compaction.strategy.opts.*
 
 Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
-org.apache.accumulo.tserver.compaction.* package. EverythingCompactionStrategy will simply compact all files. This is the 
-strategy used by the user "compact" command. SizeLimitCompactionStrategy compacts files no bigger than the limit set in the
-property table.majc.compaction.strategy.opts.sizeLimit. 
+`org.apache.accumulo.tserver.compaction.*` package. `EverythingCompactionStrategy` will simply compact all files. This is the 
+strategy used by the user `compact` command. `SizeLimitCompactionStrategy` compacts files no bigger than the limit set in the
+property `table.majc.compaction.strategy.opts.sizeLimit`. 
 
-TwoTierCompactionStrategy is a hybrid compaction strategy that supports two types of compression. If the total size of 
-files being compacted is larger than table.majc.compaction.strategy.opts.file.large.compress.threshold than a larger 
-compression type will be used. The larger compression type is specified in table.majc.compaction.strategy.opts.file.large.compress.type. 
-Otherwise, the configured table compression will be used. To use this strategy with minor compactions set table.file.compress.type=snappy 
-and set a different compress type in table.majc.compaction.strategy.opts.file.large.compress.type for larger files.
+`TwoTierCompactionStrategy` is a hybrid compaction strategy that supports two types of compression. If the total size of 
+files being compacted is larger than `table.majc.compaction.strategy.opts.file.large.compress.threshold` than a larger 
+compression type will be used. The larger compression type is specified in `table.majc.compaction.strategy.opts.file.large.compress.type`. 
+Otherwise, the configured table compression will be used. To use this strategy with minor compactions set `table.file.compress.type=snappy` 
+and set a different compress type in `table.majc.compaction.strategy.opts.file.large.compress.type` for larger files.
 
 ## Pre-splitting tables
 
@@ -479,7 +478,7 @@ In the shell:
     root@myinstance> addsplits -t newTable g n t
 
 This will create a new table with 4 tablets. The table will be split
-on the letters ``g'', ``n'', and ``t'' which will work nicely if the
+on the letters `g`, `n`, and `t` which will work nicely if the
 row data start with lower-case alphabetic characters. If your row
 data includes binary information or numeric information, or if the
 distribution of the row information is not flat, then you would pick
@@ -498,7 +497,7 @@ window of current information, tablets for older rows may be empty.
 
 Accumulo supports tablet merging, which can be used to reduce
 the number of split points. The following command will merge all rows
-from ``A'' to ``Z'' into a single tablet:
+from `A` to `Z` into a single tablet:
 
     root@myinstance> merge -t myTable -s A -e Z
 
@@ -532,7 +531,7 @@ faster to set the split point and merge the entire table:
 ## Delete Range
 
 Consider an indexing scheme that uses date information in each row.
-For example ``20110823-15:20:25.013'' might be a row that specifies a
+For example `20110823-15:20:25.013` might be a row that specifies a
 date and time. In some cases, we might like to delete rows based on
 this date, say to remove all the data older than the current year.
 Accumulo supports a delete range operation which efficiently
@@ -540,8 +539,8 @@ removes data between two rows. For example:
 
     root@myinstance> deleterange -t myTable -s 2010 -e 2011
 
-This will delete all rows starting with ``2010'' and it will stop at
-any row starting ``2011''. You can delete any data prior to 2011
+This will delete all rows starting with `2010` and it will stop at
+any row starting `2011`. You can delete any data prior to 2011
 with:
 
     root@myinstance> deleterange -t myTable -e 2011 --force
@@ -663,3 +662,7 @@ for example code.
 [combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
 [filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
+[table.majc.compaction.strategy]: {{ page.docs_baseurl}}/administration/configuration-properties#table_majc_compaction_strategy
+[config-properties]: {{ page.docs_baseurl}}/administration/configuration-properties
+[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
+[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html

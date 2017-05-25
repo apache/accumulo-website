@@ -67,8 +67,8 @@ and the others will become backups if the master should fail.
 
 The Accumulo Tracer process supports the distributed timing API provided by Accumulo.
 One to many of these processes can be run on a cluster which will write the timing
-information to a given Accumulo table for future reference. Seeing the section on
-Tracing for more information on this support.
+information to a given Accumulo table for future reference. See the
+[tracing documentation][tracing] for more information.
 
 ### Monitor
 
@@ -86,9 +86,8 @@ at one time. Leader election will be performed internally to choose the active M
 
 ### Client
 
-Accumulo includes a client library that is linked to every application. The client
-library contains logic for finding servers managing a particular tablet, and
-communicating with TabletServers to write and retrieve key-value pairs.
+Accumulo has a client library that can be used to write applications that write and read
+data to/from Accumulo. See the [Accumulo clients documentation][clients] for more information.
 
 ## Data Management
 
@@ -126,7 +125,8 @@ performs Major Compactions of files within a tablet, in which some set of RFiles
 are combined into one file. The previous files will eventually be removed by the
 Garbage Collector. This also provides an opportunity to permanently remove
 deleted key-value pairs by omitting key-value pairs suppressed by a delete entry
-when the new file is created.
+when the new file is created. See the [compaction documentation][compaction]
+for more information.
 
 ## Splitting
 
@@ -142,8 +142,8 @@ writes giving better initial performance without waiting for automatic
 splitting.
 
 As data is deleted from a table, tablets may shrink. Over time this can lead
-to small or empty tablets. To deal with this, merging of tablets was
-introduced in Accumulo 1.4. This is discussed in more detail later.
+to small or empty tablets. To deal with this, the [merging of tablets][merging]
+was introduced in Accumulo 1.4.
 
 ## Fault-Tolerance
 
@@ -162,4 +162,9 @@ TabletServer failures are noted on the Master's monitor page, accessible via
 
 ![failure handling]({{ site.url }}/images/docs/failure_handling.png)
 
-[monitor]: {{page.docs_baseurl}}/administration/overview#monitoring
+[monitor]: {{page.docs_baseurl}}/administration/monitoring-metrics#monitoring
+[tracing]: {{page.docs_baseurl}}/administration/tracing
+[clients]: {{page.docs_baseurl}}/getting-started/clients
+[merging]: {{page.docs_baseurl}}/getting-started/table_configuration#merging-tablets
+[compaction]: {{page.docs_baseurl}}/getting-started/table_configuration#compaction
+
