@@ -320,18 +320,18 @@
     <p>Accumulo tables have a few options that can be configured to alter the default
 behavior of Accumulo as well as improve performance based on the data stored.
 These include locality groups, constraints, bloom filters, iterators, and block
-cache.  See the <a href="/docs/unreleased/config/">configuration documentation</a> for a complete list of
-available configuration options.</p>
+cache.  See the <a href="/docs/unreleased/administration/configuration-properties">configuration properties documentation</a> for
+a complete list of available configuration options.</p>
 
 <h2 id="locality-groups">Locality Groups</h2>
 
 <p>Accumulo supports storing sets of column families separately on disk to allow
 clients to efficiently scan over columns that are frequently used together and to avoid
 scanning over column families that are not requested. After a locality group is set,
-Scanner and BatchScanner operations will automatically take advantage of them
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a> and <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> operations will automatically take advantage of them
 whenever the fetchColumnFamilies() method is used.</p>
 
-<p>By default, tables place all column families into the same ``default’’ locality group.
+<p>By default, tables place all column families into the same <code class="highlighter-rouge">default</code> locality group.
 Additional locality groups can be configured at any time via the shell or
 programmatically as follows:</p>
 
@@ -789,11 +789,8 @@ compact tablets that overlap the given row range.</p>
 <h3 id="compaction-strategies">Compaction Strategies</h3>
 
 <p>The default behavior of major compactions is defined in the class DefaultCompactionStrategy. 
-This behavior can be changed by overriding the following property with a fully qualified class name:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>table.majc.compaction.strategy
-</code></pre>
-</div>
+This behavior can be changed by overriding <a href="/docs/unreleased/administration/configuration-properties#table_majc_compaction_strategy">table.majc.compaction.strategy</a> with a fully
+qualified class name.</p>
 
 <p>Custom compaction strategies can have additional properties that are specified following the prefix property:</p>
 
@@ -802,15 +799,15 @@ This behavior can be changed by overriding the following property with a fully q
 </div>
 
 <p>Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
-org.apache.accumulo.tserver.compaction.* package. EverythingCompactionStrategy will simply compact all files. This is the 
-strategy used by the user “compact” command. SizeLimitCompactionStrategy compacts files no bigger than the limit set in the
-property table.majc.compaction.strategy.opts.sizeLimit.</p>
+<code class="highlighter-rouge">org.apache.accumulo.tserver.compaction.*</code> package. <code class="highlighter-rouge">EverythingCompactionStrategy</code> will simply compact all files. This is the 
+strategy used by the user <code class="highlighter-rouge">compact</code> command. <code class="highlighter-rouge">SizeLimitCompactionStrategy</code> compacts files no bigger than the limit set in the
+property <code class="highlighter-rouge">table.majc.compaction.strategy.opts.sizeLimit</code>.</p>
 
-<p>TwoTierCompactionStrategy is a hybrid compaction strategy that supports two types of compression. If the total size of 
-files being compacted is larger than table.majc.compaction.strategy.opts.file.large.compress.threshold than a larger 
-compression type will be used. The larger compression type is specified in table.majc.compaction.strategy.opts.file.large.compress.type. 
-Otherwise, the configured table compression will be used. To use this strategy with minor compactions set table.file.compress.type=snappy 
-and set a different compress type in table.majc.compaction.strategy.opts.file.large.compress.type for larger files.</p>
+<p><code class="highlighter-rouge">TwoTierCompactionStrategy</code> is a hybrid compaction strategy that supports two types of compression. If the total size of 
+files being compacted is larger than <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.threshold</code> than a larger 
+compression type will be used. The larger compression type is specified in <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.type</code>. 
+Otherwise, the configured table compression will be used. To use this strategy with minor compactions set <code class="highlighter-rouge">table.file.compress.type=snappy</code> 
+and set a different compress type in <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.type</code> for larger files.</p>
 
 <h2 id="pre-splitting-tables">Pre-splitting tables</h2>
 
@@ -828,7 +825,7 @@ root@myinstance&gt; addsplits -t newTable g n t
 </div>
 
 <p>This will create a new table with 4 tablets. The table will be split
-on the letters <code class="highlighter-rouge">g'',</code>n’’, and ``t’’ which will work nicely if the
+on the letters <code class="highlighter-rouge">g</code>, <code class="highlighter-rouge">n</code>, and <code class="highlighter-rouge">t</code> which will work nicely if the
 row data start with lower-case alphabetic characters. If your row
 data includes binary information or numeric information, or if the
 distribution of the row information is not flat, then you would pick
@@ -847,7 +844,7 @@ window of current information, tablets for older rows may be empty.</p>
 
 <p>Accumulo supports tablet merging, which can be used to reduce
 the number of split points. The following command will merge all rows
-from <code class="highlighter-rouge">A'' to</code>Z’’ into a single tablet:</p>
+from <code class="highlighter-rouge">A</code> to <code class="highlighter-rouge">Z</code> into a single tablet:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
 </code></pre>
@@ -891,7 +888,7 @@ root@myinstance&gt; merge -t myTable
 <h2 id="delete-range">Delete Range</h2>
 
 <p>Consider an indexing scheme that uses date information in each row.
-For example ``20110823-15:20:25.013’’ might be a row that specifies a
+For example <code class="highlighter-rouge">20110823-15:20:25.013</code> might be a row that specifies a
 date and time. In some cases, we might like to delete rows based on
 this date, say to remove all the data older than the current year.
 Accumulo supports a delete range operation which efficiently
@@ -901,8 +898,8 @@ removes data between two rows. For example:</p>
 </code></pre>
 </div>
 
-<p>This will delete all rows starting with <code class="highlighter-rouge">2010'' and it will stop at
-any row starting</code>2011’’. You can delete any data prior to 2011
+<p>This will delete all rows starting with <code class="highlighter-rouge">2010</code> and it will stop at
+any row starting <code class="highlighter-rouge">2011</code>. You can delete any data prior to 2011
 with:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
