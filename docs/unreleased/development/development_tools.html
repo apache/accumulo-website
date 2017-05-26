@@ -200,9 +200,11 @@
               <div class="panel-body">
                 
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
                 
@@ -213,8 +215,6 @@
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
                 
               </div>
             </div>
@@ -321,6 +321,104 @@
 Accumulo requires Hadoop, Zookeeper, the Accumulo master, a tablet server, etc. If
 you want to write a unit test that uses Accumulo, you need a lot of infrastructure
 in place before your test can run.</p>
+
+<h2 id="iterator-test-harness">Iterator Test Harness</h2>
+
+<p>Iterators, while extremely powerful, are notoriously difficult to test. While the API defines
+the methods an Iterator must implement and each method’s functionality, the actual invocation
+of these methods by Accumulo TabletServers can be surprisingly difficult to mimic in unit tests.</p>
+
+<p>The Apache Accumulo “Iterator Test Harness” is designed to provide a generalized testing framework
+for all Accumulo Iterators to leverage to identify common pitfalls in user-created Iterators.</p>
+
+<h3 id="framework-use">Framework Use</h3>
+
+<p>The harness provides an abstract class for use with JUnit4. Users must define the following for this
+abstract class:</p>
+
+<ul>
+  <li>A <code class="highlighter-rouge">SortedMap</code> of input data (<code class="highlighter-rouge">Key</code>-<code class="highlighter-rouge">Value</code> pairs)</li>
+  <li>A <code class="highlighter-rouge">Range</code> to use in tests</li>
+  <li>A <code class="highlighter-rouge">Map</code> of options (<code class="highlighter-rouge">String</code> to <code class="highlighter-rouge">String</code> pairs)</li>
+  <li>A <code class="highlighter-rouge">SortedMap</code> of output data (<code class="highlighter-rouge">Key</code>-<code class="highlighter-rouge">Value</code> pairs)</li>
+  <li>A list of <code class="highlighter-rouge">IteratorTestCase</code>s (these can be automatically discovered)</li>
+</ul>
+
+<p>The majority of effort a user must make is in creating the input dataset and the expected
+output dataset for the iterator being tested.</p>
+
+<h3 id="normal-test-outline">Normal Test Outline</h3>
+
+<p>Most iterator tests will follow the given outline:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.SortedMap</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Key</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Range</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Value</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestCaseFinder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestInput</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestOutput</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.junit4.BaseJUnit4IteratorTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.testcases.IteratorTestCase</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runners.Parameterized.Parameters</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyIteratorTest</span> <span class="kd">extends</span> <span class="n">BaseJUnit4IteratorTest</span> <span class="o">{</span>
+
+  <span class="nd">@Parameters</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span><span class="o">[][]</span> <span class="nf">parameters</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">IteratorTestInput</span> <span class="n">input</span> <span class="o">=</span> <span class="n">createIteratorInput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="n">IteratorTestOutput</span> <span class="n">output</span> <span class="o">=</span> <span class="n">createIteratorOutput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorTestCase</span><span class="o">&gt;</span> <span class="n">testCases</span> <span class="o">=</span> <span class="n">IteratorTestCaseFinder</span><span class="o">.</span><span class="na">findAllTestCases</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">BaseJUnit4IteratorTest</span><span class="o">.</span><span class="na">createParameters</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="n">output</span><span class="o">,</span> <span class="n">tests</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">INPUT_DATA</span> <span class="o">=</span> <span class="n">createInputData</span><span class="o">();</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">OUTPUT_DATA</span> <span class="o">=</span> <span class="n">createOutputData</span><span class="o">();</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createInputData</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createOutputData</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestInput</span> <span class="nf">createIteratorInput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span> <span class="o">=</span> <span class="n">createIteratorOptions</span><span class="o">();</span> 
+    <span class="kd">final</span> <span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">createRange</span><span class="o">();</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestInput</span><span class="o">(</span><span class="n">MyIterator</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">options</span><span class="o">,</span> <span class="n">range</span><span class="o">,</span> <span class="n">INPUT_DATA</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">createIteratorOptions</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+    <span class="c1">// Tip: Use INPUT_DATA if helpful in generating output</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Range</span> <span class="nf">createRange</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestOutput</span> <span class="nf">createIteratorOutput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestOutput</span><span class="o">(</span><span class="n">OUTPUT_DATA</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="limitations">Limitations</h3>
+
+<p>While the provided <code class="highlighter-rouge">IteratorTestCase</code>s should exercise common edge-cases in user iterators,
+there are still many limitations to the existing test harness. Some of them are:</p>
+
+<ul>
+  <li>Can only specify a single iterator, not many (a “stack”)</li>
+  <li>No control over provided IteratorEnvironment for tests</li>
+  <li>Exercising delete keys (especially with major compactions that do not include all files)</li>
+</ul>
+
+<p>These are left as future improvements to the harness.</p>
 
 <h2 id="mock-accumulo">Mock Accumulo</h2>
 

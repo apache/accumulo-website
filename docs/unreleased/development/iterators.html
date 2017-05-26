@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - Iterator Design</title>
+<title>Accumulo Documentation - Iterators</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -200,9 +200,11 @@
               <div class="panel-body">
                 
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
                 
@@ -213,8 +215,6 @@
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
                 
               </div>
             </div>
@@ -312,12 +312,12 @@
   </div>
   <div class="col-md-9">
     
-    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Iterator Design</p>
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Iterators</p>
     
     
-    <h1>Iterator Design</h1>
+    <h1>Iterators</h1>
     
-    <p>Accumulo SortedKeyValueIterators, commonly referred to as Iterators for short, are server-side programming constructs
+    <p>Accumulo SortedKeyValueIterators, commonly referred to as <strong>Iterators</strong> for short, are server-side programming constructs
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
@@ -609,6 +609,32 @@ Combiner at a priority less than the Combiner (the Versioning Iterator is added 
 Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
 pair that has the largest timestamp.</p>
 
+<h4 id="combiner-applications">Combiner Applications</h4>
+
+<p>Many applications can benefit from the ability to aggregate values across common
+keys. This can be done via Combiner iterators and is similar to the Reduce step in
+MapReduce. This provides the ability to define online, incrementally updated
+analytics without the overhead or latency associated with batch-oriented
+MapReduce jobs.</p>
+
+<p>All that is needed to aggregate values of a table is to identify the fields over which
+values will be grouped, insert mutations with those fields as the key, and configure
+the table with a combining iterator that supports the summarizing operation
+desired.</p>
+
+<p>The only restriction on an combining iterator is that the combiner developer
+should not assume that all values for a given key have been seen, since new
+mutations can be inserted at anytime. This precludes using the total number of
+values in the aggregation such as when calculating an average, for example.</p>
+
+<p>An interesting use of combining iterators within an Accumulo table is to store
+feature vectors for use in machine learning algorithms. For example, many
+algorithms such as k-means clustering, support vector machines, anomaly detection,
+etc. use the concept of a feature vector and the calculation of distance metrics to
+learn a particular model. The columns in an Accumulo table can be used to efficiently
+store sparse features and their weights to be incrementally updated via the use of an
+combining iterator.</p>
+
 <h2 id="best-practices">Best practices</h2>
 
 <p>Because of the flexibility that the <code class="highlighter-rouge">SortedKeyValueInterface</code> provides, it doesn’t directly disallow
@@ -699,6 +725,12 @@ all files (only a subset of them), it is possible that the logic take this into 
 <p>For example, a Combiner that runs over data at during compactions, might not see all of the values for a given Key. The
 Combiner must recognize this and not perform any function that would be incorrect due
 to the missing values.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>The <a href="/docs/unreleased/development/development_tools#iterator-test-harness">Iterator test harness</a> is generalized testing framework for Accumulo Iterators that can
+identify common pitfalls in user-created Iterators.</p>
+
 
   </div>
 </div>

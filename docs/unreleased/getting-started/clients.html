@@ -200,9 +200,11 @@
               <div class="panel-body">
                 
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_design">Iterator Design</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterator_testing">Iterator Testing</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
                 
@@ -213,8 +215,6 @@
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/analytics">Analytics</a></div>
                 
               </div>
             </div>
@@ -592,124 +592,15 @@ You may consider using the <a href="https://static.javadoc.io/org.apache.accumul
 isolation. The drawback of this approach is that entire rows are read into
 memory on the server side. If a row is too big, it may crash a tablet server.</p>
 
-<h2 id="proxy">Proxy</h2>
+<h2 id="additional-documentation">Additional Documentation</h2>
 
-<p>The proxy API allows the interaction with Accumulo with languages other than Java.
-A proxy server is provided in the codebase and a client can further be generated.
-The proxy API can also be used instead of the traditional ZooKeeperInstance class to
-provide a single TCP port in which clients can be securely routed through a firewall,
-without requiring access to all tablet servers in the cluster.</p>
+<p>This page covers Accumulo client basics.  Below are links to additional documentation that may be useful when creating Accumulo clients:</p>
 
-<h3 id="prerequisites">Prerequisites</h3>
-
-<p>The proxy server can live on any node in which the basic client API would work. That
-means it must be able to communicate with the Master, ZooKeepers, NameNode, and the
-DataNodes. A proxy client only needs the ability to communicate with the proxy server.</p>
-
-<h3 id="configuration">Configuration</h3>
-
-<p>The configuration options for the proxy server live inside of a properties file. At
-the very least, you need to supply the following properties:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
-tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
-port=42424
-instance=test
-zookeepers=localhost:2181
-</code></pre>
-</div>
-
-<p>You can find a sample configuration file in your distribution at <code class="highlighter-rouge">proxy/proxy.properties</code>.</p>
-
-<p>This sample configuration file further demonstrates an ability to back the proxy server
-by MockAccumulo or the MiniAccumuloCluster.</p>
-
-<h3 id="running-the-proxy-server">Running the Proxy Server</h3>
-
-<p>After the properties file holding the configuration is created, the proxy server
-can be started using the following command in the Accumulo distribution (assuming
-your properties file is named <code class="highlighter-rouge">config.properties</code>):</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo proxy -p config.properties
-</code></pre>
-</div>
-
-<h3 id="creating-a-proxy-client">Creating a Proxy Client</h3>
-
-<p>Aside from installing the Thrift compiler, you will also need the language-specific library
-for Thrift installed to generate client code in that language. Typically, your operating
-system’s package manager will be able to automatically install these for you in an expected
-location such as <code class="highlighter-rouge">/usr/lib/python/site-packages/thrift</code>.</p>
-
-<p>You can find the thrift file for generating the client at <code class="highlighter-rouge">proxy/proxy.thrift</code>.</p>
-
-<p>After a client is generated, the port specified in the configuration properties above will be
-used to connect to the server.</p>
-
-<h3 id="using-a-proxy-client">Using a Proxy Client</h3>
-
-<p>The following examples have been written in Java and the method signatures may be
-slightly different depending on the language specified when generating client with
-the Thrift compiler. After initiating a connection to the Proxy (see Apache Thrift’s
-documentation for examples of connecting to a Thrift service), the methods on the
-proxy client will be available. The first thing to do is log in:</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
-<span class="n">password</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"password"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">);</span>
-<span class="n">ByteBuffer</span> <span class="n">token</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
-</code></pre>
-</div>
-
-<p>Once logged in, the token returned will be used for most subsequent calls to the client.
-Let’s create a table, add some data, scan the table, and delete it.</p>
-
-<p>First, create a table.</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">createTable</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">TimeType</span><span class="o">.</span><span class="na">MILLIS</span><span class="o">);</span>
-</code></pre>
-</div>
-
-<p>Next, add some data:</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// first, create a writer on the server</span>
-<span class="n">String</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createWriter</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">WriterOptions</span><span class="o">());</span>
-
-<span class="c1">//rowid</span>
-<span class="n">ByteBuffer</span> <span class="n">rowid</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="s">"UUID"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
-
-<span class="c1">//mutation like class</span>
-<span class="n">ColumnUpdate</span> <span class="n">cu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColumnUpdate</span><span class="o">();</span>
-<span class="n">cu</span><span class="o">.</span><span class="na">setColFamily</span><span class="o">(</span><span class="s">"MyFamily"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
-<span class="n">cu</span><span class="o">.</span><span class="na">setColQualifier</span><span class="o">(</span><span class="s">"MyQualifier"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
-<span class="n">cu</span><span class="o">.</span><span class="na">setColVisibility</span><span class="o">(</span><span class="s">"VisLabel"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
-<span class="n">cu</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="s">"Some Value."</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
-
-<span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;</span> <span class="n">updates</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;();</span>
-<span class="n">updates</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cu</span><span class="o">);</span>
-
-<span class="c1">// build column updates</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">ByteBuffer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;&gt;</span> <span class="n">cellsToUpdate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">ByteBuffer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;&gt;();</span>
-<span class="n">cellsToUpdate</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rowid</span><span class="o">,</span> <span class="n">updates</span><span class="o">);</span>
-
-<span class="c1">// send updates to the server</span>
-<span class="n">client</span><span class="o">.</span><span class="na">updateAndFlush</span><span class="o">(</span><span class="n">writer</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="n">cellsToUpdate</span><span class="o">);</span>
-
-<span class="n">client</span><span class="o">.</span><span class="na">closeWriter</span><span class="o">(</span><span class="n">writer</span><span class="o">);</span>
-</code></pre>
-</div>
-
-<p>Scan for the data and batch the return of the results on the server:</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">String</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ScanOptions</span><span class="o">());</span>
-<span class="n">ScanResult</span> <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">nextK</span><span class="o">(</span><span class="n">scanner</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
-
-<span class="k">for</span><span class="o">(</span><span class="n">KeyValue</span> <span class="n">keyValue</span> <span class="o">:</span> <span class="n">results</span><span class="o">.</span><span class="na">getResultsIterator</span><span class="o">())</span> <span class="o">{</span>
-  <span class="c1">// do something with results</span>
-<span class="o">}</span>
-
-<span class="n">client</span><span class="o">.</span><span class="na">closeScanner</span><span class="o">(</span><span class="n">scanner</span><span class="o">);</span>
-</code></pre>
-</div>
+<ul>
+  <li><a href="/docs/unreleased/development/iterators">Iterators</a> - Server-side programming mechanism that can modify key/value pairs at various points in data management process</li>
+  <li><a href="/docs/unreleased/development/proxy">Proxy</a> - Documentation for interacting with Accumulo using non-Java languages through a proxy server</li>
+  <li><a href="/docs/unreleased/development/mapreduce">MapReduce</a> - Documentation for reading and writing to Accumulo using MapReduce.</li>
+</ul>
 
 
   </div>
