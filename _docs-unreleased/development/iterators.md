@@ -4,7 +4,7 @@ category: development
 order: 1
 ---
 
-Accumulo SortedKeyValueIterators, commonly referred to as **Iterators** for short, are server-side programming constructs
+Accumulo [SortedKeyValueIterators][SortedKeyValueIterator], commonly referred to as **Iterators** for short, are server-side programming constructs
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
@@ -16,7 +16,7 @@ merge multiple Iterators into a single view. In this sense, a collection of Iter
 a tree-structure than a list, but there is always a sense of a flow of Key-Value pairs through some Iterators. Iterators
 are not designed to act as triggers nor are they designed to operate outside of the purview of a single table.
 
-Understanding how TabletServers invoke the methods on a SortedKeyValueIterator can be obtuse as the actual code is
+Understanding how TabletServers invoke the methods on a [SortedKeyValueIterator] can be obtuse as the actual code is
 buried within the implementation of the TabletServer; however, it is generally unnecessary to have a strong
 understanding of this as the interface provides clear definitions about what each action each method should take. This
 chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
@@ -37,7 +37,7 @@ Iterators must have a public no-args constructor.
 
 ## Interface
 
-A normal implementation of the SortedKeyValueIterator defines functionality for the following methods:
+A normal implementation of the [SortedKeyValueIterator] defines functionality for the following methods:
 
 ```java
 void init(SortedKeyValueIterator<Key,Value> source, Map<String,String> options, IteratorEnvironment env) throws IOException;
@@ -68,7 +68,7 @@ These options allow for Iterators to dynamically configure themselves on the fly
 (a Scan or Compaction), the Map will be empty. An example of a configuration item for an Iterator could be a pattern used to filter
 Key-Value pairs in a regular expression Iterator.
 
-The third argument, the `IteratorEnvironment`, is a special object which provides information to this Iterator about the
+The third argument, the [IteratorEnvironment], is a special object which provides information to this Iterator about the
 context in which it was invoked. Commonly, this information is not necessary to inspect. For example, if an Iterator
 knows that it is running in the context of a full-major compaction (reading all of the data) as opposed to a user scan
 (which may strongly limit the number of columns), the Iterator might make different algorithmic decisions in an attempt to
@@ -79,7 +79,7 @@ optimize itself.
 The `seek` method is likely the most confusing method on the Iterator interface. The purpose of this method is to
 advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
 the implementation of this method returns some additional processing is performed which may further advance the current
-position past the `startKey` of the `Range`. This, however, is dependent on the functionality the iterator provides. For
+position past the `startKey` of the [Range]. This, however, is dependent on the functionality the iterator provides. For
 example, a filtering iterator would consume a number Key-Value pairs which do not meets its criteria before `seek`
 returns. The important condition for `seek` to meet is that this Iterator should be ready to return the first Key-Value
 pair, or none if no such pair is available, when the method returns. The Key-Value pair would be returned by `getTopKey`
@@ -88,8 +88,8 @@ a Key-Value pair to return.
 
 The arguments passed to seek are as follows:
 
-The TabletServer first provides a `Range`, an object which defines some collection of Accumulo `Key`s, which defines the
-Key-Value pairs that this Iterator should return. Each `Range` has a `startKey` and `endKey` with an inclusive flag for
+The TabletServer first provides a [Range], an object which defines some collection of Accumulo `Key`s, which defines the
+Key-Value pairs that this Iterator should return. Each [Range] has a `startKey` and `endKey` with an inclusive flag for
 both. While this Range is often similar to the Range(s) set by the client on a Scanner or BatchScanner, it is not
 guaranteed to be a Range that the client set. Accumulo will split up larger ranges and group them together based on
 Tablet boundaries per TabletServer. Iterators should not attempt to implement any custom logic based on the Range(s)
@@ -101,12 +101,12 @@ should be treated as an inclusion collection (true) or an exclusion collection (
 
 It is likely that all implementations of `seek` will first make a call to the `seek` method on the
 "source" Iterator that was provided in the `init` method. The collection of column families and
-the boolean `include` argument should be passed down as well as the `Range`. Somewhat commonly, the Iterator will
+the boolean `include` argument should be passed down as well as the [Range]. Somewhat commonly, the Iterator will
 also implement some sort of additional logic to find or compute the first Key-Value pair in the provided
 Range. For example, a regular expression Iterator would consume all records which do not match the given
 pattern before returning from `seek`.
 
-It is important to retain the original Range passed to this method to know when this Iterator should stop
+It is important to retain the original [Range] passed to this method to know when this Iterator should stop
 reading more Key-Value pairs. Ignoring this typically does not affect scans from a Scanner, but it
 will result in duplicate keys emitting from a BatchScan if the scanned table has more than one tablet.
 Best practice is to never emit entries outside the seek range.
@@ -156,12 +156,12 @@ The `deepCopy` method is similar to the `clone` method from the Java `Cloneable`
 Implementations of this method should return a new object of the same type as the Accumulo Iterator
 instance it was called on. Any internal state from the instance `deepCopy` was called
 on should be carried over to the returned copy. The returned copy should be ready to have
-`seek` called on it. The SortedKeyValueIterator interface guarantees that `init` will be called on
+`seek` called on it. The [SortedKeyValueIterator] interface guarantees that `init` will be called on
 an iterator before `deepCopy` and that `init` will not be called on the iterator returned by
 `deepCopy`.
 
 Typically, implementations of `deepCopy` call a copy-constructor which will initialize
-internal data structures. As with `seek`, it is common for the `IteratorEnvironment`
+internal data structures. As with `seek`, it is common for the [IteratorEnvironment]
 argument to be ignored as most Iterator implementations can be written without the explicit
 information the environment provides.
 
@@ -246,18 +246,18 @@ next possible row.
 ## Abstract Iterators
 
 A number of Abstract implementations of Iterators are provided to allow for faster creation
-of common patterns. The most commonly used abstract implementations are the `Filter` and
-`Combiner` classes. When possible these classes should be used instead as they have been
+of common patterns. The most commonly used abstract implementations are the [Filter] and
+[Combiner] classes. When possible these classes should be used instead as they have been
 thoroughly tested inside Accumulo itself.
 
 ### Filter
 
-The `Filter` abstract Iterator provides a very simple implementation which allows implementations
+The [Filter] abstract Iterator provides a very simple implementation which allows implementations
 to define whether or not a Key-Value pair should be returned via an `accept(Key, Value)` method.
 
 Filters are extremely simple to implement; however, when the implementation is filtering a
 large percentage of Key-Value pairs with respect to the total number of pairs examined,
-it can be very inefficient. For example, if a Filter implementation can determine after examining
+it can be very inefficient. For example, if a [Filter] implementation can determine after examining
 part of the row that no other pairs in this row will be accepted, there is no mechanism to
 efficiently skip the remaining Key-Value pairs. Concretely, take a row which is comprised of
 1000 Key-Value pairs. After examining the first 10 Key-Value pairs, it is determined
@@ -266,30 +266,30 @@ remaining 990 Key-Value pairs in this row. Another way to express this deficienc
 Filters have no means to leverage the `seek` method to efficiently skip large portions
 of Key-Value pairs.
 
-As such, the `Filter` class functions well for filtering small amounts of data, but is
-inefficient for filtering large amounts of data. The decision to use a `Filter` strongly
+As such, the [Filter] class functions well for filtering small amounts of data, but is
+inefficient for filtering large amounts of data. The decision to use a Filter strongly
 depends on the use case and distribution of data being filtered.
 
 ### Combiner
 
-The `Combiner` class is another common abstract Iterator. Similar to the `Combiner` interface
+The [Combiner] class is another common abstract Iterator. Similar to the `Combiner` interface
 define in Hadoop's MapReduce framework, implementations of this abstract class reduce
 multiple Values for different versions of a Key (Keys which only differ by timestamps) into one Key-Value pair.
 Combiners provide a simple way to implement common operations like summation and
 aggregation without the need to implement the entire Accumulo Iterator interface.
 
-One important consideration when choosing to design a Combiner is that the "reduction" operation
+One important consideration when choosing to design a [Combiner] is that the "reduction" operation
 is often best represented when it is associative and commutative. Operations which do not meet
 these criteria can be implemented; however, the implementation can be difficult.
 
-A second consideration is that a Combiner is not guaranteed to see every Key-Value pair
+A second consideration is that a [Combiner] is not guaranteed to see every Key-Value pair
 which differ only by timestamp every time it is invoked. For example, if there are 5 Key-Value
 pairs in a table which only differ by the timestamps 1, 2, 3, 4, and 5, it is not guaranteed that
 every invocation of the Combiner will see 5 timestamps. One invocation might see the Values for
 Keys with timestamp 1 and 4, while another invocation might see the Values for Keys with the
 timestamps 1, 2, 4 and 5.
 
-Finally, when configuring an Accumulo table to use a Combiner, be sure to disable the Versioning Iterator or set the
+Finally, when configuring an Accumulo table to use a [Combiner], be sure to disable the Versioning Iterator or set the
 Combiner at a priority less than the Combiner (the Versioning Iterator is added at a priority of 20 by default). The
 Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
 pair that has the largest timestamp.
@@ -297,7 +297,7 @@ pair that has the largest timestamp.
 #### Combiner Applications
 
 Many applications can benefit from the ability to aggregate values across common
-keys. This can be done via Combiner iterators and is similar to the Reduce step in
+keys. This can be done via [Combiner] iterators and is similar to the Reduce step in
 MapReduce. This provides the ability to define online, incrementally updated
 analytics without the overhead or latency associated with batch-oriented
 MapReduce jobs.
@@ -322,16 +322,16 @@ combining iterator.
 
 ## Best practices
 
-Because of the flexibility that the `SortedKeyValueInterface` provides, it doesn't directly disallow
+Because of the flexibility that the [SortedKeyValueInterface] provides, it doesn't directly disallow
 many implementations which are poor design decisions. The following are some common recommendations to
 follow and pitfalls to avoid in Iterator implementations.
 
 #### Avoid special logic encoded in Ranges
 
 Commonly, granular Ranges that a client passes to an Iterator from a `Scanner` or `BatchScanner` are unmodified.
-If a `Range` falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
-`seek` method. However, there is no guarantee that the `Range` will remain unaltered from client to server. As such, Iterators
-should *never* make assumptions about the current state/context based on the `Range`.
+If a [Range] falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
+`seek` method. However, there is no guarantee that the [Range] will remain unaltered from client to server. As such, Iterators
+should *never* make assumptions about the current state/context based on the Range.
 
 The common failure condition is referred to as a "re-seek". In the context of a Scan, TabletServers construct the
 "stack" of Iterators and batch up Key-Value pairs to send back to the client. When a sufficient number of Key-Value
@@ -342,24 +342,24 @@ the point to resume the iteration (to avoid returning duplicate Key-Value pairs)
 from the original but is shortened by setting the startKey of the original Range to the Key last returned by the Scan,
 non-inclusive.
 
-### `seek`'ing backwards
+### seeking backwards
 
 The ability for an Iterator to "skip over" large blocks of Key-Value pairs is a major tenet behind Iterators.
 By `seek`'ing when it is known that there is a collection of Key-Value pairs which can be ignored can
 greatly increase the speed of a scan as many Key-Value pairs do not have to be deserialized and processed.
 
-While the `seek` method provides the `Range` that should be used to `seek` the underlying source Iterator,
-there is no guarantee that the implementing Iterator uses that `Range` to perform the `seek` on its
-"source" Iterator. As such, it is possible to seek to any `Range` and the interface has no assertions
+While the `seek` method provides the [Range] that should be used to `seek` the underlying source Iterator,
+there is no guarantee that the implementing Iterator uses that Range to perform the `seek` on its
+"source" Iterator. As such, it is possible to seek to any Range and the interface has no assertions
 to prevent this from happening.
 
 Since Iterators are allowed to `seek` to arbitrary Keys, it also allows Iterators to create infinite loops
-inside Scans that will repeatedly read the same data without end. If an arbitrary Range is constructed, it should
+inside Scans that will repeatedly read the same data without end. If an arbitrary [Range] is constructed, it should
 construct a completely new Range as it allows for bugs to be introduced which will break Accumulo.
 
 Thus, `seek`'s should always be thought of as making "forward progress" in the view of the total iteration. The
-`startKey` of a `Range` should always be greater than the current Key seen by the Iterator while the `endKey` of the
-`Range` should always retain the original `endKey` (and `endKey` inclusivity) of the last `Range` seen by your
+`startKey` of a [Range] should always be greater than the current Key seen by the Iterator while the `endKey` of the
+Range should always retain the original `endKey` (and `endKey` inclusivity) of the last Range seen by your
 Iterator's implementation of seek.
 
 ### Take caution in constructing new data in an Iterator
@@ -407,7 +407,7 @@ to make different assertions than those who only operate at scan time. Iterators
 Iterators will not necessarily see all of the Key-Value pairs in ever invocation. Because compactions often do not rewrite
 all files (only a subset of them), it is possible that the logic take this into consideration.
 
-For example, a Combiner that runs over data at during compactions, might not see all of the values for a given Key. The
+For example, a [Combiner] that runs over data at during compactions, might not see all of the values for a given Key. The
 Combiner must recognize this and not perform any function that would be incorrect due
 to the missing values.
 
@@ -416,4 +416,9 @@ to the missing values.
 The [Iterator test harness][iterator-test-harness] is generalized testing framework for Accumulo Iterators that can
 identify common pitfalls in user-created Iterators.
 
+[SortedKeyValueIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html
+[IteratorEnvironment]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/IteratorEnvironment.html
+[Filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
+[Combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
+[Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
 [iterator-test-harness]: {{ page.docs_baseurl }}/development/development_tools#iterator-test-harness
