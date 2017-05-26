@@ -1,7 +1,7 @@
 ---
 title: High-Speed Ingest
 category: development
-order: 7
+order: 8
 ---
 
 Accumulo is often used as part of a larger data processing and storage system. To

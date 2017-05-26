@@ -1,14 +1,8 @@
 ---
-title: Analytics
+title: MapReduce
 category: development
-order: 8
+order: 2
 ---
-
-Accumulo supports more advanced data processing than simply keeping keys
-sorted and performing efficient lookups. Analytics can be developed by using
-MapReduce and Iterators in conjunction with Accumulo tables.
-
-## MapReduce
 
 Accumulo tables can be used as the source and destination of MapReduce jobs. To
 use an Accumulo table with a MapReduce job (specifically with the new Hadoop API
@@ -20,7 +14,7 @@ two format classes to do the following:
 * Restrict the scan to a range of rows
 * Restrict the input to a subset of available columns
 
-### Mapper and Reducer classes
+## Mapper and Reducer classes
 
 To read from an Accumulo table create a Mapper with the following class
 parameterization and be sure to configure the AccumuloInputFormat.
@@ -55,7 +49,7 @@ this mutation should be applied. The Text can be null in which case the mutation
 will be applied to the default table name specified in the AccumuloOutputFormat
 options.
 
-### AccumuloInputFormat options
+## AccumuloInputFormat options
 
 ```java
 Job job = new Job(getConf());
@@ -95,7 +89,7 @@ RegExFilter.setRegexs(is, ".*suffix", null, null, null, true);
 AccumuloInputFormat.addIterator(job, is);
 ```
 
-### AccumuloMultiTableInputFormat options
+## AccumuloMultiTableInputFormat options
 
 The AccumuloMultiTableInputFormat allows the scanning over multiple tables
 in a single MapReduce job. Separate ranges, columns, and iterators can be
@@ -159,7 +153,7 @@ class MyMapper extends Mapper<Key,Value,WritableComparable,Writable> {
 }
 ```
 
-### AccumuloOutputFormat options
+## AccumuloOutputFormat options
 
 ```java
 boolean createTables = true;
@@ -182,45 +176,6 @@ AccumuloOutputFormat.setMaxLatency(job, 300000); // milliseconds
 AccumuloOutputFormat.setMaxMutationBufferSize(job, 50000000); // bytes
 ```
 
-The [MapReduce example](https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md)
-contains a complete example of using MapReduce with Accumulo.
+The [MapReduce example][mapred-example] contains a complete example of using MapReduce with Accumulo.
 
-## Combiners
-
-Many applications can benefit from the ability to aggregate values across common
-keys. This can be done via Combiner iterators and is similar to the Reduce step in
-MapReduce. This provides the ability to define online, incrementally updated
-analytics without the overhead or latency associated with batch-oriented
-MapReduce jobs.
-
-All that is needed to aggregate values of a table is to identify the fields over which
-values will be grouped, insert mutations with those fields as the key, and configure
-the table with a combining iterator that supports the summarizing operation
-desired.
-
-The only restriction on an combining iterator is that the combiner developer
-should not assume that all values for a given key have been seen, since new
-mutations can be inserted at anytime. This precludes using the total number of
-values in the aggregation such as when calculating an average, for example.
-
-### Feature Vectors
-
-An interesting use of combining iterators within an Accumulo table is to store
-feature vectors for use in machine learning algorithms. For example, many
-algorithms such as k-means clustering, support vector machines, anomaly detection,
-etc. use the concept of a feature vector and the calculation of distance metrics to
-learn a particular model. The columns in an Accumulo table can be used to efficiently
-store sparse features and their weights to be incrementally updated via the use of an
-combining iterator.
-
-## Statistical Modeling
-
-Statistical models that need to be updated by many machines in parallel could be
-similarly stored within an Accumulo table. For example, a MapReduce job that is
-iteratively updating a global statistical model could have each map or reduce worker
-reference the parts of the model to be read and updated through an embedded
-Accumulo client.
-
-Using Accumulo this way enables efficient and fast lookups and updates of small
-pieces of information in a random access pattern, which is complementary to
-MapReduce's sequential access model.
+[mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md

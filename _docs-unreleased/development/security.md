@@ -1,7 +1,7 @@
 ---
 title: Security
 category: development
-order: 6
+order: 7
 ---
 
 Accumulo extends the BigTable data model to implement a security mechanism

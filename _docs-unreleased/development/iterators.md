@@ -1,10 +1,10 @@
 ---
-title: Iterator Design
+title: Iterators
 category: development
 order: 1
 ---
 
-Accumulo SortedKeyValueIterators, commonly referred to as Iterators for short, are server-side programming constructs
+Accumulo SortedKeyValueIterators, commonly referred to as **Iterators** for short, are server-side programming constructs
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
@@ -294,6 +294,32 @@ Combiner at a priority less than the Combiner (the Versioning Iterator is added 
 Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
 pair that has the largest timestamp.
 
+#### Combiner Applications
+
+Many applications can benefit from the ability to aggregate values across common
+keys. This can be done via Combiner iterators and is similar to the Reduce step in
+MapReduce. This provides the ability to define online, incrementally updated
+analytics without the overhead or latency associated with batch-oriented
+MapReduce jobs.
+
+All that is needed to aggregate values of a table is to identify the fields over which
+values will be grouped, insert mutations with those fields as the key, and configure
+the table with a combining iterator that supports the summarizing operation
+desired.
+
+The only restriction on an combining iterator is that the combiner developer
+should not assume that all values for a given key have been seen, since new
+mutations can be inserted at anytime. This precludes using the total number of
+values in the aggregation such as when calculating an average, for example.
+
+An interesting use of combining iterators within an Accumulo table is to store
+feature vectors for use in machine learning algorithms. For example, many
+algorithms such as k-means clustering, support vector machines, anomaly detection,
+etc. use the concept of a feature vector and the calculation of distance metrics to
+learn a particular model. The columns in an Accumulo table can be used to efficiently
+store sparse features and their weights to be incrementally updated via the use of an
+combining iterator.
+
 ## Best practices
 
 Because of the flexibility that the `SortedKeyValueInterface` provides, it doesn't directly disallow
@@ -384,3 +410,10 @@ all files (only a subset of them), it is possible that the logic take this into 
 For example, a Combiner that runs over data at during compactions, might not see all of the values for a given Key. The
 Combiner must recognize this and not perform any function that would be incorrect due
 to the missing values.
+
+## Testing
+
+The [Iterator test harness][iterator-test-harness] is generalized testing framework for Accumulo Iterators that can
+identify common pitfalls in user-created Iterators.
+
+[iterator-test-harness]: {{ page.docs_baseurl }}/development/development_tools#iterator-test-harness

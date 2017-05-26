@@ -1,7 +1,7 @@
 ---
 title: Summary Statistics
 category: development
-order: 5
+order: 6
 ---
 
 ## Overview
