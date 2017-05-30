@@ -5,10 +5,9 @@ order: 2
 ---
 
 Accumulo tables can be used as the source and destination of MapReduce jobs. To
-use an Accumulo table with a MapReduce job (specifically with the new Hadoop API
-as of version 0.20), configure the job parameters to use the AccumuloInputFormat
-and AccumuloOutputFormat. Accumulo specific parameters can be set via these
-two format classes to do the following:
+use an Accumulo table with a MapReduce job, configure the job parameters to use
+the [AccumuloInputFormat] and [AccumuloOutputFormat]. Accumulo specific parameters
+can be set via these two format classes to do the following:
 
 * Authenticate and provide user credentials for the input
 * Restrict the scan to a range of rows
@@ -17,7 +16,7 @@ two format classes to do the following:
 ## Mapper and Reducer classes
 
 To read from an Accumulo table create a Mapper with the following class
-parameterization and be sure to configure the AccumuloInputFormat.
+parameterization and be sure to configure the [AccumuloInputFormat].
 
 ```java
 class MyMapper extends Mapper<Key,Value,WritableComparable,Writable> {
@@ -28,7 +27,7 @@ class MyMapper extends Mapper<Key,Value,WritableComparable,Writable> {
 ```
 
 To write to an Accumulo table, create a Reducer with the following class
-parameterization and be sure to configure the AccumuloOutputFormat. The key
+parameterization and be sure to configure the [AccumuloOutputFormat]. The key
 emitted from the Reducer identifies the table to which the mutation is sent. This
 allows a single Reducer to write to more than one table if desired. A default table
 can be configured using the AccumuloOutputFormat, in which case the output table
@@ -46,7 +45,7 @@ class MyReducer extends Reducer<WritableComparable, Writable, Text, Mutation> {
 
 The Text object passed as the output should contain the name of the table to which
 this mutation should be applied. The Text can be null in which case the mutation
-will be applied to the default table name specified in the AccumuloOutputFormat
+will be applied to the default table name specified in the [AccumuloOutputFormat]
 options.
 
 ## AccumuloInputFormat options
@@ -91,7 +90,7 @@ AccumuloInputFormat.addIterator(job, is);
 
 ## AccumuloMultiTableInputFormat options
 
-The AccumuloMultiTableInputFormat allows the scanning over multiple tables
+The [AccumuloMultiTableInputFormat] allows the scanning over multiple tables
 in a single MapReduce job. Separate ranges, columns, and iterators can be
 used for each table.
 
@@ -179,3 +178,6 @@ AccumuloOutputFormat.setMaxMutationBufferSize(job, 50000000); // bytes
 The [MapReduce example][mapred-example] contains a complete example of using MapReduce with Accumulo.
 
 [mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
+[AccumuloInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html
+[AccumuloMultiTableInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloMultiTableInputFormat.html
+[AccumuloOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html

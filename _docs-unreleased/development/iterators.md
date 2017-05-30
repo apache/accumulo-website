@@ -90,7 +90,7 @@ The arguments passed to seek are as follows:
 
 The TabletServer first provides a [Range], an object which defines some collection of Accumulo `Key`s, which defines the
 Key-Value pairs that this Iterator should return. Each [Range] has a `startKey` and `endKey` with an inclusive flag for
-both. While this Range is often similar to the Range(s) set by the client on a Scanner or BatchScanner, it is not
+both. While this Range is often similar to the Range(s) set by the client on a [Scanner] or [BatchScanner], it is not
 guaranteed to be a Range that the client set. Accumulo will split up larger ranges and group them together based on
 Tablet boundaries per TabletServer. Iterators should not attempt to implement any custom logic based on the Range(s)
 provided to `seek` and Iterators should not return any Keys that fall outside of the provided Range.
@@ -107,8 +107,8 @@ Range. For example, a regular expression Iterator would consume all records whic
 pattern before returning from `seek`.
 
 It is important to retain the original [Range] passed to this method to know when this Iterator should stop
-reading more Key-Value pairs. Ignoring this typically does not affect scans from a Scanner, but it
-will result in duplicate keys emitting from a BatchScan if the scanned table has more than one tablet.
+reading more Key-Value pairs. Ignoring this typically does not affect scans from a [Scanner], but it
+will result in duplicate keys emitting from a [BatchScanner] if the scanned table has more than one tablet.
 Best practice is to never emit entries outside the seek range.
 
 ### next
@@ -322,13 +322,13 @@ combining iterator.
 
 ## Best practices
 
-Because of the flexibility that the [SortedKeyValueInterface] provides, it doesn't directly disallow
+Because of the flexibility that the [SortedKeyValueIterator] interface provides, it doesn't directly disallow
 many implementations which are poor design decisions. The following are some common recommendations to
 follow and pitfalls to avoid in Iterator implementations.
 
 #### Avoid special logic encoded in Ranges
 
-Commonly, granular Ranges that a client passes to an Iterator from a `Scanner` or `BatchScanner` are unmodified.
+Commonly, granular Ranges that a client passes to an Iterator from a [Scanner] or [BatchScanner] are unmodified.
 If a [Range] falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
 `seek` method. However, there is no guarantee that the [Range] will remain unaltered from client to server. As such, Iterators
 should *never* make assumptions about the current state/context based on the Range.
@@ -364,17 +364,17 @@ Iterator's implementation of seek.
 
 ### Take caution in constructing new data in an Iterator
 
-Implementations of Iterator might be tempted to open BatchWriters inside of an Iterator as a means
+Implementations of Iterator might be tempted to open [BatchWriters][BatchWriter] inside of an Iterator as a means
 to implement triggers for writing additional data outside of their client application. The lifecycle of an Iterator
 is *not* managed in such a way that guarantees that this is safe nor efficient. Specifically, there
 is no way to guarantee that the internal ThreadPool inside of the BatchWriter is closed (and the thread(s)
-are reaped) without calling the close() method. `close`'ing and recreating a `BatchWriter` after every
+are reaped) without calling the close() method. `close`'ing and recreating a [BatchWriter] after every
 Key-Value pair is also prohibitively performance limiting to be considered an option.
 
 The only safe way to generate additional data in an Iterator is to alter the current Key-Value pair.
-For example, the `WholeRowIterator` serializes the all of the Key-Values pairs that fall within each
+For example, the [WholeRowIterator] serializes the all of the Key-Values pairs that fall within each
 row. A safe way to generate more data in an Iterator would be to construct an Iterator that is
-"higher" (at a larger priority) than the `WholeRowIterator`, that is, the Iterator receives the Key-Value pairs which are
+"higher" (at a larger priority) than the WholeRowIterator, that is, the Iterator receives the Key-Value pairs which are
 a serialization of many Key-Value pairs. The custom Iterator could deserialize the pairs, compute
 some function, and add a new Key-Value pair to the original collection, re-serializing the collection
 of Key-Value pairs back into a single Key-Value pair.
@@ -422,3 +422,7 @@ identify common pitfalls in user-created Iterators.
 [Combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
 [Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
 [iterator-test-harness]: {{ page.docs_baseurl }}/development/development_tools#iterator-test-harness
+[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
+[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
+[BatchWriter]: {{ page.javdoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
+[WholeRowIterator]: {{ page.javdoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html

@@ -6,7 +6,7 @@ order: 3
 
 The proxy API allows the interaction with Accumulo with languages other than Java.
 A proxy server is provided in the codebase and a client can further be generated.
-The proxy API can also be used instead of the traditional ZooKeeperInstance class to
+The proxy API can also be used instead of the traditional [ZooKeeperInstance] class to
 provide a single TCP port in which clients can be securely routed through a firewall,
 without requiring access to all tablet servers in the cluster.
 
@@ -30,7 +30,7 @@ the very least, you need to supply the following properties:
 You can find a sample configuration file in your distribution at `proxy/proxy.properties`.
 
 This sample configuration file further demonstrates an ability to back the proxy server
-by MockAccumulo or the MiniAccumuloCluster.
+by MiniAccumuloCluster.
 
 ## Running the Proxy Server
 
@@ -117,3 +117,4 @@ for(KeyValue keyValue : results.getResultsIterator()) {
 client.closeScanner(scanner);
 ```
 
+[ZookeeperInstance]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/ZooKeeperInstance.html
