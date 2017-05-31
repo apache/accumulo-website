@@ -27,36 +27,27 @@ and then display the following prompt:
 
 ## Basic Administration
 
-The Accumulo shell can be used to create and delete tables, as well as to configure
-table and instance specific options.
+The `tables` command will list all existings tables.
 
-```
-root@myinstance> tables
-accumulo.metadata
-accumulo.root
+    root@myinstance> tables
+    accumulo.metadata
+    accumulo.root
 
-root@myinstance> createtable mytable
+The `createtable` command creates a new table.
 
-root@myinstance mytable>
+    root@myinstance> createtable mytable
+    root@myinstance mytable> tables
+    accumulo.metadata
+    accumulo.root
+    mytable
 
-root@myinstance mytable> tables
-accumulo.metadata
-accumulo.root
-mytable
+The `deletetable` command deletes a table.
 
-root@myinstance mytable> createtable testtable
+    root@myinstance testtable> deletetable testtable
+    deletetable { testtable } (yes|no)? yes
+    Table: [testtable] has been deleted.
 
-root@myinstance testtable>
-
-root@myinstance testtable> deletetable testtable
-deletetable { testtable } (yes|no)? yes
-Table: [testtable] has been deleted.
-
-root@myinstance>
-```
-
-The Shell can also be used to insert updates and scan tables. This is useful for
-inspecting tables.
+The shell can be used to insert updates and scan tables. This is useful for inspecting tables.
 
     root@myinstance mytable> scan
 
@@ -71,13 +62,13 @@ You can use the `-st` option to scan to see the timestamp for the cell, too.
 
 ## Table Maintenance
 
-The *compact* command instructs Accumulo to schedule a compaction of the table during which
+The `compact` command instructs Accumulo to schedule a compaction of the table during which
 files are consolidated and deleted entries are removed.
 
     root@myinstance mytable> compact -t mytable
     07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
 
-The *flush* command instructs Accumulo to write all entries currently in memory for a given table
+The `flush` command instructs Accumulo to write all entries currently in memory for a given table
 to disk.
 
     root@myinstance mytable> flush -t mytable
@@ -116,30 +107,3 @@ Enter current password for 'root': *********
 
 root@myinstance bobstable> revoke System.CREATE_TABLE -s -u bob
 ```
-
-## JSR-223 Support in the Shell
-
-The script command can be used to invoke programs written in languages supported by installed JSR-223
-engines. You can get a list of installed engines with the -l argument. Below is an example of the output
-of the command when running the Shell with Java 7.
-
-    root@fake> script -l
-        Engine Alias: ECMAScript
-        Engine Alias: JavaScript
-        Engine Alias: ecmascript
-        Engine Alias: javascript
-        Engine Alias: js
-        Engine Alias: rhino
-        Language: ECMAScript (1.8)
-        Script Engine: Mozilla Rhino (1.7 release 3 PRERELEASE)
-    ScriptEngineFactory Info
-
-A list of compatible languages can be found on [this page](https://en.wikipedia.org/wiki/List_of_JVM_languages). The
-rhino javascript engine is provided with the JVM. Typically putting a jar on the classpath is all that is
-needed to install a new engine.
-
- When writing scripts to run in the shell, you will have a variable called connection already available
-to you. This variable is a reference to an Accumulo Connector object, the same connection that the Shell
-is using to communicate with the Accumulo servers. At this point you can use any of the public API methods
-within your script. Reference the script command help to see all of the execution options. Script and script
-invocation examples can be found in ACCUMULO-1399.

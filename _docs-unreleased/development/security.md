@@ -5,7 +5,7 @@ order: 7
 ---
 
 Accumulo extends the BigTable data model to implement a security mechanism
-known as cell-level security. Every key-value pair has its own security label, stored
+known as cell-level security. Every [Key]-[Value] pair has its own security label, stored
 under the column visibility element of the key, which is used to determine whether
 a given user meets the security requirements to read the value. This enables data of
 various security levels to be stored within the same row, and users of varying
@@ -14,7 +14,7 @@ degrees of access to query the same table, while preserving data confidentiality
 ## Security Label Expressions
 
 When mutations are applied, users can specify a security label for each value. This is
-done as the Mutation is created by passing a ColumnVisibility object to the put()
+done as the [Mutation] is created by passing a [ColumnVisibility] object to the put()
 method:
 
 ```java
@@ -69,36 +69,37 @@ admin|audit
 When both `|` and `&` operators are used, parentheses must be used to specify
 precedence of the operators.
 
-## Authorization
+## Authorizations
 
 When clients attempt to read data from Accumulo, any security labels present are
-examined against the set of authorizations passed by the client code when the
-Scanner or BatchScanner are created. If the authorizations are determined to be
+examined against an [Authorizations] object passed by the client code when the
+[Scanner] or [BatchScanner] are created. If the Authorizations are determined to be
 insufficient to satisfy the security label, the value is suppressed from the set of
 results sent back to the client.
 
-Authorizations are specified as a comma-separated list of tokens the user possesses:
+[Authorizations] are specified as a comma-separated list of tokens the user possesses:
 
 ```java
 // user possesses both admin and system level access
-Authorization auths = new Authorization("admin","system");
+Authorizations auths = new Authorizations("admin","system");
 
 Scanner s = connector.createScanner("table", auths);
 ```
 
 ## User Authorizations
 
-Each Accumulo user has a set of associated security labels. To manipulate
-these in the shell while using the default authorizor, use the setuaths and getauths commands.
-These may also be modified for the default authorizor using the java security operations API.
+Each Accumulo user has a set of associated security labels. To manipulate these in
+the [Accumulo shell][shell], use the `setuaths` and `getauths` commands. They can be
+retrieved and modified in Java using `getUserAuthorizations` and `changeUserAuthorizations`
+methods of [SecurityOperations].
 
-When a user creates a scanner a set of Authorizations is passed. If the
-authorizations passed to the scanner are not a subset of the users
-authorizations, then an exception will be thrown.
+When a user creates a [Scanner] or [BatchScanner] a set of [Authorizations] is passed.
+If the Authorizations passed to the scanner are not a subset of the user's Authorizations,
+then an exception will be thrown.
 
 To prevent users from writing data they can not read, add the visibility
-constraint to a table. Use the -evc option in the createtable shell command to
-enable this constraint. For existing tables use the following shell command to
+constraint to a table. Use the -evc option in the `createtable` shell command to
+enable this constraint. For existing tables, use the `config` command to
 enable the visibility constraint. Ensure the constraint number does not
 conflict with any existing constraints.
 
@@ -110,18 +111,19 @@ disable the bulk import permission.
 
 ## Pluggable Security
 
-New in 1.5 of Accumulo is a pluggable security mechanism. It can be broken into three actions --
-authentication, authorization, and permission handling. By default all of these are handled in
-Zookeeper, which is how things were handled in Accumulo 1.4 and before. It is worth noting at this
-point, that it is a new feature in 1.5 and may be adjusted in future releases without the standard
-deprecation cycle.
+Accumulo has a pluggable security mechanism. It can be broken into three actions: authentication, 
+authorization, and permission handling.
 
-Authentication simply handles the ability for a user to verify their integrity. A combination of
-principal and authentication token are used to verify a user is who they say they are. An
-authentication token should be constructed, either directly through its constructor, but it is
-advised to use the `init(Property)` method to populate an authentication token. It is expected that a
-user knows what the appropriate token to use for their system is. The default token is
-`PasswordToken`.
+Authentication verifies the identity of a user. In Accumulo, authentication occurs when
+the `getConnector` method of [Instance] is called with a principal (i.e username)
+and an [AuthenticationToken] which is an interface with multiple implementations. The most
+common implementation is [PasswordToken] which is the default authenticaton method for Accumulo
+out of the box.
+
+```java
+Instance instance = new ZooKeeperInstance("myinstance", "zookeeper1,zookeeper2");
+Connector conn = instance.getConnector("user", new PasswordToken("passwd"));
+```
 
 Once a user is authenticated by the Authenticator, the user has access to the other actions within
 Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission
@@ -167,3 +169,16 @@ cached within the query layer and presented to Accumulo through the
 Authorizations mechanism.
 
 Typically, the query services layer sits between Accumulo and user workstations.
+
+[shell]: {{ page.docs_baseurl }}/getting-started/shell
+[Key]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Key.html
+[Value]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Value.html
+[Mutation]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
+[ColumnVisibility]: {{ page.javadoc_core }}/org/apache/accumulo/core/security/ColumnVisibility.html
+[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
+[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
+[Authorizations]: {{ page.javadoc_core}}/org/apache/accumulo/core/security/Authorizations.html
+[SecurityOperations]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/admin/SecurityOperations.html
+[Instance]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/Instance.html
+[AuthenticationToken]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
+[PasswordToken]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html

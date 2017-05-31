@@ -26,11 +26,11 @@ Below are some suggested tests that can be run (feel free to run your own custom
 * Build the [Accumulo Examples][examples] repo using the release candidate by updating the `accumulo.version`
   property in the `pom.xml` and using the staging repo. Also, run the unit/integration tests using `mvn verify`.
 
-* Run Accumulo's distributed tests (i.e RandomWalk, ContinuousIngest, etc). Information on these tests can
-  be found in their respective directories, `test/system/randomwalk` and `test/system/continuous`, which
-  include instructions on how to run the tests. These tests are intended to be run for days on end while
-  injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
-  real systems.
+* Run Accumulo's distributed tests (i.e. random walk, continous ingest). These tests are intended to be run for days
+  on end while injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
+  real systems. Starting with 2.0, these tests are run using the [Accumulo Testing repo][at]. See the [README.md][at-readme]
+  for more information.  Before 2.0, these tests are found in Accumulo tarball at `test/system/randomwalk` and
+  `test/system/continuous` which include instructions on how to run the tests.
 
 ## Project testing goals
 
@@ -128,3 +128,5 @@ own NOTICE file. The contents of the Apache Thrift NOTICE file should be include
 [5]: https://www.apache.org/legal
 [examples]: https://github.com/apache/accumulo-examples
 [versioning]: {{ site.baseurl }}/contributor/versioning
+[at]: https://github.com/apache/accumulo-testing
+[at-readme]: https://github.com/apache/accumulo-testing/blob/master/README.md

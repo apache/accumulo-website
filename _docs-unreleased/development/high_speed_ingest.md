@@ -32,7 +32,7 @@ rate is still subject to the number of machines running ingest clients, and the
 distribution of rowIDs across the table. The aggregation ingest rate will be
 suboptimal if there are many inserts into a small number of rowIDs.
 
-## Multiple Ingester Clients
+## Multiple Ingest Clients
 
 Accumulo is capable of scaling to very high rates of ingest, which is dependent upon
 not just the number of TabletServers in operation but also the number of ingest
@@ -71,7 +71,7 @@ into multiple tablets.
     zy
     zz
 
-Run the MapReduce job, using the AccumuloFileOutputFormat to create the files to
+Run the MapReduce job, using the [AccumuloFileOutputFormat] to create the files to
 be introduced to Accumulo. Once this is complete, the files can be added to
 Accumulo via the shell:
 
@@ -81,8 +81,7 @@ Note that the paths referenced are directories within the same HDFS instance ove
 which Accumulo is running. Accumulo places any files that failed to be added to the
 second directory specified.
 
-See the [bulk ingest example](https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md)
-for a complete example.
+See the [bulk ingest example][bulk-example] for a complete example.
 
 ## Logical Time for Bulk Ingest
 
@@ -107,7 +106,13 @@ import file.
 ## MapReduce Ingest
 
 It is possible to efficiently write many mutations to Accumulo in parallel via a
-MapReduce job. In this scenario the MapReduce is written to process data that lives
-in HDFS and write mutations to Accumulo using the AccumuloOutputFormat. See
-the MapReduce section under Analytics for details. The [MapReduce example](https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md)
-is also a good reference for example code.
+MapReduce job.  Typically, a MapReduce job will process data that lives in HDFS
+and write mutations to Accumulo using [AccumuloOutputFormat]. For more information
+on how use to use MapReduce with Accumulo, see the [MapReduce documentation][mapred-docs]
+and the [MapReduce example code][mapred-code].
+
+[bulk-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md
+[AccumuloOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html
+[AccumuloFileOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html
+[mapred-docs]: {{ page.docs_baseurl }}/development/mapreduce
+[mapred-code]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
