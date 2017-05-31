@@ -347,7 +347,7 @@ rate is still subject to the number of machines running ingest clients, and the
 distribution of rowIDs across the table. The aggregation ingest rate will be
 suboptimal if there are many inserts into a small number of rowIDs.</p>
 
-<h2 id="multiple-ingester-clients">Multiple Ingester Clients</h2>
+<h2 id="multiple-ingest-clients">Multiple Ingest Clients</h2>
 
 <p>Accumulo is capable of scaling to very high rates of ingest, which is dependent upon
 not just the number of TabletServers in operation but also the number of ingest
@@ -388,7 +388,7 @@ zz
 </code></pre>
 </div>
 
-<p>Run the MapReduce job, using the AccumuloFileOutputFormat to create the files to
+<p>Run the MapReduce job, using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> to create the files to
 be introduced to Accumulo. Once this is complete, the files can be added to
 Accumulo via the shell:</p>
 
@@ -400,8 +400,7 @@ Accumulo via the shell:</p>
 which Accumulo is running. Accumulo places any files that failed to be added to the
 second directory specified.</p>
 
-<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md">bulk ingest example</a>
-for a complete example.</p>
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md">bulk ingest example</a> for a complete example.</p>
 
 <h2 id="logical-time-for-bulk-ingest">Logical Time for Bulk Ingest</h2>
 
@@ -426,10 +425,11 @@ import file.</p>
 <h2 id="mapreduce-ingest">MapReduce Ingest</h2>
 
 <p>It is possible to efficiently write many mutations to Accumulo in parallel via a
-MapReduce job. In this scenario the MapReduce is written to process data that lives
-in HDFS and write mutations to Accumulo using the AccumuloOutputFormat. See
-the MapReduce section under Analytics for details. The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a>
-is also a good reference for example code.</p>
+MapReduce job.  Typically, a MapReduce job will process data that lives in HDFS
+and write mutations to Accumulo using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html">AccumuloOutputFormat</a>. For more information
+on how use to use MapReduce with Accumulo, see the <a href="/docs/unreleased/development/mapreduce">MapReduce documentation</a>
+and the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example code</a>.</p>
+
 
   </div>
 </div>

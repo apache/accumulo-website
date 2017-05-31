@@ -344,36 +344,33 @@ root@myinstance&gt;
 
 <h2 id="basic-administration">Basic Administration</h2>
 
-<p>The Accumulo shell can be used to create and delete tables, as well as to configure
-table and instance specific options.</p>
+<p>The <code class="highlighter-rouge">tables</code> command will list all existings tables.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; tables
 accumulo.metadata
 accumulo.root
+</code></pre>
+</div>
 
-root@myinstance&gt; createtable mytable
+<p>The <code class="highlighter-rouge">createtable</code> command creates a new table.</p>
 
-root@myinstance mytable&gt;
-
+<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; createtable mytable
 root@myinstance mytable&gt; tables
 accumulo.metadata
 accumulo.root
 mytable
-
-root@myinstance mytable&gt; createtable testtable
-
-root@myinstance testtable&gt;
-
-root@myinstance testtable&gt; deletetable testtable
-deletetable { testtable } (yes|no)? yes
-Table: [testtable] has been deleted.
-
-root@myinstance&gt;
 </code></pre>
 </div>
 
-<p>The Shell can also be used to insert updates and scan tables. This is useful for
-inspecting tables.</p>
+<p>The <code class="highlighter-rouge">deletetable</code> command deletes a table.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance testtable&gt; deletetable testtable
+deletetable { testtable } (yes|no)? yes
+Table: [testtable] has been deleted.
+</code></pre>
+</div>
+
+<p>The shell can be used to insert updates and scan tables. This is useful for inspecting tables.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance mytable&gt; scan
 
@@ -390,7 +387,7 @@ You can use the <code class="highlighter-rouge">-st</code> option to scan to see
 
 <h2 id="table-maintenance">Table Maintenance</h2>
 
-<p>The <em>compact</em> command instructs Accumulo to schedule a compaction of the table during which
+<p>The <code class="highlighter-rouge">compact</code> command instructs Accumulo to schedule a compaction of the table during which
 files are consolidated and deleted entries are removed.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance mytable&gt; compact -t mytable
@@ -398,7 +395,7 @@ files are consolidated and deleted entries are removed.</p>
 </code></pre>
 </div>
 
-<p>The <em>flush</em> command instructs Accumulo to write all entries currently in memory for a given table
+<p>The <code class="highlighter-rouge">flush</code> command instructs Accumulo to write all entries currently in memory for a given table
 to disk.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance mytable&gt; flush -t mytable
@@ -439,35 +436,6 @@ Enter current password for 'root': *********
 root@myinstance bobstable&gt; revoke System.CREATE_TABLE -s -u bob
 </code></pre>
 </div>
-
-<h2 id="jsr-223-support-in-the-shell">JSR-223 Support in the Shell</h2>
-
-<p>The script command can be used to invoke programs written in languages supported by installed JSR-223
-engines. You can get a list of installed engines with the -l argument. Below is an example of the output
-of the command when running the Shell with Java 7.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>root@fake&gt; script -l
-    Engine Alias: ECMAScript
-    Engine Alias: JavaScript
-    Engine Alias: ecmascript
-    Engine Alias: javascript
-    Engine Alias: js
-    Engine Alias: rhino
-    Language: ECMAScript (1.8)
-    Script Engine: Mozilla Rhino (1.7 release 3 PRERELEASE)
-ScriptEngineFactory Info
-</code></pre>
-</div>
-
-<p>A list of compatible languages can be found on <a href="https://en.wikipedia.org/wiki/List_of_JVM_languages">this page</a>. The
-rhino javascript engine is provided with the JVM. Typically putting a jar on the classpath is all that is
-needed to install a new engine.</p>
-
-<p>When writing scripts to run in the shell, you will have a variable called connection already available
-to you. This variable is a reference to an Accumulo Connector object, the same connection that the Shell
-is using to communicate with the Accumulo servers. At this point you can use any of the public API methods
-within your script. Reference the script command help to see all of the execution options. Script and script
-invocation examples can be found in ACCUMULO-1399.</p>
 
   </div>
 </div>

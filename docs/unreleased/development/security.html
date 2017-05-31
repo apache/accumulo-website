@@ -318,7 +318,7 @@
     <h1>Security</h1>
     
     <p>Accumulo extends the BigTable data model to implement a security mechanism
-known as cell-level security. Every key-value pair has its own security label, stored
+known as cell-level security. Every <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Key.html">Key</a>-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Value.html">Value</a> pair has its own security label, stored
 under the column visibility element of the key, which is used to determine whether
 a given user meets the security requirements to read the value. This enables data of
 various security levels to be stored within the same row, and users of varying
@@ -327,7 +327,7 @@ degrees of access to query the same table, while preserving data confidentiality
 <h2 id="security-label-expressions">Security Label Expressions</h2>
 
 <p>When mutations are applied, users can specify a security label for each value. This is
-done as the Mutation is created by passing a ColumnVisibility object to the put()
+done as the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Mutation.html">Mutation</a> is created by passing a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/ColumnVisibility.html">ColumnVisibility</a> object to the put()
 method:</p>
 
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Text</span> <span class="n">rowID</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"row1"</span><span class="o">);</span>
@@ -384,18 +384,18 @@ admin|audit
 <p>When both <code class="highlighter-rouge">|</code> and <code class="highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify
 precedence of the operators.</p>
 
-<h2 id="authorization">Authorization</h2>
+<h2 id="authorizations">Authorizations</h2>
 
 <p>When clients attempt to read data from Accumulo, any security labels present are
-examined against the set of authorizations passed by the client code when the
-Scanner or BatchScanner are created. If the authorizations are determined to be
+examined against an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> object passed by the client code when the
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are created. If the Authorizations are determined to be
 insufficient to satisfy the security label, the value is suppressed from the set of
 results sent back to the client.</p>
 
-<p>Authorizations are specified as a comma-separated list of tokens the user possesses:</p>
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> are specified as a comma-separated list of tokens the user possesses:</p>
 
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
-<span class="n">Authorization</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorization</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
+<span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
 
 <span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
 </code></pre>
@@ -403,17 +403,18 @@ results sent back to the client.</p>
 
 <h2 id="user-authorizations">User Authorizations</h2>
 
-<p>Each Accumulo user has a set of associated security labels. To manipulate
-these in the shell while using the default authorizor, use the setuaths and getauths commands.
-These may also be modified for the default authorizor using the java security operations API.</p>
+<p>Each Accumulo user has a set of associated security labels. To manipulate these in
+the <a href="/docs/unreleased/getting-started/shell">Accumulo shell</a>, use the <code class="highlighter-rouge">setuaths</code> and <code class="highlighter-rouge">getauths</code> commands. They can be
+retrieved and modified in Java using <code class="highlighter-rouge">getUserAuthorizations</code> and <code class="highlighter-rouge">changeUserAuthorizations</code>
+methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>.</p>
 
-<p>When a user creates a scanner a set of Authorizations is passed. If the
-authorizations passed to the scanner are not a subset of the users
-authorizations, then an exception will be thrown.</p>
+<p>When a user creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> a set of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> is passed.
+If the Authorizations passed to the scanner are not a subset of the user’s Authorizations,
+then an exception will be thrown.</p>
 
 <p>To prevent users from writing data they can not read, add the visibility
-constraint to a table. Use the -evc option in the createtable shell command to
-enable this constraint. For existing tables use the following shell command to
+constraint to a table. Use the -evc option in the <code class="highlighter-rouge">createtable</code> shell command to
+enable this constraint. For existing tables, use the <code class="highlighter-rouge">config</code> command to
 enable the visibility constraint. Ensure the constraint number does not
 conflict with any existing constraints.</p>
 
@@ -427,18 +428,19 @@ disable the bulk import permission.</p>
 
 <h2 id="pluggable-security">Pluggable Security</h2>
 
-<p>New in 1.5 of Accumulo is a pluggable security mechanism. It can be broken into three actions –
-authentication, authorization, and permission handling. By default all of these are handled in
-Zookeeper, which is how things were handled in Accumulo 1.4 and before. It is worth noting at this
-point, that it is a new feature in 1.5 and may be adjusted in future releases without the standard
-deprecation cycle.</p>
+<p>Accumulo has a pluggable security mechanism. It can be broken into three actions: authentication, 
+authorization, and permission handling.</p>
 
-<p>Authentication simply handles the ability for a user to verify their integrity. A combination of
-principal and authentication token are used to verify a user is who they say they are. An
-authentication token should be constructed, either directly through its constructor, but it is
-advised to use the <code class="highlighter-rouge">init(Property)</code> method to populate an authentication token. It is expected that a
-user knows what the appropriate token to use for their system is. The default token is
-<code class="highlighter-rouge">PasswordToken</code>.</p>
+<p>Authentication verifies the identity of a user. In Accumulo, authentication occurs when
+the <code class="highlighter-rouge">getConnector</code> method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Instance.html">Instance</a> is called with a principal (i.e username)
+and an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> which is an interface with multiple implementations. The most
+common implementation is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> which is the default authenticaton method for Accumulo
+out of the box.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">);</span>
+<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">));</span>
+</code></pre>
+</div>
 
 <p>Once a user is authenticated by the Authenticator, the user has access to the other actions within
 Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission
@@ -484,6 +486,7 @@ cached within the query layer and presented to Accumulo through the
 Authorizations mechanism.</p>
 
 <p>Typically, the query services layer sits between Accumulo and user workstations.</p>
+
 
   </div>
 </div>
