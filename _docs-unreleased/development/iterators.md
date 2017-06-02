@@ -177,32 +177,32 @@ The following code is a general outline for how TabletServers invoke Iterators.
 ```java
 List<KeyValue> batch;
 Range range = getRangeFromClient();
-while(!overSizeLimit(batch)){
- SortedKeyValueIterator source = getSystemIterator();
+while (!overSizeLimit(batch)) {
+    SortedKeyValueIterator source = getSystemIterator();
 
- for(String clzName : getUserIterators()){
-  Class<?> clz = Class.forName(clzName);
-  SortedKeyValueIterator iter = (SortedKeyValueIterator) clz.newInstance();
-  iter.init(source, opts, env);
-  source = iter;
- }
+    for (String clzName : getUserIterators()) {
+        Class<?> clz = Class.forName(clzName);
+        SortedKeyValueIterator iter = (SortedKeyValueIterator) clz.newInstance();
+        iter.init(source, opts, env);
+        source = iter;
+    }
 
- // read a batch of data to return to client
- // the last iterator, the "top"
- SortedKeyValueIterator topIter = source;
- topIter.seek(getRangeFromUser(), ...)
+    // read a batch of data to return to client
+    // the last iterator, the "top"
+    SortedKeyValueIterator topIter = source;
+    topIter.seek(getRangeFromUser(), ...)
 
- while(topIter.hasTop() && !overSizeLimit(batch)){
-   key = topIter.getTopKey()
-   val = topIter.getTopValue()
-   batch.add(new KeyValue(key, val)
-   if(systemDataSourcesChanged()){
-     // code does not show isolation case, which will
-     // keep using same data sources until a row boundry is hit 
-     range = new Range(key, false, range.endKey(), range.endKeyInclusive());
-     break;
-   }
- }
+    while (topIter.hasTop() && !overSizeLimit(batch)) {
+        key = topIter.getTopKey()
+        val = topIter.getTopValue()
+        batch.add(new KeyValue(key, val)
+        if (systemDataSourcesChanged()) {
+            // code does not show isolation case, which will
+            // keep using same data sources until a row boundry is hit 
+            range = new Range(key, false, range.endKey(), range.endKeyInclusive());
+            break;
+        }
+    }
 }
 //return batch of key values to client
 ```
@@ -220,10 +220,8 @@ lastKeyReturned = batch.get(batch.size() - 1).getKey();
 
 // Eventually client comes back
 // Setup as before...
-
 Range userRange = getRangeFromUser();
-Range actualRange = new Range(lastKeyReturned, false
-    userRange.getEndKey(), userRange.isEndKeyInclusive());
+Range actualRange = new Range(lastKeyReturned, false, userRange.getEndKey(), userRange.isEndKeyInclusive());
 
 // Use the actualRange, not the user provided one
 topIter.seek(actualRange);

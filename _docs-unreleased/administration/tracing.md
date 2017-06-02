@@ -85,22 +85,22 @@ zookeeper path defaults to /tracers.  An example of configuring
 Hadoop to send traces to ZooTraceClient is
 
 ```xml
-  <property>
-    <name>hadoop.htrace.spanreceiver.classes</name>
-    <value>org.apache.accumulo.core.trace.ZooTraceClient</value>
-  </property>
-  <property>
-    <name>hadoop.htrace.tracer.zookeeper.host</name>
-    <value>zookeeperHost:2181</value>
-  </property>
-  <property>
-    <name>hadoop.htrace.tracer.zookeeper.path</name>
-    <value>/tracers</value>
-  </property>
-  <property>
-    <name>hadoop.htrace.tracer.span.min.ms</name>
-    <value>1</value>
-  </property>
+<property>
+  <name>hadoop.htrace.spanreceiver.classes</name>
+  <value>org.apache.accumulo.core.trace.ZooTraceClient</value>
+</property>
+<property>
+  <name>hadoop.htrace.tracer.zookeeper.host</name>
+  <value>zookeeperHost:2181</value>
+</property>
+<property>
+  <name>hadoop.htrace.tracer.zookeeper.path</name>
+  <value>/tracers</value>
+</property>
+<property>
+  <name>hadoop.htrace.tracer.span.min.ms</name>
+  <value>1</value>
+</property>
 ```
 
 The accumulo-core, accumulo-tracer, accumulo-fate and libthrift
@@ -151,14 +151,14 @@ be placed in the ClientConfiguration (if applicable) and Accumulo's `accumulo-si
 Two such properties for ZipkinSpanReceiver, listed with their default values, are
 
 ```xml
-  <property>
-    <name>trace.span.receiver.zipkin.collector-hostname</name>
-    <value>localhost</value>
-  </property>
-  <property>
-    <name>trace.span.receiver.zipkin.collector-port</name>
-    <value>9410</value>
-  </property>
+<property>
+  <name>trace.span.receiver.zipkin.collector-hostname</name>
+  <value>localhost</value>
+</property>
+<property>
+  <name>trace.span.receiver.zipkin.collector-port</name>
+  <value>9410</value>
+</property>
 ```
 
 ### Instrumenting a Client

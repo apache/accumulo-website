@@ -52,8 +52,7 @@ localityGroups.put("content", contentColumns);
 conn.tableOperations().setLocalityGroups("mytable", localityGroups);
 
 // existing locality groups can be obtained as follows
-Map<String, Set<Text>> groups =
-    conn.tableOperations().getLocalityGroups("mytable");
+Map<String, Set<Text>> groups = conn.tableOperations().getLocalityGroups("mytable");
 ```
 
 The assignment of Column Families to Locality Groups can be changed at any time. The

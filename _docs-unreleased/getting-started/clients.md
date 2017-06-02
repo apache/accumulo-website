@@ -43,7 +43,8 @@ the accumulo command.
 ### Using the 'accumulo-util hadoop-jar' command
 
 If you are writing map reduce job that accesses Accumulo, then you can use
-`accumulo-util hadoop-jar` to run those jobs. See the map reduce example.
+`accumulo-util hadoop-jar` to run those jobs. See the [MapReduce example][mapred-example]
+for more information.
 
 ## Connecting
 
@@ -116,13 +117,11 @@ BatchWriterConfig config = new BatchWriterConfig();
 config.setMaxMemory(10000000L); // bytes available to batchwriter for buffering mutations
 
 BatchWriter writer = conn.createBatchWriter("table", config)
-
 writer.addMutation(mutation);
-
 writer.close();
 ```
 
-For more example code, see the [batch writing and scanning example](https://github.com/apache/accumulo-examples/blob/master/docs/batch.md).
+For more example code, see the [batch writing and scanning example][batch].
 
 ### ConditionalWriter
 
@@ -141,14 +140,13 @@ mutation when a column is less than 5.
 
 In the case when a tablet server dies after a client sent a conditional
 mutation, its not known if the mutation was applied or not.  When this happens
-the ConditionalWriter reports a status of UNKNOWN for the ConditionalMutation.
+the [ConditionalWriter] reports a status of UNKNOWN for the ConditionalMutation.
 In many cases this situation can be dealt with by simply reading the row again
 and possibly sending another conditional mutation.  If this is not sufficient,
 then a higher level of abstraction can be built by storing transactional
 information within a row.
 
-See the [reservations example](https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md)
-for example code that uses the conditional writer.
+See the [reservations example][reservations] for example code that uses the [ConditionalWriter].
 
 ### Durability
 
@@ -196,15 +194,13 @@ to return a subset of the columns available.
 // specify which visibilities we are allowed to see
 Authorizations auths = new Authorizations("public");
 
-Scanner scan =
-    conn.createScanner("table", auths);
-
+Scanner scan = conn.createScanner("table", auths);
 scan.setRange(new Range("harry","john"));
 scan.fetchColumnFamily(new Text("attributes"));
 
-for(Entry<Key,Value> entry : scan) {
-    Text row = entry.getKey().getRow();
-    Value value = entry.getValue();
+for (Entry<Key,Value> entry : scan) {
+  Text row = entry.getKey().getRow();
+  Value value = entry.getValue();
 }
 ```
 
@@ -229,8 +225,7 @@ crash a tablet server. By default rows are buffered in memory, but the user
 can easily supply their own buffer if they wish to buffer to disk when rows are
 large.
 
-See the [isolation example](https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md)
-for example code that uses the IsolatedScanner.
+See the [isolation example][isolation] for example code that uses the [IsolatedScanner].
 
 ### BatchScanner
 
@@ -248,17 +243,16 @@ TabletServers in parallel.
 ArrayList<Range> ranges = new ArrayList<Range>();
 // populate list of ranges ...
 
-BatchScanner bscan =
-    conn.createBatchScanner("table", auths, 10);
+BatchScanner bscan = conn.createBatchScanner("table", auths, 10);
 bscan.setRanges(ranges);
 bscan.fetchColumnFamily("attributes");
 
-for(Entry<Key,Value> entry : bscan) {
-    System.out.println(entry.getValue());
+for (Entry<Key,Value> entry : bscan) {
+  System.out.println(entry.getValue());
 }
 ```
 
-For more example code, see the [batch writing and scanning example](https://github.com/apache/accumulo-examples/blob/master/docs/batch.md).
+For more example code, see the [batch writing and scanning example][batch].
 
 At this time, there is no client side isolation support for the [BatchScanner].
 You may consider using the [WholeRowIterator] with the BatchScanner to achieve
@@ -288,3 +282,7 @@ This page covers Accumulo client basics.  Below are links to additional document
 [Iterators]: {{ page.docs_baseurl }}/development/iterators
 [Proxy]: {{ page.docs_baseurl }}/development/proxy
 [MapReduce]: {{ page.docs_baseurl }}/development/mapreduce
+[mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
+[batch]: https://github.com/apache/accumulo-examples/blob/master/docs/batch.md
+[reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md
+[isolation]: https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md

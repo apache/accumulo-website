@@ -38,7 +38,7 @@ Scanner s = conn.createScanner("userdata", auths);
 s.setRange(r);
 s.fetchColumnFamily(new Text("age"));
 
-for(Entry<Key,Value> entry : s) {
+for (Entry<Key,Value> entry : s) {
   System.out.println(entry.getValue().toString());
 }
 ```
@@ -160,7 +160,7 @@ Scanner indexScanner = createScanner("index", auths);
 indexScanner.setRange(new Range(term, term));
 
 // we retrieve the matching rowIDs and create a set of ranges
-for(Entry<Key,Value> entry : indexScanner) {
+for (Entry<Key,Value> entry : indexScanner) {
     matchingRows.add(new Range(entry.getKey().getColumnQualifier()));
 }
 
@@ -169,7 +169,7 @@ BatchScanner bscan = conn.createBatchScanner("table", auths, 10);
 bscan.setRanges(matchingRows);
 bscan.fetchColumnFamily(new Text("attributes"));
 
-for(Entry<Key,Value> entry : bscan) {
+for (Entry<Key,Value> entry : bscan) {
     System.out.println(entry.getValue());
 }
 ```
@@ -285,7 +285,7 @@ IntersectingIterator.setColumnFamilies(iter, terms);
 bscan.addScanIterator(iter);
 bscan.setRanges(Collections.singleton(new Range()));
 
-for(Entry<Key,Value> entry : bscan) {
+for (Entry<Key,Value> entry : bscan) {
     System.out.println(" " + entry.getKey().getColumnQualifier());
 }
 ```
