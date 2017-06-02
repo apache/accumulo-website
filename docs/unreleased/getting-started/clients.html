@@ -375,7 +375,8 @@ the accumulo command.</p>
 <h3 id="using-the-accumulo-util-hadoop-jar-command">Using the ‘accumulo-util hadoop-jar’ command</h3>
 
 <p>If you are writing map reduce job that accesses Accumulo, then you can use
-<code class="highlighter-rouge">accumulo-util hadoop-jar</code> to run those jobs. See the map reduce example.</p>
+<code class="highlighter-rouge">accumulo-util hadoop-jar</code> to run those jobs. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a>
+for more information.</p>
 
 <h2 id="connecting">Connecting</h2>
 
@@ -447,9 +448,7 @@ batching.</p>
 <span class="n">config</span><span class="o">.</span><span class="na">setMaxMemory</span><span class="o">(</span><span class="mi">10000000L</span><span class="o">);</span> <span class="c1">// bytes available to batchwriter for buffering mutations</span>
 
 <span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">config</span><span class="o">)</span>
-
 <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
-
 <span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 </code></pre>
 </div>
@@ -473,14 +472,13 @@ mutation when a column is less than 5.</p>
 
 <p>In the case when a tablet server dies after a client sent a conditional
 mutation, its not known if the mutation was applied or not.  When this happens
-the ConditionalWriter reports a status of UNKNOWN for the ConditionalMutation.
+the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a> reports a status of UNKNOWN for the ConditionalMutation.
 In many cases this situation can be dealt with by simply reading the row again
 and possibly sending another conditional mutation.  If this is not sufficient,
 then a higher level of abstraction can be built by storing transactional
 information within a row.</p>
 
-<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md">reservations example</a>
-for example code that uses the conditional writer.</p>
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md">reservations example</a> for example code that uses the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.</p>
 
 <h3 id="durability">Durability</h3>
 
@@ -529,15 +527,13 @@ to return a subset of the columns available.</p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// specify which visibilities we are allowed to see</span>
 <span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"public"</span><span class="o">);</span>
 
-<span class="n">Scanner</span> <span class="n">scan</span> <span class="o">=</span>
-    <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
-
+<span class="n">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
 <span class="n">scan</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="s">"harry"</span><span class="o">,</span><span class="s">"john"</span><span class="o">));</span>
 <span class="n">scan</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">));</span>
 
-<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">Text</span> <span class="n">row</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getRow</span><span class="o">();</span>
-    <span class="n">Value</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">Text</span> <span class="n">row</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getRow</span><span class="o">();</span>
+  <span class="n">Value</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre>
 </div>
@@ -565,8 +561,7 @@ crash a tablet server. By default rows are buffered in memory, but the user
 can easily supply their own buffer if they wish to buffer to disk when rows are
 large.</p>
 
-<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md">isolation example</a>
-for example code that uses the IsolatedScanner.</p>
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md">isolation example</a> for example code that uses the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/IsolatedScanner.html">IsolatedScanner</a>.</p>
 
 <h3 id="batchscanner">BatchScanner</h3>
 
@@ -583,13 +578,12 @@ TabletServers in parallel.</p>
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="c1">// populate list of ranges ...</span>
 
-<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span>
-    <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
+<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
 <span class="n">bscan</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">ranges</span><span class="o">);</span>
 <span class="n">bscan</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">);</span>
 
-<span class="k">for</span><span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
 <span class="o">}</span>
 </code></pre>
 </div>
