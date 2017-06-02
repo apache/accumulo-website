@@ -1,8 +1,11 @@
 ---
-title: Installation
+title: In-depth Installation
 category: administration
 order: 1
 ---
+
+This document provides detailed instructions for installing Accumulo. For basic
+instructions, see the [quick installation guide][quick].
 
 ## Hardware
 
@@ -715,5 +718,6 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 mailing lists at https://accumulo.apache.org for more info.
 
+[quick]: {{ page.docs_baseurl }}/getting-started/quick-install
 [monitor]: {{page.docs_baseurl}}/administration/monitoring-metrics#monitor
 [config-mgmt]: {{page.docs_baseurl}}/administration/configuration-management

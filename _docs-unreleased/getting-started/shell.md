@@ -1,7 +1,7 @@
 ---
 title: Accumulo Shell
 category: getting-started
-order: 3
+order: 4
 ---
 
 Accumulo provides a simple shell that can be used to examine the contents and
