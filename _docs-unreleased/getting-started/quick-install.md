@@ -182,5 +182,5 @@ When finished, use the following commands to stop Accumulo:
 [Zookeeper]: https://zookeeper.apache.org/
 [HDFS]: https://hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/
-[prysnc]: https://code.google.com/p/parallel-ssh/
+[prsync]: https://code.google.com/p/parallel-ssh/
 [pwl]: https://www.google.com/search?q=hadoop+passwordless+ssh&ie=utf-8&oe=utf-8
