@@ -109,15 +109,37 @@ automatically.
 
 Fill out the [add release][addrelease] form to update the projects website.
 
-## Update the Website
+## Update the Accumulo project website
 
 After a successful vote, this website needs to be updated with the new artifacts.
 
-  * Copy Accumulo User Manual (HTML version exists in >=1.7.0)
   * Update downloads page
   * Create a post in `_posts/release/` containing release notes (ensure notes contain link to JIRA changes for that version)
   * Remove previous bug-fix release (if applicable)
   * Update doap_Accumulo.rdf
+
+### Documentation
+
+**For 2.x minor releases,** follow the steps below:
+
+1. Create a new documentation collection for the new minor release (i.e `2.0`) using the unreleased collection. Avoid using a dot `.` in directory name:
+
+        cp -r _docs-unreleased _docs-2-0
+
+2. Create a new doc layout using the unreleased layout. Update the reference to `site.docs-unreleased` to `site.docs-2-0` (if making 2.0 release):
+
+        cp _layouts/docs-unreleased.html _layouts/docs-2.0.html
+        vim _layouts/docs-2.0.html
+
+3. Point Jekyll to the new documentation collection by modifying `collections` and `defaults` in `_config.yml`. Follow what was done for previous
+   releases.
+
+Once a collection is created for a 2.x minor release, developers can make documentation updates like normal website updates.
+
+**For 2.x bugfix releases,** nothing needs to be done.
+
+**For 1.x minor & bugfix releases,** copy and commit the `accumulo_user_manual.html` generated for release to the `1.x/` directory in
+Accumulo website repo.
 
 ### Javadocs
 
