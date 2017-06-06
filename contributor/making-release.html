@@ -255,17 +255,49 @@ automatically.</p>
 
 <p>Fill out the <a href="https://reporter.apache.org/addrelease?accumulo">add release</a> form to update the projects website.</p>
 
-<h2 id="update-the-website">Update the Website</h2>
+<h2 id="update-the-accumulo-project-website">Update the Accumulo project website</h2>
 
 <p>After a successful vote, this website needs to be updated with the new artifacts.</p>
 
 <ul>
-  <li>Copy Accumulo User Manual (HTML version exists in &gt;=1.7.0)</li>
   <li>Update downloads page</li>
   <li>Create a post in <code class="highlighter-rouge">_posts/release/</code> containing release notes (ensure notes contain link to JIRA changes for that version)</li>
   <li>Remove previous bug-fix release (if applicable)</li>
   <li>Update doap_Accumulo.rdf</li>
 </ul>
+
+<h3 id="documentation">Documentation</h3>
+
+<p><strong>For 2.x minor releases,</strong> follow the steps below:</p>
+
+<ol>
+  <li>
+    <p>Create a new documentation collection for the new minor release (i.e <code class="highlighter-rouge">2.0</code>) using the unreleased collection. Avoid using a dot <code class="highlighter-rouge">.</code> in directory name:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> cp -r _docs-unreleased _docs-2-0
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Create a new doc layout using the unreleased layout. Update the reference to <code class="highlighter-rouge">site.docs-unreleased</code> to <code class="highlighter-rouge">site.docs-2-0</code> (if making 2.0 release):</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> cp _layouts/docs-unreleased.html _layouts/docs-2.0.html
+ vim _layouts/docs-2.0.html
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Point Jekyll to the new documentation collection by modifying <code class="highlighter-rouge">collections</code> and <code class="highlighter-rouge">defaults</code> in <code class="highlighter-rouge">_config.yml</code>. Follow what was done for previous
+releases.</p>
+  </li>
+</ol>
+
+<p>Once a collection is created for a 2.x minor release, developers can make documentation updates like normal website updates.</p>
+
+<p><strong>For 2.x bugfix releases,</strong> nothing needs to be done.</p>
+
+<p><strong>For 1.x minor &amp; bugfix releases,</strong> copy and commit the <code class="highlighter-rouge">accumulo_user_manual.html</code> generated for release to the <code class="highlighter-rouge">1.x/</code> directory in
+Accumulo website repo.</p>
 
 <h3 id="javadocs">Javadocs</h3>
 
