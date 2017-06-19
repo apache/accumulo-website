@@ -123,6 +123,7 @@ permalink: /people/
 |             | Vincent Russell     |                                                                   |                       |
 |             | Volth               |                                                                   |                       |
 |             | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
+| jchevalay   | Josselin CHEVALAY   |                                                                   | [FR]                  |
 
 ## Organizations
 
