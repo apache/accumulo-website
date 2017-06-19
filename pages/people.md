@@ -85,6 +85,7 @@ permalink: /people/
 |             | John Stoneham       |                                                                   | [ET][ET]              |
 | jmhsieh     | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 |             | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
+| jchevalay   | Josselin Chevalay   |                                                                   | [CEST][CEST]                |
 |             | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 |             | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 |             | Luis Tavarez        |                                                                   | [ET][ET]              |
@@ -123,7 +124,6 @@ permalink: /people/
 |             | Vincent Russell     |                                                                   |                       |
 |             | Volth               |                                                                   |                       |
 |             | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
-| jchevalay   | Josselin CHEVALAY   |                                                                   | [FR]                  |
 
 ## Organizations
 
