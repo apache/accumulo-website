@@ -85,7 +85,7 @@ permalink: /people/
 |             | John Stoneham       |                                                                   | [ET][ET]              |
 | jmhsieh     | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 |             | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
-| jchevalay   | Josselin Chevalay   |                                                                   | [CEST][CEST]                |
+|             | Josselin Chevalay   |                                                                   | [CEST][CEST]                |
 |             | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 |             | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 |             | Luis Tavarez        |                                                                   | [ET][ET]              |
