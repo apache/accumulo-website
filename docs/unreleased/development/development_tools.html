@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Development Tools</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/quick-install">Quick Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="true" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/in-depth-install">In-depth Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Development Tools</p>
+    
+    
+
+    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
+
+    <div class="row">
+      <div class="col-md-10"><h1>Development Tools</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/development/development_tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+    
+    <p>Accumulo has several tools that can help developers test their code.</p>
+
+<h2 id="miniaccumulocluster">MiniAccumuloCluster</h2>
+
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/1.8.1/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> is a standalone instance of Apache Accumulo for testing. It will
+create Zookeeper and Accumulo processes that write all of their data to a single local
+directory. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/1.8.1/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> makes it easy to code agaist a real Accumulo instance.
+Developers can write realistic-to-end integration tests that mimic the use of a normal
+Accumulo instance.</p>
+
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/1.8.1/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> is published in a separate jar that should be added to your pom.xml
+as a test dependency:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-minicluster<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>${accumulo.version}<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<p>To start it up, you will need to supply an empty directory and a root password as arguments:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
+<span class="n">MiniAccumuloCluster</span> <span class="n">accumulo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
+<span class="n">accumulo</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>Once we have our mini cluster running, we will want to interact with the Accumulo client API:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">accumulo</span><span class="o">.</span><span class="na">getInstanceName</span><span class="o">(),</span> <span class="n">accumulo</span><span class="o">.</span><span class="na">getZooKeepers</span><span class="o">());</span>
+<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"password"</span><span class="o">));</span>
+</code></pre>
+</div>
+
+<p>Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">accumulo</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+<span class="c1">// delete your temporary folder</span>
+</code></pre>
+</div>
+
+<h2 id="iterator-test-harness">Iterator Test Harness</h2>
+
+<p>Iterators, while extremely powerful, are notoriously difficult to test. While the API defines
+the methods an Iterator must implement and each method’s functionality, the actual invocation
+of these methods by Accumulo TabletServers can be surprisingly difficult to mimic in unit tests.</p>
+
+<p>The Apache Accumulo “Iterator Test Harness” is designed to provide a generalized testing framework
+for all Accumulo Iterators to leverage to identify common pitfalls in user-created Iterators.</p>
+
+<h3 id="framework-use">Framework Use</h3>
+
+<p>The Iterator Test Harness is published in a separate jar that should be added to your pom.xml as
+a test dependency:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-iterator-test-harness<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>${accumulo.version}<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<p>To use the Iterator test harness, create a class that extends the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-iterator-test-harness/1.8.1/org/apache/accumulo/iteratortest/junit4/BaseJUnit4IteratorTest.html">BaseJUnit4IteratorTest</a> class
+and defines the following:</p>
+
+<ul>
+  <li>A <code class="highlighter-rouge">SortedMap</code> of input data (<code class="highlighter-rouge">Key</code>-<code class="highlighter-rouge">Value</code> pairs)</li>
+  <li>A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Range.html">Range</a> to use in tests</li>
+  <li>A <code class="highlighter-rouge">Map</code> of options (<code class="highlighter-rouge">String</code> to <code class="highlighter-rouge">String</code> pairs)</li>
+  <li>A <code class="highlighter-rouge">SortedMap</code> of output data (<code class="highlighter-rouge">Key</code>-<code class="highlighter-rouge">Value</code> pairs)</li>
+  <li>A list of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-iterator-test-harness/1.8.1/org/apache/accumulo/iteratortest/testcases/IteratorTestCase.html">IteratorTestCase</a>s (these can be automatically discovered)</li>
+</ul>
+
+<p>The majority of effort a user must make is in creating the input dataset and the expected
+output dataset for the iterator being tested.</p>
+
+<h3 id="normal-test-outline">Normal Test Outline</h3>
+
+<p>Most iterator tests will follow the given outline:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.SortedMap</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Key</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Range</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Value</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestCaseFinder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestInput</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.IteratorTestOutput</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.junit4.BaseJUnit4IteratorTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.testcases.IteratorTestCase</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runners.Parameterized.Parameters</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyIteratorTest</span> <span class="kd">extends</span> <span class="n">BaseJUnit4IteratorTest</span> <span class="o">{</span>
+
+  <span class="nd">@Parameters</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span><span class="o">[][]</span> <span class="nf">parameters</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">IteratorTestInput</span> <span class="n">input</span> <span class="o">=</span> <span class="n">createIteratorInput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="n">IteratorTestOutput</span> <span class="n">output</span> <span class="o">=</span> <span class="n">createIteratorOutput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorTestCase</span><span class="o">&gt;</span> <span class="n">testCases</span> <span class="o">=</span> <span class="n">IteratorTestCaseFinder</span><span class="o">.</span><span class="na">findAllTestCases</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">BaseJUnit4IteratorTest</span><span class="o">.</span><span class="na">createParameters</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="n">output</span><span class="o">,</span> <span class="n">tests</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">INPUT_DATA</span> <span class="o">=</span> <span class="n">createInputData</span><span class="o">();</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">OUTPUT_DATA</span> <span class="o">=</span> <span class="n">createOutputData</span><span class="o">();</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createInputData</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createOutputData</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestInput</span> <span class="nf">createIteratorInput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span> <span class="o">=</span> <span class="n">createIteratorOptions</span><span class="o">();</span> 
+    <span class="kd">final</span> <span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">createRange</span><span class="o">();</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestInput</span><span class="o">(</span><span class="n">MyIterator</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">options</span><span class="o">,</span> <span class="n">range</span><span class="o">,</span> <span class="n">INPUT_DATA</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">createIteratorOptions</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+    <span class="c1">// Tip: Use INPUT_DATA if helpful in generating output</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Range</span> <span class="nf">createRange</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// TODO -- implement this method</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestOutput</span> <span class="nf">createIteratorOutput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestOutput</span><span class="o">(</span><span class="n">OUTPUT_DATA</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="limitations">Limitations</h3>
+
+<p>While the provided <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-iterator-test-harness/1.8.1/org/apache/accumulo/iteratortest/testcases/IteratorTestCase.html">IteratorTestCase</a>s should exercise common edge-cases in user iterators,
+there are still many limitations to the existing test harness. Some of them are:</p>
+
+<ul>
+  <li>Can only specify a single iterator, not many (a “stack”)</li>
+  <li>No control over provided IteratorEnvironment for tests</li>
+  <li>Exercising delete keys (especially with major compactions that do not include all files)</li>
+</ul>
+
+<p>These are left as future improvements to the harness.</p>
+
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/development/development_tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -51,7 +51,13 @@
       }
     });
   });
-  
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
   // configure Google Analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -146,14 +152,47 @@
       <h3>Apache Accumulo&reg; is a sorted, distributed key/value store that provides robust, scalable data storage and retrieval.</h3>
       <a class="btn btn-success" href="downloads/" role="button"><i class="fa fa-download fa-lg"></i> Download</a>
     </div>
-    <div>
-      <p id="home-description">Apache Accumulo is based on the design of Google's <a href="https://research.google.com/archive/bigtable.html">BigTable</a> and is powered by <a href="https://hadoop.apache.org">Apache Hadoop</a>, <a href="https://zookeeper.apache.org">Apache Zookeeper</a>, and <a href="https://thrift.apache.org">Apache Thrift</a>.<br /><br />Accumulo has several <a href="/features/">novel features</a> such as cell-based access control and a server-side programming mechanism that can modify key/value pairs at various points in the data management process.</p>
+    <p id="home-description">Apache Accumulo is a key/value store based on the design of Google's <a href="https://research.google.com/archive/bigtable.html">BigTable</a>. Accumulo stores its data in <a href="https://hadoop.apache.org">Apache Hadoop</a>'s HDFS and uses <a href="https://zookeeper.apache.org">Apache Zookeeper</a> for consensus. While many users interact directly with Accumulo, several <a href="/related-projects">open source projects</a> use Accumulo as their underlying store.</p>
+
+    <h3>Major Features</h3>
+
+    <div class="row">
+      <div class="col-md-6"> 
+        <h4>Server-side programming</h4>
+        <p>Accumulo has a programing meachinism (called Iterators) that can modify key/value pairs at various points in the data management process.</p>
+      </div>
+      <div class="col-md-6">
+        <h4>Cell-based access control</h4>
+        <p>Every Accumulo key/value pair has its own security label which limits query results based off user authorizations.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"> 
+        <h4>Designed to scale</h4>
+        <p>Accumulo runs on a cluster using one or more HDFS instances. Nodes can be added or removed as the amount of data stored in Accumulo changes.</p>
+      </div>
+      <div class="col-md-6">
+        <h4>Stable</h4>
+        <p>Accumulo has a stable <a href="/latest/apidocs">client API</a> that follows <a href="https://semver.org">semantic versioning</a>. Each Accumulo release goes through <a href="/features/#testing">extensive testing</a>.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">  
+        <p id="home-description">To learn more about Accumulo, read the <a href="/1.8/accumulo_user_manual.html">user manual</a> and run the Accumulo <a href="https://github.com/apache/accumulo-examples">example code</a>. Also, join our <a href="/mailing_list">mailing list</a> and see how you can <a href="/get_involved">get involved</a>.
+      </div>
     </div>
   </div>
   <div class="col-md-4" id="sidebar">
     <div class="row">
       <div class="col-sm-12 panel panel-default">
         <p style="font-size: 24px; margin-bottom: 0px;">Latest News</p>
+        
+        <div class="row latest-news-item">
+          <div class="col-sm-12" style="margin-bottom: 5px">
+           <span style="font-size: 12px; margin-right: 5px;">Apr 2017</span>
+           <a href="/blog/2017/04/21/introducing-uno-and-muchos.html">Introducing Uno and Muchos</a>
+          </div>
+        </div>
         
         <div class="row latest-news-item">
           <div class="col-sm-12" style="margin-bottom: 5px">
@@ -180,13 +219,6 @@
           <div class="col-sm-12" style="margin-bottom: 5px">
            <span style="font-size: 12px; margin-right: 5px;">Feb 2017</span>
            <a href="/release/accumulo-1.8.1/">Apache Accumulo 1.8.1</a>
-          </div>
-        </div>
-        
-        <div class="row latest-news-item">
-          <div class="col-sm-12" style="margin-bottom: 5px">
-           <span style="font-size: 12px; margin-right: 5px;">Dec 2016</span>
-           <a href="/blog/2016/12/19/running-on-fedora-25.html">Running Accumulo on Fedora 25</a>
           </div>
         </div>
         
@@ -222,8 +254,8 @@
 
       </div>
     </div>
-    <a id="apachecon" href="https://www.apache.org/events/current-event"><img src="https://www.apache.org/events/current-event-234x60.png" /></a>
-    <a id="accumulo-summit-logo" a="" href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png" /></a>
+    <a id="apachecon" href="https://www.apache.org/events/current-event"><img src="https://www.apache.org/events/current-event-234x60.png"/></a>
+    <a id="accumulo-summit-logo" a href="http://accumulosummit.com/"><img alt="Accumulo Summit" class="img-responsive" src="/images/accumulo-summit.png"></a>
   </div>
 </div>
 
@@ -236,7 +268,7 @@
 
   <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 
-  <p>Apache Accumulo, Accumulo, Apache Hadoop, Apache Thrift, Apache, the Apache feather logo, and the Accumulo project logo are trademarks of the <a href="https://www.apache.org">Apache Software Foundation</a>.</p>
+  <p>Apache Accumulo, Apache Hadoop, and the Accumulo project logo are trademarks<br />of the <a href="https://www.apache.org">Apache Software Foundation</a>.</p>
 
 </footer>
 

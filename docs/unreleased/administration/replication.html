@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Replication</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/quick-install">Quick Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/in-depth-install">In-depth Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Replication</p>
+    
+    
+
+    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
+
+    <div class="row">
+      <div class="col-md-10"><h1>Replication</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/administration/replication.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+    
+    <h2 id="overview">Overview</h2>
+
+<p>Replication is a feature of Accumulo which provides a mechanism to automatically
+copy data to other systems, typically for the purpose of disaster recovery,
+high availability, or geographic locality. It is best to consider this feature
+as a framework for automatic replication instead of the ability to copy data
+from to another Accumulo instance as copying to another Accumulo cluster is
+only an implementation detail. The local Accumulo cluster is hereby referred
+to as the <code class="highlighter-rouge">primary</code> while systems being replicated to are known as
+<code class="highlighter-rouge">peers</code>.</p>
+
+<p>This replication framework makes two Accumulo instances, where one instance
+replicates to another, eventually consistent between one another, as opposed
+to the strong consistency that each single Accumulo instance still holds. That
+is to say, attempts to read data from a table on a peer which has pending replication
+from the primary will not wait for that data to be replicated before running the scan.
+This is desirable for a number of reasons, the most important is that the replication
+framework is not limited by network outages or offline peers, but only by the HDFS
+space available on the primary system.</p>
+
+<p>Replication configurations can be considered as a directed graph which allows cycles.
+The systems in which data was replicated from is maintained in each Mutation which
+allow each system to determine if a peer has already has the data in which
+the system wants to send.</p>
+
+<p>Data is replicated by using the Write-Ahead logs (WAL) that each TabletServer is
+already maintaining. TabletServers records which WALs have data that need to be
+replicated to the <code class="highlighter-rouge">accumulo.metadata</code> table. The Master uses these records,
+combined with the local Accumulo table that the WAL was used with, to create records
+in the <code class="highlighter-rouge">replication</code> table which track which peers the given WAL should be
+replicated to. The Master latter uses these work entries to assign the actual
+replication task to a local TabletServer using ZooKeeper. A TabletServer will get
+a lock in ZooKeeper for the replication of this file to a peer, and proceed to
+replicate to the peer, recording progress in the <code class="highlighter-rouge">replication</code> table as
+data is successfully replicated on the peer. Later, the Master and Garbage Collector
+will remove records from the <code class="highlighter-rouge">accumulo.metadata</code> and <code class="highlighter-rouge">replication</code> tables
+and files from HDFS, respectively, after replication to all peers is complete.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Configuration of Accumulo to replicate data to another system can be categorized
+into the following sections.</p>
+
+<h3 id="site-configuration">Site Configuration</h3>
+
+<p>Each system involved in replication (even the primary) needs a name that uniquely
+identifies it across all peers in the replication graph. This should be considered
+fixed for an instance, and set in <code class="highlighter-rouge">accumulo-site.xml</code>.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>primary<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;description&gt;</span>Unique name for this system used by replication<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="instance-configuration">Instance Configuration</h3>
+
+<p>For each peer of this system, Accumulo needs to know the name of that peer,
+the class used to replicate data to that system and some configuration information
+to connect to this remote peer. In the case of Accumulo, this additional data
+is the Accumulo instance name and ZooKeeper quorum; however, this varies on the
+replication implementation for the peer.</p>
+
+<p>These can be set in the site configuration to ease deployments; however, as they may
+change, it can be useful to set this information using the Accumulo shell.</p>
+
+<p>To configure a peer with the name <code class="highlighter-rouge">peer1</code> which is an Accumulo system with an instance name of <code class="highlighter-rouge">accumulo_peer</code>
+and a ZooKeeper quorum of <code class="highlighter-rouge">10.0.0.1,10.0.2.1,10.0.3.1</code>, invoke the following
+command in the shell.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@accumulo_primary&gt; config -s
+replication.peer.peer1=org.apache.accumulo.tserver.replication.AccumuloReplicaSystem,accumulo_peer,10.0.0.1,10.0.2.1,10.0.3.1
+</code></pre>
+</div>
+
+<p>Since this is an Accumulo system, we also want to set a username and password
+to use when authenticating with this peer. On our peer, we make a special user
+which has permission to write to the tables we want to replicate data into, “replication”
+with a password of “password”. We then need to record this in the primary’s configuration.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@accumulo_primary&gt; config -s replication.peer.user.peer1=replication
+root@accumulo_primary&gt; config -s replication.peer.password.peer1=password
+</code></pre>
+</div>
+
+<p>Alternatively, when configuring replication on Accumulo running Kerberos, a keytab
+file per peer can be configured instead of a password. The provided keytabs must be readable
+by the unix user running Accumulo. They keytab for a peer can be unique from the
+keytab used by Accumulo or any keytabs for other peers.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo@EXAMPLE.COM@accumulo_primary&gt; config -s replication.peer.user.peer1=replication@EXAMPLE.COM
+accumulo@EXAMPLE.COM@accumulo_primary&gt; config -s replication.peer.keytab.peer1=/path/to/replication.keytab
+</code></pre>
+</div>
+
+<h3 id="table-configuration">Table Configuration</h3>
+
+<p>Now, we presently have a peer defined, so we just need to configure which tables will
+replicate to that peer. We also need to configure an identifier to determine where
+this data will be replicated on the peer. Since we’re replicating to another Accumulo
+cluster, this is a table ID. In this example, we want to enable replication on
+<code class="highlighter-rouge">my_table</code> and configure our peer <code class="highlighter-rouge">accumulo_peer</code> as a target, sending
+the data to the table with an ID of <code class="highlighter-rouge">2</code> in <code class="highlighter-rouge">accumulo_peer</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@accumulo_primary&gt; config -t my_table -s table.replication=true
+root@accumulo_primary&gt; config -t my_table -s table.replication.target.accumulo_peer=2
+</code></pre>
+</div>
+
+<p>To replicate a single table on the primary to multiple peers, the second command
+in the above shell snippet can be issued, for each peer and remote identifier pair.</p>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<p>Basic information about replication status from a primary can be found on the Accumulo
+Monitor server, using the <code class="highlighter-rouge">Replication</code> link the sidebar.</p>
+
+<p>On this page, information is broken down into the following sections:</p>
+
+<ol>
+  <li>Files pending replication by peer and target</li>
+  <li>Files queued for replication, with progress made</li>
+</ol>
+
+<h2 id="work-assignment">Work Assignment</h2>
+
+<p>Depending on the schema of a table, different implementations of the WorkAssigner used could
+be configured. The implementation is controlled via the property <code class="highlighter-rouge">replication.work.assigner</code>
+and the full class name for the implementation. This can be configured via the shell or
+<code class="highlighter-rouge">accumulo-site.xml</code>.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>replication.work.assigner<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>org.apache.accumulo.master.replication.SequentialWorkAssigner<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;description&gt;</span>Implementation used to assign work for replication<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@accumulo_primary&gt; config -t my_table -s replication.work.assigner=org.apache.accumulo.master.replication.SequentialWorkAssigner
+</code></pre>
+</div>
+
+<p>Two implementations are provided. By default, the <code class="highlighter-rouge">SequentialWorkAssigner</code> is configured for an
+instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
+replicated in the order in which they were created. This is sufficient to ensure that updates to a table
+will be replayed in the correct order on the peer. This implementation has the downside of only replicating
+a single WAL at a time.</p>
+
+<p>The second implementation, the <code class="highlighter-rouge">UnorderedWorkAssigner</code> can be used to overcome the limitation
+of only a single WAL being replicated to a target and peer at any time. Depending on the table schema,
+it’s possible that multiple versions of the same Key with different values are infrequent or nonexistent.
+In this case, parallel replication to a peer and target is possible without any downsides. In the case
+where this implementation is used were column updates are frequent, it is possible that there will be
+an inconsistency between the primary and the peer.</p>
+
+<h2 id="replicasystems">ReplicaSystems</h2>
+
+<p><code class="highlighter-rouge">ReplicaSystem</code> is the interface which allows abstraction of replication of data
+to peers of various types. Presently, only an <code class="highlighter-rouge">AccumuloReplicaSystem</code> is provided
+which will replicate data to another Accumulo instance. A <code class="highlighter-rouge">ReplicaSystem</code> implementation
+is run inside of the TabletServer process, and can be configured as mentioned in the 
+<code class="highlighter-rouge">Instance Configuration</code> section of this document. Theoretically, an implementation
+of this interface could send data to other filesystems, databases, etc.</p>
+
+<h3 id="accumuloreplicasystem">AccumuloReplicaSystem</h3>
+
+<p>The <code class="highlighter-rouge">AccumuloReplicaSystem</code> uses Thrift to communicate with a peer Accumulo instance
+and replicate the necessary data. The TabletServer running on the primary will communicate
+with the Master on the peer to request the address of a TabletServer on the peer which
+this TabletServer will use to replicate the data.</p>
+
+<p>The TabletServer on the primary will then replicate data in batches of a configurable
+size (<code class="highlighter-rouge">replication.max.unit.size</code>). The TabletServer on the peer will report how many
+records were applied back to the primary, which will be used to record how many records
+were successfully replicated. The TabletServer on the primary will continue to replicate
+data in these batches until no more data can be read from the file.</p>
+
+<h2 id="other-configuration">Other Configuration</h2>
+
+<p>There are a number of configuration values that can be used to control how
+the implementation of various components operate.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>replication.max.work.queue</td>
+      <td>Maximum number of files queued for replication at one time</td>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <td>replication.work.assignment.sleep</td>
+      <td>Time between invocations of the WorkAssigner</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <td>replication.worker.threads</td>
+      <td>Size of threadpool used to replicate data to peers</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>replication.receipt.service.port</td>
+      <td>Thrift service port to listen for replication requests, can use ‘0’ for a random port</td>
+      <td>10002</td>
+    </tr>
+    <tr>
+      <td>replication.work.attempts</td>
+      <td>Number of attempts to replicate to a peer before aborting the attempt</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>replication.receiver.min.threads</td>
+      <td>Minimum number of idle threads for handling incoming replication</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>replication.receiver.threadcheck.time</td>
+      <td>Time between attempting adjustments of thread pool for incoming replications</td>
+      <td>30s</td>
+    </tr>
+    <tr>
+      <td>replication.max.unit.size</td>
+      <td>Maximum amount of data to be replicated in one RPC</td>
+      <td>64M</td>
+    </tr>
+    <tr>
+      <td>replication.work.assigner</td>
+      <td>Work Assigner implementation</td>
+      <td>org.apache.accumulo.master.replication.SequentialWorkAssigner</td>
+    </tr>
+    <tr>
+      <td>tserver.replication.batchwriter.replayer.memory</td>
+      <td>Size of BatchWriter cache to use in applying replication requests</td>
+      <td>50M</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="example-practical-configuration">Example Practical Configuration</h2>
+
+<p>A real-life example is now provided to give concrete application of replication configuration. This
+example is a two instance Accumulo system, one primary system and one peer system. They are called
+primary and peer, respectively. Each system also have a table of the same name, “my_table”. The instance
+name for each is also the same (primary and peer), and both have ZooKeeper hosts on a node with a hostname
+with that name as well (primary:2181 and peer:2181).</p>
+
+<p>We want to configure these systems so that “my_table” on “primary” replicates to “my_table” on “peer”.</p>
+
+<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+
+<p>We can assign the “unique” name that identifies this Accumulo instance among all others that might participate
+in replication together. In this example, we will use the names provided in the description.</p>
+
+<h4 id="primary">Primary</h4>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>primary<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Defines the unique name<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h4 id="peer">Peer</h4>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>peer<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="masters-and-tservers-files">masters and tservers files</h3>
+
+<p>Be <em>sure</em> to use non-local IP addresses. Other nodes need to connect to it and using localhost will likely result in
+a local node talking to another local node.</p>
+
+<h3 id="start-both-instances">Start both instances</h3>
+
+<p>The rest of the configuration is dynamic and is best configured on the fly (in ZooKeeper) than in accumulo-site.xml.</p>
+
+<h3 id="peer-1">Peer</h3>
+
+<p>The next series of command are to be run on the peer system. Create a user account for the primary instance called
+“peer”. The password for this account will need to be saved in the configuration on the primary</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@peer&gt; createtable my_table
+root@peer&gt; createuser peer
+root@peer&gt; grant -t my_table -u peer Table.WRITE
+root@peer&gt; grant -t my_table -u peer Table.READ
+root@peer&gt; tables -l
+</code></pre>
+</div>
+
+<p>Remember what the table ID for ‘my_table’ is. You’ll need that to configured the primary instance.</p>
+
+<h3 id="primary-1">Primary</h3>
+
+<p>Next, configure the primary instance.</p>
+
+<h4 id="set-up-the-table">Set up the table</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@primary&gt; createtable my_table
+</code></pre>
+</div>
+
+<h4 id="define-the-peer-as-a-replication-peer-to-the-primary">Define the Peer as a replication peer to the Primary</h4>
+
+<p>We’re defining the instance with replication.name of ‘peer’ as a peer. We provide the implementation of ReplicaSystem
+that we want to use, and the configuration for the AccumuloReplicaSystem. In this case, the configuration is the Accumulo
+Instance name for ‘peer’ and the ZooKeeper quorum string. The configuration key is of the form
+“replication.peer.$peer_name”.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@primary&gt; config -s replication.peer.peer=org.apache.accumulo.tserver.replication.AccumuloReplicaSystem,peer,$peer_zk_quorum
+</code></pre>
+</div>
+
+<h4 id="set-the-authentication-credentials">Set the authentication credentials</h4>
+
+<p>We want to use that special username and password that we created on the peer, so we have a means to write data to
+the table that we want to replicate to. The configuration key is of the form “replication.peer.user.$peer_name”.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@primary&gt; config -s replication.peer.user.peer=peer
+root@primary&gt; config -s replication.peer.password.peer=peer
+</code></pre>
+</div>
+
+<h4 id="enable-replication-on-the-table">Enable replication on the table</h4>
+
+<p>Now that we have defined the peer on the primary and provided the authentication credentials, we need to configure
+our table with the implementation of ReplicaSystem we want to use to replicate to the peer. In this case, our peer 
+is an Accumulo instance, so we want to use the AccumuloReplicaSystem.</p>
+
+<p>The configuration for the AccumuloReplicaSystem is the table ID for the table on the peer instance that we
+want to replicate into. Be sure to use the correct value for $peer_table_id. The configuration key is of
+the form “table.replication.target.$peer_name”.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@primary&gt; config -t my_table -s table.replication.target.peer=$peer_table_id
+</code></pre>
+</div>
+
+<p>Finally, we can enable replication on this table.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@primary&gt; config -t my_table -s table.replication=true
+</code></pre>
+</div>
+
+<h2 id="extra-considerations-for-use">Extra considerations for use</h2>
+
+<p>While this feature is intended for general-purpose use, its implementation does carry some baggage. Like any software,
+replication is a feature that operates well within some set of use cases but is not meant to support all use cases.
+For the benefit of the users, we can enumerate these cases.</p>
+
+<h3 id="latency">Latency</h3>
+
+<p>As previously mentioned, the replication feature uses the Write-Ahead Log files for a number of reasons, one of which
+is to prevent the need for data to be written to RFiles before it is available to be replicated. While this can help
+reduce the latency for a batch of Mutations that have been written to Accumulo, the latency is at least seconds to tens
+of seconds for replication once ingest is active. For a table which replication has just been enabled on, this is likely
+to take a few minutes before replication will begin.</p>
+
+<p>Once ingest is active and flowing into the system at a regular rate, replication should be occurring at a similar rate, 
+given sufficient computing resources. Replication attempts to copy data at a rate that is to be considered low latency
+but is not a replacement for custom indexing code which can ensure near real-time referential integrity on secondary indexes.</p>
+
+<h3 id="table-configured-iterators">Table-Configured Iterators</h3>
+
+<p>Accumulo Iterators tend to be a heavy hammer which can be used to solve a variety of problems. In general, it is highly
+recommended that Iterators which are applied at major compaction time are both idempotent and associative due to the
+non-determinism in which some set of files for a Tablet might be compacted. In practice, this translates to common patterns,
+such as aggregation, which are implemented in a manner resilient to duplication (such as using a Set instead of a List).</p>
+
+<p>Due to the asynchronous nature of replication and the expectation that hardware failures and network partitions will exist,
+it is generally not recommended to not configure replication on a table which has Iterators set which are not idempotent.
+While the replication implementation can make some simple assertions to try to avoid re-replication of data, it is not
+presently guaranteed that all data will only be sent to a peer once. Data will be replicated at least once. Typically,
+this is not a problem as the VersioningIterator will automaticaly deduplicate this over-replication because they will
+have the same timestamp; however, certain Combiners may result in inaccurate aggregations.</p>
+
+<p>As a concrete example, consider a table which has the SummingCombiner configured to sum all values for
+multiple versions of the same Key. For some key, consider a set of numeric values that are written to a table on the
+primary: [1, 2, 3]. On the primary, all of these are successfully written and thus the current value for the given key
+would be 6, (1 + 2 + 3). Consider, however, that each of these updates to the peer were done independently (because
+other data was also included in the write-ahead log that needed to be replicated). The update with a value of 1 was
+successfully replicated, and then we attempted to replicate the update with a value of 2 but the remote server never
+responded. The primary does not know whether the update with a value of 2 was actually applied or not, so the
+only recourse is to re-send the update. After we receive confirmation that the update with a value of 2 was replicated,
+we will then replicate the update with 3. If the peer did never apply the first update of ‘2’, the summation is accurate.
+If the update was applied but the acknowledgement was lost for some reason (system failure, network partition), the
+update will be resent to the peer. Because addition is non-idempotent, we have created an inconsistency between the
+primary and peer. As such, the SummingCombiner wouldn’t be recommended on a table being replicated.</p>
+
+<p>While there are changes that could be made to the replication implementation which could attempt to mitigate this risk,
+presently, it is not recommended to configure Iterators or Combiners which are not idempotent to support cases where
+inaccuracy of aggregations is not acceptable.</p>
+
+<h3 id="duplicate-keys">Duplicate Keys</h3>
+
+<p>In Accumulo, when more than one key exists that are exactly the same, keys that are equal down to the timestamp,
+the retained value is non-deterministic. Replication introduces another level of non-determinism in this case.
+For a table that is being replicated and has multiple equal keys with different values inserted into it, the final
+value in that table on the primary instance is not guaranteed to be the final value on all replicas.</p>
+
+<p>For example, say the values that were inserted on the primary instance were <code class="highlighter-rouge">value1</code> and <code class="highlighter-rouge">value2</code> and the final
+value was <code class="highlighter-rouge">value1</code>, it is not guaranteed that all replicas will have <code class="highlighter-rouge">value1</code> like the primary. The final value is
+non-deterministic for each instance.</p>
+
+<p>As is the recommendation without replication enabled, if multiple values for the same key (sans timestamp) are written to
+Accumulo, it is strongly recommended that the value in the timestamp properly reflects the intended version by
+the client. That is to say, newer values inserted into the table should have larger timestamps. If the time between
+writing updates to the same key is significant (order minutes), this concern can likely be ignored.</p>
+
+<h3 id="bulk-imports">Bulk Imports</h3>
+
+<p>Currently, files that are bulk imported into a table configured for replication are not replicated. There is no
+technical reason why it was not implemented, it was simply omitted from the initial implementation. This is considered a
+fair limitation because bulk importing generated files multiple locations is much simpler than bifurcating “live” ingest
+data into two instances. Given some existing bulk import process which creates files and them imports them into an
+Accumulo instance, it is trivial to copy those files to a new HDFS instance and import them into another Accumulo
+instance using the same process. Hadoop’s <code class="highlighter-rouge">distcp</code> command provides an easy way to copy large amounts of data to another
+HDFS instance which makes the problem of duplicating bulk imports very easy to solve.</p>
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/administration/replication.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

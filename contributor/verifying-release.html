@@ -51,7 +51,13 @@
       }
     });
   });
-  
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
   // configure Google Analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -171,11 +177,11 @@ trumps anything written here.</p>
 property in the <code class="highlighter-rouge">pom.xml</code> and using the staging repo. Also, run the unit/integration tests using <code class="highlighter-rouge">mvn verify</code>.</p>
   </li>
   <li>
-    <p>Run Accumulo’s distributed tests (i.e RandomWalk, ContinuousIngest, etc). Information on these tests can
-be found in their respective directories, <code class="highlighter-rouge">test/system/randomwalk</code> and <code class="highlighter-rouge">test/system/continuous</code>, which
-include instructions on how to run the tests. These tests are intended to be run for days on end while
-injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
-real systems.</p>
+    <p>Run Accumulo’s distributed tests (i.e. random walk, continous ingest). These tests are intended to be run for days
+on end while injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
+real systems. Starting with 2.0, these tests are run using the <a href="https://github.com/apache/accumulo-testing">Accumulo Testing repo</a>. See the <a href="https://github.com/apache/accumulo-testing/blob/master/README.md">README.md</a>
+for more information.  Before 2.0, these tests are found in Accumulo tarball at <code class="highlighter-rouge">test/system/randomwalk</code> and
+<code class="highlighter-rouge">test/system/continuous</code> which include instructions on how to run the tests.</p>
   </li>
 </ul>
 

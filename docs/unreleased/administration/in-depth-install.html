@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - In-depth Installation</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-1.6.6/">1.6.6</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/quick-install">Quick Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/iterators">Iterators</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/proxy">Proxy</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/in-depth-install">In-depth Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/unreleased/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/unreleased/">Accumulo unreleased docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; In-depth Installation</p>
+    
+    
+
+    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
+
+    <div class="row">
+      <div class="col-md-10"><h1>In-depth Installation</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/administration/in-depth-install.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+    
+    <p>This document provides detailed instructions for installing Accumulo. For basic
+instructions, see the <a href="/docs/unreleased/getting-started/quick-install">quick installation guide</a>.</p>
+
+<h2 id="hardware">Hardware</h2>
+
+<p>Because we are running essentially two or three systems simultaneously layered
+across the cluster: HDFS, Accumulo and MapReduce, it is typical for hardware to
+consist of 4 to 8 cores, and 8 to 32 GB RAM. This is so each running process can have
+at least one core and 2 - 4 GB each.</p>
+
+<p>One core running HDFS can typically keep 2 to 4 disks busy, so each machine may
+typically have as little as 2 x 300GB disks and as much as 4 x 1TB or 2TB disks.</p>
+
+<p>It is possible to do with less than this, such as with 1u servers with 2 cores and 4GB
+each, but in this case it is recommended to only run up to two processes per
+machine – i.e. DataNode and TabletServer or DataNode and MapReduce worker but
+not all three. The constraint here is having enough available heap space for all the
+processes on a machine.</p>
+
+<h2 id="network">Network</h2>
+
+<p>Accumulo communicates via remote procedure calls over TCP/IP for both passing
+data and control messages. In addition, Accumulo uses HDFS clients to
+communicate with HDFS. To achieve good ingest and query performance, sufficient
+network bandwidth must be available between any two machines.</p>
+
+<p>In addition to needing access to ports associated with HDFS and ZooKeeper, Accumulo will
+use the following default ports. Please make sure that they are open, or change
+their value in accumulo-site.xml.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Port</th>
+      <th>Description</th>
+      <th>Property Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4445</td>
+      <td>Shutdown Port (Accumulo MiniCluster)</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td>4560</td>
+      <td>Accumulo monitor (for centralized log display)</td>
+      <td>monitor.port.log4j</td>
+    </tr>
+    <tr>
+      <td>9995</td>
+      <td>Accumulo HTTP monitor</td>
+      <td>monitor.port.client</td>
+    </tr>
+    <tr>
+      <td>9997</td>
+      <td>Tablet Server</td>
+      <td>tserver.port.client</td>
+    </tr>
+    <tr>
+      <td>9998</td>
+      <td>Accumulo GC</td>
+      <td>gc.port.client</td>
+    </tr>
+    <tr>
+      <td>9999</td>
+      <td>Master Server</td>
+      <td>master.port.client</td>
+    </tr>
+    <tr>
+      <td>12234</td>
+      <td>Accumulo Tracer</td>
+      <td>trace.port.client</td>
+    </tr>
+    <tr>
+      <td>42424</td>
+      <td>Accumulo Proxy Server</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td>10001</td>
+      <td>Master Replication service</td>
+      <td>master.replication.coordinator.port</td>
+    </tr>
+    <tr>
+      <td>10002</td>
+      <td>TabletServer Replication service</td>
+      <td>replication.receipt.service.port</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In addition, the user can provide <code class="highlighter-rouge">0</code> and an ephemeral port will be chosen instead. This
+ephemeral port is likely to be unique and not already bound. Thus, configuring ports to
+use <code class="highlighter-rouge">0</code> instead of an explicit value, should, in most cases, work around any issues of
+running multiple distinct Accumulo instances (or any other process which tries to use the
+same default ports) on the same hardware. Finally, the *.port.client properties will work
+with the port range syntax (M-N) allowing the user to specify a range of ports for the
+service to attempt to bind. The ports in the range will be tried in a 1-up manner starting
+at the low end of the range to, and including, the high end of the range.</p>
+
+<h2 id="download-tarball">Download Tarball</h2>
+
+<p>Download a binary distribution of Accumulo and install it to a directory on a disk with
+sufficient space:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd &lt;install directory&gt;
+tar xzf accumulo-X.Y.Z-bin.tar.gz   # Replace 'X.Y.Z' with your Accumulo version
+cd accumulo-X.Y.Z
+</code></pre>
+</div>
+
+<p>Repeat this step on each machine in your cluster. Typically, the same <code class="highlighter-rouge">&lt;install directory&gt;</code>
+is chosen for all machines in the cluster.</p>
+
+<p>There are four scripts in the <code class="highlighter-rouge">bin/</code> directory that are used to manage Accumulo:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">accumulo</code> - Runs Accumulo command-line tools and starts Accumulo processes</li>
+  <li><code class="highlighter-rouge">accumulo-service</code> - Runs Accumulo processes as services</li>
+  <li><code class="highlighter-rouge">accumulo-cluster</code> - Manages Accumulo cluster on a single node or several nodes</li>
+  <li><code class="highlighter-rouge">accumulo-util</code> - Accumulo utilities for creating configuration, native libraries, etc.</li>
+</ol>
+
+<p>These scripts will be used in the remaining instructions to configure and run Accumulo.</p>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<p>Accumulo requires HDFS and ZooKeeper to be configured and running
+before starting. Password-less SSH should be configured between at least the
+Accumulo master and TabletServer machines. It is also a good idea to run Network
+Time Protocol (NTP) within the cluster to ensure nodes’ clocks don’t get too out of
+sync, which can cause problems with automatically timestamped data.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The Accumulo tarball contains a <code class="highlighter-rouge">conf/</code> directory where Accumulo looks for configuration. If you
+installed Accumulo using downstream packaging, the <code class="highlighter-rouge">conf/</code> could be something else like
+<code class="highlighter-rouge">/etc/accumulo/</code>.</p>
+
+<p>Before starting Accumulo, the configuration files <code class="highlighter-rouge">accumulo-env.sh</code> and <code class="highlighter-rouge">accumulo-site.xml</code> must
+exist in <code class="highlighter-rouge">conf/</code> and be properly configured. If you are using <code class="highlighter-rouge">accumulo-cluster</code> to launch
+a cluster, the <code class="highlighter-rouge">conf/</code> directory must also contain hosts file for Accumulo services (i.e <code class="highlighter-rouge">gc</code>,
+<code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">monitor</code>, <code class="highlighter-rouge">tservers</code>, <code class="highlighter-rouge">tracers</code>). You can either create these files manually or run
+<code class="highlighter-rouge">accumulo-cluster create-config</code>.</p>
+
+<p>Logging is configured in <code class="highlighter-rouge">accumulo-env.sh</code> to use three log4j configuration files in <code class="highlighter-rouge">conf/</code>. The
+file used depends on the Accumulo command or service being run. Logging for most Accumulo services
+(i.e Master, TabletServer, Garbage Collector) is configured by <code class="highlighter-rouge">log4j-service.properties</code> except for
+the Monitor which is configured by <code class="highlighter-rouge">log4j-monitor.properties</code>. All Accumulo commands (i.e <code class="highlighter-rouge">init</code>,
+<code class="highlighter-rouge">shell</code>, etc) are configured by <code class="highlighter-rouge">log4j.properties</code>.</p>
+
+<h3 id="configure-accumulo-envsh">Configure accumulo-env.sh</h3>
+
+<p>Accumulo needs to know where to find the software it depends on. Edit accumulo-env.sh
+and specify the following:</p>
+
+<ol>
+  <li>Enter the location of Hadoop for <code class="highlighter-rouge">$HADOOP_PREFIX</code></li>
+  <li>Enter the location of ZooKeeper for <code class="highlighter-rouge">$ZOOKEEPER_HOME</code></li>
+  <li>Optionally, choose a different location for Accumulo logs using <code class="highlighter-rouge">$ACCUMULO_LOG_DIR</code></li>
+</ol>
+
+<p>Accumulo uses <code class="highlighter-rouge">HADOOP_PREFIX</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to locate Hadoop and Zookeeper jars
+and add them the <code class="highlighter-rouge">CLASSPATH</code> variable. If you are running a vendor-specific release of Hadoop
+or Zookeeper, you may need to change how your <code class="highlighter-rouge">CLASSPATH</code> is built in <code class="highlighter-rouge">accumulo-env.sh</code>. If
+Accumulo has problems later on finding jars, run <code class="highlighter-rouge">accumulo classpath -d</code> to debug and print
+Accumulo’s classpath.</p>
+
+<p>You may want to change the default memory settings for Accumulo’s TabletServer which are
+by set in the <code class="highlighter-rouge">JAVA_OPTS</code> settings for ‘tservers’ in <code class="highlighter-rouge">accumulo-env.sh</code>. Note the
+syntax is that of the Java JVM command line options. This value should be less than the
+physical memory of the machines running TabletServers.</p>
+
+<p>There are similar options for the master’s memory usage and the garbage collector
+process. Reduce these if they exceed the physical RAM of your hardware and
+increase them, within the bounds of the physical RAM, if a process fails because of
+insufficient memory.</p>
+
+<p>Note that you will be specifying the Java heap space in accumulo-env.sh. You should
+make sure that the total heap space used for the Accumulo tserver and the Hadoop
+DataNode and TaskTracker is less than the available memory on each worker node in
+the cluster. On large clusters, it is recommended that the Accumulo master, Hadoop
+NameNode, secondary NameNode, and Hadoop JobTracker all be run on separate
+machines to allow them to use more heap space. If you are running these on the
+same machine on a small cluster, likewise make sure their heap space settings fit
+within the available memory.</p>
+
+<h3 id="native-map">Native Map</h3>
+
+<p>The tablet server uses a data structure called a MemTable to store sorted key/value
+pairs in memory when they are first received from the client. When a minor compaction
+occurs, this data structure is written to HDFS. The MemTable will default to using
+memory in the JVM but a JNI version, called the native map, can be used to significantly
+speed up performance by utilizing the memory space of the native operating system. The
+native map also avoids the performance implications brought on by garbage collection
+in the JVM by causing it to pause much less frequently.</p>
+
+<h4 id="building">Building</h4>
+
+<p>32-bit and 64-bit Linux and Mac OS X versions of the native map can be built by executing
+<code class="highlighter-rouge">accumulo-util build-native</code>. If your system’s default compiler options are insufficient,
+you can add additional compiler options to the command line, such as options for the
+architecture. These will be passed to the Makefile in the environment variable <code class="highlighter-rouge">USERFLAGS</code>.</p>
+
+<p>Examples:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-util build-native
+accumulo-util build-native -m32
+</code></pre>
+</div>
+
+<p>After building the native map from the source, you will find the artifact in
+<code class="highlighter-rouge">lib/native</code>. Upon starting up, the tablet server will look
+in this directory for the map library. If the file is renamed or moved from its
+target directory, the tablet server may not be able to find it. The system can
+also locate the native maps shared library by setting <code class="highlighter-rouge">LD_LIBRARY_PATH</code>
+(or <code class="highlighter-rouge">DYLD_LIBRARY_PATH</code> on Mac OS X) in <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
+
+<h4 id="native-maps-configuration">Native Maps Configuration</h4>
+
+<p>As mentioned, Accumulo will use the native libraries if they are found in the expected
+location and <code class="highlighter-rouge">tserver.memory.maps.native.enabled</code> is set to <code class="highlighter-rouge">true</code> (which is the default).
+Using the native maps over JVM Maps nets a noticeable improvement in ingest rates; however,
+certain configuration variables are important to modify when increasing the size of the
+native map.</p>
+
+<p>To adjust the size of the native map, increase the value of <code class="highlighter-rouge">tserver.memory.maps.max</code>.
+By default, the maximum size of the native map is 1GB. When increasing this value, it is
+also important to adjust the values of <code class="highlighter-rouge">table.compaction.minor.logs.threshold</code> and
+<code class="highlighter-rouge">tserver.walog.max.size</code>. <code class="highlighter-rouge">table.compaction.minor.logs.threshold</code> is the maximum
+number of write-ahead log files that a tablet can reference before they will be automatically
+minor compacted. <code class="highlighter-rouge">tserver.walog.max.size</code> is the maximum size of a write-ahead log.</p>
+
+<p>The maximum size of the native maps for a server should be less than the product
+of the write-ahead log maximum size and minor compaction threshold for log files:</p>
+
+<p><code class="highlighter-rouge">$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max</code></p>
+
+<p>This formula ensures that minor compactions won’t be automatically triggered before the native
+maps can be completely saturated.</p>
+
+<p>Subsequently, when increasing the size of the write-ahead logs, it can also be important
+to increase the HDFS block size that Accumulo uses when creating the files for the write-ahead log.
+This is controlled via <code class="highlighter-rouge">tserver.wal.blocksize</code>. A basic recommendation is that when
+<code class="highlighter-rouge">tserver.walog.max.size</code> is larger than 2GB in size, set <code class="highlighter-rouge">tserver.wal.blocksize</code> to 2GB.
+Increasing the block size to a value larger than 2GB can result in decreased write
+performance to the write-ahead log file which will slow ingest.</p>
+
+<h3 id="cluster-specification">Cluster Specification</h3>
+
+<p>If you are using <code class="highlighter-rouge">accumulo-cluster</code> to start a cluster, configure the following on the
+machine that will serve as the Accumulo master:</p>
+
+<ol>
+  <li>Write the IP address or domain name of the Accumulo Master to the <code class="highlighter-rouge">conf/masters</code> file.</li>
+  <li>Write the IP addresses or domain name of the machines that will be TabletServers in <code class="highlighter-rouge">conf/tservers</code>, one per line.</li>
+</ol>
+
+<p>Note that if using domain names rather than IP addresses, DNS must be configured
+properly for all machines participating in the cluster. DNS can be a confusing source
+of errors.</p>
+
+<h3 id="configure-accumulo-sitexml">Configure accumulo-site.xml</h3>
+
+<p>Specify appropriate values for the following settings in <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>instance.zookeeper.host<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>zooserver-one:2181,zooserver-two:2181<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;description&gt;</span>list of zookeeper servers<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>This enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper to coordinate
+settings between processes and helps finalize TabletServer failure.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>instance.secret<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>DEFAULT<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>The instance needs a secret to enable secure communication between servers. Configure your
+secret and make sure that the <code class="highlighter-rouge">accumulo-site.xml</code> file is not readable to other users.
+For alternatives to storing the <code class="highlighter-rouge">instance.secret</code> in plaintext, please read the
+<code class="highlighter-rouge">Sensitive Configuration Values</code> section.</p>
+
+<p>Some settings can be modified via the Accumulo shell and take effect immediately, but
+some settings require a process restart to take effect. See the <a href="/docs/unreleased/administration/configuration-management">configuration management</a>
+documentation for details.</p>
+
+<h3 id="hostnames-in-configuration-files">Hostnames in configuration files</h3>
+
+<p>Accumulo has a number of configuration files which can contain references to other hosts in your
+network. All of the “host” configuration files for Accumulo (<code class="highlighter-rouge">gc</code>, <code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">tservers</code>, <code class="highlighter-rouge">monitor</code>,
+<code class="highlighter-rouge">tracers</code>) as well as <code class="highlighter-rouge">instance.volumes</code> in accumulo-site.xml must contain some host reference.</p>
+
+<p>While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid, it
+is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop cluster.
+Failing to consistently use FQDNs can have unexpected consequences in how Accumulo uses the FileSystem.</p>
+
+<p>A common way for this problem can be observed is via applications that use Bulk Ingest. The Accumulo
+Master coordinates moving the input files to Bulk Ingest to an Accumulo-managed directory. However,
+Accumulo cannot safely move files across different Hadoop FileSystems. This is problematic because
+Accumulo also cannot make reliable assertions across what is the same FileSystem which is specified
+with different names. Naively, while 127.0.0.1:8020 might be a valid identifier for an HDFS instance,
+Accumulo identifies <code class="highlighter-rouge">localhost:8020</code> as a different HDFS instance than <code class="highlighter-rouge">127.0.0.1:8020</code>.</p>
+
+<h3 id="deploy-configuration">Deploy Configuration</h3>
+
+<p>Copy accumulo-env.sh and accumulo-site.xml from the <code class="highlighter-rouge">conf/</code> directory on the master to all Accumulo
+tablet servers.  The “host” configuration files files <code class="highlighter-rouge">accumulo-cluster</code> only need to be on servers
+where that command is run.</p>
+
+<h3 id="sensitive-configuration-values">Sensitive Configuration Values</h3>
+
+<p>Accumulo has a number of properties that can be specified via the accumulo-site.xml
+file which are sensitive in nature, instance.secret and trace.token.property.password
+are two common examples. Both of these properties, if compromised, have the ability
+to result in data being leaked to users who should not have access to that data.</p>
+
+<p>In Hadoop-2.6.0, a new CredentialProvider class was introduced which serves as a common
+implementation to abstract away the storage and retrieval of passwords from plaintext
+storage in configuration files. Any Property marked with the <code class="highlighter-rouge">Sensitive</code> annotation
+is a candidate for use with these CredentialProviders. For version of Hadoop which lack
+these classes, the feature will just be unavailable for use.</p>
+
+<p>A comma separated list of CredentialProviders can be configured using the Accumulo Property
+<code class="highlighter-rouge">general.security.credential.provider.paths</code>. Each configured URL will be consulted
+when the Configuration object for accumulo-site.xml is accessed.</p>
+
+<h3 id="using-a-javakeystorecredentialprovider-for-storage">Using a JavaKeyStoreCredentialProvider for storage</h3>
+
+<p>One of the implementations provided in Hadoop-2.6.0 is a Java KeyStore CredentialProvider.
+Each entry in the KeyStore is the Accumulo Property key name. For example, to store the
+<code class="highlighter-rouge">instance.secret</code>, the following command can be used:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
+</code></pre>
+</div>
+
+<p>The command will then prompt you to enter the secret to use and create a keystore in:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/path/to/accumulo/conf/accumulo.jceks
+</code></pre>
+</div>
+
+<p>Then, accumulo-site.xml must be configured to use this KeyStore as a CredentialProvider:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>general.security.credential.provider.paths<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>jceks://file/path/to/accumulo/conf/accumulo.jceks<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>This configuration will then transparently extract the <code class="highlighter-rouge">instance.secret</code> from
+the configured KeyStore and alleviates a human readable storage of the sensitive
+property.</p>
+
+<p>A KeyStore can also be stored in HDFS, which will make the KeyStore readily available to
+all Accumulo servers. If the local filesystem is used, be aware that each Accumulo server
+will expect the KeyStore in the same location.</p>
+
+<h3 id="client-configuration">Client Configuration</h3>
+
+<p>In version 1.6.0, Accumulo included a new type of configuration file known as a client
+configuration file. One problem with the traditional “site.xml” file that is prevalent
+through Hadoop is that it is a single file used by both clients and servers. This makes
+it very difficult to protect secrets that are only meant for the server processes while
+allowing the clients to connect to the servers.</p>
+
+<p>The client configuration file is a subset of the information stored in accumulo-site.xml
+meant only for consumption by clients of Accumulo. By default, Accumulo checks a number
+of locations for a client configuration by default:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/path/to/accumulo/conf/client.conf</code></li>
+  <li><code class="highlighter-rouge">/etc/accumulo/client.conf</code></li>
+  <li><code class="highlighter-rouge">/etc/accumulo/conf/client.conf</code></li>
+  <li><code class="highlighter-rouge">~/.accumulo/config</code></li>
+</ul>
+
+<p>These files are <a href="https://en.wikipedia.org/wiki/.properties">Java Properties files</a>. These files
+can currently contain information about ZooKeeper servers, RPC properties (such as SSL or SASL
+connectors), distributed tracing properties. Valid properties are defined by the <a href="https://github.com/apache/accumulo/blob/f1d0ec93d9f13ff84844b5ac81e4a7b383ced467/core/src/main/java/org/apache/accumulo/core/client/ClientConfiguration.java#L54">ClientProperty</a>
+enum contained in the client API.</p>
+
+<h4 id="custom-table-tags">Custom Table Tags</h4>
+
+<p>Accumulo has the ability for users to add custom tags to tables.  This allows
+applications to set application-level metadata about a table.  These tags can be
+anything from a table description, administrator notes, date created, etc.
+This is done by naming and setting a property with a prefix <code class="highlighter-rouge">table.custom.*</code>.</p>
+
+<p>Currently, table properties are stored in ZooKeeper. This means that the number
+and size of custom properties should be restricted on the order of 10’s of properties
+at most without any properties exceeding 1MB in size. ZooKeeper’s performance can be
+very sensitive to an excessive number of nodes and the sizes of the nodes. Applications
+which leverage the user of custom properties should take these warnings into
+consideration. There is no enforcement of these warnings via the API.</p>
+
+<h4 id="configuring-the-classloader">Configuring the ClassLoader</h4>
+
+<p>Accumulo builds its Java classpath in <code class="highlighter-rouge">accumulo-env.sh</code>.  After an Accumulo application has started, it will load classes from the locations
+specified in the deprecated <code class="highlighter-rouge">general.classpaths</code> property. Additionally, Accumulo will load classes from the locations specified in the
+<code class="highlighter-rouge">general.dynamic.classpaths</code> property and will monitor and reload them if they change. The reloading  feature is useful during the development
+and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
+/
+Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
+uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
+<code class="highlighter-rouge">general.classpaths</code> property in the same manner described above. It differs in that you need to configure the
+<code class="highlighter-rouge">general.vfs.classpaths</code> property instead of the <code class="highlighter-rouge">general.dynamic.classpath</code> property. As in the default configuration, this alternate
+configuration will also monitor the vfs locations for changes and reload if necessary.</p>
+
+<p>The Accumulo classpath can be viewed in human readable format by running <code class="highlighter-rouge">accumulo classpath -d</code>.</p>
+
+<h5 id="classloader-contexts">ClassLoader Contexts</h5>
+
+<p>With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A context is identified
+by a name and references a set of locations from which to load classes and can be specified in the accumulo-site.xml file or added
+using the <code class="highlighter-rouge">config</code> command in the shell. Below is an example for specify the app1 context in the accumulo-site.xml file:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>The default behavior follows the Java ClassLoader contract in that classes, if they exists, are loaded from the parent classloader first.
+You can override this behavior by delegating to the parent classloader after looking in this classloader first. An example of this
+configuration is:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1.delegation=post<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>To use contexts in your application you can set the <code class="highlighter-rouge">table.classpath.context</code> on your tables or use the <code class="highlighter-rouge">setClassLoaderContext()</code> method on Scanner
+and BatchScanner passing in the name of the context, app1 in the example above. Setting the property on the table allows your minc, majc, and scan 
+iterators to load classes from the locations defined by the context. Passing the context name to the scanners allows you to override the table setting
+to load only scan time iterators from a different location.</p>
+
+<h2 id="initialization">Initialization</h2>
+
+<p>Accumulo must be initialized to create the structures it uses internally to locate
+data across the cluster. HDFS is required to be configured and running before
+Accumulo can be initialized.</p>
+
+<p>Once HDFS is started, initialization can be performed by executing
+<code class="highlighter-rouge">accumulo init</code> . This script will prompt for a name
+for this instance of Accumulo. The instance name is used to identify a set of tables
+and instance-specific settings. The script will then write some information into
+HDFS so Accumulo can start properly.</p>
+
+<p>The initialization script will prompt you to set a root password. Once Accumulo is
+initialized it can be started.</p>
+
+<h2 id="running">Running</h2>
+
+<h3 id="starting-accumulo">Starting Accumulo</h3>
+
+<p>Make sure Hadoop is configured on all of the machines in the cluster, including
+access to a shared HDFS instance. Make sure HDFS and ZooKeeper are running.
+Make sure ZooKeeper is configured and running on at least one machine in the
+cluster.
+Start Accumulo using <code class="highlighter-rouge">accumulo-cluster start</code>.</p>
+
+<p>To verify that Accumulo is running, check the <a href="/docs/unreleased/administration/monitoring-metrics#monitor">Accumulo monitor</a>.
+In addition, the Shell can provide some information about the status of tables via reading the metadata tables.</p>
+
+<h3 id="stopping-accumulo">Stopping Accumulo</h3>
+
+<p>To shutdown cleanly, run <code class="highlighter-rouge">accumulo-cluster stop</code> and the master will orchestrate the
+shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may
+take some time for particular configurations.</p>
+
+<h3 id="adding-a-tablet-server">Adding a Tablet Server</h3>
+
+<p>Update your <code class="highlighter-rouge">conf/tservers</code> file to account for the addition.</p>
+
+<p>Next, ssh to each of the hosts you want to add and run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service tserver start
+</code></pre>
+</div>
+
+<p>Make sure the host in question has the new configuration, or else the tablet
+server won’t start; at a minimum this needs to be on the host(s) being added,
+but in practice it’s good to ensure consistent configuration across all nodes.</p>
+
+<h3 id="decomissioning-a-tablet-server">Decomissioning a Tablet Server</h3>
+
+<p>If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
+server. Accumulo will automatically rebalance the tablets across the available tablet servers.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
+</code></pre>
+</div>
+
+<p>Alternatively, you can ssh to each of the hosts you want to remove and run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service tserver stop
+</code></pre>
+</div>
+
+<p>Be sure to update your <code class="highlighter-rouge">conf/tservers</code> file to
+account for the removal of these hosts. Bear in mind that the monitor will not re-read the
+tservers file automatically, so it will report the decommissioned servers as down; it’s
+recommended that you restart the monitor so that the node list is up to date.</p>
+
+<p>The steps described to decommission a node can also be used (without removal of the host
+from the <code class="highlighter-rouge">conf/tservers</code> file) to gracefully stop a node. This will
+ensure that the tabletserver is cleanly stopped and recovery will not need to be performed
+when the tablets are re-hosted.</p>
+
+<h3 id="restarting-process-on-a-node">Restarting process on a node</h3>
+
+<p>Occasionally, it might be necessary to restart the processes on a specific node. In addition
+to the <code class="highlighter-rouge">accumulo-cluster</code> script, Accumulo has a <code class="highlighter-rouge">accumulo-service</code> script that
+can be use to start/stop processes on a node.</p>
+
+<h4 id="a-note-on-rolling-restarts">A note on rolling restarts</h4>
+
+<p>For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant 
+load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting 
+<code class="highlighter-rouge">table.suspend.duration</code> to a positive value.</p>
+
+<p>With <code class="highlighter-rouge">table.suspend.duration</code> set to, say, <code class="highlighter-rouge">5m</code>, Accumulo will wait 
+for 5 minutes for any dead TabletServer to return before reassigning that TabletServer’s responsibilities to other TabletServers.
+If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer 
+its original responsibilities.</p>
+
+<p>It is important not to choose too large a value for <code class="highlighter-rouge">table.suspend.duration</code>, as during this time, all scans against the 
+data that TabletServer had hosted will block (or time out).</p>
+
+<h3 id="running-multiple-tabletservers-on-a-single-node">Running multiple TabletServers on a single node</h3>
+
+<p>With very powerful nodes, it may be beneficial to run more than one TabletServer on a given
+node. This decision should be made carefully and with much deliberation as Accumulo is designed
+to be able to scale to using 10’s of GB of RAM and 10’s of CPU cores.</p>
+
+<p>Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
+other nodes. Running more than one TabletServer on a host requires that you set the environment variable
+<code class="highlighter-rouge">ACCUMULO_SERVICE_INSTANCE</code> to an instance number (i.e 1, 2) for each instance that is started. Also, set
+these properties in <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>tserver.port.search<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>replication.receipt.service.port<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>0<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<h2 id="logging">Logging</h2>
+
+<p>Accumulo processes each write to a set of log files. By default, these logs are found at directory
+set by <code class="highlighter-rouge">ACCUMULO_LOG_DIR</code> in <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
+
+<h2 id="recovery">Recovery</h2>
+
+<p>In the event of TabletServer failure or error on shutting Accumulo down, some
+mutations may not have been minor compacted to HDFS properly. In this case,
+Accumulo will automatically reapply such mutations from the write-ahead log
+either when the tablets from the failed server are reassigned by the Master (in the
+case of a single TabletServer failure) or the next time Accumulo starts (in the event of
+failure during shutdown).</p>
+
+<p>Recovery is performed by asking a tablet server to sort the logs so that tablets can easily find their missing
+updates. The sort status of each file is displayed on
+Accumulo monitor status page. Once the recovery is complete any
+tablets involved should return to an <code class="highlighter-rouge">online</code> state. Until then those tablets will be
+unavailable to clients.</p>
+
+<p>The Accumulo client library is configured to retry failed mutations and in many
+cases clients will be able to continue processing after the recovery process without
+throwing an exception.</p>
+
+<h2 id="migrating-accumulo-from-non-ha-namenode-to-ha-namenode">Migrating Accumulo from non-HA Namenode to HA Namenode</h2>
+
+<p>The following steps will allow a non-HA instance to be migrated to an HA instance. Consider an HDFS URL
+<code class="highlighter-rouge">hdfs://namenode.example.com:8020</code> which is going to be moved to <code class="highlighter-rouge">hdfs://nameservice1</code>.</p>
+
+<p>Before moving HDFS over to the HA namenode, use <code class="highlighter-rouge">accumulo admin volumes</code> to confirm
+that the only volume displayed is the volume from the current namenode’s HDFS URL.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+        Volume : hdfs://namenode.example.com:8020/accumulo
+
+Listing volumes referenced in accumulo.root tablets section
+        Volume : hdfs://namenode.example.com:8020/accumulo
+Listing volumes referenced in accumulo.root deletes section (volume replacement occurrs at deletion time)
+
+Listing volumes referenced in accumulo.metadata tablets section
+        Volume : hdfs://namenode.example.com:8020/accumulo
+
+Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurrs at deletion time)
+</code></pre>
+</div>
+
+<p>After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.</p>
+
+<p>Edit <code class="highlighter-rouge">accumulo-site.xml</code> to notify accumulo that a volume is being replaced. First,
+add the new nameservice volume to the <code class="highlighter-rouge">instance.volumes</code> property. Next, add the
+<code class="highlighter-rouge">instance.volumes.replacements</code> property in the form of <code class="highlighter-rouge">old new</code>. It’s important to not include
+the volume that’s being replaced in <code class="highlighter-rouge">instance.volumes</code>, otherwise it’s possible accumulo could continue
+to write to the volume.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="c">&lt;!-- instance.dfs.uri and instance.dfs.dir should not be set--&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>instance.volumes<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://nameservice1/accumulo<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>instance.volumes.replacements<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+</div>
+
+<p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> and start up the accumulo cluster. Verify that the
+new nameservice volume shows up with <code class="highlighter-rouge">accumulo admin volumes</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+        Volume : hdfs://namenode.example.com:8020/accumulo
+        Volume : hdfs://nameservice1/accumulo
+
+Listing volumes referenced in accumulo.root tablets section
+        Volume : hdfs://namenode.example.com:8020/accumulo
+        Volume : hdfs://nameservice1/accumulo
+Listing volumes referenced in accumulo.root deletes section (volume replacement occurrs at deletion time)
+
+Listing volumes referenced in accumulo.metadata tablets section
+        Volume : hdfs://namenode.example.com:8020/accumulo
+        Volume : hdfs://nameservice1/accumulo
+Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurrs at deletion time)
+</code></pre>
+</div>
+
+<p>Some erroneous GarbageCollector messages may still be seen for a small period while data is transitioning to
+the new volumes. This is expected and can usually be ignored.</p>
+
+<h2 id="achieving-stability-in-a-vm-environment">Achieving Stability in a VM Environment</h2>
+
+<p>For testing, demonstration, and even operation uses, Accumulo is often
+installed and run in a virtual machine (VM) environment. The majority of
+long-term operational uses of Accumulo are on bare-metal cluster. However, the
+core design of Accumulo and its dependencies do not preclude running stably for
+long periods within a VM. Many of Accumulo’s operational robustness features to
+handle failures like periodic network partitioning in a large cluster carry
+over well to VM environments. This guide covers general recommendations for
+maximizing stability in a VM environment, including some of the common failure
+modes that are more common when running in VMs.</p>
+
+<h3 id="known-failure-modes-setup-and-troubleshooting">Known failure modes: Setup and Troubleshooting</h3>
+
+<p>In addition to the general failure modes of running Accumulo, VMs can introduce a
+couple of environmental challenges that can affect process stability. Clock
+drift is something that is more common in VMs, especially when VMs are
+suspended and resumed. Clock drift can cause Accumulo servers to assume that
+they have lost connectivity to the other Accumulo processes and/or lose their
+locks in Zookeeper. VM environments also frequently have constrained resources,
+such as CPU, RAM, network, and disk throughput and capacity. Accumulo generally
+deals well with constrained resources from a stability perspective (optimizing
+performance will require additional tuning, which is not covered in this
+section), however there are some limits.</p>
+
+<h4 id="physical-memory">Physical Memory</h4>
+
+<p>One of those limits has to do with the Linux out of memory killer. A common
+failure mode in VM environments (and in some bare metal installations) is when
+the Linux out of memory killer decides to kill processes in order to avoid a
+kernel panic when provisioning a memory page. This often happens in VMs due to
+the large number of processes that must run in a small memory footprint. In
+addition to the Linux core processes, a single-node Accumulo setup requires a
+Hadoop Namenode, a Hadoop Secondary Namenode a Hadoop Datanode, a Zookeeper
+server, an Accumulo Master, an Accumulo GC and an Accumulo TabletServer.
+Typical setups also include an Accumulo Monitor, an Accumulo Tracer, a Hadoop
+ResourceManager, a Hadoop NodeManager, provisioning software, and client
+applications. Between all of these processes, it is not uncommon to
+over-subscribe the available RAM in a VM. We recommend setting up VMs without
+swap enabled, so rather than performance grinding to a halt when physical
+memory is exhausted the kernel will randomly* select processes to kill in order
+to free up memory.</p>
+
+<p>Calculating the maximum possible memory usage is essential in creating a stable
+Accumulo VM setup. Safely engineering memory allocation for stability is a
+matter of then bringing the calculated maximum memory usage under the physical
+memory by a healthy margin. The margin is to account for operating system-level
+operations, such as managing process, maintaining virtual memory pages, and
+file system caching. When the java out-of-memory killer finds your process, you
+will probably only see evidence of that in /var/log/messages. Out-of-memory
+process kills do not show up in Accumulo or Hadoop logs.</p>
+
+<p>To calculate the max memory usage of all java virtual machine (JVM) processes
+add the maximum heap size (often limited by a -Xmx… argument, such as in
+accumulo-site.xml) and the off-heap memory usage. Off-heap memory usage
+includes the following:</p>
+
+<ul>
+  <li>“Permanent Space”, where the JVM stores Classes, Methods, and other code elements. This can be limited by a JVM flag such as <code class="highlighter-rouge">-XX:MaxPermSize:100m</code>, and is typically tens of megabytes.</li>
+  <li>Code generation space, where the JVM stores just-in-time compiled code. This is typically small enough to ignore</li>
+  <li>Socket buffers, where the JVM stores send and receive buffers for each socket.</li>
+  <li>Thread stacks, where the JVM allocates memory to manage each thread.</li>
+  <li>Direct memory space and JNI code, where applications can allocate memory outside of the JVM-managed space. For Accumulo, this includes the native in-memory maps that are allocated with the memory.maps.max parameter in accumulo-site.xml.</li>
+  <li>Garbage collection space, where the JVM stores information used for garbage collection.</li>
+</ul>
+
+<p>You can assume that each Hadoop and Accumulo process will use ~100-150MB for
+Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
+simple calculation for physical memory requirements follows:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  Physical memory needed
+    = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
+    = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process) + (total applications memory, provisioning memory, etc.) + (1G)
+    = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
+    = (2150M) + (7G) + (2G) + (1G)
+    = ~12GB
+</code></pre>
+</div>
+
+<p>These calculations can add up quickly with the large number of processes,
+especially in constrained VM environments. To reduce the physical memory
+requirements, it is a good idea to reduce maximum heap limits and turn off
+unnecessary processes. If you’re not using YARN in your application, you can
+turn off the ResourceManager and NodeManager. If you’re not expecting to
+re-provision the cluster frequently you can turn off or reduce provisioning
+processes such as Salt Stack minions and masters.</p>
+
+<h4 id="disk-space">Disk Space</h4>
+
+<p>Disk space is primarily used for two operations: storing data and storing logs.
+While Accumulo generally stores all of its key/value data in HDFS, Accumulo,
+Hadoop, and Zookeeper all store a significant amount of logs in a directory on
+a local file system. Care should be taken to make sure that (a) limitations to
+the amount of logs generated are in place, and (b) enough space is available to
+host the generated logs on the partitions that they are assigned. When space is
+not available to log, processes will hang. This can cause interruptions in
+availability of Accumulo, as well as cascade into failures of various
+processes.</p>
+
+<p>Hadoop, Accumulo, and Zookeeper use log4j as a logging mechanism, and each of
+them has a way of limiting the logs and directing them to a particular
+directory. Logs are generated independently for each process, so when
+considering the total space you need to add up the maximum logs generated by
+each process. Typically, a rolling log setup in which each process can generate
+something like 10 100MB files is instituted, resulting in a maximum file system
+usage of 1GB per process. Default setups for Hadoop and Zookeeper are often
+unbounded, so it is important to set these limits in the logging configuration
+files for each subsystem. Consult the user manual for each system for
+instructions on how to limit generated logs.</p>
+
+<h4 id="zookeeper-interaction">Zookeeper Interaction</h4>
+
+<p>Accumulo is designed to scale up to thousands of nodes. At that scale,
+intermittent interruptions in network service and other rare failures of
+compute nodes become more common. To limit the impact of node failures on
+overall service availability, Accumulo uses a heartbeat monitoring system that
+leverages Zookeeper’s ephemeral locks. There are several conditions that can
+occur that cause Accumulo process to lose their Zookeeper locks, some of which
+are true interruptions to availability and some of which are false positives.
+Several of these conditions become more common in VM environments, where they
+can be exacerbated by resource constraints and clock drift.</p>
+
+<h4 id="tested-versions">Tested Versions</h4>
+
+<p>Each release of Accumulo is built with a specific version of Apache
+Hadoop, Apache ZooKeeper and Apache Thrift.  We expect Accumulo to
+work with versions that are API compatible with those versions.
+However this compatibility is not guaranteed because Hadoop, ZooKeeper
+and Thift may not provide guarantees between their own versions. We
+have also found that certain versions of Accumulo and Hadoop included
+bugs that greatly affected overall stability.  Thrift is particularly
+prone to compatibility changes between versions and you must use the
+same version your Accumulo is built with.</p>
+
+<p>Please check the release notes for your Accumulo version or use the
+mailing lists at https://accumulo.apache.org for more info.</p>
+
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/administration/in-depth-install.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
