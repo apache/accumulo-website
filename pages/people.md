@@ -93,6 +93,7 @@ permalink: /people/
 |             | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 |             | Matt Dailey         |                                                                   |                       |
 |             | Matthew Kirkley     |                                                                   |                       |
+|             | Matthew Peterson    | [Applied Technology Group][ATG]                                   | [ET][ET]              |
 |             | Max Jordan          |                                                                   |                       |
 |             | Michael Allen       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 |             | Michael Berman      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
@@ -138,6 +139,7 @@ Additionally, we would like to thank the following organizations for resources t
 [ANTHEMENG]: http://www.anthemengineering.com
 [ARCUS]: http://www.arcus-research.com
 [ARGYLE]: http://www.argyledata.com
+[ATG]: http://www.appliedtech-group.com/
 [ATSID]: http://www.atsid.com
 [ATT]: http://www.att.com
 [BASISTECH]: http://www.basistech.com
