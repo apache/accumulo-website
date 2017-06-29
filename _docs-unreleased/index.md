@@ -11,6 +11,5 @@ Use the sidebar to left the navigate the documentation.
 
 The links below contain additional documentation for this release:
 
-* [Release notes](/release/accumulo-1.8.1)
-* [Javadocs](/1.8/apidocs)
-* [Examples](/1.8/examples)
+* [Release notes](/release/accumulo-2.0.0)
+* [Javadocs](/2.0/apidocs)
