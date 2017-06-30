@@ -329,72 +329,92 @@
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/administration/configuration-management.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
     
-    <h2 id="configuration-overview">Configuration Overview</h2>
+    <h2 id="setting-configuration">Setting Configuration</h2>
 
-<p>All accumulo properties have a default value in the source code.  Properties can also be set
-in accumulo-site.xml and in zookeeper on per-table or system-wide basis.  If properties are set in more than one location,
-accumulo will choose the property with the highest precedence.  This order of precedence is described
-below (from highest to lowest):</p>
+<p>Accumulo is configured using <a href="/docs/unreleased/administration/configuration-properties">properties</a> whose values can be set in the following locations (with increasing precedence):</p>
 
-<h3 id="zookeeper-table-properties">Zookeeper table properties</h3>
+<ol>
+  <li>Default values</li>
+  <li>accumulo-site.xml (overrides defaults)</li>
+  <li>Zookeeper (overrides accumulo-site.xml &amp; defaults)</li>
+</ol>
 
-<p>Table properties are applied to the entire cluster when set in zookeeper using the accumulo API or shell.  While table properties take precedent over system properties, both will override properties set in accumulo-site.xml</p>
+<p>If a property is set in multiple locations, the value in the location with the highest precedence is used.</p>
 
-<p>Table properties consist of all properties with the table.* prefix.  Table properties are configured on a per-table basis using the following shell command:</p>
+<p>The configuration locations above are described in detail below.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
-</code></pre>
-</div>
+<h3 id="default-values">Default values</h3>
 
-<h3 id="zookeeper-system-properties">Zookeeper system properties</h3>
+<p>All <a href="/docs/unreleased/administration/configuration-properties">properties</a> have a default value that is listed for each property on the <a href="/docs/unreleased/administration/configuration-properties">properties</a> page. Default values are set in the source code.
+While defalt values have the lowest precendence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.</p>
 
-<p>System properties are applied to the entire cluster when set in zookeeper using the accumulo API or shell.  System properties consist of all properties with a <code class="highlighter-rouge">yes</code> in the <em>Zookeeper Mutable</em> column in the table below.  They are set with the following shell command:</p>
+<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+
+<p>Setting <a href="/docs/unreleased/administration/configuration-properties">properties</a> in accumulo-site.xml will override their default value. If you are running Accumulo on a cluster, any updates to accumulo-site.xml must
+be synced across the cluster. Accumulo processes (master, tserver, etc) read their local accumulo-site.xml on start up so processes must be restarted to apply changes.
+Certain properties can only be set in accumulo-site.xml. These properties have <strong>zk mutable: no</strong> in their description. Setting properties in accumulo-site.xml allows you
+to configure tablet servers with different settings.</p>
+
+<h3 id="zookeeper">Zookeeper</h3>
+
+<p>Many <a href="/docs/unreleased/administration/configuration-properties">properties</a> can be set in Zookeeper using the Accumulo API or shell. These properties can identified by <strong>zk mutable: yes</strong> in their description on
+the <a href="/docs/unreleased/administration/configuration-properties">properties page</a>. Zookeeper properties can be applied on a per-table or system-wide basis. Per-table properties take precedence over system-wide
+properties. While most properties set in Zookeeper take effect immediately, some require a restart of the process which is indicated in <strong>zk mutable</strong> section
+of their description.</p>
+
+<h4 id="zookeeper-system-properties">Zookeeper System properties</h4>
+
+<p>System properties consist of all <a href="/docs/unreleased/administration/configuration-properties">properties</a> with <strong>zk mutable: yes</strong> in their description. They are set with the following shell command:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>config -s PROPERTY=VALUE
 </code></pre>
 </div>
 
-<p>If a table.* property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).</p>
+<p>If a <code class="highlighter-rouge">table.*</code> property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).</p>
 
-<p>While most system properties take effect immediately, some require a restart of the process which is indicated in <em>Zookeeper Mutable</em>.</p>
+<h4 id="zookeeper-table-properties">Zookeeper Table properties</h4>
 
-<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+<p><a href="/docs/unreleased/administration/configuration-properties#table_prefix">Table properties</a> consist of all properties with the <code class="highlighter-rouge">table.*</code> prefix.</p>
 
-<p>Accumulo processes (master, tserver, etc) read their local accumulo-site.xml on start up.  Therefore, changes made to accumulo-site.xml must synced across the cluster and processes must be restarted to apply changes.</p>
+<p>Table properties are configured for a table namespace (i.e group of tables) or on a per-table basis.</p>
 
-<p>Certain properties (indicated by a <code class="highlighter-rouge">no</code> in <em>Zookeeper Mutable</em>) cannot be set in zookeeper and only set in this file.  The accumulo-site.xml also allows you to configure tablet servers with different settings.</p>
+<p>To configure a table property for a namespace, use the following command:</p>
 
-<h3 id="default-values">Default Values</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
+</code></pre>
+</div>
 
-<p>All properties have a default value in the source code.  This value has the lowest precedence and is overridden if set in accumulo-site.xml or zookeeper.</p>
+<p>To configure a table property for a specific table, use the following command:</p>
 
-<p>While the default value is usually optimal, there are cases where a change can increase query and ingest performance.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
+</code></pre>
+</div>
 
-<h3 id="zookeeper-property-considerations">ZooKeeper Property Considerations</h3>
+<p>Per-table settings take precedent over table namespace settings.  Both take precedent over system properties.</p>
 
-<p>Any properties that are stored in ZooKeeper should consider the limitations of ZooKeeper itself with respect to the
+<h4 id="zookeeper-considerations">Zookeeper Considerations</h4>
+
+<p>Any <a href="/docs/unreleased/administration/configuration-properties">properties</a> that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
 are two areas in which there aren’t any fail safes built into the API that can prevent the user from making this mistake.</p>
 
 <p>While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
 into these warnings should be reconsidered.</p>
 
-<h2 id="configuration-in-the-shell">Configuration in the Shell</h2>
+<h2 id="viewing-configuration">Viewing Configuration</h2>
 
-<p>The <code class="highlighter-rouge">config</code> command in the shell allows you to view the current system configuration.  You can also use the <code class="highlighter-rouge">-t</code> option to view a table’s configuration as below:</p>
+<p>Accumulo’s current configuration can be viewed in the shell using the <code class="highlighter-rouge">config</code> command.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo shell -u root
-Enter current password for 'root'@'accumulo-instance': ******
+<ul>
+  <li><code class="highlighter-rouge">config</code> - view configuration for the entire system</li>
+  <li><code class="highlighter-rouge">config -ns &lt;NAMESPACE&gt;</code> - view configuration for a specific namespace</li>
+  <li><code class="highlighter-rouge">config -t &lt;TABLE&gt;</code> - view configuration for a specific table</li>
+</ul>
 
-Shell - Apache Accumulo Interactive Shell
--
-- version: 2.x.x
-- instance name: accumulo-instance
-- instance id: 4f48fa03-f692-43ce-ae03-94c9ea8b7181
--
-- type 'help' for a list of available commands
--
-root@accumulo-instance&gt; config -t foo
+<p>Below is example shell output from viewing configuration for the table <code class="highlighter-rouge">foo</code>. Please note how <code class="highlighter-rouge">table.compaction.major.ratio</code>
+is set in multiple locations but the value <code class="highlighter-rouge">1.6</code> set in the <code class="highlighter-rouge">table</code> scope is used as it has the highest precedence.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@accumulo-instance&gt; config -t foo
 ---------+---------------------------------------------+------------------------------------------------------
 SCOPE    | NAME                                        | VALUE
 ---------+---------------------------------------------+------------------------------------------------------
@@ -418,6 +438,7 @@ default  | table.compaction.minor.logs.threshold ..... | 3
 default  | table.failures.ignore ..................... | false
 </code></pre>
 </div>
+
 
 
     <div class="row" style="margin-top: 20px;">
