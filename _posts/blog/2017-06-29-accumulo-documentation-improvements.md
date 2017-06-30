@@ -3,7 +3,7 @@ title: "Documentation Improvements for 2.0"
 author: Mike Walch
 ---
 
-Since Accumulo 1.5, the [Accumulo user manual][manual] source resided in the [source repository][accumulo-repo] as asciidoc. For every release or update to the manual,
+Since Accumulo 1.7, the [Accumulo user manual][manual] source resided in the [source repository][accumulo-repo] as asciidoc. For every release or update to the manual,
 an HTML document is produced from the asciidoc, committed to the [project website repository][website-repo], and published to the website. This process will remain
 for 1.x releases.
 
