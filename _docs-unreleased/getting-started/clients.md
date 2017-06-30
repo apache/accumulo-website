@@ -4,16 +4,36 @@ category: getting-started
 order: 3
 ---
 
+## Creating Client Code
+
+If you are using Maven to create Accumulo client code, add the following to your pom:
+
+```xml
+<dependency>
+  <groupId>org.apache.accumulo</groupId>
+  <artifactId>accumulo-core</artifactId>
+  <version>{{ page.latest_release }}</version>
+</dependency>
+```
+
 ## Running Client Code
 
-There are multiple ways to run Java code that uses Accumulo. Below is a list
+There are multiple ways to run Java code that use Accumulo. Below is a list
 of the different ways to execute client code.
 
-* using the `java` command
-* using the `accumulo` command
-* using the `accumulo-util hadoop-jar` command
+* build and execute an uber jar
+* add `accumulo classpath` to your Java classpath
+* use the `accumulo` command
+* use the `accumulo-util hadoop-jar` command
 
-### Using the java command
+### Build and execute an uber jar
+
+If you have included `accumulo-core` as dependency in your pom, you can build an uber jar
+using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
+an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
+version running on your cluster.
+
+### Add 'accumulo classpath' to your Java classpath
 
 To run Accumulo client code using the `java` command, use the `accumulo classpath` command 
 to include all of Accumulo's dependencies on your classpath:
@@ -25,7 +45,7 @@ output a more human readable format using the `-d` option which enables debuggin
 
     accumulo classpath -d
 
-### Using the accumulo command
+### Use the accumulo command
 
 Another option for running your code is to use the Accumulo script which can execute a
 main class (if it exists on its classpath):
@@ -40,7 +60,7 @@ the accumulo command.
 
     export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
 
-### Using the 'accumulo-util hadoop-jar' command
+### Use the 'accumulo-util hadoop-jar' command
 
 If you are writing map reduce job that accesses Accumulo, then you can use
 `accumulo-util hadoop-jar` to run those jobs. See the [MapReduce example][mapred-example]
