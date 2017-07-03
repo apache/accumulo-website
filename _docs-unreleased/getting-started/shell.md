@@ -17,7 +17,7 @@ and then display the following prompt:
 
     Shell - Apache Accumulo Interactive Shell
     -
-    - version: 2.x.x
+    - version: {{ page.latest_release }}
     - instance name: myinstance
     - instance id: 00000000-0000-0000-0000-000000000000
     -

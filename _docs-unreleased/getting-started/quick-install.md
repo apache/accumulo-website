@@ -12,8 +12,8 @@ see the [in-depth installation guide][in-depth].
 Either [download] or [build] a binary distribution of Accumulo from source code and
 unpack as follows.
 
-    tar xzf /path/to/accumulo-X.Y.Z-bin.tar.gz
-    cd accumulo-X.Y.Z
+    tar xzf /path/to/accumulo-{{ page.latest_release}}-bin.tar.gz
+    cd accumulo-{{ page.latest_release }}
 
 There are four scripts in the `bin` directory of the tarball distribution that are used
 to manage Accumulo:
@@ -24,7 +24,7 @@ to manage Accumulo:
 4. `accumulo-util` - Accumulo utilities for building native libraries, running jars, etc.
 
 These scripts will be used in the remaining instructions to configure and run Accumulo.
-For convenience, consider adding `accumulo-X.Y.Z/bin/` to your shell's path.
+For convenience, consider adding `accumulo-{{ page.latest_release }}/bin/` to your shell's path.
 
 ## Configuring Accumulo
 

@@ -62,8 +62,8 @@ Download a binary distribution of Accumulo and install it to a directory on a di
 sufficient space:
 
     cd <install directory>
-    tar xzf accumulo-X.Y.Z-bin.tar.gz   # Replace 'X.Y.Z' with your Accumulo version
-    cd accumulo-X.Y.Z
+    tar xzf accumulo-{{ page.latest_release }}-bin.tar.gz
+    cd accumulo-{{ page.latest_release }}
 
 Repeat this step on each machine in your cluster. Typically, the same `<install directory>`
 is chosen for all machines in the cluster.
