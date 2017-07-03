@@ -329,18 +329,38 @@
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-unreleased/getting-started/clients.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
     
-    <h2 id="running-client-code">Running Client Code</h2>
+    <h2 id="creating-client-code">Creating Client Code</h2>
 
-<p>There are multiple ways to run Java code that uses Accumulo. Below is a list
+<p>If you are using Maven to create Accumulo client code, add the following to your pom:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-core<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<h2 id="running-client-code">Running Client Code</h2>
+
+<p>There are multiple ways to run Java code that use Accumulo. Below is a list
 of the different ways to execute client code.</p>
 
 <ul>
-  <li>using the <code class="highlighter-rouge">java</code> command</li>
-  <li>using the <code class="highlighter-rouge">accumulo</code> command</li>
-  <li>using the <code class="highlighter-rouge">accumulo-util hadoop-jar</code> command</li>
+  <li>build and execute an uber jar</li>
+  <li>add <code class="highlighter-rouge">accumulo classpath</code> to your Java classpath</li>
+  <li>use the <code class="highlighter-rouge">accumulo</code> command</li>
+  <li>use the <code class="highlighter-rouge">accumulo-util hadoop-jar</code> command</li>
 </ul>
 
-<h3 id="using-the-java-command">Using the java command</h3>
+<h3 id="build-and-execute-an-uber-jar">Build and execute an uber jar</h3>
+
+<p>If you have included <code class="highlighter-rouge">accumulo-core</code> as dependency in your pom, you can build an uber jar
+using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
+an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
+version running on your cluster.</p>
+
+<h3 id="add-accumulo-classpath-to-your-java-classpath">Add ‘accumulo classpath’ to your Java classpath</h3>
 
 <p>To run Accumulo client code using the <code class="highlighter-rouge">java</code> command, use the <code class="highlighter-rouge">accumulo classpath</code> command 
 to include all of Accumulo’s dependencies on your classpath:</p>
@@ -356,7 +376,7 @@ output a more human readable format using the <code class="highlighter-rouge">-d
 </code></pre>
 </div>
 
-<h3 id="using-the-accumulo-command">Using the accumulo command</h3>
+<h3 id="use-the-accumulo-command">Use the accumulo command</h3>
 
 <p>Another option for running your code is to use the Accumulo script which can execute a
 main class (if it exists on its classpath):</p>
@@ -375,7 +395,7 @@ the accumulo command.</p>
 </code></pre>
 </div>
 
-<h3 id="using-the-accumulo-util-hadoop-jar-command">Using the ‘accumulo-util hadoop-jar’ command</h3>
+<h3 id="use-the-accumulo-util-hadoop-jar-command">Use the ‘accumulo-util hadoop-jar’ command</h3>
 
 <p>If you are writing map reduce job that accesses Accumulo, then you can use
 <code class="highlighter-rouge">accumulo-util hadoop-jar</code> to run those jobs. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a>
