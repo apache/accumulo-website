@@ -341,53 +341,77 @@ without requiring access to all tablet servers in the cluster.</p>
 means it must be able to communicate with the Master, ZooKeepers, NameNode, and the
 DataNodes. A proxy client only needs the ability to communicate with the proxy server.</p>
 
-<h2 id="configuration">Configuration</h2>
-
-<p>The configuration options for the proxy server live inside of a properties file. At
-the very least, you need to supply the following properties:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
-tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
-port=42424
-instance=test
-zookeepers=localhost:2181
-</code></pre>
-</div>
-
-<p>You can find a sample configuration file in your distribution at <code class="highlighter-rouge">proxy/proxy.properties</code>.</p>
-
-<p>This sample configuration file further demonstrates an ability to back the proxy server
-by MiniAccumuloCluster.</p>
-
 <h2 id="running-the-proxy-server">Running the Proxy Server</h2>
 
-<p>After the properties file holding the configuration is created, the proxy server
-can be started using the following command in the Accumulo distribution (assuming
-your properties file is named <code class="highlighter-rouge">config.properties</code>):</p>
+<p>The proxy server is included in the Accumulo tarball distribution and can be run using
+the <code class="highlighter-rouge">accumulo</code> or <code class="highlighter-rouge">accumulo-service</code> command. A sample proxy configuration file can be found at
+<code class="highlighter-rouge">conf/templates/proxy.properties</code>. Create a copy of this file and edit it for your environment:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo proxy -p config.properties
+<div class="highlighter-rouge"><pre class="highlight"><code>cp ./conf/templates/proxy.properties ./conf/
+vim ./conf/proxy.properties
 </code></pre>
 </div>
 
-<h2 id="creating-a-proxy-client">Creating a Proxy Client</h2>
+<p>At the very least, you need to configure the following properties:</p>
 
-<p>Aside from installing the Thrift compiler, you will also need the language-specific library
-for Thrift installed to generate client code in that language. Typically, your operating
-system’s package manager will be able to automatically install these for you in an expected
-location such as <code class="highlighter-rouge">/usr/lib/python/site-packages/thrift</code>.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>instance=test
+zookeepers=localhost:2181
+port=42424
+protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
+tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
+</code></pre>
+</div>
 
-<p>You can find the thrift file for generating the client at <code class="highlighter-rouge">proxy/proxy.thrift</code>.</p>
+<p>After <code class="highlighter-rouge">proxy.properties</code> is configured, the proxy server can be started using the <code class="highlighter-rouge">accumulo</code>
+or <code class="highlighter-rouge">accumulo-service</code> commands:</p>
 
-<p>After a client is generated, the port specified in the configuration properties above will be
-used to connect to the server.</p>
+<p>To start the proxy in the foreground and log to the console, use the <code class="highlighter-rouge">accumulo</code> command:</p>
 
-<h2 id="using-a-proxy-client">Using a Proxy Client</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo proxy -p /path/to/proxy.properties
+</code></pre>
+</div>
 
-<p>The following examples have been written in Java and the method signatures may be
-slightly different depending on the language specified when generating client with
-the Thrift compiler. After initiating a connection to the Proxy (see Apache Thrift’s
-documentation for examples of connecting to a Thrift service), the methods on the
-proxy client will be available. The first thing to do is log in:</p>
+<p>To background the process and redirect logs, use the <code class="highlighter-rouge">accumulo-service</code> command (a <code class="highlighter-rouge">proxy.properties</code>
+file must exist in <code class="highlighter-rouge">conf/</code> if using this method):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service proxy start
+</code></pre>
+</div>
+
+<h2 id="prerequisites-for-proxy-clients">Prerequisites for Proxy Clients</h2>
+
+<p>Before you can run a proxy client, you will need the following:</p>
+
+<ol>
+  <li>Proxy client code generated for your language</li>
+  <li>Thrift library installed for your language</li>
+</ol>
+
+<p>These requirements are described in detail below.</p>
+
+<h3 id="proxy-client-code">Proxy client code</h3>
+
+<p>The Accumulo tarball distribution ships with pre-generated client code for Python, Ruby, and C++ in
+<code class="highlighter-rouge">lib/proxy</code>.</p>
+
+<p>If you want to write a proxy in another language, you will need to install Thrift and generate
+client code for you language using <code class="highlighter-rouge">lib/proxy/thrift/proxy.thrift</code>.  See the <a href="https://thrift.apache.org/tutorial/">Thrift Tutorial</a>
+to how generate source from a thrift file.</p>
+
+<h3 id="thrift-library">Thrift library</h3>
+
+<p>Language-specific Thrift libraries can be installed using an OS or language package manager (i.e gem, pip, etc).
+For example, <code class="highlighter-rouge">pip install thrift</code> will install Python-specific thrift libaries on your machine.</p>
+
+<h2 id="proxy-client-examples">Proxy Client Examples</h2>
+
+<p>The following examples show proxy clients written in Java, Ruby, and Python.</p>
+
+<h3 id="java">Java</h3>
+
+<p>After initiating a connection to the Proxy (see Apache Thrift’s documentation for examples
+of connecting to a Thrift service), the methods on the proxy client will be available. The
+first thing to do is log in:</p>
 
 <div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
 <span class="n">password</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"password"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">);</span>
@@ -443,6 +467,255 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 <span class="o">}</span>
 
 <span class="n">client</span><span class="o">.</span><span class="na">closeScanner</span><span class="o">(</span><span class="n">scanner</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<h3 id="ruby">Ruby</h3>
+
+<p>The example ruby code below can be run using the following command (the -I option is needed for ruby 1.9.x):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ruby -I . client.rb &lt;host of server&gt;
+</code></pre>
+</div>
+
+<p><strong>Warning:</strong> The script will connect to Accumulo, create a table, and add some rows to it.</p>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'thrift'</span>
+<span class="nb">require</span> <span class="s1">'accumulo_proxy'</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="no">ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="s1">'localhost'</span>
+
+<span class="n">socket</span> <span class="o">=</span> <span class="no">Thrift</span><span class="o">::</span><span class="no">Socket</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="mi">42424</span><span class="p">,</span> <span class="mi">9001</span><span class="p">)</span>
+<span class="n">transport</span> <span class="o">=</span> <span class="no">Thrift</span><span class="o">::</span><span class="no">FramedTransport</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">socket</span><span class="p">)</span>
+<span class="n">proto</span> <span class="o">=</span> <span class="no">Thrift</span><span class="o">::</span><span class="no">CompactProtocol</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+<span class="n">proxy</span> <span class="o">=</span> <span class="no">Accumulo</span><span class="o">::</span><span class="no">AccumuloProxy</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+
+<span class="c1"># open up the connect</span>
+<span class="n">transport</span><span class="p">.</span><span class="nf">open</span><span class="p">()</span>
+
+<span class="c1"># Test if the server is up</span>
+<span class="n">login</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">login</span><span class="p">(</span><span class="s1">'root'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'password'</span> <span class="o">=&gt;</span> <span class="s1">'secret'</span><span class="p">})</span>
+
+<span class="c1"># print out a table list</span>
+<span class="nb">puts</span> <span class="s2">"List of tables: </span><span class="si">#{</span><span class="n">proxy</span><span class="p">.</span><span class="nf">listTables</span><span class="p">(</span><span class="n">login</span><span class="p">).</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">testtable</span> <span class="o">=</span> <span class="s2">"rubytest"</span>
+<span class="n">proxy</span><span class="p">.</span><span class="nf">createTable</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="no">Accumulo</span><span class="o">::</span><span class="no">TimeType</span><span class="o">::</span><span class="no">MILLIS</span><span class="p">)</span> <span class="k">unless</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">tableExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span><span class="n">testtable</span><span class="p">)</span> 
+
+<span class="n">update1</span> <span class="o">=</span> <span class="no">Accumulo</span><span class="o">::</span><span class="no">ColumnUpdate</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="s1">'colFamily'</span> <span class="o">=&gt;</span> <span class="s2">"cf1"</span><span class="p">,</span> <span class="s1">'colQualifier'</span> <span class="o">=&gt;</span> <span class="s2">"cq1"</span><span class="p">,</span> <span class="s1">'value'</span><span class="o">=&gt;</span> <span class="s2">"a"</span><span class="p">})</span>
+<span class="n">update2</span> <span class="o">=</span> <span class="no">Accumulo</span><span class="o">::</span><span class="no">ColumnUpdate</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="s1">'colFamily'</span> <span class="o">=&gt;</span> <span class="s2">"cf2"</span><span class="p">,</span> <span class="s1">'colQualifier'</span> <span class="o">=&gt;</span> <span class="s2">"cq2"</span><span class="p">,</span> <span class="s1">'value'</span><span class="o">=&gt;</span> <span class="s2">"b"</span><span class="p">})</span>
+<span class="n">proxy</span><span class="p">.</span><span class="nf">updateAndFlush</span><span class="p">(</span><span class="n">login</span><span class="p">,</span><span class="n">testtable</span><span class="p">,{</span><span class="s1">'row1'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="n">update1</span><span class="p">,</span><span class="n">update2</span><span class="p">]})</span>
+
+<span class="n">cookie</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">createScanner</span><span class="p">(</span><span class="n">login</span><span class="p">,</span><span class="n">testtable</span><span class="p">,</span><span class="kp">nil</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">nextK</span><span class="p">(</span><span class="n">cookie</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">result</span><span class="p">.</span><span class="nf">results</span><span class="p">.</span><span class="nf">each</span><span class="p">{</span> <span class="o">|</span><span class="n">keyvalue</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">"Key: </span><span class="si">#{</span><span class="n">keyvalue</span><span class="p">.</span><span class="nf">key</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2"> Value: </span><span class="si">#{</span><span class="n">keyvalue</span><span class="p">.</span><span class="nf">value</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="python">Python</h3>
+
+<p>The example python client code below (if saved to TestClient.py) can be run using the following command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>PYTHONPATH=/path/to/accumulo-2.0.0/lib/proxy/gen-py python TestClient.py
+</code></pre>
+</div>
+
+<p>As a warning, this script will create a table in your Accumulo instance and add a few cells to it.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">thrift</span> <span class="kn">import</span> <span class="n">Thrift</span>
+<span class="kn">from</span> <span class="nn">thrift.transport</span> <span class="kn">import</span> <span class="n">TSocket</span>
+<span class="kn">from</span> <span class="nn">thrift.transport</span> <span class="kn">import</span> <span class="n">TTransport</span>
+<span class="kn">from</span> <span class="nn">thrift.protocol</span> <span class="kn">import</span> <span class="n">TCompactProtocol</span>
+
+<span class="kn">from</span> <span class="nn">accumulo</span> <span class="kn">import</span> <span class="n">AccumuloProxy</span>
+<span class="kn">from</span> <span class="nn">accumulo.ttypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">transport</span> <span class="o">=</span> <span class="n">TSocket</span><span class="o">.</span><span class="n">TSocket</span><span class="p">(</span><span class="s">'localhost'</span><span class="p">,</span> <span class="mi">42424</span><span class="p">)</span>
+<span class="n">transport</span> <span class="o">=</span> <span class="n">TTransport</span><span class="o">.</span><span class="n">TFramedTransport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+<span class="n">protocol</span> <span class="o">=</span> <span class="n">TCompactProtocol</span><span class="o">.</span><span class="n">TCompactProtocol</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">AccumuloProxy</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">protocol</span><span class="p">)</span>
+<span class="n">transport</span><span class="o">.</span><span class="nb">open</span><span class="p">()</span>
+
+<span class="n">login</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s">'root'</span><span class="p">,</span> <span class="p">{</span><span class="s">'password'</span><span class="p">:</span><span class="s">'secret'</span><span class="p">})</span>
+
+<span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">listTables</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
+
+<span class="n">testtable</span> <span class="o">=</span> <span class="s">"pythontest"</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">tableExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">):</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="n">TimeType</span><span class="o">.</span><span class="n">MILLIS</span><span class="p">)</span>
+
+<span class="n">row1</span> <span class="o">=</span> <span class="p">{</span><span class="s">'a'</span><span class="p">:[</span><span class="n">ColumnUpdate</span><span class="p">(</span><span class="s">'a'</span><span class="p">,</span><span class="s">'a'</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="s">'value1'</span><span class="p">),</span> <span class="n">ColumnUpdate</span><span class="p">(</span><span class="s">'b'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="s">'value2'</span><span class="p">)]}</span>
+<span class="n">client</span><span class="o">.</span><span class="n">updateAndFlush</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">,</span> <span class="n">row1</span><span class="p">)</span>
+
+<span class="n">cookie</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">createScanner</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">nextK</span><span class="p">(</span><span class="n">cookie</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+   <span class="k">print</span> <span class="n">entry</span>
+</code></pre>
+</div>
+
+<p>The example code below shows proxy client code for managing namespaces:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
+
+<span class="kn">from</span> <span class="nn">thrift.protocol</span> <span class="kn">import</span> <span class="n">TCompactProtocol</span>
+<span class="kn">from</span> <span class="nn">thrift.transport</span> <span class="kn">import</span> <span class="n">TSocket</span><span class="p">,</span> <span class="n">TTransport</span>
+
+<span class="kn">from</span> <span class="nn">proxy</span> <span class="kn">import</span> <span class="n">AccumuloProxy</span>
+<span class="kn">from</span> <span class="nn">proxy.ttypes</span> <span class="kn">import</span> <span class="n">NamespacePermission</span><span class="p">,</span> <span class="n">IteratorSetting</span><span class="p">,</span> <span class="n">IteratorScope</span><span class="p">,</span> <span class="n">AccumuloException</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">TSocket</span><span class="o">.</span><span class="n">TSocket</span><span class="p">(</span><span class="s">'localhost'</span><span class="p">,</span> <span class="mi">42424</span><span class="p">)</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">TTransport</span><span class="o">.</span><span class="n">TFramedTransport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">TCompactProtocol</span><span class="o">.</span><span class="n">TCompactProtocol</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">AccumuloProxy</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">protocol</span><span class="p">)</span>
+    <span class="n">transport</span><span class="o">.</span><span class="nb">open</span><span class="p">()</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s">'root'</span><span class="p">,</span> <span class="p">{</span><span class="s">'password'</span><span class="p">:</span> <span class="s">'password'</span><span class="p">})</span>
+
+    <span class="n">client</span><span class="o">.</span><span class="n">createLocalUser</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'password1'</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaces</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
+
+    <span class="c"># create a namespace and give the user1 all permissions</span>
+    <span class="k">print</span> <span class="s">'creating namespace testing'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">createNamespace</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaces</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'testing namespace renaming'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">renameNamespace</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'testing2'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing2'</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">renameNamespace</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing2'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing2'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'granting all namespace permissions to user1'</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">grantNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="c"># make sure the last operation worked</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">hasNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> \
+            <span class="s">'user1 does</span><span class="se">\'</span><span class="s">nt have namespace permission </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">v</span>
+
+    <span class="k">print</span> <span class="s">'default namespace: '</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="n">defaultNamespace</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">'system namespace: '</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="n">systemNamespace</span><span class="p">()</span>
+
+    <span class="c"># grab the namespace properties</span>
+    <span class="k">print</span> <span class="s">'retrieving namespace properties'</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceProperties</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">props</span> <span class="ow">and</span> <span class="n">props</span><span class="p">[</span><span class="s">'table.compaction.major.ratio'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'3'</span>
+
+    <span class="c"># update a property and verify it is good</span>
+    <span class="k">print</span> <span class="s">'setting namespace property table.compaction.major.ratio = 4'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">setNamespaceProperty</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'table.compaction.major.ratio'</span><span class="p">,</span> <span class="s">'4'</span><span class="p">)</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceProperties</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">props</span> <span class="ow">and</span> <span class="n">props</span><span class="p">[</span><span class="s">'table.compaction.major.ratio'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'4'</span>
+
+    <span class="k">print</span> <span class="s">'retrieving namespace ID map'</span>
+    <span class="n">nsids</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceIdMap</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">nsids</span> <span class="ow">and</span> <span class="s">'accumulo'</span> <span class="ow">in</span> <span class="n">nsids</span>
+
+    <span class="k">print</span> <span class="s">'attaching debug iterator to namespace testing'</span>
+    <span class="n">setting</span> <span class="o">=</span> <span class="n">IteratorSetting</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'DebugTheThings'</span><span class="p">,</span>
+                              <span class="n">iteratorClass</span><span class="o">=</span><span class="s">'org.apache.accumulo.core.iterators.DebugIterator'</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">attachNamespaceIterator</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">])</span>
+    <span class="n">setting</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceIteratorSetting</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'DebugTheThings'</span><span class="p">,</span> <span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">setting</span> <span class="ow">and</span> <span class="n">setting</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span>
+
+    <span class="c"># make sure the iterator is in the list</span>
+    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scopes</span> <span class="ow">in</span> <span class="n">iters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="n">found</span>
+
+    <span class="k">print</span> <span class="s">'checking for iterator conflicts'</span>
+
+    <span class="c"># this next statment should be fine since we are on a different scope</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">checkNamespaceIteratorConflicts</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">MINC</span><span class="p">])</span>
+
+    <span class="c"># this time it should throw an exception since we have already added the iterator with this scope</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">checkNamespaceIteratorConflicts</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">,</span> <span class="n">IteratorScope</span><span class="o">.</span><span class="n">MINC</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">AccumuloException</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'There should have been a namespace iterator conflict!'</span>
+
+    <span class="k">print</span> <span class="s">'removing debug iterator from namespace testing'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">removeNamespaceIterator</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'DebugTheThings'</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">])</span>
+
+    <span class="c"># make sure the iterator is NOT in the list anymore</span>
+    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scopes</span> <span class="ow">in</span> <span class="n">iters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">found</span>
+
+    <span class="k">print</span> <span class="s">'adding max mutation size namespace constraint'</span>
+    <span class="n">constraintid</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">addNamespaceConstraint</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span>
+                                                 <span class="s">'org.apache.accumulo.test.constraints.MaxMutationSize'</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'make sure constraint was added'</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceConstraints</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cid</span> <span class="o">==</span> <span class="n">constraintid</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'org.apache.accumulo.test.constraints.MaxMutationSize'</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="n">found</span>
+
+    <span class="k">print</span> <span class="s">'remove max mutation size namespace constraint'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">removeNamespaceConstraint</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">constraintid</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'make sure constraint was removed'</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceConstraints</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cid</span> <span class="o">==</span> <span class="n">constraintid</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'org.apache.accumulo.test.constraints.MaxMutationSize'</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">found</span>
+
+    <span class="k">print</span> <span class="s">'test a namespace class load of the VersioningIterator'</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">testNamespaceClassLoad</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'org.apache.accumulo.core.iterators.user.VersioningIterator'</span><span class="p">,</span>
+                                        <span class="s">'org.apache.accumulo.core.iterators.SortedKeyValueIterator'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span>
+
+    <span class="k">print</span> <span class="s">'test a bad namespace class load of the VersioningIterator'</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">testNamespaceClassLoad</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'org.apache.accumulo.core.iterators.user.VersioningIterator'</span><span class="p">,</span>
+                                        <span class="s">'dummy'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">res</span>
+
+    <span class="c"># revoke the permissions</span>
+    <span class="k">print</span> <span class="s">'revoking namespace permissions for user1'</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">revokeNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="c"># make sure the last operation worked</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">hasNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> \
+            <span class="s">'user1 does</span><span class="se">\'</span><span class="s">nt have namespace permission </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">v</span>
+
+    <span class="k">print</span> <span class="s">'deleting namespace testing'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">deleteNamespace</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'deleting user1'</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">dropLocalUser</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </code></pre>
 </div>
 
