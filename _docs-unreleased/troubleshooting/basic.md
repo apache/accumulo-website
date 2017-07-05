@@ -139,6 +139,13 @@ Note that the use of `PrintInfo` is an administrative tool and can only
 by used by someone who can access the underlying Accumulo data. It
 does not provide the normal access controls in Accumulo.
 
+## Ingest
+
+**Why does my ingest rate periodically go down during heavy ingest?**
+
+Periods of zero or low ingest rates can be caused by Java garbage collection pauses in tablet servers. This problem
+can be mitigated by [enabling native maps in tablet servers][native-maps].
+
 ## HDFS
 
 Accumulo reads and writes to the Hadoop Distributed File System.
@@ -225,3 +232,4 @@ Node count: 22524
 Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.
 
 [print-info]: {{ page.docs_baseurl }}/troubleshooting/tools#PrintInfo
+[native-maps]: {{ page.docs_baseurl }}/administration/in-depth-install#native-map
