@@ -118,7 +118,7 @@ permalink: /people/
 | tedyu       | Ted Yu              | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 |             | Tim Halloran        |                                                                   |                       |
 |             | Tim Reardon         |                                                                   |                       |
-| brfrn169    | Toshihiro Suzuki    | [Hortonworks][HORTONWORKS]                                        | [JST][JST]            |
+|             | Toshihiro Suzuki    | [Hortonworks][HORTONWORKS]                                        | [JST][JST]            |
 |             | Travis Pinney       |                                                                   |                       |
 |             | Trent Nadeau        | [Anthem Engineering LLC][ANTHEMENG]                               | [ET][ET]              |
 |             | Tristen Georgiou    | [PHEMI][PHEMI]                                                    | [PT][PT]              |
