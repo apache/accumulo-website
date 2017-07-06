@@ -118,6 +118,7 @@ permalink: /people/
 | tedyu       | Ted Yu              | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 |             | Tim Halloran        |                                                                   |                       |
 |             | Tim Reardon         |                                                                   |                       |
+| brfrn169    | Toshihiro Suzuki    | [Hortonworks][HORTONWORKS]                                        | [JST][JST]            |
 |             | Travis Pinney       |                                                                   |                       |
 |             | Trent Nadeau        | [Anthem Engineering LLC][ANTHEMENG]                               | [ET][ET]              |
 |             | Tristen Georgiou    | [PHEMI][PHEMI]                                                    | [PT][PT]              |
@@ -175,6 +176,7 @@ Additionally, we would like to thank the following organizations for resources t
 [CT]: http://www.timeanddate.com/time/zones/ct
 [ET]: http://www.timeanddate.com/time/zones/et
 [GMT]: http://www.timeanddate.com/time/zones/gmt
+[JST]: http://www.timeanddate.com/time/zones/jst
 [MT]: http://www.timeanddate.com/time/zones/mt
 [PT]: http://www.timeanddate.com/time/zones/pt
 [CEST]: http://www.timeanddate.com/time/zones/cest
