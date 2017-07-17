@@ -20,12 +20,13 @@ permalink: /people/
 | cjnolet       | Corey J. Nolet    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
 | ctubbsii      | Christopher Tubbs | [NSA][NSA]                             | [ET][ET] |
 | dhutchis      | Dylan Hutchison   | [University of Washington][UW]         | [PT][PT] |
-| dlmarion      | Dave Marion       | [Objective Solutions, Inc.][OBJECTIVE] | [ET][ET] |
+| dlmarion      | Dave Marion       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | drew          | Drew Farris       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
 | ecn           | Eric Newton       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | elserj        | Josh Elser        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | etcoleman     | Ed Coleman        |                                        | [ET][ET] |
 | jtrost        | Jason Trost       | [Endgame][ENDGAME]                     |          |
+| ibella        | Ivan Bella        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | kturner       | Keith Turner      | [Peterson Technologies][PETERSON]      | [ET][ET] |
 | mdrob         | Mike Drob         | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | medined       | David Medinets    |                                        |          |
@@ -67,7 +68,6 @@ permalink: /people/
 |             | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 |             | Hayden Marchant     |                                                                   |                       |
 |             | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
-|             | Ivan Bella          | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 |             | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
 |             | James Fiori         | [Flywheel Data][FLYWHEEL]                                         | [ET][ET]              |
 | jaredwinick | Jared Winick        | [Koverse][KOVERSE]                                                | [MT][MT]              |
@@ -140,6 +140,7 @@ Additionally, we would like to thank the following organizations for resources t
 [ANTHEMENG]: http://www.anthemengineering.com
 [ARCUS]: http://www.arcus-research.com
 [ARGYLE]: http://www.argyledata.com
+[ASRC]: http://www.asrc.com
 [ATG]: http://www.appliedtech-group.com/
 [ATSID]: http://www.atsid.com
 [ATT]: http://www.att.com
