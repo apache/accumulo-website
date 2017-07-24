@@ -30,7 +30,7 @@ permalink: /people/
 | kturner       | Keith Turner      | [Peterson Technologies][PETERSON]      | [ET][ET] |
 | mdrob         | Mike Drob         | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | medined       | David Medinets    |                                        |          |
-| mjwall        | Michael Wall      | [Objective Solutions, Inc.][OBJECTIVE] | [ET][ET] |
+| mjwall        | Michael Wall      | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | mmiller       | Michael Miller    | [Centroid, LLC][CENTROID]              | [ET][ET] |
 | mwalch        | Mike Walch        | [Peterson Technologies][PETERSON]      | [ET][ET] |
 | phrocker      | Marc Parisi       | [Hortonworks][HORTONWORKS]             | [ET][ET] |
