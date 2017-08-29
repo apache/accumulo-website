@@ -71,21 +71,21 @@ codebase][examples-simple] and the related published documentation for versions
 [1.7][17EXAMPLES] and [1.6][16EXAMPLES].
 
 [gitbook]: http://git-scm.com
-[instamo-browse]: https://git-wip-us.apache.org/repos/asf?p=accumulo-instamo-archetype.git;a=summary
-[instamo-checkout]: https://git-wip-us.apache.org/repos/asf/accumulo-instamo-archetype.git
+[instamo-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-instamo-archetype.git;a=summary
+[instamo-checkout]: https://gitbox.apache.org/repos/asf/accumulo-instamo-archetype.git
 [maven-proj]: https://maven.apache.org
 [wiki-readme]: https://github.com/apache/accumulo-wikisearch/blob/master/README.md
-[wikisearch-browse]: https://git-wip-us.apache.org/repos/asf?p=accumulo-wikisearch.git;a=summary
-[wikisearch-checkout]: https://git-wip-us.apache.org/repos/asf/accumulo-wikisearch.git
+[wikisearch-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-wikisearch.git;a=summary
+[wikisearch-checkout]: https://gitbox.apache.org/repos/asf/accumulo-wikisearch.git
 [bsp-alg]: https://hama.apache.org/hama_bsp_tutorial
 [hama]: https://hama.apache.org
-[bsp-browse]: https://git-wip-us.apache.org/repos/asf?p=accumulo-bsp.git;a=summary
-[bsp-checkout]: https://git-wip-us.apache.org/repos/asf/accumulo-bsp.git
+[bsp-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-bsp.git;a=summary
+[bsp-checkout]: https://gitbox.apache.org/repos/asf/accumulo-bsp.git
 [git-process]: git#the-implementation
 [jira-component]: https://issues.apache.org/jira/browse/ACCUMULO/component/12316610
 [mailing-list]: mailing_list
 [mail-with-subj]: mailto:dev@accumulo.apache.org?subject=[Accumulo+Contrib+Proposal]
-[examples-simple]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=tree;f=examples/simple;
+[examples-simple]: https://gitbox.apache.org/repos/asf?p=accumulo-examples.git;a=summary
 [16EXAMPLES]: 1.6/examples
 [17EXAMPLES]: 1.7/examples
 [contrib2]: #contributing-to-contrib

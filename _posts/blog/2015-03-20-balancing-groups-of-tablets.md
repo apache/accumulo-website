@@ -30,8 +30,8 @@ The Fluo Stress test is a very abstract use case. A more concrete use case for t
 [fluo]: http://fluo.io/
 [stress-test]: https://github.com/fluo-io/fluo-stress
 [accumulo-3439]: https://issues.apache.org/jira/browse/ACCUMULO-3439
-[rgbalancer]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob;f=docs/src/main/resources/examples/README.rgbalancer;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
-[RegexGroupBalancer]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/RegexGroupBalancer.java;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
-[GroupBalancer]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/GroupBalancer.java;hb=b0815affade66ab04ca27b6fc3abaac400097469
+[rgbalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=docs/src/main/resources/examples/README.rgbalancer;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
+[RegexGroupBalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/RegexGroupBalancer.java;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
+[GroupBalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/GroupBalancer.java;hb=b0815affade66ab04ca27b6fc3abaac400097469
 [geowave]: https://ngageoint.github.io/geowave/
 [persis-model]: http://ngageoint.github.io/geowave/documentation.html#architecture-accumulo

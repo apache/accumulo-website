@@ -105,7 +105,7 @@ Jira issue ACCUMULO-12345 that affects 1.5.0 release.
 
 2. Clone the Accumulo repository:
 
-    `git clone https://git-wip-us.apache.org/repos/asf/accumulo.git accumulo`
+    `git clone https://gitbox.apache.org/repos/asf/accumulo.git accumulo`
 
 3. or update your local copy:
 

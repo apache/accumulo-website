@@ -7,7 +7,7 @@ redirect_from: /source
 <div class="panel panel-default pull-right">
 <div class="panel-heading">Quick Links</div>
 <div class="list-group">
-<a href="https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=summary" class="list-group-item"><i class="fa fa-external-link"></i> Accumulo source</a>
+<a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary" class="list-group-item"><i class="fa fa-external-link"></i> Accumulo source</a>
 <a href="https://builds.apache.org/job/Accumulo-Master" class="list-group-item"><i class="fa fa-external-link"></i> Master build on Jenkins</a>
 <a href="https://issues.apache.org/jira/browse/ACCUMULO" class="list-group-item"><i class="fa fa-external-link"></i> Accumulo JIRA</a>
 </div>
@@ -91,7 +91,7 @@ need to install or modify the Thrift definitions as a part of developing against
 
 To check out the code:
 
-    git clone https://git-wip-us.apache.org/repos/asf/accumulo.git
+    git clone https://gitbox.apache.org/repos/asf/accumulo.git
 
 #### Running a Build
 
@@ -205,14 +205,14 @@ Accumulo has [guidelines for using Review Board][rb] to support code reviews.
 [17build]: https://builds.apache.org/job/Accumulo-1.7
 [1]: https://creadur.apache.org/rat/apache-rat-plugin
 [anongit]: git://git.apache.org/accumulo.git
-[cgit]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=summary
+[cgit]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
 [contrib]: {{ "/contributor/contrib-projects" | relative_url }}
 [devlist]: mailto:dev@accumulo.apache.org
-[website-branch]: https://git-wip-us.apache.org/repos/asf?p=accumulo-website.git;a=tree;h=master
-[git-instr]: https://git-wip-us.apache.org
+[website-branch]: https://gitbox.apache.org/repos/asf?p=accumulo-website.git;a=tree;h=master
+[git-instr]: https://gitbox.apache.org
 [git]: https://git-scm.com
 [github]: https://github.com/apache/accumulo
-[hook]: https://git-wip-us.apache.org/repos/asf?p=accumulo-website.git;a=blob_plain;f=_devtools/git-hooks/post-commit;hb=master
+[hook]: https://gitbox.apache.org/repos/asf?p=accumulo-website.git;a=blob_plain;f=_devtools/git-hooks/post-commit;hb=master
 [intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
 [jekyll]: https://jekyllrb.com
 [jenkins]: https://jenkins.io
@@ -221,8 +221,8 @@ Accumulo has [guidelines for using Review Board][rb] to support code reviews.
 [lifecycle]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle
 [masterbuild]: https://builds.apache.org/job/Accumulo-Master
 [maven]: https://maven.apache.org
-[pom]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
+[pom]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
 [rb]: {{ "/contributor/rb" | relative_url }}
 [site-canon]: https://accumulo.apache.org
 [srcheaders]: https://www.apache.org/legal/src-headers
-[styles]: https://git-wip-us.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
+[styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
