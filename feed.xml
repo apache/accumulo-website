@@ -6,28 +6,10 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 05 Sep 2017 15:29:06 -0400</pubDate>
-    <lastBuildDate>Tue, 05 Sep 2017 15:29:06 -0400</lastBuildDate>
+    <pubDate>Wed, 06 Sep 2017 15:41:36 -0400</pubDate>
+    <lastBuildDate>Wed, 06 Sep 2017 15:41:36 -0400</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
-      <item>
-        <title>Apache Accumulo 2.0.0</title>
-        <description>&lt;h2 id=&quot;major-changes&quot;&gt;Major Changes&lt;/h2&gt;
-
-&lt;h2 id=&quot;other-notable-changes&quot;&gt;Other Notable Changes&lt;/h2&gt;
-
-&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
-
-&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
-</description>
-        <pubDate>Tue, 05 Sep 2017 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/release/accumulo-2.0.0/</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-2.0.0/</guid>
-        
-        
-        <category>release</category>
-        
-      </item>
     
       <item>
         <title>Accumulo Summit is on October 16th!</title>
@@ -1362,6 +1344,181 @@ Commands:
         <pubDate>Wed, 16 Nov 2016 00:00:00 -0500</pubDate>
         <link>https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Durability Performance Implications</title>
+        <description>&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;Accumulo stores recently written data in a sorted in memory map.  Before data is
+added to this map, it’s written to an unsorted write ahead log(WAL).  In the
+case when a tablet server dies, the recently written data is recovered from the
+WAL.&lt;/p&gt;
+
+&lt;p&gt;When data is written to Accumulo the following happens :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Client sends a batch of mutations to a tablet server&lt;/li&gt;
+  &lt;li&gt;Tablet server does the following :
+    &lt;ul&gt;
+      &lt;li&gt;Writes mutation to tablet servers’ WAL&lt;/li&gt;
+      &lt;li&gt;Sync or flush tablet servers’ WAL&lt;/li&gt;
+      &lt;li&gt;Adds mutations to sorted in memory map of each tablet.&lt;/li&gt;
+      &lt;li&gt;Reports success back to client.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The sync/flush step above moves data written to the WAL from memory to disk.
+Write ahead logs are stored in HDFS. HDFS supports two ways of forcing data to
+disk for an open file : &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;hdfs-syncflush-details&quot;&gt;HDFS Sync/Flush Details&lt;/h2&gt;
+
+&lt;p&gt;When &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; is called on a WAL, it does not guarantee data is on disk.  It
+only guarantees that data is in OS buffers on each datanode and on its way to disk.
+As a result calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; are very fast.  If a WAL is replicated to 3 data
+nodes then data may be lost if all three machines reboot or die.  If the datanode
+process dies, then data loss will not happen because the data was in OS buffers
+waiting to be written to disk.  The machines have to reboot or die for data loss to
+occur.&lt;/p&gt;
+
+&lt;p&gt;In order to avoid data loss in the event of reboot, &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; can be called.  This
+will ensure data is written to disk on all datanodes before returning.  When
+using &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; for the WAL, if Accumulo reports success to a user it means the
+data is on disk.  However &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; is much slower than &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; and the way it’s
+implemented exacerbates the problem.  For example &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; make take 1ms and
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; may take 50ms.  This difference will impact writes to Accumulo and can
+be mitigated in some situations with larger buffers in Accumulo.&lt;/p&gt;
+
+&lt;p&gt;HDFS keeps checksum data internally by default.  Datanodes store checksum data
+in a separate file in the local filesystem.  This means when &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; is called
+on a WAL, two files must be synced on each datanode.  Syncing two files doubles
+the time. To make matters even worse, when the two files are synced the local
+filesystem metadata is also synced.  Depending on the local filesystem and its
+configuration, syncing the metadata may or may not take time.  In the worst
+case, we need to wait for four sync operations at the local filesystem level on
+each datanode. One thing I am not sure about, is if these sync operations occur
+in parallel on the replicas on different datanodes.  If anyone can answer this
+question, please let us know on the &lt;a href=&quot;/mailing_list&quot;&gt;dev list&lt;/a&gt;. The following pointers show
+where sync occurs in the datanode code.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L358&quot;&gt;BlockReceiver.flushOrSync()&lt;/a&gt; calls &lt;a href=&quot;https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L78&quot;&gt;ReplicaOutputStreams.syncDataOut()&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L87&quot;&gt;ReplicaOutputStreams.syncChecksumOut()&lt;/a&gt; when &lt;code class=&quot;highlighter-rouge&quot;&gt;isSync&lt;/code&gt; is true.&lt;/li&gt;
+  &lt;li&gt;The methods in ReplicaOutputStreams call &lt;a href=&quot;https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html#force-boolean-&quot;&gt;FileChannel.force(true)&lt;/a&gt; which
+synchronously flushes data and filesystem metadata.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If files were preallocated (this would avoid syncing local filesystem metadata)
+and checksums were stored in-line, then 1 sync could be done instead of 4.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuring-wal-flushsync-in-accumulo-16&quot;&gt;Configuring WAL flush/sync in Accumulo 1.6&lt;/h2&gt;
+
+&lt;p&gt;Accumulo 1.6.0 only supported &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; and this caused &lt;a href=&quot;/release/accumulo-1.6.0#slower-writes-than-previous-accumulo-versions&quot;&gt;performance
+problems&lt;/a&gt;.  In order to offer better performance, the option to
+configure &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; was &lt;a href=&quot;/release/accumulo-1.6.1#write-ahead-log-sync-implementation&quot;&gt;added in 1.6.1&lt;/a&gt;.  The
+&lt;a href=&quot;/1.6/accumulo_user_manual#_tserver_wal_sync_method&quot;&gt;tserver.wal.sync.method&lt;/a&gt; configuration option was added to support
+this feature.  This was a tablet server wide option that applied to everything
+written to any table.&lt;/p&gt;
+
+&lt;h2 id=&quot;group-commit&quot;&gt;Group Commit&lt;/h2&gt;
+
+&lt;p&gt;Each Accumulo tablet server has a single WAL.  When multiple clients send
+mutations to a tablet server at around the same time, the tablet sever may group
+all of this into a single WAL operation.  It will do this instead of writing and
+syncing or flushing each client’s mutations to the WAL separately.  Doing this
+increase throughput and lowers average latency for clients.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuring-wal-flushsync-in-accumulo-17&quot;&gt;Configuring WAL flush/sync in Accumulo 1.7+&lt;/h2&gt;
+
+&lt;p&gt;Accumulo 1.7.0 introduced &lt;a href=&quot;/1.7/accumulo_user_manual#_table_durability&quot;&gt;table.durability&lt;/a&gt;, a new per table property
+for configuring durability.  It also stopped using the &lt;code class=&quot;highlighter-rouge&quot;&gt;tserver.wal.sync.method&lt;/code&gt;
+property.  The &lt;code class=&quot;highlighter-rouge&quot;&gt;table.durability&lt;/code&gt; property has the following four legal values.
+This property defaults to the most durable option which is &lt;code class=&quot;highlighter-rouge&quot;&gt;sync&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;none&lt;/strong&gt; : Do not write to WAL&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;log&lt;/strong&gt;  : Write to WAL, but do not sync&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;flush&lt;/strong&gt; : Write to WAL and call &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;sync&lt;/strong&gt; : Write to WAL and call &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If multiple writes arrive at around the same time with different durability
+settings, then the group commit code will choose the most durable.  This can
+cause one tables settings to slow down writes to another table.  Basically, one
+table that is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;sync&lt;/code&gt; can impact the entire system.&lt;/p&gt;
+
+&lt;p&gt;In Accumulo 1.6, it was easy to make all writes use &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt; because there was
+only one tserver setting.  Getting everything to use &lt;code class=&quot;highlighter-rouge&quot;&gt;flush&lt;/code&gt; in 1.7 and later
+can be a little tricky because by default the Accumulo metadata table is set to
+use &lt;code class=&quot;highlighter-rouge&quot;&gt;sync&lt;/code&gt;.  The following shell commands show this. The first command sets
+&lt;code class=&quot;highlighter-rouge&quot;&gt;table.durability=flush&lt;/code&gt; as a system wide default for all tables.  However, the
+metadata table is still set to &lt;code class=&quot;highlighter-rouge&quot;&gt;sync&lt;/code&gt;, because it has a per table override for
+that setting.  This override is set when Accumulo is initialized.  To get this
+table to use &lt;code class=&quot;highlighter-rouge&quot;&gt;flush&lt;/code&gt;, the per table override must be deleted.  After deleting
+those properties, the metadata tables will inherit the system wide setting.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@uno&amp;gt; config -s table.durability=flush
+root@uno&amp;gt; createtable foo
+root@uno foo&amp;gt; config -t foo -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+-----------+---------------------+----------------------------------------------
+root@uno&amp;gt; config -t accumulo.metadata -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+table      |    @override ...... | sync
+-----------+---------------------+----------------------------------------------
+root@uno&amp;gt; config -t accumulo.metadata -d table.durability
+root@uno&amp;gt; config -t accumulo.metadata -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+-----------+---------------------+----------------------------------------------
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In short, executing the following commands will make all writes use &lt;code class=&quot;highlighter-rouge&quot;&gt;flush&lt;/code&gt;
+(assuming no other tables or namespaces have been specifically set to &lt;code class=&quot;highlighter-rouge&quot;&gt;sync&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -s table.durability=flush
+config -t accumulo.metadata -d table.durability
+config -t accumulo.root -d table.durability
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Even with these settings adjusted, minor compactions could still force &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt;
+to be called in 1.7.0 and 1.7.1.  This was fixed in 1.7.2 and 1.8.0.  See the
+&lt;a href=&quot;/release/accumulo-1.7.2#minor-performance-improvements&quot;&gt;1.7.2 release notes&lt;/a&gt; and &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4112&quot;&gt;ACCUMULO-4112&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;p&gt;In addition to the per table durability setting, a per batch writer durability
+setting was also added in 1.7.0.  See
+&lt;a href=&quot;/1.8/apidocs/org/apache/accumulo/core/client/BatchWriterConfig.html#setDurability(org.apache.accumulo.core.client.Durability)&quot;&gt;BatchWriterConfig.setDurability(…)&lt;/a&gt;.  This means any client could
+potentially cause a &lt;code class=&quot;highlighter-rouge&quot;&gt;hsync&lt;/code&gt; operation to occur, even if the system is
+configured to use &lt;code class=&quot;highlighter-rouge&quot;&gt;hflush&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;improving-the-situation&quot;&gt;Improving the situation&lt;/h2&gt;
+
+&lt;p&gt;The more granular durability settings introduced in 1.7.0 can cause some
+unexpected problems.  &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4146&quot;&gt;ACCUMULO-4146&lt;/a&gt; suggests one possible way to solve these
+problems with Per-durability write ahead logs.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 02 Nov 2016 13:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/blog/2016/11/02/durability-performance.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2016/11/02/durability-performance.html</guid>
         
         
         <category>blog</category>
