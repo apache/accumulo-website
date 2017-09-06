@@ -167,9 +167,9 @@
 
 <hr />
 
-<h2 id="a-idadministrationa-administration"><a id="Administration"></a> Administration</h2>
+<h2 id="-administration"><a id="Administration"></a> Administration</h2>
 
-<h2 id="a-idhardwarea-hardware"><a id="Hardware"></a> Hardware</h2>
+<h2 id="-hardware"><a id="Hardware"></a> Hardware</h2>
 
 <p>Because we are running essentially two or three systems simultaneously layered across the cluster: HDFS, Accumulo and MapReduce, it is typical for hardware to consist of 4 to 8 cores, and 8 to 32 GB RAM. This is so each running process can have at least one core and 2 - 4 GB each.</p>
 
@@ -177,11 +177,11 @@
 
 <p>It is possible to do with less than this, such as with 1u servers with 2 cores and 4GB each, but in this case it is recommended to only run up to two processes per machine - i.e. DataNode and TabletServer or DataNode and MapReduce worker but not all three. The constraint here is having enough available heap space for all the processes on a machine.</p>
 
-<h2 id="a-idnetworka-network"><a id="Network"></a> Network</h2>
+<h2 id="-network"><a id="Network"></a> Network</h2>
 
 <p>Accumulo communicates via remote procedure calls over TCP/IP for both passing data and control messages. In addition, Accumulo uses HDFS clients to communicate with HDFS. To achieve good ingest and query performance, sufficient network bandwidth must be available between any two machines.</p>
 
-<h2 id="a-idinstallationa-installation"><a id="Installation"></a> Installation</h2>
+<h2 id="-installation"><a id="Installation"></a> Installation</h2>
 
 <p>Choose a directory for the Accumulo installation. This directory will be referenced by the environment variable $ACCUMULO_HOME. Run the following:</p>
 
@@ -191,15 +191,15 @@
 
 <p>Repeat this step at each machine within the cluster. Usually all machines have the same $ACCUMULO_HOME.</p>
 
-<h2 id="a-iddependenciesa-dependencies"><a id="Dependencies"></a> Dependencies</h2>
+<h2 id="-dependencies"><a id="Dependencies"></a> Dependencies</h2>
 
 <p>Accumulo requires HDFS and ZooKeeper to be configured and running before starting. Password-less SSH should be configured between at least the Accumulo master and TabletServer machines. It is also a good idea to run Network Time Protocol (NTP) within the cluster to ensure nodes’ clocks don’t get too out of sync, which can cause problems with automatically timestamped data. Accumulo will remove from the set of TabletServers those machines whose times differ too much from the master’s.</p>
 
-<h2 id="a-idconfigurationa-configuration"><a id="Configuration"></a> Configuration</h2>
+<h2 id="-configuration"><a id="Configuration"></a> Configuration</h2>
 
 <p>Accumulo is configured by editing several Shell and XML files found in $ACCUMULO_HOME/conf. The structure closely resembles Hadoop’s configuration files.</p>
 
-<h3 id="a-ideditconfaccumulo-envsha-edit-confaccumulo-envsh"><a id="Edit_conf/accumulo-env.sh"></a> Edit conf/accumulo-env.sh</h3>
+<h3 id="-edit-confaccumulo-envsh"><a id="Edit_conf/accumulo-env.sh"></a> Edit conf/accumulo-env.sh</h3>
 
 <p>Accumulo needs to know where to find the software it depends on. Edit accumulo-env.sh and specify the following:</p>
 
@@ -217,7 +217,7 @@
 
 <p>Note that you will be specifying the Java heap space in accumulo-env.sh. You should make sure that the total heap space used for the Accumulo tserver and the Hadoop DataNode and TaskTracker is less than the available memory on each slave node in the cluster. On large clusters, it is recommended that the Accumulo master, Hadoop NameNode, secondary NameNode, and Hadoop JobTracker all be run on separate machines to allow them to use more heap space. If you are running these on the same machine on a small cluster, likewise make sure their heap space settings fit within the available memory.</p>
 
-<h3 id="a-idclusterspecificationa-cluster-specification"><a id="Cluster_Specification"></a> Cluster Specification</h3>
+<h3 id="-cluster-specification"><a id="Cluster_Specification"></a> Cluster Specification</h3>
 
 <p>On the machine that will serve as the Accumulo master:</p>
 
@@ -230,7 +230,7 @@ $ACCUMULO_HOME/conf/slaves, one per line.</li>
 
 <p>Note that if using domain names rather than IP addresses, DNS must be configured properly for all machines participating in the cluster. DNS can be a confusing source of errors.</p>
 
-<h3 id="a-idaccumulosettingsa-accumulo-settings"><a id="Accumulo_Settings"></a> Accumulo Settings</h3>
+<h3 id="-accumulo-settings"><a id="Accumulo_Settings"></a> Accumulo Settings</h3>
 
 <p>Specify appropriate values for the following settings in <br />
 $ACCUMULO_HOME/conf/accumulo-site.xml :</p>
@@ -254,12 +254,12 @@ $ACCUMULO_HOME/conf/accumulo-site.xml :</p>
 
 <p>Some settings can be modified via the Accumulo shell and take effect immediately. However, any settings that should be persisted across system restarts must be recorded in the accumulo-site.xml file.</p>
 
-<h3 id="a-iddeployconfigurationa-deploy-configuration"><a id="Deploy_Configuration"></a> Deploy Configuration</h3>
+<h3 id="-deploy-configuration"><a id="Deploy_Configuration"></a> Deploy Configuration</h3>
 
 <p>Copy the masters, slaves, accumulo-env.sh, and if necessary, accumulo-site.xml from the <br />
 $ACCUMULO_HOME/conf/ directory on the master to all the machines specified in the slaves file.</p>
 
-<h2 id="a-idinitializationa-initialization"><a id="Initialization"></a> Initialization</h2>
+<h2 id="-initialization"><a id="Initialization"></a> Initialization</h2>
 
 <p>Accumulo must be initialized to create the structures it uses internally to locate data across the cluster. HDFS is required to be configured and running before Accumulo can be initialized.</p>
 
@@ -268,19 +268,19 @@ $ACCUMULO_HOME/bin/accumulo init . This script will prompt for a name for this i
 
 <p>The initialization script will prompt you to set a root password. Once Accumulo is initialized it can be started.</p>
 
-<h2 id="a-idrunninga-running"><a id="Running"></a> Running</h2>
+<h2 id="-running"><a id="Running"></a> Running</h2>
 
-<h3 id="a-idstartingaccumuloa-starting-accumulo"><a id="Starting_Accumulo"></a> Starting Accumulo</h3>
+<h3 id="-starting-accumulo"><a id="Starting_Accumulo"></a> Starting Accumulo</h3>
 
 <p>Make sure Hadoop is configured on all of the machines in the cluster, including access to a shared HDFS instance. Make sure HDFS and ZooKeeper are running. Make sure ZooKeeper is configured and running on at least one machine in the cluster. Start Accumulo using the bin/start-all.sh script.</p>
 
 <p>To verify that Accumulo is running, check the Status page as described under <em>Monitoring</em>. In addition, the Shell can provide some information about the status of tables via reading the !METADATA table.</p>
 
-<h3 id="a-idstoppingaccumuloa-stopping-accumulo"><a id="Stopping_Accumulo"></a> Stopping Accumulo</h3>
+<h3 id="-stopping-accumulo"><a id="Stopping_Accumulo"></a> Stopping Accumulo</h3>
 
 <p>To shutdown cleanly, run bin/stop-all.sh and the master will orchestrate the shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may take some time for particular configurations.</p>
 
-<h3 id="a-idaddinganodea-adding-a-node"><a id="Adding_a_Node"></a> Adding a Node</h3>
+<h3 id="-adding-a-node"><a id="Adding_a_Node"></a> Adding a Node</h3>
 
 <p>Update your $ACCUMULO_HOME/conf/slaves (or $ACCUMULO_CONF_DIR/slaves) file to account for the addition.</p>
 
@@ -292,7 +292,7 @@ $ACCUMULO_HOME/bin/accumulo init . This script will prompt for a name for this i
 
 <p>Make sure the host in question has the new configuration, or else the tablet server won’t start; at a minimum this needs to be on the host(s) being added, but in practice it’s good to ensure consistent configuration across all nodes.</p>
 
-<h3 id="a-iddecomissioninganodea-decomissioning-a-node"><a id="Decomissioning_a_Node"></a> Decomissioning a Node</h3>
+<h3 id="-decomissioning-a-node"><a id="Decomissioning_a_Node"></a> Decomissioning a Node</h3>
 
 <p>If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet server. Accumulo will automatically rebalance the tablets across the available tablet servers.</p>
 
@@ -304,17 +304,17 @@ $ACCUMULO_HOME/bin/accumulo init . This script will prompt for a name for this i
 
 <p>Be sure to update your $ACCUMULO_HOME/conf/slaves (or $ACCUMULO_CONF_DIR/slaves) file to account for the removal of these hosts. Bear in mind that the monitor will not re-read the slaves file automatically, so it will report the decomissioned servers as down; it’s recommended that you restart the monitor so that the node list is up to date.</p>
 
-<h2 id="a-idmonitoringa-monitoring"><a id="Monitoring"></a> Monitoring</h2>
+<h2 id="-monitoring"><a id="Monitoring"></a> Monitoring</h2>
 
 <p>The Accumulo Master provides an interface for monitoring the status and health of Accumulo components. This interface can be accessed by pointing a web browser to <br />
 http://accumulomaster:50095/status</p>
 
-<h2 id="a-idlogginga-logging"><a id="Logging"></a> Logging</h2>
+<h2 id="-logging"><a id="Logging"></a> Logging</h2>
 
 <p>Accumulo processes each write to a set of log files. By default these are found under <br />
 $ACCUMULO/logs/.</p>
 
-<h2 id="a-idrecoverya-recovery"><a id="Recovery"></a> Recovery</h2>
+<h2 id="-recovery"><a id="Recovery"></a> Recovery</h2>
 
 <p>In the event of TabletServer failure or error on shutting Accumulo down, some mutations may not have been minor compacted to HDFS properly. In this case, Accumulo will automatically reapply such mutations from the write-ahead log either when the tablets from the failed server are reassigned by the Master, in the case of a single TabletServer failure or the next time Accumulo starts, in the event of failure during shutdown.</p>
 

@@ -163,17 +163,17 @@
 
 <hr />
 
-<h2 id="a-idtableconfigurationa-table-configuration"><a id="Table_Configuration"></a> Table Configuration</h2>
+<h2 id="-table-configuration"><a id="Table_Configuration"></a> Table Configuration</h2>
 
 <p>Accumulo tables have a few options that can be configured to alter the default behavior of Accumulo as well as improve performance based on the data stored. These include locality groups, constraints, and iterators.</p>
 
-<h2 id="a-idlocalitygroupsa-locality-groups"><a id="Locality_Groups"></a> Locality Groups</h2>
+<h2 id="-locality-groups"><a id="Locality_Groups"></a> Locality Groups</h2>
 
 <p>Accumulo supports storing of sets of column families separately on disk to allow clients to scan over columns that are frequently used together efficient and to avoid scanning over column families that are not requested. After a locality group is set Scanner and BatchScanner operations will automatically take advantage of them whenever the fetchColumnFamilies() method is used.</p>
 
 <p>By default tables place all column families into the same ``default” locality group. Additional locality groups can be configured anytime via the shell or programmatically as follows:</p>
 
-<h3 id="a-idmanaginglocalitygroupsviatheshella-managing-locality-groups-via-the-shell"><a id="Managing_Locality_Groups_via_the_Shell"></a> Managing Locality Groups via the Shell</h3>
+<h3 id="-managing-locality-groups-via-the-shell"><a id="Managing_Locality_Groups_via_the_Shell"></a> Managing Locality Groups via the Shell</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col
 fam&gt;}} [-?] -t &lt;table&gt;
@@ -185,7 +185,7 @@ group_one=colf1,colf2
 </code></pre>
 </div>
 
-<h3 id="a-idmanaginglocalitygroupsviatheclientapia-managing-locality-groups-via-the-client-api"><a id="Managing_Locality_Groups_via_the_Client_API"></a> Managing Locality Groups via the Client API</h3>
+<h3 id="-managing-locality-groups-via-the-client-api"><a id="Managing_Locality_Groups_via_the_Client_API"></a> Managing Locality Groups via the Client API</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>Connector conn;
 
@@ -217,7 +217,7 @@ Map&lt;String, Set&lt;Text&gt;&gt; groups =
 </code></pre>
 </div>
 
-<h2 id="a-idconstraintsa-constraints"><a id="Constraints"></a> Constraints</h2>
+<h2 id="-constraints"><a id="Constraints"></a> Constraints</h2>
 
 <p>Accumulo supports constraints applied on mutations at insert time. This can be used to disallow certain inserts according to a user defined policy. Any mutation that fails to meet the requirements of the constraint is rejected and sent back to the client.</p>
 
@@ -243,7 +243,7 @@ table    | table.constraint.2............ | com.test.AnotherConstraint
 accumulo/docs/examples/README.constraints with corresponding code under <br />
 accumulo/src/examples/main/java/accumulo/examples/constraints .</p>
 
-<h2 id="a-idbloomfiltersa-bloom-filters"><a id="Bloom_Filters"></a> Bloom Filters</h2>
+<h2 id="-bloom-filters"><a id="Bloom_Filters"></a> Bloom Filters</h2>
 
 <p>As mutations are applied to an Accumulo table, several files are created per tablet. If bloom filters are enabled, Accumulo will create and load a small data structure into memory to determine whether a file contains a given key before opening the file. This can speed up lookups considerably.</p>
 
@@ -256,11 +256,11 @@ accumulo/src/examples/main/java/accumulo/examples/constraints .</p>
 <p>An extensive example of using Bloom Filters can be found at <br />
 accumulo/docs/examples/README.bloom .</p>
 
-<h2 id="a-iditeratorsa-iterators"><a id="Iterators"></a> Iterators</h2>
+<h2 id="-iterators"><a id="Iterators"></a> Iterators</h2>
 
 <p>Iterators provide a modular mechanism for adding functionality to be executed by TabletServers when scanning or compacting data. This allows users to efficiently summarize, filter, and aggregate data. In fact, the built-in features of cell-level security and age-off are implemented using Iterators.</p>
 
-<h3 id="a-idsettingiteratorsviatheshella-setting-iterators-via-the-shell"><a id="Setting_Iterators_via_the_Shell"></a> Setting Iterators via the Shell</h3>
+<h3 id="-setting-iterators-via-the-shell"><a id="Setting_Iterators_via_the_Shell"></a> Setting Iterators via the Shell</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>usage: setiter [-?] -agg | -class &lt;name&gt; | -filter | -nolabel | 
 -regex | -vers [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt; [-scan] 
@@ -270,7 +270,7 @@ user@myinstance mytable&gt; setiter -t mytable -scan -p 10 -n myiter
 </code></pre>
 </div>
 
-<h3 id="a-idsettingiteratorsprogrammaticallya-setting-iterators-programmatically"><a id="Setting_Iterators_Programmatically"></a> Setting Iterators Programmatically</h3>
+<h3 id="-setting-iterators-programmatically"><a id="Setting_Iterators_Programmatically"></a> Setting Iterators Programmatically</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>scanner.setScanIterators(
     15, // priority
@@ -290,7 +290,7 @@ user@myinstance mytable&gt; setiter -t mytable -scan -p 10 -n myiter
 
 <p>Tables support separate Iterator settings to be applied at scan time, upon minor compaction and upon major compaction. For most uses, tables will have identical iterator settings for all three to avoid inconsistent results.</p>
 
-<h3 id="a-idversioningiteratorsandtimestampsa-versioning-iterators-and-timestamps"><a id="Versioning_Iterators_and_Timestamps"></a> Versioning Iterators and Timestamps</h3>
+<h3 id="-versioning-iterators-and-timestamps"><a id="Versioning_Iterators_and_Timestamps"></a> Versioning Iterators and Timestamps</h3>
 
 <p>Accumulo provides the capability to manage versioned data through the use of timestamps within the Key. If a timestamp is not specified in the key created by the client then the system will set the timestamp to the current time. Two keys with identical rowIDs and columns but different timestamps are considered two versions of the same key. If two inserts are made into accumulo with the same rowID, column, and timestamp, then the behavior is non-deterministic.</p>
 
@@ -309,7 +309,7 @@ table.iterator.majc.vers.opt.maxVersions=3
 </code></pre>
 </div>
 
-<h4 id="a-idlogicaltimea-logical-time"><a id="Logical_Time"></a> Logical Time</h4>
+<h4 id="-logical-time"><a id="Logical_Time"></a> Logical Time</h4>
 
 <p>Accumulo 1.2 introduces the concept of logical time. This ensures that timestamps set by accumulo always move forward. This helps avoid problems caused by TabletServers that have different time settings. The per tablet counter gives unique one up time stamps on a per mutation basis. When using time in milliseconds, if two things arrive within the same millisecond then both receive the same timestamp.</p>
 
@@ -319,11 +319,11 @@ table.iterator.majc.vers.opt.maxVersions=3
 </code></pre>
 </div>
 
-<h4 id="a-iddeletesa-deletes"><a id="Deletes"></a> Deletes</h4>
+<h4 id="-deletes"><a id="Deletes"></a> Deletes</h4>
 
 <p>Deletes are special keys in accumulo that get sorted along will all the other data. When a delete key is inserted, accumulo will not show anything that has a timestamp less than or equal to the delete key. During major compaction, any keys older than a delete key are omitted from the new file created, and the omitted keys are removed from disk as part of the regular garbage collection process.</p>
 
-<h3 id="a-idfilteringiteratorsa-filtering-iterators"><a id="Filtering_Iterators"></a> Filtering Iterators</h3>
+<h3 id="-filtering-iterators"><a id="Filtering_Iterators"></a> Filtering Iterators</h3>
 
 <p>When scanning over a set of key-value pairs it is possible to apply an arbitrary filtering policy through the use of a FilteringIterator. These types of iterators return only key-value pairs that satisfy the filter logic. Accumulo has two built-in filtering iterators that can be configured on any table: AgeOff and RegEx. More can be added by writing a Java class that implements the <br />
 org.apache.accumulo.core.iterators.filter.Filter interface.</p>
@@ -392,7 +392,7 @@ table    | table.iterator.scan.myfilter.opt.0.ttl . | 30000
 </code></pre>
 </div>
 
-<h2 id="a-idaggregatingiteratorsa-aggregating-iterators"><a id="Aggregating_Iterators"></a> Aggregating Iterators</h2>
+<h2 id="-aggregating-iterators"><a id="Aggregating_Iterators"></a> Aggregating Iterators</h2>
 
 <p>Accumulo allows aggregating iterators to be configured on tables and column families. When an aggregating iterator is set, the iterator is applied across the values associated with any keys that share rowID, column family, and column qualifier. This is similar to the reduce step in MapReduce, which applied some function to all the values associated with a particular key.</p>
 
@@ -443,7 +443,7 @@ row2 day:20080101 [] 2
 <p>An example of an aggregator can be found under <br />
 accumulo/src/examples/main/java/org/apache/accumulo/examples/aggregation/SortedSetAggregator.java</p>
 
-<h2 id="a-idblockcachea-block-cache"><a id="Block_Cache"></a> Block Cache</h2>
+<h2 id="-block-cache"><a id="Block_Cache"></a> Block Cache</h2>
 
 <p>In order to increase throughput of commonly accessed entries, Accumulo employs a block cache. This block cache buffers data in memory so that it doesn’t have to be read off of disk. The RFile format that Accumulo prefers is a mix of index blocks and data blocks, where the index blocks are used to find the appropriate data blocks. Typical queries to Accumulo result in a binary search over several index blocks followed by a linear scan of one or more data blocks.</p>
 

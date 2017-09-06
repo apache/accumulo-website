@@ -160,11 +160,11 @@
 
 <hr />
 
-<h2 id="a-idanalyticsa-analytics"><a id="Analytics"></a> Analytics</h2>
+<h2 id="-analytics"><a id="Analytics"></a> Analytics</h2>
 
 <p>Accumulo supports more advanced data processing than simply keeping keys sorted and performing efficient lookups. Analytics can be developed by using MapReduce and Iterators in conjunction with Accumulo tables.</p>
 
-<h2 id="a-idmapreducea-mapreduce"><a id="MapReduce"></a> MapReduce</h2>
+<h2 id="-mapreduce"><a id="MapReduce"></a> MapReduce</h2>
 
 <p>Accumulo tables can be used as the source and destination of MapReduce jobs. To use an Accumulo table with a MapReduce job (specifically with the new Hadoop API as of version 0.20), configure the job parameters to use the AccumuloInputFormat and AccumuloOutputFormat. Accumulo specific parameters can be set via these two format classes to do the following:</p>
 
@@ -174,7 +174,7 @@
   <li>Restrict the input to a subset of available columns</li>
 </ul>
 
-<h3 id="a-idmapperandreducerclassesa-mapper-and-reducer-classes"><a id="Mapper_and_Reducer_classes"></a> Mapper and Reducer classes</h3>
+<h3 id="-mapper-and-reducer-classes"><a id="Mapper_and_Reducer_classes"></a> Mapper and Reducer classes</h3>
 
 <p>To read from an Accumulo table create a Mapper with the following class parameterization and be sure to configure the AccumuloInputFormat.</p>
 
@@ -204,7 +204,7 @@
 
 <p>The Text object passed as the output should contain the name of the table to which this mutation should be applied. The Text can be null in which case the mutation will be applied to the default table name specified in the AccumuloOutputFormat options.</p>
 
-<h3 id="a-idaccumuloinputformatoptionsa-accumuloinputformat-options"><a id="AccumuloInputFormat_options"></a> AccumuloInputFormat options</h3>
+<h3 id="-accumuloinputformat-options"><a id="AccumuloInputFormat_options"></a> AccumuloInputFormat options</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>Job job = new Job(getConf());
 AccumuloInputFormat.setInputInfo(job,
@@ -242,7 +242,7 @@ AccumuloInputFormat.fetchColumns(job, columns);
 </code></pre>
 </div>
 
-<h3 id="a-idaccumulooutputformatoptionsa-accumulooutputformat-options"><a id="AccumuloOutputFormat_options"></a> AccumuloOutputFormat options</h3>
+<h3 id="-accumulooutputformat-options"><a id="AccumuloOutputFormat_options"></a> AccumuloOutputFormat options</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>boolean createTables = true;
 String defaultTable = "mytable";
@@ -268,7 +268,7 @@ AccumuloOutputFormat.setMaxMutationBufferSize(job, 5000000); // bytes
 <p>An example of using MapReduce with Accumulo can be found at <br />
 accumulo/docs/examples/README.mapred</p>
 
-<h2 id="a-idcombinersa-combiners"><a id="Combiners"></a> Combiners</h2>
+<h2 id="-combiners"><a id="Combiners"></a> Combiners</h2>
 
 <p>Many applications can benefit from the ability to aggregate values across common keys. This can be done via Combiner iterators and is similar to the Reduce step in MapReduce. This provides the ability to define online, incrementally updated analytics without the overhead or latency associated with batch-oriented MapReduce jobs.</p>
 
@@ -276,11 +276,11 @@ accumulo/docs/examples/README.mapred</p>
 
 <p>The only restriction on an combining iterator is that the combiner developer should not assume that all values for a given key have been seen, since new mutations can be inserted at anytime. This precludes using the total number of values in the aggregation such as when calculating an average, for example.</p>
 
-<h3 id="a-idfeaturevectorsa-feature-vectors"><a id="Feature_Vectors"></a> Feature Vectors</h3>
+<h3 id="-feature-vectors"><a id="Feature_Vectors"></a> Feature Vectors</h3>
 
 <p>An interesting use of combining iterators within an Accumulo table is to store feature vectors for use in machine learning algorithms. For example, many algorithms such as k-means clustering, support vector machines, anomaly detection, etc. use the concept of a feature vector and the calculation of distance metrics to learn a particular model. The columns in an Accumulo table can be used to efficiently store sparse features and their weights to be incrementally updated via the use of an combining iterator.</p>
 
-<h2 id="a-idstatisticalmodelinga-statistical-modeling"><a id="Statistical_Modeling"></a> Statistical Modeling</h2>
+<h2 id="-statistical-modeling"><a id="Statistical_Modeling"></a> Statistical Modeling</h2>
 
 <p>Statistical models that need to be updated by many machines in parallel could be similarly stored within an Accumulo table. For example, a MapReduce job that is iteratively updating a global statistical model could have each map or reduce worker reference the parts of the model to be read and updated through an embedded Accumulo client.</p>
 

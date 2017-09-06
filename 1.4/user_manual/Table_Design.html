@@ -162,9 +162,9 @@
 
 <hr />
 
-<h2 id="a-idtabledesigna-table-design"><a id="Table_Design"></a> Table Design</h2>
+<h2 id="-table-design"><a id="Table_Design"></a> Table Design</h2>
 
-<h2 id="a-idbasictablea-basic-table"><a id="Basic_Table"></a> Basic Table</h2>
+<h2 id="-basic-table"><a id="Basic_Table"></a> Basic Table</h2>
 
 <p>Since Accumulo tables are sorted by row ID, each table can be thought of as being indexed by the row ID. Lookups performed row ID can be executed quickly, by doing a binary search, first across the tablets, and then within a tablet. Clients should choose a row ID carefully in order to support their desired application. A simple rule is to select a unique identifier as the row ID for each entity to be stored and assign all the other attributes to be tracked to be columns under this row ID. For example, if we have the following data in a comma-separated file:</p>
 
@@ -195,7 +195,7 @@ for(Entry&lt;Key,Value&gt; entry : s)
 </code></pre>
 </div>
 
-<h2 id="a-idrowiddesigna-rowid-design"><a id="RowID_Design"></a> RowID Design</h2>
+<h2 id="-rowid-design"><a id="RowID_Design"></a> RowID Design</h2>
 
 <p>Often it is necessary to transform the rowID in order to have rows ordered in a way that is optimal for anticipated access patterns. A good example of this is reversing the order of components of internet domain names in order to group rows of the same parent domain together:</p>
 
@@ -231,11 +231,11 @@ com.google.mail_201004
 
 <p>Appending dates provides the additional capability of restricting a scan to a given date range.</p>
 
-<h2 id="a-idindexinga-indexing"><a id="Indexing"></a> Indexing</h2>
+<h2 id="-indexing"><a id="Indexing"></a> Indexing</h2>
 
 <p>In order to support lookups via more than one attribute of an entity, additional indexes can be built. However, because Accumulo tables can support any number of columns without specifying them beforehand, a single additional index will often suffice for supporting lookups of records in the main table. Here, the index has, as the rowID, the Value or Term from the main table, the column families are the same, and the column qualifier of the index table contains the rowID from the main table.</p>
 
-<p><img src="img4.png" alt="converted table" /></p>
+<p><img src="/1.4/user_manual/img4.png" alt="converted table" /></p>
 
 <p>Note: We store rowIDs in the column qualifier rather than the Value so that we can have more than one rowID associated with a particular term within the index. If we stored this in the Value we would only see one of the rows in which the value appears since Accumulo is configured by default to return the one most recent value associated with a key.</p>
 
@@ -269,7 +269,7 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <p>One advantage of the dynamic schema capabilities of Accumulo is that different fields may be indexed into the same physical table. However, it may be necessary to create different index tables if the terms must be formatted differently in order to maintain proper sort order. For example, real numbers must be formatted differently than their usual notation in order to be sorted correctly. In these cases, usually one index per unique data type will suffice.</p>
 
-<h2 id="a-identity-attributeandgraphtablesa-entity-attribute-and-graph-tables"><a id="Entity-Attribute_and_Graph_Tables"></a> Entity-Attribute and Graph Tables</h2>
+<h2 id="-entity-attribute-and-graph-tables"><a id="Entity-Attribute_and_Graph_Tables"></a> Entity-Attribute and Graph Tables</h2>
 
 <p>Accumulo is ideal for storing entities and their attributes, especially of the attributes are sparse. It is often useful to join several datasets together on common entities within the same table. This can allow for the representation of graphs, including nodes, their attributes, and connections to other nodes.</p>
 
@@ -277,15 +277,15 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <p>The physical schema for an entity-attribute or graph table is as follows:</p>
 
-<p><img src="img5.png" alt="converted table" /></p>
+<p><img src="/1.4/user_manual/img5.png" alt="converted table" /></p>
 
 <p>For example, to keep track of employees, managers and products the following entity-attribute table could be used. Note that the weights are not always necessary and are set to 0 when not used.</p>
 
-<p><img src="img6.png" alt="converted table" /></p>
+<p><img src="/1.4/user_manual/img6.png" alt="converted table" /></p>
 
 <p>To allow efficient updating of edge weights, an aggregating iterator can be configured to add the value of all mutations applied with the same key. These types of tables can easily be created from raw events by simply extracting the entities, attributes, and relationships from individual events and inserting the keys into Accumulo each with a count of 1. The aggregating iterator will take care of maintaining the edge weights.</p>
 
-<h2 id="a-iddocument-partitionedindexinga-document-partitioned-indexing"><a id="Document-Partitioned_Indexing"></a> Document-Partitioned Indexing</h2>
+<h2 id="-document-partitioned-indexing"><a id="Document-Partitioned_Indexing"></a> Document-Partitioned Indexing</h2>
 
 <p>Using a simple index as described above works well when looking for records that match one of a set of given criteria. When looking for records that match more than one criterion simultaneously, such as when looking for documents that contain all of the words <code class="highlighter-rouge">the' and </code>white’ and `house’, there are several issues.</p>
 
@@ -295,7 +295,7 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <p>This is accomplished via partitioning records into bins that each reside on at most one TabletServer, and then creating an index of terms per record within each bin as follows:</p>
 
-<p><img src="img7.png" alt="converted table" /></p>
+<p><img src="/1.4/user_manual/img7.png" alt="converted table" /></p>
 
 <p>Documents or records are mapped into bins by a user-defined ingest application. By storing the BinID as the RowID we ensure that all the information for a particular bin is contained in a single tablet and hosted on a single TabletServer since Accumulo never splits rows across tablets. Storing the Terms as column families serves to enable fast lookups of all the documents within this bin that contain the given term.</p>
 

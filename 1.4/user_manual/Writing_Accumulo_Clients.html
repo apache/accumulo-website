@@ -162,9 +162,9 @@
 
 <hr />
 
-<h2 id="a-idwritingaccumuloclientsa-writing-accumulo-clients"><a id="Writing_Accumulo_Clients"></a> Writing Accumulo Clients</h2>
+<h2 id="-writing-accumulo-clients"><a id="Writing_Accumulo_Clients"></a> Writing Accumulo Clients</h2>
 
-<h2 id="a-idrunningclientcodea-running-client-code"><a id="Running_Client_Code"></a> Running Client Code</h2>
+<h2 id="-running-client-code"><a id="Running_Client_Code"></a> Running Client Code</h2>
 
 <p>There are multiple ways to run Java code that uses Accumulo. Below is a list of the different ways to execute client code.</p>
 
@@ -184,7 +184,7 @@
 
 <p>If you are writing map reduce job that access Accumulo, then you can use the bin/tool.sh script to run those jobs. See the map reduce example.</p>
 
-<h2 id="a-idconnectinga-connecting"><a id="Connecting"></a> Connecting</h2>
+<h2 id="-connecting"><a id="Connecting"></a> Connecting</h2>
 
 <p>All clients must first identify the Accumulo instance to which they will be communicating. Code to do this is as follows:</p>
 
@@ -196,7 +196,7 @@ Connector conn = inst.getConnector("user", "passwd");
 </code></pre>
 </div>
 
-<h2 id="a-idwritingdataa-writing-data"><a id="Writing_Data"></a> Writing Data</h2>
+<h2 id="-writing-data"><a id="Writing_Data"></a> Writing Data</h2>
 
 <p>Data are written to Accumulo by creating Mutation objects that represent all the changes to the columns of a single row. The changes are made atomically in the TabletServer. Clients then add Mutations to a BatchWriter which submits them to the appropriate TabletServers.</p>
 
@@ -215,7 +215,7 @@ mutation.put(colFam, colQual, colVis, timestamp, value);
 </code></pre>
 </div>
 
-<h3 id="a-idbatchwritera-batchwriter"><a id="BatchWriter"></a> BatchWriter</h3>
+<h3 id="-batchwriter"><a id="BatchWriter"></a> BatchWriter</h3>
 
 <p>The BatchWriter is highly optimized to send Mutations to multiple TabletServers and automatically batches Mutations destined for the same TabletServer to amortize network overhead. Care must be taken to avoid changing the contents of any Object passed to the BatchWriter since it keeps objects in memory while batching.</p>
 
@@ -237,11 +237,11 @@ writer.close();
 <p>An example of using the batch writer can be found at <br />
 accumulo/docs/examples/README.batch</p>
 
-<h2 id="a-idreadingdataa-reading-data"><a id="Reading_Data"></a> Reading Data</h2>
+<h2 id="-reading-data"><a id="Reading_Data"></a> Reading Data</h2>
 
 <p>Accumulo is optimized to quickly retrieve the value associated with a given key, and to efficiently return ranges of consecutive keys and their associated values.</p>
 
-<h3 id="a-idscannera-scanner"><a id="Scanner"></a> Scanner</h3>
+<h3 id="-scanner"><a id="Scanner"></a> Scanner</h3>
 
 <p>To retrieve data, Clients use a Scanner, which provides acts like an Iterator over keys and values. Scanners can be configured to start and stop at particular keys, and to return a subset of the columns available.</p>
 
@@ -261,7 +261,7 @@ for(Entry&lt;Key,Value&gt; entry : scan) {
 </code></pre>
 </div>
 
-<h3 id="a-idisolatedscannera-isolated-scanner"><a id="Isolated_Scanner"></a> Isolated Scanner</h3>
+<h3 id="-isolated-scanner"><a id="Isolated_Scanner"></a> Isolated Scanner</h3>
 
 <p>Accumulo supports the ability to present an isolated view of rows when scanning. There are three possible ways that a row could change in accumulo :</p>
 
@@ -278,7 +278,7 @@ for(Entry&lt;Key,Value&gt; entry : scan) {
 <p>For an example, look at the following <br />
 src/examples/src/main/java/org/apache/accumulo/examples/isolation/InterferenceTest.java</p>
 
-<h3 id="a-idbatchscannera-batchscanner"><a id="BatchScanner"></a> BatchScanner</h3>
+<h3 id="-batchscanner"><a id="BatchScanner"></a> BatchScanner</h3>
 
 <p>For some types of access, it is more efficient to retrieve several ranges simultaneously. This arises when accessing a set of rows that are not consecutive whose IDs have been retrieved from a secondary index, for example.</p>
 
@@ -301,15 +301,15 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 <p>An example of the BatchScanner can be found at <br />
 accumulo/docs/examples/README.batch</p>
 
-<h2 id="a-idproxya-proxy"><a id="Proxy"></a> Proxy</h2>
+<h2 id="-proxy"><a id="Proxy"></a> Proxy</h2>
 
 <p>The proxy API allows the interaction with Accumulo with languages other than Java. A proxy server is provided in the codebase and a client can further be generated.</p>
 
-<h3 id="a-idprequisitesa-prequisites"><a id="Prequisites"></a> Prequisites</h3>
+<h3 id="-prequisites"><a id="Prequisites"></a> Prequisites</h3>
 
 <p>The proxy server can live on any node in which the basic client API would work. That means it must be able to communicate with the Master, ZooKeepers, NameNode, and the Data nodes. A proxy client only needs the ability to communicate with the proxy server.</p>
 
-<h3 id="a-idconfigurationa-configuration"><a id="Configuration"></a> Configuration</h3>
+<h3 id="-configuration"><a id="Configuration"></a> Configuration</h3>
 
 <p>The configuration options for the proxy server live inside of a properties file. At the very least, you need to supply the following properties:</p>
 
@@ -329,7 +329,7 @@ zookeepers=localhost:2181
 
 <p>This sample configuration file further demonstrates an ability to back the proxy server by MockAccumulo or the MiniAccumuloCluster.</p>
 
-<h3 id="a-idrunningtheproxyservera-running-the-proxy-server"><a id="Running_the_Proxy_Server"></a> Running the Proxy Server</h3>
+<h3 id="-running-the-proxy-server"><a id="Running_the_Proxy_Server"></a> Running the Proxy Server</h3>
 
 <p>After the properties file holding the configuration is created, the proxy server can be started using the following command in the Accumulo distribution (assuming your properties file is named config.properties):</p>
 
@@ -337,7 +337,7 @@ zookeepers=localhost:2181
 </code></pre>
 </div>
 
-<h3 id="a-idcreatingaproxyclienta-creating-a-proxy-client"><a id="Creating_a_Proxy_Client"></a> Creating a Proxy Client</h3>
+<h3 id="-creating-a-proxy-client"><a id="Creating_a_Proxy_Client"></a> Creating a Proxy Client</h3>
 
 <p>Aside from installing the Thrift compiler, you will also need the language-specific library for Thrift installed to generate client code in that language. Typically, your operating system’s package manager will be able to automatically install these for you in an expected location such as /usr/lib/python/site-packages/thrift.</p>
 
@@ -349,7 +349,7 @@ zookeepers=localhost:2181
 
 <p>After a client is generated, the port specified in the configuration properties above will be used to connect to the server.</p>
 
-<h3 id="a-idusingaproxyclienta-using-a-proxy-client"><a id="Using_a_Proxy_Client"></a> Using a Proxy Client</h3>
+<h3 id="-using-a-proxy-client"><a id="Using_a_Proxy_Client"></a> Using a Proxy Client</h3>
 
 <p>The following examples have been written in Java and the method signatures may be slightly different depending on the language specified when generating client with the Thrift compiler. After initiating a connection to the Proxy (see Apache Thrift’s documentation for examples of connecting to a Thrift service), the methods on the proxy client will be available. The first thing to do is log in:</p>
 

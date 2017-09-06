@@ -164,63 +164,63 @@
 
 <hr />
 
-<h2 id="a-idaccumulodesigna-accumulo-design"><a id="Accumulo_Design"></a> Accumulo Design</h2>
+<h2 id="-accumulo-design"><a id="Accumulo_Design"></a> Accumulo Design</h2>
 
-<h2 id="a-iddatamodela-data-model"><a id="Data_Model"></a> Data Model</h2>
+<h2 id="-data-model"><a id="Data_Model"></a> Data Model</h2>
 
 <p>Accumulo provides a richer data model than simple key-value stores, but is not a fully relational database. Data is represented as key-value pairs, where the key and value are comprised of the following elements:</p>
 
-<p><img src="img1.png" alt="converted table" /></p>
+<p><img src="/1.4/user_manual/img1.png" alt="converted table" /></p>
 
 <p>All elements of the Key and the Value are represented as byte arrays except for Timestamp, which is a Long. Accumulo sorts keys by element and lexicographically in ascending order. Timestamps are sorted in descending order so that later versions of the same Key appear first in a sequential scan. Tables consist of a set of sorted key-value pairs.</p>
 
-<h2 id="a-idarchitecturea-architecture"><a id="Architecture"></a> Architecture</h2>
+<h2 id="-architecture"><a id="Architecture"></a> Architecture</h2>
 
 <p>Accumulo is a distributed data storage and retrieval system and as such consists of several architectural components, some of which run on many individual servers. Much of the work Accumulo does involves maintaining certain properties of the data, such as organization, availability, and integrity, across many commodity-class machines.</p>
 
-<h2 id="a-idcomponentsa-components"><a id="Components"></a> Components</h2>
+<h2 id="-components"><a id="Components"></a> Components</h2>
 
 <p>An instance of Accumulo includes many TabletServers, write-ahead Logger servers, one Garbage Collector process, one Master server and many Clients.</p>
 
-<h3 id="a-idtabletservera-tablet-server"><a id="Tablet_Server"></a> Tablet Server</h3>
+<h3 id="-tablet-server"><a id="Tablet_Server"></a> Tablet Server</h3>
 
 <p>The TabletServer manages some subset of all the tablets (partitions of tables). This includes receiving writes from clients, persisting writes to a write-ahead log, sorting new key-value pairs in memory, periodically flushing sorted key-value pairs to new files in HDFS, and responding to reads from clients, forming a merge-sorted view of all keys and values from all the files it has created and the sorted in-memory store.</p>
 
 <p>TabletServers also perform recovery of a tablet that was previously on a server that failed, reapplying any writes found in the write-ahead log to the tablet.</p>
 
-<h3 id="a-idloggersa-loggers"><a id="Loggers"></a> Loggers</h3>
+<h3 id="-loggers"><a id="Loggers"></a> Loggers</h3>
 
 <p>The Loggers accept updates to Tablet servers and write them to local on-disk storage. Each tablet server will write their updates to multiple loggers to preserve data in case of hardware failure.</p>
 
-<h3 id="a-idgarbagecollectora-garbage-collector"><a id="Garbage_Collector"></a> Garbage Collector</h3>
+<h3 id="-garbage-collector"><a id="Garbage_Collector"></a> Garbage Collector</h3>
 
 <p>Accumulo processes will share files stored in HDFS. Periodically, the Garbage Collector will identify files that are no longer needed by any process, and delete them.</p>
 
-<h3 id="a-idmastera-master"><a id="Master"></a> Master</h3>
+<h3 id="-master"><a id="Master"></a> Master</h3>
 
 <p>The Accumulo Master is responsible for detecting and responding to TabletServer failure. It tries to balance the load across TabletServer by assigning tablets carefully and instructing TabletServers to migrate tablets when necessary. The Master ensures all tablets are assigned to one TabletServer each, and handles table creation, alteration, and deletion requests from clients. The Master also coordinates startup, graceful shutdown and recovery of changes in write-ahead logs when Tablet servers fail.</p>
 
-<h3 id="a-idclienta-client"><a id="Client"></a> Client</h3>
+<h3 id="-client"><a id="Client"></a> Client</h3>
 
 <p>Accumulo includes a client library that is linked to every application. The client library contains logic for finding servers managing a particular tablet, and communicating with TabletServers to write and retrieve key-value pairs.</p>
 
-<h2 id="a-iddatamanagementa-data-management"><a id="Data_Management"></a> Data Management</h2>
+<h2 id="-data-management"><a id="Data_Management"></a> Data Management</h2>
 
 <p>Accumulo stores data in tables, which are partitioned into tablets. Tablets are partitioned on row boundaries so that all of the columns and values for a particular row are found together within the same tablet. The Master assigns Tablets to one TabletServer at a time. This enables row-level transactions to take place without using distributed locking or some other complicated synchronization mechanism. As clients insert and query data, and as machines are added and removed from the cluster, the Master migrates tablets to ensure they remain available and that the ingest and query load is balanced across the cluster.</p>
 
-<p><img src="./data_distribution.png" alt="Image data_distribution" /></p>
+<p><img src="/1.4/user_manual/data_distribution.png" alt="Image data_distribution" /></p>
 
-<h2 id="a-idtabletservicea-tablet-service"><a id="Tablet_Service"></a> Tablet Service</h2>
+<h2 id="-tablet-service"><a id="Tablet_Service"></a> Tablet Service</h2>
 
 <p>When a write arrives at a TabletServer it is written to a Write-Ahead Log and then inserted into a sorted data structure in memory called a MemTable. When the MemTable reaches a certain size the TabletServer writes out the sorted key-value pairs to a file in HDFS called Indexed Sequential Access Method (ISAM) file. This process is called a minor compaction. A new MemTable is then created and the fact of the compaction is recorded in the Write-Ahead Log.</p>
 
 <p>When a request to read data arrives at a TabletServer, the TabletServer does a binary search across the MemTable as well as the in-memory indexes associated with each ISAM file to find the relevant values. If clients are performing a scan, several key-value pairs are returned to the client in order from the MemTable and the set of ISAM files by performing a merge-sort as they are read.</p>
 
-<h2 id="a-idcompactionsa-compactions"><a id="Compactions"></a> Compactions</h2>
+<h2 id="-compactions"><a id="Compactions"></a> Compactions</h2>
 
 <p>In order to manage the number of files per tablet, periodically the TabletServer performs Major Compactions of files within a tablet, in which some set of ISAM files are combined into one file. The previous files will eventually be removed by the Garbage Collector. This also provides an opportunity to permanently remove deleted key-value pairs by omitting key-value pairs suppressed by a delete entry when the new file is created.</p>
 
-<h2 id="a-idfault-tolerancea-fault-tolerance"><a id="Fault-Tolerance"></a> Fault-Tolerance</h2>
+<h2 id="-fault-tolerance"><a id="Fault-Tolerance"></a> Fault-Tolerance</h2>
 
 <p>If a TabletServer fails, the Master detects it and automatically reassigns the tablets assigned from the failed server to other servers. Any key-value pairs that were in memory at the time the TabletServer are automatically reapplied from the Write-Ahead Log to prevent any loss of data.</p>
 
@@ -229,7 +229,7 @@
 <p>TabletServer failures are noted on the Master’s monitor page, accessible via <br />
 http://master-address:50095/monitor.</p>
 
-<p><img src="./failure_handling.png" alt="Image failure_handling" /></p>
+<p><img src="/1.4/user_manual/failure_handling.png" alt="Image failure_handling" /></p>
 
 <hr />
 

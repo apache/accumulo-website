@@ -163,11 +163,11 @@
 
 <hr />
 
-<h2 id="a-idsecuritya-security"><a id="Security"></a> Security</h2>
+<h2 id="-security"><a id="Security"></a> Security</h2>
 
 <p>Accumulo extends the BigTable data model to implement a security mechanism known as cell-level security. Every key-value pair has its own security label, stored under the column visibility element of the key, which is used to determine whether a given user meets the security requirements to read the value. This enables data of various security levels to be stored within the same row, and users of varying degrees of access to query the same table, while preserving data confidentiality.</p>
 
-<h2 id="a-idsecuritylabelexpressionsa-security-label-expressions"><a id="Security_Label_Expressions"></a> Security Label Expressions</h2>
+<h2 id="-security-label-expressions"><a id="Security_Label_Expressions"></a> Security Label Expressions</h2>
 
 <p>When mutations are applied, users can specify a security label for each value. This is done as the Mutation is created by passing a ColumnVisibility object to the put() method:</p>
 
@@ -184,7 +184,7 @@ mutation.put(colFam, colQual, colVis, timestamp, value);
 </code></pre>
 </div>
 
-<h2 id="a-idsecuritylabelexpressionsyntaxa-security-label-expression-syntax"><a id="Security_Label_Expression_Syntax"></a> Security Label Expression Syntax</h2>
+<h2 id="-security-label-expression-syntax"><a id="Security_Label_Expression_Syntax"></a> Security Label Expression Syntax</h2>
 
 <p>Security labels consist of a set of user-defined tokens that are required to read the value the label is associated with. The set of tokens required can be specified using syntax that supports logical AND and OR combinations of tokens, as well as nesting groups of tokens together.</p>
 
@@ -214,7 +214,7 @@ admin|audit
 
 <p>When both <code class="highlighter-rouge">|</code> and <code class="highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify precedence of the operators.</p>
 
-<h2 id="a-idauthorizationa-authorization"><a id="Authorization"></a> Authorization</h2>
+<h2 id="-authorization"><a id="Authorization"></a> Authorization</h2>
 
 <p>When clients attempt to read data from Accumulo, any security labels present are examined against the set of authorizations passed by the client code when the Scanner or BatchScanner are created. If the authorizations are determined to be insufficient to satisfy the security label, the value is suppressed from the set of results sent back to the client.</p>
 
@@ -227,7 +227,7 @@ Scanner s = connector.createScanner("table", auths);
 </code></pre>
 </div>
 
-<h2 id="a-iduserauthorizationsa-user-authorizations"><a id="User_Authorizations"></a> User Authorizations</h2>
+<h2 id="-user-authorizations"><a id="User_Authorizations"></a> User Authorizations</h2>
 
 <p>Each accumulo user has a set of associated security labels. To manipulate these in the shell use the setuaths and getauths commands. These may also be modified using the java security operations API.</p>
 
@@ -241,13 +241,13 @@ Scanner s = connector.createScanner("table", auths);
 
 <p>Any user with the alter table permission can add or remove this constraint. This constraint is not applied to bulk imported data, if this a concern then disable the bulk import permission.</p>
 
-<h2 id="a-idsecureauthorizationshandlinga-secure-authorizations-handling"><a id="Secure_Authorizations_Handling"></a> Secure Authorizations Handling</h2>
+<h2 id="-secure-authorizations-handling"><a id="Secure_Authorizations_Handling"></a> Secure Authorizations Handling</h2>
 
 <p>For applications serving many users, it is not expected that an accumulo user will be created for each application user. In this case an accumulo user with all authorizations needed by any of the applications users must be created. To service queries, the application should create a scanner with the application users authorizations. These authorizations could be obtained from a trusted 3rd party.</p>
 
 <p>Often production systems will integrate with Public-Key Infrastructure (PKI) and designate client code within the query layer to negotiate with PKI servers in order to authenticate users and retrieve their authorization tokens (credentials). This requires users to specify only the information necessary to authenticate themselves to the system. Once user identity is established, their credentials can be accessed by the client code and passed to Accumulo outside of the reach of the user.</p>
 
-<h2 id="a-idqueryserviceslayera-query-services-layer"><a id="Query_Services_Layer"></a> Query Services Layer</h2>
+<h2 id="-query-services-layer"><a id="Query_Services_Layer"></a> Query Services Layer</h2>
 
 <p>Since the primary method of interaction with Accumulo is through the Java API, production environments often call for the implementation of a Query layer. This can be done using web services in containers such as Apache Tomcat, but is not a requirement. The Query Services Layer provides a mechanism for providing a platform on which user facing applications can be built. This allows the application designers to isolate potentially complex query logic, and enables a convenient point at which to perform essential security functions.</p>
 
