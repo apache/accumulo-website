@@ -131,16 +131,17 @@ for two markdown files that should be changed in the Accumulo repo and copied/mi
 
         cp /path/to/accumulo/core/target/generated-docs/configuration-properties.md /path/to/accumulo-website/_docs-2-x/administration/configuration-properties.md
 
-**For 2.x minor releases,** follow the steps below:
+**For 2.x minor releases,** follow the steps below to create docs for next release:
 
-1. Create a new documentation collection for the new minor release (i.e `2.0`) using the unreleased collection. Avoid using a dot `.` in the directory name:
+1. Create a new documentation collection for the new minor release (i.e `2.0`) using the collection of the last release. Avoid using a dot `.` in
+   the directory name:
 
-        cp -r _docs-unreleased _docs-2-0
+        cp -r _docs-2-0 _docs-2-1
 
-2. Create a new doc layout using the unreleased layout. Update the reference to `site.docs-unreleased` to `site.docs-2-0` (if making 2.0 release):
+2. Create a new doc layout using the previous layout. Update the reference to `site.docs-2-0` to `site.docs-2-1` (if creating 2.1 docs):
 
-        cp _layouts/docs-unreleased.html _layouts/docs-2.0.html
-        vim _layouts/docs-2.0.html
+        cp _layouts/docs-2.0.html _layouts/docs-2.1.html
+        vim _layouts/docs-2.1.html
 
 3. Point Jekyll to the new documentation collection by modifying `collections` and `defaults` in `_config.yml`. Follow what was done for previous
    releases.
