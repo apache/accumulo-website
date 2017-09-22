@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Summary Statistics</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/quick-install">Quick Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="true" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/iterators">Iterators</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/proxy">Proxy</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/in-depth-install">In-depth Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/2.0/">Accumulo 2.0 docs</a> &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Summary Statistics</p>
+    
+
+    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
+
+    
+    <div class="row">
+      <div class="col-md-10"><h1>Summary Statistics</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/development/summaries.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+    
+    <h2 id="overview">Overview</h2>
+
+<p>Accumulo has the ability to generate summary statistics about data in a table
+using user defined functions.  Currently these statistics are only generated for
+data written to files.  Data recently written to Accumulo that is still in
+memory will not contribute to summary statistics.</p>
+
+<p>This feature can be used to inform a user about what data is in their table.
+Summary statistics can also be used by compaction strategies to make decisions
+about which files to compact.</p>
+
+<p>Summary data is stored in each file Accumulo produces.  Accumulo can gather
+summary information from across a cluster merging it along the way.  In order
+for this to be fast the, summary information should fit in cache.  There is a
+dedicated cache for summary data on each tserver with a configurable size.  In
+order for summary data to fit in cache, it should probably be small.</p>
+
+<p>For information on writing a custom summarizer see the javadoc for
+<code class="highlighter-rouge">org.apache.accumulo.core.client.summary.Summarizer</code>.  The package
+<code class="highlighter-rouge">org.apache.accumulo.core.client.summary.summarizers</code> contains summarizer
+implementations that ship with Accumulo and can be configured for use.</p>
+
+<h2 id="inaccuracies">Inaccuracies</h2>
+
+<p>Summary data can be inaccurate when files are missing summary data or when
+files have extra summary data. Files can contain data outside of a tablets
+boundaries. This can happen as result of bulk imported files and tablet splits.
+When this happens, those files could contain extra summary information.
+Accumulo offsets this some by storing summary information for multiple row
+ranges per a file.  However, the ranges are not granular enough to completely
+offset extra data.</p>
+
+<p>Any source of inaccuracies is reported when summary information is requested.
+In the shell examples below this can be seen on the <code class="highlighter-rouge">File Statistics</code> line.
+For files missing summary information, the compact command in the shell has a
+<code class="highlighter-rouge">--sf-no-summary</code> option.  This options compacts files that do not have the
+summary information configured for the table.  The compact command also has the
+<code class="highlighter-rouge">--sf-extra-summary</code> option which will compact files with extra summary
+information.</p>
+
+<h2 id="configuring">Configuring</h2>
+
+<p>The following tablet server and table properties configure summarization.</p>
+
+<ul>
+  <li><a href="/docs/2.0/administration/configuration-properties#tserver_cache_summary_size">tserver.cache.summary.size</a></li>
+  <li><a href="/docs/2.0/administration/configuration-properties#tserver_summary_partition_threads">tserver.summary.partition.threads</a></li>
+  <li><a href="/docs/2.0/administration/configuration-properties#tserver_summary_remote_threads">tserver.summary.remote.threads</a></li>
+  <li><a href="/docs/2.0/administration/configuration-properties#tserver_summary_retreival_threads">tserver.summary.retrieval.threads</a></li>
+  <li><a href="/docs/2.0/administration/configuration-properties#table_summarizer_prefix">table.summarizer.*</a></li>
+  <li><a href="/docs/2.0/administration/configuration-properties#table_file_summary_maxSize">table.file.summary.maxSize</a></li>
+</ul>
+
+<h2 id="permissions">Permissions</h2>
+
+<p>Because summary data may be derived from sensitive data, requesting summary data
+requires a special permission.  User must have the table permission
+<code class="highlighter-rouge">GET_SUMMARIES</code> in order to retrieve summary data.</p>
+
+<h2 id="bulk-import">Bulk import</h2>
+
+<p>When generating rfiles to bulk import into Accumulo, those rfiles can contain
+summary data.  To use this feature, look at the javadoc on the
+<code class="highlighter-rouge">AccumuloFileOutputFormat.setSummarizers(...)</code> method.  Also,
+<code class="highlighter-rouge">org.apache.accumulo.core.client.rfile.RFile</code> has options for creating RFiles
+with embedded summary data.</p>
+
+<h2 id="examples">Examples</h2>
+
+<p>This example walks through using summarizers in the Accumulo shell.  Below a
+table is created and some data is inserted to summarize.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@uno&gt; createtable summary_test
+root@uno summary_test&gt; setauths -u root -s PI,GEO,TIME
+root@uno summary_test&gt; insert 3b503bd name last Doe
+root@uno summary_test&gt; insert 3b503bd name first John
+root@uno summary_test&gt; insert 3b503bd contact address "123 Park Ave, NY, NY" -l PI&amp;GEO
+root@uno summary_test&gt; insert 3b503bd date birth "1/11/1942" -l PI&amp;TIME
+root@uno summary_test&gt; insert 3b503bd date married "5/11/1962" -l PI&amp;TIME
+root@uno summary_test&gt; insert 3b503bd contact home_phone 1-123-456-7890 -l PI
+root@uno summary_test&gt; insert d5d18dd contact address "50 Lake Shore Dr, Chicago, IL" -l PI&amp;GEO
+root@uno summary_test&gt; insert d5d18dd name first Jane
+root@uno summary_test&gt; insert d5d18dd name last Doe
+root@uno summary_test&gt; insert d5d18dd date birth 8/15/1969 -l PI&amp;TIME
+root@uno summary_test&gt; scan -s PI,GEO,TIME
+3b503bd contact:address [PI&amp;GEO]    123 Park Ave, NY, NY
+3b503bd contact:home_phone [PI]    1-123-456-7890
+3b503bd date:birth [PI&amp;TIME]    1/11/1942
+3b503bd date:married [PI&amp;TIME]    5/11/1962
+3b503bd name:first []    John
+3b503bd name:last []    Doe
+d5d18dd contact:address [PI&amp;GEO]    50 Lake Shore Dr, Chicago, IL
+d5d18dd date:birth [PI&amp;TIME]    8/15/1969
+d5d18dd name:first []    Jane
+d5d18dd name:last []    Doe
+</code></pre>
+</div>
+
+<p>After inserting the data, summaries are requested below.  No summaries are returned.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; summaries
+</code></pre>
+</div>
+
+<p>The visibility summarizer is configured below and the table is flushed.
+Flushing the table creates a file creating summary data in the process. The
+summary data returned counts how many times each column visibility occurred.
+The statistics with a <code class="highlighter-rouge">c:</code> prefix are visibilities.  The others are generic
+statistics created by the CountingSummarizer that VisibilitySummarizer extends.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
+root@uno summary_test&gt; summaries
+root@uno summary_test&gt; flush -w
+2017-02-24 19:54:46,090 [shell.Shell] INFO : Flush of table summary_test completed.
+root@uno summary_test&gt; summaries
+Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {}
+File Statistics    : [total:1, missing:0, extra:0, large:0]
+Summary Statistics : 
+   c:                                                           = 4
+   c:PI                                                         = 1
+   c:PI&amp;GEO                                                     = 2
+   c:PI&amp;TIME                                                    = 3
+   emitted                                                      = 10
+   seen                                                         = 10
+   tooLong                                                      = 0
+   tooMany                                                      = 0
+</code></pre>
+</div>
+
+<p>VisibilitySummarizer has an option <code class="highlighter-rouge">maxCounters</code> that determines the max number
+of column visibilites it will track.  Below this option is set and compaction
+is forced to regenerate summary data.  The new summary data only has three
+visibilites and now the <code class="highlighter-rouge">tooMany</code> statistic is 4.  This is the number of
+visibilites that were not counted.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis.opt.maxCounters=3
+ root@uno summary_test&gt; compact -w
+ 2017-02-24 19:54:46,267 [shell.Shell] INFO : Compacting table ...
+ 2017-02-24 19:54:47,127 [shell.Shell] INFO : Compaction of table summary_test completed for given range
+ root@uno summary_test&gt; summaries
+  Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
+  File Statistics    : [total:1, missing:0, extra:0, large:0]
+  Summary Statistics : 
+     c:PI                                                         = 1
+     c:PI&amp;GEO                                                     = 2
+     c:PI&amp;TIME                                                    = 3
+     emitted                                                      = 10
+     seen                                                         = 10
+     tooLong                                                      = 0
+     tooMany                                                      = 4
+</code></pre>
+</div>
+
+<p>Another summarizer is configured below that tracks the number of deletes.  Also
+a compaction strategy that uses this summary data is configured.  The
+<code class="highlighter-rouge">TooManyDeletesCompactionStrategy</code> will force a compaction of the tablet when
+the ratio of deletes to non-deletes is over 25%.  This threshold is
+configurable.  Below a delete is added and its reflected in the statistics.  In
+this case there is 1 delete and 10 non-deletes, not enough to force a
+compaction of the tablet.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.del=org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer
+root@uno summary_test&gt; compact -w
+2017-02-24 19:54:47,282 [shell.Shell] INFO : Compacting table ...
+2017-02-24 19:54:49,236 [shell.Shell] INFO : Compaction of table summary_test completed for given range
+root@uno summary_test&gt; config -t summary_test -s table.compaction.major.ratio=10
+root@uno summary_test&gt; config -t summary_test -s table.majc.compaction.strategy=org.apache.accumulo.tserver.compaction.strategies.TooManyDeletesCompactionStrategy
+root@uno summary_test&gt; deletemany -r d5d18dd -c date -f
+[DELETED] d5d18dd date:birth [PI&amp;TIME]
+root@uno summary_test&gt; flush -w
+2017-02-24 19:54:49,686 [shell.Shell] INFO : Flush of table summary_test completed.
+root@uno summary_test&gt; summaries
+ Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
+ File Statistics    : [total:2, missing:0, extra:0, large:0]
+ Summary Statistics : 
+    c:PI                                                         = 1
+    c:PI&amp;GEO                                                     = 2
+    c:PI&amp;TIME                                                    = 4
+    emitted                                                      = 11
+    seen                                                         = 11
+    tooLong                                                      = 0
+    tooMany                                                      = 4
+
+ Summarizer         : org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer del {}
+ File Statistics    : [total:2, missing:0, extra:0, large:0]
+ Summary Statistics : 
+    deletes                                                      = 1
+    total                                                        = 11
+</code></pre>
+</div>
+
+<p>Some more deletes are added and the table is flushed below.  This results in 4
+deletes and 10 non-deletes, which triggers a full compaction.  A full
+compaction of all files is the only time when delete markers are dropped.  The
+compaction ratio was set to 10 above to show that the number of files did not
+trigger the compaction.   After the compaction there no deletes 6 non-deletes.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; deletemany -r d5d18dd -f
+[DELETED] d5d18dd contact:address [PI&amp;GEO]
+[DELETED] d5d18dd name:first []
+[DELETED] d5d18dd name:last []
+root@uno summary_test&gt; flush -w
+2017-02-24 19:54:52,800 [shell.Shell] INFO : Flush of table summary_test completed.
+root@uno summary_test&gt; summaries
+ Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
+ File Statistics    : [total:1, missing:0, extra:0, large:0]
+ Summary Statistics : 
+    c:PI                                                         = 1
+    c:PI&amp;GEO                                                     = 1
+    c:PI&amp;TIME                                                    = 2
+    emitted                                                      = 6
+    seen                                                         = 6
+    tooLong                                                      = 0
+    tooMany                                                      = 2
+
+ Summarizer         : org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer del {}
+ File Statistics    : [total:1, missing:0, extra:0, large:0]
+ Summary Statistics : 
+    deletes                                                      = 0
+    total                                                        = 6
+root@uno summary_test&gt;   
+</code></pre>
+</div>
+
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/development/summaries.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Configuration Properties</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/get_involved">Get Involved</a></li>
+            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a href="/contributor/">Contributor Guide</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/design">Accumulo Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/quick-install">Quick Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/clients">Accumulo Clients</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/shell">Accumulo Shell</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/table_design">Table Design</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/getting-started/table_configuration">Table Configuration</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/iterators">Iterators</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/mapreduce">MapReduce</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/proxy">Proxy</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/development_tools">Development Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/sampling">Sampling</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/summaries">Summary Statistics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/security">Security</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/in-depth-install">In-depth Installation</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-properties">Configuration Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/tracing">Tracing</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/fate">FATE</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/multivolume">Multi-Volume Installations</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/ssl">SSL</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/kerberos">Kerberos</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/replication">Replication</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/basic">Basic Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/tools">Troubleshooting Tools</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p><a href="/docs/2.0/">Accumulo 2.0 docs</a> &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Configuration Properties</p>
+    
+
+    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
+
+    
+    <div class="row">
+      <div class="col-md-10"><h1>Configuration Properties</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/administration/configuration-properties.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+    
+    <!-- WARNING: Do not edit this file. It is a generated file that is copied from Accumulo build (from core/target/generated-docs) -->
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a name="gc_prefix"></a> <strong>gc.</strong>*</td>
+      <td>Properties in this category affect the behavior of the accumulo garbage collector.</td>
+    </tr>
+    <tr>
+      <td><a name="gc_cycle_delay"></a> gc.cycle.delay</td>
+      <td>Time between garbage collection cycles. In each cycle, old files no longer in use are removed from the filesystem.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_cycle_start"></a> gc.cycle.start</td>
+      <td>Time to wait before attempting to garbage collect any old files.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_file_archive"></a> gc.file.archive</td>
+      <td>Archive any files/directories instead of moving to the HDFS trash or deleting.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_port_client"></a> gc.port.client</td>
+      <td>The listening port for the garbage collector’s monitor service<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> yes but requires restart of the gc, <strong>default value:</strong> <code class="highlighter-rouge">9998</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_threads_delete"></a> gc.threads.delete</td>
+      <td>The number of threads used to delete files<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">16</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_trace_percent"></a> gc.trace.percent</td>
+      <td>Percent of gc cycles to trace<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0.01</code></td>
+    </tr>
+    <tr>
+      <td><a name="gc_trash_ignore"></a> gc.trash.ignore</td>
+      <td>Do not use the Trash, even if it is configured.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_prefix"></a> <strong>general.</strong>*</td>
+      <td>Properties in this category affect the behavior of accumulo overall, but do not have to be consistent throughout a cloud.</td>
+    </tr>
+    <tr>
+      <td><a name="general_classpaths"></a> general.classpaths</td>
+      <td><strong>Deprecated.</strong> <del>This property is deprecated. The class path should instead be configured by the launch environment (for example, accumulo-env.sh). A list of all of the places to look for a class. Order does matter, as it will look for the jar starting in the first location to the last. Supports full regex on filename alone.</del><br /><del><strong>type:</strong> STRING</del>, <del><strong>zk mutable:</strong> no</del>, <del><strong>default value:</strong> empty</del></td>
+    </tr>
+    <tr>
+      <td><a name="general_custom_prefix"></a> <strong>general.custom.</strong>*</td>
+      <td>Prefix to be used for user defined system-wide properties. This may be particularly useful for system-wide configuration for various user-implementations of pluggable Accumulo features, such as the balancer or volume chooser.</td>
+    </tr>
+    <tr>
+      <td><a name="general_delegation_token_lifetime"></a> general.delegation.token.lifetime</td>
+      <td>The length of time that delegation tokens and secret keys are valid<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">7d</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_delegation_token_update_interval"></a> general.delegation.token.update.interval</td>
+      <td>The length of time between generation of new secret keys<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">1d</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_dynamic_classpaths"></a> general.dynamic.classpaths</td>
+      <td>A list of all of the places where changes in jars or classes will force a reload of the classloader.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">$ACCUMULO_HOME/lib/ext/[^.].*.jar</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_kerberos_keytab"></a> general.kerberos.keytab</td>
+      <td>Path to the kerberos keytab to use. Leave blank if not using kerberoized hdfs<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="general_kerberos_principal"></a> general.kerberos.principal</td>
+      <td>Name of the kerberos principal to use. _HOST will automatically be replaced by the machines hostname in the hostname portion of the principal. Leave blank if not using kerberoized hdfs<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="general_kerberos_renewal_period"></a> general.kerberos.renewal.period</td>
+      <td>The amount of time between attempts to perform Kerberos ticket renewals. This does not equate to how often tickets are actually renewed (which is performed at 80% of the ticket lifetime).<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_legacy_metrics"></a> general.legacy.metrics</td>
+      <td>Use the old metric infrastructure configured by accumulo-metrics.xml, instead of Hadoop Metrics2<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_max_scanner_retry_period"></a> general.max.scanner.retry.period</td>
+      <td>The maximum amount of time that a Scanner should wait before retrying a failed RPC<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">5s</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_rpc_timeout"></a> general.rpc.timeout</td>
+      <td>Time to wait on I/O for simple, short RPC calls<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">120s</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_security_credential_provider_paths"></a> general.security.credential.provider.paths</td>
+      <td>Comma-separated list of paths to CredentialProviders<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="general_server_message_size_max"></a> general.server.message.size.max</td>
+      <td>The maximum size of a message that can be sent to a server.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">1G</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_server_simpletimer_threadpool_size"></a> general.server.simpletimer.threadpool.size</td>
+      <td>The number of threads to use for server-internal scheduled tasks<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_vfs_cache_dir"></a> general.vfs.cache.dir</td>
+      <td>Directory to use for the vfs cache. The cache will keep a soft reference to all of the classes loaded in the VM. This should be on local disk on each node with sufficient space. It defaults to ${java.io.tmpdir}/accumulo-vfs-cache-${user.name}<br /><strong>type:</strong> ABSOLUTEPATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">${java.io.tmpdir}/accumulo-vfs-cache-${user.name}</code></td>
+    </tr>
+    <tr>
+      <td><a name="general_vfs_classpaths"></a> general.vfs.classpaths</td>
+      <td>Configuration for a system level vfs classloader. Accumulo jar can be configured here and loaded out of HDFS.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="general_vfs_context_classpath_prefix"></a> <strong>general.vfs.context.classpath.</strong>*</td>
+      <td>Properties in this category are define a classpath. These properties start  with the category prefix, followed by a context name. The value is a comma seperated list of URIs. Supports full regex on filename alone. For example, general.vfs.context.classpath.cx1=hdfs://nn1:9902/mylibdir/*.jar. You can enable post delegation for a context, which will load classes from the context first instead of the parent first. Do this by setting general.vfs.context.classpath.<name>.delegation=post, where <name> is your context nameIf delegation is not specified, it defaults to loading from parent classloader first.</name></name></td>
+    </tr>
+    <tr>
+      <td><a name="instance_prefix"></a> <strong>instance.</strong>*</td>
+      <td>Properties in this category must be consistent throughout a cloud. This is enforced and servers won’t be able to communicate if these differ.</td>
+    </tr>
+    <tr>
+      <td><a name="instance_dfs_dir"></a> instance.dfs.dir</td>
+      <td><strong>Deprecated.</strong> <del>HDFS directory in which accumulo instance will run. Do not change after accumulo is initialized.</del><br /><del><strong>type:</strong> ABSOLUTEPATH</del>, <del><strong>zk mutable:</strong> no</del>, <del><strong>default value:</strong> <code class="highlighter-rouge">/accumulo</code></del></td>
+    </tr>
+    <tr>
+      <td><a name="instance_dfs_uri"></a> instance.dfs.uri</td>
+      <td><strong>Deprecated.</strong> <del>A url accumulo should use to connect to DFS. If this is empty, accumulo will obtain this information from the hadoop configuration. This property will only be used when creating new files if instance.volumes is empty. After an upgrade to 1.6.0 Accumulo will start using absolute paths to reference files. Files created before a 1.6.0 upgrade are referenced via relative paths. Relative paths will always be resolved using this config (if empty using the hadoop config).</del><br /><del><strong>type:</strong> URI</del>, <del><strong>zk mutable:</strong> no</del>, <del><strong>default value:</strong> empty</del></td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_sasl_allowed_host_impersonation"></a> instance.rpc.sasl.allowed.host.impersonation</td>
+      <td>One-line configuration property controlling the network locations (hostnames) that are allowed to impersonate other users<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_sasl_allowed_user_impersonation"></a> instance.rpc.sasl.allowed.user.impersonation</td>
+      <td>One-line configuration property controlling what users are allowed to impersonate other users<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_sasl_enabled"></a> instance.rpc.sasl.enabled</td>
+      <td>Configures Thrift RPCs to require SASL with GSSAPI which supports Kerberos authentication. Mutually exclusive with SSL RPC configuration.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_sasl_impersonation_prefix"></a> <strong>instance.rpc.sasl.impersonation.</strong>*</td>
+      <td><strong>Deprecated.</strong> <del>Prefix that allows configuration of users that are allowed to impersonate other users</del></td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_ssl_clientAuth"></a> instance.rpc.ssl.clientAuth</td>
+      <td>Require clients to present certs signed by a trusted root<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_rpc_ssl_enabled"></a> instance.rpc.ssl.enabled</td>
+      <td>Use SSL for socket connections from clients and among accumulo services. Mutually exclusive with SASL RPC configuration.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_secret"></a> instance.secret</td>
+      <td>A secret unique to a given instance that all servers must know in order to communicate with one another.It should be changed prior to the initialization of Accumulo. To change it after Accumulo has been initialized, use the ChangeSecret tool and then update accumulo-site.xml everywhere. Before using the ChangeSecret tool, make sure Accumulo is not running and you are logged in as the user that controls Accumulo files in HDFS.  To use the ChangeSecret tool, run the command: ./bin/accumulo org.apache.accumulo.server.util.ChangeSecret<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">DEFAULT</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_security_authenticator"></a> instance.security.authenticator</td>
+      <td>The authenticator class that accumulo will use to determine if a user has privilege to perform an action<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.security.handler.ZKAuthenticator</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_security_authorizor"></a> instance.security.authorizor</td>
+      <td>The authorizor class that accumulo will use to determine what labels a user has privilege to see<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.security.handler.ZKAuthorizor</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_security_permissionHandler"></a> instance.security.permissionHandler</td>
+      <td>The permission handler class that accumulo will use to determine if a user has privilege to perform an action<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.security.handler.ZKPermHandler</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_volumes"></a> instance.volumes</td>
+      <td>A comma seperated list of dfs uris to use. Files will be stored across these filesystems. If this is empty, then instance.dfs.uri will be used. After adding uris to this list, run ‘accumulo init –add-volume’ and then restart tservers. If entries are removed from this list then tservers will need to be restarted. After a uri is removed from the list Accumulo will not create new files in that location, however Accumulo can still reference files created at that location before the config change. To use a comma or other reserved characters in a URI use standard URI hex encoding. For example replace commas with %2C.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="instance_volumes_replacements"></a> instance.volumes.replacements</td>
+      <td>Since accumulo stores absolute URIs changing the location of a namenode could prevent Accumulo from starting. The property helps deal with that situation. Provide a comma separated list of uri replacement pairs here if a namenode location changes. Each pair shold be separated with a space. For example, if hdfs://nn1 was replaced with hdfs://nnA and hdfs://nn2 was replaced with hdfs://nnB, then set this property to ‘hdfs://nn1 hdfs://nnA,hdfs://nn2 hdfs://nnB’ Replacements must be configured for use. To see which volumes are currently in use, run ‘accumulo admin volumes -l’. To use a comma or other reserved characters in a URI use standard URI hex encoding. For example replace commas with %2C.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="instance_zookeeper_host"></a> instance.zookeeper.host</td>
+      <td>Comma separated list of zookeeper servers<br /><strong>type:</strong> HOSTLIST, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">localhost:2181</code></td>
+    </tr>
+    <tr>
+      <td><a name="instance_zookeeper_timeout"></a> instance.zookeeper.timeout</td>
+      <td>Zookeeper session timeout; max value when represented as milliseconds should be no larger than 2147483647<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_prefix"></a> <strong>master.</strong>*</td>
+      <td>Properties in this category affect the behavior of the master server</td>
+    </tr>
+    <tr>
+      <td><a name="master_bulk_rename_threadpool_size"></a> master.bulk.rename.threadpool.size</td>
+      <td>The number of threads to use when moving user files to bulk ingest directories under accumulo control<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">20</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_bulk_retries"></a> master.bulk.retries</td>
+      <td>The number of attempts to bulk-load a file before giving up.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">3</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_bulk_threadpool_size"></a> master.bulk.threadpool.size</td>
+      <td>The number of threads to use when coordinating a bulk-import.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_bulk_timeout"></a> master.bulk.timeout</td>
+      <td>The time to wait for a tablet server to process a bulk import request<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_fate_threadpool_size"></a> master.fate.threadpool.size</td>
+      <td>The number of threads used to run FAult-Tolerant Executions. These are primarily table operations like merge.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">4</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_lease_recovery_interval"></a> master.lease.recovery.interval</td>
+      <td>The amount of time to wait after requesting a WAL file to be recovered<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_metadata_suspendable"></a> master.metadata.suspendable</td>
+      <td>Allow tablets for the accumulo.metadata table to be suspended via table.suspend.duration.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_port_client"></a> master.port.client</td>
+      <td>The port used for handling client connections on the master<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> yes but requires restart of the master, <strong>default value:</strong> <code class="highlighter-rouge">9999</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_recovery_delay"></a> master.recovery.delay</td>
+      <td>When a tablet server’s lock is deleted, it takes time for it to completely quit. This delay gives it time before log recoveries begin.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_recovery_max_age"></a> master.recovery.max.age</td>
+      <td>Recovery files older than this age will be removed.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">60m</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_recovery_time_max"></a> master.recovery.time.max</td>
+      <td>The maximum time to attempt recovery before giving up<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30m</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_replication_coordinator_minthreads"></a> master.replication.coordinator.minthreads</td>
+      <td>Minimum number of threads dedicated to answering coordinator requests<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">4</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_replication_coordinator_port"></a> master.replication.coordinator.port</td>
+      <td>Port for the replication coordinator service<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10001</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_replication_coordinator_threadcheck_time"></a> master.replication.coordinator.threadcheck.time</td>
+      <td>The time between adjustments of the coordinator thread pool<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_replication_status_scan_interval"></a> master.replication.status.scan.interval</td>
+      <td>Amount of time to sleep before scanning the status section of the replication table for new data<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_server_threadcheck_time"></a> master.server.threadcheck.time</td>
+      <td>The time between adjustments of the server thread pool.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1s</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_server_threads_minimum"></a> master.server.threads.minimum</td>
+      <td>The minimum number of threads to use to handle incoming requests.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">20</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_status_threadpool_size"></a> master.status.threadpool.size</td>
+      <td>The number of threads to use when fetching the tablet server status for balancing.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_tablet_balancer"></a> master.tablet.balancer</td>
+      <td>The balancer class that accumulo will use to make tablet assignment and migration decisions.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.master.balancer.TableLoadBalancer</code></td>
+    </tr>
+    <tr>
+      <td><a name="master_walog_closer_implementation"></a> master.walog.closer.implementation</td>
+      <td>A class that implements a mechansim to steal write access to a file<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.master.recovery.HadoopLogCloser</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_prefix"></a> <strong>monitor.</strong>*</td>
+      <td>Properties in this category affect the behavior of the monitor web server.</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_banner_background"></a> monitor.banner.background</td>
+      <td>The background color of the banner text displayed on the monitor page.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">#304065</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_banner_color"></a> monitor.banner.color</td>
+      <td>The color of the banner text displayed on the monitor page.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">#c4c4c4</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_banner_text"></a> monitor.banner.text</td>
+      <td>The banner text displayed on the monitor page.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_lock_check_interval"></a> monitor.lock.check.interval</td>
+      <td>The amount of time to sleep between checking for the Montior ZooKeeper lock<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">5s</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_log_date_format"></a> monitor.log.date.format</td>
+      <td>The SimpleDateFormat string used to configure the date shown on the ‘Recent Logs’ monitor page<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">yyyy/MM/dd HH:mm:ss,SSS</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_port_client"></a> monitor.port.client</td>
+      <td>The listening port for the monitor’s http service<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">9995</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_port_log4j"></a> monitor.port.log4j</td>
+      <td>The listening port for the monitor’s log4j logging collection.<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">4560</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_exclude_ciphers"></a> monitor.ssl.exclude.ciphers</td>
+      <td>A comma-separated list of disallowed SSL Ciphers, see mmonitor.ssl.include.ciphers to allow ciphers<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_include_ciphers"></a> monitor.ssl.include.ciphers</td>
+      <td>A comma-separated list of allows SSL Ciphers, see monitor.ssl.exclude.ciphers to disallow ciphers<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_include_protocols"></a> monitor.ssl.include.protocols</td>
+      <td>A comma-separate list of allowed SSL protocols<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">TLSv1,TLSv1.1,TLSv1.2</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_keyStore"></a> monitor.ssl.keyStore</td>
+      <td>The keystore for enabling monitor SSL.<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_keyStorePassword"></a> monitor.ssl.keyStorePassword</td>
+      <td>The keystore password for enabling monitor SSL.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_keyStoreType"></a> monitor.ssl.keyStoreType</td>
+      <td>Type of SSL keystore<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">jks</code></td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_trustStore"></a> monitor.ssl.trustStore</td>
+      <td>The truststore for enabling monitor SSL.<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_trustStorePassword"></a> monitor.ssl.trustStorePassword</td>
+      <td>The truststore password for enabling monitor SSL.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="monitor_ssl_trustStoreType"></a> monitor.ssl.trustStoreType</td>
+      <td>Type of SSL truststore<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">jks</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_prefix"></a> <strong>replication.</strong>*</td>
+      <td>Properties in this category affect the replication of data to other Accumulo instances.</td>
+    </tr>
+    <tr>
+      <td><a name="replication_driver_delay"></a> replication.driver.delay</td>
+      <td>Amount of time to wait before the replication work loop begins in the master.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0s</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_max_unit_size"></a> replication.max.unit.size</td>
+      <td>Maximum size of data to send in a replication message<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">64M</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_max_work_queue"></a> replication.max.work.queue</td>
+      <td>Upper bound of the number of files queued for replication<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1000</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_name"></a> replication.name</td>
+      <td>Name of this cluster with respect to replication. Used to identify this instance from other peers<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="replication_peer_prefix"></a> <strong>replication.peer.</strong>*</td>
+      <td>Properties in this category control what systems data can be replicated to</td>
+    </tr>
+    <tr>
+      <td><a name="replication_peer_keytab_prefix"></a> <strong>replication.peer.keytab.</strong>*</td>
+      <td>The keytab to use when authenticating with the given peer</td>
+    </tr>
+    <tr>
+      <td><a name="replication_peer_password_prefix"></a> <strong>replication.peer.password.</strong>*</td>
+      <td>The password to provide when authenticating with the given peer</td>
+    </tr>
+    <tr>
+      <td><a name="replication_peer_user_prefix"></a> <strong>replication.peer.user.</strong>*</td>
+      <td>The username to provide when authenticating with the given peer</td>
+    </tr>
+    <tr>
+      <td><a name="replication_receipt_service_port"></a> replication.receipt.service.port</td>
+      <td>Listen port used by thrift service in tserver listening for replication<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10002</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_receiver_min_threads"></a> replication.receiver.min.threads</td>
+      <td>Minimum number of threads for replication<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_receiver_threadcheck_time"></a> replication.receiver.threadcheck.time</td>
+      <td>The time between adjustments of the replication thread pool.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_rpc_timeout"></a> replication.rpc.timeout</td>
+      <td>Amount of time for a single replication RPC call to last before failing the attempt. See replication.work.attempts.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">2m</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_trace_percent"></a> replication.trace.percent</td>
+      <td>The sampling percentage to use for replication traces<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0.1</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_work_assigner"></a> replication.work.assigner</td>
+      <td>Replication WorkAssigner implementation to use<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.master.replication.UnorderedWorkAssigner</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_work_assignment_sleep"></a> replication.work.assignment.sleep</td>
+      <td>Amount of time to sleep between replication work assignment<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_work_attempts"></a> replication.work.attempts</td>
+      <td>Number of attempts to try to replicate some data before giving up and letting it naturally be retried later<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_work_processor_delay"></a> replication.work.processor.delay</td>
+      <td>Amount of time to wait before first checking for replication work, not useful outside of tests<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0s</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_work_processor_period"></a> replication.work.processor.period</td>
+      <td>Amount of time to wait before re-checking for replication work, not useful outside of tests<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0s</code></td>
+    </tr>
+    <tr>
+      <td><a name="replication_worker_threads"></a> replication.worker.threads</td>
+      <td>Size of the threadpool that each tabletserver devotes to replicating data<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">4</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_prefix"></a> <strong>rpc.</strong>*</td>
+      <td>Properties in this category related to the configuration of SSL keys for RPC. See also instance.ssl.enabled</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_keyStore"></a> rpc.javax.net.ssl.keyStore</td>
+      <td>Path of the keystore file for the server’s private SSL key<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_keyStorePassword"></a> rpc.javax.net.ssl.keyStorePassword</td>
+      <td>Password used to encrypt the SSL private keystore. Leave blank to use the Accumulo instance secret<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_keyStoreType"></a> rpc.javax.net.ssl.keyStoreType</td>
+      <td>Type of SSL keystore<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">jks</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_trustStore"></a> rpc.javax.net.ssl.trustStore</td>
+      <td>Path of the truststore file for the root cert<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_trustStorePassword"></a> rpc.javax.net.ssl.trustStorePassword</td>
+      <td>Password used to encrypt the SSL truststore. Leave blank to use no password<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_javax_net_ssl_trustStoreType"></a> rpc.javax.net.ssl.trustStoreType</td>
+      <td>Type of SSL truststore<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">jks</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_sasl_qop"></a> rpc.sasl.qop</td>
+      <td>The quality of protection to be used with SASL. Valid values are ‘auth’, ‘auth-int’, and ‘auth-conf’<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">auth</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_ssl_cipher_suites"></a> rpc.ssl.cipher.suites</td>
+      <td>Comma separated list of cipher suites that can be used by accepted connections<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="rpc_ssl_client_protocol"></a> rpc.ssl.client.protocol</td>
+      <td>The protocol used to connect to a secure server, must be in the list of enabled protocols on the server side (rpc.ssl.server.enabled.protocols)<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">TLSv1</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_ssl_server_enabled_protocols"></a> rpc.ssl.server.enabled.protocols</td>
+      <td>Comma separated list of protocols that can be used to accept connections<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">TLSv1,TLSv1.1,TLSv1.2</code></td>
+    </tr>
+    <tr>
+      <td><a name="rpc_useJsse"></a> rpc.useJsse</td>
+      <td>Use JSSE system properties to configure SSL rather than the rpc.javax.net.ssl.* Accumulo properties<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_prefix"></a> <strong>table.</strong>*</td>
+      <td>Properties in this category affect tablet server treatment of tablets, but can be configured on a per-table basis. Setting these properties in the site file will override the default globally for all tables and not any specific table. However, both the default and the global setting can be overridden per table using the table operations API or in the shell, which sets the overridden value in zookeeper. Restarting accumulo tablet servers after setting these properties in the site file will cause the global setting to take effect. However, you must use the API or the shell to change properties in zookeeper that are set on a table.</td>
+    </tr>
+    <tr>
+      <td><a name="table_balancer"></a> table.balancer</td>
+      <td>This property can be set to allow the LoadBalanceByTable load balancer to change the called Load Balancer for this table<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.master.balancer.DefaultLoadBalancer</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_enabled"></a> table.bloom.enabled</td>
+      <td>Use bloom filters on this table.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_error_rate"></a> table.bloom.error.rate</td>
+      <td>Bloom filter error rate.<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0.5%</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_hash_type"></a> table.bloom.hash.type</td>
+      <td>The bloom filter hash type<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">murmur</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_key_functor"></a> table.bloom.key.functor</td>
+      <td>A function that can transform the key prior to insertion and check of bloom filter. org.apache.accumulo.core.file.keyfunctor.RowFunctor,,org.apache.accumulo.core.file.keyfunctor.ColumnFamilyFunctor, and org.apache.accumulo.core.file.keyfunctor.ColumnQualifierFunctor are allowable values. One can extend any of the above mentioned classes to perform specialized parsing of the key. <br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.core.file.keyfunctor.RowFunctor</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_load_threshold"></a> table.bloom.load.threshold</td>
+      <td>This number of seeks that would actually use a bloom filter must occur before a file’s bloom filter is loaded. Set this to zero to initiate loading of bloom filters when a file is opened.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_bloom_size"></a> table.bloom.size</td>
+      <td>Bloom filter size, as number of keys.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1048576</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_cache_block_enable"></a> table.cache.block.enable</td>
+      <td>Determines whether file block cache is enabled.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_cache_index_enable"></a> table.cache.index.enable</td>
+      <td>Determines whether index cache is enabled.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_classpath_context"></a> table.classpath.context</td>
+      <td>Per table classpath context<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="table_compaction_major_everything_idle"></a> table.compaction.major.everything.idle</td>
+      <td>After a tablet has been idle (no mutations) for this time period it may have all of its files compacted into one. There is no guarantee an idle tablet will be compacted. Compactions of idle tablets are only started when regular compactions are not running. Idle compactions only take place for tablets that have one or more files.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1h</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_compaction_major_ratio"></a> table.compaction.major.ratio</td>
+      <td>minimum ratio of total input size to maximum input file size for running a major compactionWhen adjusting this property you may want to also adjust table.file.max. Want to avoid the situation where only merging minor compactions occur.<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">3</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_compaction_minor_idle"></a> table.compaction.minor.idle</td>
+      <td>After a tablet has been idle (no mutations) for this time period it may have its in-memory map flushed to disk in a minor compaction. There is no guarantee an idle tablet will be compacted.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_compaction_minor_logs_threshold"></a> table.compaction.minor.logs.threshold</td>
+      <td>When there are more than this many write-ahead logs against a tablet, it will be minor compacted. See comment for property tserver.memory.maps.max<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">3</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_compaction_minor_merge_file_size_max"></a> table.compaction.minor.merge.file.size.max</td>
+      <td>The max file size used for a merging minor compaction. The default value of 0 disables a max file size.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_constraint_prefix"></a> <strong>table.constraint.</strong>*</td>
+      <td>Properties in this category are per-table properties that add constraints to a table. These properties start with the category prefix, followed by a number, and their values correspond to a fully qualified Java class that implements the Constraint interface.<br />For example:<br />table.constraint.1 = org.apache.accumulo.core.constraints.MyCustomConstraint<br />and:<br />table.constraint.2 = my.package.constraints.MySecondConstraint</td>
+    </tr>
+    <tr>
+      <td><a name="table_custom_prefix"></a> <strong>table.custom.</strong>*</td>
+      <td>Prefix to be used for user defined arbitrary properties.</td>
+    </tr>
+    <tr>
+      <td><a name="table_durability"></a> table.durability</td>
+      <td>The durability used to write to the write-ahead log. Legal values are: none, which skips the write-ahead log; log, which sends the data to the write-ahead log, but does nothing to make it durable; flush, which pushes data to the file system; and sync, which ensures the data is written to disk.<br /><strong>type:</strong> DURABILITY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">sync</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_failures_ignore"></a> table.failures.ignore</td>
+      <td>If you want queries for your table to hang or fail when data is missing from the system, then set this to false. When this set to true missing data will be reported but queries will still run possibly returning a subset of the data.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_blocksize"></a> table.file.blocksize</td>
+      <td>Overrides the hadoop dfs.block.size setting so that files have better query performance. The maximum value for this is 2147483647<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0B</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_compress_blocksize"></a> table.file.compress.blocksize</td>
+      <td>Similar to the hadoop io.seqfile.compress.blocksize setting, so that files have better query performance. The maximum value for this is 2147483647. (This setting is the size threshold prior to compression, and applies even compression is disabled.)<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">100K</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_compress_blocksize_index"></a> table.file.compress.blocksize.index</td>
+      <td>Determines how large index blocks can be in files that support multilevel indexes. The maximum value for this is 2147483647. (This setting is the size threshold prior to compression, and applies even compression is disabled.)<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">128K</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_compress_type"></a> table.file.compress.type</td>
+      <td>One of gz,snappy,lzo,none<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">gz</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_max"></a> table.file.max</td>
+      <td>Determines the max # of files each tablet in a table can have. When adjusting this property you may want to consider adjusting table.compaction.major.ratio also. Setting this property to 0 will make it default to tserver.scan.files.open.max-1, this will prevent a tablet from having more files than can be opened. Setting this property low may throttle ingest and increase query performance.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">15</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_replication"></a> table.file.replication</td>
+      <td>Determines how many replicas to keep of a tables’ files in HDFS. When this value is LTE 0, HDFS defaults are used.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_summary_maxSize"></a> table.file.summary.maxSize</td>
+      <td>The maximum size summary that will be stored. The number of files that had summary data exceeding this threshold is reported by Summary.getFileStatistics().getLarge().  When adjusting this consider the expected number files with summaries on each tablet server and the summary cache size.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">256K</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_file_type"></a> table.file.type</td>
+      <td>Change the type of file a table writes<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">rf</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_formatter"></a> table.formatter</td>
+      <td>The Formatter class to apply on results in the shell<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.core.util.format.DefaultFormatter</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_group_prefix"></a> <strong>table.group.</strong>*</td>
+      <td>Properties in this category are per-table properties that define locality groups in a table. These properties start with the category prefix, followed by a name, followed by a period, and followed by a property for that group.<br />For example table.group.group1=x,y,z sets the column families for a group called group1. Once configured, group1 can be enabled by adding it to the list of groups in the table.groups.enabled property.<br />Additional group options may be specified for a named group by setting table.group.<name>.opt.<key>=<value>.</value></key></name></td>
+    </tr>
+    <tr>
+      <td><a name="table_groups_enabled"></a> table.groups.enabled</td>
+      <td>A comma separated list of locality group names to enable for this table.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="table_interepreter"></a> table.interepreter</td>
+      <td>The ScanInterpreter class to apply on scan arguments in the shell<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.core.util.interpret.DefaultScanInterpreter</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_iterator_prefix"></a> <strong>table.iterator.</strong>*</td>
+      <td>Properties in this category specify iterators that are applied at various stages (scopes) of interaction with a table. These properties start with the category prefix, followed by a scope (minc, majc, scan, etc.), followed by a period, followed by a name, as in table.iterator.scan.vers, or table.iterator.scan.custom. The values for these properties are a number indicating the ordering in which it is applied, and a class name such as:<br /> table.iterator.scan.vers = 10,org.apache.accumulo.core.iterators.VersioningIterator<br /> These iterators can take options if additional properties are set that look like this property, but are suffixed with a period, followed by ‘opt’ followed by another period, and a property name.<br />For example, table.iterator.minc.vers.opt.maxVersions = 3</td>
+    </tr>
+    <tr>
+      <td><a name="table_iterator_majc_prefix"></a> <strong>table.iterator.majc.</strong>*</td>
+      <td>Convenience prefix to find options for the majc iterator scope</td>
+    </tr>
+    <tr>
+      <td><a name="table_iterator_minc_prefix"></a> <strong>table.iterator.minc.</strong>*</td>
+      <td>Convenience prefix to find options for the minc iterator scope</td>
+    </tr>
+    <tr>
+      <td><a name="table_iterator_scan_prefix"></a> <strong>table.iterator.scan.</strong>*</td>
+      <td>Convenience prefix to find options for the scan iterator scope</td>
+    </tr>
+    <tr>
+      <td><a name="table_majc_compaction_strategy"></a> table.majc.compaction.strategy</td>
+      <td>A customizable major compaction strategy.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.tserver.compaction.DefaultCompactionStrategy</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_majc_compaction_strategy_opts_prefix"></a> <strong>table.majc.compaction.strategy.opts.</strong>*</td>
+      <td>Properties in this category are used to configure the compaction strategy.</td>
+    </tr>
+    <tr>
+      <td><a name="table_replication"></a> table.replication</td>
+      <td>Is replication enabled for the given table<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_replication_target_prefix"></a> <strong>table.replication.target.</strong>*</td>
+      <td>Enumerate a mapping of other systems which this table should replicate their data to. The key suffix is the identifying cluster name and the value is an identifier for a location on the target system, e.g. the ID of the table on the target to replicate to</td>
+    </tr>
+    <tr>
+      <td><a name="table_sampler"></a> table.sampler</td>
+      <td>The name of a class that implements org.apache.accumulo.core.Sampler.  Setting this option enables storing a sample of data which can be scanned.  Always having a current sample can useful for query optimization and data comprehension.   After enabling sampling for an existing table, a compaction is needed to compute the sample for existing data.  The compact command in the shell has an option to only compact files without sample data.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="table_sampler_opt_prefix"></a> <strong>table.sampler.opt.</strong>*</td>
+      <td>The property is used to set options for a sampler.  If a sample had two options like hasher and modulous, then the two properties table.sampler.opt.hasher=${hash algorithm} and table.sampler.opt.modulous=${mod} would be set.</td>
+    </tr>
+    <tr>
+      <td><a name="table_scan_max_memory"></a> table.scan.max.memory</td>
+      <td>The maximum amount of memory that will be used to cache results of a client query/scan. Once this limit is reached, the buffered data is sent to the client.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">512K</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_security_scan_visibility_default"></a> table.security.scan.visibility.default</td>
+      <td>The security label that will be assumed at scan time if an entry does not have a visibility set.<br />Note: An empty security label is displayed as []. The scan results will show an empty visibility even if the visibility from this setting is applied to the entry.<br />CAUTION: If a particular key has an empty security label AND its table’s default visibility is also empty, access will ALWAYS be granted for users with permission to that table. Additionally, if this field is changed, all existing data with an empty visibility label will be interpreted with the new label on the next scan.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="table_split_endrow_size_max"></a> table.split.endrow.size.max</td>
+      <td>Maximum size of end row<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10K</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_split_threshold"></a> table.split.threshold</td>
+      <td>When combined size of files exceeds this amount a tablet is split.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1G</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_summarizer_prefix"></a> <strong>table.summarizer.</strong>*</td>
+      <td>Prefix for configuring summarizers for a table.  Using this prefix multiple summarizers can be configured with options for each one. Each summarizer configured should have a unique id, this id can be anything. To add a summarizer set table.summarizer.<unique>=<summarizer class="" name="">.  If the summarizer has options, then for each option set table.summarizer.<unique>.opt.<key>=<value>.</value></key></unique></summarizer></unique></td>
+    </tr>
+    <tr>
+      <td><a name="table_suspend_duration"></a> table.suspend.duration</td>
+      <td>For tablets belonging to this table: When a tablet server dies, allow the tablet server this duration to revive before reassigning its tabletsto other tablet servers.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0s</code></td>
+    </tr>
+    <tr>
+      <td><a name="table_walog_enabled"></a> table.walog.enabled</td>
+      <td><strong>Deprecated.</strong> <del>This setting is deprecated.  Use table.durability=none instead.</del><br /><del><strong>type:</strong> BOOLEAN</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <code class="highlighter-rouge">true</code></del></td>
+    </tr>
+    <tr>
+      <td><a name="trace_prefix"></a> <strong>trace.</strong>*</td>
+      <td>Properties in this category affect the behavior of distributed tracing.</td>
+    </tr>
+    <tr>
+      <td><a name="trace_password"></a> trace.password</td>
+      <td>The password for the user used to store distributed traces<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">secret</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_port_client"></a> trace.port.client</td>
+      <td>The listening port for the trace server<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">12234</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_span_receiver_prefix"></a> <strong>trace.span.receiver.</strong>*</td>
+      <td>Prefix for span receiver configuration properties</td>
+    </tr>
+    <tr>
+      <td><a name="trace_span_receivers"></a> trace.span.receivers</td>
+      <td>A list of span receiver classes to send trace spans<br /><strong>type:</strong> CLASSNAMELIST, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.tracer.ZooTraceClient</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_table"></a> trace.table</td>
+      <td>The name of the table to store distributed traces<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">trace</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_token_property_prefix"></a> <strong>trace.token.property.</strong>*</td>
+      <td>The prefix used to create a token for storing distributed traces. For each property required by trace.token.type, place this prefix in front of it.</td>
+    </tr>
+    <tr>
+      <td><a name="trace_token_type"></a> trace.token.type</td>
+      <td>An AuthenticationToken type supported by the authorizer<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.core.client.security.tokens.PasswordToken</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_user"></a> trace.user</td>
+      <td>The name of the user to store distributed traces<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">root</code></td>
+    </tr>
+    <tr>
+      <td><a name="trace_zookeeper_path"></a> trace.zookeeper.path</td>
+      <td>The zookeeper node where tracers are registered<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="highlighter-rouge">/tracers</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_prefix"></a> <strong>tserver.</strong>*</td>
+      <td>Properties in this category affect the behavior of the tablet servers</td>
+    </tr>
+    <tr>
+      <td><a name="tserver_archive_walogs"></a> tserver.archive.walogs</td>
+      <td>Keep copies of the WALOGs for debugging purposes<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_assignment_concurrent_max"></a> tserver.assignment.concurrent.max</td>
+      <td>The number of threads available to load tablets. Recoveries are still performed serially.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">2</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_assignment_duration_warning"></a> tserver.assignment.duration.warning</td>
+      <td>The amount of time an assignment can run  before the server will print a warning along with the current stack trace. Meant to help debug stuck assignments<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_bloom_load_concurrent_max"></a> tserver.bloom.load.concurrent.max</td>
+      <td>The number of concurrent threads that will load bloom filters in the background. Setting this to zero will make bloom filters load in the foreground.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">4</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_bulk_assign_threads"></a> tserver.bulk.assign.threads</td>
+      <td>The master delegates bulk file processing and assignment to tablet servers. After the bulk file has been processed, the tablet server will assign the file to the appropriate tablets on all servers. This property controls the number of threads used to communicate to the other servers.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_bulk_process_threads"></a> tserver.bulk.process.threads</td>
+      <td>The master will task a tablet server with pre-processing a bulk file prior to assigning it to the appropriate tablet servers. This configuration value controls the number of threads used to process the files.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_bulk_retry_max"></a> tserver.bulk.retry.max</td>
+      <td>The number of times the tablet server will attempt to assign a file to a tablet as it migrates and splits.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_bulk_timeout"></a> tserver.bulk.timeout</td>
+      <td>The time to wait for a tablet server to process a bulk import request.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_cache_data_size"></a> tserver.cache.data.size</td>
+      <td>Specifies the size of the cache for file data blocks.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_cache_index_size"></a> tserver.cache.index.size</td>
+      <td>Specifies the size of the cache for file indices.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">25%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_cache_policy"></a> tserver.cache.policy</td>
+      <td>Specifies the eviction policy of the file data caches (LRU or TinyLFU).<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">LRU</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_cache_summary_size"></a> tserver.cache.summary.size</td>
+      <td>Specifies the size of the cache for summary data on each tablet server.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_client_timeout"></a> tserver.client.timeout</td>
+      <td>Time to wait for clients to continue scans before closing a session.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">3s</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_major_concurrent_max"></a> tserver.compaction.major.concurrent.max</td>
+      <td>The maximum number of concurrent major compactions for a tablet server<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">3</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_major_delay"></a> tserver.compaction.major.delay</td>
+      <td>Time a tablet server will sleep between checking which tablets need compaction.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">30s</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_major_thread_files_open_max"></a> tserver.compaction.major.thread.files.open.max</td>
+      <td>Max number of files a major compaction thread can open at once. <br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_major_throughput"></a> tserver.compaction.major.throughput</td>
+      <td>Maximum number of bytes to read or write per second over all major compactions on a TabletServer, or 0B for unlimited.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0B</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_major_trace_percent"></a> tserver.compaction.major.trace.percent</td>
+      <td>The percent of major compactions to trace<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0.1</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_minor_concurrent_max"></a> tserver.compaction.minor.concurrent.max</td>
+      <td>The maximum number of concurrent minor compactions for a tablet server<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">4</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_minor_trace_percent"></a> tserver.compaction.minor.trace.percent</td>
+      <td>The percent of minor compactions to trace<br /><strong>type:</strong> FRACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0.1</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_compaction_warn_time"></a> tserver.compaction.warn.time</td>
+      <td>When a compaction has not made progress for this time period, a warning will be logged<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_default_blocksize"></a> tserver.default.blocksize</td>
+      <td>Specifies a default blocksize for the tserver caches<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1M</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_dir_memdump"></a> tserver.dir.memdump</td>
+      <td>A long running scan could possibly hold memory that has been minor compacted. To prevent this, the in memory map is dumped to a local file and the scan is switched to that local file. We can not switch to the minor compacted file because it may have been modified by iterators. The file dumped to the local dir is an exact copy of what was in memory.<br /><strong>type:</strong> PATH, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">/tmp</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_files_open_idle"></a> tserver.files.open.idle</td>
+      <td>Tablet servers leave previously used files open for future queries. This setting determines how much time an unused file should be kept open until it is closed.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_hold_time_max"></a> tserver.hold.time.max</td>
+      <td>The maximum time for a tablet server to be in the “memory full” state. If the tablet server cannot write out memory in this much time, it will assume there is some failure local to its node, and quit. A value of zero is equivalent to forever.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_memory_manager"></a> tserver.memory.manager</td>
+      <td>An implementation of MemoryManger that accumulo will use.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.server.tabletserver.LargestFirstMemoryManager</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_memory_maps_max"></a> tserver.memory.maps.max</td>
+      <td>Maximum amount of memory that can be used to buffer data written to a tablet server. There are two other properties that can effectively limit memory usage table.compaction.minor.logs.threshold and tserver.walog.max.size. Ensure that table.compaction.minor.logs.threshold * tserver.walog.max.size &gt;= this property.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">33%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_memory_maps_native_enabled"></a> tserver.memory.maps.native.enabled</td>
+      <td>An in-memory data store for accumulo implemented in c++ that increases the amount of data accumulo can hold in memory and avoids Java GC pauses.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes but requires restart of the tserver, <strong>default value:</strong> <code class="highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_metadata_readahead_concurrent_max"></a> tserver.metadata.readahead.concurrent.max</td>
+      <td>The maximum number of concurrent metadata read ahead that will execute.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">8</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_migrations_concurrent_max"></a> tserver.migrations.concurrent.max</td>
+      <td>The maximum number of concurrent tablet migrations for a tablet server<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_monitor_fs"></a> tserver.monitor.fs</td>
+      <td>When enabled the tserver will monitor file systems and kill itself when one switches from rw to ro. This is usually and indication that Linux has detected a bad disk.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_mutation_queue_max"></a> tserver.mutation.queue.max</td>
+      <td><strong>Deprecated.</strong> <del>This setting is deprecated. See tserver.total.mutation.queue.max. The amount of memory to use to store write-ahead-log mutations-per-session before flushing them. Since the buffer is per write session, consider the max number of concurrent writer when configuring. When using Hadoop 2, Accumulo will call hsync() on the WAL . For a small number of concurrent writers, increasing this buffer size decreases the frequncy of hsync calls. For a large number of concurrent writers a small buffers size is ok because of group commit.</del><br /><del><strong>type:</strong> BYTES</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <code class="highlighter-rouge">1M</code></del></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_port_client"></a> tserver.port.client</td>
+      <td>The port used for handling client connections on the tablet servers<br /><strong>type:</strong> PORT, <strong>zk mutable:</strong> yes but requires restart of the tserver, <strong>default value:</strong> <code class="highlighter-rouge">9997</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_port_search"></a> tserver.port.search</td>
+      <td>if the ports above are in use, search higher ports until one is available<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_readahead_concurrent_max"></a> tserver.readahead.concurrent.max</td>
+      <td>The maximum number of concurrent read ahead that will execute. This effectively limits the number of long running scans that can run concurrently per tserver.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">16</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_recovery_concurrent_max"></a> tserver.recovery.concurrent.max</td>
+      <td>The maximum number of threads to use to sort logs during recovery<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">2</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_replication_batchwriter_replayer_memory"></a> tserver.replication.batchwriter.replayer.memory</td>
+      <td>Memory to provide to batchwriter to replay mutations for replication<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">50M</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_replication_default_replayer"></a> tserver.replication.default.replayer</td>
+      <td>Default AccumuloReplicationReplayer implementation<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">org.apache.accumulo.tserver.replication.BatchWriterReplicationReplayer</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_replication_replayer_prefix"></a> <strong>tserver.replication.replayer.</strong>*</td>
+      <td>Allows configuration of implementation used to apply replicated data</td>
+    </tr>
+    <tr>
+      <td><a name="tserver_scan_files_open_max"></a> tserver.scan.files.open.max</td>
+      <td>Maximum total files that all tablets in a tablet server can open for scans. <br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes but requires restart of the tserver, <strong>default value:</strong> <code class="highlighter-rouge">100</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_server_message_size_max"></a> tserver.server.message.size.max</td>
+      <td>The maximum size of a message that can be sent to a tablet server.<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1G</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_server_threadcheck_time"></a> tserver.server.threadcheck.time</td>
+      <td>The time between adjustments of the server thread pool.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1s</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_server_threads_minimum"></a> tserver.server.threads.minimum</td>
+      <td>The minimum number of threads to use to handle incoming requests.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">20</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_session_idle_max"></a> tserver.session.idle.max</td>
+      <td>When a tablet server’s SimpleTimer thread triggers to check idle sessions, this configurable option will be used to evaluate scan sessions to determine if they can be closed due to inactivity<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_session_update_idle_max"></a> tserver.session.update.idle.max</td>
+      <td>When a tablet server’s SimpleTimer thread triggers to check idle sessions, this configurable option will be used to evaluate update sessions to determine if they can be closed due to inactivity<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_slow_flush_time"></a> tserver.slow.flush.time</td>
+      <td>If a flush to the write-ahead log takes longer than this period of time, debugging information will written, and may result in a log rollover.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">100ms</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_sort_buffer_size"></a> tserver.sort.buffer.size</td>
+      <td>The amount of memory to use when sorting logs during recovery.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_summary_partition_threads"></a> tserver.summary.partition.threads</td>
+      <td>Summary data must be retrieved from files.  For a large number of files, the files are broken into partitions of 100K files.  This setting determines how many of these groups of 100K files will be processed concurrently.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_summary_remote_threads"></a> tserver.summary.remote.threads</td>
+      <td>For a partitioned group of 100K files, those files are grouped by tablet server.  Then a remote tablet server is asked to gather summary data.  This setting determines how many concurrent request are made per partition.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">128</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_summary_retrieval_threads"></a> tserver.summary.retrieval.threads</td>
+      <td>The number of threads on each tablet server available to retrieve summary data, that is not currently in cache, from RFiles.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">10</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_tablet_split_midpoint_files_max"></a> tserver.tablet.split.midpoint.files.max</td>
+      <td>To find a tablets split points, all index files are opened. This setting determines how many index files can be opened at once. When there are more index files than this setting multiple passes must be made, which is slower. However opening too many files at once can cause problems.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">300</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_total_mutation_queue_max"></a> tserver.total.mutation.queue.max</td>
+      <td>The amount of memory used to store write-ahead-log mutations before flushing them.<br /><strong>type:</strong> MEMORY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5%</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_wal_blocksize"></a> tserver.wal.blocksize</td>
+      <td>The size of the HDFS blocks used to write to the Write-Ahead log. If zero, it will be 110% of tserver.walog.max.size (that is, try to use just one block)<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_wal_replication"></a> tserver.wal.replication</td>
+      <td>The replication to use when writing the Write-Ahead log to HDFS. If zero, it will use the HDFS default replication setting.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_wal_sync"></a> tserver.wal.sync</td>
+      <td>Use the SYNC_BLOCK create flag to sync WAL writes to disk. Prevents problems recovering from sudden system resets.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_wal_sync_method"></a> tserver.wal.sync.method</td>
+      <td><strong>Deprecated.</strong> <del>This property is deprecated. Use table.durability instead.</del><br /><del><strong>type:</strong> STRING</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <code class="highlighter-rouge">hsync</code></del></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_walog_max_age"></a> tserver.walog.max.age</td>
+      <td>The maximum age for each write-ahead log.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">24h</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_walog_max_size"></a> tserver.walog.max.size</td>
+      <td>The maximum size for each write-ahead log. See comment for property tserver.memory.maps.max<br /><strong>type:</strong> BYTES, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1g</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_walog_maximum_wait_duration"></a> tserver.walog.maximum.wait.duration</td>
+      <td>The maximum amount of time to wait after a failure to create a WAL file.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">5m</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_walog_tolerated_creation_failures"></a> tserver.walog.tolerated.creation.failures</td>
+      <td>The maximum number of failures tolerated when creating a new WAL file within the period specified by tserver.walog.failures.period. Exceeding this number of failures in the period causes the TabletServer to exit.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">50</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_walog_tolerated_wait_increment"></a> tserver.walog.tolerated.wait.increment</td>
+      <td>The amount of time to wait between failures to create a WALog.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">1000ms</code></td>
+    </tr>
+    <tr>
+      <td><a name="tserver_workq_threads"></a> tserver.workq.threads</td>
+      <td>The number of threads for the distributed work queue. These threads are used for copying failed bulk files.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="highlighter-rouge">2</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="property-types">Property Types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>duration</td>
+      <td>A non-negative integer optionally followed by a unit of time (whitespace disallowed), as in 30s.<br />If no unit of time is specified, seconds are assumed. Valid units are ‘ms’, ‘s’, ‘m’, ‘h’ for milliseconds, seconds, minutes, and hours.<br />Examples of valid durations are ‘600’, ’30s’, ‘45m’, ‘30000ms’, ‘3d’, and ‘1h’.<br />Examples of invalid durations are ‘1w’, ‘1h30m’, ‘1s 200ms’, ‘ms’, ‘’, and ‘a’.<br />Unless otherwise stated, the max value for the duration represented in milliseconds is 9223372036854775807</td>
+    </tr>
+    <tr>
+      <td>bytes</td>
+      <td>A positive integer optionally followed by a unit of memory (whitespace disallowed).<br />If no unit is specified, bytes are assumed. Valid units are ‘B’, ‘K’, ‘M’ or ‘G’ for bytes, kilobytes, megabytes, gigabytes.<br />Examples of valid memories are ‘1024’, ‘20B’, ‘100K’, ‘1500M’, ‘2G’, ‘20%’.<br />Examples of invalid memories are ‘1M500K’, ‘1M 2K’, ‘1MB’, ‘1.5G’, ‘1,024K’, ‘’, and ‘a’.<br />Unless otherwise stated, the max value for the memory represented in bytes is 9223372036854775807</td>
+    </tr>
+    <tr>
+      <td>memory</td>
+      <td>A positive integer optionally followed by a unit of memory or a percentage (whitespace disallowed).<br />If a percentage is specified, memory will be a percentage of the max memory allocated to a Java process (set by the JVM option -Xmx).<br />If no unit is specified, bytes are assumed. Valid units are ‘B’, ‘K’, ‘M’, ‘G’, ‘%’ for bytes, kilobytes, megabytes, gigabytes, and percentage.<br />Examples of valid memories are ‘1024’, ‘20B’, ‘100K’, ‘1500M’, ‘2G’, ‘20%’.<br />Examples of invalid memories are ‘1M500K’, ‘1M 2K’, ‘1MB’, ‘1.5G’, ‘1,024K’, ‘’, and ‘a’.<br />Unless otherwise stated, the max value for the memory represented in bytes is 9223372036854775807</td>
+    </tr>
+    <tr>
+      <td>host list</td>
+      <td>A comma-separated list of hostnames or ip addresses, with optional port numbers.<br />Examples of valid host lists are ‘localhost:2000,www.example.com,10.10.1.1:500’ and ‘localhost’.<br />Examples of invalid host lists are ‘’, ‘:1000’, and ‘localhost:80000’</td>
+    </tr>
+    <tr>
+      <td>port</td>
+      <td>An positive integer in the range 1024-65535 (not already in use or specified elsewhere in the configuration),<br />zero to indicate any open ephemeral port, or a range of positive integers specified as M-N</td>
+    </tr>
+    <tr>
+      <td>count</td>
+      <td>A non-negative integer in the range of 0-2147483647</td>
+    </tr>
+    <tr>
+      <td>fraction/percentage</td>
+      <td>A floating point number that represents either a fraction or, if suffixed with the ‘%’ character, a percentage.<br />Examples of valid fractions/percentages are ‘10’, ‘1000%’, ‘0.05’, ‘5%’, ‘0.2%’, ‘0.0005’.<br />Examples of invalid fractions/percentages are ‘’, ‘10 percent’, ‘Hulk Hogan’</td>
+    </tr>
+    <tr>
+      <td>path</td>
+      <td>A string that represents a filesystem path, which can be either relative or absolute to some directory. The filesystem depends on the property. The following environment variables will be substituted: [ACCUMULO_HOME, ACCUMULO_CONF_DIR]</td>
+    </tr>
+    <tr>
+      <td>absolute path</td>
+      <td>An absolute filesystem path. The filesystem depends on the property. This is the same as path, but enforces that its root is explicitly specified.</td>
+    </tr>
+    <tr>
+      <td>java class</td>
+      <td>A fully qualified java class name representing a class on the classpath.<br />An example is ‘java.lang.String’, rather than ‘String’</td>
+    </tr>
+    <tr>
+      <td>java class list</td>
+      <td>A list of fully qualified java class names representing classes on the classpath.<br />An example is ‘java.lang.String’, rather than ‘String’</td>
+    </tr>
+    <tr>
+      <td>durability</td>
+      <td>One of ‘none’, ‘log’, ‘flush’ or ‘sync’.</td>
+    </tr>
+    <tr>
+      <td>string</td>
+      <td>An arbitrary string of characters whose format is unspecified and interpreted based on the context of the property to which it applies.</td>
+    </tr>
+    <tr>
+      <td>boolean</td>
+      <td>Has a value of either ‘true’ or ‘false’ (case-insensitive)</td>
+    </tr>
+    <tr>
+      <td>uri</td>
+      <td>A valid URI</td>
+    </tr>
+  </tbody>
+</table>
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/administration/configuration-properties.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
