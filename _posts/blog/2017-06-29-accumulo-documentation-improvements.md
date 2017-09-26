@@ -18,7 +18,8 @@ For 2.0, the source for the user manual was converted to markdown and moved to t
 While the [2.0 documentation][docs-2.0] is viewable, it is not linked to (except by this post) and every page contains a warning that the documentation
 is for a future release. Each page also links to the documentation for the latest release.
 
-
+It is now much easier to view, edit, and propose changes to the documentation. If you would like to contribute to the documentation for 2.0, view
+the [documentation][docs-2.0]. Each page has an **Edit this page** link that will take you to GitHub where you can edit the markdown for the page, preview it,
 and submit a pull request to the [website repository][website-repo]. A committer will review your changes so don't be afraid to contribute!
 
 [manual]: /1.8/accumulo_user_manual.html
