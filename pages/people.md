@@ -85,12 +85,13 @@ permalink: /people/
 |             | John Stoneham       |                                                                   | [ET][ET]              |
 | jmhsieh     | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 |             | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
-|             | Josselin Chevalay   |                                                                   | [CEST][CEST]                |
+|             | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
 |             | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 |             | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 |             | Luis Tavarez        |                                                                   | [ET][ET]              |
 |             | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 |             | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
+|             | Mark Owens          |                                                                   | [ET][ET]              |
 |             | Matt Dailey         |                                                                   |                       |
 |             | Matthew Kirkley     |                                                                   |                       |
 |             | Matthew Peterson    | [Applied Technology Group][ATG]                                   | [ET][ET]              |
