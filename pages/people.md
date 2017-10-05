@@ -53,6 +53,7 @@ permalink: /people/
 |             | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 |             | Ben Manes           |                                                                   | [PT][PT]              |
 |             | Bob Thorman         | [AT&amp;T][ATT]                                                   |                       |
+|             | Charles Williams    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
 |             | Chris Bennight      |                                                                   |                       |
 |             | Chris McCubbin      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 |             | Christian Rohling   | [Endgame][ENDGAME]                                                | [ET][ET]              |
@@ -173,6 +174,7 @@ Additionally, we would like to thank the following organizations for resources t
 [SWC]: http://swcomplete.com
 [TERALYTICS]: http://www.teralytics.net/
 [TETRA]: http://www.tetraconcepts.com
+[TIBER]: http://www.tibertechnologies.com
 [UW]: http://www.uw.edu
 [WAVE]: http://www.wavestrike.com/
 [BST]: http://www.timeanddate.com/time/zones/bst
