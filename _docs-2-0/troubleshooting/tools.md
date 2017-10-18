@@ -4,14 +4,14 @@ category: troubleshooting
 order: 3
 ---
 
-The `accumulo` command can be used to run classes from the command line.
+The `accumulo` command can be used to run various tools and classes from the command line.
 
-## PrintInfo
+## RFileInfo
 
-The `PrintInfo` tool will examine an Accumulo storage file and print out basic metadata.
+The `rfile-info` tool will examine an Accumulo storage file and print out basic metadata.
 
 ```
-$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/1/default_tablet/A000000n.rf
+$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
 2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
 Locality group         : <DEFAULT>
         Start block          : 0
@@ -37,9 +37,9 @@ Meta block     : RFile.index
       Compression type     : gz
 ```
 
-When trying to diagnose problems related to key size, the `PrintInfo` tool can provide a histogram of the individual key sizes:
+When trying to diagnose problems related to key size, the `rfile-info` tool can provide a histogram of the individual key sizes:
 
-    $ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+    $ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
     ...
     Up to size      count      %-age
              10 :        222  28.23%
@@ -53,9 +53,9 @@ When trying to diagnose problems related to key size, the `PrintInfo` tool can p
      1000000000 :          0   0.00%
     10000000000 :          0   0.00%
 
-Likewise, `PrintInfo` will dump the key-value pairs and show you the contents of the RFile:
+Likewise, `rfile-info` will dump the key-value pairs and show you the contents of the RFile:
 
-    $ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --dump /accumulo/tables/1/default_tablet/A000000n.rf
+    $ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
     row columnFamily:columnQualifier [visibility] timestamp deleteFlag -> Value
     ...
 
