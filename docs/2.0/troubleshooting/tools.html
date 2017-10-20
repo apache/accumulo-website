@@ -328,13 +328,13 @@
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/troubleshooting/tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <p>The <code class="highlighter-rouge">accumulo</code> command can be used to run classes from the command line.</p>
+    <p>The <code class="highlighter-rouge">accumulo</code> command can be used to run various tools and classes from the command line.</p>
 
-<h2 id="printinfo">PrintInfo</h2>
+<h2 id="rfileinfo">RFileInfo</h2>
 
-<p>The <code class="highlighter-rouge">PrintInfo</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
+<p>The <code class="highlighter-rouge">rfile-info</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
 2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
 Locality group         : &lt;DEFAULT&gt;
         Start block          : 0
@@ -361,9 +361,9 @@ Meta block     : RFile.index
 </code></pre>
 </div>
 
-<p>When trying to diagnose problems related to key size, the <code class="highlighter-rouge">PrintInfo</code> tool can provide a histogram of the individual key sizes:</p>
+<p>When trying to diagnose problems related to key size, the <code class="highlighter-rouge">rfile-info</code> tool can provide a histogram of the individual key sizes:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
 ...
 Up to size      count      %-age
          10 :        222  28.23%
@@ -379,9 +379,9 @@ Up to size      count      %-age
 </code></pre>
 </div>
 
-<p>Likewise, <code class="highlighter-rouge">PrintInfo</code> will dump the key-value pairs and show you the contents of the RFile:</p>
+<p>Likewise, <code class="highlighter-rouge">rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.PrintInfo --dump /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
 row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
 ...
 </code></pre>
