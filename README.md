@@ -1,23 +1,35 @@
 # Apache Accumulo Website
 
-Apache Accumulo uses [Jekyll](http://jekyllrb.com/) to build their website. It is recommended
-that you use [Bundler](http://bundler.io/) to manage any dependencies of the build for you.
+Apache Accumulo uses [Jekyll] to build their website. It is recommended that you
+use [Bundler] to install the necessary dependencies to run and build the website.
 
 ## Install Bundler and dependencies
 
-`gem install bundler`
-`bundle install`
+With Ruby installed on your machine, you can install [Bundler] using the command below:
 
-## Build the website
+    gem install bundler
 
-Jekyll lets you either build the static HTML files or create an embedded webserver
-to interact with the local version of the website.
+Next, use [Bundler] to install [Jekyll] and other dependencies needed to run the website.
 
-`bundle exec jekyll build`
+    git clone https://github.com/apache/accumulo-website
+    cd accumulo-website
+    bundle install
 
-or
+## Run the website locally
 
-`bundle exec jekyll serve -w`
+Run the following command to run the website locally using Jekyll's embedded webserver:
+
+    cd accumulo-website
+    bundle exec jekyll serve -w
+
+The website can viewed at [http://0.0.0.0:4000/](http://0.0.0.0:4000/)
+
+## Build website static HTML files
+
+You can just build static HTML files which are viewable in `_config.yml`:
+
+    cd accumulo-website
+    bundle exec jekyll build
 
 ## Update the production website
 
@@ -28,3 +40,11 @@ This can be done easily by invoking the post-commit hook (either by hand, or aut
 Git to invoke the post-commit hook).
 
 `./_devtools/git-hooks/post-commit`
+
+To automatically run this post-commit hook in your local repository, copy
+the given file into your `.git/hook` directory:
+
+    cp ./_devtools/git-hooks/post-commit .git/hooks/
+
+[Jekyll]: https://jekyllrb.com/
+[Bundler]: https://bundler.io/
