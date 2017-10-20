@@ -652,6 +652,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_bulk_imports">12.8.4. Bulk Imports</a></li>
 </ul>
 </li>
+<li><a href="#_table_schema">12.9. Table Schema</a>
+<ul class="sectlevel3">
+<li><a href="#_repl_section">12.9.1. Repl section</a></li>
+<li><a href="#_work_section">12.9.2. Work section</a></li>
+<li><a href="#_order_section">12.9.3. Order section</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_implementation_details">13. Implementation Details</a>
@@ -1071,6 +1078,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_replication_receipt_service_port">replication.receipt.service.port</a></li>
 <li><a href="#_replication_receiver_min_threads">replication.receiver.min.threads</a></li>
 <li><a href="#_replication_receiver_threadcheck_time">replication.receiver.threadcheck.time</a></li>
+<li><a href="#_replication_rpc_timeout">replication.rpc.timeout</a></li>
 <li><a href="#_replication_trace_percent">replication.trace.percent</a></li>
 <li><a href="#_replication_work_assigner">replication.work.assigner</a></li>
 <li><a href="#_replication_work_assignment_sleep">replication.work.assignment.sleep</a></li>
@@ -5112,6 +5120,73 @@ HDFS instance which makes the problem of duplicating bulk imports very easy to s
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_table_schema">12.9. Table Schema</h3>
+<div class="paragraph">
+<p>The following describes the kinds of keys, their format, and their general function for the purposes of individuals
+understanding what the replication table describes. Because the replication table is essentially a state machine,
+this data is often the source of truth for why Accumulo is doing what it is with respect to replication. There are
+three "sections" in this table: "repl", "work", and "order".</p>
+</div>
+<div class="sect3">
+<h4 id="_repl_section">12.9.1. Repl section</h4>
+<div class="paragraph">
+<p>This section is for the tracking of a WAL file that needs to be replicated to one or more Accumulo remote tables.
+This entry is tracking that replication needs to happen on the given WAL file, but also that the local Accumulo table,
+as specified by the column qualifier "local table ID", has information in this WAL file.</p>
+</div>
+<div class="paragraph">
+<p>The structure of the key-value is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;HDFS_uri_to_WAL&gt; repl:&lt;local_table_id&gt; [] -&gt; &lt;protobuf&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This entry is created based on a replication entry from the Accumlo metadata table, and is deleted from the replication table
+when the WAL has been fully replicated to all remote Accumulo tables.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_work_section">12.9.2. Work section</h4>
+<div class="paragraph">
+<p>This section is for the tracking of a WAL file that needs to be replicated to a single Accumulo table in a remote
+Accumulo cluster. If a WAL must be replicated to multiple tables, there will be multiple entries. The Value for this
+Key is a serialized ProtocolBuffer message which encapsulates the portion of the WAL which was already sent for
+this file. The "replication target" is the unique location of where the file needs to be replicated: the identifier
+for the remote Accumulo cluster and the table ID in that remote Accumulo cluster. The protocol buffer in the value
+tracks the progress of replication to the remote cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;HDFS_uri_to_WAL&gt; work:&lt;replication_target&gt; [] -&gt; &lt;protobuf&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The "work" entry is created when a WAL has an "order" entry, and deleted after the WAL is replicated to all
+necessary remote clusters.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_order_section">12.9.3. Order section</h4>
+<div class="paragraph">
+<p>This section is used to order and schedule (create) replication work. In some cases, data with the same timestamp
+may be provided multiple times. In this case, it is important that WALs are replicated in the same order they were
+created/used. In this case (and in cases where this is not important), the order entry ensures that oldest WALs
+are processed most quickly and pushed through the replication framework.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;time_of_WAL_closing&gt;\x00&lt;HDFS_uri_to_WAL&gt; order:&lt;local_table_id&gt; [] -&gt; &lt;protobuf&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The "order" entry is created when the WAL is closed (no longer being written to) and is removed when
+the WAL is fully replicated to all remote locations.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6889,6 +6964,12 @@ The Traces page displays data for recent traces performed (see the following sec
 The Recent Logs page displays warning and error logs forwarded to the monitor from all Accumulo processes.
 Also, the XML and JSON links provide metrics in XML and JSON formats, respectively.</p>
 </div>
+<div class="paragraph">
+<p>The Accumulo monitor does a best-effort to not display any sensitive information to users; however,
+the monitor is intended to be a tool used with care. It is not a production-grade webservice. It is
+a good idea to whitelist access to the monitor via an authentication proxy or firewall. It
+is strongly recommended that the Monitor is not exposed to any publicly-accessible networks.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_ssl_2">16.8.2. SSL</h4>
@@ -8132,17 +8213,17 @@ messages to zookeeper.</p>
 <div class="sect2">
 <h3 id="_tools">18.5. Tools</h3>
 <div class="paragraph">
-<p>The accumulo script can be used to run classes from the command line.
+<p>The accumulo script can be used to run various tools and classes from the command line.
 This section shows how a few of the utilities work, but there are many
 more.</p>
 </div>
 <div class="paragraph">
-<p>There&#8217;s a class that will examine an accumulo storage file and print
+<p>There&#8217;s a command, <code>rfile-info</code>, that will examine an accumulo storage file and print
 out basic metadata.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ ./bin/accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/1/default_tablet/A000000n.rf
+<pre>$ ./bin/accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
 2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
 Locality group         : &lt;DEFAULT&gt;
         Start block          : 0
@@ -8169,11 +8250,11 @@ Meta block     : RFile.index
 </div>
 </div>
 <div class="paragraph">
-<p>When trying to diagnose problems related to key size, the <code>PrintInfo</code> tool can provide a histogram of the individual key sizes:</p>
+<p>When trying to diagnose problems related to key size, the <code>rfile-info</code> command can provide a histogram of the individual key sizes:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>$ ./bin/accumulo org.apache.accumulo.core.file.rfile.PrintInfo --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+<pre>$ ./bin/accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
 ...
 Up to size      count      %-age
          10 :        222  28.23%
@@ -8189,11 +8270,11 @@ Up to size      count      %-age
 </div>
 </div>
 <div class="paragraph">
-<p>Likewise, <code>PrintInfo</code> will dump the key-value pairs and show you the contents of the RFile:</p>
+<p>Likewise, <code>rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>$ ./bin/accumulo org.apache.accumulo.core.file.rfile.PrintInfo --dump /accumulo/tables/1/default_tablet/A000000n.rf
+<pre>$ ./bin/accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
 row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
 ...</pre>
 </div>
@@ -8208,10 +8289,10 @@ row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
 <p><strong>Q</strong>: What are my visibilities?</p>
 </div>
 <div class="paragraph">
-<p><strong>A</strong>: Use <code>PrintInfo</code> on a representative file to get some idea of the visibilities in the underlying data.</p>
+<p><strong>A</strong>: Use <code>rfile-info</code> on a representative file to get some idea of the visibilities in the underlying data.</p>
 </div>
 <div class="paragraph">
-<p>Note that the use of <code>PrintInfo</code> is an administrative tool and can only
+<p>Note that the use of <code>rfile-info</code> is an administrative tool and can only
 by used by someone who can access the underlying Accumulo data. It
 does not provide the normal access controls in Accumulo.</p>
 </div>
@@ -8742,6 +8823,47 @@ original and the new instances, but it can serve as a reference.</p>
 <p><strong>A</strong>: If the files cannot be recovered, replace corrupt data files with a empty
 rfiles to allow references in the metadata table and in the tablet servers to be
 resolved. Rebuild the metadata table if the corrupt files are metadata files.</p>
+</div>
+<div class="paragraph">
+<p><strong>Write-Ahead Log(WAL) File Corruption</strong></p>
+</div>
+<div class="paragraph">
+<p>In certain versions of Accumulo, a corrupt WAL file (caused by HDFS corruption
+or a bug in Accumulo that created the file) can block the successful recovery
+of one to many Tablets. Accumulo can be stuck in a loop trying to recover the
+WAL file, never being able to succeed.</p>
+</div>
+<div class="paragraph">
+<p>In the cases where the WAL file&#8217;s original contents are unrecoverable or some degree
+of data loss is acceptable (beware if the WAL file contains updates to the Accumulo
+metadat table!), the following process can be followed to create an valid, empty
+WAL file. Run the following commands as the Accumulo unix user (to ensure that
+the proper file permissions in HDFS)</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' &gt; empty.wal</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above creates a file with the text "--- Log File Header (v2) ---" and then
+four bytes. You should verify the contents of the file with a hexdump tool.</p>
+</div>
+<div class="paragraph">
+<p>Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
+with the empty WAL.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
+$ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the corrupt WAL file has been replaced, the system should automatically recover.
+It may be necessary to restart the Accumulo Master process as an exponential
+backup policy is used which could lead to a long wait before Accumulo will
+try to re-load the WAL file.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10577,7 +10699,7 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 <div class="paragraph">
 <p><em>Type:</em> STRING<br>
 <em>Zookeeper Mutable:</em> no<br>
-<em>Default Value:</em> <em>empty</em></p>
+<em>Default Value:</em> <code>jks</code></p>
 </div>
 </div>
 <div class="sect4">
@@ -10610,7 +10732,7 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 <div class="paragraph">
 <p><em>Type:</em> STRING<br>
 <em>Zookeeper Mutable:</em> no<br>
-<em>Default Value:</em> <em>empty</em></p>
+<em>Default Value:</em> <code>jks</code></p>
 </div>
 </div>
 </div>
@@ -10926,7 +11048,7 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 <div class="sect4">
 <h5 id="_table_file_compress_type">table.file.compress.type</h5>
 <div class="paragraph">
-<p>One of gz,lzo,none</p>
+<p>One of gz,snappy,lzo,none</p>
 </div>
 <div class="paragraph">
 <p><em>Type:</em> STRING<br>
@@ -11232,6 +11354,17 @@ Additional group options may be specified for a named group by setting table.gro
 </div>
 </div>
 <div class="sect4">
+<h5 id="_replication_rpc_timeout">replication.rpc.timeout</h5>
+<div class="paragraph">
+<p>Amount of time for a single replication RPC call to last before failing the attempt. See replication.work.attempts.</p>
+</div>
+<div class="paragraph">
+<p><em>Type:</em> TIMEDURATION<br>
+<em>Zookeeper Mutable:</em> yes<br>
+<em>Default Value:</em> <code>2m</code></p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="_replication_trace_percent">replication.trace.percent</h5>
 <div class="paragraph">
 <p>The sampling percentage to use for replication traces</p>
@@ -11446,7 +11579,7 @@ An example is <em>java.lang.String</em>, rather than <em>String</em></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-06 13:07:00 +00:00
+Last updated 2017-10-20 15:39:22 -04:00
 </div>
 </div>
 </body>
