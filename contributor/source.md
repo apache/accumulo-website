@@ -26,54 +26,18 @@ Instructions for configuring git are [here][git-instr].
 
 Accumulo has a number of [contrib projects][contrib] that maintain their own code repositories and release schedules.
 
-### Website
+### Project Website
 
-Accumulo's web site is developed using [Jekyll][jekyll]. Development is
-performed by editing the contents of the [accumulo-website master][website-branch] branch, either
-directly by a committer, with a pull request to [GitHub][github], or a patch
-submitted to [JIRA][jiraloc]. The rendered site can be previewed locally and
-the rendered site (in the `_site` directory) will be merged into the `asf-site`
-branch to update our [official/canonical site][site-canon] after being built.
+The source for this website is a collection of markdown documents that are converted to HTML using
+[Jekyll]. It can be found in the [accumulo-website repo][website-repo]. If you would like to make changes to
+this website, clone the website repo and edit the markdown:
 
-To manage any Gem dependencies, it is highly recommended to use [Bundler](https://bundler.io).
-To start using Bundler, install it and then the dependencies for the website:
+    git clone https://github.com/apache/accumulo-website.git
 
-    gem install bundler
-    bundle install
-
-To get help with jekyll:
-
-    jekyll help
-
-To test the site locally (usually on http://localhost:4000):
-
-    jekyll serve --safe
-
-To do the same with Bundler:
-
-    bundle exec jekyll serve --safe
-
-To build for updating the `asf-site` branch:
-
-    jekyll build --safe
-
-To do the same with Bundler:
-
-    bundle exec jekyll build --safe
-
-For preview convenience and consistent builds and testing, build using a
-version which looks the same locally and on GitHub.
-
-A [post-commit hook][hook] is available for you to automatically create a
-commit in the `asf-site` branch locally each time you commit to the `master`
-branch. You can also run this command manually:
-
-    ./_devtools/git-hooks/post-commit
-
-To automatically run this post-commit hook in your local repository, copy
-the given file into your `.git/hook` directory:
-
-    cp ./_devtools/git-hooks/post-commit .git/hooks/
+After you have made your changes, follow the instructions in the [README.md][website-readme] to run the website
+locally and make a pull request on [GitHub][website-repo]. If you have problems installing Jekyll or running the
+website locally, it's OK to proceed with the pull request. A committer will review your changes before committing
+them and updating the website.
 
 ## Developer's Guide
 
@@ -208,10 +172,11 @@ Accumulo has [guidelines for using Review Board][rb] to support code reviews.
 [cgit]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
 [contrib]: {{ "/contributor/contrib-projects" | relative_url }}
 [devlist]: mailto:dev@accumulo.apache.org
-[website-branch]: https://gitbox.apache.org/repos/asf?p=accumulo-website.git;a=tree;h=master
 [git-instr]: https://gitbox.apache.org
 [git]: https://git-scm.com
 [github]: https://github.com/apache/accumulo
+[website-repo]: https://github.com/apache/accumulo
+[website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
 [hook]: https://gitbox.apache.org/repos/asf?p=accumulo-website.git;a=blob_plain;f=_devtools/git-hooks/post-commit;hb=master
 [intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
 [jekyll]: https://jekyllrb.com
