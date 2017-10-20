@@ -132,10 +132,10 @@ Do you have your auths set so that it matches your visibilities?
 
 **What are my visibilities?**
 
-Use the [PrintInfo][print-info] tool on a representative file to get some idea
+Use the [rfile-info] tool on a representative file to get some idea
 of the visibilities in the underlying data.
 
-Note that the use of `PrintInfo` is an administrative tool and can only
+Note that the use of `rfile-info` is an administrative tool and can only
 by used by someone who can access the underlying Accumulo data. It
 does not provide the normal access controls in Accumulo.
 
@@ -231,5 +231,5 @@ Node count: 22524
 
 Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.
 
-[print-info]: {{ page.docs_baseurl }}/troubleshooting/tools#PrintInfo
+[rfile-info]: {{ page.docs_baseurl }}/troubleshooting/tools#RFileInfo
 [native-maps]: {{ page.docs_baseurl }}/administration/in-depth-install#native-map
