@@ -132,7 +132,7 @@ Do you have your auths set so that it matches your visibilities?
 
 **What are my visibilities?**
 
-Use the [rfile-info][RFileInfo] tool on a representative file to get some idea
+Use the [rfile-info] tool on a representative file to get some idea
 of the visibilities in the underlying data.
 
 Note that the use of `rfile-info` is an administrative tool and can only
