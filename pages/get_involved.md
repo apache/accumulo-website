@@ -47,10 +47,6 @@ Take a look at [Accumulo's Ohloh page][5] for an analysis of the code base.
 * [Accumulo Users Group - DC VA MD](https://www.meetup.com/Accumulo-Users-DC/)
 * Look for [Accumulo Meetups in your area](https://www.meetup.com/find/?keywords=accumulo)
 
-## Community Interaction
-
-Learn about [building open source communities][6].
-
 ## Decision Making
 
 The most important thing about engaging with any Apache project is that everyone
@@ -67,7 +63,7 @@ Most of the time we work with the consensus building techniques documented below
 
 ### Lazy Consensus
 
-[Lazy consensus][7] is the first, and possibly the most important, consensus building 
+[Lazy consensus][6] is the first, and possibly the most important, consensus building 
 tool we have. Essentially, lazy consensus means that you don't need to get explicit
 approval to proceed, but you need to be prepared to listen if someone objects.
 
@@ -76,15 +72,15 @@ approval to proceed, but you need to be prepared to listen if someone objects.
 Sometimes, lazy consensus is not appropriate. In such cases, it is necessary to
 make a proposal to the mailing list and discuss options. There are mechanisms
 for quickly showing your support or otherwise for a proposal and 
-[building consensus][8] amongst the community.
+[building consensus][7] amongst the community.
 
 Once there is a consensus, people can proceed with the work under the [lazy 
-consensus][9] model.
+consensus][8] model.
 
 ### Voting
 
 Occasionally a "feel" for consensus is not enough. Sometimes we need to 
-have a measurable consensus. For example, when [voting][10] in new committers or 
+have a measurable consensus. For example, when [voting][9] in new committers or 
 to approve a release. 
 
 [1]: https://s.apache.org/newbie_accumulo_tickets
@@ -92,8 +88,7 @@ to approve a release.
 [3]: https://www.meetup.com/find/?keywords=accumulo
 [4]: {{ site.baseurl }}/contributor/
 [5]: https://www.ohloh.net/p/accumulo
-[6]: http://www.betaversion.org/~stefano/papers/ac2006.2.pdf
-[7]: {{ site.baseurl }}/contributor/lazyConsensus
-[8]: {{ site.baseurl }}/contributor/consensusBuilding
-[9]: {{ site.baseurl }}/contributor/lazyConsensus
-[10]: {{ site.baseurl }}/contributor/voting
+[6]: {{ site.baseurl }}/contributor/lazyConsensus
+[7]: {{ site.baseurl }}/contributor/consensusBuilding
+[8]: {{ site.baseurl }}/contributor/lazyConsensus
+[9]: {{ site.baseurl }}/contributor/voting
