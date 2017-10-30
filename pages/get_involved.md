@@ -92,7 +92,7 @@ to approve a release.
 [3]: https://www.meetup.com/find/?keywords=accumulo
 [4]: {{ site.baseurl }}/contributor/
 [5]: https://www.ohloh.net/p/accumulo
-[6]: http://www.betaversion.org/~stefano/papers/ac2006.2.pdf
+[6]: https://archive.apachecon.com/eu2007/materials/OpenDevelopmentCommunityBuilding.pdf
 [7]: {{ site.baseurl }}/contributor/lazyConsensus
 [8]: {{ site.baseurl }}/contributor/consensusBuilding
 [9]: {{ site.baseurl }}/contributor/lazyConsensus
