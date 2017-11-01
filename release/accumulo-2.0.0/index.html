@@ -156,12 +156,23 @@
 
 <h2 id="major-changes">Major Changes</h2>
 
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4726">ACCUMULO-4726</a> - Replaced the ability to use <code class="highlighter-rouge">Value.equals(byte[])</code> to check
+if the contents of a <code class="highlighter-rouge">Value</code> object was equal to a given byte array. To perform
+that check, you must now use the newly added <code class="highlighter-rouge">Value.contentEquals(byte[])</code>
+method. This corrects the behavior of the <code class="highlighter-rouge">equals</code> method so that it conforms
+to the API contract documented in the javadoc inherited from its superclass.
+However, it will break any code that was relying on the undocumented and broken
+behavior to compare <code class="highlighter-rouge">Value</code> objects with byte arrays. Such comparisons will now
+always return <code class="highlighter-rouge">false</code> instead of <code class="highlighter-rouge">true</code>, even if the contents are equal.</p>
+
 <h2 id="other-notable-changes">Other Notable Changes</h2>
-<p>ACCUMULO-3652 - Replaced string concatenation in log statements with slf4j where applicable.  Removed tserver TLevel logging class.</p>
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-3652">ACCUMULO-3652</a> - Replaced string concatenation in log statements with slf4j
+where applicable. Removed tserver TLevel logging class.</p>
 
 <h2 id="upgrading">Upgrading</h2>
 
 <h2 id="testing">Testing</h2>
+
 
 
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
