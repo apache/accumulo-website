@@ -1,11 +1,23 @@
 ---
-title: Mailing Lists
-permalink: /mailing_list/
+title: Contact Us
+permalink: /contact-us/
+redirect_from:
+  - /mailing_list/
+  - /get_involved/
 ---
 
-All Accumulo mailing lists are in the accumulo.apache.org domain. Please note
-that search providers linked on this page are not part of the [official Apache
-mailing list archives][lists].
+Below are ways to get in touch with the Apache Accumulo community.
+
+## Issues
+
+Accumulo uses [JIRA] to track bugs and new features.  Before creating an issue, you will need to create
+an [Apache JIRA account][jira-signup].
+
+## Mailing Lists
+
+The Accumulo mailing lists are for general discussions, questions, and announcements. While you can read the archives
+using the links below, it's best to subscribe to the `user` and `dev` (if you contribute) mailing lists to
+follow discussions as they happen.
 
 {: .table }
 | Name              | Description                                      | Read | Follow | Post |
@@ -14,6 +26,21 @@ mailing list archives][lists].
 | **dev**           | Contributor discussions and development activity | [<span class="glyphicon glyphicon-search"/> Archive][D_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][D_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][D_UN] | [<span class="glyphicon glyphicon-envelope"/> Post][D_P] |
 | **commits**       | Code changes                                     | [<span class="glyphicon glyphicon-search"/> Archive][C_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][C_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][C_UN] | |
 | **notifications** | Automated notifications (JIRA, etc.)             | [<span class="glyphicon glyphicon-search"/> Archive][N_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][N_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][N_UN] | |
+
+## IRC
+
+Drop by and chat about Accumulo at [#accumulo][accumulo-irc] on [freenode].
+
+## Contributions
+
+Contributions to Apache Accumulo are welcome! If you are interested, read our [Contributor Guide][contributor]. If you need help finding something to work on, send a message to our `dev` mailing list and we'll help you find a task that interests you.
+
+## Events
+
+Attend Accumulo events such as [Accumulo Summit][summit] and meetups hosted by [Accumulo Users Group - DC VA MD][meetup-dc].
+
+[JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
+[jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
 
 [U_A]: https://lists.apache.org/list.html?user@accumulo.apache.org
 {: .btn .btn-primary .btn-xs }
@@ -47,4 +74,8 @@ mailing list archives][lists].
 [N_UN]: mailto:notifications-unsubscribe@accumulo.apache.org
 {: .btn .btn-danger .btn-xs }
 
-[lists]: https://lists.apache.org
+[summit]: http://accumulosummit.com
+[meetup-dc]: https://www.meetup.com/Accumulo-Users-DC/
+[accumulo-irc]: irc://chat.freenode.net/accumulo
+[freenode]: https://freenode.net/
+[contributor]: /contributor/
