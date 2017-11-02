@@ -1,0 +1,55 @@
+---
+layout: default
+---
+{% assign tour_pages = site.data.tour.docs %}
+{% for p in tour_pages %}
+  {% assign doc_url = p | prepend: '/tour/' | append: '/' %}
+  {% if doc_url == page.url %}
+    {% assign tour_num = forloop.index %}
+    {% if forloop.first %}
+      {% assign previous = -1 %}
+    {% else %}
+      {% assign previous = forloop.index0 | minus: 1 %}
+      {% assign previous_page = tour_pages[previous] | prepend:"/tour/" | append:"/" %}
+    {% endif %}
+    {% if forloop.last %}
+      {% assign next = 0 %}
+    {% else %}
+      {% assign next = forloop.index0 | plus: 1 %}
+      {% assign next_page = tour_pages[next] | prepend:"/tour/" | append:"/" %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+<div id="tour-header">
+  <h2><a href="/tour/">Accumulo Tour</a>: {{ page.title }}</h2>
+  <p class="text-muted">Tour page {{ tour_num }} of {{ tour_pages.size }}</p>
+</div>
+<div id="tour-content">
+  {{ content }}
+</div>
+
+<script>
+document.body.onkeyup = function(e){
+{% if previous >= 0 %}
+if (e.keyCode == '37') { window.location = '{{previous_page}}'; }
+{% endif %}
+
+{% if next > 0 %}
+if (e.keyCode == '39') { window.location = '{{next_page}}'; }
+{% endif %}
+};
+</script>
+
+<div class="text-center">
+  <h2>
+    {% if previous >= 0 %}
+    <a href="{{ previous_page }}">&lt;</a>
+    {% endif %}
+
+    {{ tour_num }} / {{ tour_pages.size }}
+    {% if next > 0 %}
+    <a href="{{ next_page }}">&gt;</a>
+    {% endif %}
+  </h2>
+</div>
