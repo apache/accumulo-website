@@ -10,7 +10,9 @@ be used to support development in the context of the
 Contributors to Accumulo are encouraged to use RB for non-trivial patches and
 any time feedback is desired. No one is required to use RB, but its ready
 availability and better interface for feedback can help with reviews. Committers
-seeking review prior to pushing changes can also benefit similarly.
+seeking review prior to pushing changes can also benefit similarly. It should
+be noted that more recently the use of GitHub has been overtaking the use of 
+Review Board for code reviews.
 
 ## Roles for Review Board
 
