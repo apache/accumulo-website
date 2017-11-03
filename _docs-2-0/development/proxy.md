@@ -66,7 +66,7 @@ to how generate source from a thrift file.
 ### Thrift library
 
 Language-specific Thrift libraries can be installed using an OS or language package manager (i.e gem, pip, etc).
-For example, `pip install thrift` will install Python-specific thrift libaries on your machine.
+For example, `pip install thrift` will install Python-specific thrift libraries on your machine.
 
 ## Proxy Client Examples
 

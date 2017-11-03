@@ -198,7 +198,7 @@ while (!overSizeLimit(batch)) {
         batch.add(new KeyValue(key, val)
         if (systemDataSourcesChanged()) {
             // code does not show isolation case, which will
-            // keep using same data sources until a row boundry is hit 
+            // keep using same data sources until a row boundary is hit
             range = new Range(key, false, range.endKey(), range.endKeyInclusive());
             break;
         }
@@ -422,5 +422,5 @@ identify common pitfalls in user-created Iterators.
 [iterator-test-harness]: {{ page.docs_baseurl }}/development/development_tools#iterator-test-harness
 [BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
 [Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
-[BatchWriter]: {{ page.javdoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
-[WholeRowIterator]: {{ page.javdoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html
+[BatchWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
+[WholeRowIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html
