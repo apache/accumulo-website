@@ -190,7 +190,7 @@ including nodes, their attributes, and connections to other nodes.
 
 Rather than storing individual events, Entity-Attribute or Graph tables store
 aggregate information about the entities involved in the events and the
-relationships between entities. This is often preferrable when single events aren't
+relationships between entities. This is often preferable when single events aren't
 very useful and when a continuously updated summarization is desired.
 
 The physical schema for an entity-attribute or graph table is as follows:

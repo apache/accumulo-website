@@ -19,7 +19,7 @@ The configuration locations above are described in detail below.
 ### Default values
 
 All [properties][props] have a default value that is listed for each property on the [properties][props] page. Default values are set in the source code.
-While defalt values have the lowest precendence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.
+While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.
 
 ### accumulo-site.xml
 

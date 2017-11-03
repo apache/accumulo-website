@@ -89,8 +89,8 @@ Use `muchos ssh` to ssh to the cluster and `muchos terminate` to terminate all E
 
 ## Conclusion
 
-Uno and Muchos automate installing Accumulo for developmment and testing. While not recommended for production
-use at this time, Muchos is a great reference for running Accumulo in production. System admistrators can
+Uno and Muchos automate installing Accumulo for development and testing. While not recommended for production
+use at this time, Muchos is a great reference for running Accumulo in production. System administrators can
 reference the [Ansible] code in Muchos to automate management of their own clusters.
 
 [install]: https://github.com/apache/accumulo/blob/master/INSTALL.md

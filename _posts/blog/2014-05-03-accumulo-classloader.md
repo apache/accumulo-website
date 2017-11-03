@@ -54,7 +54,7 @@ The goal here is to enable multiple tenants to share the same Accumulo instance.
 </property>
 ```
 
-Context classloaders do not have to be defined in the accumulo-site.xml file. The "general.vfs.context.classpath.{context}" property can be defined on the table either programatically or manually in the shell. Then set the "table.classpath.context" property on your table.
+Context classloaders do not have to be defined in the accumulo-site.xml file. The "general.vfs.context.classpath.{context}" property can be defined on the table either programmatically or manually in the shell. Then set the "table.classpath.context" property on your table.
 
 ### Known Issues
 

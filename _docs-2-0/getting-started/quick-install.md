@@ -59,7 +59,7 @@ Follow the steps below to configure `accumulo-env.sh`:
 
 2. Accumulo tablet servers are configured by default to use 1GB of memory (768MB is allocated to
    JVM and 256MB is allocated for native maps). Native maps are allocated memory equal to 33% of
-   the tserver JVM heap. The table below can be used if you would like to change tsever memory
+   the tserver JVM heap. The table below can be used if you would like to change tserver memory
    usage in the `JAVA_OPTS` section of `accumulo-env.sh`:
 
     | Native? | 512MB             | 1GB               | 2GB                 | 3GB           |
@@ -104,7 +104,7 @@ Each method above has instructions below.
 
 ### Run Accumulo processes
 
-Start Accumulo processes (tserver, master, moniitor, etc) using command below:
+Start Accumulo processes (tserver, master, monitor, etc) using command below:
 
     accumulo tserver
 

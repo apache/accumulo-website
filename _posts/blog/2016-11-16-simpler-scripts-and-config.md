@@ -21,9 +21,9 @@ bootstrap_hdfs.sh    config.sh                start-daemon.sh                  s
 ```
 
 The number of scripts made it difficult to know which scripts to use.  If you added the `bin/` directory to your 
-`PATH`, it could add unecessary commands to your PATH or cause commands to be overriden due generic names
+`PATH`, it could add unnecessary commands to your PATH or cause commands to be overridden due generic names
 (like 'start-all.sh'). The number of scripts were reduced by removing scripts that are no longer used and combining
-scripts with similiar functionality.
+scripts with similar functionality.
 
 Starting with 2.0.0, Accumulo will only have 4 scripts in its `bin/` directory:
 
@@ -129,7 +129,7 @@ Services:
   monitor     Accumulo monitor
   master      Accumulo master
   tserver     Accumulo tserver
-  tracer      Accumulo tracter
+  tracer      Accumulo tracer
 
 Commands:
   start       Starts service

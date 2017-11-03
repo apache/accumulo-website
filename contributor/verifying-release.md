@@ -26,7 +26,7 @@ Below are some suggested tests that can be run (feel free to run your own custom
 * Build the [Accumulo Examples][examples] repo using the release candidate by updating the `accumulo.version`
   property in the `pom.xml` and using the staging repo. Also, run the unit/integration tests using `mvn verify`.
 
-* Run Accumulo's distributed tests (i.e. random walk, continous ingest). These tests are intended to be run for days
+* Run Accumulo's distributed tests (i.e. random walk, continuous ingest). These tests are intended to be run for days
   on end while injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
   real systems. Starting with 2.0, these tests are run using the [Accumulo Testing repo][at]. See the [README.md][at-readme]
   for more information.  Before 2.0, these tests are found in Accumulo tarball at `test/system/randomwalk` and
@@ -43,7 +43,7 @@ release, the release should be vetoed via the normal voting process. New major r
 
 ### Stand alone
 
-The following steps can be taken without having an underlying cluster. They SHOULD be handled with each Hadoop profile available for a given release version. To activate an alternative profile specify e.g. "-Dhadoop.profile=2" for the Hadoop 2 profile on the Maven commandline. Some older versions of Accumulo referred to Hadoop profiles diferently; see the README that came with said versions for details on building against different Hadoop versions.
+The following steps can be taken without having an underlying cluster. They SHOULD be handled with each Hadoop profile available for a given release version. To activate an alternative profile specify e.g. "-Dhadoop.profile=2" for the Hadoop 2 profile on the Maven commandline. Some older versions of Accumulo referred to Hadoop profiles differently; see the README that came with said versions for details on building against different Hadoop versions.
 
   1. All JUnit tests must pass.  This should be a requirement of any patch so it should never be an issue of the codebase.
     - Use "mvn package" to run against the default profile of a particular release

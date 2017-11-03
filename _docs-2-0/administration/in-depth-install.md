@@ -436,7 +436,7 @@ Make sure the host in question has the new configuration, or else the tablet
 server won't start; at a minimum this needs to be on the host(s) being added,
 but in practice it's good to ensure consistent configuration across all nodes.
 
-### Decomissioning a Tablet Server
+### Decommissioning a Tablet Server
 
 If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.
@@ -536,12 +536,12 @@ that the only volume displayed is the volume from the current namenode's HDFS UR
 
     Listing volumes referenced in accumulo.root tablets section
             Volume : hdfs://namenode.example.com:8020/accumulo
-    Listing volumes referenced in accumulo.root deletes section (volume replacement occurrs at deletion time)
+    Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
     Listing volumes referenced in accumulo.metadata tablets section
             Volume : hdfs://namenode.example.com:8020/accumulo
 
-    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurrs at deletion time)
+    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
 
 After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.
 
@@ -573,12 +573,12 @@ new nameservice volume shows up with `accumulo admin volumes`.
     Listing volumes referenced in accumulo.root tablets section
             Volume : hdfs://namenode.example.com:8020/accumulo
             Volume : hdfs://nameservice1/accumulo
-    Listing volumes referenced in accumulo.root deletes section (volume replacement occurrs at deletion time)
+    Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
     Listing volumes referenced in accumulo.metadata tablets section
             Volume : hdfs://namenode.example.com:8020/accumulo
             Volume : hdfs://nameservice1/accumulo
-    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurrs at deletion time)
+    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
 
 Some erroneous GarbageCollector messages may still be seen for a small period while data is transitioning to
 the new volumes. This is expected and can usually be ignored.
@@ -709,7 +709,7 @@ Each release of Accumulo is built with a specific version of Apache
 Hadoop, Apache ZooKeeper and Apache Thrift.  We expect Accumulo to
 work with versions that are API compatible with those versions.
 However this compatibility is not guaranteed because Hadoop, ZooKeeper
-and Thift may not provide guarantees between their own versions. We
+and Thrift may not provide guarantees between their own versions. We
 have also found that certain versions of Accumulo and Hadoop included
 bugs that greatly affected overall stability.  Thrift is particularly
 prone to compatibility changes between versions and you must use the

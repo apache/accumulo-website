@@ -338,7 +338,7 @@ Due to the asynchronous nature of replication and the expectation that hardware 
 it is generally not recommended to not configure replication on a table which has Iterators set which are not idempotent.
 While the replication implementation can make some simple assertions to try to avoid re-replication of data, it is not
 presently guaranteed that all data will only be sent to a peer once. Data will be replicated at least once. Typically,
-this is not a problem as the VersioningIterator will automaticaly deduplicate this over-replication because they will
+this is not a problem as the VersioningIterator will automatically deduplicate this over-replication because they will
 have the same timestamp; however, certain Combiners may result in inaccurate aggregations.
 
 As a concrete example, consider a table which has the SummingCombiner configured to sum all values for
@@ -403,7 +403,7 @@ The structure of the key-value is as follows:
 <HDFS_uri_to_WAL> repl:<local_table_id> [] -> <protobuf>
 ```
 
-This entry is created based on a replication entry from the Accumlo metadata table, and is deleted from the replication table
+This entry is created based on a replication entry from the Accumulo metadata table, and is deleted from the replication table
 when the WAL has been fully replicated to all remote Accumulo tables.
 
 ### Work section

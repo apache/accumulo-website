@@ -113,7 +113,7 @@ Ensure your client has adequate memory and is not being swapped out to disk.
 
 ## HDFS Failures
 
-**I had disasterous HDFS failure.  After bringing everything back up, several tablets refuse to go online.**
+**I had disastrous HDFS failure.  After bringing everything back up, several tablets refuse to go online.**
 
 Data written to tablets is written into memory before being written into indexed files.  In case the server
 is lost before the data is saved into a an indexed file, all data stored in memory is first written into a
@@ -170,7 +170,7 @@ but the basic approach is:
 * Stop all accumulo processes on all nodes
 * Move the accumulo directory in HDFS out of the way:
        $ hadoop fs -mv /accumulo /corrupt
-* Re-initalize accumulo
+* Re-initialize accumulo
 * Recreate tables, users and permissions
 * Import the directories under `/corrupt/tables/<id>` into the new instance
 
@@ -206,7 +206,7 @@ When an Accumulo data file is corrupt, the most reliable way to restore Accumulo
 operations is to replace the missing file with an ``empty'' file so that
 references to the file in the METADATA table and within the tablet server
 hosting the file can be resolved by Accumulo. An empty file can be created using
-the CreateEmpty utiity:
+the CreateEmpty utility:
 
     $ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
 
@@ -245,7 +245,7 @@ WAL file, never being able to succeed.
 
 In the cases where the WAL file's original contents are unrecoverable or some degree
 of data loss is acceptable (beware if the WAL file contains updates to the Accumulo
-metadat table!), the following process can be followed to create an valid, empty
+metadata table!), the following process can be followed to create an valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
@@ -326,7 +326,7 @@ omission of new data.
 
 Yes, you can recover them by running the LocalWALRecovery utility (not available in 1.8 and later) on each node that needs recovery performed. The utility
 will default to using the directory specified by `logger.dir.walog` in your configuration, or can be
-overriden by using the `--local-wal-directories` option on the tool. It can be invoked as follows:
+overridden by using the `--local-wal-directories` option on the tool. It can be invoked as follows:
 
     accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 
