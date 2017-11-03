@@ -523,7 +523,7 @@ then returns itself.</p>
         <span class="n">batch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">KeyValue</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">systemDataSourcesChanged</span><span class="o">())</span> <span class="o">{</span>
             <span class="c1">// code does not show isolation case, which will</span>
-            <span class="c1">// keep using same data sources until a row boundry is hit </span>
+            <span class="c1">// keep using same data sources until a row boundary is hit</span>
             <span class="n">range</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">range</span><span class="o">.</span><span class="na">endKey</span><span class="o">(),</span> <span class="n">range</span><span class="o">.</span><span class="na">endKeyInclusive</span><span class="o">());</span>
             <span class="k">break</span><span class="o">;</span>
         <span class="o">}</span>
@@ -688,15 +688,15 @@ Iterator’s implementation of seek.</p>
 
 <h3 id="take-caution-in-constructing-new-data-in-an-iterator">Take caution in constructing new data in an Iterator</h3>
 
-<p>Implementations of Iterator might be tempted to open <a href="/org/apache/accumulo/core/client/BatchWriter.html">BatchWriters</a> inside of an Iterator as a means
+<p>Implementations of Iterator might be tempted to open <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchWriter.html">BatchWriters</a> inside of an Iterator as a means
 to implement triggers for writing additional data outside of their client application. The lifecycle of an Iterator
 is <em>not</em> managed in such a way that guarantees that this is safe nor efficient. Specifically, there
 is no way to guarantee that the internal ThreadPool inside of the BatchWriter is closed (and the thread(s)
-are reaped) without calling the close() method. <code class="highlighter-rouge">close</code>‘ing and recreating a <a href="/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a> after every
+are reaped) without calling the close() method. <code class="highlighter-rouge">close</code>‘ing and recreating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a> after every
 Key-Value pair is also prohibitively performance limiting to be considered an option.</p>
 
 <p>The only safe way to generate additional data in an Iterator is to alter the current Key-Value pair.
-For example, the <a href="/org/apache/accumulo/core/iterators/user/WholeRowIterator.html">WholeRowIterator</a> serializes the all of the Key-Values pairs that fall within each
+For example, the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/user/WholeRowIterator.html">WholeRowIterator</a> serializes the all of the Key-Values pairs that fall within each
 row. A safe way to generate more data in an Iterator would be to construct an Iterator that is
 “higher” (at a larger priority) than the WholeRowIterator, that is, the Iterator receives the Key-Value pairs which are
 a serialization of many Key-Value pairs. The custom Iterator could deserialize the pairs, compute
