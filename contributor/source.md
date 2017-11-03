@@ -13,43 +13,10 @@ redirect_from: /source
 </div>
 </div>
 
-## Source Code
-
-### Apache Accumulo
-
-Apache Accumulo&reg; source code is maintained using [Git][git] version control
-([browse][cgit]|[checkout][anongit]).  It builds with [Apache Maven][maven].
-
-Instructions for configuring git are [here][git-instr].
-
-### Contrib Projects
-
-Accumulo has a number of [contrib projects][contrib] that maintain their own code repositories and release schedules.
-
-### Project Website
-
-The source for this website is a collection of markdown documents that are converted to HTML using
-[Jekyll]. It can be found in the [accumulo-website repo][website-repo]. If you would like to make changes to
-this website, clone the website repo and edit the markdown:
-
-    git clone https://github.com/apache/accumulo-website.git
-
-After you have made your changes, follow the instructions in the [README.md][website-readme] to run the website
-locally and make a pull request on [GitHub][website-repo]. If you have problems installing Jekyll or running the
-website locally, it's OK to proceed with the pull request. A committer will review your changes before committing
-them and updating the website.
 
 ## Developer's Guide
 
 ### Building
-
-#### Installing Apache Thrift
-
-If you activate the 'thrift' Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate
-stubs. If you activate this profile and don't have Apache Thrift installed and in your path, you will see a warning and
-your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the 'thrift' command is in your path. 
-Watch out for THRIFT-1367; you may need to configure Thrift with --without-ruby. Most developers do not
-need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.
 
 #### Checking out from Git
 
@@ -115,55 +82,9 @@ Note that this git clean command will delete any files unknown to git in a way t
     # On branch 1.6.1-SNAPSHOT
     nothing to commit (working directory clean)
 
-### Continuous Integration
 
-Accumulo uses [Jenkins][jenkins] for automatic builds.
 
-<img src="https://builds.apache.org/job/Accumulo-Master/lastBuild/buildStatus" style="height: 1.1em"> [Master][masterbuild]
 
-<img src="https://builds.apache.org/job/Accumulo-1.7/lastBuild/buildStatus" style="height: 1.1em"> [1.7 Branch][17build]
-
-<img src="https://builds.apache.org/job/Accumulo-1.6/lastBuild/buildStatus" style="height: 1.1em"> [1.6 Branch][16build]
-
-### Issue Tracking
-
-Accumulo [tracks issues][jiraloc] with [JIRA][jira].  Every commit should reference a JIRA ticket of the form ACCUMULO-#.
-
-### Merging Practices
-
-Changes should be merged from earlier branches of Accumulo to later branches.  Ask the [dev list][devlist] for instructions.
-
-### Public API
-
-Refer to the README in the release you are using to see what packages are in the public API.
-
-Changes to non-private members of those classes are subject to additional scrutiny to minimize compatibility problems across Accumulo versions.
-
-### Coding Practices
-
-{: .table}
-| **License Header**              | Always add the current ASF license header as described in [ASF Source Header][srcheaders].            |
-| **Trailing Whitespaces**        | Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this. |
-| **Indentation**                 | Use 2 space indents and never use tabs!                                                               |
-| **Line Wrapping**               | Use 160-column line width for Java code and Javadoc.                                                  |
-| **Control Structure New Lines** | Use a new line with single statement if/else blocks.                                                  |
-| **Author Tags**                 | Do not use Author Tags. The code is developed and owned by the community.                             |
-
-### Code Review
-
-Accumulo has [guidelines for using Review Board][rb] to support code reviews.
-
-### IDE Configuration Tips
-
-#### Eclipse
-
-* Download Eclipse [formatting and style guides for Accumulo][styles].
-* Import Formatter: Preferences > Java > Code Style >  Formatter and import the Eclipse-Accumulo-Codestyle.xml downloaded in the previous step. 
-* Import Template: Preferences > Java > Code Style > Code Templates and import the Eclipse-Accumulo-Template.xml. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
-
-#### IntelliJ
-
- * Formatter [plugin][intellij-formatter] that uses eclipse code style xml.
 
 [16build]: https://builds.apache.org/job/Accumulo-1.6
 [17build]: https://builds.apache.org/job/Accumulo-1.7
