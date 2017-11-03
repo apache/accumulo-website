@@ -10,7 +10,7 @@ Accumulo has several tools that can help developers test their code.
 
 [MiniAccumuloCluster] is a standalone instance of Apache Accumulo for testing. It will
 create Zookeeper and Accumulo processes that write all of their data to a single local
-directory. [MiniAccumuloCluster] makes it easy to code agaist a real Accumulo instance.
+directory. [MiniAccumuloCluster] makes it easy to code against a real Accumulo instance.
 Developers can write realistic-to-end integration tests that mimic the use of a normal
 Accumulo instance.
 

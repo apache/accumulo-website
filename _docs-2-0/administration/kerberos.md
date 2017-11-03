@@ -12,7 +12,7 @@ A centralized key-distribution center (KDC) is the service that coordinates
 authentication between a client and a server. Clients and servers use "tickets",
 obtained from the KDC via a password or a special file called a "keytab", to
 communicate with the KDC and prove their identity. A KDC administrator must
-create the principal (name for the client/server identiy) and the password
+create the principal (name for the client/server identity) and the password
 or keytab, securely passing the necessary information to the actual user/service.
 Properly securing the KDC and generated ticket material is central to the security
 model and is mentioned only as a warning to administrators running their own KDC.
@@ -29,7 +29,7 @@ using GSSAPI that Kerberos implements.
 
 Kerberos is a very complicated software application and is deserving of much
 more description than can be provided here. An [explain like I`m 5](http://www.roguelynn.com/words/explain-like-im-5-kerberos/)
-blog post is very good at distilling the basics, while [MIT Keberos's project page](http://web.mit.edu/kerberos/)
+blog post is very good at distilling the basics, while [MIT Kerberos's project page](http://web.mit.edu/kerberos/)
 contains lots of documentation for users or administrators. Various Hadoop "vendors"
 also provide free documentation that includes step-by-step instructions for
 configuring Hadoop and ZooKeeper (which will be henceforth considered as prerequisites).
@@ -123,7 +123,7 @@ server processes don't have an interactive console to enter a password into.
 kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
 ```
 
-To simplify deployments, at thet cost of security, all Accumulo principals could
+To simplify deployments, at the cost of security, all Accumulo principals could
 be globbed into a single keytab
 
 ```
@@ -568,7 +568,7 @@ on, is extremely important when negotiating an SASL connection. This problem com
 servers are not configured to listen on the address denoted by their FQDN.
 
 The values in the Accumulo "hosts" files (In `accumulo/conf`: `masters`, `monitors`, `tservers`, `tracers`,
-and `gc`) should match the instance componentof the Kerberos server principal (e.g. `host` in `accumulo/host@EXAMPLE.COM`).
+and `gc`) should match the instance component of the Kerberos server principal (e.g. `host` in `accumulo/host@EXAMPLE.COM`).
 
 **Q**: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
 when I attempt to use the "Recent Traces" page on the Monitor UI I get a stacktrace similar to:

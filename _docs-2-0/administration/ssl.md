@@ -6,7 +6,7 @@ order: 8
 
 Accumulo, through Thrift's TSSLTransport, provides the ability to encrypt
 wire communication between Accumulo servers and clients using secure
-sockets layer (SSL). SSL certifcates signed by the same certificate authority
+sockets layer (SSL). SSL certificates signed by the same certificate authority
 control the "circle of trust" in which a secure connection can be established.
 Typically, each host running Accumulo processes would be given a certificate
 which identifies itself.
@@ -121,4 +121,4 @@ keytool -import -trustcacerts -alias server-crt -file server.crt -keystore serve
 ```
 
 The `server.jks` file is the Java keystore containing the certificate for a given host. The above
-methods are equivalent whether the certficate is generate for an Accumulo server or a client.
+methods are equivalent whether the certificate is generate for an Accumulo server or a client.

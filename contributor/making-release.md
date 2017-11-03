@@ -41,7 +41,7 @@ Given all of this, it's recommended that you only attempt making a release from 
 
 You should use the provided script assemble/build.sh to create the release candidate. This script is
 desirable as it activates all necessary maven profiles in addition to verifying that certain preconditions
-are met, like RPM signing availablilty and the ability to sign files using GPG. The --test option can 
+are met, like RPM signing availability and the ability to sign files using GPG. The --test option can
 be used as a dry run for creating a release candidate. The --create-release-candidate option should be 
 used to create the actual release candidate.
 

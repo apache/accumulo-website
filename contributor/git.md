@@ -270,7 +270,7 @@ with `<apache_id>/ACCUMULO-<issue#>[-description]`.
 
     `git checkout <apache_id>/ACCUMULO-<issue#> master`
 
-2. Create the feature, commiting early and often to appropriately outline the
+2. Create the feature, committing early and often to appropriately outline the
 "story" behind the feature and it's implementation.
 
 3. As long as you have not collaborating with others, `git-rebase` your feature

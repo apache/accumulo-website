@@ -27,7 +27,7 @@ and then display the following prompt:
 
 ## Basic Administration
 
-The `tables` command will list all existings tables.
+The `tables` command will list all existing tables.
 
     root@myinstance> tables
     accumulo.metadata
