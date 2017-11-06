@@ -24,7 +24,7 @@ private static void exercise(MiniAccumuloCluster mac) {
     System.out.println("Hello world");
 }
 ```
-4. Build and run to make sure everything is peachy.
+4. Build and run to make sure everything is cool.
 ```commandline
 mvn -q clean compile exec:java
 ```

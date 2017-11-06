@@ -4,51 +4,45 @@ title: Writing and Reading
 Accumulo is a big data key/value store.  Writing data to Accumulo is flexible and fast.  Like any database, Accumulo stores
 data in tables and rows.  Each row in an Accumulo table can hold many key/value pairs.  
 
-1. Start by connecting to Mini Accumulo and create a table called "superheroes".  For now, connect as the root user.
+Copy and paste the code below into the _exercise_  method.
 ```java
-Connector conn = mac.getConnector("root", "tourguide");
-conn.tableOperations().create("superheroes");
+        // 1. Start by connecting to Mini Accumulo as the root user and create a table called "superheroes".
+        Connector conn = mac.getConnector("root", "tourguide");
+        conn.tableOperations().create("superheroes");
+
+        // 2. Create a Mutation object to write to a row
+        Mutation mutation = new Mutation("hero023948092");
+        // A Mutation is an object that holds all changes to a row in a table.  Each row has a unique row ID.
+
+        // 3. Create key/value pairs for Batman.  Put them in the "HeroAttribute" family.
+        mutation.put("HeroAttribute","name", "Batman");
+        mutation.put("HeroAttribute","real-name", "Bruce Wayne");
+        mutation.put("HeroAttribute","wearsCape?", "true");
+        mutation.put("HeroAttribute","flies?","false");
+
+        // 4. Create a BatchWriter to the superhero table and add your mutation to it.  Try w/ resources will close for us.
+        try(BatchWriter writer = conn.createBatchWriter("superheroes", new BatchWriterConfig())) {
+            writer.addMutation(mutation);
+        } catch(TableNotFoundException | MutationsRejectedException e) {
+            System.out.println("Error in the BatchWriter:");
+            e.printStackTrace();
+        }
+
+        // 5. Read and print all rows of the "superheroes" table. Try w/ resources will close for us.
+        try(Scanner scan = conn.createScanner("superheroes", Authorizations.EMPTY)) {
+            System.out.println("superheroes table contents:");
+            // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+            for (Map.Entry<Key, Value> entry : scan) {
+                System.out.println("Key:" + entry.getKey());
+                System.out.println("Value:" + entry.getValue());
+            }
+        } catch(TableNotFoundException e) {
+            System.out.println("Error performing scan:");
+            e.printStackTrace();
+        }
 ```
 
-2. Create a Mutation object for row1
-```java
-Mutation mutation = new Mutation("row1");
-```
-A Mutation is an object that holds all changes to a row in a table.  Each row has a unique row ID.
- 
-3. Create key/value pairs for Batman.
-```java
-mutation.put("name", "", "Batman");
-mutation.put("real-name", "", "Bruce Wayne");
-mutation.put("wearsCape?", "", "true");
-mutation.put("flies?", "", "false");
-```
-Every Mutation in Accumulo is atomic. This means that all the changes to a single row will happen at once. The Mutation
-object conveniently allows us to put all the changes for the row in one spot. 
-
-4. Create a BatchWriter to the superhero table and add your mutation to it.
-```java
-BatchWriter writer = conn.createBatchWriter("superheroes", new BatchWriterConfig());
-writer.addMutation(mutation);
-writer.close();
-```
-Accumulo is very efficient, so it prefers data to arrive in batches.  The BatchWriter will take care of this for us.
-Once we are finished, closing the BatchWriter will tell Accumulo everything is good to go.
-
-5. Print all rows of the "superheroes" table
-```java
-Scanner scan = conn.createScanner("superheroes", Authorizations.EMPTY);
-System.out.println("superheroes table contents:");
-for(java.util.Map.Entry entry : scan) {
-    System.out.println("Key:" + entry.getKey());
-    System.out.println("Value:" + entry.getValue());
-}
-```
-A Scanner is the object that Accumulo clients use to read data efficiently. A Scanner is an extension of 
-java.util.Iterator so behaves just like one. More on Scanners later.  
-
-
-6. Build and run your code
+Build and run your code
 ```commandline
 mvn -q clean compile exec:java
 ``` 
