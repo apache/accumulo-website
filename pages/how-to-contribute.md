@@ -17,9 +17,9 @@ the community before being merged by a committer.
 
 ## Issues
 
-Accumulo uses [JIRA] to track bugs and new features. Before creating an issue, you will need to create
-an [Apache JIRA account][jira-signup]. If you need help finding an issue, check out the [open issues labeled
-for newbies][newbie-issues] or [contact us][contact].
+Any contribution should have a corresponding issue. Accumulo uses [JIRA] for issue tracking. Before creating an issue,
+you will need to create an [Apache JIRA account][jira-signup]. If you need help finding an issue to work on, check out
+the [open issues labeled for newbies][newbie-issues] or [contact us][contact].
 
 ## Repositories
 
