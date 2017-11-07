@@ -11,7 +11,7 @@ trumps anything written here.
 
 ## Versioning
 
-Accumulo has adopted [Semantic Versioning][versioning] and follows their rules and guidelines.
+Accumulo has adopted [Semantic Versioning][semver] and follows their rules and guidelines.
 
 ## Testing basics
 
@@ -127,6 +127,6 @@ own NOTICE file. The contents of the Apache Thrift NOTICE file should be include
 [4]: https://www.apache.org/legal/resolved
 [5]: https://www.apache.org/legal
 [examples]: https://github.com/apache/accumulo-examples
-[versioning]: {{ site.baseurl }}/contributor/versioning
+[semver]: http://semver.org/spec/v2.0.0.html
 [at]: https://github.com/apache/accumulo-testing
 [at-readme]: https://github.com/apache/accumulo-testing/blob/master/README.md
