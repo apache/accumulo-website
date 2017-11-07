@@ -4,41 +4,33 @@ title: Writing and Reading
 Accumulo is a big data key/value store.  Writing data to Accumulo is flexible and fast.  Like any database, Accumulo stores
 data in tables and rows.  Each row in an Accumulo table can hold many key/value pairs.  
 
-Copy and paste the code below into the _exercise_  method.
+Here are the steps for writing to a table and then reading from it. Copy and paste the code below into the _exercise_  method.  Note each step is commented. 
 ```java
-        // 1. Start by connecting to Mini Accumulo as the root user and create a table called "superheroes".
+        // 1. Connect to Mini Accumulo as the root user and create a table called "GothamPD".
         Connector conn = mac.getConnector("root", "tourguide");
-        conn.tableOperations().create("superheroes");
+        conn.tableOperations().create("GothamPD");
 
-        // 2. Create a Mutation object to write to a row
-        Mutation mutation = new Mutation("hero023948092");
-        // A Mutation is an object that holds all changes to a row in a table.  Each row has a unique row ID.
+        // 2. Create a Mutation object to hold all changes to a row in a table.  Each row has a unique row ID.
+        Mutation mutation = new Mutation("id0001");
 
-        // 3. Create key/value pairs for Batman.  Put them in the "HeroAttribute" family.
-        mutation.put("HeroAttribute","name", "Batman");
-        mutation.put("HeroAttribute","real-name", "Bruce Wayne");
-        mutation.put("HeroAttribute","wearsCape?", "true");
-        mutation.put("HeroAttribute","flies?","false");
+        // 3. Create key/value pairs for Batman.  Put them in the "hero" family.
+        mutation.put("hero","alias", "Batman");
+        mutation.put("hero","name", "Bruce Wayne");
+        mutation.put("hero","wearsCape?", "true");
 
-        // 4. Create a BatchWriter to the superhero table and add your mutation to it.  Try w/ resources will close for us.
-        try(BatchWriter writer = conn.createBatchWriter("superheroes", new BatchWriterConfig())) {
+        // 4. Create a BatchWriter to the GothamPD table and add your mutation to it.  Try w/ resources will close for us.
+        try(BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
             writer.addMutation(mutation);
-        } catch(TableNotFoundException | MutationsRejectedException e) {
-            System.out.println("Error in the BatchWriter:");
-            e.printStackTrace();
         }
 
-        // 5. Read and print all rows of the "superheroes" table. Try w/ resources will close for us.
-        try(Scanner scan = conn.createScanner("superheroes", Authorizations.EMPTY)) {
-            System.out.println("superheroes table contents:");
+        // 5. Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.
+        try(Scanner scan = conn.createScanner("GothamPD", Authorizations.EMPTY)) {
+            System.out.println("Gotham Police Department Persons of Interest:");
             // A Scanner is an extension of java.lang.Iterable so behaves just like one.
             for (Map.Entry<Key, Value> entry : scan) {
                 System.out.println("Key:" + entry.getKey());
                 System.out.println("Value:" + entry.getValue());
             }
-        } catch(TableNotFoundException e) {
-            System.out.println("Error performing scan:");
-            e.printStackTrace();
         }
 ```
 
