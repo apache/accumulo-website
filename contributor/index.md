@@ -6,64 +6,62 @@ This page contains resources and documentation of interest to current and potent
 
 If your are interested in quickly getting an Accumulo instance up and running, see the [Accumulo Quickstart][quickstart] guide or refer to the [Uno] project on Github.
 
-- [How to contribute to Apache Accumulo](./#how-to-contribute-to-apache-accumulo)
-- [Project Resources](./#project-resources)
-  - [Source Code](./#source-code)
-  - [Issue Tracking](./#issue-tracking)
-  - [Automated Build Information](./#automated-build-information)
-- [Create a Ticket for Bugs or New Features](./#create-a-ticket-for-new-bugs-or-features)
-- [Building Accumulo from Soruce](./#building-accumulo-from-source)
-  - [Checking out from Git](./#configuring-your-git-client)
-  - [Running a Build](./#cloning-the-accumulo-repository)
-- [Providing a contribution](./#)
-  - [Proposed Git Workflow](./#proposed-workflow)
-  - [The Implementation](./#the-implementation)
-    - [Contributors](./#contributors)
-    - [Developers](./#developers)
-      - [Primary Development](./#primary-development)
-      - [Reviewing Contributor Changes](./#reviewing-contributor-changes)
-      - [Submit Contribution via Patch](./#)
-      - [Submit Contribution via Pull Request](./#)
-      - [Feature Branches](./#feature-branches)
-      - [Changes Which Affect Multiple-Versions (a.k.a Merging)](./#changes-which-affect-multiple-versions-aka-merging)
-- [Code Review Process](./#code-review-process)
-- [Additional Contributor Information](./#additional-developer-information)
-  - [Merging Practices](./merging-practices)
-  - [Public API](/#public-api)
-  - [Coding Practices](./#coding-practices)
-  - [Project Examples](./#)
-  - [Accumulo Website Contributions](./#project-website)   
-  - [Contrib Projects](./contrib-projects)
-  - [Installing Apache Thrift](./#installing-apache-thrift)
-  - [Apache Guide for New Project Contributors](http://www.apache.org/dev/contributors.html)
-  - [Apache Voting Guide](http://www.apache.org/foundation/voting.html)
-- [Committer Documentation](./#commiter-documentation)
-- [Project Governance](./#project-governance)
-- [IDE Configuration Tips](./#ide-configuration-tips)
-- [Contact Us](./#contact-us)
+- [How to contribute to Apache Accumulo][1]
+- [Project Resources][2]
+  - [GitHub][3]
+  - [JIRA][4]
+  - [Jenkins/TravisCI][5]
+- [Create a Ticket for Bugs or New Features][6]
+- [Building Accumulo from Soruce][7]
+  - [Checking out from Git][8]
+  - [Running a Build][9]
+- [Providing a contribution][10]
+  - [Proposed Git Workflow][11]
+  - [The Implementation][12]
+    - [Contributors][13]
+    - [Developers][14]
+      - [Primary Development][15]
+      - [Reviewing Contributor Changes][16]
+      - [Submit Contribution via Patch][17]
+      - [Submit Contribution via Pull Request][18]
+      - [Feature Branches][19]
+      - [Changes Which Affect Multiple-Versions (a.k.a Merging)][20]
+- [Code Review Process][21]
+- [Additional Contributor Information][22]
+  - [Merging Practices][23]
+  - [Coding Practices][25]
+  - [Project Examples][26]
+  - [Accumulo Website Contributions][27]
+  - [Contrib Projects][28]
+  - [Public API][24]
+  - [Installing Apache Thrift][28]
+- [Committer Documentation][31]
+- [Project Governance][32]
+- [IDE Configuration Tips][33]
+- [Contact Us][34]
 
 
-# How to Contribute to Apache Accumulo
+## How to Contribute to Apache Accumulo
 
-Apache Accumulo welcomes contributions from the community. This is especially true of new contributors! You don’t need to be a software developer to contribute to Apache Accumulo. To be successful, this project requires a huge range of different skills, levels of involvement, and degrees of technical expertise. So, if you want to get involved in Apache Accumulo, there is almost certainly a role for you. View our [Get Involved](../get_involved) page for additional details on the many opportunities available.
+Apache Accumulo welcomes contributions from the community. This is especially true of new contributors! You don’t need to be a software developer to contribute to Apache Accumulo. So, if you want to get involved in Apache Accumulo, there is almost certainly a role for you. View our [Get Involved][get-involved] page for additional details on the many opportunities available.
 
-# Project Resources
+## Project Resources
 
 Accumulo makes use of the following external tools for development.
 
-## Source Code
+### GitHub
 
-Apache Accumulo&reg; source code is maintained using [Git] version control and mirrored to [GitHub]. Source files can be browsed [here][browse] or at the [GitHub mirror][mirror]. 
+Apache Accumulo&reg; source code is maintained using [Git] version control and mirrored to [GitHub]][github]. Source files can be browsed [here][browse] or at the [GitHub mirror][mirror]. 
 
 The project code can be checked-out [here][mirror]. It builds with [Apache Maven][maven].
 
-## Issue Tracking
+### JIRA
 
-Accumulo [tracks issues][jiraloc] with [JIRA][jira].  Every commit should reference a JIRA ticket of the form ACCUMULO-#.
+Accumulo [tracks issues][jiraloc] with [JIRA][jira]. Prospective code contributors can view [open issues labeled for "newbies"][newbies] to search for starter tickets. Note that every commit should reference a JIRA ticket of the form ACCUMULO-#. 
 
-## Continuous Integration
+### Jenkins/TravisCI
 
-Accumulo uses [Jenkins][jenkins] and [TravisCI](https://travis-ci.org/apache/accumulo) for automatic builds.
+Accumulo uses [Jenkins][jenkins] and [TravisCI](https://travis-ci.org/apache/accumulo) for automatic builds and continuous integration.
 
 <img src="https://builds.apache.org/job/Accumulo-Master/lastBuild/buildStatus" style="height: 1.1em"> [Master][masterbuild]
 
@@ -71,37 +69,37 @@ Accumulo uses [Jenkins][jenkins] and [TravisCI](https://travis-ci.org/apache/acc
 
 <img src="https://builds.apache.org/job/Accumulo-1.7/lastBuild/buildStatus" style="height: 1.1em"> [1.7 Branch][17build]
 
-# Create a Ticket for New Bugs or Feature
+## Create a Ticket for New Bugs or Feature
 
 If you run into a bug or think there is something that would benefit the project, we encourage you to file an issue at the [Apache Accumulo JIRA][jiraloc] page. Regardless of whether you have the time to provide the fix or implementation yourself, this will be helpful to the project.
 
-# Building Accumulo from Source
+## Building Accumulo from Source
 
-## Checking out from Git
+### Checking out from Git
 
-There are several methods that can be used to obtain the Accumulo source code. Follow one of the methods described below. Note that if you prefer to use SSH rather than https you can refer to the [GitHub help pages](https://help.github.com/) for creating a GitHub account and setting up [SSH keys](https://help.github.com/articles/connecting-to-github-with-ssh/).
+There are several methods for obtaining the Accumulo source code. If you prefer to use SSH rather than HTTPS you can refer to the [GitHub help pages][github-help] for creating a GitHub account and setting up [SSH keys][ssh].
 
-### From the Apache Hosted Repository
+#### - from the Apache Hosted Repository
 
     git clone https://gitbox.apache.org/repos/asf/accumulo.git
 
-### From the Github Mirror
+#### - from the Github Mirror
 
     git clone https://github.com/apache/accumulo.git
 
-### From your Github Fork
+#### - from your Github Fork
 
-It is also possible to [fork](https://help.github.com/articles/fork-a-repo/) a repository in GitHub so that you can freely experiment with changes without affecting the original project. You can then submit a [pull request](https://help.github.com/articles/about-pull-requests/) from your personal fork to the project repository when you wish to supply a contribution.
+It is also possible to [fork] a repository in GitHub so that you can freely experiment with changes without affecting the original project. You can then submit a [pull request](https://help.github.com/articles/about-pull-requests/) from your personal fork to the project repository when you wish to supply a contribution.
 
     git clone git@github.com:<account name>/accumulo.git
 
-#### Retrieval of upstream changes 
+##### Retrieval of upstream changes 
 
 Additionally, it is beneficial to add a git remote for the mirror to allow the retrieval of upstream changes.
 
     git remote add upstream http://github.com/apache/accumulo.git
 
-# Running a Build
+## Running a Build
 
 Accumulo uses  [Apache Maven][maven] to handle source building, testing, and packaging. To build Accumulo, you will need to use Maven version 3.0.5 or later.
 
@@ -127,7 +125,7 @@ Or to run the specific integration tests MyIT and YourIT (and skip all unit test
 
 There are plenty of other options. For example, you can skip findbugs with `mvn verify -Dfindbugs.skip` or checkstyle `-Dcheckstyle.skip`, or control the number of forks to use while executing tests, `-DforkCount=4`, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.
 
-If you regularly switch between major development branches, you may receive errors about improperly licensed files from the [RAT plugin][1]. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.
+If you regularly switch between major development branches, you may receive errors about improperly licensed files from the [RAT plugin][rat]. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.
 
 The easiest fix is to ensure all of your current changes are stored in git and then cleaning your workspace.
 
@@ -159,15 +157,15 @@ Note that this git clean command will delete any files unknown to git in a way t
     # On branch 1.6.1-SNAPSHOT
     nothing to commit (working directory clean)
 
-# Providing a Contribution
+## Providing a Contribution
 
-The Accumulo source is hosted at [https://git-wip-us.apache.org/repos/asf/accumulo.git]. 
+The Accumulo source is hosted at [https://gitbox.apache.org/][repo] .
 
-Like all Apache projects, a mirror of the git repository is also located on GitHub at [https://github.com/apache/accumulo] which provides ease in [forking][https://help.github.com/articles/fork-a-repo/] and generating [pull requests (PRs)][https://help.github.com/articles/using-pull-requests/].
+Like all Apache projects, a mirror of the git repository is also located on GitHub at [https://github.com/apache/accumulo][GitHub] which provides ease in [forking] and generating [pull requests (PRs)][pulls].
 
-## Git
+### Git
 
-[Git](https://git-scm.com) is an open source, distributed version control system
+[Git][git] is an open source, distributed version control system
 which has become very popular in large, complicated software projects due to
 its efficient handling of multiple, simultaneously and independently developed
 branches of source code.
@@ -218,7 +216,7 @@ impact on the efficacy of the advanced commands bundled with Git.
 ### Proposed Workflow
 
 This is a summary of what has been agreed upon by vocal committers/PMC members
-on [dev@accumulo.apache.org](mailto:dev@accumulo.apache.org). Enumeration of
+on [dev@accumulo.apache.org][dev-mail]. Enumeration of
 every possible situation out of the scope of this document. This document
 intends to lay the ground work to define the correct course of action regardless
 of circumstances. Some concrete examples will be provided to ensure the
@@ -259,10 +257,10 @@ The following steps, originally derived from Apache kafka's
 
 Use the following steps, original derived from Apache Kafka's [simple
 contributor
-workflow][1].
+workflow][kafka].
 
 To be specific, let's consider a contributor wanting to work on a fix for the
-Jira issue ACCUMULO-12345 that affects 1.5.0 release.
+Jira issue ACCUMULO-12345 that affects 1.8.0 release.
 
 1. Ensure you configured Git with your information
 
@@ -278,9 +276,9 @@ Jira issue ACCUMULO-12345 that affects 1.5.0 release.
     `git fetch && git fetch --tags`
 
 4. For the given issue you intend to work on, choose the 'lowest' fixVersion
-   and create a branch for yourself to work in. This example is against the next release of 1.5
+   and create a branch for yourself to work in. This example is against the next release of 1.8
 
-    `git checkout -b ACCUMULO-12345-my-work origin/1.5`
+    `git checkout -b ACCUMULO-12345-my-work origin/1.8`
 
 5. Make commits as you see fit as you fix the issue, referencing the issue name
    in the commit message:
@@ -309,15 +307,15 @@ Jira issue ACCUMULO-12345 that affects 1.5.0 release.
    work, or before you create your patch, rebase your branch against the remote
    to lift your changes to the top of your branch. The branch specified here should be the same one you used in step 4.
 
-    `git pull --rebase origin 1.5`
+    `git pull --rebase origin 1.8`
 
 7. At this point, you can create a patch file from the upstream branch to
-   attach to the ACCUMULO-12345 Jira issue. The branch specified here should be teh same one you used in step 4.
+   attach to the ACCUMULO-12345 Jira issue. The branch specified here should be the same one you used in step 4.
 
-    `git format-patch --stdout origin/1.5 > ACCUMULO-12345.patch`
+    `git format-patch --stdout origin/1.8 > ACCUMULO-12345.patch`
 
 An alternative to creating a patch is submitting a request to pull your changes
-from some repository, e.g. Github. Please include the repository and branch
+from some repository, e.g. GitHub. Please include the repository and branch
 name merge in the notice to the Jira issue, e.g.
 
     repo=git://github.com/<username>/accumulo.git branch=ACCUMULO-12345
@@ -325,16 +323,16 @@ name merge in the notice to the Jira issue, e.g.
 A second alternative is to use Github's "Pull Requests" feature against the
 [Apache Accumulo account](https://github.com/apache/accumulo). Notifications of
 new pull-requests from Github should automatically be sent to
-[dev@accumulo.apache.org](mailto:dev@accumulo.apache.org).
+[dev@accumulo.apache.org][dev-mail].
 
 Ignoring specifics, contributors should be sure to make their changes against
 the earlier version in which the fix is intended, `git-rebase`'ing their
 changes against the upstream branch so as to keep their changes co-located and
 free of unnecessary merges.
 
-## Developers
+### Developers
 
-### Primary Development
+#### Primary Development
 
 Primary development should take place in `master` which is to contain the most
 recent, un-released version of Apache Accumulo. Branches exist for minor releases
@@ -344,7 +342,7 @@ Using long-lived branches that track a major release line simplifies management 
 release practices. Developers are encouraged to make branches for their own purposes,
 for large features, release candidates or whatever else is deemed useful.
 
-### Reviewing contributor changes
+#### Reviewing contributor changes
 
 It is always the responsibility of committers to determine that a patch is
 intended and able to be contributed.  From the
@@ -360,14 +358,14 @@ Contribution under the [Apache License](https://www.apache.org/licenses/LICENSE-
 When pulling the code, committers should also verify that the commits pulled match the 
 list of commits sent to the Accumulo dev list in the pull request.
 
-#### Patches
+#### Submit Contribution via Patch
 
 Developers should use the following steps to apply patches from
 contributors:
 
 1. Checkout the branch for the major version which the patch is intended:
 
-    `git checkout 1.5`
+    `git checkout 1.8`
 
 2. Verify the changes introduced by the patch:
 
@@ -383,13 +381,13 @@ contributors:
 
 5. When finished, push the changes:
 
-    `git push origin 1.5`
+    `git push origin 1.8`
 
 6. Merge where appropriate:
 
-    `git checkout master && git merge 1.5`
+    `git checkout master && git merge 1.8`
 
-#### Github Pull-Requests
+#### Submit Contrribution via Pull-Request
 
 If the contributor submits a repository and branch to pull
 from, the steps are even easier:
@@ -419,7 +417,7 @@ include a signoff on the commit(s) as it changes the final commit ID in the
 Accumulo repository. This also has the negative effect of not automatically closing
 the Pull-Request when the changes are made public.
 
-### Feature Branches
+#### Feature Branches
 
 Ease in creating and using feature branches is a desirable merit which Git
 provides with little work. Feature branches are a great way in which developers
@@ -468,7 +466,7 @@ branch, you can choose to:
 
         `git checkout master && git merge --squash <apache_id>/ACCUMULO-<issue#>`
 
-### Changes which affect multiple versions (a.k.a. merging)
+#### Changes which affect multiple versions (a.k.a. merging)
 
 Merging can be a very confusing topic for users switching to Git, but it can be
 summarized fairly easily.
@@ -499,37 +497,17 @@ through the rest of the active versions. Even when the merge may results in a
 zero-length change in content, this is incredibly important to record, as you
 are the one who knows that this zero-length change in content is correct!
 
-
-## Release Management
-
-Releases, although not a day to day task, have their own unique steps which are
-to be followed. As releases are performed by project committers, contributors 
-or developers interested in additional details can see the following [link]. 
-
-## The Infrastructure
-
-The following [link][git] deals with the changes that must be request through INFRA and is primarily of concert to proect commiters. View the provide [link][git] to read additional details.
-
-
 ## Code review process
 
-Accumulo primarily used GitHub (via pull requests) for code reviews, but has access to an instance of [Review Board](https://reviews.apache.org/) as well if that is preferred.
+Accumulo primarily uses GitHub (via pull requests) for code reviews, but has access to an instance of [Review Board](https://reviews.apache.org/) as well if that is preferred.
 
 Accumulo operates under the [Commit-Then-Review](https://www.apache.org/foundation/glossary#CommitThenReview) (CtR) policy, so a code review does not need to occur prior to commit. However, a commiter has the option to hold a code review before a commit happens if, in their opinion, it would benifit from additional attention. Full details of the code review process for Accumulo is documented [here](./rb)
 
-### [Review Board](#rb)
+### Review Board
+
+Use of [Review Board](#rb) has slowly diminished and been gradually replaced by GitHub reviews over the past year or so.
 
 ## Additional Contributor Information
-
-### Merging Practices
-
-Changes should be merged from earlier branches of Accumulo to later branches. Ask the [dev list](dev@accumulo.apache.org) for instructions.
-
-### Public API
-
-Refer to the README in the release you are using to see what packages are in the public API.
-
-Changes to non-private members of those classes are subject to additional scrutiny to minimize compatibility problems across Accumulo versions.
 
 ### Coding Practices
 
@@ -539,35 +517,52 @@ Changes to non-private members of those classes are subject to additional scruti
 | **Indentation**                 | Use 2 space indents and never use tabs!                                                               |
 | **Line Wrapping**               | Use 160-column line width for Java code and Javadoc.                                                  |
 | **Control Structure New Lines** | Use a new line with single statement if/else blocks.                                                  |
-| **Author Tags**                 | Do not use Author Tags. The code is developed and owned by the community.   
+| **Author Tags**                 | Do not use Author Tags. The code is developed and owned by the community.
 
-### Installing Apache Thrift
+### Merging Practices
 
-If you activate the ‘thrift’ Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate stubs. If you activate this profile and don’t have Apache Thrift installed and in your path, you will see a warning and your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the ‘thrift’ command is in your path. Watch out for THRIFT-1367; you may need to configure Thrift with –without-ruby. Most developers do not need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.
-Checking out from Git
+Changes should be merged from earlier branches of Accumulo to later branches. Ask the [dev list][dev-mail] for instructions.
 
-## Project Website Contributions
+### Project Examples
+
+A collection of Accumulo example code can be found at the [Accumulo Examples repository][examples].
+
+### Website Contributions
 
 The source for this website is a collection of markdown documents that are converted to HTML using
-[Jekyll]. It can be found in the [accumulo-website repo][website-repo]. If you would like to make changes to
-this website, clone the website repo and edit the markdown:
+[Jekyll]. It can be found in the [accumulo-website repo][website-repo]. If you would like to make changes to this website, clone the website repo and edit the markdown:
 
 ```
     git clone https://github.com/apache/accumulo-website.git
 ```
 
-After you have made your changes, follow the instructions in the [README.md][website-readme] to run the website
-locally and make a pull request on [GitHub][website-repo]. If you have problems installing Jekyll or running the
-website locally, it's OK to proceed with the pull request. A committer will review your changes before committing
-them and updating the website.
+After you have made your changes, follow the instructions in the [README.md][website-readme] to run the website locally and make a pull request on [GitHub][website-repo]. If you have problems installing Jekyll or running the website locally, it's OK to proceed with the pull request. A committer will review your changes before committing them and updating the website.
+
+### Public API
+
+Refer to the README in the release you are using to see what packages are in the public API.
+
+Changes to non-private members of those classes are subject to additional scrutiny to minimize compatibility problems across Accumulo versions.   
+
+### Installing Apache Thrift
+
+If you activate the ‘thrift’ Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate stubs. If you activate this profile and don’t have Apache Thrift installed and in your path, you will see a warning and your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the ‘thrift’ command is in your path. Watch out for THRIFT-1367; you may need to configure Thrift with –without-ruby. Most developers do not need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.
+
+## Committer Documentation
+
+The links below are provided primarily for the project committers but may be of interest to contributors as well.
+
+- [Release Management][release]
+- [Making a Release][making]
+- [Verifying a Release][verifying]
 
 ## IDE Configuration Tips
 
 ### Eclipse
 
 * Download Eclipse [formatting and style guides for Accumulo][styles].
-* Import Formatter: Preferences > Java > Code Style >  Formatter and import the Eclipse-Accumulo-Codestyle.xml downloaded in the previous step. 
-* Import Template: Preferences > Java > Code Style > Code Templates and import the Eclipse-Accumulo-Template.xml. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
+* Import Formatter: `Preferences > Java > Code Style >  Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step. 
+* Import Template: `Preferences > Java > Code Style > Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
 
 ### IntelliJ
 
@@ -576,28 +571,79 @@ them and updating the website.
 
 ## Contact us!
 
-The developer mailing list (dev@accumulo.apache.org) is monitored pretty closely, and we tend to respond quickly.  If you have a question, don't hesitate to send us an e-mail - we're here to help! Unfortunately, though, e-mails can get lost in the shuffle, so if you do send an e-mail and don't get a response within a day or two, just ping the mailing list again - don't worry about bothering us.
+The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pretty closely, and we tend to respond quickly.  If you have a question, don't hesitate to send us an e-mail - we're here to help! Unfortunately, though, e-mails can get lost in the shuffle, so if you do send an e-mail and don't get a response within a day or two, just ping the mailing list again - don't worry about bothering us.
 
-#[1]: https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow
-#[jenkins]: https://jenkins.io
-#[manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
-#[Git]: https://git-scm.com/
-#[browse]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
-#[quickstart]: {{ site.baseurl }}/quickstart-1.x/
-#[Uno]: https://github.com/astralway/uno
-#[GitHub]: https://www.github.com/
-#[maven]: https://maven.apache.org/
-#[mirror]: https://github.com/apache/accumulo
-#[jekyll]: https://jekyllrb.com
-#[jira]: https://www.atlassian.com/software/jira
-#[jiraloc]: https://issues.apache.org/jira/browse/ACCUMULO
+
+
+[1]: #how-to-contribute-to-apache-accumulo
+[2]: #project-resources
+[3]: #github
+[4]: #jira
+[5]: #jenkinstravisci
+[6]: #create-a-ticket-for-bugs-or-new-features
+[7]: #building-accumulo-from-source
+[8]: #checking-out-from-git
+[9]: #running-a-build
+[10]: #providing-a-contribution
+[11]: #proposed-git-workflow
+[12]: #the-implementation
+[13]: #contributors
+[14]: #developers
+[15]: #primary-development
+[16]: #reviewing-contributor-changes
+[17]: #submit-contribution-via-changes
+[18]: #submit-contribution-via-pull-request
+[19]: #feature-branches
+[20]: #changes-which-affect-multiple-versions-aka-merging
+[21]: #code-review-process
+[22]: #additional-contributor-information
+[23]: #merging-practices
+[24]: #public-api
+[25]: #coding-practices
+[26]: #project-examples
+[27]: #accumulo-website-contributions
+[28]: #contrib-projects
+[29]: #installing-apache-thrift
+[30]: #apache-guide-for-new-project-contributors
+[31]: #apache-voting-guide
+[32]: #committer-documentation
+[33]: #project-governance
+[34]: #ide-configuration-tips
+[35]: #contact-us
+[manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
+[quickstart]: {{ site.baseurl }}/quickstart-1.x/
+[Uno]: https://github.com/astralway/uno
+[get-involved]: {{ site.baseurl }}/get_involved
+[git]: https://git-scm.com/
+[github]: https://github.com/apache/accumulo
+[pulls]: https://github.com/apache/accumulo/pulls
+[browse]: https://gitbox.apache.org/repos/?p=accumulo.git;a=summary
+[mirror]: https://github.com/apache/accumulo
+[maven]: https://maven.apache.org/
+[jekyll]: https://jekyllrb.com
+[jiraloc]: https://issues.apache.org/jira/browse/ACCUMULO
+[jira]: https://www.atlassian.com/software/jira
+[newbies]: https://s.apache.org/newbie_accumulo_tickets
+[Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [masterbuild]: https://builds.apache.org/job/Accumulo-Master
 [18build]: https://builds.apache.org/job/Accumulo-1.8
 [17build]: https://builds.apache.org/job/Accumulo-1.7
-#[website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
-#[website-repo]: https://github.com/apache/accumulo
+[github-help]: https://help.github.com/
+[ssh]: https://help.github.com/articles/connecting-to-github-with-ssh/
+[forking]: https://help.github.com/articles/fork-a-repo/
+[pom]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
+[lifecycle]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle
+[rat]: https://creadur.apache.org/rat/apache-rat-plugin
+[repo]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
+[pulls]: https://help.github.com/articles/using-pull-requests/
+[dev-mail]: mailto:dev@accumulo.apache.org
+[kafka]: https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow
+[examples]: https://github.com/apache/accumulo-examples
+[website-repo]: https://github.com/apache/accumulo-website
+[website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
+[styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
 [intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
-#[styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
-#[jiraloc]: https://issues.apache.org/jira/browse/ACCUMULO
-
+[release]: {{site.baseurl }}/contributor/committer-info
+[making]: {{site.baseurl }}/contributor/making-release
+[verifying]: https://accumulo.apache.org/contributor/verifying-release
 
