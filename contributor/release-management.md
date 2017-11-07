@@ -1,6 +1,6 @@
 ---
-title: Git
-redirect_from: /git
+title: Release Management
+redirect_from: /release-management
 ---
 
 ## Release Management

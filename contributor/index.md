@@ -12,7 +12,7 @@ If your are interested in quickly getting an Accumulo instance up and running, s
   - [JIRA][4]
   - [Jenkins/TravisCI][5]
 - [Create a Ticket for Bugs or New Features][6]
-- [Building Accumulo from Soruce][7]
+- [Building Accumulo from Source][7]
   - [Checking out from Git][8]
   - [Running a Build][9]
 - [Providing a contribution][10]
