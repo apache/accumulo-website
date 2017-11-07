@@ -4,7 +4,7 @@ title: Contributor Guide
 
 This page contains resources and documentation of interest to current and potential contributors to the Accumulo project. Any documentation that is helpful to Accumulo users should go in the [Accumulo User Manual][manual].
 
-If your are interested in quickly getting an Accumulo instance up and running, see the [Accumulo Quickstart][quickstart] guide or refer to the [Uno] project on Github.
+If your are interested in quickly getting an Accumulo instance up and running, see the Accumulo Quickstart guides [(1.x)][quickstart1x]/[(2.x)][quickstart2x] or refer to the [Uno] project on Github.
 
 - [How to contribute to Apache Accumulo][1]
 - [Project Resources][2]
@@ -16,7 +16,7 @@ If your are interested in quickly getting an Accumulo instance up and running, s
   - [Checking out from Git][8]
   - [Running a Build][9]
 - [Providing a contribution][10]
-  - [Proposed Git Workflow][11]
+  - [Proposed Workflow][11]
   - [The Implementation][12]
     - [Contributors][13]
     - [Developers][14]
@@ -28,17 +28,17 @@ If your are interested in quickly getting an Accumulo instance up and running, s
       - [Changes Which Affect Multiple-Versions (a.k.a Merging)][20]
 - [Code Review Process][21]
 - [Additional Contributor Information][22]
-  - [Merging Practices][23]
   - [Coding Practices][25]
+  - [Merging Practices][23]
   - [Project Examples][26]
-  - [Accumulo Website Contributions][27]
-  - [Contrib Projects][28]
+  - [Website Contributions][27]
   - [Public API][24]
-  - [Installing Apache Thrift][28]
-- [Committer Documentation][31]
-- [Project Governance][32]
-- [IDE Configuration Tips][33]
-- [Contact Us][34]
+  - [Installing Apache Thrift][29]
+  - [Contrib Projects][28]
+- [Committer Documentation][32]
+- [Project Governance][33]
+- [IDE Configuration Tips][34]
+- [Contact Us][35]
 
 
 ## How to Contribute to Apache Accumulo
@@ -51,7 +51,7 @@ Accumulo makes use of the following external tools for development.
 
 ### GitHub
 
-Apache Accumulo&reg; source code is maintained using [Git] version control and mirrored to [GitHub]][github]. Source files can be browsed [here][browse] or at the [GitHub mirror][mirror]. 
+Apache Accumulo&reg; source code is maintained using [Git] version control and mirrored to [GitHub][github]. Source files can be browsed [here][browse] or at the [GitHub mirror][mirror]. 
 
 The project code can be checked-out [here][mirror]. It builds with [Apache Maven][maven].
 
@@ -77,7 +77,7 @@ If you run into a bug or think there is something that would benefit the project
 
 ### Checking out from Git
 
-There are several methods for obtaining the Accumulo source code. If you prefer to use SSH rather than HTTPS you can refer to the [GitHub help pages][github-help] for creating a GitHub account and setting up [SSH keys][ssh].
+There are several methods for obtaining the Accumulo source code. If you prefer to use SSH rather than HTTPS you can refer to the [GitHub help pages][github-help] for help in creating a GitHub account and setting up [SSH keys][ssh].
 
 #### - from the Apache Hosted Repository
 
@@ -89,7 +89,7 @@ There are several methods for obtaining the Accumulo source code. If you prefer 
 
 #### - from your Github Fork
 
-It is also possible to [fork] a repository in GitHub so that you can freely experiment with changes without affecting the original project. You can then submit a [pull request](https://help.github.com/articles/about-pull-requests/) from your personal fork to the project repository when you wish to supply a contribution.
+It is also possible to [fork][forking] a repository in GitHub so that you can freely experiment with changes without affecting the original project. You can then submit a [pull request](https://help.github.com/articles/about-pull-requests/) from your personal fork to the project repository when you wish to supply a contribution.
 
     git clone git@github.com:<account name>/accumulo.git
 
@@ -140,10 +140,10 @@ Note that this git clean command will delete any files unknown to git in a way t
     nothing to commit (working directory clean)
     $> mvn package
     { maven output elided }
-    $> git checkout 1.6.1-SNAPSHOT
-    Switched to branch '1.6.1-SNAPSHOT'
+    $> git checkout 2.0.0-SNAPSHOT
+    Switched to branch '2.0.0-SNAPSHOT'
     $> git status
-    # On branch 1.6.1-SNAPSHOT
+    # On branch 2.0.0-SNAPSHOT
     # Untracked files:
     #   (use "git add <file>..." to include in what will be committed)
     #
@@ -154,7 +154,7 @@ Note that this git clean command will delete any files unknown to git in a way t
     Removing mapreduce/
     Removing shell/
     $> git status
-    # On branch 1.6.1-SNAPSHOT
+    # On branch 2.0.0-SNAPSHOT
     nothing to commit (working directory clean)
 
 ## Providing a Contribution
@@ -251,16 +251,12 @@ explanation is clear.
 ## The Implementation
 
 The following steps, originally derived from Apache kafka's 
-[simple contributor workflow][1], will demonstrate the gitflow implementation.
+[simple contributor workflow][kafka], will demonstrate the gitflow implementation.
 
 ### Contributors
 
-Use the following steps, original derived from Apache Kafka's [simple
-contributor
-workflow][kafka].
-
 To be specific, let's consider a contributor wanting to work on a fix for the
-Jira issue ACCUMULO-12345 that affects 1.8.0 release.
+Jira issue ACCUMULO-12345 that affects the 1.8 release.
 
 1. Ensure you configured Git with your information
 
@@ -296,12 +292,14 @@ Jira issue ACCUMULO-12345 that affects 1.8.0 release.
     leave a short descriptive message in the first line, skip a line, and write
     more detailed stuff there, if you need to. For example:
 
-    `ACCUMULO-2194 Add delay for randomwalk Security teardown`
+```
+    ACCUMULO-2194 Add delay for randomwalk Security teardown
 
-    `If two Security randomwalk tests run back-to-back, the second test may see that the
+    If two Security randomwalk tests run back-to-back, the second test may see that the
     table user still exists even though it was removed when the first test was torn down.
     This can happen if the user drop does not propagate through Zookeeper quickly enough.
-    This commit adds a delay to the end of the Security test to give ZK some time.`
+    This commit adds a delay to the end of the Security test to give ZK some time.
+```
 
 6. Assuming others are developing against the version you also are, as you
    work, or before you create your patch, rebase your branch against the remote
@@ -501,11 +499,11 @@ are the one who knows that this zero-length change in content is correct!
 
 Accumulo primarily uses GitHub (via pull requests) for code reviews, but has access to an instance of [Review Board](https://reviews.apache.org/) as well if that is preferred.
 
-Accumulo operates under the [Commit-Then-Review](https://www.apache.org/foundation/glossary#CommitThenReview) (CtR) policy, so a code review does not need to occur prior to commit. However, a commiter has the option to hold a code review before a commit happens if, in their opinion, it would benifit from additional attention. Full details of the code review process for Accumulo is documented [here](./rb)
+Accumulo operates under the [Commit-Then-Review](https://www.apache.org/foundation/glossary#CommitThenReview) (CtR) policy, so a code review does not need to occur prior to commit. However, a commiter has the option to hold a code review before a commit happens if, in their opinion, it would benefit from additional attention. Full details of the code review process for Accumulo is documented [here](./rb)
 
 ### Review Board
 
-Use of [Review Board](#rb) has slowly diminished and been gradually replaced by GitHub reviews over the past year or so.
+Use of [Review Board][rb] has slowly diminished and been gradually replaced by GitHub reviews over the past year or so.
 
 ## Additional Contributor Information
 
@@ -556,6 +554,15 @@ The links below are provided primarily for the project committers but may be of 
 - [Making a Release][making]
 - [Verifying a Release][verifying]
 
+## Project Governance
+
+For details about governance policies for the Accumulo project view the following links.
+
+- [Bylaws][36]
+- [Consensus Building][37]
+- [Lazy Consensus][38]
+- [Voting][39]
+
 ## IDE Configuration Tips
 
 ### Eclipse
@@ -568,10 +575,9 @@ The links below are provided primarily for the project committers but may be of 
 
  * Formatter [plugin][intellij-formatter] that uses eclipse code style xml.
 
-
 ## Contact us!
 
-The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pretty closely, and we tend to respond quickly.  If you have a question, don't hesitate to send us an e-mail - we're here to help! Unfortunately, though, e-mails can get lost in the shuffle, so if you do send an e-mail and don't get a response within a day or two, just ping the mailing list again - don't worry about bothering us.
+The developer mailing list [(dev@accumulo.apache.org)][dev-mail] is monitored pretty closely, and we tend to respond quickly.  If you have a question, don't hesitate to send us an e-mail! Unfortunately, though, e-mails can get lost in the shuffle, so if you do send an e-mail and don't get a response within a day or two, just ping the mailing list again.
 
 
 
@@ -580,12 +586,12 @@ The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pret
 [3]: #github
 [4]: #jira
 [5]: #jenkinstravisci
-[6]: #create-a-ticket-for-bugs-or-new-features
+[6]: #create-a-ticket-for-new-bugs-or-feature
 [7]: #building-accumulo-from-source
 [8]: #checking-out-from-git
 [9]: #running-a-build
 [10]: #providing-a-contribution
-[11]: #proposed-git-workflow
+[11]: #proposed-workflow
 [12]: #the-implementation
 [13]: #contributors
 [14]: #developers
@@ -601,23 +607,26 @@ The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pret
 [24]: #public-api
 [25]: #coding-practices
 [26]: #project-examples
-[27]: #accumulo-website-contributions
-[28]: #contrib-projects
+[27]: #website-contributions
+[28]: {{ site.baseurl }}/contributor/contrib-projects
 [29]: #installing-apache-thrift
-[30]: #apache-guide-for-new-project-contributors
-[31]: #apache-voting-guide
 [32]: #committer-documentation
 [33]: #project-governance
 [34]: #ide-configuration-tips
 [35]: #contact-us
+[36]: {{ site.baseurl }}/contributor/bylaws
+[37]: {{ site.baseurl }}/contributor/consensusBuilding
+[38]: {{ site.baseurl }}/contributor/lazyConsensus
+[39]: {{ site.baseurl }}/contributor/voting
 [manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
-[quickstart]: {{ site.baseurl }}/quickstart-1.x/
+[quickstart1x]: {{ site.baseurl }}/quickstart-1.x/
+[quickstart2x]: {{ site.baseurl }}/quickstart-2.x/
 [Uno]: https://github.com/astralway/uno
 [get-involved]: {{ site.baseurl }}/get_involved
 [git]: https://git-scm.com/
 [github]: https://github.com/apache/accumulo
 [pulls]: https://github.com/apache/accumulo/pulls
-[browse]: https://gitbox.apache.org/repos/?p=accumulo.git;a=summary
+[browse]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
 [mirror]: https://github.com/apache/accumulo
 [maven]: https://maven.apache.org/
 [jekyll]: https://jekyllrb.com
@@ -633,6 +642,7 @@ The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pret
 [forking]: https://help.github.com/articles/fork-a-repo/
 [pom]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD
 [lifecycle]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle
+[rb]: {{site.baseurl }}/contributor/rb
 [rat]: https://creadur.apache.org/rat/apache-rat-plugin
 [repo]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
 [pulls]: https://help.github.com/articles/using-pull-requests/
@@ -643,7 +653,7 @@ The developer mailing list (dev@accumulo.apache.org)[dev-mail] is monitored pret
 [website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
 [styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
 [intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
-[release]: {{site.baseurl }}/contributor/committer-info
+[release]: {{site.baseurl }}/contributor/release-management
 [making]: {{site.baseurl }}/contributor/making-release
 [verifying]: https://accumulo.apache.org/contributor/verifying-release
 

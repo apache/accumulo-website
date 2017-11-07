@@ -3,8 +3,6 @@ title: Release Management
 redirect_from: /release-management
 ---
 
-## Release Management
-
 Releases, although not a day to day task, have their own unique steps which are to be followed. Releases can be categorized in to minor and major releases
 
 ### A minor release
