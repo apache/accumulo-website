@@ -116,7 +116,7 @@ If you are running an Accumulo cluster on multiple nodes, the following files in
 - `tservers`: Accumulo worker processes. List all of the nodes where tablet servers should run in this file.
 - `tracers` : Optional capability. Can specify zero or more nodes.
 
-The Accumulo, Hadoop, and Zookeeper software should be present at the same location on every node. Also the files in the conf directory must be copied to every node. There are many ways to replicate the software and configuration, two possible tools that can help replicate software and/or config are pdcp and prsync.
+The Accumulo, Hadoop, and Zookeeper software should be present at the same location on every node. Also the files in the conf directory must be copied to every node. There are many ways to replicate the software and configuration, two possible tools that can help replicate software and/or config are [pdcp] and [prsync].
 
 The accumulo-cluster script uses ssh to start processes on remote nodes. Before attempting to start Accumulo, [passwordless ssh][ssh] must be setup on the cluster.
 
@@ -152,7 +152,7 @@ When finished, use the following commands to stop Accumulo:
 [download]: https://accumulo.apache.org/downloads/
 [build]: https://github.com/apache/accumulo/blob/master/README.md#building
 [zookeeper]: http://zookeeper.apache.org/
-[hdfs]: http://http//hadoop.apache.org/
+[hdfs]: https://hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/
 [prsync]: https://code.google.com/p/parallel-ssh/
 [ssh]: https://www.tecmint.com/ssh-passwordless-login-using-ssh-keygen-in-5-easy-steps/
