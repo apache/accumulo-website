@@ -85,7 +85,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
    git clone https://github.com/apache/accumulo.git
    ```
 1. [Import][intellij-import] the repository as a Maven project into IntelliJ
-1. (Optional) Download and import `Eclipse-Accumulo-Codestyle.xml` from Accumulo's [contrib][accumulo-contib] directory
+1. (Optional) Download and import `Eclipse-Accumulo-Codestyle.xml` from Accumulo's [contrib][accumulo-contrib] directory
   * Import via `File` > `Settings` > `Code Style` and clicking on cog wheel
 
 ### Eclipse
