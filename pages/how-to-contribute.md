@@ -129,7 +129,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [TravisCI]: https://travis-ci.org/apache/accumulo
 [build]: {{ "/contributor/build" | relative_url }}
-[git]: {{ "/contributor/git" | relative_url }}
+[git]: {{ "/contributors-guide#git" | relative_url }}
 [making]: {{ "/contributor/making-release" | relative_url }}
 [verifying]: {{ "/contributor/verifying-release" | relative_url }}
 [bylaws]: {{ "/contributor/bylaws" | relative_url }}
