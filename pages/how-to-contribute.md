@@ -130,7 +130,7 @@ For more details see the [contributor guide](/contributors-guide/).
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [TravisCI]: https://travis-ci.org/apache/accumulo
-[build]: {{ "/contributor/build" | relative_url }}
+[build]: {{ "/contributors-guide#building-accumulo-from-source" | relative_url }}
 [git]: {{ "/contributors-guide#git" | relative_url }}
 [making]: {{ "/contributor/making-release" | relative_url }}
 [verifying]: {{ "/contributor/verifying-release" | relative_url }}
