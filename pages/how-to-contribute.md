@@ -45,7 +45,8 @@ viewed by clicking on the `C` in the Links column below.
 +    ```
 +    git checkout -b accumulo-4321
 +    ```
-1. Do work and commit to your branch
+1. Do work and commit to your branch. You can reference [this link][messages] for a guide on 
+to write good commit log messages in git.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this tutorial or StackOverflow answer.
 1. [Push] your branch to your fork.
@@ -74,7 +75,7 @@ viewed by clicking on the `C` in the Links column below.
 Feel free to use any editor when contributing Accumulo. If you are looking for a recommendation, many Accumulo
 developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic instructions to help you get started.
 
-+### IntelliJ
+### IntelliJ
 
 1. Download and install [IntelliJ][intellij]
 1. Clone the Accumulo repository that you want to work on.
@@ -149,3 +150,4 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 [intellij]: https://www.jetbrains.com/idea/
 [intellij-import]: https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start
 [accumulo-contrib]: https://github.com/apache/accumulo/tree/master/contrib
+[messages]: https://chris.beams.io/posts/git-commit/
