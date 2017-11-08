@@ -150,7 +150,7 @@ When finished, use the following commands to stop Accumulo:
 - **Stop Accumulo cluster:** `accumulo-cluster stop`
 
 [download]: https://accumulo.apache.org/downloads/
-[build]: https://github.com/apache/accumulo/blob/master/README.md#building
+[build]: {{  site.baseurl  }}/contributor/build
 [zookeeper]: http://zookeeper.apache.org/
 [hdfs]: https://hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/

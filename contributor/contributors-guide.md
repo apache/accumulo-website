@@ -1,5 +1,6 @@
 ---
 title: Contributor Guide
+permalink: /contributors-guide/
 ---
 
 This page contains resources and documentation of interest to current and potential contributors to the Accumulo project. Any documentation that is helpful to Accumulo users should go in the [Accumulo User Manual][manual].

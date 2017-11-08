@@ -15,6 +15,8 @@ there are other ways to contribute to Accumulo:
 This document describes how to make contributions which are reviewed (via GitHub pull requests) by
 the community before being merged by a committer.
 
+This page provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive [contributor guide](/contributors-guide/).
+
 ## Issues
 
 Any contribution should have a corresponding issue. Accumulo uses [JIRA] for issue tracking. Before creating an issue,
@@ -42,17 +44,17 @@ viewed by clicking on the `C` in the Links column below.
 1. Find an [issue][newbie-issues] to work on or create one that describes the work that you want to do.
 1. [Fork] and [clone] the GitHub repository that you want to contribute to.
 1. Create a branch in the local clone of your fork.
-+    ```
-+    git checkout -b accumulo-4321
-+    ```
+```    
+    git checkout -b accumulo-4321
+```    
 1. Do work and commit to your branch. You can reference [this link][messages] for a guide on 
 to write good commit log messages in git.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this tutorial or StackOverflow answer.
 1. [Push] your branch to your fork.
-    ```
-    git push origin fluo-301
-    ```
+```
+    git push origin accumulo-4321
+```
 1. Create a [Pull Request] on GitHub to the appropriate repository. If the work is not complete and the Pull Request is for feedback, please put `[WIP]` in the subject.
 1. At least one committer (and others in the community) will review your pull request and add any comments to your code.
 1. Push any changes from the review to the branch as new commits so the reviewer only needs to review new changes. Please avoid squashing commits after the review starts. Squashing makes it hard for the reviewer to follow the changes.
@@ -100,7 +102,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 
 ## Helpful Links
 
-* **Build resources** - [TravisCI] & [Jenkins][jenkins] ([Master][masterbuild], [1.7 Branch][17build], [1.6 Branch][16build])
+* **Build resources** - [TravisCI] & [Jenkins][jenkins] ([Master][masterbuild], [1.8 Branch][18build], [1.7 Branch][17build])
 * **Development** - [Building Accumulo][build], [Git Workflow][git]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
 * **Project governance** - [Bylaws](/contributor/bylaws), [Consensus Building](/contributor/consensusBuilding), [Lazy Consensus](/contributor/lazyConsensus), [Voting](/contributor/voting)
@@ -139,7 +141,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 [Push]: https://help.github.com/articles/pushing-to-a-remote/
 [clone]: https://help.github.com/articles/cloning-a-repository/
 [masterbuild]: https://builds.apache.org/job/Accumulo-Master
-[16build]: https://builds.apache.org/job/Accumulo-1.6
+[18build]: https://builds.apache.org/job/Accumulo-1.8
 [17build]: https://builds.apache.org/job/Accumulo-1.7
 [srcheaders]: https://www.apache.org/legal/src-headers
 [styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
