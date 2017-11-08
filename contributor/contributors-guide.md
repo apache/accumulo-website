@@ -38,13 +38,11 @@ If your are interested in quickly getting an Accumulo instance up and running, s
   - [Contrib Projects][28]
 - [Committer Documentation][32]
 - [Project Governance][33]
-- [IDE Configuration Tips][34]
-- [Contact Us][35]
 
 
 ## How to Contribute to Apache Accumulo
 
-Apache Accumulo welcomes contributions from the community. This is especially true of new contributors! You don’t need to be a software developer to contribute to Apache Accumulo. So, if you want to get involved in Apache Accumulo, there is almost certainly a role for you. View our [Get Involved][get-involved] page for additional details on the many opportunities available.
+Apache Accumulo welcomes contributions from the community. This is especially true of new contributors! You don’t need to be a software developer to contribute to Apache Accumulo. So, if you want to get involved in Apache Accumulo, there is almost certainly a role for you. View our [How to Contribute](/how-to-contribute/) page for additional details on the many opportunities available.
 
 ## Project Resources
 
@@ -106,57 +104,7 @@ Accumulo uses  [Apache Maven][maven] to handle source building, testing, and pac
 
 You should familiarize yourself with the [Maven Build Lifecycle][lifecycle], as well as the various plugins we use in our [POM][pom], in order to understand how Maven works and how to use the various build options while building Accumulo.
 
-To build from source (for example, to deploy):
-
-    mvn package -Passemble
-
-This will create a file accumulo-*-SNAPSHOT-dist.tar.gz in the assemble/target directory. Optionally, append `-DskipTests` if you want to skip the build tests.
-
-To build your branch before submitting a pull request, you'll probably want to run some basic "sunny-day" integration tests to ensure you haven't made any grave errors, as well as `checkstyle` and `findbugs`:
-
-    mvn verify -Psunny
-
-To run specific unit tests, you can run:
-
-    mvn package -Dtest=MyTest -DfailIfNoTests=false
-
-Or to run the specific integration tests MyIT and YourIT (and skip all unit tests), you can run:
-
-    mvn verify -Dtest=NoSuchTestExists -Dit.test=MyIT,YourIT -DfailIfNoTests=false
-
-There are plenty of other options. For example, you can skip findbugs with `mvn verify -Dfindbugs.skip` or checkstyle `-Dcheckstyle.skip`, or control the number of forks to use while executing tests, `-DforkCount=4`, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.
-
-If you regularly switch between major development branches, you may receive errors about improperly licensed files from the [RAT plugin][rat]. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.
-
-The easiest fix is to ensure all of your current changes are stored in git and then cleaning your workspace.
-
-    $> git add path/to/file/that/has/changed
-    $> git add path/to/other/file
-    $> git clean -df
-
-Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the "untracked files" section in a ```git status``` command.
-
-    $> git status
-    # On branch master
-    nothing to commit (working directory clean)
-    $> mvn package
-    { maven output elided }
-    $> git checkout 2.0.0-SNAPSHOT
-    Switched to branch '2.0.0-SNAPSHOT'
-    $> git status
-    # On branch 2.0.0-SNAPSHOT
-    # Untracked files:
-    #   (use "git add <file>..." to include in what will be committed)
-    #
-    # mapreduce/
-    # shell/
-    nothing added to commit but untracked files present (use "git add" to track)
-    $> git clean -df
-    Removing mapreduce/
-    Removing shell/
-    $> git status
-    # On branch 2.0.0-SNAPSHOT
-    nothing to commit (working directory clean)
+To build from source (for example, to deploy) view [this page](/contributor/build):
 
 ## Providing a Contribution
 
@@ -564,23 +512,6 @@ For details about governance policies for the Accumulo project view the followin
 - [Lazy Consensus][38]
 - [Voting][39]
 
-## IDE Configuration Tips
-
-### Eclipse
-
-* Download Eclipse [formatting and style guides for Accumulo][styles].
-* Import Formatter: `Preferences > Java > Code Style >  Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step. 
-* Import Template: `Preferences > Java > Code Style > Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
-
-### IntelliJ
-
- * Formatter [plugin][intellij-formatter] that uses eclipse code style xml.
-
-## Contact us!
-
-The developer mailing list [(dev@accumulo.apache.org)][dev-mail] is monitored pretty closely, and we tend to respond quickly.  If you have a question, don't hesitate to send us an e-mail! Unfortunately, though, e-mails can get lost in the shuffle, so if you do send an e-mail and don't get a response within a day or two, just ping the mailing list again.
-
-
 
 [1]: #how-to-contribute-to-apache-accumulo
 [2]: #project-resources
@@ -613,8 +544,6 @@ The developer mailing list [(dev@accumulo.apache.org)][dev-mail] is monitored pr
 [29]: #installing-apache-thrift
 [32]: #committer-documentation
 [33]: #project-governance
-[34]: #ide-configuration-tips
-[35]: #contact-us
 [36]: {{ site.baseurl }}/contributor/bylaws
 [37]: {{ site.baseurl }}/contributor/consensusBuilding
 [38]: {{ site.baseurl }}/contributor/lazyConsensus
@@ -652,8 +581,6 @@ The developer mailing list [(dev@accumulo.apache.org)][dev-mail] is monitored pr
 [examples]: https://github.com/apache/accumulo-examples
 [website-repo]: https://github.com/apache/accumulo-website
 [website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
-[styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
-[intellij-formatter]: https://code.google.com/p/eclipse-code-formatter-intellij-plugin
 [release]: {{site.baseurl }}/contributor/release-management
 [making]: {{site.baseurl }}/contributor/making-release
 [verifying]: https://accumulo.apache.org/contributor/verifying-release

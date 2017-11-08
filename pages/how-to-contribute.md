@@ -15,7 +15,7 @@ there are other ways to contribute to Accumulo:
 This document describes how to make contributions which are reviewed (via GitHub pull requests) by
 the community before being merged by a committer.
 
-This page provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive [contributor guide](/contributors-guide/).
+This document provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive [contributor guide](/contributors-guide/).
 
 ## Issues
 
@@ -106,6 +106,8 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 * **Development** - [Building Accumulo][build], [Git Workflow][git]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
 * **Project governance** - [Bylaws](/contributor/bylaws), [Consensus Building](/contributor/consensusBuilding), [Lazy Consensus](/contributor/lazyConsensus), [Voting](/contributor/voting)
+
+For more details see the [contributor guide](/contributors-guide/).
 
 [newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
 [contact]: /contact-us/
