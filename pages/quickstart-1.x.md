@@ -95,7 +95,7 @@ When finished, use the following command to stop Accumulo.
 
 
 [download]: http://accumulo.apache.org/downloads/
-[build]: {{  site.baseurl  }}/contributor/build
+[build]: {{ "/contributors-guide#building-accumulo-from-source" | relative_url }}
 [zookeeper]: http://zookeeper.apache.org/
 [hdfs]: https:/hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/
