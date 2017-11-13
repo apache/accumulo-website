@@ -12,7 +12,7 @@ there are other ways to contribute to Accumulo:
 * verify and test new releases
 * update the Accumulo website and documentation
 
-This document describes how to make contributions which are reviewed (via GitHub pull requests) by
+Contributions are reviewed (via GitHub pull requests) by
 the community before being merged by a committer.
 
 This document provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive [contributor guide](/contributors-guide/).
@@ -103,11 +103,9 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 ## Helpful Links
 
 * **Build resources** - [TravisCI] & [Jenkins][jenkins] ([Master][masterbuild], [1.8 Branch][18build], [1.7 Branch][17build])
-* **Development** - [Building Accumulo][build], [Git Workflow][git]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
-* **Project governance** - [Bylaws](/contributor/bylaws), [Consensus Building](/contributor/consensusBuilding), [Lazy Consensus](/contributor/lazyConsensus), [Voting](/contributor/voting)
 
-For more details see the [contributor guide](/contributors-guide/).
+For more details, see the [contributor guide](/contributors-guide/).
 
 [newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
 [contact]: /contact-us/
@@ -130,14 +128,8 @@ For more details see the [contributor guide](/contributors-guide/).
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [TravisCI]: https://travis-ci.org/apache/accumulo
-[build]: {{ "/contributors-guide#building-accumulo-from-source" | relative_url }}
-[git]: {{ "/contributors-guide#git" | relative_url }}
 [making]: {{ "/contributor/making-release" | relative_url }}
 [verifying]: {{ "/contributor/verifying-release" | relative_url }}
-[bylaws]: {{ "/contributor/bylaws" | relative_url }}
-[consensus-building]: {{ "/contributor/consensusBuilding" | relative_url }}
-[lazyConsensus]: {{ "/contributor/lazyConsensus" | relative_url }}
-[voting]: {{ "/contributor/voting" | relative_url }}
 [Fork]: https://help.github.com/articles/fork-a-repo/
 [Pull Request]: https://help.github.com/articles/about-pull-requests/
 [Push]: https://help.github.com/articles/pushing-to-a-remote/

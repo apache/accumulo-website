@@ -33,7 +33,7 @@ Drop by and chat about Accumulo at [#accumulo][accumulo-irc] on [freenode].
 
 ## Contributions
 
-Contributions to Apache Accumulo are welcome! If you are interested, read our [Contributor Guide][contributor]. If you need help finding something to work on, send a message to our `dev` mailing list and we'll help you find a task that interests you.
+Contributions to Apache Accumulo are welcome! If you are interested, read [how to contribute][contribute]. If you need help finding something to work on, send a message to our `dev` mailing list and we'll help you find a task that interests you.
 
 ## Events
 
@@ -80,4 +80,4 @@ Attend Accumulo events such as [Accumulo Summit][summit] and meetups hosted by [
 [meetup-dc]: https://www.meetup.com/Accumulo-Users-DC/
 [accumulo-irc]: irc://chat.freenode.net/accumulo
 [freenode]: https://freenode.net/
-[contributor]: /contributor/
+[contribute]: /how-to-contribute/
