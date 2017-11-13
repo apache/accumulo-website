@@ -27,16 +27,16 @@ the [open issues labeled for newbies][newbie-issues] or [contact us][contact].
 
 Contributions can be made to the following repositories. While the general contribution workflow is
 described below, repositories have special instructions in their `CONTRIBUTING.md` file which can be
-viewed by clicking on the `C` in the Links column below.
+viewed by clicking on `contribute` in the Links column below.
 
 | Repository                      | Links    | Description
 | ------------------------------- | -------- | -----------
-| [Accumulo][a]                   | [C][ac]  | Core Project
-| [Accumulo Website][w]           | [C][wc]  | Source for this website
-| [Accumulo Examples][e]          | [C][ec]  | Accumulo example code
-| [Accumulo Testing][t]           | [C][tc]  | Accumulo test suites such as continuous ingest and random walk
-| [Accumulo Docker][d]            | [C][dc]  | Source for Accumulo Docker image
-| [Accumulo Wikisearch][s]        | [C][sc]  | Accumulo example application that indexes and queries Wikipedia data
+| [Accumulo][a]                   | [contribute][ac]  | Core Project
+| [Accumulo Website][w]           | [contribute][wc]  | Source for this website
+| [Accumulo Examples][e]          | [contribute][ec]  | Accumulo example code
+| [Accumulo Testing][t]           | [contribute][tc]  | Accumulo test suites such as continuous ingest and random walk
+| [Accumulo Docker][d]            | [contribute][dc]  | Source for Accumulo Docker image
+| [Accumulo Wikisearch][s]        | [contribute][sc]  | Accumulo example application that indexes and queries Wikipedia data
 
 ## Contribution workflow
 
