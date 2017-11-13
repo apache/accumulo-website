@@ -50,7 +50,7 @@ viewed by clicking on the `C` in the Links column below.
 1. Do work and commit to your branch. You can reference [this link][messages] for a guide on 
 to write good commit log messages in git.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
-1. If needed, squash to the minimum number of commits. For help on squashing commits, see this tutorial or StackOverflow answer.
+1. If needed, squash to the minimum number of commits. For help on squashing commits, see this [tutorial][squash-tutorial] or [StackOverflow answer][squash-stack].
 1. [Push] your branch to your fork.
 ```
     git push origin accumulo-4321
@@ -147,3 +147,5 @@ For more details, see the [contributor guide](/contributors-guide/).
 [intellij-import]: https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start
 [accumulo-contrib]: https://github.com/apache/accumulo/tree/master/contrib
 [messages]: https://chris.beams.io/posts/git-commit/
+[squash-tutorial]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
+[squash-stack]: https://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git
