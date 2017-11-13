@@ -103,6 +103,7 @@ permalink: /people/
 |             | Mike Fagan          | [Arcus Research][ARCUS]                                           | [MT][MT]              |
 |             | Morgan Haskel       |                                                                   |                       |
 |             | Nguessan Kouame     |                                                                   |                       |
+| PircDef     | Nick Felts          | [Praxis Engineering][PRAXIS]                                      | [ET][ET]              |
 |             | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 |             | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 |             | Philip Young        |                                                                   |                       |
