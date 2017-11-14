@@ -47,8 +47,7 @@ viewed by clicking on `contribute` in the Links column below.
 ```    
     git checkout -b accumulo-4321
 ```    
-1. Do work and commit to your branch. You can reference [this link][messages] for a guide on 
-to write good commit log messages in git.
+1. Do work and commit to your branch. You can reference [this link][messages] for a guide on how to write good commit log messages.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this [tutorial][squash-tutorial] or [StackOverflow answer][squash-stack].
 1. [Push] your branch to your fork.
