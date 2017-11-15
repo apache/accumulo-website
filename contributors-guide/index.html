@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Git</title>
+<title>Contributor Guide</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -99,6 +99,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
             <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
             <li><a href="/1.8/examples">Examples (1.8)</a></li>
@@ -111,11 +112,10 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/get_involved">Get Involved</a></li>
-            <li><a href="/mailing_list">Mailing Lists</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
             <li><a href="/people">People</a></li>
             <li><a href="/related-projects">Related Projects</a></li>
-            <li><a href="/contributor/">Contributor Guide</a></li>
           </ul>
         </li>
       </ul>
@@ -146,14 +146,222 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Git</h1>
+          <h1 class="title">Contributor Guide</h1>
           
-          <p><a href="https://git-scm.com">Git</a> is an open source, distributed version control system
+          <p>This page contains resources and documentation of interest to current and potential contributors to the Accumulo project. Any documentation that is helpful to Accumulo users should go in the <a href="/1.8/accumulo_user_manual.html">Accumulo User Manual</a>.</p>
+
+<p>If your are interested in quickly getting an Accumulo instance up and running, see the Accumulo Quickstart guides <a href="/quickstart-1.x/">(1.x)</a>/<a href="/quickstart-2.x/">(2.x)</a> or refer to the <a href="https://github.com/astralway/uno">Uno</a> project on Github.</p>
+
+<ul>
+  <li><a href="#how-to-contribute-to-apache-accumulo">How to contribute to Apache Accumulo</a></li>
+  <li><a href="#project-resources">Project Resources</a>
+    <ul>
+      <li><a href="#github">GitHub</a></li>
+      <li><a href="#jira">JIRA</a></li>
+      <li><a href="#jenkinstravisci">Jenkins/TravisCI</a></li>
+    </ul>
+  </li>
+  <li><a href="#create-a-ticket-for-new-bugs-or-feature">Create a Ticket for Bugs or New Features</a></li>
+  <li><a href="#building-accumulo-from-source">Building Accumulo from Source</a>
+    <ul>
+      <li><a href="#installing-apache-thrift">Installing Apache Thrift</a></li>
+      <li><a href="#checking-out-from-git">Checking out from Git</a></li>
+      <li><a href="#running-a-build">Running a Build</a></li>
+    </ul>
+  </li>
+  <li><a href="#providing-a-contribution">Providing a contribution</a>
+    <ul>
+      <li><a href="#proposed-workflow">Proposed Workflow</a></li>
+      <li><a href="#the-implementation">The Implementation</a>
+        <ul>
+          <li><a href="#contributors">Contributors</a></li>
+          <li><a href="#developers">Developers</a>
+            <ul>
+              <li><a href="#primary-development">Primary Development</a></li>
+              <li><a href="#reviewing-contributor-changes">Reviewing Contributor Changes</a></li>
+              <li><a href="#submit-contribution-via-patch">Submit Contribution via Patch</a></li>
+              <li><a href="#submit-contribution-via-pull-request">Submit Contribution via Pull Request</a></li>
+              <li><a href="#feature-branches">Feature Branches</a></li>
+              <li><a href="#changes-which-affect-multiple-versions-aka-merging">Changes Which Affect Multiple-Versions (a.k.a Merging)</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#code-review-process">Code Review Process</a></li>
+  <li><a href="#additional-contributor-information">Additional Contributor Information</a>
+    <ul>
+      <li><a href="#coding-practices">Coding Practices</a></li>
+      <li><a href="#merging-practices">Merging Practices</a></li>
+      <li><a href="#project-examples">Project Examples</a></li>
+      <li><a href="#website-contributions">Website Contributions</a></li>
+      <li><a href="#public-api">Public API</a></li>
+      <li><a href="/contributor/contrib-projects">Contrib Projects</a></li>
+    </ul>
+  </li>
+  <li><a href="#committer-documentation">Committer Documentation</a></li>
+  <li><a href="#project-governance">Project Governance</a></li>
+</ul>
+
+<h2 id="how-to-contribute-to-apache-accumulo">How to Contribute to Apache Accumulo</h2>
+
+<p>Apache Accumulo welcomes contributions from the community. This is especially true of new contributors! You don’t need to be a software developer to contribute to Apache Accumulo. So, if you want to get involved in Apache Accumulo, there is almost certainly a role for you. View our <a href="/how-to-contribute/">How to Contribute</a> page for additional details on the many opportunities available.</p>
+
+<h2 id="project-resources">Project Resources</h2>
+
+<p>Accumulo makes use of the following external tools for development.</p>
+
+<h3 id="github">GitHub</h3>
+
+<p>Apache Accumulo® source code is maintained using <a href="https://git-scm.com/">Git</a> version control and mirrored to <a href="https://github.com/apache/accumulo">GitHub</a>. Source files can be browsed <a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary">here</a> or at the <a href="https://github.com/apache/accumulo">GitHub mirror</a>.</p>
+
+<p>The project code can be checked-out <a href="https://github.com/apache/accumulo">here</a>. It builds with <a href="https://maven.apache.org">Apache Maven</a>.</p>
+
+<h3 id="jira">JIRA</h3>
+
+<p>Accumulo <a href="https://issues.apache.org/jira/browse/ACCUMULO">tracks issues</a> with <a href="https://www.atlassian.com/software/jira">JIRA</a>. Prospective code contributors can view <a href="https://s.apache.org/newbie_accumulo_tickets">open issues labeled for “newbies”</a> to search for starter tickets. Note that every commit should reference a JIRA ticket of the form ACCUMULO-#.</p>
+
+<h3 id="jenkinstravisci">Jenkins/TravisCI</h3>
+
+<p>Accumulo uses <a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins</a> and <a href="https://travis-ci.org/apache/accumulo">TravisCI</a> for automatic builds and continuous integration.</p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-Master/lastBuild/buildStatus" style="height: 1.1em" /> <a href="https://builds.apache.org/job/Accumulo-Master">Master</a></p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-1.8/lastBuild/buildStatus" style="height: 1.1em" /> <a href="https://builds.apache.org/job/Accumulo-1.8">1.8 Branch</a></p>
+
+<p><img src="https://builds.apache.org/job/Accumulo-1.7/lastBuild/buildStatus" style="height: 1.1em" /> <a href="https://builds.apache.org/job/Accumulo-1.7">1.7 Branch</a></p>
+
+<h2 id="create-a-ticket-for-new-bugs-or-feature">Create a Ticket for New Bugs or Feature</h2>
+
+<p>If you run into a bug or think there is something that would benefit the project, we encourage you to file an issue at the <a href="https://issues.apache.org/jira/browse/ACCUMULO">Apache Accumulo JIRA</a> page. Regardless of whether you have the time to provide the fix or implementation yourself, this will be helpful to the project.</p>
+
+<h2 id="building-accumulo-from-source">Building Accumulo from Source</h2>
+
+<h3 id="installing-apache-thrift">Installing Apache Thrift</h3>
+
+<p>If you activate the ‘thrift’ Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate
+stubs. If you activate this profile and don’t have Apache Thrift installed and in your path, you will see a warning and
+your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the ‘thrift’ command is in your path. 
+Watch out for THRIFT-1367; you may need to configure Thrift with –without-ruby. Most developers do not
+need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.</p>
+
+<h3 id="checking-out-from-git">Checking out from Git</h3>
+
+<p>There are several methods for obtaining the Accumulo source code. If you prefer to use SSH rather than HTTPS you can refer to the <a href="https://help.github.com/">GitHub help pages</a> for help in creating a GitHub account and setting up <a href="https://help.github.com/articles/connecting-to-github-with-ssh/">SSH keys</a>.</p>
+
+<h4 id="--from-your-github-fork">- from your Github Fork</h4>
+
+<p>It is also possible to <a href="https://help.github.com/articles/fork-a-repo/">fork</a> a repository in GitHub so that you can freely experiment with changes without affecting the original project. You can then submit a <a href="https://help.github.com/articles/about-pull-requests/">pull request</a> from your personal fork to the project repository when you wish to supply a contribution.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git clone git@github.com:&lt;account name&gt;/accumulo.git
+</code></pre>
+</div>
+
+<h5 id="retrieval-of-upstream-changes">Retrieval of upstream changes</h5>
+
+<p>Additionally, it is beneficial to add a git remote for the mirror to allow the retrieval of upstream changes.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git remote add upstream http://github.com/apache/accumulo.git
+</code></pre>
+</div>
+
+<h4 id="--from-the-github-mirror">- from the Github Mirror</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/apache/accumulo.git
+</code></pre>
+</div>
+
+<h4 id="--from-the-apache-hosted-repository">- from the Apache Hosted Repository</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git clone https://gitbox.apache.org/repos/asf/accumulo.git
+</code></pre>
+</div>
+
+<h2 id="running-a-build">Running a Build</h2>
+
+<p>Accumulo uses <a href="https://maven.apache.org">Apache Maven</a> to handle source building, testing, and packaging. To build Accumulo, you will need to use Maven version 3.0.5 or later.</p>
+
+<p>You should familiarize yourself with the <a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle">Maven Build Lifecycle</a>, as well as the various plugins we use in our <a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob_plain;f=pom.xml;hb=HEAD">POM</a>, in order to understand how Maven works and how to use the various build options while building Accumulo.</p>
+
+<p>To build from source (for example, to deploy):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn package -Passemble
+</code></pre>
+</div>
+
+<p>This will create a file <code class="highlighter-rouge">accumulo-*-SNAPSHOT-dist.tar.gz</code> in the assemble/target directory. Optionally, append <code class="highlighter-rouge">-DskipTests</code> if you want to skip the build tests.</p>
+
+<p>To build your branch before submitting a pull request, you’ll probably want to run some basic “sunny-day” integration tests to ensure you haven’t made any grave errors, as well as <code class="highlighter-rouge">checkstyle</code> and <code class="highlighter-rouge">findbugs</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn verify -Psunny
+</code></pre>
+</div>
+
+<p>To run specific unit tests, you can run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn package -Dtest=MyTest -DfailIfNoTests=false
+</code></pre>
+</div>
+
+<p>Or to run the specific integration tests MyIT and YourIT (and skip all unit tests), you can run:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn verify -Dtest=NoSuchTestExists -Dit.test=MyIT,YourIT -DfailIfNoTests=false
+</code></pre>
+</div>
+
+<p>There are plenty of other options. For example, you can skip findbugs with <code class="highlighter-rouge">mvn verify -Dfindbugs.skip</code> or checkstyle <code class="highlighter-rouge">-Dcheckstyle.skip</code>, or control the number of forks to use while executing tests, <code class="highlighter-rouge">-DforkCount=4</code>, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.</p>
+
+<p>If you regularly switch between major development branches, you may receive errors about improperly licensed files from the <a href="https://creadur.apache.org/rat/apache-rat-plugin">RAT plugin</a>. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.</p>
+
+<p>The easiest fix is to ensure all of your current changes are stored in git and then cleaning your workspace.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$&gt; git add path/to/file/that/has/changed
+$&gt; git add path/to/other/file
+$&gt; git clean -df
+</code></pre>
+</div>
+
+<p>Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the “untracked files” section in a <code class="highlighter-rouge">git status</code> command.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$&gt; git status
+# On branch master
+nothing to commit (working directory clean)
+$&gt; mvn package
+{ maven output elided }
+$&gt; git checkout 1.6.1-SNAPSHOT
+Switched to branch '1.6.1-SNAPSHOT'
+$&gt; git status
+# On branch 1.6.1-SNAPSHOT
+# Untracked files:
+#   (use "git add &lt;file&gt;..." to include in what will be committed)
+#
+# mapreduce/
+# shell/
+nothing added to commit but untracked files present (use "git add" to track)
+$&gt; git clean -df
+Removing mapreduce/
+Removing shell/
+$&gt; git status
+# On branch 1.6.1-SNAPSHOT
+nothing to commit (working directory clean)
+</code></pre>
+</div>
+
+<h2 id="providing-a-contribution">Providing a Contribution</h2>
+
+<p>The Accumulo source is hosted at <a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary">https://gitbox.apache.org/</a> .</p>
+
+<p>Like all Apache projects, a mirror of the git repository is also located on GitHub at <a href="https://github.com/apache/accumulo">https://github.com/apache/accumulo</a> which provides ease in <a href="https://help.github.com/articles/fork-a-repo/">forking</a> and generating <a href="https://help.github.com/articles/using-pull-requests/">pull requests (PRs)</a>.</p>
+
+<h3 id="git">Git</h3>
+
+<p><a href="https://git-scm.com/">Git</a> is an open source, distributed version control system
 which has become very popular in large, complicated software projects due to
 its efficient handling of multiple, simultaneously and independently developed
 branches of source code.</p>
 
-<h2 id="workflow-background">Workflow Background</h2>
+<h3 id="workflow-background">Workflow Background</h3>
 
 <p>The most likely contested subject matter regarding switching an active team
 from one SCM tool to another is a shift in the development paradigm.</p>
@@ -196,7 +404,7 @@ the blemish.</p>
 the workflow decided upon for development is very important and has direct
 impact on the efficacy of the advanced commands bundled with Git.</p>
 
-<h2 id="proposed-workflow">Proposed Workflow</h2>
+<h3 id="proposed-workflow">Proposed Workflow</h3>
 
 <p>This is a summary of what has been agreed upon by vocal committers/PMC members
 on <a href="mailto:dev@accumulo.apache.org">dev@accumulo.apache.org</a>. Enumeration of
@@ -238,16 +446,15 @@ for a best-effort to be given to avoid duplicative commits appearing in
   </li>
 </ol>
 
-<h1 id="the-implementation">The implementation</h1>
+<h2 id="the-implementation">The Implementation</h2>
 
-<h2 id="contributors">Contributors</h2>
+<p>The following steps, originally derived from Apache kafka’s 
+<a href="https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow">simple contributor workflow</a>, will demonstrate the gitflow implementation.</p>
 
-<p>Use the following steps, original derived from Apache Kafka’s <a href="https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow">simple
-contributor
-workflow</a>.</p>
+<h3 id="contributors">Contributors</h3>
 
 <p>To be specific, let’s consider a contributor wanting to work on a fix for the
-Jira issue ACCUMULO-12345 that affects 1.5.0 release.</p>
+Jira issue ACCUMULO-12345 that affects the 1.8 release.</p>
 
 <ol>
   <li>
@@ -268,9 +475,9 @@ Jira issue ACCUMULO-12345 that affects 1.5.0 release.</p>
   </li>
   <li>
     <p>For the given issue you intend to work on, choose the ‘lowest’ fixVersion
-and create a branch for yourself to work in. This example is against the next release of 1.5</p>
+and create a branch for yourself to work in. This example is against the next release of 1.8</p>
 
-    <p><code class="highlighter-rouge">git checkout -b ACCUMULO-12345-my-work origin/1.5</code></p>
+    <p><code class="highlighter-rouge">git checkout -b ACCUMULO-12345-my-work origin/1.8</code></p>
   </li>
   <li>
     <p>Make commits as you see fit as you fix the issue, referencing the issue name
@@ -288,31 +495,36 @@ in the commit message:</p>
  (specifically slides 78-98, beginning at 15:20 into the video). Essentially,
  leave a short descriptive message in the first line, skip a line, and write
  more detailed stuff there, if you need to. For example:</p>
-
-    <p><code class="highlighter-rouge">ACCUMULO-2194 Add delay for randomwalk Security teardown</code></p>
-
-    <p><code class="highlighter-rouge">If two Security randomwalk tests run back-to-back, the second test may see that the
- table user still exists even though it was removed when the first test was torn down.
- This can happen if the user drop does not propagate through Zookeeper quickly enough.
- This commit adds a delay to the end of the Security test to give ZK some time.</code></p>
   </li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    ACCUMULO-2194 Add delay for randomwalk Security teardown
+
+    If two Security randomwalk tests run back-to-back, the second test may see that the
+    table user still exists even though it was removed when the first test was torn down.
+    This can happen if the user drop does not propagate through Zookeeper quickly enough.
+    This commit adds a delay to the end of the Security test to give ZK some time.
+</code></pre>
+</div>
+
+<ol>
   <li>
     <p>Assuming others are developing against the version you also are, as you
 work, or before you create your patch, rebase your branch against the remote
 to lift your changes to the top of your branch. The branch specified here should be the same one you used in step 4.</p>
 
-    <p><code class="highlighter-rouge">git pull --rebase origin 1.5</code></p>
+    <p><code class="highlighter-rouge">git pull --rebase origin 1.8</code></p>
   </li>
   <li>
     <p>At this point, you can create a patch file from the upstream branch to
-attach to the ACCUMULO-12345 Jira issue. The branch specified here should be teh same one you used in step 4.</p>
+attach to the ACCUMULO-12345 Jira issue. The branch specified here should be the same one you used in step 4.</p>
 
-    <p><code class="highlighter-rouge">git format-patch --stdout origin/1.5 &gt; ACCUMULO-12345.patch</code></p>
+    <p><code class="highlighter-rouge">git format-patch --stdout origin/1.8 &gt; ACCUMULO-12345.patch</code></p>
   </li>
 </ol>
 
 <p>An alternative to creating a patch is submitting a request to pull your changes
-from some repository, e.g. Github. Please include the repository and branch
+from some repository, e.g. GitHub. Please include the repository and branch
 name merge in the notice to the Jira issue, e.g.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>repo=git://github.com/&lt;username&gt;/accumulo.git branch=ACCUMULO-12345
@@ -329,9 +541,9 @@ the earlier version in which the fix is intended, <code class="highlighter-rouge
 changes against the upstream branch so as to keep their changes co-located and
 free of unnecessary merges.</p>
 
-<h2 id="developers">Developers</h2>
+<h3 id="developers">Developers</h3>
 
-<h3 id="primary-development">Primary Development</h3>
+<h4 id="primary-development">Primary Development</h4>
 
 <p>Primary development should take place in <code class="highlighter-rouge">master</code> which is to contain the most
 recent, un-released version of Apache Accumulo. Branches exist for minor releases
@@ -341,7 +553,7 @@ for each previously released major version.</p>
 release practices. Developers are encouraged to make branches for their own purposes,
 for large features, release candidates or whatever else is deemed useful.</p>
 
-<h3 id="reviewing-contributor-changes">Reviewing contributor changes</h3>
+<h4 id="reviewing-contributor-changes">Reviewing contributor changes</h4>
 
 <p>It is always the responsibility of committers to determine that a patch is
 intended and able to be contributed.  From the
@@ -357,7 +569,7 @@ Contribution under the <a href="https://www.apache.org/licenses/LICENSE-2.0.txt"
 When pulling the code, committers should also verify that the commits pulled match the 
 list of commits sent to the Accumulo dev list in the pull request.</p>
 
-<h4 id="patches">Patches</h4>
+<h4 id="submit-contribution-via-patch">Submit Contribution via Patch</h4>
 
 <p>Developers should use the following steps to apply patches from
 contributors:</p>
@@ -366,7 +578,7 @@ contributors:</p>
   <li>
     <p>Checkout the branch for the major version which the patch is intended:</p>
 
-    <p><code class="highlighter-rouge">git checkout 1.5</code></p>
+    <p><code class="highlighter-rouge">git checkout 1.8</code></p>
   </li>
   <li>
     <p>Verify the changes introduced by the patch:</p>
@@ -386,16 +598,16 @@ contributors:</p>
   <li>
     <p>When finished, push the changes:</p>
 
-    <p><code class="highlighter-rouge">git push origin 1.5</code></p>
+    <p><code class="highlighter-rouge">git push origin 1.8</code></p>
   </li>
   <li>
     <p>Merge where appropriate:</p>
 
-    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git merge 1.5</code></p>
+    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git merge 1.8</code></p>
   </li>
 </ol>
 
-<h4 id="github-pull-requests">Github Pull-Requests</h4>
+<h4 id="submit-contribution-via-pull-request">Submit Contribution via Pull-Request</h4>
 
 <p>If the contributor submits a repository and branch to pull
 from, the steps are even easier:</p>
@@ -432,7 +644,7 @@ include a signoff on the commit(s) as it changes the final commit ID in the
 Accumulo repository. This also has the negative effect of not automatically closing
 the Pull-Request when the changes are made public.</p>
 
-<h3 id="feature-branches">Feature Branches</h3>
+<h4 id="feature-branches">Feature Branches</h4>
 
 <p>Ease in creating and using feature branches is a desirable merit which Git
 provides with little work. Feature branches are a great way in which developers
@@ -496,7 +708,7 @@ with the lump-sum of your feature branch changes:</p>
   </li>
 </ol>
 
-<h3 id="changes-which-affect-multiple-versions-aka-merging">Changes which affect multiple versions (a.k.a. merging)</h3>
+<h4 id="changes-which-affect-multiple-versions-aka-merging">Changes which affect multiple versions (a.k.a. merging)</h4>
 
 <p>Merging can be a very confusing topic for users switching to Git, but it can be
 summarized fairly easily.</p>
@@ -538,136 +750,98 @@ through the rest of the active versions. Even when the merge may results in a
 zero-length change in content, this is incredibly important to record, as you
 are the one who knows that this zero-length change in content is correct!</p>
 
-<h2 id="release-management">Release Management</h2>
+<h2 id="code-review-process">Code review process</h2>
 
-<p>Releases, although not a day to day task, have their own unique steps which are
-to be followed. Releases can be categorized in to minor and major releases.</p>
+<p>Accumulo primarily uses GitHub (via pull requests) for code reviews, but has access to an instance of <a href="https://reviews.apache.org/">Review Board</a> as well if that is preferred.</p>
 
-<h3 id="a-minor-release">A minor release</h3>
+<p>Accumulo operates under the <a href="https://www.apache.org/foundation/glossary#CommitThenReview">Commit-Then-Review</a> (CtR) policy, so a code review does not need to occur prior to commit. However, a commiter has the option to hold a code review before a commit happens if, in their opinion, it would benefit from additional attention. Full details of the code review process for Accumulo is documented <a href="./rb">here</a></p>
 
-<p>A minor release is some set of changes <code class="highlighter-rouge">z'</code> on top of a version <code class="highlighter-rouge">x.y.z</code>.
-Typically, <code class="highlighter-rouge">z'</code> is simply <code class="highlighter-rouge">z + 1</code>, e.g. given a release named ‘1.6.0’, and the
-next minor release is ‘1.6.1’. These changes for <code class="highlighter-rouge">z'</code> should not break any
-client code which works against <code class="highlighter-rouge">z</code> and should absolutely not change the public
-API.</p>
+<h3 id="review-board">Review Board</h3>
 
-<p>By convention, the branch containing the changes <code class="highlighter-rouge">z'</code> should be named
-<code class="highlighter-rouge">x.y</code> (where the changes for <code class="highlighter-rouge">z'</code> are commits since <code class="highlighter-rouge">x.y.z</code>. The steps to take are as follows:</p>
+<p>Use of <a href="/contributor/rb">Review Board</a> has slowly diminished and been gradually replaced by GitHub reviews over the past year or so.</p>
 
-<ol>
-  <li><a href="/contributor/making-release">Make a release candidate</a></li>
-  <li>Create a branch for the release candidate from the <code class="highlighter-rouge">x.y</code> branch,
-named something like <code class="highlighter-rouge">x.y.z'-RCN</code>.</li>
-  <li>Test and Vote</li>
-  <li>Create a GPG-signed tag with the correct final name: <code class="highlighter-rouge">x.y.z'</code></li>
-  <li>Push a delete of the remote branch <code class="highlighter-rouge">x.y.z'-RCN</code></li>
-</ol>
+<h2 id="additional-contributor-information">Additional Contributor Information</h2>
 
-<p>This process is not firm and should not be viewed as requirements for making a release.
-The release manager is encouraged to make use branches/tags in whichever way is best.</p>
+<h3 id="coding-practices">Coding Practices</h3>
 
-<h3 id="a-major-release">A major release</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><strong>License Header</strong></td>
+      <td>Always add the current ASF license header as described in [ASF Source Header][srcheaders].</td>
+    </tr>
+    <tr>
+      <td><strong>Trailing Whitespaces</strong></td>
+      <td>Remove all trailing whitespaces. Eclipse users can use Source→Cleanup option to accomplish this.</td>
+    </tr>
+    <tr>
+      <td><strong>Indentation</strong></td>
+      <td>Use 2 space indents and never use tabs!</td>
+    </tr>
+    <tr>
+      <td><strong>Line Wrapping</strong></td>
+      <td>Use 160-column line width for Java code and Javadoc.</td>
+    </tr>
+    <tr>
+      <td><strong>Control Structure New Lines</strong></td>
+      <td>Use a new line with single statement if/else blocks.</td>
+    </tr>
+    <tr>
+      <td><strong>Author Tags</strong></td>
+      <td>Do not use Author Tags. The code is developed and owned by the community.</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>A major release is a release in which multiple new features are introduced
-and/or the public API are modified. The major release <code class="highlighter-rouge">y'</code>, even when the
-client API is not modified, will typically contain many new features and
-functionality above the last release series <code class="highlighter-rouge">y</code>. A major release also resets
-the <code class="highlighter-rouge">z</code> value back to <code class="highlighter-rouge">0</code>.</p>
+<h3 id="merging-practices">Merging Practices</h3>
 
-<p>The steps to create a new major release are very similar to a minor release:</p>
+<p>Changes should be merged from earlier branches of Accumulo to later branches. Ask the <a href="mailto:dev@accumulo.apache.org">dev list</a> for instructions.</p>
 
-<ol>
-  <li><a href="/contributor/making-release">Make a release candidate</a></li>
-  <li>Create a tag of the release candidate from the <code class="highlighter-rouge">x.y</code> branch,
-named something like <code class="highlighter-rouge">x.y.0-RCN</code>.</li>
-  <li>Test and Vote</li>
-  <li>Create a GPG-signed tag with the correct final name: <code class="highlighter-rouge">x.y.0</code></li>
-  <li>Push a delete of the remote branch <code class="highlighter-rouge">x.y.0-RCN</code></li>
-</ol>
+<h3 id="project-examples">Project Examples</h3>
 
-<h1 id="the-infrastructure">The infrastructure</h1>
+<p>A collection of Accumulo example code can be found at the <a href="https://github.com/apache/accumulo-examples">Accumulo Examples repository</a>.</p>
 
-<p>This section deals with the changes that must be requested through INFRA. As
-with any substantial INFRA request, the VOTE and result from the mailing should
-be referenced so INFRA knows that the request has been acknowledged. Likely, a
-PMC member should be the one to submit the request.</p>
+<h3 id="website-contributions">Website Contributions</h3>
 
-<h2 id="repositories">Repositories</h2>
+<p>The source for this website is a collection of markdown documents that are converted to HTML using
+<a href="https://jekyllrb.com">Jekyll</a>. It can be found in the <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a>. If you would like to make changes to this website, clone the website repo and edit the markdown:</p>
 
-<p>I believe that we will need multiple repositories to best align ourselves with
-how we currently track “Accumulo” projects. The repositories follow:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    git clone https://github.com/apache/accumulo-website.git
+</code></pre>
+</div>
 
-<ol>
-  <li>
-    <p>The main source tree. This will track the standard trunk, branches, tags
-structure from Subversion for Apache Accumulo.</p>
-  </li>
-  <li>
-    <p>One repository for every project in
-<a href="https://svn.apache.org/repos/asf/accumulo/contrib">contrib</a>: Accumulo-BSP,
-Instamo Archetype, and the Wikisearch project. Each of these
-are considered disjoint from one another, and the main source tree, so they
-each deserve their own repository.</p>
-  </li>
-</ol>
+<p>After you have made your changes, follow the instructions in the <a href="https://github.com/apache/accumulo-website/blob/master/README.md">README.md</a> to run the website locally and make a pull request on <a href="https://github.com/apache/accumulo-website">GitHub</a>. If you have problems installing Jekyll or running the website locally, it’s OK to proceed with the pull request. A committer will review your changes before committing them and updating the website.</p>
 
-<p>Given the list of repositories that currently exist on the <a href="https://git-wip-us.apache.org/repos/asf">ASF
-site</a> and a brief search over INFRA
-tickets, multiple repositories for a single Apache project is not an issue.
-Having this list when making the initial ticket will likely reduce the amount
-of work necessary in opening multiple INFRA tickets.</p>
+<h3 id="public-api">Public API</h3>
 
-<h2 id="mirroring">Mirroring</h2>
+<p>Refer to the README in the release you are using to see what packages are in the public API.</p>
 
-<p>It should be noted in the INFRA request that each repository will also need to
-be configured to properly mirror to the <a href="https://github.com/apache">ASF Github</a>
-account to provide the same functionality with current have via the git+svn
-mirror. Same change needs to be applied for the <a href="https://git.apache.org">Apache hosted</a> 
-mirror’ing.</p>
+<p>Changes to non-private members of those classes are subject to additional scrutiny to minimize compatibility problems across Accumulo versions.</p>
 
-<h2 id="mailing-lists">Mailing lists</h2>
+<h3 id="installing-apache-thrift-1">Installing Apache Thrift</h3>
 
-<p>It should be noted in the INFRA request that commit messages should be sent to
-<a href="mailto:commits@accumulo.apache.org">commits@accumulo.apache.org</a>. The subject
-can be decided on using the <a href="https://git-wip-us.apache.org/docs/switching-to-git#contents">provided
-variables</a>.</p>
+<p>If you activate the ‘thrift’ Maven profile, the build of some modules will attempt to run the Apache Thrift command line to regenerate stubs. If you activate this profile and don’t have Apache Thrift installed and in your path, you will see a warning and your build will fail. For Accumulo 1.5.0 and greater, install Thrift 0.9 and make sure that the ‘thrift’ command is in your path. Watch out for THRIFT-1367; you may need to configure Thrift with –without-ruby. Most developers do not need to install or modify the Thrift definitions as a part of developing against Apache Accumulo.</p>
 
-<h1 id="examples">Examples</h1>
+<h2 id="committer-documentation">Committer Documentation</h2>
 
-<p>For the sake of clarity, some examples of common situations are included below.</p>
+<p>The links below are provided primarily for the project committers but may be of interest to contributors as well.</p>
 
-<h2 id="releasing-160">Releasing 1.6.0</h2>
+<ul>
+  <li><a href="/contributor/release-management">Release Management</a></li>
+  <li><a href="/contributor/making-release">Making a Release</a></li>
+  <li><a href="https://accumulo.apache.org/contributor/verifying-release">Verifying a Release</a></li>
+</ul>
 
-<ol>
-  <li>
-    <p>Branch from <code class="highlighter-rouge">master</code> to <code class="highlighter-rouge">1.6</code></p>
+<h2 id="project-governance">Project Governance</h2>
 
-    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git branch 1.6</code></p>
-  </li>
-  <li>
-    <p>Tag <code class="highlighter-rouge">1.6.0-RC1</code> from the just created <code class="highlighter-rouge">1.6</code> branch</p>
+<p>For details about governance policies for the Accumulo project view the following links.</p>
 
-    <p><code class="highlighter-rouge">git tag 1.6.0-RC1 1.6</code></p>
-  </li>
-  <li>
-    <p>Test, vote, etc. and tag from 1.6.0-RC1</p>
-
-    <p><code class="highlighter-rouge">git -s tag 1.6.0 1.6.0-RC1</code></p>
-  </li>
-  <li>
-    <p>Delete the RC tag, if desired.</p>
-
-    <p><code class="highlighter-rouge">git tag -d 1.6.0-RC1 &amp;&amp; git push --delete origin 1.6.0-RC1</code></p>
-  </li>
-  <li>
-    <p>Ensure <code class="highlighter-rouge">master</code> contains all features and fixes from <code class="highlighter-rouge">1.6.0</code></p>
-
-    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git merge 1.6</code></p>
-  </li>
-  <li>
-    <p>Update the project version in <code class="highlighter-rouge">master</code> to 1.7.0-SNAPSHOT</p>
-  </li>
-</ol>
+<ul>
+  <li><a href="/contributor/bylaws">Bylaws</a></li>
+  <li><a href="/contributor/consensusBuilding">Consensus Building</a></li>
+  <li><a href="/contributor/lazyConsensus">Lazy Consensus</a></li>
+  <li><a href="/contributor/voting">Voting</a></li>
+</ul>
 
 
         </div>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>How To Contribute</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+
+  // configure Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
+    ga('create', 'UA-50934829-1', 'apache.org');
+    ga('send', 'pageview');
+  }
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">How To Contribute</h1>
+          
+          <p>Contributions are welcome to all Apache Accumulo repositories. While most contributions are code,
+there are other ways to contribute to Accumulo:</p>
+
+<ul>
+  <li>answer questions on mailing lists</li>
+  <li>review pull requests</li>
+  <li>verify and test new releases</li>
+  <li>update the Accumulo website and documentation</li>
+</ul>
+
+<p>Contributions are reviewed (via GitHub pull requests) by
+the community before being merged by a committer.</p>
+
+<p>This document provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive <a href="/contributors-guide/">contributor guide</a>.</p>
+
+<h2 id="issues">Issues</h2>
+
+<p>Any contribution should have a corresponding issue. Accumulo uses <a href="https://issues.apache.org/jira/browse/ACCUMULO">JIRA</a> for issue tracking. Before creating an issue,
+you will need to create an <a href="https://issues.apache.org/jira/secure/Signup!default.jspa">Apache JIRA account</a>. If you need help finding an issue to work on, check out
+the <a href="https://s.apache.org/newbie_accumulo_tickets">open issues labeled for newbies</a> or <a href="/contact-us/">contact us</a>.</p>
+
+<h2 id="repositories">Repositories</h2>
+
+<p>Contributions can be made to the following repositories. While the general contribution workflow is
+described below, repositories have special instructions in their <code class="highlighter-rouge">CONTRIBUTING.md</code> file which can be
+viewed by clicking on <code class="highlighter-rouge">contribute</code> in the Links column below.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Repository</th>
+      <th>Links</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo">Accumulo</a></td>
+      <td><a href="https://github.com/apache/accumulo/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Core Project</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo-website">Accumulo Website</a></td>
+      <td><a href="https://github.com/apache/accumulo-website/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Source for this website</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo-examples">Accumulo Examples</a></td>
+      <td><a href="https://github.com/apache/accumulo-examples/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Accumulo example code</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo-testing">Accumulo Testing</a></td>
+      <td><a href="https://github.com/apache/accumulo-testing/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Accumulo test suites such as continuous ingest and random walk</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo-docker">Accumulo Docker</a></td>
+      <td><a href="https://github.com/apache/accumulo-docker/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Source for Accumulo Docker image</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/apache/accumulo-wikisearch">Accumulo Wikisearch</a></td>
+      <td><a href="https://github.com/apache/accumulo-wikisearch/blob/master/CONTRIBUTING.md">contribute</a></td>
+      <td>Accumulo example application that indexes and queries Wikipedia data</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="contribution-workflow">Contribution workflow</h2>
+
+<ol>
+  <li>Create an <a href="https://issues.apache.org/jira/secure/Signup!default.jspa">Apache JIRA account</a> (for issue tracking) and <a href="https://github.com/join">GitHub account</a> (for pull requests).</li>
+  <li>Find an <a href="https://s.apache.org/newbie_accumulo_tickets">issue</a> to work on or create one that describes the work that you want to do.</li>
+  <li><a href="https://help.github.com/articles/fork-a-repo/">Fork</a> and <a href="https://help.github.com/articles/cloning-a-repository/">clone</a> the GitHub repository that you want to contribute to.</li>
+  <li>Create a branch in the local clone of your fork.
+    <div class="highlighter-rouge"><pre class="highlight"><code> git checkout -b accumulo-4321
+</code></pre>
+    </div>
+  </li>
+  <li>Do work and commit to your branch. You can reference <a href="https://chris.beams.io/posts/git-commit/">this link</a> for a guide on how to write good commit log messages.</li>
+  <li>Ensure you works satisfies the guidelines laid out in the <code class="highlighter-rouge">CONTRIBUTING.md</code> file.</li>
+  <li>If needed, squash to the minimum number of commits. For help on squashing commits, see this <a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">tutorial</a> or <a href="https://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git">StackOverflow answer</a>.</li>
+  <li><a href="https://help.github.com/articles/pushing-to-a-remote/">Push</a> your branch to your fork.
+    <div class="highlighter-rouge"><pre class="highlight"><code> git push origin accumulo-4321
+</code></pre>
+    </div>
+  </li>
+  <li>Create a <a href="https://help.github.com/articles/about-pull-requests/">Pull Request</a> on GitHub to the appropriate repository. If the work is not complete and the Pull Request is for feedback, please put <code class="highlighter-rouge">[WIP]</code> in the subject.</li>
+  <li>At least one committer (and others in the community) will review your pull request and add any comments to your code.</li>
+  <li>Push any changes from the review to the branch as new commits so the reviewer only needs to review new changes. Please avoid squashing commits after the review starts. Squashing makes it hard for the reviewer to follow the changes.</li>
+  <li>Repeat this process until a reviewer approves the pull request.</li>
+  <li>When the review process is finished, all commits on the pull request may be squashed by a committer. Please avoid squashing as it makes it difficult for the committer to know if they are merging what was reviewed.</li>
+</ol>
+
+<h2 id="coding-guidelines">Coding Guidelines</h2>
+
+<ul>
+  <li>If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches.</li>
+  <li>Accumulo follows <a href="http://semver.org/spec/v2.0.0.html">semver</a> for its public API. Accumulo lists which packages are public API in its <a href="https://github.com/apache/accumulo/blob/master/README.md#api">README.md</a>.</li>
+  <li>Every file requires the ASF license header as described in <a href="https://www.apache.org/legal/src-headers">ASF Source Header</a>.</li>
+  <li>Remove all trailing whitespaces. Eclipse users can use Source→Cleanup option to accomplish this.</li>
+  <li>Use 2 space indents and never use tabs!</li>
+  <li>Use 160-column line width for Java code and Javadoc.</li>
+  <li>Use a new line with single statement if/else blocks.</li>
+  <li>Do not use Author Tags. The code is developed and owned by the community.</li>
+</ul>
+
+<h2 id="code-editors">Code Editors</h2>
+
+<p>Feel free to use any editor when contributing Accumulo. If you are looking for a recommendation, many Accumulo
+developers use <a href="https://www.jetbrains.com/idea/">IntelliJ</a> or <a href="https://www.eclipse.org/">Eclipse</a>. Below are some basic instructions to help you get started.</p>
+
+<h3 id="intellij">IntelliJ</h3>
+
+<ol>
+  <li>Download and install <a href="https://www.jetbrains.com/idea/">IntelliJ</a></li>
+  <li>Clone the Accumulo repository that you want to work on.
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/apache/accumulo.git
+</code></pre>
+    </div>
+  </li>
+  <li><a href="https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start">Import</a> the repository as a Maven project into IntelliJ</li>
+  <li>(Optional) Download and import <code class="highlighter-rouge">Eclipse-Accumulo-Codestyle.xml</code> from Accumulo’s <a href="https://github.com/apache/accumulo/tree/master/contrib">contrib</a> directory
+    <ul>
+      <li>Import via <code class="highlighter-rouge">File</code> &gt; <code class="highlighter-rouge">Settings</code> &gt; <code class="highlighter-rouge">Code Style</code> and clicking on cog wheel</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="eclipse">Eclipse</h3>
+
+<ol>
+  <li>Download and install <a href="https://www.eclipse.org/">Eclipse</a>.</li>
+  <li>Clone the Accumulo repository that you want to work on.
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code>git clone https://github.com/apache/accumulo.git
+</code></pre>
+    </div>
+  </li>
+  <li><a href="https://stackoverflow.com/questions/2061094/importing-maven-project-into-eclipse">Import</a> the repository as a Maven project into Eclipse</li>
+  <li>(Optional) Download and import Eclipse formatting and style guides from Accumulo’s <a href="https://github.com/apache/accumulo/tree/master/contrib">contrib</a> directory
+    <ul>
+      <li>Import Formatter: <code class="highlighter-rouge">Preferences</code> &gt; <code class="highlighter-rouge">Java</code> &gt; <code class="highlighter-rouge">Code Style</code> &gt; <code class="highlighter-rouge">Formatter</code> and import the <code class="highlighter-rouge">Eclipse-Accumulo-Codestyle.xml</code> downloaded in the previous step.</li>
+      <li>Import Template: <code class="highlighter-rouge">Preferences</code> &gt; <code class="highlighter-rouge">Java</code> &gt; <code class="highlighter-rouge">Code Style</code> &gt; <code class="highlighter-rouge">Code Templates</code> and import the <code class="highlighter-rouge">Eclipse-Accumulo-Template.xml</code>. Make sure to check the “Automatically add comments” box. This template adds the ASF header and so on for new code.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="helpful-links">Helpful Links</h2>
+
+<ul>
+  <li><strong>Build resources</strong> - <a href="https://travis-ci.org/apache/accumulo">TravisCI</a> &amp; <a href="https://builds.apache.org/view/A/view/Accumulo">Jenkins</a> (<a href="https://builds.apache.org/job/Accumulo-Master">Master</a>, <a href="https://builds.apache.org/job/Accumulo-1.8">1.8 Branch</a>, <a href="https://builds.apache.org/job/Accumulo-1.7">1.7 Branch</a>)</li>
+  <li><strong>Releases</strong> - <a href="/contributor/making-release">Making a release</a>, <a href="/contributor/verifying-release">Verifying a release</a></li>
+</ul>
+
+<p>For more details, see the <a href="/contributors-guide/">contributor guide</a>.</p>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2017 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

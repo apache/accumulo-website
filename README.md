@@ -5,6 +5,10 @@ use [Bundler] to install the necessary dependencies to run and build the website
 
 ## Install Bundler and dependencies
 
+Ruby is required to use Bundler so first make sure you have Ruby on your machine.  If you are using
+an OS packaged version of Ruby, you will have to also install the ruby-dev (Ubuntu) or 
+ruby-devel (Fedora) package as well.
+
 With Ruby installed on your machine, you can install [Bundler] using the command below:
 
     gem install bundler
