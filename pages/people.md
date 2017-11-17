@@ -73,6 +73,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
 | James Fiori         | [Flywheel Data][FLYWHEEL]                                         | [ET][ET]              |
+| Jared R.            |                                                                   |                       |
 | Jared Winick        | [Koverse][KOVERSE]                                                | [MT][MT]              |
 | Jason Then          |                                                                   |                       |
 | Jay Shipper         |                                                                   |                       |
