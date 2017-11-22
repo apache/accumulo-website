@@ -1,7 +1,8 @@
 ---
 title: Data Model
 ---
-Data is stored in Accumulo in a sorted [TreeMap]. The Keys are broken up logically into a few different parts, as seen in the image below.
+Data is stored in Accumulo in a distributed sorted map. The Keys of the map are broken up logically into a few different parts, 
+as seen in the image below.
 
 ![key value pair]({{ site.url }}/images/docs/key_value.png)
 
@@ -26,5 +27,3 @@ For this exercise add a few more rows to the GothamDB table.  Create a row for R
 and his name is "Dick Grayson".  Create a row for Joker (id0003), who is a villain with an "Unknown" name and doesn't wear a cape. Build and run.
 
 Notice how the data is printed in sorted order. Accumulo sorts by Row ID then family and then qualifier.  
-
-[TreeMap]: https://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html

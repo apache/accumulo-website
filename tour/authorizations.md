@@ -1,9 +1,15 @@
 ---
 title: Authorizations
 ---
-An Authorization is an authority granted to a User that allows them to read certain data. A column in Accumulo can have 
-a visibility attached to it, limiting access to the data of that column. Only users who have an authorization equal to 
-the visibility will be able to read the data in that column.
+Authorizations are a set of Strings that enable a user to read protected data. A column visibility is a boolean expression 
+that is evaluated using the authorizations provided by a scanner. If it evaluates to true, then the data is visible. 
+
+For example:
+* Bob has authorizations = { IT, User }
+* Tina has authorizations = { Admin, IT, User }
+* Row1:A:B has Visibility = { Admin && IT && User }
+* Bob will not see Row1:A:B
+* Tina will see Row1:A:B
 
 We now want to secure our secret identities of the heroes so that only users with the proper authorizations can read their names.
 
