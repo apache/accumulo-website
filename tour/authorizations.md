@@ -5,11 +5,11 @@ Authorizations are a set of Strings that enable a user to read protected data. A
 that is evaluated using the authorizations provided by a scanner. If it evaluates to true, then the data is visible. 
 
 For example:
-* Bob has authorizations = { IT, User }
-* Tina has authorizations = { Admin, IT, User }
-* Row1:A:B has Visibility = { Admin && IT && User }
-* Bob will not see Row1:A:B
-* Tina will see Row1:A:B
+* Bob scans with authorizations = { IT, User }
+* Tina scans with authorizations = { Admin, IT, User }
+* Row1:family1:qualifier1 has Visibility = { Admin && IT && User }
+* Bob will **not** see Row1:family1:qualifier1
+* Tina will see Row1:family1:qualifier1
 
 We now want to secure our secret identities of the heroes so that only users with the proper authorizations can read their names.
 
@@ -39,10 +39,8 @@ the [Mutation API][mut] and modify the code so the visibility created above will
 
 5. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
 ```commandline
-Key:id0001 hero:name [secretIdentity] 1510092746436 false
-Value:Bruce Wayne
-Key:id0002 hero:name [secretIdentity] 1510092746436 false
-Value:Dick Grayson
+Key : id0001 hero:name [secretIdentity] 1511900180231 false         Value : Bruce Wayne
+Key : id0002 hero:name [secretIdentity] 1511900180231 false         Value : Dick Grayson
 ```
 
 [mut]: https://accumulo.apache.org/1.8/apidocs/org/apache/accumulo/core/data/Mutation.html

@@ -7,13 +7,12 @@ as seen in the image below.
 ![key value pair]({{ site.url }}/images/docs/key_value.png)
 
 **Row ID** - Unique identifier for the row.<br/>
-**Column Family** - Logical grouping of the key.<br/>
+**Column Family** - Logical grouping of the key. This field can be used to partition data within a node.<br/>
 **Column Qualifier** - More specific attribute of the key.<br/>
 **Column Visibility** - Security label controlling access to the key/value pair.<br/>
+**Timestamp** - Generated automatically and used for versioning.
 
-The key is also composed of a **timestamp** but this is typically generated automatically.
-The **value** is where the actual data is stored. <br/>
-For brevity, we often refer to the 3 parts of the column as the family, qualifier and visibility. 
+The **value** is where the actual data is stored. For brevity, we often refer to the 3 parts of the column as the family, qualifier and visibility. 
 
 Take a closer look at the Mutation object created in the first exercise:
 ```java

@@ -26,7 +26,7 @@ title: Data Model Code
         mutation3.put("villain","wearsCape?", "false");
 
         // Create a BatchWriter to the GothamPD table and add your mutations to it.  
-        // Once the BatchWriter is closed, data will be available to scans.
+        // Once the BatchWriter is closed by the try w/ resources, data will be available to scans.
         try(BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
             writer.addMutation(mutation1);
             writer.addMutation(mutation2);
