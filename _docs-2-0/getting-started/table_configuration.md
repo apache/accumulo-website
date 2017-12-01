@@ -341,24 +341,8 @@ See the [combiner example][combiner-example] for example code.
 
 ## Block Cache
 
-In order to increase throughput of commonly accessed entries, Accumulo employs a block cache.
-This block cache buffers data in memory so that it doesn't have to be read off of disk.
-The RFile format that Accumulo prefers is a mix of index blocks and data blocks, where the index blocks are used to find the appropriate data blocks.
-Typical queries to Accumulo result in a binary search over several index blocks followed by a linear scan of one or more data blocks.
-
-The block cache can be configured on a per-table basis, and all tablets hosted on a tablet server share a single resource pool.
-To configure the size of the tablet server's block cache, set the following properties:
-
-    tserver.cache.data.size: Specifies the size of the cache for file data blocks.
-    tserver.cache.index.size: Specifies the size of the cache for file indices.
-
-To enable the block cache for your table, set the following properties:
-
-    table.cache.block.enable: Determines whether file (data) block cache is enabled.
-    table.cache.index.enable: Determines whether index cache is enabled.
-
-The block cache can have a significant effect on alleviating hot spots, as well as reducing query latency.
-It is enabled by default for the metadata tables.
+A Block Cache can be enabled on tables to limit reads from disk which can result
+in reduced read latency. Read the [Caching] documentation to learn more.
 
 ## Compaction
 
@@ -653,7 +637,6 @@ losing access to the table. See the [export example](https://github.com/apache/a
 for example code.
 
 [bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md
-[config]: /docs/{{ page.version }}/config/
 [constraint]: {{ page.javadoc_core }}/org/apache/accumulo/core/constraints/Constraint.html
 [constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md
 [iterators-user]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/package-summary.html
@@ -665,3 +648,4 @@ for example code.
 [config-properties]: {{ page.docs_baseurl}}/administration/configuration-properties
 [Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
 [BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
+[Caching]: {{ page.docs_baseurl }}/administration/caching
