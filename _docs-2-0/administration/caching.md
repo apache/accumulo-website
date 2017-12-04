@@ -10,7 +10,7 @@ This caching has the following benefits:
 * reduces latency when reading data
 * helps alleviate hotspots in tables
 
-The block cache stores index and data blocks. A typical Accumulo read will perfrom a binary search
+The block cache stores index and data blocks. A typical Accumulo read operation will perform a binary search
 over several index blocks followed by a linear scan of one or more data blocks. Each tablet server
 has its own block cache that is shared by all hosted tablets. Therefore, block caches are only enabled
 for tables where read performance is critical.
