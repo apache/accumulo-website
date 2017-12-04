@@ -266,6 +266,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/replication">Replication</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/caching">Caching</a></div>
+                
               </div>
             </div>
           
@@ -683,28 +685,8 @@ the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/o
 
 <h2 id="block-cache">Block Cache</h2>
 
-<p>In order to increase throughput of commonly accessed entries, Accumulo employs a block cache.
-This block cache buffers data in memory so that it doesn’t have to be read off of disk.
-The RFile format that Accumulo prefers is a mix of index blocks and data blocks, where the index blocks are used to find the appropriate data blocks.
-Typical queries to Accumulo result in a binary search over several index blocks followed by a linear scan of one or more data blocks.</p>
-
-<p>The block cache can be configured on a per-table basis, and all tablets hosted on a tablet server share a single resource pool.
-To configure the size of the tablet server’s block cache, set the following properties:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>tserver.cache.data.size: Specifies the size of the cache for file data blocks.
-tserver.cache.index.size: Specifies the size of the cache for file indices.
-</code></pre>
-</div>
-
-<p>To enable the block cache for your table, set the following properties:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>table.cache.block.enable: Determines whether file (data) block cache is enabled.
-table.cache.index.enable: Determines whether index cache is enabled.
-</code></pre>
-</div>
-
-<p>The block cache can have a significant effect on alleviating hot spots, as well as reducing query latency.
-It is enabled by default for the metadata tables.</p>
+<p>A Block Cache can be enabled on tables to limit reads from disk which can result
+in reduced read latency. Read the <a href="/docs/2.0/administration/caching">Caching</a> documentation to learn more.</p>
 
 <h2 id="compaction">Compaction</h2>
 
