@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - Sampling</title>
+<title>Accumulo Documentation - Upgrading Accumulo</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -197,12 +197,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="true" aria-controls="collapsedevelopment">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
                   Development
                 </a>
               </h4>
             </div>
-            <div id="collapsedevelopment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -237,12 +237,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
                   Administration
                 </a>
               </h4>
             </div>
-            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseadministration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -322,89 +322,137 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.0 documentation &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Sampling</p>
+    <p>Accumulo 2.0 documentation &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Upgrading Accumulo</p>
     
 
     <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.8/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
 
     <div class="row">
-      <div class="col-md-10"><h1>Sampling</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/development/sampling.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-10"><h1>Upgrading Accumulo</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/administration/upgrading.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <h2 id="overview">Overview</h2>
+    <h2 id="upgrading-from-17-to-18">Upgrading from 1.7 to 1.8</h2>
 
-<p>Accumulo has the ability to generate and scan a per table set of sample data.
-This sample data is kept up to date as a table is mutated.  What key values are
-placed in the sample data is configurable per table.</p>
+<p>Upgrades from 1.7 to 1.8 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.7, perform the Accumulo upgrade to 1.8, and then start 1.8. Like previous versions, after 1.8 is started on a 1.7 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.7. Upgrades are still one way. Upgrades from versions prior to 1.7 to 1.8 should follow the below path to 1.7 and then perform the upgrade to 1.8 – direct upgrades to 1.8 for versions other than 1.7 are untested.</p>
 
-<p>This feature can be used for query estimation and optimization.  For an example
-of estimation assume an Accumulo table is configured to generate a sample
-containing one millionth of a tables data.   If a query is executed against the
-sample and returns one thousand results, then the same query against all the
-data would probably return a billion results.  A nice property of having
-Accumulo generate the sample is that its always up to date.  So estimations
-will be accurate even when querying the most recently written data.</p>
+<p>Existing configuration files from 1.7 should be compared against the examples provided in 1.8. The 1.7 configuration files should all function with 1.8 code, but you will likely want to include changes found in the 1.8.0 release notes and these release notes for 1.8.1.</p>
 
-<p>An example of a query optimization is an iterator using sample data to get an
-estimate, and then making decisions based on the estimate.</p>
+<p>For upgrades from prior to 1.7, follow the upgrade instructions to 1.7 first.</p>
 
-<h2 id="configuring">Configuring</h2>
+<h2 id="upgrading-from-17x-to-17y">Upgrading from 1.7.x to 1.7.y</h2>
 
-<p>In order to use sampling, an Accumulo table must be configured with a class that
-implements <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a> along with options for that class.  For guidance on
-implementing a Sampler, see the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler interface javadoc</a>. Accumulo provides a few
-implementations of Sampler out of the box. For information on how to use the samplers that
-ship with Accumulo, look in the package <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/package-summary.html">org.apache.accumulo.core.client.sample</a>
-and consult the javadoc of the classes there. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a>
-for examples of how to configure a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a> on a table.</p>
+<p>The recommended way to upgrade from a prior 1.7.x release is to stop Accumulo, upgrade to 1.7.y and then start 1.7.y.</p>
 
-<p>Once a table is configured with a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/sample/Sampler.html">Sampler</a>, all writes after that point will
-generate sample data.  For data written before sampling was configured, sample
-data will not be present.  A compaction can be initiated that only compacts the
-files in the table that do not have sample data.  The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a> 
-shows how to do this.</p>
+<p>When upgrading, there is a known issue if the upgrade fails due to outstanding <a href="https://accumulo.apache.org/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate">FATE</a> operations, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4496">ACCUMULO-4496</a> The work around if this situation is encountered:</p>
 
-<p>If the sampling configuration of a table is changed, then Accumulo will start
-generating new sample data with the new configuration.   However old data will
-still have sample data generated with the previous configuration.  A selective
-compaction can also be issued in this case to regenerate the sample data.</p>
+<ul>
+  <li>Start tservers</li>
+  <li>Start shell</li>
+  <li>Run <code class="highlighter-rouge">fate print</code> to list all</li>
+  <li>If completed, just delete with <code class="highlighter-rouge">fate delete</code></li>
+  <li>Start masters once there are no more fate operations</li>
+</ul>
 
-<h2 id="scanning-sample-data">Scanning sample data</h2>
+<p>If any of the FATE operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version. When performing an upgrade between major versions, the upgrade is one-way, therefore it is important that you do not have any outstanding FATE operations before starting the upgrade.</p>
 
-<p>In order to scan sample data, use <code class="highlighter-rouge">setSamplerConfiguration(...)</code> method of
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a>.  Please consult the javadoc of this method for more
-information.</p>
+<h2 id="upgrading-from-16-to-17">Upgrading from 1.6 to 1.7</h2>
 
-<p>Sample data can also be scanned from within an Accumulo <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a>.
-To see how to do this, look at the example iterator referenced in the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/sample.md">sampling example</a>.
-Also, consult the javadoc on <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/IteratorEnvironment.html#cloneWithSamplingEnabled()">IteratorEnvironment.cloneWithSamplingEnabled()</a>.</p>
+<p>Upgrades from 1.6 to 1.7 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.6, perform the Accumulo upgrade to 1.7, and then start 1.7. Like previous versions, after 1.7.0 is started on a 1.6 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.6. Upgrades are still one way. Upgrades from versions prior to 1.6 to 1.7 should follow the below path to 1.6 and then perform the upgrade to 1.7 – direct upgrades to 1.7 for versions other than 1.6 are untested.</p>
 
-<p>Map reduce jobs using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html">AccumuloInputFormat</a> can also read sample data.  See
-the javadoc for the <code class="highlighter-rouge">setSamplerConfiguration()</code> method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
+<p>After upgrading to 1.7.0, users will notice the addition of a replication table in the accumulo namespace. This table is created and put offline to avoid any additional maintenance if the data-center replication feature is not in use.</p>
 
-<p>Scans over sample data will throw a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/SampleNotPresentException.html">SampleNotPresentException</a> in the following cases :</p>
+<p>Existing configuration files from 1.6 should be compared against the examples provided in 1.7. The 1.6 configuration files should all function with 1.7 code, but you will likely want to include a new file (hadoop-metrics2-accumulo.properties) to enable the new metrics subsystem. Read the section on Hadoop Metrics2 in the Administration chapter of the Accumulo User Manual.</p>
 
-<ol>
-  <li>sample data is not present,</li>
-  <li>sample data is present but was generated with multiple configurations</li>
-  <li>sample data is partially present</li>
-</ol>
+<p>For each of the other new features, new configuration properties exist to support the feature. Refer to the added sections in the User Manual for the feature for information on how to properly configure and use the new functionality.</p>
 
-<p>So a scan over sample data can only succeed if all data written has sample data
-generated with the same configuration.</p>
+<h2 id="upgrading-from-15-to-16">Upgrading from 1.5 to 1.6</h2>
 
-<h2 id="bulk-import">Bulk import</h2>
+<p>This happens automatically the first time Accumulo 1.6 is started.</p>
 
-<p>When generating rfiles to bulk import into Accumulo, those rfiles can contain
-sample data.  To use this feature, look at the javadoc of the <code class="highlighter-rouge">setSampler(...)</code>
-method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.</p>
+<p>If your instance previously upgraded from 1.4 to 1.5, you must verify that your
+1.5 instance has no outstanding local write ahead logs. You can do this by ensuring
+either:</p>
+
+<ul>
+  <li>All of your tables are online and the Monitor shows all tablets hosted</li>
+  <li>The directory for write ahead logs (logger.dir.walog) from 1.4 has no files remaining
+  on any tablet server / logger hosts</li>
+</ul>
+
+<p>To upgrade from 1.5 to 1.6 you must:</p>
+
+<ul>
+  <li>Verify that there are no outstanding FATE operations
+    <ul>
+      <li>Under 1.5 you can list what’s in FATE by running
+<code class="highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+      <li>Note that operations in any state will prevent an upgrade. It is safe
+to delete operations with status SUCCESSFUL. For others, you should restart
+your 1.5 cluster and allow them to finish.</li>
+    </ul>
+  </li>
+  <li>Stop the 1.5 instance.</li>
+  <li>Configure 1.6 to use the hdfs directory and zookeepers that 1.5 was using.</li>
+  <li>Copy other 1.5 configuration options as needed.</li>
+  <li>Start Accumulo 1.6.</li>
+</ul>
+
+<p>The upgrade process must make changes to Accumulo’s internal state in both ZooKeeper and
+  the table metadata. This process may take some time if Tablet Servers have to go through
+  recovery. During this time, the Monitor will claim that the Master is down and some
+  services may send the Monitor log messages about failure to communicate with each other.
+  These messages are safe to ignore. If you need detail on the upgrade’s progress you should
+  view the local logs on the Tablet Servers and active Master.</p>
+
+<h2 id="upgrading-from-14-to-16">Upgrading from 1.4 to 1.6</h2>
+
+<p>To upgrade from 1.4 to 1.6 you must perform a manual initial step.</p>
+
+<p>Prior to upgrading you must:</p>
+
+<ul>
+  <li>Verify that there are no outstanding FATE operations
+    <ul>
+      <li>Under 1.4 you can list what’s in FATE by running <code class="highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+      <li>Note that operations in any state will prevent an upgrade. It is safe to delete operations with status SUCCESSFUL. For others, 
+  you should restart your 1.4 cluster and allow them to finish.</li>
+    </ul>
+  </li>
+  <li>Stop the 1.4 instance.</li>
+  <li>Configure 1.6 to use the hdfs directory, walog directories, and zookeepers that 1.4 was using.</li>
+  <li>Copy other 1.4 configuration options as needed.</li>
+</ul>
+
+<p>Prior to starting the 1.6 instance you will need to run the LocalWALRecovery tool on each node that previously ran an instance of the Logger role.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+</code></pre>
+</div>
+
+<p>The recovery tool will rewrite the 1.4 write ahead logs into a format that 1.6 can read. After this step has completed on all nodes, start the 1.6 cluster to continue the upgrade.</p>
+
+<p>The upgrade process must make changes to Accumulo’s internal state in both ZooKeeper and the table metadata. This process may take some time if Tablet Servers have to go through recovery. During this time, the Monitor will claim that the Master is down and some services may send the Monitor log messages about failure to communicate with each other. While the upgrade is in progress, the Garbage Collector may complain about invalid paths. The Master may also complain about failure to create the trace table because it already exists. These messages are safe to ignore. If other error messages occur, you should seek out support before continuing to use Accumulo. If you need detail on the upgrade’s progress you should view the local logs on the Tablet Servers and active Master.</p>
+
+<p>Note that the LocalWALRecovery tool does not delete the local files. Once you confirm that 1.6 is successfully running, you should delete these files on the local filesystem.</p>
+
+<h2 id="upgrading-from-14-to-15">Upgrading from 1.4 to 1.5</h2>
+
+<p>This happens automatically the first time Accumulo 1.5 is started.</p>
+
+<ul>
+  <li>Stop the 1.4 instance.</li>
+  <li>Configure 1.5 to use the hdfs directory, walog directories, and zookeepers
+that 1.4 was using.</li>
+  <li>Copy other 1.4 configuration options as needed.</li>
+  <li>Start Accumulo 1.5.</li>
+</ul>
 
 
 
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/development/sampling.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2-0/administration/upgrading.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
   </div>
 </div>
