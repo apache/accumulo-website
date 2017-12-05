@@ -43,10 +43,10 @@ is strongly recommended that the Monitor is not exposed to any publicly-accessib
 
 SSL may be enabled for the monitor page by setting the following properties in the `accumulo-site.xml` file:
 
-    monitor.ssl.keyStore
-    monitor.ssl.keyStorePassword
-    monitor.ssl.trustStore
-    monitor.ssl.trustStorePassword
+ * [monitor.ssl.keyStore]
+ * [monitor.ssl.keyStorePassword]
+ * [monitor.ssl.trustStore]
+ * [monitor.ssl.trustStorePassword]
 
 If the Accumulo conf directory has been configured (in particular the `accumulo-env.sh` file must be set up), the 
 `accumulo-util gen-monitor-cert` command can be used to create the keystore and truststore files with random passwords. The command
@@ -55,8 +55,8 @@ Java `keytool` command, whose usage can be seen in the `accumulo-util` script.
 
 If desired, the SSL ciphers allowed for connections can be controlled via the following properties in `accumulo-site.xml`:
 
-    monitor.ssl.include.ciphers
-    monitor.ssl.exclude.ciphers
+ * [monitor.ssl.include.ciphers]
+ * [monitor.ssl.exclude.ciphers]
 
 If SSL is enabled, the monitor URL can only be accessed via https.
 This also allows you to access the Accumulo shell through the monitor page.
@@ -70,7 +70,7 @@ Accumulo can expose metrics through a legacy metrics library and using the Hadoo
 ### Legacy Metrics
 
 Accumulo has a legacy metrics library that can be exposes metrics using JMX endpoints or file-based logging. These metrics can
-be enabled by setting `general.legacy.metrics` to `true` in `accumulo-site.xml` and placing the `accumulo-metrics.xml`
+be enabled by setting [general.legacy.metrics] to `true` in `accumulo-site.xml` and placing the `accumulo-metrics.xml`
 configuration file on the classpath (which is typically done by placing the file in the `conf/` directory). A template for
 `accumulo-metrics.xml` can be found in `conf/templates` of the Accumulo tarball.
 
@@ -98,3 +98,10 @@ the Accumulo processes log files when debugging missing metrics output.
 For additional information on configuring Metrics2, visit the [Javadoc page for Metrics2](https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html).
 
 [tracing]: {{page.docs_baseurl}}/administration/tracing
+[monitor.ssl.keyStore]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_keyStore
+[monitor.ssl.keyStorePassword]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_keystorePassword
+[monitor.ssl.trustStore]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_trustStore
+[monitor.ssl.trustStorePassword]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_trustStorePassword
+[monitor.ssl.include.ciphers]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_include_ciphers
+[monitor.ssl.exclude.ciphers]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_exclude_ciphers
+[general.legacy.metrics]: {{ page.docs_baseurl }}/administration/properties#general_legacy_metrics

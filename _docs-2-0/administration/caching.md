@@ -39,8 +39,8 @@ the following properties:
 * [tserver.cache.data.size]
 * [tserver.cache.index.size]
 
-[table.cache.block.enable]: {{ page.docs_baseurl }}/administration/configuration-properties#table_cache_block_enable
-[table.cache.index.enable]: {{ page.docs_baseurl }}/administration/configuration-properties#table_cache_index_enable
-[tserver.cache.data.size]: {{ page.docs_baseurl }}/administration/configuration-properties#tserver_cache_data_size
-[tserver.cache.index.size]: {{ page.docs_baseurl }}/administration/configuration-properties#tserver_cache_data_size
+[table.cache.block.enable]: {{ page.docs_baseurl }}/administration/properties#table_cache_block_enable
+[table.cache.index.enable]: {{ page.docs_baseurl }}/administration/properties#table_cache_index_enable
+[tserver.cache.data.size]: {{ page.docs_baseurl }}/administration/properties#tserver_cache_data_size
+[tserver.cache.index.size]: {{ page.docs_baseurl }}/administration/properties#tserver_cache_data_size
 [tableops]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/admin/TableOperations.html#setProperty(java.lang.String, java.lang.String, java.lang.String)

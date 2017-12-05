@@ -30,14 +30,14 @@ configure your server in `conf/tracers`. The server collects traces from clients
 user that the tracer connects to Accumulo with can be configured with the following properties (see the [configuration management][config-mgmt] 
 page for setting Accumulo server properties)
 
-    trace.user
-    trace.token.property.password
+ * [trace.user]
+ * [trace.token.property.password]
 
 Other tracer configuration properties include
 
-    trace.port.client - port tracer listens on
-    trace.table - table tracer writes to
-    trace.zookeeper.path - zookeeper path where tracers register
+ * [trace.port.client] - port tracer listens on
+ * [trace.table] - table tracer writes to
+ * [trace.zookeeper.path] - zookeeper path where tracers register
 
 The zookeeper path is configured to /tracers by default.  If
 multiple Accumulo instances are sharing the same ZooKeeper
@@ -51,12 +51,10 @@ configured is org.apache.accumulo.core.trace.ZooTraceClient, which
 sends spans to an Accumulo Tracer process, as discussed in the
 previous section. This default can be changed to a different span
 receiver, or additional span receivers can be added in a
-comma-separated list, by modifying the property
-
-    trace.span.receivers
+comma-separated list, by modifying the property [trace.span.receivers].
 
 Individual span receivers may require their own configuration
-parameters, which are grouped under the trace.span.receiver.*
+parameters, which are grouped under the [trace.span.receiver.*]
 prefix.  ZooTraceClient uses the following properties.  The first
 three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
@@ -71,12 +69,12 @@ trace.span.receiver. when set in the Accumulo configuration.
 
 Note that to configure an Accumulo client for tracing, including
 the Accumulo shell, the client configuration must be given the same
-trace.span.receivers, trace.span.receiver.*, and trace.zookeeper.path
+[trace.span.receivers], [trace.span.receiver.*], and [trace.zookeeper.path]
 properties as the servers have.
 
 Hadoop can also be configured to send traces to Accumulo, as of
 Hadoop 2.6.0, by setting properties in Hadoop's core-site.xml
-file.  Instead of using the trace.span.receiver.* prefix, Hadoop
+file.  Instead of using the [trace.span.receiver.*] prefix, Hadoop
 uses hadoop.htrace.*.  The Hadoop configuration does not have
 access to Accumulo's properties, so the
 hadoop.htrace.tracer.zookeeper.host property must be specified.
@@ -108,7 +106,7 @@ jars must also be placed on Hadoop's classpath.
 
 ### Adding additional SpanReceivers
 
-[Zipkin](https://github.com/openzipkin/zipkin) has a SpanReceiver supported by HTrace and popularized by Twitter
+[Zipkin] has a SpanReceiver supported by HTrace and popularized by Twitter
 that users looking for a more graphical trace display may opt to use.
 The following steps configure Accumulo to use `org.apache.htrace.impl.ZipkinSpanReceiver`
 in addition to the Accumulo's default ZooTraceClient, and they serve as a template
@@ -344,4 +342,12 @@ Time  Start  Service@Location       Name
     5+1692           tserver@localhost tablet read ahead 6
 ```
 
-[config-mgmt]: {{page.docs_baseurl}}/administration/configuration-management
+[config-mgmt]: {{ page.docs_baseurl }}/administration/configuration-management
+[Zipkin]: https://github.com/openzipkin/zipkin
+[trace.user]: {{ page.docs_baseurl }}/administration/properties#trace_user
+[trace.token.property.password]: {{ page.docs_baseurl }}/administration/properties#trace_token_property_password
+[trace.port.client]: {{ page.docs_baseurl }}/administration/properties#trace_port_client
+[trace.table]: {{ page.docs_baseurl }}/administration/properties#trace_table
+[trace.zookeeper.path]: {{ page.docs_baseurl }}/administration/properties#trace_zookeeper_path
+[trace.span.receivers]: {{ page.docs_baseurl }}/administration/properties#trace_span_receivers
+[trace.span.receiver.*]: {{ page.docs_baseurl }}/administration/properties#trace_span_receiver_prefix

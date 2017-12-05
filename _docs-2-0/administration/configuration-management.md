@@ -104,5 +104,5 @@ default  | table.compaction.minor.logs.threshold ..... | 3
 default  | table.failures.ignore ..................... | false
 ```
 
-[props]: {{ page.docs_baseurl }}/administration/configuration-properties
-[tableprops]: {{ page.docs_baseurl }}/administration/configuration-properties#table_prefix
+[props]: {{ page.docs_baseurl }}/administration/properties
+[tableprops]: {{ page.docs_baseurl }}/administration/properties#table_prefix
