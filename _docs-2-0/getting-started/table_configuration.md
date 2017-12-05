@@ -644,8 +644,8 @@ for example code.
 [combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
 [filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
-[table.majc.compaction.strategy]: {{ page.docs_baseurl}}/administration/configuration-properties#table_majc_compaction_strategy
-[config-properties]: {{ page.docs_baseurl}}/administration/configuration-properties
+[table.majc.compaction.strategy]: {{ page.docs_baseurl}}/administration/properties#table_majc_compaction_strategy
+[config-properties]: {{ page.docs_baseurl}}/administration/properties
 [Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
 [BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
 [Caching]: {{ page.docs_baseurl }}/administration/caching
