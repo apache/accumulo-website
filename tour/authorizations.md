@@ -8,9 +8,9 @@ of each Accumulo key in the scan. If the boolean expression of the ColumnVisibil
 visible to the user.
 
 For example:
-* Bob has authorizations `User, Manager`
-* Tina has authorizations `User, Admin`
-* The key `row1:family1:qualifier1` has visibility `Admin && User`
+* Bob has authorizations `product, sales`
+* Tina has authorizations `sales, employee`
+* The key `row1:family1:qualifier1` has visibility `sales && employee`
 * When Bob scans with all of his authorizations, he will **not** see `row1:family1:qualifier1`
 * When Tina scans with all of her authorizations, she will see `row1:family1:qualifier1`
 
