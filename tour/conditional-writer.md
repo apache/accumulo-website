@@ -11,14 +11,14 @@ events shows an example of this.
  3. Thread 2 reads `id0001:location:home`
  4. Thread 1 replaces `Dr` with `Drive`
  5. Thread 2 replaces `New York` with `NY`
- 6. Thread 1 sets key `id0001:location:home` with its modifications
- 7. Thread 2 sets key `id0001:location:home` with its modifications
+ 6. Thread 1 sets key `id0001:location:home` to `1007 Mountain Drive, Gotham, New York`
+ 7. Thread 2 sets key `id0001:location:home` to `1007 Mountain Dr, Gotham, NY`
 
 In this situation the changes made by Thread 1 are lost, ending up with `1007
 Mountain Dr, Gotham, NY` instead of `1007 Mountain Drive, Gotham, NY`.  To
 correctly handle this, Accumulo offers the [ConditionalWriter].  The
 ConditionalWriter atomically checks conditions on a row and only applies a
-mutation if all are satisfied.
+mutation when all are satisfied.
 
 ## Exercise
 

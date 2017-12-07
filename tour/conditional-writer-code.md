@@ -22,8 +22,8 @@ Below is a solution to the excercise.
 ```
 
 The following output shows running the example with a conditional writer.
-Threads retry when conditional mutations a rejected.  The final address has all
-three modifications.
+Threads retry when conditional mutations are rejected.  The final address has
+all three modifications.
 
 ```
 Thread  37 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '1007 Mountain Dr, Gotham, New York'
