@@ -250,7 +250,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -379,32 +379,32 @@ their value in accumulo-site.xml.</p>
     <tr>
       <td>4560</td>
       <td>Accumulo monitor (for centralized log display)</td>
-      <td>monitor.port.log4j</td>
+      <td><a href="/docs/2.0/administration/properties#monitor_port_log4j">monitor.port.log4j</a></td>
     </tr>
     <tr>
       <td>9995</td>
       <td>Accumulo HTTP monitor</td>
-      <td>monitor.port.client</td>
+      <td><a href="/docs/2.0/administration/properties#monitor_port_client">monitor.port.client</a></td>
     </tr>
     <tr>
       <td>9997</td>
       <td>Tablet Server</td>
-      <td>tserver.port.client</td>
+      <td><a href="/docs/2.0/administration/properties#tserver_port_client">tserver.port.client</a></td>
     </tr>
     <tr>
       <td>9998</td>
       <td>Accumulo GC</td>
-      <td>gc.port.client</td>
+      <td><a href="/docs/2.0/administration/properties#gc_port_client">gc.port.client</a></td>
     </tr>
     <tr>
       <td>9999</td>
       <td>Master Server</td>
-      <td>master.port.client</td>
+      <td><a href="/docs/2.0/administration/properties#master_port_client">master.port.client</a></td>
     </tr>
     <tr>
       <td>12234</td>
       <td>Accumulo Tracer</td>
-      <td>trace.port.client</td>
+      <td><a href="/docs/2.0/administration/properties#trace_port_client">trace.port.client</a></td>
     </tr>
     <tr>
       <td>42424</td>
@@ -414,12 +414,12 @@ their value in accumulo-site.xml.</p>
     <tr>
       <td>10001</td>
       <td>Master Replication service</td>
-      <td>master.replication.coordinator.port</td>
+      <td><a href="/docs/2.0/administration/properties#master_replication_coordinator_port">master.replication.coordinator.port</a></td>
     </tr>
     <tr>
       <td>10002</td>
       <td>TabletServer Replication service</td>
-      <td>replication.receipt.service.port</td>
+      <td><a href="/docs/2.0/administration/properties#replication_receipt_service_port">replication.receipt.service.port</a></td>
     </tr>
   </tbody>
 </table>
@@ -554,30 +554,34 @@ also locate the native maps shared library by setting <code class="highlighter-r
 <h4 id="native-maps-configuration">Native Maps Configuration</h4>
 
 <p>As mentioned, Accumulo will use the native libraries if they are found in the expected
-location and <code class="highlighter-rouge">tserver.memory.maps.native.enabled</code> is set to <code class="highlighter-rouge">true</code> (which is the default).
+location and <a href="/docs/2.0/administration/properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a> is set to <code class="highlighter-rouge">true</code> (which is the default).
 Using the native maps over JVM Maps nets a noticeable improvement in ingest rates; however,
 certain configuration variables are important to modify when increasing the size of the
 native map.</p>
 
-<p>To adjust the size of the native map, increase the value of <code class="highlighter-rouge">tserver.memory.maps.max</code>.
-By default, the maximum size of the native map is 1GB. When increasing this value, it is
-also important to adjust the values of <code class="highlighter-rouge">table.compaction.minor.logs.threshold</code> and
-<code class="highlighter-rouge">tserver.walog.max.size</code>. <code class="highlighter-rouge">table.compaction.minor.logs.threshold</code> is the maximum
-number of write-ahead log files that a tablet can reference before they will be automatically
-minor compacted. <code class="highlighter-rouge">tserver.walog.max.size</code> is the maximum size of a write-ahead log.</p>
+<p>To adjust the size of the native map, modify the value of <a href="/docs/2.0/administration/properties#tserver_memory_maps_max">tserver.memory.maps.max</a>. When increasing
+this value, it is also important to adjust the values below:</p>
 
-<p>The maximum size of the native maps for a server should be less than the product
-of the write-ahead log maximum size and minor compaction threshold for log files:</p>
+<ul>
+  <li><a href="/docs/2.0/administration/properties#table_compaction_minor_logs_threshold">table.compaction.minor.logs.threshold</a> - maximum number of write-ahead log files that a tablet can
+reference before they will be automatically minor compacted</li>
+  <li><a href="/docs/2.0/administration/properties#tserver_walog_max_size">tserver.walog.max.size</a> - maximum size of a write-ahead log.</li>
+</ul>
 
-<p><code class="highlighter-rouge">$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max</code></p>
+<p>The maximum size of the native maps for a server should be less than the product of the write-ahead
+log maximum size and minor compaction threshold for log files:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max
+</code></pre>
+</div>
 
 <p>This formula ensures that minor compactions won’t be automatically triggered before the native
 maps can be completely saturated.</p>
 
 <p>Subsequently, when increasing the size of the write-ahead logs, it can also be important
 to increase the HDFS block size that Accumulo uses when creating the files for the write-ahead log.
-This is controlled via <code class="highlighter-rouge">tserver.wal.blocksize</code>. A basic recommendation is that when
-<code class="highlighter-rouge">tserver.walog.max.size</code> is larger than 2GB in size, set <code class="highlighter-rouge">tserver.wal.blocksize</code> to 2GB.
+This is controlled via <a href="/docs/2.0/administration/properties#tserver_wal_blocksize">tserver.wal.blocksize</a>. A basic recommendation is that when
+<a href="/docs/2.0/administration/properties#tserver_walog_max_size">tserver.walog.max.size</a> is larger than 2GB in size, set <a href="/docs/2.0/administration/properties#tserver_wal_blocksize">tserver.wal.blocksize</a> to 2GB.
 Increasing the block size to a value larger than 2GB can result in decreased write
 performance to the write-ahead log file which will slow ingest.</p>
 
@@ -597,30 +601,16 @@ of errors.</p>
 
 <h3 id="configure-accumulo-sitexml">Configure accumulo-site.xml</h3>
 
-<p>Specify appropriate values for the following settings in <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+<p>Specify appropriate values for the following properties in <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-    <span class="nt">&lt;name&gt;</span>instance.zookeeper.host<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;value&gt;</span>zooserver-one:2181,zooserver-two:2181<span class="nt">&lt;/value&gt;</span>
-    <span class="nt">&lt;description&gt;</span>list of zookeeper servers<span class="nt">&lt;/description&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
-
-<p>This enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper to coordinate
-settings between processes and helps finalize TabletServer failure.</p>
-
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-    <span class="nt">&lt;name&gt;</span>instance.secret<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;value&gt;</span>DEFAULT<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
-
-<p>The instance needs a secret to enable secure communication between servers. Configure your
-secret and make sure that the <code class="highlighter-rouge">accumulo-site.xml</code> file is not readable to other users.
-For alternatives to storing the <code class="highlighter-rouge">instance.secret</code> in plaintext, please read the
-<code class="highlighter-rouge">Sensitive Configuration Values</code> section.</p>
+<ul>
+  <li><a href="/docs/2.0/administration/properties#instance_zookeeper_host">instance.zookeeper.host</a> - Enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper
+to coordinate settings between processes and helps finalize TabletServer failure.</li>
+  <li><a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> - The instance needs a secret to enable secure communication between servers.
+Configure your secret and make sure that the <code class="highlighter-rouge">accumulo-site.xml</code> file is not readable to other users.
+For alternatives to storing the <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> in plaintext, please read the
+<a href="#sensitive-configuration-values">Sensitive Configuration Values</a> section.</li>
+</ul>
 
 <p>Some settings can be modified via the Accumulo shell and take effect immediately, but
 some settings require a process restart to take effect. See the <a href="/docs/2.0/administration/configuration-management">configuration management</a>
@@ -652,7 +642,7 @@ where that command is run.</p>
 <h3 id="sensitive-configuration-values">Sensitive Configuration Values</h3>
 
 <p>Accumulo has a number of properties that can be specified via the accumulo-site.xml
-file which are sensitive in nature, instance.secret and trace.token.property.password
+file which are sensitive in nature, <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> and <code class="highlighter-rouge">trace.token.property.password</code>
 are two common examples. Both of these properties, if compromised, have the ability
 to result in data being leaked to users who should not have access to that data.</p>
 
@@ -663,14 +653,14 @@ is a candidate for use with these CredentialProviders. For version of Hadoop whi
 these classes, the feature will just be unavailable for use.</p>
 
 <p>A comma separated list of CredentialProviders can be configured using the Accumulo Property
-<code class="highlighter-rouge">general.security.credential.provider.paths</code>. Each configured URL will be consulted
+<a href="/docs/2.0/administration/properties#general_security_credential_provider_paths">general.security.credential.provider.paths</a>. Each configured URL will be consulted
 when the Configuration object for accumulo-site.xml is accessed.</p>
 
 <h3 id="using-a-javakeystorecredentialprovider-for-storage">Using a JavaKeyStoreCredentialProvider for storage</h3>
 
 <p>One of the implementations provided in Hadoop-2.6.0 is a Java KeyStore CredentialProvider.
 Each entry in the KeyStore is the Accumulo Property key name. For example, to store the
-<code class="highlighter-rouge">instance.secret</code>, the following command can be used:</p>
+<a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a>, the following command can be used:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
 </code></pre>
@@ -691,7 +681,7 @@ Each entry in the KeyStore is the Accumulo Property key name. For example, to st
 </code></pre>
 </div>
 
-<p>This configuration will then transparently extract the <code class="highlighter-rouge">instance.secret</code> from
+<p>This configuration will then transparently extract the <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> from
 the configured KeyStore and alleviates a human readable storage of the sensitive
 property.</p>
 
@@ -740,14 +730,14 @@ consideration. There is no enforcement of these warnings via the API.</p>
 <h4 id="configuring-the-classloader">Configuring the ClassLoader</h4>
 
 <p>Accumulo builds its Java classpath in <code class="highlighter-rouge">accumulo-env.sh</code>.  After an Accumulo application has started, it will load classes from the locations
-specified in the deprecated <code class="highlighter-rouge">general.classpaths</code> property. Additionally, Accumulo will load classes from the locations specified in the
-<code class="highlighter-rouge">general.dynamic.classpaths</code> property and will monitor and reload them if they change. The reloading  feature is useful during the development
+specified in the deprecated <a href="/docs/2.0/administration/properties#general_classpaths">general.classpaths</a> property. Additionally, Accumulo will load classes from the locations specified in the
+<a href="/docs/2.0/administration/properties#general_dynamic_classpaths">general.dynamic.classpaths</a> property and will monitor and reload them if they change. The reloading feature is useful during the development
 and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
 /
 Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
 uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
-<code class="highlighter-rouge">general.classpaths</code> property in the same manner described above. It differs in that you need to configure the
-<code class="highlighter-rouge">general.vfs.classpaths</code> property instead of the <code class="highlighter-rouge">general.dynamic.classpath</code> property. As in the default configuration, this alternate
+<a href="/docs/2.0/administration/properties#general_classpaths">general.classpaths</a> property in the same manner described above. It differs in that you need to configure the
+<a href="/docs/2.0/administration/properties#general_vfs_classpaths">general.vfs.classpaths</a> property instead of the <a href="/docs/2.0/administration/properties#general_dynamic_classpaths">general.dynamic.classpaths</a> property. As in the default configuration, this alternate
 configuration will also monitor the vfs locations for changes and reload if necessary.</p>
 
 <p>The Accumulo classpath can be viewed in human readable format by running <code class="highlighter-rouge">accumulo classpath -d</code>.</p>

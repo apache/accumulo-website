@@ -250,7 +250,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -358,18 +358,18 @@ configure your server in <code class="highlighter-rouge">conf/tracers</code>. Th
 user that the tracer connects to Accumulo with can be configured with the following properties (see the <a href="/docs/2.0/administration/configuration-management">configuration management</a> 
 page for setting Accumulo server properties)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>trace.user
-trace.token.property.password
-</code></pre>
-</div>
+<ul>
+  <li><a href="/docs/2.0/administration/properties#trace_user">trace.user</a></li>
+  <li><a href="/docs/2.0/administration/properties#trace_token_property_password">trace.token.property.password</a></li>
+</ul>
 
 <p>Other tracer configuration properties include</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>trace.port.client - port tracer listens on
-trace.table - table tracer writes to
-trace.zookeeper.path - zookeeper path where tracers register
-</code></pre>
-</div>
+<ul>
+  <li><a href="/docs/2.0/administration/properties#trace_port_client">trace.port.client</a> - port tracer listens on</li>
+  <li><a href="/docs/2.0/administration/properties#trace_table">trace.table</a> - table tracer writes to</li>
+  <li><a href="/docs/2.0/administration/properties#trace_zookeeper_path">trace.zookeeper.path</a> - zookeeper path where tracers register</li>
+</ul>
 
 <p>The zookeeper path is configured to /tracers by default.  If
 multiple Accumulo instances are sharing the same ZooKeeper
@@ -383,14 +383,10 @@ configured is org.apache.accumulo.core.trace.ZooTraceClient, which
 sends spans to an Accumulo Tracer process, as discussed in the
 previous section. This default can be changed to a different span
 receiver, or additional span receivers can be added in a
-comma-separated list, by modifying the property</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>trace.span.receivers
-</code></pre>
-</div>
+comma-separated list, by modifying the property <a href="/docs/2.0/administration/properties#trace_span_receivers">trace.span.receivers</a>.</p>
 
 <p>Individual span receivers may require their own configuration
-parameters, which are grouped under the trace.span.receiver.*
+parameters, which are grouped under the <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a>
 prefix.  ZooTraceClient uses the following properties.  The first
 three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
@@ -407,13 +403,13 @@ tracer.span.min.ms - minimum span length to store (in ms, default 1)
 
 <p>Note that to configure an Accumulo client for tracing, including
 the Accumulo shell, the client configuration must be given the same
-trace.span.receivers, trace.span.receiver.*, and trace.zookeeper.path
+<a href="/docs/2.0/administration/properties#trace_span_receivers">trace.span.receivers</a>, <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a>, and <a href="/docs/2.0/administration/properties#trace_zookeeper_path">trace.zookeeper.path</a>
 properties as the servers have.</p>
 
 <p>Hadoop can also be configured to send traces to Accumulo, as of
 Hadoop 2.6.0, by setting properties in Hadoop’s core-site.xml
-file.  Instead of using the trace.span.receiver.* prefix, Hadoop
-uses hadoop.htrace.*.  The Hadoop configuration does not have
+file.  Instead of using the [trace.span.receiver.<em>] prefix, Hadoop
+uses hadoop.htrace.</em>.  The Hadoop configuration does not have
 access to Accumulo’s properties, so the
 hadoop.htrace.tracer.zookeeper.host property must be specified.
 The zookeeper timeout defaults to 30000 (30 seconds), and the
