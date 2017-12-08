@@ -10,7 +10,7 @@ under a lot of write pressure.
 The HDFS NameNode holds all of the metadata about the files in
 HDFS. For fast performance, all of this information needs to be stored
 in memory.  A single NameNode with 64G of memory can store the
-metadata for tens of millions of files.However, when scaling beyond a
+metadata for tens of millions of files. However, when scaling beyond a
 thousand nodes, an active Accumulo system can generate lots of updates
 to the file system, especially when data is being ingested.  The large
 number of write transactions to the NameNode, and the speed of a
@@ -24,7 +24,7 @@ routinely runs in less than a minute, the NameNode is performing well.
 
 However, if you do begin to experience slow-down and poor GC
 performance, Accumulo can be configured to use multiple NameNode
-servers.  The configuration `instance.volumes` should be set to a
+servers.  The configuration [instance.volumes] should be set to a
 comma-separated list, using full URI references to different NameNode
 servers:
 
@@ -46,10 +46,10 @@ If the URI for a namenode changes (e.g. namenode was running on host1 and its
 moved to host2), then Accumulo will no longer function.  Even if Hadoop and
 Accumulo configurations are changed, the fully qualified URIs stored in
 Accumulo will still contain the old URI.  To handle this Accumulo has the
-following configuration property for replacing URI stored in its metadata.  The
-example configuration below will replace ns1 with nsA and ns2 with nsB in
-Accumulo metadata.  For this property to take affect, Accumulo will need to be
-restarted.
+configuration property [instance.volumes.replacements] for replacing URI stored
+in its metadata.  The example configuration below will replace ns1 with nsA and
+ns2 with nsB in Accumulo metadata. For this property to take affect, Accumulo will
+need to be restarted.
 
 ```xml
 <property>
@@ -71,3 +71,6 @@ You may also want to configure your cluster to use Federation,
 available in Hadoop 2.0, which allows DataNodes to respond to multiple
 NameNode servers, so you do not have to partition your DataNodes by
 NameNode.
+
+[instance.volumes]: {{ page.docs_baseurl }}/administration/properties#instance_volumes
+[instance.volumes.replacements]: {{ page.docs_baseurl }}/administration/properties#instance_volumes_replacements

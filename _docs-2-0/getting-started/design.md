@@ -107,16 +107,27 @@ ingest and query load is balanced across the cluster.
 When a write arrives at a TabletServer it is written to a Write-Ahead Log and
 then inserted into a sorted data structure in memory called a MemTable. When the
 MemTable reaches a certain size, the TabletServer writes out the sorted
-key-value pairs to a file in HDFS called a Relative Key File (RFile), which is a
-kind of Indexed Sequential Access Method (ISAM) file. This process is called a
-minor compaction. A new MemTable is then created and the fact of the compaction
-is recorded in the Write-Ahead Log.
+key-value pairs to a file in HDFS called an [RFile](#rfile)). This process is
+called a minor compaction. A new MemTable is then created and the fact of the
+compaction is recorded in the Write-Ahead Log.
 
 When a request to read data arrives at a TabletServer, the TabletServer does a
 binary search across the MemTable as well as the in-memory indexes associated
 with each RFile to find the relevant values. If clients are performing a scan,
 several key-value pairs are returned to the client in order from the MemTable
 and the set of RFiles by performing a merge-sort as they are read.
+
+## RFile
+
+RFile (short for Relative Key File) is a file that contains Accumulo's sorted key-value
+pairs. The file is written to HDFS by Tablet Servers during a minor compaction. RFiles are
+organized using the Index Sequential Access Method (ISAM). RFiles consist of data (key/value) block,
+index blocks (which are used to find data block), and meta blocks (which contain
+metadata for bloom filters and summary statistics). Data in an RFile is seperated by
+locality group. The diagram below shows the logical view and HDFS file view of an RFile.
+
+![rfile diagram]({{ site.url }}/images/docs/rfile_diagram.png)
+<!-- Source at https://docs.google.com/presentation/d/1w9BgfgUtZ-3M14K-lIgv0UmvnOhVg10Zof6AUi-7pcc/edit?usp=sharing -->
 
 ## Compactions
 
@@ -167,4 +178,3 @@ TabletServer failures are noted on the Master's monitor page, accessible via
 [clients]: {{page.docs_baseurl}}/getting-started/clients
 [merging]: {{page.docs_baseurl}}/getting-started/table_configuration#merging-tablets
 [compaction]: {{page.docs_baseurl}}/getting-started/table_configuration#compaction
-
