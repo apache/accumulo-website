@@ -26,11 +26,11 @@ Threads retry when conditional mutations are rejected.  The final address has
 all three modifications.
 
 ```
-Thread  37 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '1007 Mountain Dr, Gotham, New York'
+Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '  1007 Mountain Dr, Gotham, New York  '
+Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '1007 Mountain Drive, Gotham, New York'
+Thread  39 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '  1007 Mountain Drive, Gotham, NY  '
+Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '1007 Mountain Dr, Gotham, New York'
 Thread  39 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '  1007 Mountain Dr, Gotham, NY  '
-Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '  1007 Mountain Drive, Gotham, New York  '
-Thread  38 attempting change '  1007 Mountain Dr, Gotham, NY  ' -> '  1007 Mountain Drive, Gotham, NY  '
-Thread  37 attempting change '  1007 Mountain Dr, Gotham, NY  ' -> '1007 Mountain Dr, Gotham, NY'
-Thread  37 attempting change '  1007 Mountain Drive, Gotham, NY  ' -> '1007 Mountain Drive, Gotham, NY'
-Final address : '1007 Mountain Drive, Gotham, NY'
+Thread  39 attempting change '1007 Mountain Dr, Gotham, New York' -> '1007 Mountain Dr, Gotham, NY'
+Final address : '1007 Mountain Dr, Gotham, NY'
 ```

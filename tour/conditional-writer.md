@@ -2,28 +2,38 @@
 title: Conditional Writer
 ---
 
-When read-modify-write operations run concurrently, its possible changes made
-by some operations will be overwritten by others. The following sequence of
-events shows an example of this.
+Suppose the Gotham PD is storing home addresses for persons of interest in
+Accumulo.  We want to correctly handle the case of multiple users editing the
+same address at the same time. The following sequence of events shows an example
+of how this can go wrong.
 
- 1. Thread 0 sets the key `id0001:location:home` to `1007 Mountain Dr, Gotham, New York`
- 2. Thread 1 reads `id0001:location:home`
- 3. Thread 2 reads `id0001:location:home`
- 4. Thread 1 replaces `Dr` with `Drive`
- 5. Thread 2 replaces `New York` with `NY`
- 6. Thread 1 sets key `id0001:location:home` to `1007 Mountain Drive, Gotham, New York`
- 7. Thread 2 sets key `id0001:location:home` to `1007 Mountain Dr, Gotham, NY`
+ 1. User 0 sets the key `id0001:location:home` to `1007 Mountain Drive, Gotham, New York`
+ 2. User 1 reads `id0001:location:home`
+ 3. User 2 reads `id0001:location:home`
+ 4. User 1 replaces `Drive` with `Dr`
+ 5. User 2 replaces `New York` with `NY`
+ 6. User 1 sets key `id0001:location:home` to `1007 Mountain Dr, Gotham, New York`
+ 7. User 2 sets key `id0001:location:home` to `1007 Mountain Drive, Gotham, NY`
 
-In this situation the changes made by Thread 1 are lost, ending up with `1007
-Mountain Dr, Gotham, NY` instead of `1007 Mountain Drive, Gotham, NY`.  To
+In this situation the changes made by User 1 are lost, ending up with `1007
+Mountain Drive, Gotham, NY` instead of `1007 Mountain Dr, Gotham, NY`.  To
 correctly handle this, Accumulo offers the [ConditionalWriter].  The
 ConditionalWriter atomically checks conditions on a row and only applies a
-mutation when all are satisfied.
+mutation when all conditions are satisfied.
 
 ## Exercise
 
-The following code simulates the concurrency situation above.  Because it uses
-a BatchWriter it will lose modifications.
+The following code simulates the concurrency in the situation above.  The code
+starts multiple threads, with each thread doing the following.
+
+ 1. Read key's value into memory using a scanner
+ 2. Modify the copy in memory.
+ 3. Write out the modified value from memory using a batch writer.
+ 4. If write was unsuccessful, then goto step 1.
+
+This process can result in threads overwriting each other changes.  The problem
+is the batch writer always makes the update, even when the value has
+changed since it was read.
 
 ```java
   static String getAddress(Connector conn, String id) {
@@ -68,13 +78,13 @@ a BatchWriter it will lose modifications.
 
     String id = "id0001";
 
-    setAddress(conn, id, null, "  1007 Mountain Dr, Gotham, New York  ");
+    setAddress(conn, id, null, "  1007 Mountain Drive, Gotham, New York  ");
 
     // create async operation to trim whitespace
     Future<Void> future1 = modifyAddress(conn, id, String::trim);
 
     // create async operation to replace Dr with Drive
-    Future<Void> future2 = modifyAddress(conn, id, addr -> addr.replace("Dr", "Drive"));
+    Future<Void> future2 = modifyAddress(conn, id, addr -> addr.replace("Drive", "Dr"));
 
     // create async operation to replace New York with NY
     Future<Void> future3 = modifyAddress(conn, id, addr -> addr.replace("New York", "NY"));
@@ -90,24 +100,24 @@ a BatchWriter it will lose modifications.
 ```
 
 The following is one of a few possible outputs.  Notice that only the
-modification of `New York` to `NY` shows up in the final output.  The other
+modification of `Drive` to `Dr` shows up in the final output.  The other
 modifications were lost.
 
 ```
-Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '  1007 Mountain Drive, Gotham, New York  '
-Thread  39 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '  1007 Mountain Dr, Gotham, NY  '
-Thread  37 attempting change '  1007 Mountain Dr, Gotham, New York  ' -> '1007 Mountain Dr, Gotham, New York'
-Final address : '  1007 Mountain Dr, Gotham, NY  '
+Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '1007 Mountain Drive, Gotham, New York'
+Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '  1007 Mountain Drive, Gotham, NY  '
+Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -> '  1007 Mountain Dr, Gotham, New York  '
+Final address : '  1007 Mountain Dr, Gotham, New York  '
 ```
 
 To fix this example, make the following changes in `setAddress()` to use a
 ConditionalWriter.
 
  * Call [createConditionalWriter] instead of creating a batch writer
- * Create a [Condition] for the column 'location:home'.  If `expectedAddr` is not null, then pass it to [setValue].  A condition with no value set means that column is expected to absent.
- * Replace Mutation with a [ConditionalMutation] and set the condition.
+ * Create a [Condition] for the column 'location:home'.  If `expectedAddr` is not null, then call [setValue] passing `expectedAddr`.  If `expectedAddr` is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.
+ * Replace Mutation with a [ConditionalMutation] and pass the condition to its constructor.
  * Call [write] passing it the conditional mutation.
- * Return `true` if [getStatus] from the [Result] returned by [write] is `ACCEPTED`. 
+ * Return `true` if [getStatus] from the [Result] returned by [write] is [ACCEPTED].
 
 [ConditionalWriter]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html
 [Result]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Result.html
@@ -117,3 +127,4 @@ ConditionalWriter.
 [getStatus]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus()
 [write]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html#write(org.apache.accumulo.core.data.ConditionalMutation)
 [setValue]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Condition.html#setValue(java.lang.CharSequence)
+[ACCEPTED]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED
