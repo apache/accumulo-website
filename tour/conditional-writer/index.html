@@ -153,17 +153,143 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Conditional Writer</h2>
-  <p class="text-muted">Tour page  of 9</p>
+  <p class="text-muted">Tour page 10 of 11</p>
 </div>
 <div id="tour-content">
-  
+  <p>Suppose the Gotham PD is storing home addresses for persons of interest in
+Accumulo.  We want to correctly handle the case of multiple users editing the
+same address at the same time. The following sequence of events shows an example
+of how this can go wrong.</p>
+
+<ol>
+  <li>User 0 sets the key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Drive, Gotham, New York</code></li>
+  <li>User 1 reads <code class="highlighter-rouge">id0001:location:home</code></li>
+  <li>User 2 reads <code class="highlighter-rouge">id0001:location:home</code></li>
+  <li>User 1 replaces <code class="highlighter-rouge">Drive</code> with <code class="highlighter-rouge">Dr</code></li>
+  <li>User 2 replaces <code class="highlighter-rouge">New York</code> with <code class="highlighter-rouge">NY</code></li>
+  <li>User 1 sets key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Dr, Gotham, New York</code></li>
+  <li>User 2 sets key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Drive, Gotham, NY</code></li>
+</ol>
+
+<p>In this situation the changes made by User 1 are lost, ending up with <code class="highlighter-rouge">1007
+Mountain Drive, Gotham, NY</code> instead of <code class="highlighter-rouge">1007 Mountain Dr, Gotham, NY</code>.  To
+correctly handle this, Accumulo offers the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.  The
+ConditionalWriter atomically checks conditions on a row and only applies a
+mutation when all conditions are satisfied.</p>
+
+<h2 id="exercise">Exercise</h2>
+
+<p>The following code simulates the concurrency in the situation above.  The code
+starts multiple threads, with each thread doing the following.</p>
+
+<ol>
+  <li>Read key’s value into memory using a scanner</li>
+  <li>Modify the copy in memory.</li>
+  <li>Write out the modified value from memory using a batch writer.</li>
+  <li>If write was unsuccessful, then goto step 1.</li>
+</ol>
+
+<p>This process can result in threads overwriting each other changes.  The problem
+is the batch writer always makes the update, even when the value has
+changed since it was read.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">static</span> <span class="n">String</span> <span class="nf">getAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// The IsolatedScanner ensures partial changes to a row are not seen</span>
+    <span class="k">try</span> <span class="o">(</span><span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IsolatedScanner</span><span class="o">(</span><span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="n">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">)))</span> <span class="o">{</span>
+      <span class="n">scanner</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="n">Range</span><span class="o">.</span><span class="na">exact</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">));</span>
+      <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+      <span class="o">}</span>
+      <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TableNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="n">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">(</span><span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">()))</span> <span class="o">{</span>
+      <span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+      <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">);</span>
+      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="nf">modifyAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modifier</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">CompletableFuture</span><span class="o">.</span><span class="na">runAsync</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+      <span class="n">String</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">;</span>
+      <span class="k">do</span> <span class="o">{</span>
+        <span class="n">currAddr</span> <span class="o">=</span> <span class="n">getAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+        <span class="n">newAddr</span> <span class="o">=</span> <span class="n">modifier</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">currAddr</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Thread %3d attempting change %20s -&gt; %-20s\n"</span><span class="o">,</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getId</span><span class="o">(),</span> <span class="s">"'"</span><span class="o">+</span><span class="n">currAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">+</span><span class="n">newAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">);</span>
+      <span class="o">}</span> <span class="k">while</span> <span class="o">(!</span><span class="n">setAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">));</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="n">MiniAccumuloCluster</span> <span class="n">mac</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">mac</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="s">"tourguide"</span><span class="o">);</span>
+    <span class="n">conn</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
+
+    <span class="n">String</span> <span class="n">id</span> <span class="o">=</span> <span class="s">"id0001"</span><span class="o">;</span>
+
+    <span class="n">setAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="s">"  1007 Mountain Drive, Gotham, New York  "</span><span class="o">);</span>
+
+    <span class="c1">// create async operation to trim whitespace</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="n">future1</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="nl">String:</span><span class="o">:</span><span class="n">trim</span><span class="o">);</span>
+
+    <span class="c1">// create async operation to replace Dr with Drive</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="n">future2</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"Drive"</span><span class="o">,</span> <span class="s">"Dr"</span><span class="o">));</span>
+
+    <span class="c1">// create async operation to replace New York with NY</span>
+    <span class="n">Future</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="n">future3</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"New York"</span><span class="o">,</span> <span class="s">"NY"</span><span class="o">));</span>
+
+    <span class="c1">// wait for async operations to complete</span>
+    <span class="n">future1</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">future2</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">future3</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+
+    <span class="c1">// print the address stored in Accumulo</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Final address : '"</span><span class="o">+</span><span class="n">getAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">)+</span><span class="s">"'"</span><span class="o">);</span>
+  <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>The following is one of a few possible outputs.  Notice that only the
+modification of <code class="highlighter-rouge">Drive</code> to <code class="highlighter-rouge">Dr</code> shows up in the final output.  The other
+modifications were lost.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
+Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
+Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
+Final address : '  1007 Mountain Dr, Gotham, New York  '
+</code></pre>
+</div>
+
+<p>To fix this example, make the following changes in <code class="highlighter-rouge">setAddress()</code> to use a
+ConditionalWriter.</p>
+
+<ul>
+  <li>Call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html#createConditionalWriter(java.lang.String,%20org.apache.accumulo.core.client.ConditionalWriterConfig)">createConditionalWriter</a> instead of creating a batch writer</li>
+  <li>Create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Condition.html">Condition</a> for the column ‘location:home’.  If <code class="highlighter-rouge">expectedAddr</code> is not null, then call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Condition.html#setValue(java.lang.CharSequence)">setValue</a> passing <code class="highlighter-rouge">expectedAddr</code>.  If <code class="highlighter-rouge">expectedAddr</code> is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.</li>
+  <li>Replace Mutation with a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/ConditionalMutation.html">ConditionalMutation</a> and pass the condition to its constructor.</li>
+  <li>Call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.html#write(org.apache.accumulo.core.data.ConditionalMutation)">write</a> passing it the conditional mutation.</li>
+  <li>Return <code class="highlighter-rouge">true</code> if <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus()">getStatus</a> from the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.Result.html">Result</a> returned by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.html#write(org.apache.accumulo.core.data.ConditionalMutation)">write</a> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED">ACCEPTED</a>.</li>
+</ul>
+
 
 </div>
 
 <script>
 document.body.onkeyup = function(e){
 
+if (e.keyCode == '37') { window.location = '/tour/batch-scanner-code/'; }
 
+
+
+if (e.keyCode == '39') { window.location = '/tour/conditional-writer-code/'; }
 
 };
 </script>
@@ -171,8 +297,12 @@ document.body.onkeyup = function(e){
 <div class="text-center">
   <h2>
     
+    <a href="/tour/batch-scanner-code/">&lt;</a>
+    
 
-     / 9
+    10 / 11
+    
+    <a href="/tour/conditional-writer-code/">&gt;</a>
     
   </h2>
 </div>

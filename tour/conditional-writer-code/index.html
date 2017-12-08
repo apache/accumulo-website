@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Using Iterators</title>
+<title>Conditional Writer Code</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -146,22 +146,55 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Using Iterators</h1>
+          <h1 class="title">Conditional Writer Code</h1>
           
           
 
 
 <div id="tour-header">
-  <h2><a href="/tour/">Accumulo Tour</a>: Using Iterators</h2>
-  <p class="text-muted">Tour page  of 11</p>
+  <h2><a href="/tour/">Accumulo Tour</a>: Conditional Writer Code</h2>
+  <p class="text-muted">Tour page 11 of 11</p>
 </div>
 <div id="tour-content">
-  
+  <p>Below is a solution to the excercise.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="n">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">(</span><span class="n">ConditionalWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createConditionalWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ConditionalWriterConfig</span><span class="o">()))</span> <span class="o">{</span>
+      <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Condition</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">);</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">expectedAddr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">condition</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expectedAddr</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="n">ConditionalMutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConditionalMutation</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">condition</span><span class="o">);</span>
+      <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">);</span>
+      <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">mutation</span><span class="o">).</span><span class="na">getStatus</span><span class="o">()</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="na">ACCEPTED</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+</code></pre>
+</div>
+
+<p>The following output shows running the example with a conditional writer.
+Threads retry when conditional mutations are rejected.  The final address has
+all three modifications.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
+Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
+Thread  39 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
+Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '1007 Mountain Dr, Gotham, New York'
+Thread  39 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, NY  '
+Thread  39 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, NY'
+Final address : '1007 Mountain Dr, Gotham, NY'
+</code></pre>
+</div>
 
 </div>
 
 <script>
 document.body.onkeyup = function(e){
+
+if (e.keyCode == '37') { window.location = '/tour/conditional-writer/'; }
 
 
 
@@ -171,8 +204,10 @@ document.body.onkeyup = function(e){
 <div class="text-center">
   <h2>
     
+    <a href="/tour/conditional-writer/">&lt;</a>
+    
 
-     / 11
+    11 / 11
     
   </h2>
 </div>
