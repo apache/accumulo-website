@@ -68,6 +68,8 @@ files are consolidated and deleted entries are removed.
     root@myinstance mytable> compact -t mytable
     07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
 
+If needed, the compaction can be canceled using `compact --cancel -t mytable`.
+
 The `flush` command instructs Accumulo to write all entries currently in memory for a given table
 to disk.
 
