@@ -24,5 +24,5 @@ or [create an issue][issue].
   1. [{{ link_to_page.title }}]({{ doc_url }})
 {% endfor %}
 
-[mlist]: /mailing_list/
+[mlist]: /contact-us/#mailing-lists
 [issue]: https://issues.apache.org/jira/projects/ACCUMULO
