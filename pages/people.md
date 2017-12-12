@@ -53,6 +53,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
+| Benjamin Fach       |                                                                   |                       |
 | Ben Manes           |                                                                   | [PT][PT]              |
 | Bob Thorman         | [AT&amp;T][ATT]                                                   |                       |
 | Charles Williams    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
