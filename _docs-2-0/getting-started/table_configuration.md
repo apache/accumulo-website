@@ -63,6 +63,8 @@ through the shell:
 
     user@myinstance mytable> compact -t mytable
 
+If needed, the compaction can be canceled using `compact --cancel -t mytable`.
+
 ## Constraints
 
 Accumulo supports constraints applied on mutations at insert time. This can be
