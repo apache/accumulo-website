@@ -57,13 +57,8 @@ Map<String, Set<Text>> groups = conn.tableOperations().getLocalityGroups("mytabl
 
 The assignment of Column Families to Locality Groups can be changed at any time. The
 physical movement of column families into their new locality groups takes place via
-the periodic Major Compaction process that takes place continuously in the
-background. Major Compaction can also be scheduled to take place immediately
-through the shell:
-
-    user@myinstance mytable> compact -t mytable
-
-If needed, the compaction can be canceled using `compact --cancel -t mytable`.
+the periodic [major compaction](#compaction) process that takes place continuously in the
+background or manually using the `compact` command in the shell.
 
 ## Constraints
 
@@ -98,9 +93,8 @@ See the [constraints examples][constraints-example] for example code.
 As mutations are applied to an Accumulo table, several files are created per tablet. If
 bloom filters are enabled, Accumulo will create and load a small data structure into
 memory to determine whether a file contains a given key before opening the file.
-This can speed up lookups considerably.
-
-To enable bloom filters, enter the following command in the Shell:
+This can speed up lookups considerably. Bloom filters can be enabled on a table by
+setting the [table.bloom.enabled] property to `true` in the shell:
 
     user@myinstance> config -t mytable -s table.bloom.enabled=true
 
@@ -354,9 +348,7 @@ added to tablets directly by bulk import. In the background tablet servers run
 major compactions to merge multiple files into one. The tablet server has to
 decide which tablets to compact and which files within a tablet to compact.
 This decision is made using the compaction ratio, which is configurable on a
-per table basis. To configure this ratio modify the following property:
-
-    table.compaction.major.ratio
+per table basis by the [table.compaction.major.ratio] property.
 
 Increasing this ratio will result in more files per tablet and less compaction
 work. More files per tablet means more higher query latency. So adjusting
@@ -370,17 +362,11 @@ files in a tablet, the largest file is removed from consideration, and the
 remaining files are considered for compaction. This is repeated until a
 compaction is triggered or there are no files left to consider.
 
-The number of background threads tablet servers use to run major compactions is
-configurable. To configure this modify the following property:
+The number of background threads tablet servers use to run major and minor
+compactions is configured by the [tserver.compaction.major.concurrent.max]
+and [tserver.compaction.minor.concurrent.max] properties respectively.
 
-    tserver.compaction.major.concurrent.max
-
-Also, the number of threads tablet servers use for minor compactions is
-configurable. To configure this modify the following property:
-
-    tserver.compaction.minor.concurrent.max
-
-The numbers of minor and major compactions running and queued is visible on the
+The numbers of major and minor compactions running and queued is visible on the
 Accumulo monitor page. This allows you to see if compactions are backing up
 and adjustments to the above settings are needed. When adjusting the number of
 threads available for compactions, consider the number of cores and other tasks
@@ -400,13 +386,9 @@ alleviate backups by lowering the amount of major compaction work that needs to
 be done.
 
 Another option to deal with the files per tablet growing too large is to adjust
-the following property:
-
-    table.file.max
-
-When a tablet reaches this number of files and needs to flush its in-memory
-data to disk, it will choose to do a merging minor compaction. A merging minor
-compaction will merge the tablet's smallest file with the data in memory at
+the [table.file.max] property. When a tablet reaches this number of files and needs
+to flush its in-memory data to disk, it will choose to do a merging minor compaction.
+A merging minor compaction will merge the tablet's smallest file with the data in memory at
 minor compaction time. Therefore the number of files will not grow beyond this
 limit. This will make minor compactions take longer, which will cause ingest
 performance to decrease. This can cause ingest to slow down until major
@@ -420,13 +402,18 @@ The amount of work done by major compactions is O(N*log<sub>R</sub>(N)) where
 R is the compaction ratio.
 
 Compactions can be initiated manually for a table. To initiate a minor
-compaction, use the flush command in the shell. To initiate a major compaction,
-use the compact command in the shell. The compact command will compact all
-tablets in a table to one file. Even tablets with one file are compacted. This
-is useful for the case where a major compaction filter is configured for a
-table. In 1.4 the ability to compact a range of a table was added. To use this
-feature specify start and stop rows for the compact command. This will only
-compact tablets that overlap the given row range.
+compaction, use the `flush` command in the shell. To initiate a major compaction,
+use the `compact` command in the shell:
+
+    user@myinstance mytable> compact -t mytable
+
+If needed, the compaction can be canceled using `compact --cancel -t mytable`.
+
+The `compact` command will compact all tablets in a table to one file. Even tablets
+with one file are compacted. This is useful for the case where a major compaction
+filter is configured for a table. In 1.4, the ability to compact a range of a table
+was added. To use this feature specify start and stop rows for the compact command.
+This will only compact tablets that overlap the given row range.
 
 ### Compaction Strategies
 
@@ -446,7 +433,7 @@ property `table.majc.compaction.strategy.opts.sizeLimit`.
 `TwoTierCompactionStrategy` is a hybrid compaction strategy that supports two types of compression. If the total size of 
 files being compacted is larger than `table.majc.compaction.strategy.opts.file.large.compress.threshold` than a larger 
 compression type will be used. The larger compression type is specified in `table.majc.compaction.strategy.opts.file.large.compress.type`. 
-Otherwise, the configured table compression will be used. To use this strategy with minor compactions set `table.file.compress.type=snappy` 
+Otherwise, the configured table compression will be used. To use this strategy with minor compactions set [table.file.compress.type] to `snappy` 
 and set a different compress type in `table.majc.compaction.strategy.opts.file.large.compress.type` for larger files.
 
 ## Pre-splitting tables
@@ -651,3 +638,9 @@ for example code.
 [Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
 [BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
 [Caching]: {{ page.docs_baseurl }}/administration/caching
+[table.compaction.major.ratio]: {{ page.docs_baseurl}}/administration/properties#table_compaction_major_ratio
+[tserver.compaction.major.concurrent.max]: {{ page.docs_baseurl}}/administration/properties#tserver_compaction_major_concurrent_max
+[tserver.compaction.minor.concurrent.max]: {{ page.docs_baseurl}}/administration/properties#tserver_compaction_minor_concurrent_max
+[table.file.max]: {{ page.docs_baseurl}}/administration/properties#table_file_max
+[table.bloom.enabled]: {{ page.docs_baseurl}}/administration/properties#table_bloom_enabled
+[table.file.compress.type]: {{ page.docs_baseurl}}/administration/properties#table_file_compress_type
