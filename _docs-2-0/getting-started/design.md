@@ -102,7 +102,7 @@ ingest and query load is balanced across the cluster.
 
 ![data distribution]({{ site.url }}/images/docs/data_distribution.png)
 
-## Tablet Service
+## Tablet Server
 
 When a write arrives at a TabletServer it is written to a Write-Ahead Log and
 then inserted into a sorted data structure in memory called a MemTable. When the
@@ -112,10 +112,14 @@ called a minor compaction. A new MemTable is then created and the fact of the
 compaction is recorded in the Write-Ahead Log.
 
 When a request to read data arrives at a TabletServer, the TabletServer does a
-binary search across the MemTable as well as the in-memory indexes associated
-with each RFile to find the relevant values. If clients are performing a scan,
-several key-value pairs are returned to the client in order from the MemTable
-and the set of RFiles by performing a merge-sort as they are read.
+binary search across the MemTable as well as the index blocks associated with each RFile
+to find the relevant values. If clients are performing a scan, several key-value pairs
+are returned to the client in order from the MemTable and data blocks of RFiles by performing
+a merge-sort as they are read. If [caching] is enabled for the table, any index or data
+block is stored in the block cache to speed up future scans.
+
+![tablet server diagram]({{ site.url }}/images/docs/tablet_server.png)
+<!-- Source at https://docs.google.com/presentation/d/1yEBNM044FxrzksVfxU35WDbxcVWUYUMy3tgRP75dzus/edit?usp=sharing -->
 
 ## RFile
 
@@ -178,3 +182,4 @@ TabletServer failures are noted on the Master's monitor page, accessible via
 [clients]: {{page.docs_baseurl}}/getting-started/clients
 [merging]: {{page.docs_baseurl}}/getting-started/table_configuration#merging-tablets
 [compaction]: {{page.docs_baseurl}}/getting-started/table_configuration#compaction
+[caching]: {{page.docs_baseurl}}/administration/caching
