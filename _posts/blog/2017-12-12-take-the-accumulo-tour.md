@@ -17,5 +17,7 @@ following Accumulo concepts:
  * [Batch Scanner](/tour/batch-scanner/)
  * [Conditional Writer](/tour/conditional-writer/)
 
+More exercises (such as one on Accumulo Iterators) will be added in the future so check for updates.
+
 [tour]: /tour/
 [gs]: /tour/getting-started/
