@@ -36,7 +36,7 @@ one Master server and many Clients.
 The TabletServer manages some subset of all the tablets (partitions of tables). This includes receiving writes from clients, persisting writes to a
 write-ahead log, sorting new key-value pairs in memory, periodically
 flushing sorted key-value pairs to new files in HDFS, and responding
-to reads from clients, forming a merge-sorted view of all keys and
+to reads from clients, forming a sorted merge view of all keys and
 values from all the files it has created and the sorted in-memory
 store.
 
