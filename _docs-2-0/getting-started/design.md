@@ -115,7 +115,7 @@ When a request to read data arrives at a TabletServer, the TabletServer does a
 binary search across the MemTable as well as the index blocks associated with each RFile
 to find the relevant values. If clients are performing a scan, several key-value pairs
 are returned to the client in order from the MemTable and data blocks of RFiles by performing
-a merge-sort as they are read. If [caching] is enabled for the table, any index or data
+a sorted merge as they are read. If [caching] is enabled for the table, any index or data
 block is stored in the block cache to speed up future scans.
 
 ![tablet server diagram]({{ site.url }}/images/docs/tablet_server.png)
