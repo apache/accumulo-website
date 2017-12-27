@@ -347,36 +347,32 @@ Accumulo instance.</p>
 <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/2.0.0/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> is published in a separate jar that should be added to your pom.xml
 as a test dependency:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>accumulo-minicluster<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;version&gt;</span>${accumulo.version}<span class="nt">&lt;/version&gt;</span>
   <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To start it up, you will need to supply an empty directory and a root password as arguments:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
 <span class="n">MiniAccumuloCluster</span> <span class="n">accumulo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
 <span class="n">accumulo</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Once we have our mini cluster running, we will want to interact with the Accumulo client API:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">accumulo</span><span class="o">.</span><span class="na">getInstanceName</span><span class="o">(),</span> <span class="n">accumulo</span><span class="o">.</span><span class="na">getZooKeepers</span><span class="o">());</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">accumulo</span><span class="o">.</span><span class="na">getInstanceName</span><span class="o">(),</span> <span class="n">accumulo</span><span class="o">.</span><span class="na">getZooKeepers</span><span class="o">());</span>
 <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"password"</span><span class="o">));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">accumulo</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">accumulo</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
 <span class="c1">// delete your temporary folder</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="iterator-test-harness">Iterator Test Harness</h2>
 
@@ -392,14 +388,13 @@ for all Accumulo Iterators to leverage to identify common pitfalls in user-creat
 <p>The Iterator Test Harness is published in a separate jar that should be added to your pom.xml as
 a test dependency:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>accumulo-iterator-test-harness<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;version&gt;</span>${accumulo.version}<span class="nt">&lt;/version&gt;</span>
   <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To use the Iterator test harness, create a class that extends the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-iterator-test-harness/2.0.0/org/apache/accumulo/iteratortest/junit4/BaseJUnit4IteratorTest.html">BaseJUnit4IteratorTest</a> class
 and defines the following:</p>
@@ -419,7 +414,7 @@ output dataset for the iterator being tested.</p>
 
 <p>Most iterator tests will follow the given outline:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.SortedMap</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.apache.accumulo.core.data.Key</span><span class="o">;</span>
@@ -472,8 +467,7 @@ output dataset for the iterator being tested.</p>
     <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestOutput</span><span class="o">(</span><span class="n">OUTPUT_DATA</span><span class="o">);</span>
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="limitations">Limitations</h3>
 

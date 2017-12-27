@@ -177,9 +177,8 @@ profile. It’s also a good idea to ensure the optional hadoop native libraries
 are installed, and you have a good editor (replace <code class="highlighter-rouge">vim</code> with your preferred
 editor):</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo dnf install accumulo java-1.8.0-openjdk-devel tuned vim hadoop-common-native
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf install accumulo java-1.8.0-openjdk-devel tuned vim hadoop-common-native
+</code></pre></div></div>
 
 <p>It is possible to install only a specific Accumulo service. For the single node
 setup, almost everything is needed. For the multi-node setup, it might make
@@ -191,12 +190,11 @@ example, to only install <code class="highlighter-rouge">accumulo-tserver</code>
 <p>(Optional) <code class="highlighter-rouge">tuned</code> can optimize your server settings, adjusting things like
 your <code class="highlighter-rouge">vm.swappiness</code>. To set up <code class="highlighter-rouge">tuned</code>, do:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start tuned.service     <span class="c"># start service</span>
-sudo tuned-adm profile network-latency <span class="c"># pick a good profile</span>
-sudo tuned-adm active                  <span class="c"># verify the selected profile</span>
-sudo systemctl <span class="nb">enable </span>tuned.service    <span class="c"># auto-start on reboots</span>
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start tuned.service     <span class="c"># start service</span>
+<span class="nb">sudo </span>tuned-adm profile network-latency <span class="c"># pick a good profile</span>
+<span class="nb">sudo </span>tuned-adm active                  <span class="c"># verify the selected profile</span>
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>tuned.service    <span class="c"># auto-start on reboots</span>
+</code></pre></div></div>
 
 <h3 id="set-up-zookeeper">Set up ZooKeeper</h3>
 
@@ -204,16 +202,14 @@ sudo systemctl <span class="nb">enable </span>tuned.service    <span class="c">#
 single node or many. So, let’s create its configuration file (the defaults are
 fine):</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
+</code></pre></div></div>
 
 <p>Now, let’s start ZooKeeper (and set it to run on reboot):</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start zookeeper.service
-sudo systemctl <span class="nb">enable </span>zookeeper.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start zookeeper.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>zookeeper.service
+</code></pre></div></div>
 
 <p>Note that the default port for ZooKeeper is <code class="highlighter-rouge">2181</code>. Remember the hostname of
 the node where ZooKeeper is running, referred to as <code class="highlighter-rouge">&lt;zk-dns-name&gt;</code> later.</p>
@@ -226,9 +222,8 @@ the node where ZooKeeper is running, referred to as <code class="highlighter-rou
 filesystem as a volume instead. By default, it uses <code class="highlighter-rouge">/tmp/accumulo</code>. Let’s
 change that to something which will survive a reboot:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/accumulo/accumulo-site.xml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/accumulo/accumulo-site.xml
+</code></pre></div></div>
 
 <p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> property from <code class="highlighter-rouge">file:///tmp/accumulo</code>
 to <code class="highlighter-rouge">file:///var/tmp/accumulo</code> in the configuration file (or another preferred
@@ -250,18 +245,16 @@ robust as a full HDFS instance, but it’s more reliable than the default. Even
 though you’re not going to be running HDFS, the Hadoop client code used in
 Accumulo can still be configured by modifying Hadoop’s configuration file:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/hadoop/core-site.xml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/hadoop/core-site.xml
+</code></pre></div></div>
 
 <p>Add a new property:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
     <span class="nt">&lt;name&gt;</span>fs.file.impl<span class="nt">&lt;/name&gt;</span>
     <span class="nt">&lt;value&gt;</span>org.apache.hadoop.fs.RawLocalFileSystem<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="initialize-accumulo">Initialize Accumulo</h3>
 
@@ -272,9 +265,8 @@ you already have a user and/or group by this name, it will probably not be a
 problem, but be aware that this user will have permissions for the server
 configuration files. To initialize Accumulo as a specific user, use <code class="highlighter-rouge">sudo -u</code>:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u accumulo accumulo init
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> accumulo accumulo init
+</code></pre></div></div>
 
 <p>As expected, this command will fail if ZooKeeper is not running, or if the
 destination volume (<code class="highlighter-rouge">file:///var/tmp/accumulo</code>) already exists.</p>
@@ -283,15 +275,13 @@ destination volume (<code class="highlighter-rouge">file:///var/tmp/accumulo</co
 
 <p>Now that Accumulo is initialized, you can start its services:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre></div></div>
 
 <p>Enable the commands to start at boot:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre></div></div>
 
 <h2 id="running-multiple-nodes">Running multiple nodes</h2>
 
@@ -331,9 +321,8 @@ one machine, and copy them to the others.</p>
 (<code class="highlighter-rouge">&lt;namenode-dns-name&gt;</code>). Edit Hadoop’s configuration to set the default
 filesystem name to this location:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/hadoop/core-site.xml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/hadoop/core-site.xml
+</code></pre></div></div>
 
 <p>Set the value for the property <code class="highlighter-rouge">fs.default.name</code> to
 <code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020</code>.</p>
@@ -343,31 +332,27 @@ filesystem name to this location:</p>
 <p>Now, format the NameNode. You’ll need to do this as the <code class="highlighter-rouge">hdfs</code> user on the
 NameNode instance:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs namenode -format
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> hdfs hdfs namenode <span class="nt">-format</span>
+</code></pre></div></div>
 
 <p>On the NameNode, start the NameNode service and enable it on reboot:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start hadoop-namenode.service
-sudo systemctl <span class="nb">enable </span>hadoop-namenode.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start hadoop-namenode.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>hadoop-namenode.service
+</code></pre></div></div>
 
 <p>On each DataNode, start the DataNode service:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start hadoop-datanode.service
-sudo systemctl <span class="nb">enable </span>hadoop-datanode.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start hadoop-datanode.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>hadoop-datanode.service
+</code></pre></div></div>
 
 <h3 id="configure-and-run-accumulo">Configure and run Accumulo</h3>
 
 <p>Update Accumulo’s configuration to use this HDFS filesystem:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo vim /etc/accumulo/accumulo-site.xml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/accumulo/accumulo-site.xml
+</code></pre></div></div>
 
 <p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> to
 <code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020/accumulo</code> in the configuration file. Don’t
@@ -381,17 +366,15 @@ use <code class="highlighter-rouge">localhost:2181</code> for ZooKeeper, so set 
 <p>With HDFS now running, make sure Accumulo has permission to create its
 directory in HDFS, and initialize Accumulo:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs dfs -chmod 777 /
-sudo -u accumulo accumulo init
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> hdfs hdfs dfs <span class="nt">-chmod</span> 777 /
+<span class="nb">sudo</span> <span class="nt">-u</span> accumulo accumulo init
+</code></pre></div></div>
 
 <p>After Accumulo has created its directory structure, you can change the
 permissions for the root back to what they were:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo -u hdfs hdfs dfs -chmod 755 /
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> hdfs hdfs dfs <span class="nt">-chmod</span> 755 /
+</code></pre></div></div>
 
 <p><em>Note: we only choose to do the above because this is a developer/testing
 environment. Temporarily changing ownership of HDFS is not recommended for
@@ -401,17 +384,15 @@ the root of HDFS.</em></p>
 
 <p>On the NameNode, start all the Accumulo services and enable on reboot:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
-sudo systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
+</code></pre></div></div>
 
 <p>On each DataNode, start just the <code class="highlighter-rouge">tserver</code> and enable it on reboot:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl start accumulo-tserver.service
-sudo systemctl <span class="nb">enable </span>accumulo-tserver.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start accumulo-tserver.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>accumulo-tserver.service
+</code></pre></div></div>
 
 <h2 id="watching-and-using-accumulo">Watching and using Accumulo</h2>
 
@@ -420,9 +401,8 @@ sudo systemctl <span class="nb">enable </span>accumulo-tserver.service
 <p>Run a shell as Accumulo’s root user (the instance name and root password are
 the ones you selected during the initialize step above:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>accumulo shell -u root -zh &lt;zk-dns-name&gt;:2181 -zi &lt;instanceName&gt;
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo shell <span class="nt">-u</span> root <span class="nt">-zh</span> &lt;zk-dns-name&gt;:2181 <span class="nt">-zi</span> &lt;instanceName&gt;
+</code></pre></div></div>
 
 <h3 id="view-the-monitor-pages">View the monitor pages</h3>
 
@@ -431,9 +411,8 @@ monitor pages. If you are running this in EC2, you can view these over an SSH
 tunnel using the NameNode’s public IP address. If you didn’t give this node a
 public IP address, you can allocate one in EC2 and associate it with this node:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ssh -L50070:localhost:50070 -L50095:localhost:50095 &lt;user&gt;@&lt;host&gt;
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-L50070</span>:localhost:50070 <span class="nt">-L50095</span>:localhost:50095 &lt;user&gt;@&lt;host&gt;
+</code></pre></div></div>
 
 <p>Replace <code class="highlighter-rouge">&lt;user&gt;</code> with your username (probably <code class="highlighter-rouge">fedora</code> if using the Fedora
 AMI), and <code class="highlighter-rouge">&lt;host&gt;</code> with the public IP or hostname for your EC2 instance. Now,
@@ -445,70 +424,61 @@ monitor (http://localhost:50095)</a>.</p>
 
 <p>Check the status of a service:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl status &lt;ServiceName&gt;.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl status &lt;ServiceName&gt;.service
+</code></pre></div></div>
 
 <p>Check running Java processes:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo jps -ml
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>jps <span class="nt">-ml</span>
+</code></pre></div></div>
 
 <p>Check the system logs for a specific service within the last 10 minutes:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo journalctl -u &lt;ServiceName&gt; --since <span class="s1">'10 minutes ago'</span>
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>journalctl <span class="nt">-u</span> &lt;ServiceName&gt; <span class="nt">--since</span> <span class="s1">'10 minutes ago'</span>
+</code></pre></div></div>
 
 <p>Check listening ports:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo netstat -tlnp
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>netstat <span class="nt">-tlnp</span>
+</code></pre></div></div>
 
 <p>Check DNS name for a given IP address:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>getent hosts &lt;ipaddress&gt; <span class="c"># OR</span>
-hostname -A
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getent hosts &lt;ipaddress&gt; <span class="c"># OR</span>
+hostname <span class="nt">-A</span>
+</code></pre></div></div>
 
 <p>Perform forward and reverse DNS lookups:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo dnf install <span class="nb">bind</span>-utils
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf install bind-utils
 dig +short &lt;hostname&gt;     <span class="c"># forward DNS lookup</span>
-dig +short -x &lt;ipaddress&gt; <span class="c"># reverse DNS lookup</span>
-</code></pre>
-</div>
+dig +short <span class="nt">-x</span> &lt;ipaddress&gt; <span class="c"># reverse DNS lookup</span>
+</code></pre></div></div>
 
 <p>Find the instance ID for your instance name:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>zkCli.sh -server &lt;host&gt;:2181     <span class="c"># replace &lt;host&gt; with your ZooKeeper server DNS name</span>
-<span class="gp">&gt; </span>get /accumulo/instances/&lt;name&gt; <span class="c"># replace &lt;name&gt; with your instance name</span>
-<span class="gp">&gt; </span>quit
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zkCli.sh <span class="nt">-server</span> &lt;host&gt;:2181     <span class="c"># replace &lt;host&gt; with your ZooKeeper server DNS name</span>
+<span class="o">&gt;</span> get /accumulo/instances/&lt;name&gt; <span class="c"># replace &lt;name&gt; with your instance name</span>
+<span class="o">&gt;</span> quit
+</code></pre></div></div>
 
 <p>If the NameNode is listening on the loopback address, you’ll probably need to
 restart the service manually, as well as any Accumulo services which failed.
 This is a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1406165">known issue with Hadoop</a>:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>sudo systemctl restart hadoop-namenode.service
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl restart hadoop-namenode.service
+</code></pre></div></div>
 
 <p>Some helpful rpm commands:</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>rpm -q -i &lt;installed-package-name&gt;              <span class="c"># to see info about an installed package</span>
-rpm -q -i -p &lt;rpm-file-name&gt;                    <span class="c"># to see info about an rpm file</span>
-rpm -q --provides &lt;installed-package-name&gt;      <span class="c"># see what a package provides</span>
-rpm -q --requires &lt;installed-package-name&gt;      <span class="c"># see what a package requires</span>
-rpm -q -l &lt;installed-package-name&gt;              <span class="c"># list package files</span>
-rpm -q --whatprovides &lt;file&gt;                    <span class="c"># find rpm which owns &lt;file&gt;</span>
-rpm -q --whatrequires <span class="s1">'mvn(groupId:artifactId)'</span> <span class="c"># find rpm which requires maven coords</span>
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpm <span class="nt">-q</span> <span class="nt">-i</span> &lt;installed-package-name&gt;              <span class="c"># to see info about an installed package</span>
+rpm <span class="nt">-q</span> <span class="nt">-i</span> <span class="nt">-p</span> &lt;rpm-file-name&gt;                    <span class="c"># to see info about an rpm file</span>
+rpm <span class="nt">-q</span> <span class="nt">--provides</span> &lt;installed-package-name&gt;      <span class="c"># see what a package provides</span>
+rpm <span class="nt">-q</span> <span class="nt">--requires</span> &lt;installed-package-name&gt;      <span class="c"># see what a package requires</span>
+rpm <span class="nt">-q</span> <span class="nt">-l</span> &lt;installed-package-name&gt;              <span class="c"># list package files</span>
+rpm <span class="nt">-q</span> <span class="nt">--whatprovides</span> &lt;file&gt;                    <span class="c"># find rpm which owns &lt;file&gt;</span>
+rpm <span class="nt">-q</span> <span class="nt">--whatrequires</span> <span class="s1">'mvn(groupId:artifactId)'</span> <span class="c"># find rpm which requires maven coords</span>
+</code></pre></div></div>
 
 <h2 id="helping-out">Helping out</h2>
 

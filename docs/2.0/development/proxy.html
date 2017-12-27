@@ -352,36 +352,32 @@ DataNodes. A proxy client only needs the ability to communicate with the proxy s
 the <code class="highlighter-rouge">accumulo</code> or <code class="highlighter-rouge">accumulo-service</code> command. A sample proxy configuration file can be found at
 <code class="highlighter-rouge">conf/templates/proxy.properties</code>. Create a copy of this file and edit it for your environment:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cp ./conf/templates/proxy.properties ./conf/
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp ./conf/templates/proxy.properties ./conf/
 vim ./conf/proxy.properties
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>At the very least, you need to configure the following properties:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>instance=test
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance=test
 zookeepers=localhost:2181
 port=42424
 protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
 tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After <code class="highlighter-rouge">proxy.properties</code> is configured, the proxy server can be started using the <code class="highlighter-rouge">accumulo</code>
 or <code class="highlighter-rouge">accumulo-service</code> commands:</p>
 
 <p>To start the proxy in the foreground and log to the console, use the <code class="highlighter-rouge">accumulo</code> command:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo proxy -p /path/to/proxy.properties
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo proxy -p /path/to/proxy.properties
+</code></pre></div></div>
 
 <p>To background the process and redirect logs, use the <code class="highlighter-rouge">accumulo-service</code> command (a <code class="highlighter-rouge">proxy.properties</code>
 file must exist in <code class="highlighter-rouge">conf/</code> if using this method):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service proxy start
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service proxy start
+</code></pre></div></div>
 
 <h2 id="prerequisites-for-proxy-clients">Prerequisites for Proxy Clients</h2>
 
@@ -418,24 +414,22 @@ For example, <code class="highlighter-rouge">pip install thrift</code> will inst
 of connecting to a Thrift service), the methods on the proxy client will be available. The
 first thing to do is log in:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
 <span class="n">password</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"password"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">);</span>
 <span class="n">ByteBuffer</span> <span class="n">token</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Once logged in, the token returned will be used for most subsequent calls to the client.
 Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <p>First, create a table.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">createTable</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">TimeType</span><span class="o">.</span><span class="na">MILLIS</span><span class="o">);</span>
-</code></pre>
-</div>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">createTable</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">TimeType</span><span class="o">.</span><span class="na">MILLIS</span><span class="o">);</span>
+</code></pre></div></div>
 
 <p>Next, add some data:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// first, create a writer on the server</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// first, create a writer on the server</span>
 <span class="n">String</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createWriter</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">WriterOptions</span><span class="o">());</span>
 
 <span class="c1">//rowid</span>
@@ -459,12 +453,11 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 <span class="n">client</span><span class="o">.</span><span class="na">updateAndFlush</span><span class="o">(</span><span class="n">writer</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="n">cellsToUpdate</span><span class="o">);</span>
 
 <span class="n">client</span><span class="o">.</span><span class="na">closeWriter</span><span class="o">(</span><span class="n">writer</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Scan for the data and batch the return of the results on the server:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">String</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ScanOptions</span><span class="o">());</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ScanOptions</span><span class="o">());</span>
 <span class="n">ScanResult</span> <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">nextK</span><span class="o">(</span><span class="n">scanner</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
 
 <span class="k">for</span><span class="o">(</span><span class="n">KeyValue</span> <span class="n">keyValue</span> <span class="o">:</span> <span class="n">results</span><span class="o">.</span><span class="na">getResultsIterator</span><span class="o">())</span> <span class="o">{</span>
@@ -472,20 +465,18 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 <span class="o">}</span>
 
 <span class="n">client</span><span class="o">.</span><span class="na">closeScanner</span><span class="o">(</span><span class="n">scanner</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="ruby">Ruby</h3>
 
 <p>The example ruby code below can be run using the following command (the -I option is needed for ruby 1.9.x):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ruby -I . client.rb &lt;host of server&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby -I . client.rb &lt;host of server&gt;
+</code></pre></div></div>
 
 <p><strong>Warning:</strong> The script will connect to Accumulo, create a table, and add some rows to it.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rubygems'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rubygems'</span>
 <span class="nb">require</span> <span class="s1">'thrift'</span>
 <span class="nb">require</span> <span class="s1">'accumulo_proxy'</span>
 
@@ -515,20 +506,18 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 <span class="n">cookie</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">createScanner</span><span class="p">(</span><span class="n">login</span><span class="p">,</span><span class="n">testtable</span><span class="p">,</span><span class="kp">nil</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">.</span><span class="nf">nextK</span><span class="p">(</span><span class="n">cookie</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">result</span><span class="p">.</span><span class="nf">results</span><span class="p">.</span><span class="nf">each</span><span class="p">{</span> <span class="o">|</span><span class="n">keyvalue</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">"Key: </span><span class="si">#{</span><span class="n">keyvalue</span><span class="p">.</span><span class="nf">key</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2"> Value: </span><span class="si">#{</span><span class="n">keyvalue</span><span class="p">.</span><span class="nf">value</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="python">Python</h3>
 
 <p>The example python client code below (if saved to TestClient.py) can be run using the following command:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>PYTHONPATH=/path/to/accumulo-2.0.0/lib/proxy/gen-py python TestClient.py
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PYTHONPATH=/path/to/accumulo-2.0.0/lib/proxy/gen-py python TestClient.py
+</code></pre></div></div>
 
 <p>As a warning, this script will create a table in your Accumulo instance and add a few cells to it.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -560,12 +549,11 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 <span class="n">cookie</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">createScanner</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="n">testtable</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">nextK</span><span class="p">(</span><span class="n">cookie</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
    <span class="k">print</span> <span class="n">entry</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The example code below shows proxy client code for managing namespaces:</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
 
 <span class="kn">from</span> <span class="nn">thrift.protocol</span> <span class="kn">import</span> <span class="n">TCompactProtocol</span>
 <span class="kn">from</span> <span class="nn">thrift.transport</span> <span class="kn">import</span> <span class="n">TSocket</span><span class="p">,</span> <span class="n">TTransport</span>
@@ -721,8 +709,7 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

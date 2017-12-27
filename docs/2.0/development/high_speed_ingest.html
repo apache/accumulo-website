@@ -353,9 +353,8 @@ where there are tablets on every TabletServer.</p>
 before ingest begins to take advantage of all the parallelism possible with the cluster
 hardware. Tables can be split at any time by using the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; addsplits -sf /local_splitfile -t mytable
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; addsplits -sf /local_splitfile -t mytable
+</code></pre></div></div>
 
 <p>For the purposes of providing parallelism to ingest it is not necessary to create more
 tablets than there are physical machines within the cluster as the aggregate ingest
@@ -394,7 +393,7 @@ data. The split points can be obtained from the shell and used by the MapReduce
 RangePartitioner. Note that this is only useful if the existing table is already split
 into multiple tablets.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; getsplits
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; getsplits
 aa
 ab
 ac
@@ -402,16 +401,14 @@ ac
 zx
 zy
 zz
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Run the MapReduce job, using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> to create the files to
 be introduced to Accumulo. Once this is complete, the files can be added to
 Accumulo via the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; importdirectory /files_dir /failures
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; importdirectory /files_dir /failures
+</code></pre></div></div>
 
 <p>Note that the paths referenced are directories within the same HDFS instance over
 which Accumulo is running. Accumulo places any files that failed to be added to the

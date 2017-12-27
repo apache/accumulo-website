@@ -193,7 +193,7 @@ starts multiple threads, with each thread doing the following.</p>
 is the batch writer always makes the update, even when the value has
 changed since it was read.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">static</span> <span class="n">String</span> <span class="nf">getAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="n">String</span> <span class="nf">getAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
     <span class="c1">// The IsolatedScanner ensures partial changes to a row are not seen</span>
     <span class="k">try</span> <span class="o">(</span><span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IsolatedScanner</span><span class="o">(</span><span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="n">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">)))</span> <span class="o">{</span>
       <span class="n">scanner</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="n">Range</span><span class="o">.</span><span class="na">exact</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">));</span>
@@ -254,19 +254,17 @@ changed since it was read.</p>
     <span class="c1">// print the address stored in Accumulo</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Final address : '"</span><span class="o">+</span><span class="n">getAddress</span><span class="o">(</span><span class="n">conn</span><span class="o">,</span> <span class="n">id</span><span class="o">)+</span><span class="s">"'"</span><span class="o">);</span>
   <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The following is one of a few possible outputs.  Notice that only the
 modification of <code class="highlighter-rouge">Drive</code> to <code class="highlighter-rouge">Dr</code> shows up in the final output.  The other
 modifications were lost.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
 Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
 Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
 Final address : '  1007 Mountain Dr, Gotham, New York  '
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To fix this example, make the following changes in <code class="highlighter-rouge">setAddress()</code> to use a
 ConditionalWriter.</p>

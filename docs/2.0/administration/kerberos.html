@@ -440,25 +440,22 @@ principal is of the form “primary/instance@REALM”. “accumulo” is commonl
 (although not required) and the “instance” is the fully-qualified domain name for
 the host that will be running the Accumulo process – this is required.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>kadmin.local -q "addprinc -randkey accumulo/host.domain.com"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc -randkey accumulo/host.domain.com"
+</code></pre></div></div>
 
 <p>Perform the above for each node running Accumulo processes in the instance, modifying
 “host.domain.com” for your network. The <code class="highlighter-rouge">randkey</code> option generates a random password
 because we will use a keytab for authentication, not a password, since the Accumulo
 server processes don’t have an interactive console to enter a password into.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
+</code></pre></div></div>
 
 <p>To simplify deployments, at the cost of security, all Accumulo principals could
 be globbed into a single keytab</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.service.keytab -glob accumulo*"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.service.keytab -glob accumulo*"
+</code></pre></div></div>
 
 <p>To ensure that the SASL handshake can occur from clients to servers and servers to servers,
 all Accumulo servers must share the same instance and realm principal components as the
@@ -597,7 +594,7 @@ prompted for a password you can just hit return, since it won’t be used.</li>
   <li>Start the Accumulo cluster</li>
 </ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo-cluster stop
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-cluster stop
 ...
 $ accumulo init --reset-security
 Running against secured HDFS
@@ -606,8 +603,7 @@ Enter initial password for accumulo_admin@EXAMPLE.COM (this may not be applicabl
 Confirm initial password for accumulo_admin@EXAMPLE.COM:
 $ accumulo-cluster start
 ...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="verifying-secure-access">Verifying secure access</h4>
 
@@ -615,10 +611,9 @@ $ accumulo-cluster start
 are actually running (they should exit immediately if login fails) and verify that you see
 something similar to the following in the application log.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>2015-01-07 11:57:56,826 [security.SecurityUtil] INFO : Attempting to login with keytab as accumulo/hostname@EXAMPLE.COM
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-07 11:57:56,826 [security.SecurityUtil] INFO : Attempting to login with keytab as accumulo/hostname@EXAMPLE.COM
 2015-01-07 11:57:56,830 [security.UserGroupInformation] INFO : Login successful for user accumulo/hostname@EXAMPLE.COM using keytab file /etc/security/keytabs/accumulo.service.keytab
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="impersonation">Impersonation</h4>
 
@@ -636,7 +631,7 @@ site configuration file. These two properties are semi-colon separated propertie
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.user.impersonation<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>$PROXY_USER:*<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
@@ -645,15 +640,14 @@ in the host impersonation property value, etc.</p>
   <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.host.impersonation<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>*<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate any user from any host.</p>
 
 <p>The following is an example of specifying a subset of users <code class="highlighter-rouge">$PROXY_USER</code> can impersonate and also
 limiting the hosts from which <code class="highlighter-rouge">$PROXY_USER</code> can initiate requests from.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.user.impersonation<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
@@ -662,8 +656,7 @@ limiting the hosts from which <code class="highlighter-rouge">$PROXY_USER</code>
   <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.host.impersonation<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>host1.domain.com,host2.domain.com;*<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
 <code class="highlighter-rouge">$PROXY_USER2</code> can impersonate user2 and user4 from any host.</p>
@@ -692,13 +685,12 @@ users with the system permission are allowed to obtain delegation tokens. It is 
 to configure confidentiality with SASL, using the <code class="highlighter-rouge">rpc.sasl.qop=auth-conf</code> configuration property, to
 ensure that prying eyes cannot view the <code class="highlighter-rouge">DelegationToken</code> as it passes over the network.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code># Check a user's permissions
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Check a user's permissions
 admin@REALM@accumulo&gt; userpermissions -u user@REALM
 
 # Grant the DELEGATION_TOKEN system permission to a user
 admin@REALM@accumulo&gt; grant System.DELEGATION_TOKEN -s -u user@REALM
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="clients">Clients</h3>
 
@@ -708,9 +700,8 @@ admin@REALM@accumulo&gt; grant System.DELEGATION_TOKEN -s -u user@REALM
 primary difference between a server principal is that principals for users are created
 with a password and also not qualified to a specific instance (host).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>kadmin.local -q "addprinc $user"
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc $user"
+</code></pre></div></div>
 
 <p>The above will prompt for a password for that user which will be used to identify that $user.
 The user can verify that they can authenticate with the KDC using the command <code class="highlighter-rouge">kinit $user</code>.
@@ -719,15 +710,14 @@ to authenticate with Accumulo, access HDFS, etc.</p>
 
 <p>The user can verify the state of their local credentials cache by using the command <code class="highlighter-rouge">klist</code>.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>klist
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>klist
 Ticket cache: FILE:/tmp/krb5cc_123
 Default principal: user@EXAMPLE.COM
 
 Valid starting       Expires              Service principal
 01/07/2015 11:56:35  01/08/2015 11:56:35  krbtgt/EXAMPLE.COM@EXAMPLE.COM
 	renew <span class="k">until </span>01/14/2015 11:56:35
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="configuration">Configuration</h4>
 
@@ -756,9 +746,9 @@ interact with the sytem.</p>
 <p>While this example logs in via <code class="highlighter-rouge">kinit</code> with a password, any login method that caches Kerberos tickets
 should work.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>kinit accumulo_admin@EXAMPLE.COM
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kinit accumulo_admin@EXAMPLE.COM
 Password <span class="k">for </span>accumulo_admin@EXAMPLE.COM: <span class="k">******************************</span>
-<span class="gp">$ </span>accumulo shell
+<span class="nv">$ </span>accumulo shell
 
 Shell - Apache Accumulo Interactive Shell
 -
@@ -768,7 +758,7 @@ Shell - Apache Accumulo Interactive Shell
 -
 - <span class="nb">type</span> <span class="s1">'help'</span> <span class="k">for </span>a list of available commands
 -
-<span class="gp">accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; </span>userpermissions
+accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; userpermissions
 System permissions: System.GRANT, System.CREATE_TABLE, System.DROP_TABLE, System.ALTER_TABLE, System.CREATE_USER, System.DROP_USER, System.ALTER_USER, System.SYSTEM, System.CREATE_NAMESPACE, System.DROP_NAMESPACE, System.ALTER_NAMESPACE, System.OBTAIN_DELEGATION_TOKEN
 
 Namespace permissions <span class="o">(</span>accumulo<span class="o">)</span>: Namespace.READ, Namespace.ALTER_TABLE
@@ -777,11 +767,10 @@ Table permissions <span class="o">(</span>accumulo.metadata<span class="o">)</sp
 Table permissions <span class="o">(</span>accumulo.replication<span class="o">)</span>: Table.READ
 Table permissions <span class="o">(</span>accumulo.root<span class="o">)</span>: Table.READ, Table.ALTER_TABLE
 
-<span class="gp">accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; </span>quit
-<span class="gp">$ </span>kdestroy
+accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; quit
+<span class="nv">$ </span>kdestroy
 <span class="err">$</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="delegationtokens-with-mapreduce">DelegationTokens with MapReduce</h4>
 
@@ -793,7 +782,7 @@ using a <code class="highlighter-rouge">Connector</code> obtained with that <cod
 the MapReduce job is already logged in via Kerberos via a keytab or via a locally-cached
 Kerberos ticket-granting-ticket (TGT).</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">getInstance</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">getInstance</span><span class="o">();</span>
 <span class="n">KerberosToken</span> <span class="n">kt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
 <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">);</span>
 <span class="n">DelegationToken</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
@@ -803,8 +792,7 @@ Kerberos ticket-granting-ticket (TGT).</p>
 
 <span class="c1">// Writing to Accumulo</span>
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setConnectorInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If the user passes a <code class="highlighter-rouge">KerberosToken</code> to the <code class="highlighter-rouge">setConnectorInfo</code> method, the implementation will
 attempt to obtain a <code class="highlighter-rouge">DelegationToken</code> automatically, but this does have limitations
@@ -819,14 +807,13 @@ of time dependent on Accumulo’s configuration (<code class="highlighter-rouge"
 <p>It is also possible to obtain and use <code class="highlighter-rouge">DelegationToken</code>s outside of the context
 of MapReduce.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">String</span> <span class="n">principal</span> <span class="o">=</span> <span class="s">"user@REALM"</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">principal</span> <span class="o">=</span> <span class="s">"user@REALM"</span><span class="o">;</span>
 <span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">getInstance</span><span class="o">();</span>
 <span class="n">Connector</span> <span class="n">connector</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">());</span>
 <span class="n">DelegationToken</span> <span class="n">delegationToken</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
 
 <span class="n">Connector</span> <span class="n">dtConnector</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">delegationToken</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Use of the <code class="highlighter-rouge">dtConnector</code> will perform each operation as the original user, but without
 their Kerberos credentials.</p>
@@ -841,15 +828,14 @@ JVM to each YARN task is secure, even in multi-tenant instances.</p>
 <p><strong>Q</strong>: I have valid Kerberos credentials and a correct client configuration file but
 I still get errors like:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>java.io.IOException: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.io.IOException: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
+</code></pre></div></div>
 
 <p><strong>A</strong>: When you have a valid client configuration and Kerberos TGT, it is possible that the search
 path for your local credentials cache is incorrect. Check the value of the KRB5CCNAME environment
 value, and ensure it matches the value reported by <code class="highlighter-rouge">klist</code>.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ echo $KRB5CCNAME
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $KRB5CCNAME
 
 $ klist
 Ticket cache: FILE:/tmp/krb5cc_123
@@ -861,17 +847,15 @@ Valid starting       Expires              Service principal
 $ export KRB5CCNAME=/tmp/krb5cc_123
 $ echo $KRB5CCNAME
 /tmp/krb5cc_123
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>Q</strong>: I thought I had everything configured correctly, but my client/server still fails to log in.
 I don’t know what is actually failing.</p>
 
 <p><strong>A</strong>: Add the following system property to the JVM invocation:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>-Dsun.security.krb5.debug=true
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dsun.security.krb5.debug=true
+</code></pre></div></div>
 
 <p>This will enable lots of extra debugging at the JVM level which is often sufficient to
 diagnose some high-level configuration problem. Client applications can add this system property by
@@ -886,7 +870,7 @@ can be controlled in your client application, or using <code class="highlighter-
 keytab, but they are unable to communicate with each other, showing the
 following errors:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>2015-01-12 14:47:27,055 [transport.TSaslTransport] ERROR: SASL negotiation failure
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:27,055 [transport.TSaslTransport] ERROR: SASL negotiation failure
 javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Server not found in Kerberos database (7) - LOOKING_UP_SERVER)]
         at com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)
         at org.apache.thrift.transport.TSaslClientTransport.handleSaslStartMessage(TSaslClientTransport.java:94)
@@ -926,12 +910,11 @@ Caused by: KrbException: Identifier doesn't match expected value (906)
         at sun.security.krb5.internal.TGSRep.&lt;init&gt;(TGSRep.java:61)
         at sun.security.krb5.KrbTgsRep.&lt;init&gt;(KrbTgsRep.java:55)
         ... 25 more
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>or</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>2015-01-12 14:47:29,440 [server.TThreadPoolServer] ERROR: Error occurred during processing of message.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:29,440 [server.TThreadPoolServer] ERROR: Error occurred during processing of message.
 java.lang.RuntimeException: org.apache.thrift.transport.TTransportException: Peer indicated failure: GSS initiate failed
         at org.apache.thrift.transport.TSaslServerTransport$Factory.getTransport(TSaslServerTransport.java:219)
         at org.apache.accumulo.core.rpc.UGIAssumingTransportFactory$1.run(UGIAssumingTransportFactory.java:51)
@@ -951,8 +934,7 @@ Caused by: org.apache.thrift.transport.TTransportException: Peer indicated failu
         at org.apache.thrift.transport.TSaslServerTransport.open(TSaslServerTransport.java:41)
         at org.apache.thrift.transport.TSaslServerTransport$Factory.getTransport(TSaslServerTransport.java:216)
         ... 10 more
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>A</strong>: As previously mentioned, the hostname, and subsequently the address each Accumulo process is bound/listening
 on, is extremely important when negotiating an SASL connection. This problem commonly arises when the Accumulo
@@ -964,7 +946,7 @@ and <code class="highlighter-rouge">gc</code>) should match the instance compone
 <p><strong>Q</strong>: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
 when I attempt to use the “Recent Traces” page on the Monitor UI I get a stacktrace similar to:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>java.lang.AssertionError: AuthenticationToken should not be null
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.lang.AssertionError: AuthenticationToken should not be null
     at org.apache.accumulo.monitor.servlets.trace.Basic.getScanner(Basic.java:139)
     at org.apache.accumulo.monitor.servlets.trace.Summary.pageBody(Summary.java:164)
     at org.apache.accumulo.monitor.servlets.BasicServlet.doGet(BasicServlet.java:63)
@@ -988,8 +970,7 @@ when I attempt to use the “Recent Traces” page on the Monitor UI I get a sta
     at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:607)
     at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:536)
     at java.lang.Thread.run(Thread.java:745)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>A</strong>: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the <code class="highlighter-rouge">trace</code> table. Accumulo allows the TraceServer to rely on the property <code class="highlighter-rouge">general.kerberos.keytab</code> as a fallback when logging in the trace user if the <code class="highlighter-rouge">trace.token.property.keytab</code> property isn’t defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor’s use of the trace user. The end result is that if you configure <code class="highlighter-rouge">general.kerberos.keytab</code> and not <code class="highlighter-rouge">trace.token.property.keytab</code> you will end up with a system that properly logs trace information but can’t view it.</p>
 

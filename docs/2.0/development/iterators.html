@@ -369,7 +369,7 @@ Iterators must have a public no-args constructor.</p>
 
 <p>A normal implementation of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> defines functionality for the following methods:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
 
 <span class="kt">boolean</span> <span class="nf">hasTop</span><span class="o">();</span>
 
@@ -382,8 +382,7 @@ Iterators must have a public no-args constructor.</p>
 <span class="n">Value</span> <span class="nf">getTopValue</span><span class="o">();</span>
 
 <span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">deepCopy</span><span class="o">(</span><span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="init">init</h3>
 
@@ -506,7 +505,7 @@ then returns itself.</p>
 
 <p>The following code is a general outline for how TabletServers invoke Iterators.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span><span class="o">;</span>
 <span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
 <span class="k">while</span> <span class="o">(!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">))</span> <span class="o">{</span>
     <span class="n">SortedKeyValueIterator</span> <span class="n">source</span> <span class="o">=</span> <span class="n">getSystemIterator</span><span class="o">();</span>
@@ -536,12 +535,11 @@ then returns itself.</p>
     <span class="o">}</span>
 <span class="o">}</span>
 <span class="c1">//return batch of key values to client</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Additionally, the obtuse “re-seek” case can be outlined as the following:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// Given the above</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Given the above</span>
 <span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">getNextBatch</span><span class="o">();</span>
 
 <span class="c1">// Store off lastKeyReturned for this client</span>
@@ -556,8 +554,7 @@ then returns itself.</p>
 
 <span class="c1">// Use the actualRange, not the user provided one</span>
 <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">actualRange</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="isolation">Isolation</h2>
 

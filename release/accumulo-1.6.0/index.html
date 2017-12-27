@@ -202,7 +202,7 @@
 
 <p>Accumulo only sorts data lexicographically.  Getting something like a pair of (<em>String</em>,<em>Integer</em>) to sort correctly in Accumulo is tricky.  It’s tricky because you only want to compare the integers if the strings are equal.  It’s possible to make this sort properly in Accumulo if the data is encoded properly, but can be difficult.  To make this easier <a href="https://issues.apache.org/jira/browse/ACCUMULO-1336" title="Add lexicoders from Typo to Accumulo">ACCUMULO-1336</a> added Lexicoders to the Accumulo API.  Lexicoders provide an easy way to serialize data so that it sorts properly lexicographically.  Below is a simple example.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   PairLexicoder plex = new PairLexicoder(new StringLexicoder(), new IntegerLexicoder());
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   PairLexicoder plex = new PairLexicoder(new StringLexicoder(), new IntegerLexicoder());
    byte[] ba1 = plex.encode(new ComparablePair&lt;String, Integer&gt;("b",1));
    byte[] ba2 = plex.encode(new ComparablePair&lt;String, Integer&gt;("aa",1));
    byte[] ba3 = plex.encode(new ComparablePair&lt;String, Integer&gt;("a",2));
@@ -210,8 +210,7 @@
    byte[] ba5 = plex.encode(new ComparablePair&lt;String, Integer&gt;("aa",-3));
 
    //sorting ba1,ba2,ba3,ba4, and ba5 lexicographically will result in the same order as sorting the ComparablePairs
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="locality-groups-in-memory">Locality groups in memory</h3>
 
@@ -234,7 +233,7 @@ ticket that contains numerous fixes to enable this support.</p>
 
 <p>This version of Accumulo is accompanied by a new maven plugin for testing client apps (<a href="https://issues.apache.org/jira/browse/ACCUMULO-1030" title="Create a Maven plugin to run MiniAccumuloCluster for integration testing">ACCUMULO-1030</a>). You can execute the accumulo-maven-plugin inside your project by adding the following to your pom.xml’s build plugins section:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  &lt;plugin&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;plugin&gt;
     &lt;groupId&gt;org.apache.accumulo&lt;/groupId&gt;
     &lt;artifactId&gt;accumulo-maven-plugin&lt;/artifactId&gt;
     &lt;version&gt;1.6.0&lt;/version&gt;
@@ -252,12 +251,11 @@ ticket that contains numerous fixes to enable this support.</p>
       &lt;/execution&gt;
     &lt;/executions&gt;
   &lt;/plugin&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This plugin is designed to work in conjunction with the maven-failsafe-plugin. A small test instance of Accumulo will run during the pre-integration-test phase of the Maven build lifecycle, and will be stopped in the post-integration-test phase. Your integration tests, executed by maven-failsafe-plugin can access this instance with a MiniAccumuloInstance connector (the plugin uses MiniAccumuloInstance, internally), as in the following example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  private static Connector conn;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  private static Connector conn;
   
   @BeforeClass
   public static void setUp() throws Exception {
@@ -265,8 +263,7 @@ ticket that contains numerous fixes to enable this support.</p>
     Instance instance = new MiniAccumuloInstance(instanceName, new File("target/accumulo-maven-plugin/" + instanceName));
     conn = instance.getConnector("root", new PasswordToken("ITSecret"));
   }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This plugin is quite limited, currently only supporting an instance name and a root user password as configuration parameters. Improvements are expected in future releases, so feedback is welcome and appreciated (file bugs/requests under the “maven-plugin” component in the Accumulo JIRA).</p>
 
@@ -278,9 +275,8 @@ issues such as JVM garbage collection pauses. In earlier releases, a pre-built c
 
 <p>It is recommended that users invoke the provided build_native_library.sh before running Accumulo:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   $ACCUMULO_HOME/bin/build_native_library.sh
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   $ACCUMULO_HOME/bin/build_native_library.sh
+</code></pre></div></div>
 
 <p>Be aware that you will need a C++ compiler/toolchain installed to build this library. Check your GNU/Linux distribution documentation for the package manager command.</p>
 

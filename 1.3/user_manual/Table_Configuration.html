@@ -175,19 +175,18 @@
 
 <h3 id="-managing-locality-groups-via-the-shell"><a id="Managing_Locality_Groups_via_the_Shell"></a> Managing Locality Groups via the Shell</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col
 fam&gt;}} [-?] -t &lt;table&gt;
 
 user@myinstance mytable&gt; setgroups -t mytable group_one=colf1,colf2
 
 user@myinstance mytable&gt; getgroups -t mytable
 group_one=colf1,colf2
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="-managing-locality-groups-via-the-client-api"><a id="Managing_Locality_Groups_via_the_Client_API"></a> Managing Locality Groups via the Client API</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Connector conn;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connector conn;
 
 HashMap&lt;String,Set&lt;Text&gt;&gt; localityGroups =
     new HashMap&lt;String, Set&lt;Text&gt;&gt;();
@@ -208,14 +207,12 @@ conn.tableOperations().setLocalityGroups("mytable", localityGroups);
 // existing locality groups can be obtained as follows
 Map&lt;String, Set&lt;Text&gt;&gt; groups =
     conn.tableOperations().getLocalityGroups("mytable");
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The assignment of Column Families to Locality Groups can be changed anytime. The physical movement of column families into their new locality groups takes place via the periodic Major Compaction process that takes place continuously in the background. Major Compaction can also be scheduled to take place immediately through the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
+</code></pre></div></div>
 
 <h2 id="-constraints"><a id="Constraints"></a> Constraints</h2>
 
@@ -223,7 +220,7 @@ Map&lt;String, Set&lt;Text&gt;&gt; groups =
 
 <p>Constraints can be enabled by setting a table property as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.constraint.1=com.test.ExampleConstraint
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.constraint.1=com.test.ExampleConstraint
 user@myinstance mytable&gt; config -t mytable -s table.constraint.2=com.test.AnotherConstraint
 user@myinstance mytable&gt; config -t mytable -f constraint
 ---------+--------------------------------+----------------------------
@@ -232,8 +229,7 @@ SCOPE    | NAME                           | VALUE
 table    | table.constraint.1............ | com.test.ExampleConstraint
 table    | table.constraint.2............ | com.test.AnotherConstraint
 ---------+--------------------------------+----------------------------
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Currently there are no general-purpose constraints provided with the Accumulo distribution. New constraints can be created by writing a Java class that implements the org.apache.accumulo.core.constraints.Constraint interface.</p>
 
@@ -249,9 +245,8 @@ accumulo/src/examples/main/java/accumulo/examples/constraints .</p>
 
 <p>To enable bloom filters, enter the following command in the Shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
+</code></pre></div></div>
 
 <p>An extensive example of using Bloom Filters can be found at <br />
 accumulo/docs/examples/README.bloom .</p>
@@ -262,31 +257,28 @@ accumulo/docs/examples/README.bloom .</p>
 
 <h3 id="-setting-iterators-via-the-shell"><a id="Setting_Iterators_via_the_Shell"></a> Setting Iterators via the Shell</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>usage: setiter [-?] -agg | -class &lt;name&gt; | -filter | -nolabel | 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setiter [-?] -agg | -class &lt;name&gt; | -filter | -nolabel | 
 -regex | -vers [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt; [-scan] 
 [-t &lt;table&gt;]
 
 user@myinstance mytable&gt; setiter -t mytable -scan -p 10 -n myiter
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="-setting-iterators-programmatically"><a id="Setting_Iterators_Programmatically"></a> Setting Iterators Programmatically</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>scanner.setScanIterators(
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scanner.setScanIterators(
     15, // priority
     "com.company.MyIterator", // class name
     "myiter"); // name this iterator
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some iterators take additional parameters from client code, as in the following example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>bscan.setIteratorOption(
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bscan.setIteratorOption(
     "myiter", // iterator reference
     "myoptionname",
     "myoptionvalue");
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Tables support separate Iterator settings to be applied at scan time, upon minor compaction and upon major compaction. For most uses, tables will have identical iterator settings for all three to avoid inconsistent results.</p>
 
@@ -298,7 +290,7 @@ user@myinstance mytable&gt; setiter -t mytable -scan -p 10 -n myiter
 
 <p>The version policy can be changed by changing the VersioningIterator options for a table as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s
 table.iterator.scan.vers.opt.maxVersions=3
 
 user@myinstance mytable&gt; config -t mytable -s
@@ -306,8 +298,7 @@ table.iterator.minc.vers.opt.maxVersions=3
 
 user@myinstance mytable&gt; config -t mytable -s
 table.iterator.majc.vers.opt.maxVersions=3
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="-logical-time"><a id="Logical_Time"></a> Logical Time</h4>
 
@@ -315,9 +306,8 @@ table.iterator.majc.vers.opt.maxVersions=3
 
 <p>A table can be configured to use logical timestamps at creation time as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
+</code></pre></div></div>
 
 <h4 id="-deletes"><a id="Deletes"></a> Deletes</h4>
 
@@ -330,7 +320,7 @@ org.apache.accumulo.core.iterators.filter.Filter interface.</p>
 
 <p>To configure the AgeOff filter to remove data older than a certain date or a fixed amount of time from the present. The following example sets a table to delete everything inserted over 30 seconds ago:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
 user@myinstance filtertest&gt; setiter -t filtertest -scan -minc -majc -p
 10 -n myfilter -filter
 
@@ -364,12 +354,11 @@ foo a:b [] c
 
 user@myinstance filtertest&gt; scan
 user@myinstance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To see the iterator settings for a table, use:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
 ---------+------------------------------------------+------------------
 SCOPE    | NAME                                     | VALUE
 ---------+------------------------------------------+------------------
@@ -389,8 +378,7 @@ table    | table.iterator.scan.myfilter.opt.0 ..... |
 org.apache.accumulo.core.iterators.filter.AgeOffFilter
 table    | table.iterator.scan.myfilter.opt.0.ttl . | 30000
 ---------+------------------------------------------+------------------
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="-aggregating-iterators"><a id="Aggregating_Iterators"></a> Aggregating Iterators</h2>
 
@@ -398,21 +386,19 @@ table    | table.iterator.scan.myfilter.opt.0.ttl . | 30000
 
 <p>For example, if an aggregating iterator were configured on a table and the following mutations were inserted:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
 rowID1  colfA  colqA     20100101   1
 rowID1  colfA  colqA     20100102   1
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The table would reflect only one aggregate value:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
+</code></pre></div></div>
 
 <p>Aggregating iterators can be enabled for a table as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; createtable perDayCounts -a
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable perDayCounts -a
 day=org.apache.accumulo.core.iterators.aggregation.StringSummation
 
 user@myinstance perDayCounts&gt; insert row1 day 20080101 1
@@ -425,8 +411,7 @@ user@myinstance perDayCounts&gt; scan
 row1 day:20080101 [] 2
 row1 day:20080103 [] 1
 row2 day:20080101 [] 2
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Accumulo includes the following aggregators:</p>
 
@@ -449,17 +434,15 @@ accumulo/src/examples/main/java/org/apache/accumulo/examples/aggregation/SortedS
 
 <p>The block cache can be configured on a per-table basis, and all tablets hosted on a tablet server share a single resource pool. To configure the size of the tablet server’s block cache, set the following properties:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>tserver.cache.data.size: Specifies the size of the cache for file data blocks.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.cache.data.size: Specifies the size of the cache for file data blocks.
 tserver.cache.index.size: Specifies the size of the cache for file indices.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To enable the block cache for your table, set the following properties:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>table.cache.block.enable: Determines whether file (data) block cache is enabled.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.cache.block.enable: Determines whether file (data) block cache is enabled.
 table.cache.index.enable: Determines whether index cache is enabled.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The block cache can have a significant effect on alleviating hot spots, as well as reducing query latency. It is enabled by default for the !METADATA table.</p>
 

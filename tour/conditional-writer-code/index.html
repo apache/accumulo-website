@@ -158,7 +158,7 @@
 <div id="tour-content">
   <p>Below is a solution to the excercise.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="n">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="n">Connector</span> <span class="n">conn</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="n">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">(</span><span class="n">ConditionalWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createConditionalWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ConditionalWriterConfig</span><span class="o">()))</span> <span class="o">{</span>
       <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Condition</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">);</span>
       <span class="k">if</span><span class="o">(</span><span class="n">expectedAddr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
@@ -172,22 +172,20 @@
     <span class="o">}</span>
   <span class="o">}</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The following output shows running the example with a conditional writer.
 Threads retry when conditional mutations are rejected.  The final address has
 all three modifications.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
 Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
 Thread  39 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
 Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '1007 Mountain Dr, Gotham, New York'
 Thread  39 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, NY  '
 Thread  39 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, NY'
 Final address : '1007 Mountain Dr, Gotham, NY'
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
 

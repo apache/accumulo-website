@@ -350,13 +350,12 @@ can be set via these two format classes to do the following:</p>
 <p>To read from an Accumulo table create a Mapper with the following class
 parameterization and be sure to configure the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="n">Mapper</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">,</span><span class="n">WritableComparable</span><span class="o">,</span><span class="n">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="n">Mapper</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">,</span><span class="n">WritableComparable</span><span class="o">,</span><span class="n">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="n">Key</span> <span class="n">k</span><span class="o">,</span> <span class="n">Value</span> <span class="n">v</span><span class="o">,</span> <span class="n">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// transform key and value data here</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To write to an Accumulo table, create a Reducer with the following class
 parameterization and be sure to configure the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html">AccumuloOutputFormat</a>. The key
@@ -365,15 +364,14 @@ allows a single Reducer to write to more than one table if desired. A default ta
 can be configured using the AccumuloOutputFormat, in which case the output table
 name does not have to be passed to the Context object within the Reducer.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyReducer</span> <span class="kd">extends</span> <span class="n">Reducer</span><span class="o">&lt;</span><span class="n">WritableComparable</span><span class="o">,</span> <span class="n">Writable</span><span class="o">,</span> <span class="n">Text</span><span class="o">,</span> <span class="n">Mutation</span><span class="o">&gt;</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyReducer</span> <span class="kd">extends</span> <span class="n">Reducer</span><span class="o">&lt;</span><span class="n">WritableComparable</span><span class="o">,</span> <span class="n">Writable</span><span class="o">,</span> <span class="n">Text</span><span class="o">,</span> <span class="n">Mutation</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="n">WritableComparable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">values</span><span class="o">,</span> <span class="n">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">Mutation</span> <span class="n">m</span><span class="o">;</span>
         <span class="c1">// create the mutation based on input key and value</span>
         <span class="n">c</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"output-table"</span><span class="o">),</span> <span class="n">m</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The Text object passed as the output should contain the name of the table to which
 this mutation should be applied. The Text can be null in which case the mutation
@@ -382,7 +380,7 @@ options.</p>
 
 <h2 id="accumuloinputformat-options">AccumuloInputFormat options</h2>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Job</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Job</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setInputInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span>
         <span class="s">"user"</span><span class="o">,</span>
         <span class="s">"passwd"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
@@ -391,34 +389,30 @@ options.</p>
 
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setZooKeeperInstance</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">,</span>
         <span class="s">"zooserver-one,zooserver-two"</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>Optional Settings:</strong></p>
 
 <p>To restrict Accumulo to a set of row ranges:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="c1">// populate array list of row ranges ...</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">ranges</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To restrict Accumulo to a list of columns:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">columns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">columns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
 <span class="c1">// populate list of columns</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">fetchColumns</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">columns</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To use a regular expression to match row IDs:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">IteratorSetting</span> <span class="n">is</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="n">RexExFilter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IteratorSetting</span> <span class="n">is</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="n">RexExFilter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="n">RegExFilter</span><span class="o">.</span><span class="na">setRegexs</span><span class="o">(</span><span class="n">is</span><span class="o">,</span> <span class="s">".*suffix"</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">is</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="accumulomultitableinputformat-options">AccumuloMultiTableInputFormat options</h2>
 
@@ -426,67 +420,61 @@ options.</p>
 in a single MapReduce job. Separate ranges, columns, and iterators can be
 used for each table.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">InputTableConfig</span> <span class="n">tableOneConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputTableConfig</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">InputTableConfig</span> <span class="n">tableOneConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputTableConfig</span><span class="o">();</span>
 <span class="n">InputTableConfig</span> <span class="n">tableTwoConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputTableConfig</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To set the configuration objects on the job:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">InputTableConfig</span><span class="o">&gt;</span> <span class="n">configs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">InputTableConfig</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">InputTableConfig</span><span class="o">&gt;</span> <span class="n">configs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">InputTableConfig</span><span class="o">&gt;();</span>
 <span class="n">configs</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table1"</span><span class="o">,</span> <span class="n">tableOneConfig</span><span class="o">);</span>
 <span class="n">configs</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table2"</span><span class="o">,</span> <span class="n">tableTwoConfig</span><span class="o">);</span>
 <span class="n">AccumuloMultiTableInputFormat</span><span class="o">.</span><span class="na">setInputTableConfigs</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">configs</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>Optional settings:</strong></p>
 
 <p>To restrict to a set of ranges:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">tableOneRanges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">tableOneRanges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">tableTwoRanges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="c1">// populate array lists of row ranges for tables...</span>
 <span class="n">tableOneConfig</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">tableOneRanges</span><span class="o">);</span>
 <span class="n">tableTwoConfig</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">tableTwoRanges</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To restrict Accumulo to a list of columns:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">tableOneColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">tableOneColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
 <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">tableTwoColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">,</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
 <span class="c1">// populate lists of columns for each of the tables ...</span>
 <span class="n">tableOneConfig</span><span class="o">.</span><span class="na">fetchColumns</span><span class="o">(</span><span class="n">tableOneColumns</span><span class="o">);</span>
 <span class="n">tableTwoConfig</span><span class="o">.</span><span class="na">fetchColumns</span><span class="o">(</span><span class="n">tableTwoColumns</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To set scan iterators:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;</span> <span class="n">tableOneIterators</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;</span> <span class="n">tableOneIterators</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;();</span>
 <span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;</span> <span class="n">tableTwoIterators</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">IteratorSetting</span><span class="o">&gt;();</span>
 <span class="c1">// populate the lists of iterator settings for each of the tables ...</span>
 <span class="n">tableOneConfig</span><span class="o">.</span><span class="na">setIterators</span><span class="o">(</span><span class="n">tableOneIterators</span><span class="o">);</span>
 <span class="n">tableTwoConfig</span><span class="o">.</span><span class="na">setIterators</span><span class="o">(</span><span class="n">tableTwoIterators</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The name of the table can be retrieved from the input split:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="n">Mapper</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">,</span><span class="n">WritableComparable</span><span class="o">,</span><span class="n">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="n">Mapper</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">,</span><span class="n">WritableComparable</span><span class="o">,</span><span class="n">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="n">Key</span> <span class="n">k</span><span class="o">,</span> <span class="n">Value</span> <span class="n">v</span><span class="o">,</span> <span class="n">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">RangeInputSplit</span> <span class="n">split</span> <span class="o">=</span> <span class="o">(</span><span class="n">RangeInputSplit</span><span class="o">)</span><span class="n">c</span><span class="o">.</span><span class="na">getInputSplit</span><span class="o">();</span>
         <span class="n">String</span> <span class="n">tableName</span> <span class="o">=</span> <span class="n">split</span><span class="o">.</span><span class="na">getTableName</span><span class="o">();</span>
         <span class="c1">// do something with table name</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="accumulooutputformat-options">AccumuloOutputFormat options</h2>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kt">boolean</span> <span class="n">createTables</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">boolean</span> <span class="n">createTables</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">defaultTable</span> <span class="o">=</span> <span class="s">"mytable"</span><span class="o">;</span>
 
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setOutputInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span>
@@ -497,15 +485,13 @@ used for each table.</p>
 
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setZooKeeperInstance</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">,</span>
         <span class="s">"zooserver-one,zooserver-two"</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>Optional Settings:</strong></p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setMaxLatency</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="mi">300000</span><span class="o">);</span> <span class="c1">// milliseconds</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setMaxLatency</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="mi">300000</span><span class="o">);</span> <span class="c1">// milliseconds</span>
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setMaxMutationBufferSize</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="mi">50000000</span><span class="o">);</span> <span class="c1">// bytes</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a> contains a complete example of using MapReduce with Accumulo.</p>
 

@@ -378,10 +378,9 @@ machine, this collection can take a long time.  This happens more
 frequently when the JVM is getting low on free memory.  Check the logs
 of the tablet server.  You will see lines like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>2013-06-20 13:43:20,607 [tabletserver.TabletServer] DEBUG: gc ParNew=0.00(+0.00) secs
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2013-06-20 13:43:20,607 [tabletserver.TabletServer] DEBUG: gc ParNew=0.00(+0.00) secs
     ConcurrentMarkSweep=0.00(+0.00) secs freemem=1,868,325,952(+1,868,325,952) totalmem=2,040,135,680
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When <code class="highlighter-rouge">freemem</code> becomes small relative to the amount of memory
 needed, the JVM will spend more time finding free memory than
@@ -464,9 +463,8 @@ lost.</p>
 
 <p>Use <code class="highlighter-rouge">accumulo admin checkTablets</code></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo admin checkTablets
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin checkTablets
+</code></pre></div></div>
 
 <p><strong>I lost three data nodes, and I’m missing blocks in a WAL.  I don’t care about data loss, how
 can I get those tablets online?</strong></p>
@@ -475,17 +473,15 @@ can I get those tablets online?</strong></p>
 The entries with a column family of <code class="highlighter-rouge">log</code> are references to the WAL for that tablet.
 If you know what WAL is bad, you can find all the references with a grep in the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>shell&gt; grep 0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; grep 0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
 3&lt; log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995|6
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>You can remove the WAL references in the metadata table.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>shell&gt; grant -u root Table.WRITE -t accumulo.metadata
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; grant -u root Table.WRITE -t accumulo.metadata
 shell&gt; delete 3&lt; log 127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Note: the colon (<code class="highlighter-rouge">:</code>) is omitted when specifying the <em>row cf cq</em> for the delete command.</p>
 
@@ -524,7 +520,7 @@ reliably just remove those references.</p>
 
 <p>The directory structure in HDFS for tables will follow the general structure:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/accumulo
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/accumulo
 /accumulo/tables/
 /accumulo/tables/!0
 /accumulo/tables/!0/default_tablet/A000001.rf
@@ -535,8 +531,7 @@ reliably just remove those references.</p>
 /accumulo/tables/1/t-00001/A000005.rf
 /accumulo/tables/2/default_tablet/A000006.rf
 /accumulo/tables/2/t-00001/A000007.rf
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If files under <code class="highlighter-rouge">/accumulo/tables</code> are corrupt, the best course of action is to
 recover those files in hdsf see the section on HDFS. Once these recovery efforts
@@ -552,18 +547,16 @@ references to the file in the METADATA table and within the tablet server
 hosting the file can be resolved by Accumulo. An empty file can be created using
 the CreateEmpty utility:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
+</code></pre></div></div>
 
 <p>The process is to delete the corrupt file and then move the empty file into its
 place (The generated empty file can be copied and used multiple times if necessary and does not need
 to be regenerated each time)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ hadoop fs –rm /accumulo/tables/corrupt/file/thename.rf; \
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs –rm /accumulo/tables/corrupt/file/thename.rf; \
 hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/tables/corrupt/file/thename.rf
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><em>Metadata File Corruption</em></p>
 
@@ -597,9 +590,8 @@ metadata table!), the following process can be followed to create an valid, empt
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' &gt; empty.wal
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' &gt; empty.wal
+</code></pre></div></div>
 
 <p>The above creates a file with the text “— Log File Header (v2) —” and then
 four bytes. You should verify the contents of the file with a hexdump tool.</p>
@@ -607,10 +599,9 @@ four bytes. You should verify the contents of the file with a hexdump tool.</p>
 <p>Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
 with the empty WAL.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
 $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After the corrupt WAL file has been replaced, the system should automatically recover.
 It may be necessary to restart the Accumulo Master process as an exponential
@@ -635,7 +626,7 @@ the gap between how many splits the old table had and no splits.</p>
 
 <p>The directory structure in HDFS for tables will follow the general structure:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/accumulo
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/accumulo
 /accumulo/tables/
 /accumulo/tables/1
 /accumulo/tables/1/default_tablet/A000001.rf
@@ -643,8 +634,7 @@ the gap between how many splits the old table had and no splits.</p>
 /accumulo/tables/1/t-00001/A000003.rf
 /accumulo/tables/2/default_tablet/A000004.rf
 /accumulo/tables/2/t-00001/A000005.rf
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>For each table, make a new directory that you can move (or copy if you have the HDFS space to do so)
 all of the rfiles for a given table into. For example, to process the table with an ID of <code class="highlighter-rouge">1</code>, make a new directory,
@@ -652,9 +642,8 @@ say <code class="highlighter-rouge">/new-table-1</code> and then copy all files 
 make a directory, <code class="highlighter-rouge">/new-table-1-failures</code>, for any failures during the import process. Then, issue the import
 command using the Accumulo shell into the new table, telling Accumulo to not re-set the timestamp:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@instance new_table&gt; importdirectory /new-table-1 /new-table-1-failures false
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@instance new_table&gt; importdirectory /new-table-1 /new-table-1-failures false
+</code></pre></div></div>
 
 <p>Any RFiles which were failed to be loaded will be placed in <code class="highlighter-rouge">/new-table-1-failures</code>. Rfiles that were successfully
 imported will no longer exist in <code class="highlighter-rouge">/new-table-1</code>. For failures, move them back to the import directory and retry
@@ -684,9 +673,8 @@ omission of new data.</p>
 will default to using the directory specified by <code class="highlighter-rouge">logger.dir.walog</code> in your configuration, or can be
 overridden by using the <code class="highlighter-rouge">--local-wal-directories</code> option on the tool. It can be invoked as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+</code></pre></div></div>
 
 <h2 id="file-naming-conventions">File Naming Conventions</h2>
 

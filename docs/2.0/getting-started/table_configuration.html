@@ -354,18 +354,17 @@ programmatically as follows:</p>
 
 <h3 id="managing-locality-groups-via-the-shell">Managing Locality Groups via the Shell</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}}
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}}
     [-?] -t &lt;table&gt;
 
 user@myinstance mytable&gt; setgroups group_one=colf1,colf2 -t mytable
 
 user@myinstance mytable&gt; getgroups -t mytable
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="managing-locality-groups-via-the-client-api">Managing Locality Groups via the Client API</h3>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Connector</span> <span class="n">conn</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Connector</span> <span class="n">conn</span><span class="o">;</span>
 
 <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">localityGroups</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
 
@@ -384,8 +383,7 @@ user@myinstance mytable&gt; getgroups -t mytable
 
 <span class="c1">// existing locality groups can be obtained as follows</span>
 <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">getLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The assignment of Column Families to Locality Groups can be changed at any time. The
 physical movement of column families into their new locality groups takes place via
@@ -401,13 +399,12 @@ client.</p>
 
 <p>Constraints can be enabled by setting a table property as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
 
 user@myinstance mytable&gt; constraint -l
 com.test.ExampleConstraint=1
 com.test.AnotherConstraint=2
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Currently there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
@@ -428,9 +425,8 @@ memory to determine whether a file contains a given key before opening the file.
 This can speed up lookups considerably. Bloom filters can be enabled on a table by
 setting the <a href="/docs/2.0/administration/properties#table_bloom_enabled">table.bloom.enabled</a> property to <code class="highlighter-rouge">true</code> in the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
+</code></pre></div></div>
 
 <p>The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md">bloom filter examples</a> contains an extensive example of using Bloom Filters.</p>
 
@@ -453,25 +449,23 @@ compaction scopes. If the Iterator implements the <a href="https://static.javado
 setiter command can be used which will interactively prompt the user to provide
 values for the given necessary options.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex |
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex |
     -reqvis | -vers   [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt;
     [-scan] [-t &lt;table&gt;]
 
 user@myinstance mytable&gt; setiter -t mytable -scan -p 15 -n myiter -class com.company.MyIterator
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The config command can always be used to manually configure iterators which is useful
 in cases where the Iterator does not implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.majc.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.scan.myiter.opt.myoptionname=myoptionvalue
 config -t mytable -s table.iterator.minc.myiter.opt.myoptionname=myoptionvalue
 config -t mytable -s table.iterator.majc.myiter.opt.myoptionname=myoptionvalue
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Typically, a table will have multiple iterators. Accumulo configures a set of
 system level iterators for each table. These iterators provide core
@@ -483,22 +477,20 @@ stack.</p>
 
 <h3 id="setting-iterators-programmatically">Setting Iterators Programmatically</h3>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span>
     <span class="mi">15</span><span class="o">,</span> <span class="c1">// priority</span>
     <span class="s">"myiter"</span><span class="o">,</span> <span class="c1">// name this iterator</span>
     <span class="s">"com.company.MyIterator"</span> <span class="c1">// class name</span>
 <span class="o">));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some iterators take additional parameters from client code, as in the following
 example:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(...);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(...);</span>
 <span class="n">iter</span><span class="o">.</span><span class="na">addOption</span><span class="o">(</span><span class="s">"myoptionname"</span><span class="o">,</span> <span class="s">"myoptionvalue"</span><span class="o">);</span>
 <span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="n">iter</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Tables support separate Iterator settings to be applied at scan time, upon minor
 compaction and upon major compaction. For most uses, tables will have identical
@@ -520,22 +512,20 @@ given date. The default is to return the one most recent version.</p>
 <p>The version policy can be changed by changing the VersioningIterator options for a
 table as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
 
 user@myinstance mytable&gt; config -t mytable -s table.iterator.minc.vers.opt.maxVersions=3
 
 user@myinstance mytable&gt; config -t mytable -s table.iterator.majc.vers.opt.maxVersions=3
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When a table is created, by default its configured to use the
 VersioningIterator and keep one version. A table can be created without the
 VersioningIterator with the -ndi option in the shell. Also the Java API
 has the following method</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">connector</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">limitVersion</span><span class="o">);</span>
-</code></pre>
-</div>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">connector</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">limitVersion</span><span class="o">);</span>
+</code></pre></div></div>
 
 <h4 id="logical-time">Logical Time</h4>
 
@@ -549,9 +539,8 @@ always move forward and never backwards.</p>
 
 <p>A table can be configured to use logical timestamps at creation time as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
+</code></pre></div></div>
 
 <h4 id="deletes">Deletes</h4>
 
@@ -573,7 +562,7 @@ by writing a Java class that extends the <a href="https://static.javadoc.io/org.
 amount of time from the present. The following example sets a table to delete
 everything inserted over 30 seconds ago:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
 
 user@myinstance filtertest&gt; setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -ageoff
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
@@ -598,12 +587,11 @@ user@myinstance filtertest&gt; sleep 4
 user@myinstance filtertest&gt; scan
 
 user@myinstance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To see the iterator settings for a table, use:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
 ---------+---------------------------------------------+------------------
 SCOPE    | NAME                                        | VALUE
 ---------+---------------------------------------------+------------------
@@ -620,8 +608,7 @@ table    | table.iterator.scan.myfilter.opt.ttl ...... | 30000
 table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
 table    | table.iterator.scan.vers.opt.maxVersions .. | 1
 ---------+---------------------------------------------+------------------
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="combiners">Combiners</h3>
 
@@ -638,21 +625,19 @@ the values associated with a particular key.</p>
 <p>For example, if a summing combiner were configured on a table and the following
 mutations were inserted:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
 rowID1  colfA  colqA     20100101   1
 rowID1  colfA  colqA     20100102   1
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The table would reflect only one aggregate value:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
+</code></pre></div></div>
 
 <p>Combiners can be enabled for a table using the setiter command in the shell. Below is an example.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@a14 perDayCounts&gt; setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14 perDayCounts&gt; setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
                        -class org.apache.accumulo.core.iterators.user.SummingCombiner
 TypedValueCombiner can interpret Values as a variety of number encodings
   (VLong, Long, or String) before combining
@@ -670,8 +655,7 @@ root@a14 perDayCounts&gt; scan
 bar day:20080101 []    2
 foo day:20080101 []    2
 foo day:20080103 []    1
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Accumulo includes some useful Combiners out of the box. To find these look in
 the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.</p>
@@ -751,9 +735,8 @@ R is the compaction ratio.</p>
 compaction, use the <code class="highlighter-rouge">flush</code> command in the shell. To initiate a major compaction,
 use the <code class="highlighter-rouge">compact</code> command in the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
+</code></pre></div></div>
 
 <p>If needed, the compaction can be canceled using <code class="highlighter-rouge">compact --cancel -t mytable</code>.</p>
 
@@ -771,9 +754,8 @@ qualified class name.</p>
 
 <p>Custom compaction strategies can have additional properties that are specified following the prefix property:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>table.majc.compaction.strategy.opts.*
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.majc.compaction.strategy.opts.*
+</code></pre></div></div>
 
 <p>Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
 <code class="highlighter-rouge">org.apache.accumulo.tserver.compaction.*</code> package. <code class="highlighter-rouge">EverythingCompactionStrategy</code> will simply compact all files. This is the 
@@ -796,10 +778,9 @@ is new, or small, you can add split points and generate new tablets.</p>
 
 <p>In the shell:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; createtable newTable
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; createtable newTable
 root@myinstance&gt; addsplits -t newTable g n t
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This will create a new table with 4 tablets. The table will be split
 on the letters <code class="highlighter-rouge">g</code>, <code class="highlighter-rouge">n</code>, and <code class="highlighter-rouge">t</code> which will work nicely if the
@@ -823,44 +804,39 @@ window of current information, tablets for older rows may be empty.</p>
 the number of split points. The following command will merge all rows
 from <code class="highlighter-rouge">A</code> to <code class="highlighter-rouge">Z</code> into a single tablet:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
+</code></pre></div></div>
 
 <p>If the result of a merge produces a tablet that is larger than the
 configured split size, the tablet may be split by the tablet server.
 Be sure to increase your tablet size prior to any merges if the goal
 is to have larger tablets:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=2G
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=2G
+</code></pre></div></div>
 
 <p>In order to merge small tablets, you can ask Accumulo to merge
 sections of a table smaller than a given size.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M
+</code></pre></div></div>
 
 <p>By default, small tablets will not be merged into tablets that are
 already larger than the given size. This can leave isolated small
 tablets. To force small tablets to be merged into larger tablets use
 the <code class="highlighter-rouge">--force</code> option:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M --force
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M --force
+</code></pre></div></div>
 
 <p>Merging away small tablets works on one section at a time. If your
 table contains many sections of small split points, or you are
 attempting to change the split size of the entire table, it will be
 faster to set the split point and merge the entire table:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=256M
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=256M
 root@myinstance&gt; merge -t myTable
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="delete-range">Delete Range</h2>
 
@@ -871,17 +847,15 @@ this date, say to remove all the data older than the current year.
 Accumulo supports a delete range operation which efficiently
 removes data between two rows. For example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -s 2010 -e 2011
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -s 2010 -e 2011
+</code></pre></div></div>
 
 <p>This will delete all rows starting with <code class="highlighter-rouge">2010</code> and it will stop at
 any row starting <code class="highlighter-rouge">2011</code>. You can delete any data prior to 2011
 with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
+</code></pre></div></div>
 
 <p>The shell will not allow you to delete an unbounded range (no start)
 unless you provide the <code class="highlighter-rouge">--force</code> option.</p>
@@ -913,7 +887,7 @@ created, only the user that created the clone can read and write to it.</p>
 <p>In the following example we see that data inserted after the clone operation is
 not visible in the clone.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@a14&gt; createtable people
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; createtable people
 
 root@a14 people&gt; insert 890435 name last Doe
 root@a14 people&gt; insert 890435 name first John
@@ -936,8 +910,7 @@ root@a14 test&gt; scan
 890435 name:last []    Doe
 
 root@a14 test&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The du command in the shell shows how much space a table is using in HDFS.
 This command can also show how much overlapping space two cloned tables have in
@@ -947,7 +920,7 @@ inserted into cic and its flushed, du shows the two tables still share 428M but
 cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
 that each table uses 428M.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@a14&gt; du ci
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; du ci
              428,482,573 [ci]
 
 root@a14&gt; clonetable ci cic
@@ -977,8 +950,7 @@ root@a14 cic&gt; du ci cic
              428,482,612 [cic]
 
 root@a14 cic&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="exporting-tables">Exporting Tables</h2>
 

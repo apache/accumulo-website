@@ -154,7 +154,7 @@ do not exist in a table.</p>
 
 <p>Below table named bloom_test is created and bloom filters are enabled.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./accumulo shell -u username -p password
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./accumulo shell -u username -p password
 Shell - Apache Accumulo Interactive Shell
 - version: 1.3.x-incubating
 - instance name: instance
@@ -166,26 +166,23 @@ username@instance&gt; setauths -u username -s exampleVis
 username@instance&gt; createtable bloom_test
 username@instance bloom_test&gt; config -t bloom_test -s table.bloom.enabled=true
 username@instance bloom_test&gt; exit
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Below 1 million random values are inserted into accumulo.  The randomly
 generated rows range between 0 and 1 billion.  The random number generator is
 initialized with the seed 7.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchWriter -s 7 instance zookeepers username password bloom_test 1000000 0 1000000000 50 2000000 60000 3 exampleVis
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchWriter -s 7 instance zookeepers username password bloom_test 1000000 0 1000000000 50 2000000 60000 3 exampleVis
+</code></pre></div></div>
 
 <p>Below the table is flushed, look at the monitor page and wait for the flush to
 complete.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
 username@instance&gt; flush -t bloom_test
 Flush of table bloom_test initiated...
 username@instance&gt; exit
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The flush will be finished when there are no entries in memory and the 
 number of minor compactions goes to zero. Refresh the page to see changes to the table.</p>
@@ -194,21 +191,20 @@ number of minor compactions goes to zero. Refresh the page to see changes to the
 same seed is used to generate the queries, therefore everything is found in the
 table.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 96.19 lookups/sec   5.20 secs
 num results : 500
 Generating 500 random queries...finished
 102.35 lookups/sec   4.89 secs
 num results : 500
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Below another 500 queries are performed, using a different seed which results
 in nothing being found.  In this case the lookups are much faster because of
 the bloom filters.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ../bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 8 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ../bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 8 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 2212.39 lookups/sec   0.23 secs
 num results : 0
@@ -217,8 +213,7 @@ Generating 500 random queries...finished
 4464.29 lookups/sec   0.11 secs
 num results : 0
 Did not find 500 rows
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <hr />
 
@@ -250,29 +245,27 @@ seed.</p>
 NG seed 7.  Even though only one map file will likely contain entries for this
 seed, all map files will be interrogated.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test1 500 0 1000000000 50 20 exampleVis
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test1 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 35.09 lookups/sec  14.25 secs
 num results : 500
 Generating 500 random queries...finished
 35.33 lookups/sec  14.15 secs
 num results : 500
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Below the same lookups are done against the table with bloom filters.  The
 lookups were 2.86 times faster because only one map file was used, even though three
 map files existed.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test2 500 0 1000000000 50 20 exampleVis
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test2 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 99.03 lookups/sec   5.05 secs
 num results : 500
 Generating 500 random queries...finished
 101.15 lookups/sec   4.94 secs
 num results : 500
-</code></pre>
-</div>
+</code></pre></div></div>
 
         </div>
 

@@ -163,13 +163,12 @@
 
 <p>All clients must first identify the Accumulo instance to which they will be communicating. Code to do this is as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>String instanceName = "myinstance";
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String instanceName = "myinstance";
 String zooServers = "zooserver-one,zooserver-two"
 Instance inst = new ZooKeeperInstance(instanceName, zooServers);
 
 Connector conn = new Connector(inst, "user","passwd".getBytes());
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="-writing-data"><a id="Writing_Data"></a> Writing Data</h2>
 
@@ -177,7 +176,7 @@ Connector conn = new Connector(inst, "user","passwd".getBytes());
 
 <p>Mutations can be created thus:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Text rowID = new Text("row1");
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text rowID = new Text("row1");
 Text colFam = new Text("myColFam");
 Text colQual = new Text("myColQual");
 ColumnVisibility colVis = new ColumnVisibility("public");
@@ -187,8 +186,7 @@ Value value = new Value("myValue".getBytes());
 
 Mutation mutation = new Mutation(rowID);
 mutation.put(colFam, colQual, colVis, timestamp, value);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="-batchwriter"><a id="BatchWriter"></a> BatchWriter</h3>
 
@@ -196,7 +194,7 @@ mutation.put(colFam, colQual, colVis, timestamp, value);
 
 <p>Mutations are added to a BatchWriter thus:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>long memBuf = 1000000L; // bytes to store before sending a batch
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>long memBuf = 1000000L; // bytes to store before sending a batch
 long timeout = 1000L; // milliseconds to wait before sending
 int numThreads = 10;
 
@@ -206,8 +204,7 @@ BatchWriter writer =
 writer.add(mutation);
 
 writer.close();
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>An example of using the batch writer can be found at <br />
 accumulo/docs/examples/README.batch</p>
@@ -220,7 +217,7 @@ accumulo/docs/examples/README.batch</p>
 
 <p>To retrieve data, Clients use a Scanner, which provides acts like an Iterator over keys and values. Scanners can be configured to start and stop at particular keys, and to return a subset of the columns available.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// specify which visibilities we are allowed to see
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// specify which visibilities we are allowed to see
 Authorizations auths = new Authorizations("public");
 
 Scanner scan =
@@ -233,8 +230,7 @@ for(Entry&lt;Key,Value&gt; entry : scan) {
     String row = e.getKey().getRow();
     Value value = e.getValue();
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="-batchscanner"><a id="BatchScanner"></a> BatchScanner</h3>
 
@@ -242,7 +238,7 @@ for(Entry&lt;Key,Value&gt; entry : scan) {
 
 <p>The BatchScanner is configured similarly to the Scanner; it can be configured to retrieve a subset of the columns available, but rather than passing a single Range, BatchScanners accept a set of Ranges. It is important to note that the keys returned by a BatchScanner are not in sorted order since the keys streamed are from multiple TabletServers in parallel.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ArrayList&lt;Range&gt; ranges = new ArrayList&lt;Range&gt;();
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ArrayList&lt;Range&gt; ranges = new ArrayList&lt;Range&gt;();
 // populate list of ranges ...
 
 BatchScanner bscan =
@@ -253,8 +249,7 @@ bscan.fetchFamily("attributes");
 
 for(Entry&lt;Key,Value&gt; entry : scan)
     System.out.println(e.getValue());
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>An example of the BatchScanner can be found at <br />
 accumulo/docs/examples/README.batch</p>

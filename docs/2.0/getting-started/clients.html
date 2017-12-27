@@ -338,13 +338,12 @@
 
 <p>If you are using Maven to create Accumulo client code, add the following to your pom:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>accumulo-core<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;version&gt;</span>2.0.0<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="running-client-code">Running Client Code</h2>
 
@@ -370,25 +369,22 @@ version running on your cluster.</p>
 <p>To run Accumulo client code using the <code class="highlighter-rouge">java</code> command, use the <code class="highlighter-rouge">accumulo classpath</code> command 
 to include all of Accumulo’s dependencies on your classpath:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
+</code></pre></div></div>
 
 <p>If you would like to review which jars are included, the <code class="highlighter-rouge">accumulo classpath</code> command can
 output a more human readable format using the <code class="highlighter-rouge">-d</code> option which enables debugging:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo classpath -d
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo classpath -d
+</code></pre></div></div>
 
 <h3 id="use-the-accumulo-command">Use the accumulo command</h3>
 
 <p>Another option for running your code is to use the Accumulo script which can execute a
 main class (if it exists on its classpath):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
+</code></pre></div></div>
 
 <p>While the Accumulo script will add all of Accumulo’s dependencies to the classpath, you
 will need to add any jars that your create or depend on beyond what Accumulo already
@@ -396,9 +392,8 @@ depends on. This can be accomplished by either adding the jars to the <code clas
 of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
 the accumulo command.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
+</code></pre></div></div>
 
 <h3 id="use-the-accumulo-util-hadoop-jar-command">Use the ‘accumulo-util hadoop-jar’ command</h3>
 
@@ -411,13 +406,12 @@ for more information.</p>
 <p>All clients must first identify the Accumulo instance to which they will be
 communicating. Code to do this is as follows:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">String</span> <span class="n">instanceName</span> <span class="o">=</span> <span class="s">"myinstance"</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">instanceName</span> <span class="o">=</span> <span class="s">"myinstance"</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">zooServers</span> <span class="o">=</span> <span class="s">"zooserver-one,zooserver-two"</span>
 <span class="n">Instance</span> <span class="n">inst</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">instanceName</span><span class="o">,</span> <span class="n">zooServers</span><span class="o">);</span>
 
 <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> is the most common implementation of an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a>.
 This general interface allow authentication as an Accumulo user to come from
@@ -429,10 +423,9 @@ KeyStore to alleviate passwords stored in cleartext. When stored in HDFS, a sing
 KeyStore can be used across an entire instance. Be aware that KeyStores stored on
 the local filesystem must be made available to all nodes in the Accumulo cluster.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
 <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> can be provided to use the authentication provided by Kerberos.
 Using Kerberos requires external setup and additional configuration, but provides
@@ -448,7 +441,7 @@ the appropriate TabletServers.</p>
 
 <p>Mutations can be created thus:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Text</span> <span class="n">rowID</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"row1"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="n">rowID</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"row1"</span><span class="o">);</span>
 <span class="n">Text</span> <span class="n">colFam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"myColFam"</span><span class="o">);</span>
 <span class="n">Text</span> <span class="n">colQual</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"myColQual"</span><span class="o">);</span>
 <span class="n">ColumnVisibility</span> <span class="n">colVis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColumnVisibility</span><span class="o">(</span><span class="s">"public"</span><span class="o">);</span>
@@ -458,8 +451,7 @@ the appropriate TabletServers.</p>
 
 <span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">rowID</span><span class="o">);</span>
 <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">colFam</span><span class="o">,</span> <span class="n">colQual</span><span class="o">,</span> <span class="n">colVis</span><span class="o">,</span> <span class="n">timestamp</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="batchwriter">BatchWriter</h3>
 
@@ -471,15 +463,14 @@ batching.</p>
 
 <p>Mutations are added to a BatchWriter thus:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// BatchWriterConfig has reasonable defaults</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// BatchWriterConfig has reasonable defaults</span>
 <span class="n">BatchWriterConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
 <span class="n">config</span><span class="o">.</span><span class="na">setMaxMemory</span><span class="o">(</span><span class="mi">10000000L</span><span class="o">);</span> <span class="c1">// bytes available to batchwriter for buffering mutations</span>
 
 <span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">config</span><span class="o">)</span>
 <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
 <span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>For more example code, see the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/batch.md">batch writing and scanning example</a>.</p>
 
@@ -531,15 +522,14 @@ writing, the user can configure the BatchWriter or ConditionalWriter to use
 a different level of durability for the session. This will override the
 default durability setting.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">BatchWriterConfig</span> <span class="n">cfg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BatchWriterConfig</span> <span class="n">cfg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
 <span class="c1">// We don't care about data loss with these writes:</span>
 <span class="c1">// This is DANGEROUS:</span>
 <span class="n">cfg</span><span class="o">.</span><span class="na">setDurability</span><span class="o">(</span><span class="n">Durability</span><span class="o">.</span><span class="na">NONE</span><span class="o">);</span>
 
 <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 <span class="n">BatchWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">cfg</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="reading-data">Reading Data</h2>
 
@@ -552,7 +542,7 @@ to efficiently return ranges of consecutive keys and their associated values.</p
 keys and values. Scanners can be configured to start and stop at particular keys, and
 to return a subset of the columns available.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// specify which visibilities we are allowed to see</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// specify which visibilities we are allowed to see</span>
 <span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"public"</span><span class="o">);</span>
 
 <span class="n">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
@@ -563,8 +553,7 @@ to return a subset of the columns available.</p>
   <span class="n">Text</span> <span class="n">row</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getRow</span><span class="o">();</span>
   <span class="n">Value</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="isolated-scanner">Isolated Scanner</h3>
 
@@ -603,7 +592,7 @@ BatchScanners accept a set of Ranges. It is important to note that the keys retu
 by a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are not in sorted order since the keys streamed are from multiple
 TabletServers in parallel.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="c1">// populate list of ranges ...</span>
 
 <span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
@@ -613,8 +602,7 @@ TabletServers in parallel.</p>
 <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>For more example code, see the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/batch.md">batch writing and scanning example</a>.</p>
 

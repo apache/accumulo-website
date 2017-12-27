@@ -394,14 +394,13 @@ three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
 trace.span.receiver. when set in the Accumulo configuration.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>tracer.zookeeper.host - populated from instance.zookeepers
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracer.zookeeper.host - populated from instance.zookeepers
 tracer.zookeeper.timeout - populated from instance.zookeeper.timeout
 tracer.zookeeper.path - populated from trace.zookeeper.path
 tracer.send.timer.millis - timer for flushing send queue (in ms, default 1000)
 tracer.queue.size - max queue size (default 5000)
 tracer.span.min.ms - minimum span length to store (in ms, default 1)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Note that to configure an Accumulo client for tracing, including
 the Accumulo shell, the client configuration must be given the same
@@ -418,7 +417,7 @@ The zookeeper timeout defaults to 30000 (30 seconds), and the
 zookeeper path defaults to /tracers.  An example of configuring
 Hadoop to send traces to ZooTraceClient is</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>hadoop.htrace.spanreceiver.classes<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>org.apache.accumulo.core.trace.ZooTraceClient<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
@@ -434,8 +433,7 @@ Hadoop to send traces to ZooTraceClient is</p>
   <span class="nt">&lt;name&gt;</span>hadoop.htrace.tracer.span.min.ms<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>1<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The accumulo-core, accumulo-tracer, accumulo-fate and libthrift
 jars must also be placed on Hadoop’s classpath.</p>
@@ -458,12 +456,11 @@ is visible to the same class loader of htrace-core.</p>
   <li>
     <p>Add the following to <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> &lt;property&gt;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;property&gt;
    &lt;name&gt;trace.span.receivers&lt;/name&gt;
    &lt;value&gt;org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver&lt;/value&gt;
  &lt;/property&gt;
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Restart your Accumulo tablet servers.</p>
@@ -477,21 +474,19 @@ is visible to the same class loader of htrace-core.</p>
     <p>Ensure your client can see the ZipkinSpanReceiver class at runtime. For Maven projects,
 this is easily done by adding to your client’s pom.xml (taking care to specify a good version)</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> &lt;dependency&gt;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;dependency&gt;
    &lt;groupId&gt;org.apache.htrace&lt;/groupId&gt;
    &lt;artifactId&gt;htrace-zipkin&lt;/artifactId&gt;
    &lt;version&gt;3.1.0-incubating&lt;/version&gt;
    &lt;scope&gt;runtime&lt;/scope&gt;
  &lt;/dependency&gt;
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Add the following to your client configuration.</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Instrument your client as in the next section.</p>
@@ -502,7 +497,7 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 be placed in the ClientConfiguration (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo-site.xml</code>.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-hostname<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>localhost<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
@@ -510,8 +505,7 @@ Two such properties for ZipkinSpanReceiver, listed with their default values, ar
   <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-port<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>9410<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="instrumenting-a-client">Instrumenting a Client</h3>
 
@@ -519,18 +513,17 @@ Two such properties for ZipkinSpanReceiver, listed with their default values, ar
 the operation traverses the distributed system. To enable tracing for
 your application call</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.accumulo.core.trace.DistributedTrace</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.accumulo.core.trace.DistributedTrace</span><span class="o">;</span>
 <span class="o">...</span>
 <span class="n">DistributedTrace</span><span class="o">.</span><span class="na">enable</span><span class="o">(</span><span class="n">hostname</span><span class="o">,</span> <span class="s">"myApplication"</span><span class="o">);</span>
 <span class="c1">// do some tracing</span>
 <span class="o">...</span>
 <span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Once tracing has been enabled, a client can wrap an operation in a trace.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.Sampler</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.Sampler</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.apache.htrace.Trace</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.apache.htrace.TraceScope</span><span class="o">;</span>
 <span class="o">...</span>
@@ -540,8 +533,7 @@ your application call</p>
 <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
 <span class="o">}</span>
 <span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The user can create additional Spans within a Trace.</p>
 
@@ -551,7 +543,7 @@ Don’t forget to specify a Sampler at the top-level span
 because the default Sampler only samples when part of a pre-existing trace,
 which will never occur in a client that never specifies a Sampler.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Update"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Update"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
 <span class="o">...</span>
 <span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
 <span class="o">...</span>
@@ -561,13 +553,12 @@ which will never occur in a client that never specifies a Sampler.</p>
 <span class="o">...</span>
 <span class="n">writeScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Like Dapper, Accumulo tracing supports user defined annotations to associate additional data with a Trace.
 Checking whether currently tracing is necessary when using a sampler other than Sampler.ALWAYS.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="o">...</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
 <span class="kt">int</span> <span class="n">numberOfEntriesRead</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
 <span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
 <span class="c1">// Do the read, update the counter</span>
@@ -575,23 +566,21 @@ Checking whether currently tracing is necessary when using a sampler other than 
 <span class="k">if</span> <span class="o">(</span><span class="n">Trace</span><span class="o">.</span><span class="na">isTracing</span><span class="o">)</span>
   <span class="n">readScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addKVAnnotation</span><span class="o">(</span><span class="s">"Number of Entries Read"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">),</span>
       <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">numberOfEntriesRead</span><span class="o">).</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>It is also possible to add timeline annotations to your spans.
 This associates a string with a given timestamp between the start and stop times for a span.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="o">...</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
 <span class="n">writeScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addTimelineAnnotation</span><span class="o">(</span><span class="s">"Initiating Flush"</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some client operations may have a high volume within your
 application. As such, you may wish to only sample a percentage of
 operations for tracing. As seen below, the CountSampler can be used to
 help enable tracing for 1-in-1000 operations</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.impl.CountSampler</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.impl.CountSampler</span><span class="o">;</span>
 <span class="o">...</span>
 <span class="n">Sampler</span> <span class="n">sampler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountSampler</span><span class="o">(</span><span class="n">HTraceConfiguration</span><span class="o">.</span><span class="na">fromMap</span><span class="o">(</span>
     <span class="n">Collections</span><span class="o">.</span><span class="na">singletonMap</span><span class="o">(</span><span class="n">CountSampler</span><span class="o">.</span><span class="na">SAMPLER_FREQUENCY_CONF_KEY</span><span class="o">,</span> <span class="s">"1000"</span><span class="o">)));</span>
@@ -599,14 +588,12 @@ help enable tracing for 1-in-1000 operations</p>
 <span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">,</span> <span class="n">sampler</span><span class="o">);</span>
 <span class="o">...</span>
 <span class="n">readScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Remember to close all spans and disable tracing when finished.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
-</code></pre>
-</div>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
+</code></pre></div></div>
 
 <h2 id="viewing-collected-traces">Viewing Collected Traces</h2>
 
@@ -637,10 +624,9 @@ We use the format <code class="highlighter-rouge">row columnFamily:columnQualifi
 
 <p>Span entries take the following form:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
 63b318de80de96d1 span:4b8f66077df89de1:3778c6739afe4e1 []    %18;%09;...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The parentSpanId is “” for the root span of a trace.
 The spanBinaryEncoding is a compact Apache Thrift encoding of the original Span object.
@@ -655,10 +641,9 @@ it exists only to make span entries easier to view inside the Accumulo shell.</p
 
 <p>Index entries take the following form:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>"idx":service:startTime description:sender  []    traceId:elapsedTime
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"idx":service:startTime description:sender  []    traceId:elapsedTime
 idx:tserver:14f3828f58b startScan:localhost []    63b318de80de96d1:1
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The service and sender are set by the first call of each Accumulo process
 (and instrumented client processes) to <code class="highlighter-rouge">DistributedTrace.enable(...)</code>
@@ -669,24 +654,22 @@ are recorded in milliseconds as long values serialized to a string in hex.</p>
 
 <p>Start time entries take the following form:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>"start":startTime "id":traceId        []    spanBinaryEncoding
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"start":startTime "id":traceId        []    spanBinaryEncoding
 start:14f3828a351 id:63b318de80de96d1 []    %18;%09;...
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The following classes may be run while Accumulo is running to provide insight into trace statistics. These require
 accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (<code class="highlighter-rouge">lib/ext</code> is fine).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
 $ accumulo org.apache.accumulo.tracer.TraceDump -u username -p password -i instancename -r
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="tracing-from-the-shell">Tracing from the Shell</h3>
 <p>You can enable tracing for operations run from the shell by using the
 <code class="highlighter-rouge">trace on</code> and <code class="highlighter-rouge">trace off</code> commands.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@test test&gt; trace on
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test test&gt; trace on
 
 root@test test&gt; scan
 a b:c []    d
@@ -701,8 +684,7 @@ Time  Start  Service@Location       Name
     7+1691       shell@localhost scan:location
     6+1692         tserver@localhost startScan
     5+1692           tserver@localhost tablet read ahead 6
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

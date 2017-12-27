@@ -264,7 +264,7 @@ that setting.  This override is set when Accumulo is initialized.  To get this
 table to use <code class="highlighter-rouge">flush</code>, the per table override must be deleted.  After deleting
 those properties, the metadata tables will inherit the system wide setting.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno&gt; config -s table.durability=flush
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; config -s table.durability=flush
 root@uno&gt; createtable foo
 root@uno foo&gt; config -t foo -f table.durability
 -----------+---------------------+----------------------------------------------
@@ -289,17 +289,15 @@ SCOPE      | NAME                | VALUE
 default    | table.durability .. | sync
 system     |    @override ...... | flush
 -----------+---------------------+----------------------------------------------
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>In short, executing the following commands will make all writes use <code class="highlighter-rouge">flush</code>
 (assuming no other tables or namespaces have been specifically set to <code class="highlighter-rouge">sync</code>).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>config -s table.durability=flush
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s table.durability=flush
 config -t accumulo.metadata -d table.durability
 config -t accumulo.root -d table.durability
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Even with these settings adjusted, minor compactions could still force <code class="highlighter-rouge">hsync</code>
 to be called in 1.7.0 and 1.7.1.  This was fixed in 1.7.2 and 1.8.0.  See the

@@ -406,7 +406,7 @@ with embedded summary data.</p>
 <p>This example walks through using summarizers in the Accumulo shell.  Below a
 table is created and some data is inserted to summarize.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno&gt; createtable summary_test
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; createtable summary_test
 root@uno summary_test&gt; setauths -u root -s PI,GEO,TIME
 root@uno summary_test&gt; insert 3b503bd name last Doe
 root@uno summary_test&gt; insert 3b503bd name first John
@@ -429,14 +429,12 @@ d5d18dd contact:address [PI&amp;GEO]    50 Lake Shore Dr, Chicago, IL
 d5d18dd date:birth [PI&amp;TIME]    8/15/1969
 d5d18dd name:first []    Jane
 d5d18dd name:last []    Doe
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After inserting the data, summaries are requested below.  No summaries are returned.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; summaries
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; summaries
+</code></pre></div></div>
 
 <p>The visibility summarizer is configured below and the table is flushed.
 Flushing the table creates a file creating summary data in the process. The
@@ -444,7 +442,7 @@ summary data returned counts how many times each column visibility occurred.
 The statistics with a <code class="highlighter-rouge">c:</code> prefix are visibilities.  The others are generic
 statistics created by the CountingSummarizer that VisibilitySummarizer extends.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
 root@uno summary_test&gt; summaries
 root@uno summary_test&gt; flush -w
 2017-02-24 19:54:46,090 [shell.Shell] INFO : Flush of table summary_test completed.
@@ -460,8 +458,7 @@ Summary Statistics :
    seen                                                         = 10
    tooLong                                                      = 0
    tooMany                                                      = 0
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>VisibilitySummarizer has an option <code class="highlighter-rouge">maxCounters</code> that determines the max number
 of column visibilites it will track.  Below this option is set and compaction
@@ -469,7 +466,7 @@ is forced to regenerate summary data.  The new summary data only has three
 visibilites and now the <code class="highlighter-rouge">tooMany</code> statistic is 4.  This is the number of
 visibilites that were not counted.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code> root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis.opt.maxCounters=3
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis.opt.maxCounters=3
  root@uno summary_test&gt; compact -w
  2017-02-24 19:54:46,267 [shell.Shell] INFO : Compacting table ...
  2017-02-24 19:54:47,127 [shell.Shell] INFO : Compaction of table summary_test completed for given range
@@ -484,8 +481,7 @@ visibilites that were not counted.</p>
      seen                                                         = 10
      tooLong                                                      = 0
      tooMany                                                      = 4
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Another summarizer is configured below that tracks the number of deletes.  Also
 a compaction strategy that uses this summary data is configured.  The
@@ -495,7 +491,7 @@ configurable.  Below a delete is added and its reflected in the statistics.  In
 this case there is 1 delete and 10 non-deletes, not enough to force a
 compaction of the tablet.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.del=org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.del=org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer
 root@uno summary_test&gt; compact -w
 2017-02-24 19:54:47,282 [shell.Shell] INFO : Compacting table ...
 2017-02-24 19:54:49,236 [shell.Shell] INFO : Compaction of table summary_test completed for given range
@@ -522,8 +518,7 @@ root@uno summary_test&gt; summaries
  Summary Statistics : 
     deletes                                                      = 1
     total                                                        = 11
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some more deletes are added and the table is flushed below.  This results in 4
 deletes and 10 non-deletes, which triggers a full compaction.  A full
@@ -531,7 +526,7 @@ compaction of all files is the only time when delete markers are dropped.  The
 compaction ratio was set to 10 above to show that the number of files did not
 trigger the compaction.   After the compaction there no deletes 6 non-deletes.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>root@uno summary_test&gt; deletemany -r d5d18dd -f
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; deletemany -r d5d18dd -f
 [DELETED] d5d18dd contact:address [PI&amp;GEO]
 [DELETED] d5d18dd name:first []
 [DELETED] d5d18dd name:last []
@@ -555,8 +550,7 @@ root@uno summary_test&gt; summaries
     deletes                                                      = 0
     total                                                        = 6
 root@uno summary_test&gt;   
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
 

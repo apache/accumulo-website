@@ -250,12 +250,11 @@ files in a tablet.</p>
 
 <p>In the Java API, this new feature can be accessed in the following way:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Connection conn = ...
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connection conn = ...
 CompactionStrategyConfig csConfig = new CompactionStrategyConfig(strategyClassName).setOptions(strategyOpts);
 CompactionConfig compactionConfig = new CompactionConfig().setCompactionStrategy(csConfig);
 connector.tableOperations().compact(tableName, compactionConfig)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>In <a href="https://issues.apache.org/jira/browse/ACCUMULO-3134">ACCUMULO-3134</a>, the shell’s <code class="highlighter-rouge">compact</code> command was modified
 to enable selecting which files to compact based on size, name, and path.
@@ -270,16 +269,14 @@ tablet had a 100MB, 50MB, 7MB, and 5MB file then the 7MB and 5MB files would
 be compacted. If a tablet had a 100MB and 5MB file, then nothing would be done
 because there are not at least two files meeting the selection criteria.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>compact -t foo --min-files 2 --sf-lt-esize 10M
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --min-files 2 --sf-lt-esize 10M
+</code></pre></div></div>
 
 <p>The following is an example shell command that compacts all bulk imported
 files in a table.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>compact -t foo --sf-ename I.*
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --sf-ename I.*
+</code></pre></div></div>
 
 <p>These provided convenience options to select files execute using a specialized
 compaction strategy. Options were also added to the shell to specify an

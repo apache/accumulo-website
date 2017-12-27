@@ -440,11 +440,10 @@ at the low end of the range to, and including, the high end of the range.</p>
 <p>Download a binary distribution of Accumulo and install it to a directory on a disk with
 sufficient space:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cd &lt;install directory&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd &lt;install directory&gt;
 tar xzf accumulo-2.0.0-bin.tar.gz
 cd accumulo-2.0.0
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Repeat this step on each machine in your cluster. Typically, the same <code class="highlighter-rouge">&lt;install directory&gt;</code>
 is chosen for all machines in the cluster.</p>
@@ -541,10 +540,9 @@ architecture. These will be passed to the Makefile in the environment variable <
 
 <p>Examples:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-util build-native
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-util build-native
 accumulo-util build-native -m32
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After building the native map from the source, you will find the artifact in
 <code class="highlighter-rouge">lib/native</code>. Upon starting up, the tablet server will look
@@ -573,9 +571,8 @@ reference before they will be automatically minor compacted</li>
 <p>The maximum size of the native maps for a server should be less than the product of the write-ahead
 log maximum size and minor compaction threshold for log files:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max
+</code></pre></div></div>
 
 <p>This formula ensures that minor compactions won’t be automatically triggered before the native
 maps can be completely saturated.</p>
@@ -664,24 +661,21 @@ when the Configuration object for accumulo-site.xml is accessed.</p>
 Each entry in the KeyStore is the Accumulo Property key name. For example, to store the
 <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a>, the following command can be used:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
+</code></pre></div></div>
 
 <p>The command will then prompt you to enter the secret to use and create a keystore in:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/path/to/accumulo/conf/accumulo.jceks
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/path/to/accumulo/conf/accumulo.jceks
+</code></pre></div></div>
 
 <p>Then, accumulo-site.xml must be configured to use this KeyStore as a CredentialProvider:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
     <span class="nt">&lt;name&gt;</span>general.security.credential.provider.paths<span class="nt">&lt;/name&gt;</span>
     <span class="nt">&lt;value&gt;</span>jceks://file/path/to/accumulo/conf/accumulo.jceks<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This configuration will then transparently extract the <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> from
 the configured KeyStore and alleviates a human readable storage of the sensitive
@@ -750,25 +744,23 @@ configuration will also monitor the vfs locations for changes and reload if nece
 by a name and references a set of locations from which to load classes and can be specified in the accumulo-site.xml file or added
 using the <code class="highlighter-rouge">config</code> command in the shell. Below is an example for specify the app1 context in the accumulo-site.xml file:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The default behavior follows the Java ClassLoader contract in that classes, if they exists, are loaded from the parent classloader first.
 You can override this behavior by delegating to the parent classloader after looking in this classloader first. An example of this
 configuration is:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1.delegation=post<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To use contexts in your application you can set the <code class="highlighter-rouge">table.classpath.context</code> on your tables or use the <code class="highlighter-rouge">setClassLoaderContext()</code> method on Scanner
 and BatchScanner passing in the name of the context, app1 in the example above. Setting the property on the table allows your minc, majc, and scan 
@@ -815,9 +807,8 @@ take some time for particular configurations.</p>
 
 <p>Next, ssh to each of the hosts you want to add and run:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service tserver start
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
+</code></pre></div></div>
 
 <p>Make sure the host in question has the new configuration, or else the tablet
 server won’t start; at a minimum this needs to be on the host(s) being added,
@@ -828,15 +819,13 @@ but in practice it’s good to ensure consistent configuration across all nodes.
 <p>If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
+</code></pre></div></div>
 
 <p>Alternatively, you can ssh to each of the hosts you want to remove and run:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>accumulo-service tserver stop
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver stop
+</code></pre></div></div>
 
 <p>Be sure to update your <code class="highlighter-rouge">conf/tservers</code> file to
 account for the removal of these hosts. Bear in mind that the monitor will not re-read the
@@ -879,7 +868,7 @@ other nodes. Running more than one TabletServer on a host requires that you set 
 <code class="highlighter-rouge">ACCUMULO_SERVICE_INSTANCE</code> to an instance number (i.e 1, 2) for each instance that is started. Also, set
 these properties in <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;property&gt;</span>
     <span class="nt">&lt;name&gt;</span>tserver.port.search<span class="nt">&lt;/name&gt;</span>
     <span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;/property&gt;</span>
@@ -887,8 +876,7 @@ these properties in <code class="highlighter-rouge">accumulo-site.xml</code>:</p
     <span class="nt">&lt;name&gt;</span>replication.receipt.service.port<span class="nt">&lt;/name&gt;</span>
     <span class="nt">&lt;value&gt;</span>0<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="logging">Logging</h2>
 
@@ -922,7 +910,7 @@ throwing an exception.</p>
 <p>Before moving HDFS over to the HA namenode, use <code class="highlighter-rouge">accumulo admin volumes</code> to confirm
 that the only volume displayed is the volume from the current namenode’s HDFS URL.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
         Volume : hdfs://namenode.example.com:8020/accumulo
 
 Listing volumes referenced in accumulo.root tablets section
@@ -933,8 +921,7 @@ Listing volumes referenced in accumulo.metadata tablets section
         Volume : hdfs://namenode.example.com:8020/accumulo
 
 Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.</p>
 
@@ -944,7 +931,7 @@ add the new nameservice volume to the <code class="highlighter-rouge">instance.v
 the volume that’s being replaced in <code class="highlighter-rouge">instance.volumes</code>, otherwise it’s possible accumulo could continue
 to write to the volume.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="c">&lt;!-- instance.dfs.uri and instance.dfs.dir should not be set--&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- instance.dfs.uri and instance.dfs.dir should not be set--&gt;</span>
 <span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>instance.volumes<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://nameservice1/accumulo<span class="nt">&lt;/value&gt;</span>
@@ -953,13 +940,12 @@ to write to the volume.</p>
   <span class="nt">&lt;name&gt;</span>instance.volumes.replacements<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> and start up the accumulo cluster. Verify that the
 new nameservice volume shows up with <code class="highlighter-rouge">accumulo admin volumes</code>.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
         Volume : hdfs://namenode.example.com:8020/accumulo
         Volume : hdfs://nameservice1/accumulo
 
@@ -972,8 +958,7 @@ Listing volumes referenced in accumulo.metadata tablets section
         Volume : hdfs://namenode.example.com:8020/accumulo
         Volume : hdfs://nameservice1/accumulo
 Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some erroneous GarbageCollector messages may still be seen for a small period while data is transitioning to
 the new volumes. This is expected and can usually be ignored.</p>
@@ -1048,14 +1033,13 @@ includes the following:</p>
 Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
 simple calculation for physical memory requirements follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  Physical memory needed
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Physical memory needed
     = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
     = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process) + (total applications memory, provisioning memory, etc.) + (1G)
     = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
     = (2150M) + (7G) + (2G) + (1G)
     = ~12GB
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>These calculations can add up quickly with the large number of processes,
 especially in constrained VM environments. To reduce the physical memory

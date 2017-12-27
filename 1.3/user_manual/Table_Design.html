@@ -168,66 +168,60 @@
 
 <p>Since Accumulo tables are sorted by row ID, each table can be thought of as being indexed by the row ID. Lookups performed row ID can be executed quickly, by doing a binary search, first across the tablets, and then within a tablet. Clients should choose a row ID carefully in order to support their desired application. A simple rule is to select a unique identifier as the row ID for each entity to be stored and assign all the other attributes to be tracked to be columns under this row ID. For example, if we have the following data in a comma-separated file:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    userid,age,address,account-balance
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    userid,age,address,account-balance
+</code></pre></div></div>
 
 <p>We might choose to store this data using the userid as the rowID and the rest of the data in column families:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Mutation m = new Mutation(new Text(userid));
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mutation m = new Mutation(new Text(userid));
 m.put(new Text("age"), age);
 m.put(new Text("address"), address);
 m.put(new Text("balance"), account_balance);
 
 writer.add(m);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We could then retrieve any of the columns for a specific userid by specifying the userid as the range of a scanner and fetching specific columns:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Range r = new Range(userid, userid); // single row
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Range r = new Range(userid, userid); // single row
 Scanner s = conn.createScanner("userdata", auths);
 s.setRange(r);
 s.fetchColumnFamily(new Text("age"));
 
 for(Entry&lt;Key,Value&gt; entry : s)
     System.out.println(entry.getValue().toString());
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="-rowid-design"><a id="RowID_Design"></a> RowID Design</h2>
 
 <p>Often it is necessary to transform the rowID in order to have rows ordered in a way that is optimal for anticipated access patterns. A good example of this is reversing the order of components of internet domain names in order to group rows of the same parent domain together:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code
 com.google.labs
 com.google.mail
 com.yahoo.mail
 com.yahoo.research
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some data may result in the creation of very large rows - rows with many columns. In this case the table designer may wish to split up these rows for better load balancing while keeping them sorted together for scanning purposes. This can be done by appending a random substring at the end of the row:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_00
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_00
 com.google.code_01
 com.google.code_02
 com.google.labs_00
 com.google.mail_00
 com.google.mail_01
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>It could also be done by adding a string representation of some period of time such as date to the week or month:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_201003
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_201003
 com.google.code_201004
 com.google.code_201005
 com.google.labs_201003
 com.google.mail_201003
 com.google.mail_201004
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Appending dates provides the additional capability of restricting a scan to a given date range.</p>
 
@@ -243,7 +237,7 @@ com.google.mail_201004
 
 <p>To support efficient lookups of multiple rowIDs from the same table, the Accumulo client library provides a BatchScanner. Users specify a set of Ranges to the BatchScanner, which performs the lookups in multiple threads to multiple servers and returns an Iterator over all the rows retrieved. The rows returned are NOT in sorted order, as is the case with the basic Scanner interface.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// first we scan the index for IDs of rows matching our query
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// first we scan the index for IDs of rows matching our query
 
 Text term = new Text("mySearchTerm");
 
@@ -264,8 +258,7 @@ bscan.fetchFamily("attributes");
 
 for(Entry&lt;Key,Value&gt; entry : scan)
     System.out.println(e.getValue());
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>One advantage of the dynamic schema capabilities of Accumulo is that different fields may be indexed into the same physical table. However, it may be necessary to create different index tables if the terms must be formatted differently in order to maintain proper sort order. For example, real numbers must be formatted differently than their usual notation in order to be sorted correctly. In these cases, usually one index per unique data type will suffice.</p>
 
@@ -301,7 +294,7 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <p>Finally, we perform set intersection operations on the TabletServer via a special iterator called the Intersecting Iterator. Since documents are partitioned into many bins, a search of all documents must search every bin. We can use the BatchScanner to scan all bins in parallel. The Intersecting Iterator should be enabled on a BatchScanner within user query code as follows:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
 
 BatchScanner bs = conn.createBatchScanner(table, auths, 20);
 bs.setScanIterators(20, IntersectingIterator.class.getName(), "ii");
@@ -316,8 +309,7 @@ bs.setRanges(Collections.singleton(new Range()));
 for(Entry&lt;Key,Value&gt; entry : bs) {
     System.out.println(" " + entry.getKey().getColumnQualifier());
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This code effectively has the BatchScanner scan all tablets of a table, looking for documents that match all the given terms. Because all tablets are being scanned for every query, each query is more expensive than other Accumulo scans, which typically involve a small number of TabletServers. This reduces the number of concurrent queries supported and is subject to what is known as the `straggler’ problem in which every query runs as slow as the slowest server participating.</p>
 

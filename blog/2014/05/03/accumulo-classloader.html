@@ -176,13 +176,12 @@
 
 <p>If you have defined “general.vfs.classpaths” in your Accumulo configuration, then you can use the bootstrap_hdfs.sh script in the bin directory to seed HDFS with the Accumulo jars. A couple of jars will remain on the local file system for starting services. Now when you start up Accumulo the master, gc, tracer, and all of the tablet servers will get their jars and classes from HDFS. The bootstrap_hdfs.sh script sets the replication on the directory, but you may want to set it higher after bootstrapping. An example configuration setting would be:</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>general.vfs.classpaths<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/accumulo/system-classpath<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;description&gt;</span>Configuration for a system level vfs classloader. Accumulo jars can be configured here and loaded out of HDFS.<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="about-contexts">About Contexts</h3>
 
@@ -190,7 +189,7 @@
 
 <p>The goal here is to enable multiple tenants to share the same Accumulo instance. For example, we may have a context called ‘app1’ which references the jars for application A. We may also have another context called app2 which references the jars for application B. By default the context classloader delegates to the VFS classloader. This behavior may be overridden as seen in the app2 example below. The context classloader also supports reloading like the VFS classloader.</p>
 
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>general.vfs.context.classpath.app1<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;description&gt;</span>Application A classpath, loads jars from HDFS and local file system<span class="nt">&lt;/description&gt;</span>
@@ -201,8 +200,7 @@
   <span class="nt">&lt;value&gt;</span>hdfs://localhost:8020/applicationB/classpath/.*.jar,http://my-webserver/applicationB/.*.jar<span class="nt">&lt;/value&gt;</span>
   <span class="nt">&lt;description&gt;</span>Application B classpath, loads jars from HDFS and HTTP, does not delegate to parent first<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Context classloaders do not have to be defined in the accumulo-site.xml file. The “general.vfs.context.classpath.{context}” property can be defined on the table either programmatically or manually in the shell. Then set the “table.classpath.context” property on your table.</p>
 

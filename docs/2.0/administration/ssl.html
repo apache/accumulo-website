@@ -406,22 +406,21 @@ certificates) using OpenSSL and Java’s KeyTool command.</p>
 
 <h3 id="generate-a-certificate-authority">Generate a certificate authority</h3>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create a private key</span>
-openssl genrsa -des3 -out root.key 4096
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a private key</span>
+openssl genrsa <span class="nt">-des3</span> <span class="nt">-out</span> root.key 4096
 
 <span class="c"># Create a certificate request using the private key</span>
-openssl req -x509 -new -key root.key -days 365 -out root.pem
+openssl req <span class="nt">-x509</span> <span class="nt">-new</span> <span class="nt">-key</span> root.key <span class="nt">-days</span> 365 <span class="nt">-out</span> root.pem
 
 <span class="c"># Generate a Base64-encoded version of the PEM just created</span>
-openssl x509 -outform der -in root.pem -out root.der
+openssl x509 <span class="nt">-outform</span> der <span class="nt">-in</span> root.pem <span class="nt">-out</span> root.der
 
 <span class="c"># Import the key into a Java KeyStore</span>
-keytool -import -alias root-key -keystore truststore.jks -file root.der
+keytool <span class="nt">-import</span> <span class="nt">-alias</span> root-key <span class="nt">-keystore</span> truststore.jks <span class="nt">-file</span> root.der
 
 <span class="c"># Remove the DER formatted key file (as we don't need it anymore)</span>
 rm root.der
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
 
@@ -430,31 +429,30 @@ rm root.der
 <p>It’s common that each host in the instance is issued its own certificate (notably to ensure that revocation procedures
 can be easily followed). The following steps can be taken for each host.</p>
 
-<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># Create the private key for our server</span>
-openssl genrsa -out server.key 4096
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create the private key for our server</span>
+openssl genrsa <span class="nt">-out</span> server.key 4096
 
 <span class="c"># Generate a certificate signing request (CSR) with our private key</span>
-openssl req -new -key server.key -out server.csr
+openssl req <span class="nt">-new</span> <span class="nt">-key</span> server.key <span class="nt">-out</span> server.csr
 
 <span class="c"># Use the CSR and the CA to create a certificate for the server (a reply to the CSR)</span>
-openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial <span class="se">\</span>
-    -out server.crt -days 365
+openssl x509 <span class="nt">-req</span> <span class="nt">-in</span> server.csr <span class="nt">-CA</span> root.pem <span class="nt">-CAkey</span> root.key <span class="nt">-CAcreateserial</span> <span class="se">\</span>
+    <span class="nt">-out</span> server.crt <span class="nt">-days</span> 365
 
 <span class="c"># Use the certificate and the private key for our server to create PKCS12 file</span>
-openssl pkcs12 -export -in server.crt -inkey server.key -certfile server.crt <span class="se">\</span>
-    -name <span class="s1">'server-key'</span> -out server.p12
+openssl pkcs12 <span class="nt">-export</span> <span class="nt">-in</span> server.crt <span class="nt">-inkey</span> server.key <span class="nt">-certfile</span> server.crt <span class="se">\</span>
+    <span class="nt">-name</span> <span class="s1">'server-key'</span> <span class="nt">-out</span> server.p12
 
 <span class="c"># Create a Java KeyStore for the server using the PKCS12 file (private key)</span>
-keytool -importkeystore -srckeystore server.p12 -srcstoretype pkcs12 -destkeystore <span class="se">\</span>
-    server.jks -deststoretype JKS
+keytool <span class="nt">-importkeystore</span> <span class="nt">-srckeystore</span> server.p12 <span class="nt">-srcstoretype</span> pkcs12 <span class="nt">-destkeystore</span> <span class="se">\</span>
+    server.jks <span class="nt">-deststoretype</span> JKS
 
 <span class="c"># Remove the PKCS12 file as we don't need it</span>
 rm server.p12
 
 <span class="c"># Import the CA-signed certificate to the keystore</span>
-keytool -import -trustcacerts -alias server-crt -file server.crt -keystore server.jks
-</code></pre>
-</div>
+keytool <span class="nt">-import</span> <span class="nt">-trustcacerts</span> <span class="nt">-alias</span> server-crt <span class="nt">-file</span> server.crt <span class="nt">-keystore</span> server.jks
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
 methods are equivalent whether the certificate is generate for an Accumulo server or a client.</p>

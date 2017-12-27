@@ -158,7 +158,7 @@ Filter takes a “negate” parameter which defaults to false. If set to true, t
 return value of the accept method is negated, so that key/value pairs accepted
 by the method are omitted by the Filter.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>username@instance&gt; createtable filtertest
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable filtertest
 username@instance filtertest&gt; setiter -t filtertest -scan -p 10 -n myfilter -ageoff
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
 ----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
@@ -169,15 +169,13 @@ username@instance filtertest&gt; insert foo a b c
 username@instance filtertest&gt; scan
 foo a:b []    c
 username@instance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>… wait 30 seconds …</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>username@instance filtertest&gt; scan
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; scan
 username@instance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Note the absence of the entry inserted more than 30 seconds ago. Since the
 scope was set to “scan”, this means the entry is still in Accumulo, but is
@@ -195,7 +193,7 @@ AgeOffFilter, but any Filter can be configured by using the -class flag. The
 following commands show how to enable the AgeOffFilter for the minc and majc
 scopes using the -class flag, then flush and compact the table.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>username@instance filtertest&gt; setiter -t filtertest -minc -majc -p 10 -n myfilter -class org.apache.accumulo.core.iterators.user.AgeOffFilter
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; setiter -t filtertest -minc -majc -p 10 -n myfilter -class org.apache.accumulo.core.iterators.user.AgeOffFilter
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
 ----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
 ----------&gt; set AgeOffFilter parameter ttl, time to live (milliseconds): 30000
@@ -210,8 +208,7 @@ username@instance filtertest&gt; compact -t filtertest -w
 06 10:43:00,632 [shell.Shell] INFO : Compacting table ...
 06 10:43:01,307 [shell.Shell] INFO : Compaction of table filtertest completed for given range
 username@instance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>By default, flush and compact execute in the background, but with the -w flag
 they will wait to return until the operation has completed. Both are
@@ -224,7 +221,7 @@ the old files.</p>
 
 <p>To see the iterator settings for a table, use config.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>username@instance filtertest&gt; config -t filtertest -f iterator
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; config -t filtertest -f iterator
 ---------+---------------------------------------------+---------------------------------------------------------------------------
 SCOPE    | NAME                                        | VALUE
 ---------+---------------------------------------------+---------------------------------------------------------------------------
@@ -242,8 +239,7 @@ table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.
 table    | table.iterator.scan.vers.opt.maxVersions .. | 1
 ---------+---------------------------------------------+---------------------------------------------------------------------------
 username@instance filtertest&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When setting new iterators, make sure to order their priority numbers
 (specified with -p) in the order you would like the iterators to be applied.

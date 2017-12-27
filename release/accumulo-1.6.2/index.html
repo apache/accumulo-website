@@ -227,13 +227,12 @@ into lexicographically sorting Strings/bytes, incorrectly converted <code class=
 <a href="https://issues.apache.org/jira/browse/ACCUMULO-3385">ACCUMULO-3385</a> fixed the <code class="highlighter-rouge">DateLexicoder</code> to correctly (de)serialize data <code class="highlighter-rouge">Date</code> objects. For users with
 data stored in Accumulo using the broken implementation, the following can be performed to read the old data.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  Lexicoder lex = new ULongLexicoder();
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Lexicoder lex = new ULongLexicoder();
   for (Entry&lt;Key, Value&gt; e : scanner) {
     Date d = new Date(lex.decode(TextUtil.getBytes(e.getKey().getRow())));
     // ...
   }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="reduce-miniaccumulocluster-failures-due-to-random-port-allocations">Reduce MiniAccumuloCluster failures due to random port allocations</h3>
 

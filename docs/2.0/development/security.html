@@ -347,7 +347,7 @@ degrees of access to query the same table, while preserving data confidentiality
 done as the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Mutation.html">Mutation</a> is created by passing a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/ColumnVisibility.html">ColumnVisibility</a> object to the put()
 method:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Text</span> <span class="n">rowID</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"row1"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span> <span class="n">rowID</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"row1"</span><span class="o">);</span>
 <span class="n">Text</span> <span class="n">colFam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"myColFam"</span><span class="o">);</span>
 <span class="n">Text</span> <span class="n">colQual</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"myColQual"</span><span class="o">);</span>
 <span class="n">ColumnVisibility</span> <span class="n">colVis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColumnVisibility</span><span class="o">(</span><span class="s">"public"</span><span class="o">);</span>
@@ -357,8 +357,7 @@ method:</p>
 
 <span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">rowID</span><span class="o">);</span>
 <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">colFam</span><span class="o">,</span> <span class="n">colQual</span><span class="o">,</span> <span class="n">colVis</span><span class="o">,</span> <span class="n">timestamp</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="security-label-expression-syntax">Security Label Expression Syntax</h2>
 
@@ -376,15 +375,14 @@ with a backslash.</p>
 <p>For example, suppose within our organization we want to label our data values with
 security labels defined in terms of user roles. We might have tokens such as:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>admin
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin
 audit
 system
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>These can be specified alone or combined using logical operators:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// Users must have admin privileges
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Users must have admin privileges
 admin
 
 // Users must have admin and audit privileges
@@ -395,8 +393,7 @@ admin|audit
 
 // Users must have audit and one or both of admin or system
 (admin|system)&amp;audit
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>When both <code class="highlighter-rouge">|</code> and <code class="highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify
 precedence of the operators.</p>
@@ -411,12 +408,11 @@ results sent back to the client.</p>
 
 <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> are specified as a comma-separated list of tokens the user possesses:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
 <span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
 
 <span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="user-authorizations">User Authorizations</h2>
 
@@ -435,9 +431,8 @@ enable this constraint. For existing tables, use the <code class="highlighter-ro
 enable the visibility constraint. Ensure the constraint number does not
 conflict with any existing constraints.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
+</code></pre></div></div>
 
 <p>Any user with the alter table permission can add or remove this constraint.
 This constraint is not applied to bulk imported data, if this a concern then
@@ -454,10 +449,9 @@ and an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.
 common implementation is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> which is the default authentication method for Accumulo
 out of the box.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">);</span>
 <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Once a user is authenticated by the Authenticator, the user has access to the other actions within
 Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission

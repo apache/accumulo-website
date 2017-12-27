@@ -344,27 +344,25 @@ is to select a unique identifier as the row ID for each entity to be stored and 
 all the other attributes to be tracked to be columns under this row ID. For example,
 if we have the following data in a comma-separated file:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>userid,age,address,account-balance
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>userid,age,address,account-balance
+</code></pre></div></div>
 
 <p>We might choose to store this data using the userid as the rowID, the column
 name in the column family, and a blank column qualifier:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Mutation</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">userid</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Mutation</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">userid</span><span class="o">);</span>
 <span class="kd">final</span> <span class="n">String</span> <span class="n">column_qualifier</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
 <span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"age"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">age</span><span class="o">);</span>
 <span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"address"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">address</span><span class="o">);</span>
 <span class="n">m</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"balance"</span><span class="o">,</span> <span class="n">column_qualifier</span><span class="o">,</span> <span class="n">account_balance</span><span class="o">);</span>
 
 <span class="n">writer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We could then retrieve any of the columns for a specific userid by specifying the
 userid as the range of a scanner and fetching specific columns:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Range</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">userid</span><span class="o">,</span> <span class="n">userid</span><span class="o">);</span> <span class="c1">// single row</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Range</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">userid</span><span class="o">,</span> <span class="n">userid</span><span class="o">);</span> <span class="c1">// single row</span>
 <span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"userdata"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
 <span class="n">s</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="n">r</span><span class="o">);</span>
 <span class="n">s</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"age"</span><span class="o">));</span>
@@ -372,8 +370,7 @@ userid as the range of a scanner and fetching specific columns:</p>
 <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="rowid-design">RowID Design</h3>
 
@@ -382,39 +379,36 @@ that is optimal for anticipated access patterns. A good example of this is rever
 the order of components of internet domain names in order to group rows of the
 same parent domain together:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code
 com.google.labs
 com.google.mail
 com.yahoo.mail
 com.yahoo.research
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Some data may result in the creation of very large rows - rows with many columns.
 In this case the table designer may wish to split up these rows for better load
 balancing while keeping them sorted together for scanning purposes. This can be
 done by appending a random substring at the end of the row:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_00
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_00
 com.google.code_01
 com.google.code_02
 com.google.labs_00
 com.google.mail_00
 com.google.mail_01
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>It could also be done by adding a string representation of some period of time such as date to the week
 or month:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>com.google.code_201003
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_201003
 com.google.code_201004
 com.google.code_201005
 com.google.labs_201003
 com.google.mail_201003
 com.google.mail_201004
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Appending dates provides the additional capability of restricting a scan to a given
 date range.</p>
@@ -428,7 +422,7 @@ be better seeked or searched in ranges.</p>
 <p>The lexicoders are a standard and extensible way of encoding Java types. Here’s an example
 of a lexicoder that encodes a java Date object so that it sorts lexicographically:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// create new date lexicoder</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// create new date lexicoder</span>
 <span class="n">DateLexicoder</span> <span class="n">dateEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DateLexicoder</span><span class="o">();</span>
 
 <span class="c1">// truncate time to hours</span>
@@ -438,13 +432,12 @@ of a lexicoder that encodes a java Date object so that it sorts lexicographicall
 <span class="c1">// encode the rowId so that it is sorted lexicographically</span>
 <span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">dateEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">hour</span><span class="o">));</span>
 <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colf"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colq"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Value</span><span class="o">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]{}));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>If we want to return the most recent date first, we can reverse the sort order
 with the reverse lexicoder:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// create new date lexicoder and reverse lexicoder</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// create new date lexicoder and reverse lexicoder</span>
 <span class="n">DateLexicoder</span> <span class="n">dateEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DateLexicoder</span><span class="o">();</span>
 <span class="n">ReverseLexicoder</span> <span class="n">reverseEncoder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReverseLexicoder</span><span class="o">(</span><span class="n">dateEncoder</span><span class="o">);</span>
 
@@ -455,8 +448,7 @@ with the reverse lexicoder:</p>
 <span class="c1">// encode the rowId so that it sorts in reverse lexicographic order</span>
 <span class="n">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mutation</span><span class="o">(</span><span class="n">reverseEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">hour</span><span class="o">));</span>
 <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colf"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"colq"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Value</span><span class="o">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]{}));</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="indexing">Indexing</h3>
 
@@ -503,7 +495,7 @@ BatchScanner, which performs the lookups in multiple threads to multiple servers
 and returns an Iterator over all the rows retrieved. The rows returned are NOT in
 sorted order, as is the case with the basic Scanner interface.</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="c1">// first we scan the index for IDs of rows matching our query</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// first we scan the index for IDs of rows matching our query</span>
 <span class="n">Text</span> <span class="n">term</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"mySearchTerm"</span><span class="o">);</span>
 
 <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">matchingRows</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
@@ -524,8 +516,7 @@ sorted order, as is the case with the basic Scanner interface.</p>
 <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>One advantage of the dynamic schema capabilities of Accumulo is that different
 fields may be indexed into the same physical table. However, it may be necessary to
@@ -777,7 +768,7 @@ bins, a search of all documents must search every bin. We can use the BatchScann
 to scan all bins in parallel. The Intersecting Iterator should be enabled on a
 BatchScanner within user query code as follows:</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Text</span><span class="o">[]</span> <span class="n">terms</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"the"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"white"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"house"</span><span class="o">)};</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Text</span><span class="o">[]</span> <span class="n">terms</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"the"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"white"</span><span class="o">),</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"house"</span><span class="o">)};</span>
 
 <span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">20</span><span class="o">);</span>
 
@@ -790,8 +781,7 @@ BatchScanner within user query code as follows:</p>
 <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">bscan</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">" "</span> <span class="o">+</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">getColumnQualifier</span><span class="o">());</span>
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This code effectively has the BatchScanner scan all tablets of a table, looking for
 documents that match all the given terms. Because all tablets are being scanned for
