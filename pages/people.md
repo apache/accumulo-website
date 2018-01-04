@@ -98,6 +98,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Mark Owens          |                                                                   | [ET][ET]              |
 | Matt Dailey         |                                                                   |                       |
+| Matthew Dinep       | [Anavation, LLC] [ANAVATION]                                      | [ET][ET]              |
 | Matthew Kirkley     |                                                                   |                       |
 | Matthew Peterson    | [Applied Technology Group][ATG]                                   | [ET][ET]              |
 | Max Jordan          |                                                                   |                       |
@@ -136,6 +137,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kyle Van Gilson     |                                                                   |                       |
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
+[ANAVATION]: http://www.anavationllc.com/
 [ANTHEMENG]: http://www.anthemengineering.com
 [ARCUS]: http://www.arcus-research.com
 [ARGYLE]: http://www.argyledata.com
