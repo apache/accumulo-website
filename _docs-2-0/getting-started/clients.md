@@ -16,92 +16,69 @@ If you are using Maven to create Accumulo client code, add the following to your
 </dependency>
 ```
 
-## Running Client Code
-
-There are multiple ways to run Java code that use Accumulo. Below is a list
-of the different ways to execute client code.
-
-* build and execute an uber jar
-* add `accumulo classpath` to your Java classpath
-* use the `accumulo` command
-* use the `accumulo-util hadoop-jar` command
-
-### Build and execute an uber jar
-
-If you have included `accumulo-core` as dependency in your pom, you can build an uber jar
-using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
-an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
-version running on your cluster.
-
-### Add 'accumulo classpath' to your Java classpath
-
-To run Accumulo client code using the `java` command, use the `accumulo classpath` command 
-to include all of Accumulo's dependencies on your classpath:
-
-    java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
-
-If you would like to review which jars are included, the `accumulo classpath` command can
-output a more human readable format using the `-d` option which enables debugging:
-
-    accumulo classpath -d
-
-### Use the accumulo command
-
-Another option for running your code is to use the Accumulo script which can execute a
-main class (if it exists on its classpath):
-
-    accumulo com.foo.Client arg1 arg2
-
-While the Accumulo script will add all of Accumulo's dependencies to the classpath, you
-will need to add any jars that your create or depend on beyond what Accumulo already
-depends on. This can be accomplished by either adding the jars to the `lib/ext` directory
-of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
-the accumulo command.
-
-    export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
-
-### Use the 'accumulo-util hadoop-jar' command
-
-If you are writing map reduce job that accesses Accumulo, then you can use
-`accumulo-util hadoop-jar` to run those jobs. See the [MapReduce example][mapred-example]
-for more information.
-
 ## Connecting
 
-All clients must first identify the Accumulo instance to which they will be
-communicating. Code to do this is as follows:
+Before writing Accumulo client code, you will need the following information.
 
-```java
-String instanceName = "myinstance";
-String zooServers = "zooserver-one,zooserver-two"
-Instance inst = new ZooKeeperInstance(instanceName, zooServers);
+ * Accumulo instance name
+ * Zookeeper connection string
+ * Accumulo username & password
 
-Connector conn = inst.getConnector("user", new PasswordToken("passwd"));
-```
+The [Connector] object is the main entry point for Accumulo clients. It can be created using one
+of the following methods:
 
-The [PasswordToken] is the most common implementation of an [AuthenticationToken].
-This general interface allow authentication as an Accumulo user to come from
-a variety of sources or means. The [CredentialProviderToken] leverages the Hadoop
-CredentialProviders (new in Hadoop 2.6).
+1. Using the `accumulo-client.properties` file (a template can be found in the `conf/` directory
+   of the tarball distribution):
+    ```java
+    Connector conn = Connector.builder()
+                        .usingProperties("/path/to/accumulo-client.properties").build();
+    ```
+1. Using the builder methods of [Connector]:
+    ```java
+    Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+                        .usingCredentials("myuser", new PasswordToken("mypassword")).build();
+    ```
+1. Using a Java Properties object.
+    ```java
+    Properties props = new Properties()
+    props.put("instance.name", "myinstance")
+    props.put("instance.zookeeper.host", "zookeeper1,zookeeper2")
+    props.put("user.name", "myuser")
+    props.put("user.password", "mypassword")
+    Connector conn = Connector.builder().usingProperties(props).build();
+    ```
 
-For example, the [CredentialProviderToken] can be used in conjunction with a Java
-KeyStore to alleviate passwords stored in cleartext. When stored in HDFS, a single
-KeyStore can be used across an entire instance. Be aware that KeyStores stored on
-the local filesystem must be made available to all nodes in the Accumulo cluster.
+# Authentication
 
-```java
-KerberosToken token = new KerberosToken();
-Connector conn = inst.getConnector(token.getPrincipal(), token);
-```
+When creating a [Connector], the user must be authenticated using one of the following
+implementations of [AuthenticationToken] below:
 
-The [KerberosToken] can be provided to use the authentication provided by Kerberos.
-Using Kerberos requires external setup and additional configuration, but provides
-a single point of authentication through HDFS, YARN and ZooKeeper and allowing
-for password-less authentication with Accumulo.
+1. [PasswordToken] is the must commonly used implementation.
+1. [CredentialProviderToken] leverages the Hadoop CredentialProviders (new in Hadoop 2.6).
+   For example, the [CredentialProviderToken] can be used in conjunction with a Java KeyStore to
+   alleviate passwords stored in cleartext. When stored in HDFS, a single KeyStore can be used across
+   an entire instance. Be aware that KeyStores stored on the local filesystem must be made available
+   to all nodes in the Accumulo cluster.
+1. [KerberosToken] can be provided to use the authentication provided by Kerberos. Using Kerberos
+   requires external setup and additional configuration, but provides a single point of authentication
+   through HDFS, YARN and ZooKeeper and allowing for password-less authentication with Accumulo.
+
+    ```java
+    KerberosToken token = new KerberosToken();
+    Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+                        .usingCredentials(token.getPrincipal(), token).build();
+    ```
 
 ## Writing Data
 
-Data are written to Accumulo by creating [Mutation] objects that represent all the
+With a [Connector] created, it can be used to create objects (like the [BatchWriter]) for
+reading and writing from Accumulo:
+
+```java
+BatchWriter writer = conn.createBatchWriter("table", new BatchWriterConfig())
+```
+
+Data is written to Accumulo by creating [Mutation] objects that represent all the
 changes to the columns of a single row. The changes are made atomically in the
 TabletServer. Clients then add Mutations to a [BatchWriter] which submits them to
 the appropriate TabletServers.
@@ -279,6 +256,56 @@ You may consider using the [WholeRowIterator] with the BatchScanner to achieve
 isolation. The drawback of this approach is that entire rows are read into
 memory on the server side. If a row is too big, it may crash a tablet server.
 
+## Running Client Code
+
+There are multiple ways to run Java code that use Accumulo. Below is a list
+of the different ways to execute client code.
+
+* build and execute an uber jar
+* add `accumulo classpath` to your Java classpath
+* use the `accumulo` command
+* use the `accumulo-util hadoop-jar` command
+
+### Build and execute an uber jar
+
+If you have included `accumulo-core` as dependency in your pom, you can build an uber jar
+using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
+an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
+version running on your cluster.
+
+### Add 'accumulo classpath' to your Java classpath
+
+To run Accumulo client code using the `java` command, use the `accumulo classpath` command
+to include all of Accumulo's dependencies on your classpath:
+
+    java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
+
+If you would like to review which jars are included, the `accumulo classpath` command can
+output a more human readable format using the `-d` option which enables debugging:
+
+    accumulo classpath -d
+
+### Use the accumulo command
+
+Another option for running your code is to use the Accumulo script which can execute a
+main class (if it exists on its classpath):
+
+    accumulo com.foo.Client arg1 arg2
+
+While the Accumulo script will add all of Accumulo's dependencies to the classpath, you
+will need to add any jars that your create or depend on beyond what Accumulo already
+depends on. This can be accomplished by either adding the jars to the `lib/ext` directory
+of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
+the accumulo command.
+
+    export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
+
+### Use the 'accumulo-util hadoop-jar' command
+
+If you are writing map reduce job that accesses Accumulo, then you can use
+`accumulo-util hadoop-jar` to run those jobs. See the [MapReduce example][mapred-example]
+for more information.
+
 ## Additional Documentation
 
 This page covers Accumulo client basics.  Below are links to additional documentation that may be useful when creating Accumulo clients:
@@ -287,6 +314,7 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [Proxy] - Documentation for interacting with Accumulo using non-Java languages through a proxy server
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
+[Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
 [PasswordToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html
 [AuthenticationToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
 [CredentialProviderToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html
