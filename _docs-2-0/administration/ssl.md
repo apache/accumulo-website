@@ -47,21 +47,19 @@ their own certificate.
 ## Client configuration
 
 To establish a connection to Accumulo servers, each client must also have
-special configuration. This is typically accomplished through the use of
-the client configuration file whose default location is `~/.accumulo/config`.
+special configuration. This is typically accomplished by [creating Accumulo
+clients][clients] using `accumulo-client.properties` and setting the following
+the properties to connect to an Accumulo instance using SSL:
 
-The following properties must be set to connect to an Accumulo instance using SSL:
+* [ssl.enabled] to `true`
+* [ssl.truststore.path]
+* [ssl.truststore.password]
 
-* [rpc.javax.net.ssl.trustStore] = _The path on the local filesystem to the keystore containing the certificate authority's public key_
-* [rpc.javax.net.ssl.trustStorePassword] = _The password for the keystore containing the certificate authority's public key_
-* [instance.rpc.ssl.enabled] = _true_
+If two-way SSL is enabled for the Accumulo instance (by setting [instance.rpc.ssl.clientAuth] to `true` in `accumulo-site.xml`),
+Accumulo clients must also define their own certificate by setting the following properties:
 
-If two-way SSL if enabled (`instance.rpc.ssl.clientAuth=true`) for the instance, the client must also define
-their own certificate and enable client authenticate as well.
-
-* [rpc.javax.net.ssl.keyStore] =_The path on the local filesystem to the keystore containing the server's certificate_
-* [rpc.javax.net.ssl.keyStorePassword] = _The password for the keystore containing the server's certificate_
-* [instance.rpc.ssl.clientAuth] = _true_
+* [ssl.keystore.path]
+* [ssl.keystore.password]
 
 ## Generating SSL material using OpenSSL
 
@@ -123,6 +121,12 @@ keytool -import -trustcacerts -alias server-crt -file server.crt -keystore serve
 The `server.jks` file is the Java keystore containing the certificate for a given host. The above
 methods are equivalent whether the certificate is generate for an Accumulo server or a client.
 
+[clients]: {{ page.docs_baseurl }}/getting-started/clients#connecting
+[ssl.enabled]: {{ page.docs_baseurl }}/development/client-properties#ssl_enabled
+[ssl.truststore.path]: {{ page.docs_baseurl }}/development/client-properties#ssl_truststore_path
+[ssl.truststore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_truststore_password
+[ssl.keystore.path]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_path
+[ssl.keystore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_password
 [instance.secret]: {{ page.docs_baseurl }}/administration/properties#instance_secret
 [rpc.javax.net.ssl.trustStore]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_trustStore
 [rpc.javax.net.ssl.trustStorePassword]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_trustStorePassword

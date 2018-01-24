@@ -4,9 +4,17 @@ category: administration
 order: 2
 ---
 
-## Setting Configuration
+Configuration is managed differently for Accumulo clients and servers.
 
-Accumulo is configured using [properties][props] whose values can be set in the following locations (with increasing precedence):
+## Client Configuration
+
+Accumulo clients are configured when [the Connector is built][client-conn] using builder methods or `accumulo-client.properties`
+which is configured using [client properties][client-props].
+
+## Server Configuration
+
+Accumulo services (i.e master, tablet server, monitor, etc) are configured using [server properties][props] whose values can be
+set in the following locations (with increasing precedence):
 
 1. Default values
 2. accumulo-site.xml (overrides defaults)
@@ -18,19 +26,19 @@ The configuration locations above are described in detail below.
 
 ### Default values
 
-All [properties][props] have a default value that is listed for each property on the [properties][props] page. Default values are set in the source code.
+All [server properties][props] have a default value that is listed for each property on the [properties][props] page. Default values are set in the source code.
 While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.
 
 ### accumulo-site.xml
 
-Setting [properties][props] in accumulo-site.xml will override their default value. If you are running Accumulo on a cluster, any updates to accumulo-site.xml must
+Setting [server properties][props] in accumulo-site.xml will override their default value. If you are running Accumulo on a cluster, any updates to accumulo-site.xml must
 be synced across the cluster. Accumulo processes (master, tserver, etc) read their local accumulo-site.xml on start up so processes must be restarted to apply changes.
 Certain properties can only be set in accumulo-site.xml. These properties have **zk mutable: no** in their description. Setting properties in accumulo-site.xml allows you
 to configure tablet servers with different settings.
 
 ### Zookeeper
 
-Many [properties][props] can be set in Zookeeper using the Accumulo API or shell. These properties can identified by **zk mutable: yes** in their description on
+Many [server properties][props] can be set in Zookeeper using the Accumulo API or shell. These properties can identified by **zk mutable: yes** in their description on
 the [properties page][props]. Zookeeper properties can be applied on a per-table or system-wide basis. Per-table properties take precedence over system-wide
 properties. While most properties set in Zookeeper take effect immediately, some require a restart of the process which is indicated in **zk mutable** section
 of their description.
@@ -68,7 +76,7 @@ are two areas in which there aren't any fail safes built into the API that can p
 While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
 into these warnings should be reconsidered.
 
-## Viewing Configuration
+## Viewing Server Configuration
 
 Accumulo's current configuration can be viewed in the shell using the `config` command.
 
@@ -104,5 +112,7 @@ default  | table.compaction.minor.logs.threshold ..... | 3
 default  | table.failures.ignore ..................... | false
 ```
 
+[client-conn]: {{ page.docs_baseurl }}/getting-started/clients#connecting
+[client-props]: {{ page.docs_baseurl }}/development/client-properties
 [props]: {{ page.docs_baseurl }}/administration/properties
 [tableprops]: {{ page.docs_baseurl }}/administration/properties#table_prefix

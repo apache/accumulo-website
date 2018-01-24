@@ -67,10 +67,9 @@ trace.span.receiver. when set in the Accumulo configuration.
     tracer.queue.size - max queue size (default 5000)
     tracer.span.min.ms - minimum span length to store (in ms, default 1)
 
-Note that to configure an Accumulo client for tracing, including
-the Accumulo shell, the client configuration must be given the same
-[trace.span.receivers], [trace.span.receiver.*], and [trace.zookeeper.path]
-properties as the servers have.
+To configure an Accumulo client for tracing, set [trace.span.receivers][receivers-client] and [trace.zookeeper.path][zk-path-client]
+in `accumulo-client.properties`. Also, any [trace.span.receiver.*] properties set in `accumulo-site.xml` should be set in
+`accumulo-client.properties`.
 
 Hadoop can also be configured to send traces to Accumulo, as of
 Hadoop 2.6.0, by setting properties in Hadoop's core-site.xml
@@ -351,3 +350,5 @@ Time  Start  Service@Location       Name
 [trace.zookeeper.path]: {{ page.docs_baseurl }}/administration/properties#trace_zookeeper_path
 [trace.span.receivers]: {{ page.docs_baseurl }}/administration/properties#trace_span_receivers
 [trace.span.receiver.*]: {{ page.docs_baseurl }}/administration/properties#trace_span_receiver_prefix
+[zk-path-client]: {{ page.docs_baseurl }}/development/client-properties#trace_zookeeper_path
+[receivers-client]: {{ page.docs_baseurl }}/development/client-properties#trace_span_receivers

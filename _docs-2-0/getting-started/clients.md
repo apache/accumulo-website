@@ -42,11 +42,19 @@ of the following methods:
     ```java
     Properties props = new Properties()
     props.put("instance.name", "myinstance")
-    props.put("instance.zookeeper.host", "zookeeper1,zookeeper2")
+    props.put("instance.zookeepers", "zookeeper1,zookeeper2")
     props.put("user.name", "myuser")
     props.put("user.password", "mypassword")
     Connector conn = Connector.builder().usingProperties(props).build();
     ```
+
+If a `accumulo-client.properties` file or a Java Properties object is used to create a [Connector], the following
+[client properties][client-props] must be set:
+
+* [instance.name]
+* [instance.zookeepers]
+* [user.name]
+* [user.password]
 
 # Authentication
 
@@ -156,25 +164,28 @@ replicas, and waiting for a permanent sync to disk can significantly write speed
 Accumulo allows users to use less tolerant forms of durability when writing.
 These levels are:
 
-* none: no durability guarantees are made, the WAL is not used
-* log: the WAL is used, but not flushed; loss of the server probably means recent writes are lost
-* flush: updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.
-* sync: updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.
+* `none` - no durability guarantees are made, the WAL is not used
+* `log` - the WAL is used, but not flushed; loss of the server probably means recent writes are lost
+* `flush` - updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.
+* `sync` - updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.
 
-The user can set the default durability of a table in the shell.  When
-writing, the user can configure the BatchWriter or ConditionalWriter to use
-a different level of durability for the session. This will override the
-default durability setting.
+Durability can be set in multiple ways:
 
-```java
-BatchWriterConfig cfg = new BatchWriterConfig();
-// We don't care about data loss with these writes:
-// This is DANGEROUS:
-cfg.setDurability(Durability.NONE);
+1. The default durability of a table can be set in the Accumulo shell
+2. When creating a [Connector], the default durability can be overriden using `withBatchWriterConfig()`
+   or by setting [batch.writer.durability] in `accumulo-client.properties`.
+3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overriden
+   by the `BatchWriterConfig` that is passed in.
 
-Connection conn = ... ;
-BatchWriter bw = conn.createBatchWriter(table, cfg);
-```
+    ```java
+    BatchWriterConfig cfg = new BatchWriterConfig();
+    // We don't care about data loss with these writes:
+    // This is DANGEROUS:
+    cfg.setDurability(Durability.NONE);
+
+    Connection conn = ... ;
+    BatchWriter bw = conn.createBatchWriter(table, cfg);
+    ```
 
 ## Reading Data
 
@@ -315,6 +326,12 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
 [Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
+[client-props]: {{ page.docs_baseurl }}/development/client-properties
+[user.name]: {{ page.docs_baseurl }}/development/client-properties#user_name
+[user.password]: {{ page.docs_baseurl }}/development/client-properties#user_password
+[instance.name]: {{ page.docs_baseurl }}/development/client-properties#instance_name
+[instance.zookeepers]: {{ page.docs_baseurl }}/development/client-properties#instance_zookeepers
+[batch.writer.durability]: {{ page.docs_baseurl }}/development/client-properties#batch_writer_durability
 [PasswordToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html
 [AuthenticationToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
 [CredentialProviderToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html
