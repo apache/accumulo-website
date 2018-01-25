@@ -137,14 +137,14 @@ this is easily done by adding to your client's pom.xml (taking care to specify a
           <scope>runtime</scope>
         </dependency>
 
-2. Add the following to your client configuration.
+2. Add the following to your `accumulo-client.properties`.
 
         trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 
 3. Instrument your client as in the next section.
 
 Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in the ClientConfiguration (if applicable) and Accumulo's `accumulo-site.xml`.
+be placed in `accumulo-client.properties` (if applicable) and Accumulo's `accumulo-site.xml`.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are
 
 ```xml
