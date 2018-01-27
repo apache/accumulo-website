@@ -10,6 +10,7 @@ permalink: /people/
 | apache id     | name                                              | organization                           | timezone |
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
+| adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Hortonworks][HORTONWORKS]             | [ET][ET] |
@@ -48,7 +49,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | name                | organization                                                      | timezone              |
 |---------------------|-------------------------------------------------------------------|-----------------------|
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
-| Adam J Shook        | [Datacatessen][DATACATESS]                                        | [ET][ET]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
