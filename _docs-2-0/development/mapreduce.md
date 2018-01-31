@@ -50,16 +50,15 @@ options.
 
 ## AccumuloInputFormat options
 
+The following code shows how to set up Accumulo
+
 ```java
 Job job = new Job(getConf());
-AccumuloInputFormat.setInputInfo(job,
-        "user",
-        "passwd".getBytes(),
-        "table",
-        new Authorizations());
-
-AccumuloInputFormat.setZooKeeperInstance(job, "myinstance",
-        "zooserver-one,zooserver-two");
+ConnectionInfo info = Connector.builder().forInstance("myinstance","zoo1,zoo2")
+    .usingPasswordCredentials("user", "passwd").info()
+AccumuloInputFormat.setConnectionInfo(job, info);
+AccumuloInputFormat.setInputTableName(job, table);
+AccumuloInputFormat.setScanAuthorizations(job, new Authorizations());
 ```
 
 **Optional Settings:**
@@ -155,17 +154,10 @@ class MyMapper extends Mapper<Key,Value,WritableComparable,Writable> {
 ## AccumuloOutputFormat options
 
 ```java
-boolean createTables = true;
-String defaultTable = "mytable";
-
-AccumuloOutputFormat.setOutputInfo(job,
-        "user",
-        "passwd".getBytes(),
-        createTables,
-        defaultTable);
-
-AccumuloOutputFormat.setZooKeeperInstance(job, "myinstance",
-        "zooserver-one,zooserver-two");
+ConnectionInfo info = Connector.builder().forInstance("myinstance","zoo1,zoo2")
+    .usingPasswordCredentials("user", "passwd").info()
+AccumuloOutputFormat.setConnectionInfo(job, info);
+AccumuloOutputFormat.setDefaultTableName(job, "mytable");
 ```
 
 **Optional Settings:**

@@ -115,14 +115,14 @@ Accumulo has a pluggable security mechanism. It can be broken into three actions
 authorization, and permission handling.
 
 Authentication verifies the identity of a user. In Accumulo, authentication occurs when
-the `getConnector` method of [Instance] is called with a principal (i.e username)
+the `usingCredentials'` method of the [Connector] builder is called with a principal (i.e username)
 and an [AuthenticationToken] which is an interface with multiple implementations. The most
 common implementation is [PasswordToken] which is the default authentication method for Accumulo
 out of the box.
 
 ```java
-Instance instance = new ZooKeeperInstance("myinstance", "zookeeper1,zookeeper2");
-Connector conn = instance.getConnector("user", new PasswordToken("passwd"));
+Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+                    .usingPasswordCredentials("user", "passwd").build();
 ```
 
 Once a user is authenticated by the Authenticator, the user has access to the other actions within

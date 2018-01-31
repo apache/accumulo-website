@@ -10,11 +10,15 @@ Below are properties set in `accumulo-client.properties` that configure Accumulo
 
 | Property | Default value | Description |
 |----------|---------------|-------------|
-| <a name="user_name" class="prop"></a> user.name | *empty* | Accumulo user name |
-| <a name="user_password" class="prop"></a> user.password | *empty* | Accumulo user password |
 | <a name="instance_name" class="prop"></a> instance.name | *empty* | Name of Accumulo instance to connect to |
 | <a name="instance_zookeepers" class="prop"></a> instance.zookeepers | localhost:2181 | Zookeeper connection information for Accumulo instance |
 | <a name="instance_zookeepers_timeout_sec" class="prop"></a> instance.zookeepers.timeout.sec | 30 | Zookeeper session timeout (in seconds) |
+| <a name="auth_method" class="prop"></a> auth.method | password | Authentication method (i.e password, kerberos, provider). Set additional properties for chosen method below. |
+| <a name="auth_username" class="prop"></a> auth.username | *empty* | Accumulo username/principal for chosen authentication method |
+| <a name="auth_kerberos_keytab_path" class="prop"></a> auth.kerberos.keytab.path | *empty* | Path to Kerberos keytab |
+| <a name="auth_password" class="prop"></a> auth.password | *empty* | Accumulo user password |
+| <a name="auth_provider_name" class="prop"></a> auth.provider.name | *empty* | Alias used to extract Accumulo user password from CredentialProvider |
+| <a name="auth_provider_urls" class="prop"></a> auth.provider.urls | *empty* | Comma separated list of URLs defining CredentialProvider(s) |
 | <a name="batch_writer_durability" class="prop"></a> batch.writer.durability | default | Change the durability for the BatchWriter session. To use the table's durability setting. use "default" which is the table's durability setting. |
 | <a name="batch_writer_max_latency_sec" class="prop"></a> batch.writer.max.latency.sec | 120 | Max amount of time (in seconds) to hold data in memory before flushing it |
 | <a name="batch_writer_max_memory_bytes" class="prop"></a> batch.writer.max.memory.bytes | 52428800 | Max memory (in bytes) to batch before writing |
@@ -29,7 +33,7 @@ Below are properties set in `accumulo-client.properties` that configure Accumulo
 | <a name="ssl_truststore_type" class="prop"></a> ssl.truststore.type | jks | Type of SSL truststore |
 | <a name="ssl_use_jsse" class="prop"></a> ssl.use.jsse | false | Use JSSE system properties to configure SSL |
 | <a name="sasl_enabled" class="prop"></a> sasl.enabled | false | Enable SASL for client RPC |
+| <a name="sasl_kerberos_server_primary" class="prop"></a> sasl.kerberos.server.primary | accumulo | Kerberos principal/primary that Accumulo servers use to login |
 | <a name="sasl_qop" class="prop"></a> sasl.qop | auth | SASL quality of protection. Valid values are 'auth', 'auth-int', and 'auth-conf' |
-| <a name="kerberos_server_primary" class="prop"></a> kerberos.server.primary | accumulo | Kerberos principal/primary that Accumulo servers use to login |
 | <a name="trace_span_receivers" class="prop"></a> trace.span.receivers | org.apache.accumulo.tracer.ZooTraceClient | A list of span receiver classes to send trace spans |
 | <a name="trace_zookeeper_path" class="prop"></a> trace.zookeeper.path | /tracers | The zookeeper node where tracers are registered |

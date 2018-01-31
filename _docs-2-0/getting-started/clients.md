@@ -36,15 +36,16 @@ of the following methods:
 1. Using the builder methods of [Connector]:
     ```java
     Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
-                        .usingCredentials("myuser", new PasswordToken("mypassword")).build();
+                        .usingPasswordCredentials("myuser", "mypassword").build();
     ```
 1. Using a Java Properties object.
     ```java
     Properties props = new Properties()
     props.put("instance.name", "myinstance")
     props.put("instance.zookeepers", "zookeeper1,zookeeper2")
-    props.put("user.name", "myuser")
-    props.put("user.password", "mypassword")
+    props.put("auth.method", "password")
+    props.put("auth.username", "myuser")
+    props.put("auth.password", "mypassword")
     Connector conn = Connector.builder().usingProperties(props).build();
     ```
 
@@ -53,8 +54,9 @@ If a `accumulo-client.properties` file or a Java Properties object is used to cr
 
 * [instance.name]
 * [instance.zookeepers]
-* [user.name]
-* [user.password]
+* [auth.method]
+* [auth.username]
+* [auth.password]
 
 # Authentication
 
@@ -327,8 +329,9 @@ This page covers Accumulo client basics.  Below are links to additional document
 
 [Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
 [client-props]: {{ page.docs_baseurl }}/development/client-properties
-[user.name]: {{ page.docs_baseurl }}/development/client-properties#user_name
-[user.password]: {{ page.docs_baseurl }}/development/client-properties#user_password
+[auth.method]: {{ page.docs_baseurl }}/development/client-properties#auth_method
+[auth.username]: {{ page.docs_baseurl }}/development/client-properties#auth_username
+[auth.password]: {{ page.docs_baseurl }}/development/client-properties#auth_password
 [instance.name]: {{ page.docs_baseurl }}/development/client-properties#instance_name
 [instance.zookeepers]: {{ page.docs_baseurl }}/development/client-properties#instance_zookeepers
 [batch.writer.durability]: {{ page.docs_baseurl }}/development/client-properties#batch_writer_durability
