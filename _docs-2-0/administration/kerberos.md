@@ -349,7 +349,7 @@ the `--config-file` command line option.
 
 * [sasl.enabled] = true
 * [sasl.qop] = auth
-* [kerberos.server.primary] = accumulo
+* [sasl.kerberos.server.primary] = accumulo
 
 Each of these properties *must* match the configuration of the accumulo servers; this is
 required to set up the SASL transport.
@@ -604,4 +604,4 @@ Ensure you have set `trace.token.property.keytab` to point to a keytab for the p
 
 [sasl.enabled]: {{ page.docs_baseurl }}/development/client-properties#sasl_enabled
 [sasl.qop]: {{ page.docs_baseurl }}/development/client-properties#sasl_qop
-[kerberos.server.primary]: {{ page.docs_baseurl }}/development/client-properties#kerberos_server_primary
+[sasl.kerberos.server.primary]: {{ page.docs_baseurl }}/development/client-properties#sasl_kerberos_server_primary

@@ -122,7 +122,7 @@ out of the box.
 
 ```java
 Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
-                    .usingPasswordCredentials("user", "passwd").build();
+                    .usingCredentials("user", new PasswordToken("passwd")).build();
 ```
 
 Once a user is authenticated by the Authenticator, the user has access to the other actions within

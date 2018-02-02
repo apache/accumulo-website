@@ -38,7 +38,7 @@ Once we have our mini cluster running, we will want to interact with the Accumul
 
 ```java
 Connector conn = Connector.builder().forInstance(mac.getInstanceName(), mac.getZooKeepers())
-                    .usingCredentials("root", new PasswordToken("password"));
+                    .usingPasswordCredentials("root", "password").build();
 ```
 
 Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:
