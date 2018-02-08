@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 2.0.0</title>
+<title>2.0.0 Planning</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -93,6 +93,8 @@
           <ul class="dropdown-menu">
             <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
             <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 Planning</a></li>
+            <li><a href="/release/accumulo-1.9.0/">1.9.0 Planning</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
@@ -146,7 +148,7 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 2.0.0</h1>
+          <h1 class="title">2.0.0 Planning</h1>
           
           <p>05 Sep 2017</p>
 
@@ -154,10 +156,92 @@
 <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">These are draft release notes for a future release of Accumulo! <a href="/release/accumulo-1.8.1/">View the latest release notes</a>.</div>
 
 
-<h2 id="major-changes">Major Changes</h2>
+<h2 id="future-work-for-20">Future work for 2.0</h2>
 
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4726">ACCUMULO-4726</a> - Replaced the ability to use <code class="highlighter-rouge">Value.equals(byte[])</code> to check
-if the contents of a <code class="highlighter-rouge">Value</code> object was equal to a given byte array. To perform
+<h2 id="in-progress-work-for-20">In-progress work for 2.0</h2>
+
+<h3 id="new-api-for-creating-connections-to-accumulo">New API for creating connections to Accumulo</h3>
+
+<p>A fluent API for clients to build <code class="highlighter-rouge">Connector</code> objects was introduced in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4784">ACCUMULO-4784</a>.
+The new API deprecates <code class="highlighter-rouge">ClientConfiguration</code> and introduces its own properties
+file called <code class="highlighter-rouge">accumulo-client.properties</code> that ships with the Accumulo tarball.
+See the <a href="/docs/2.0/getting-started/clients">client documentation</a> for more information on how to use the new API.</p>
+
+<h2 id="completed-work-for-20">Completed work for 2.0</h2>
+
+<h3 id="simplified-accumulo-scripts-and-configuration-files">Simplified Accumulo scripts and configuration files</h3>
+
+<p>Accumulo’s scripts and configuration were refactored in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4490">ACCUMULO-4490</a> to make Accumulo
+easier to use. The number of scripts in the <code class="highlighter-rouge">bin</code> directory of the Accumulo release tarball
+has been reduced from 20 scripts to the four scripts below:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">accumulo</code> - mostly left alone except for improved usage</li>
+  <li><code class="highlighter-rouge">accumulo-service</code> - manage Accumulo processes as servcies</li>
+  <li><code class="highlighter-rouge">accumulo-cluster</code> - manage Accumulo on cluster. Replaces <code class="highlighter-rouge">start-all.sh</code> and <code class="highlighter-rouge">stop-all.sh</code></li>
+  <li><code class="highlighter-rouge">accumulo-util</code> - combines many utility scripts into one script.</li>
+</ul>
+
+<p>Read <a href="/blog/2016/11/16/simpler-scripts-and-config.html">this blog post</a> for more information on this change.</p>
+
+<h3 id="official-accumulo-docker-image-was-created">Official Accumulo docker image was created</h3>
+
+<p>An <a href="https://github.com/apache/accumulo-docker">official Accumulo docker images</a> was created in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4706">ACCUMULO-4706</a> to make
+it easier for users to run Accumulo in Docker. To support running in Docker, a few changes were 
+made to Accumulo:</p>
+
+<ul>
+  <li>The <code class="highlighter-rouge">--upload-accumulo-site</code> option was added to <code class="highlighter-rouge">accumulo init</code> to set properties in accumulo-site.xml
+to Zookeeper during initialization.</li>
+  <li>The <code class="highlighter-rouge">-o &lt;key&gt;=&lt;value&gt;</code> option was added to the <code class="highlighter-rouge">accumulo</code> command to override configuration that could
+not be set in Zookeeper.</li>
+</ul>
+
+<h3 id="updated-and-improved-accumulo-documentation">Updated and improved Accumulo documentation</h3>
+
+<p>Accumulo’s documentation has been refactored with the following improvements:</p>
+
+<ul>
+  <li>Documentation source now lives in <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a> so changes
+are now immediately viewable.</li>
+  <li>Improved navigation using a new sidebar</li>
+  <li>Better linking to Javadocs, between documentation pages, and to configuration properties.</li>
+</ul>
+
+<p>Accumulo’s documentation was also reviewed and changes were made to improve accuracy and remove
+out of date documentation.</p>
+
+<h3 id="moved-accumulo-examples-to-its-own-repo">Moved Accumulo Examples to its own repo</h3>
+
+<p>The Accumulo examples were moved out the accumulo repo to the <a href="https://github.com/apache/accumulo-examples">accumulo-examples repo</a>
+which has the following benefits:</p>
+
+<ul>
+  <li>The Accumulo examples are no longer released with Accumulo and can be continuously improved.</li>
+  <li>The Accumulo API version used by the examples can be updated right before Accumulo is released
+to test for any changes to the API that break semver.</li>
+</ul>
+
+<h3 id="simplified-accumulo-logging-configuration">Simplified Accumulo logging configuration</h3>
+
+<p>The log4j configuration of Accumulo services was improved in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4588">ACCUMULO-4588</a> with the following changes:</p>
+
+<ul>
+  <li>Logging is now configured using standard log4j JVM property ‘log4j.configuration’ in accumulo-env.sh.</li>
+  <li>Tarball ships with less log4j config files (3 rather than 6) which are all log4j properties files.</li>
+  <li>Log4j XML can still be used by editing accumulo-env.sh</li>
+  <li>Removed auditLog.xml and added audit log configuration to log4j-service properties files</li>
+  <li>Accumulo conf/ directory no longer has an examples/ directory. Configuration files ship in conf/ and are
+used by default.</li>
+  <li>Accumulo monitor by default will bind to 0.0.0.0 but will advertise hostname looked up in Java for log
+forwarding</li>
+  <li>Switched to use full hostnames rather than short hostnames for logging</li>
+</ul>
+
+<h3 id="removed-comparison-of-value-with-byte-in-valueequals">Removed comparison of Value with byte[] in Value.equals()</h3>
+
+<p>Replaced the ability to use <code class="highlighter-rouge">Value.equals(byte[])</code> to check if the contents of a
+<code class="highlighter-rouge">Value</code> object was equal to a given byte array in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4726">ACCUMULO-4726</a>. To perform
 that check, you must now use the newly added <code class="highlighter-rouge">Value.contentEquals(byte[])</code>
 method. This corrects the behavior of the <code class="highlighter-rouge">equals</code> method so that it conforms
 to the API contract documented in the javadoc inherited from its superclass.
@@ -165,19 +249,23 @@ However, it will break any code that was relying on the undocumented and broken
 behavior to compare <code class="highlighter-rouge">Value</code> objects with byte arrays. Such comparisons will now
 always return <code class="highlighter-rouge">false</code> instead of <code class="highlighter-rouge">true</code>, even if the contents are equal.</p>
 
-<h2 id="other-notable-changes">Other Notable Changes</h2>
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-3652">ACCUMULO-3652</a> - Replaced string concatenation in log statements with slf4j
-where applicable. Removed tserver TLevel logging class.</p>
+<h3 id="other-notable-changes">Other Notable Changes</h3>
 
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4733">ACCUMULO-4733</a> - Introduced a new configuration option,
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3652">ACCUMULO-3652</a> - Replaced string concatenation in log statements with slf4j
+where applicable. Removed tserver TLevel logging class.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4733">ACCUMULO-4733</a> - Introduced a new configuration option,
 crypto.security.provider, to allow for a configurable security provider for
-crypto. If unset, it will default to the system level Provider list.</p>
-
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4737">ACCUMULO-4737</a> - Renamed configuration option crypto.cipher.algorithm.name to
+crypto. If unset, it will default to the system level Provider list.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4737">ACCUMULO-4737</a> - Renamed configuration option crypto.cipher.algorithm.name to
 crypto.cipher.key.algorithm.name. The option now functions as described in
 the user manual. Introduced a new configuration option, crypto.wal.cipher.suite,
 to allow for a separate configuration for WAL files. If unset, this will
-default to the value for crypto.cipher.suite.</p>
+default to the value for crypto.cipher.suite.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4449">ACCUMULO-4449</a> - Removed ‘slave’ terminology and replaced with ‘tserver’ in
+most cases. The former ‘slaves’ config file is now named ‘tservers’. Added checks to
+scripts to fail if ‘slaves’ file is present.</li>
+</ul>
 
 <h2 id="upgrading">Upgrading</h2>
 
