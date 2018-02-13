@@ -342,7 +342,7 @@ Valid starting       Expires              Service principal
 
 #### Configuration
 
-The second thing clients need to do is to to configure kerberos when an Accumulo Connector is
+The second thing clients need to do is to configure kerberos when an Accumulo Connector is
 created.  This can be done using Connector builder methods or by setting the properties
 below in `accumulo-client.properties` which can be provided to Accumulo utilities using
 the `--config-file` command line option.

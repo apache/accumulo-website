@@ -36,7 +36,7 @@ of the following methods:
 1. Using the builder methods of [Connector]:
     ```java
     Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
-                        .usingPasswordCredentials("myuser", "mypassword").build();
+                        .usingPassword("myuser", "mypassword").build();
     ```
 1. Using a Java Properties object.
     ```java
@@ -76,7 +76,7 @@ implementations of [AuthenticationToken] below:
     ```java
     KerberosToken token = new KerberosToken();
     Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
-                        .usingCredentials(token.getPrincipal(), token).build();
+                        .usingToken(token.getPrincipal(), token).build();
     ```
 
 ## Writing Data
@@ -85,7 +85,7 @@ With a [Connector] created, it can be used to create objects (like the [BatchWri
 reading and writing from Accumulo:
 
 ```java
-BatchWriter writer = conn.createBatchWriter("table", new BatchWriterConfig())
+BatchWriter writer = conn.createBatchWriter("table");
 ```
 
 Data is written to Accumulo by creating [Mutation] objects that represent all the
