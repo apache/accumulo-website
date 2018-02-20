@@ -30,21 +30,21 @@ To start it up, you will need to supply an empty directory and a root password a
 
 ```java
 File tempDirectory = // JUnit and Guava supply mechanisms for creating temp directories
-MiniAccumuloCluster accumulo = new MiniAccumuloCluster(tempDirectory, "password");
-accumulo.start();
+MiniAccumuloCluster mac = new MiniAccumuloCluster(tempDirectory, "password");
+mac.start();
 ```
 
 Once we have our mini cluster running, we will want to interact with the Accumulo client API:
 
 ```java
-Instance instance = new ZooKeeperInstance(accumulo.getInstanceName(), accumulo.getZooKeepers());
-Connector conn = instance.getConnector("root", new PasswordToken("password"));
+Connector conn = Connector.builder().forInstance(mac.getInstanceName(), mac.getZooKeepers())
+                    .usingPassword("root", "password").build();
 ```
 
 Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:
 
 ```java
-accumulo.stop();
+mac.stop();
 // delete your temporary folder
 ```
 

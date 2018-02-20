@@ -294,27 +294,11 @@ will expect the KeyStore in the same location.
 
 ### Client Configuration
 
-In version 1.6.0, Accumulo included a new type of configuration file known as a client
-configuration file. One problem with the traditional "site.xml" file that is prevalent
-through Hadoop is that it is a single file used by both clients and servers. This makes
-it very difficult to protect secrets that are only meant for the server processes while
-allowing the clients to connect to the servers.
+Accumulo clients are configured in a different way than Accumulo servers. Clients are
+configured when [an Accumulo Connnector is created][client-conn] using Java builder methods
+or a `accumulo-client.properties` file containing [client properties][client-props].
 
-The client configuration file is a subset of the information stored in accumulo-site.xml
-meant only for consumption by clients of Accumulo. By default, Accumulo checks a number
-of locations for a client configuration by default:
-
-* `/path/to/accumulo/conf/client.conf`
-* `/etc/accumulo/client.conf`
-* `/etc/accumulo/conf/client.conf`
-* `~/.accumulo/config`
-
-These files are [Java Properties files](https://en.wikipedia.org/wiki/.properties). These files
-can currently contain information about ZooKeeper servers, RPC properties (such as SSL or SASL
-connectors), distributed tracing properties. Valid properties are defined by the [ClientProperty](https://github.com/apache/accumulo/blob/f1d0ec93d9f13ff84844b5ac81e4a7b383ced467/core/src/main/java/org/apache/accumulo/core/client/ClientConfiguration.java#L54)
-enum contained in the client API.
-
-#### Custom Table Tags
+### Custom Table Tags
 
 Accumulo has the ability for users to add custom tags to tables.  This allows
 applications to set application-level metadata about a table.  These tags can be
@@ -328,7 +312,7 @@ very sensitive to an excessive number of nodes and the sizes of the nodes. Appli
 which leverage the user of custom properties should take these warnings into
 consideration. There is no enforcement of these warnings via the API.
 
-#### Configuring the ClassLoader
+### Configuring the ClassLoader
 
 Accumulo builds its Java classpath in `accumulo-env.sh`.  After an Accumulo application has started, it will load classes from the locations
 specified in the deprecated [general.classpaths] property. Additionally, Accumulo will load classes from the locations specified in the
@@ -724,3 +708,5 @@ mailing lists at https://accumulo.apache.org for more info.
 [general.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_classpaths
 [general.dynamic.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_dynamic_classpaths
 [general.vfs.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_vfs_classpaths
+[client-conn]: {{ page.docs_baseurl }}/getting-started/clients#connecting
+[client-props]: {{ page.docs_baseurl }}/development/client-properties

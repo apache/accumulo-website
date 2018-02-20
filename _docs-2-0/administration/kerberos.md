@@ -342,16 +342,14 @@ Valid starting       Expires              Service principal
 
 #### Configuration
 
-The second thing clients need to do is to set up their client configuration file. By
-default, this file is stored in `~/.accumulo/config` or `/path/to/accumulo/client.conf`.
-Accumulo utilities also allow you to provide your own copy of this file in any location
-using the `--config-file` command line option.
+The second thing clients need to do is to configure kerberos when an Accumulo Connector is
+created.  This can be done using Connector builder methods or by setting the properties
+below in `accumulo-client.properties` which can be provided to Accumulo utilities using
+the `--config-file` command line option.
 
-Three items need to be set to enable access to Accumulo:
-
-* `instance.rpc.sasl.enabled`=_true_
-* `rpc.sasl.qop`=_auth_
-* `kerberos.server.primary`=_accumulo_
+* [sasl.enabled] = true
+* [sasl.qop] = auth
+* [sasl.kerberos.server.primary] = accumulo
 
 Each of these properties *must* match the configuration of the accumulo servers; this is
 required to set up the SASL transport.
@@ -603,3 +601,7 @@ java.lang.AssertionError: AuthenticationToken should not be null
 **A**: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the `trace` table. Accumulo allows the TraceServer to rely on the property `general.kerberos.keytab` as a fallback when logging in the trace user if the `trace.token.property.keytab` property isn't defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor's use of the trace user. The end result is that if you configure `general.kerberos.keytab` and not `trace.token.property.keytab` you will end up with a system that properly logs trace information but can't view it.
 
 Ensure you have set `trace.token.property.keytab` to point to a keytab for the principal defined in `trace.user` in the `accumulo-site.xml` file for the Monitor, since that should work in all versions of Accumulo.
+
+[sasl.enabled]: {{ page.docs_baseurl }}/development/client-properties#sasl_enabled
+[sasl.qop]: {{ page.docs_baseurl }}/development/client-properties#sasl_qop
+[sasl.kerberos.server.primary]: {{ page.docs_baseurl }}/development/client-properties#sasl_kerberos_server_primary

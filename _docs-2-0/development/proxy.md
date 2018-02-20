@@ -6,7 +6,7 @@ order: 3
 
 The proxy API allows the interaction with Accumulo with languages other than Java.
 A proxy server is provided in the codebase and a client can further be generated.
-The proxy API can also be used instead of the traditional [ZooKeeperInstance] class to
+The proxy API can also be used instead of the traditional [Connector] class to
 provide a single TCP port in which clients can be securely routed through a firewall,
 without requiring access to all tablet servers in the cluster.
 
@@ -380,5 +380,5 @@ if __name__ == "__main__":
     main()
 ```
 
-[ZookeeperInstance]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/ZooKeeperInstance.html
+[Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
 [tutorial]: https://thrift.apache.org/tutorial/
