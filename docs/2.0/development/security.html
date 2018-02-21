@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -446,13 +448,13 @@ disable the bulk import permission.</p>
 authorization, and permission handling.</p>
 
 <p>Authentication verifies the identity of a user. In Accumulo, authentication occurs when
-the <code class="highlighter-rouge">getConnector</code> method of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Instance.html">Instance</a> is called with a principal (i.e username)
+the <code class="highlighter-rouge">usingToken'</code> method of the [Connector] builder is called with a principal (i.e username)
 and an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> which is an interface with multiple implementations. The most
 common implementation is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> which is the default authentication method for Accumulo
 out of the box.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">);</span>
-<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">));</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">)).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Once a user is authenticated by the Authenticator, the user has access to the other actions within

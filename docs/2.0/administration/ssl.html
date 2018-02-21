@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -381,24 +383,22 @@ their own certificate.</p>
 <h2 id="client-configuration">Client configuration</h2>
 
 <p>To establish a connection to Accumulo servers, each client must also have
-special configuration. This is typically accomplished through the use of
-the client configuration file whose default location is <code class="highlighter-rouge">~/.accumulo/config</code>.</p>
-
-<p>The following properties must be set to connect to an Accumulo instance using SSL:</p>
+special configuration. This is typically accomplished by <a href="/docs/2.0/getting-started/clients#connecting">creating Accumulo
+clients</a> using <code class="highlighter-rouge">accumulo-client.properties</code> and setting the following
+the properties to connect to an Accumulo instance using SSL:</p>
 
 <ul>
-  <li><a href="/docs/2.0/administration/properties#rpc_javax_net_ssl_trustStore">rpc.javax.net.ssl.trustStore</a> = <em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
-  <li><a href="/docs/2.0/administration/properties#rpc_javax_net_ssl_trustStorePassword">rpc.javax.net.ssl.trustStorePassword</a> = <em>The password for the keystore containing the certificate authority’s public key</em></li>
-  <li><a href="/docs/2.0/administration/properties#instance_rpc_ssl_enabled">instance.rpc.ssl.enabled</a> = <em>true</em></li>
+  <li><a href="/docs/2.0/development/client-properties#ssl_enabled">ssl.enabled</a> to <code class="highlighter-rouge">true</code></li>
+  <li><a href="/docs/2.0/development/client-properties#ssl_truststore_path">ssl.truststore.path</a></li>
+  <li><a href="/docs/2.0/development/client-properties#ssl_truststore_password">ssl.truststore.password</a></li>
 </ul>
 
-<p>If two-way SSL if enabled (<code class="highlighter-rouge">instance.rpc.ssl.clientAuth=true</code>) for the instance, the client must also define
-their own certificate and enable client authenticate as well.</p>
+<p>If two-way SSL is enabled for the Accumulo instance (by setting <a href="/docs/2.0/administration/properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> to <code class="highlighter-rouge">true</code> in <code class="highlighter-rouge">accumulo-site.xml</code>),
+Accumulo clients must also define their own certificate by setting the following properties:</p>
 
 <ul>
-  <li><a href="/docs/2.0/administration/properties#rpc_javax_net_ssl_keyStore">rpc.javax.net.ssl.keyStore</a> =<em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
-  <li><a href="/docs/2.0/administration/properties#rpc_javax_net_ssl_keyStorePassword">rpc.javax.net.ssl.keyStorePassword</a> = <em>The password for the keystore containing the server’s certificate</em></li>
-  <li><a href="/docs/2.0/administration/properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> = <em>true</em></li>
+  <li><a href="/docs/2.0/development/client-properties#ssl_keystore_path">ssl.keystore.path</a></li>
+  <li><a href="/docs/2.0/development/client-properties#ssl_keystore_password">ssl.keystore.password</a></li>
 </ul>
 
 <h2 id="generating-ssl-material-using-openssl">Generating SSL material using OpenSSL</h2>

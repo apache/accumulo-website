@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -360,19 +362,19 @@ as a test dependency:</p>
 <p>To start it up, you will need to supply an empty directory and a root password as arguments:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
-<span class="n">MiniAccumuloCluster</span> <span class="n">accumulo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
-<span class="n">accumulo</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+<span class="n">MiniAccumuloCluster</span> <span class="n">mac</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
+<span class="n">mac</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Once we have our mini cluster running, we will want to interact with the Accumulo client API:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">accumulo</span><span class="o">.</span><span class="na">getInstanceName</span><span class="o">(),</span> <span class="n">accumulo</span><span class="o">.</span><span class="na">getZooKeepers</span><span class="o">());</span>
-<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"password"</span><span class="o">));</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="n">mac</span><span class="o">.</span><span class="na">getInstanceName</span><span class="o">(),</span> <span class="n">mac</span><span class="o">.</span><span class="na">getZooKeepers</span><span class="o">())</span>
+                    <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">accumulo</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mac</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
 <span class="c1">// delete your temporary folder</span>
 </code></pre></div></div>
 

@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -723,17 +725,15 @@ Valid starting       Expires              Service principal
 
 <h4 id="configuration">Configuration</h4>
 
-<p>The second thing clients need to do is to set up their client configuration file. By
-default, this file is stored in <code class="highlighter-rouge">~/.accumulo/config</code> or <code class="highlighter-rouge">/path/to/accumulo/client.conf</code>.
-Accumulo utilities also allow you to provide your own copy of this file in any location
-using the <code class="highlighter-rouge">--config-file</code> command line option.</p>
-
-<p>Three items need to be set to enable access to Accumulo:</p>
+<p>The second thing clients need to do is to configure kerberos when an Accumulo Connector is
+created.  This can be done using Connector builder methods or by setting the properties
+below in <code class="highlighter-rouge">accumulo-client.properties</code> which can be provided to Accumulo utilities using
+the <code class="highlighter-rouge">--config-file</code> command line option.</p>
 
 <ul>
-  <li><code class="highlighter-rouge">instance.rpc.sasl.enabled</code>=<em>true</em></li>
-  <li><code class="highlighter-rouge">rpc.sasl.qop</code>=<em>auth</em></li>
-  <li><code class="highlighter-rouge">kerberos.server.primary</code>=<em>accumulo</em></li>
+  <li><a href="/docs/2.0/development/client-properties#sasl_enabled">sasl.enabled</a> = true</li>
+  <li><a href="/docs/2.0/development/client-properties#sasl_qop">sasl.qop</a> = auth</li>
+  <li><a href="/docs/2.0/development/client-properties#sasl_kerberos_server_primary">sasl.kerberos.server.primary</a> = accumulo</li>
 </ul>
 
 <p>Each of these properties <em>must</em> match the configuration of the accumulo servers; this is
@@ -977,6 +977,7 @@ when I attempt to use the “Recent Traces” page on the Monitor UI I get a sta
 <p><strong>A</strong>: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the <code class="highlighter-rouge">trace</code> table. Accumulo allows the TraceServer to rely on the property <code class="highlighter-rouge">general.kerberos.keytab</code> as a fallback when logging in the trace user if the <code class="highlighter-rouge">trace.token.property.keytab</code> property isn’t defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor’s use of the trace user. The end result is that if you configure <code class="highlighter-rouge">general.kerberos.keytab</code> and not <code class="highlighter-rouge">trace.token.property.keytab</code> you will end up with a system that properly logs trace information but can’t view it.</p>
 
 <p>Ensure you have set <code class="highlighter-rouge">trace.token.property.keytab</code> to point to a keytab for the principal defined in <code class="highlighter-rouge">trace.user</code> in the <code class="highlighter-rouge">accumulo-site.xml</code> file for the Monitor, since that should work in all versions of Accumulo.</p>
+
 
 
     <div class="row" style="margin-top: 20px;">

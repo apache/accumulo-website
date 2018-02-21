@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -689,29 +691,11 @@ will expect the KeyStore in the same location.</p>
 
 <h3 id="client-configuration">Client Configuration</h3>
 
-<p>In version 1.6.0, Accumulo included a new type of configuration file known as a client
-configuration file. One problem with the traditional “site.xml” file that is prevalent
-through Hadoop is that it is a single file used by both clients and servers. This makes
-it very difficult to protect secrets that are only meant for the server processes while
-allowing the clients to connect to the servers.</p>
+<p>Accumulo clients are configured in a different way than Accumulo servers. Clients are
+configured when <a href="/docs/2.0/getting-started/clients#connecting">an Accumulo Connnector is created</a> using Java builder methods
+or a <code class="highlighter-rouge">accumulo-client.properties</code> file containing <a href="/docs/2.0/development/client-properties">client properties</a>.</p>
 
-<p>The client configuration file is a subset of the information stored in accumulo-site.xml
-meant only for consumption by clients of Accumulo. By default, Accumulo checks a number
-of locations for a client configuration by default:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">/path/to/accumulo/conf/client.conf</code></li>
-  <li><code class="highlighter-rouge">/etc/accumulo/client.conf</code></li>
-  <li><code class="highlighter-rouge">/etc/accumulo/conf/client.conf</code></li>
-  <li><code class="highlighter-rouge">~/.accumulo/config</code></li>
-</ul>
-
-<p>These files are <a href="https://en.wikipedia.org/wiki/.properties">Java Properties files</a>. These files
-can currently contain information about ZooKeeper servers, RPC properties (such as SSL or SASL
-connectors), distributed tracing properties. Valid properties are defined by the <a href="https://github.com/apache/accumulo/blob/f1d0ec93d9f13ff84844b5ac81e4a7b383ced467/core/src/main/java/org/apache/accumulo/core/client/ClientConfiguration.java#L54">ClientProperty</a>
-enum contained in the client API.</p>
-
-<h4 id="custom-table-tags">Custom Table Tags</h4>
+<h3 id="custom-table-tags">Custom Table Tags</h3>
 
 <p>Accumulo has the ability for users to add custom tags to tables.  This allows
 applications to set application-level metadata about a table.  These tags can be
@@ -725,7 +709,7 @@ very sensitive to an excessive number of nodes and the sizes of the nodes. Appli
 which leverage the user of custom properties should take these warnings into
 consideration. There is no enforcement of these warnings via the API.</p>
 
-<h4 id="configuring-the-classloader">Configuring the ClassLoader</h4>
+<h3 id="configuring-the-classloader">Configuring the ClassLoader</h3>
 
 <p>Accumulo builds its Java classpath in <code class="highlighter-rouge">accumulo-env.sh</code>.  After an Accumulo application has started, it will load classes from the locations
 specified in the deprecated <a href="/docs/2.0/administration/properties#general_classpaths">general.classpaths</a> property. Additionally, Accumulo will load classes from the locations specified in the

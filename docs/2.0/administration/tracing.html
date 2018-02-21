@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -404,10 +406,9 @@ tracer.queue.size - max queue size (default 5000)
 tracer.span.min.ms - minimum span length to store (in ms, default 1)
 </code></pre></div></div>
 
-<p>Note that to configure an Accumulo client for tracing, including
-the Accumulo shell, the client configuration must be given the same
-<a href="/docs/2.0/administration/properties#trace_span_receivers">trace.span.receivers</a>, <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a>, and <a href="/docs/2.0/administration/properties#trace_zookeeper_path">trace.zookeeper.path</a>
-properties as the servers have.</p>
+<p>To configure an Accumulo client for tracing, set <a href="/docs/2.0/development/client-properties#trace_span_receivers">trace.span.receivers</a> and <a href="/docs/2.0/development/client-properties#trace_zookeeper_path">trace.zookeeper.path</a>
+in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo-site.xml</code> should be set in
+<code class="highlighter-rouge">accumulo-client.properties</code>.</p>
 
 <p>Hadoop can also be configured to send traces to Accumulo, as of
 Hadoop 2.6.0, by setting properties in Hadoop’s core-site.xml
@@ -485,7 +486,7 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Add the following to your client configuration.</p>
+    <p>Add the following to your <code class="highlighter-rouge">accumulo-client.properties</code>.</p>
 
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 </code></pre></div>    </div>
@@ -496,7 +497,7 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 </ol>
 
 <p>Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in the ClientConfiguration (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo-site.xml</code>.
+be placed in <code class="highlighter-rouge">accumulo-client.properties</code> (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo-site.xml</code>.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are</p>
 
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>

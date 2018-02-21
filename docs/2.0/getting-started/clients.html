@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -347,96 +349,87 @@
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></div>
 
-<h2 id="running-client-code">Running Client Code</h2>
-
-<p>There are multiple ways to run Java code that use Accumulo. Below is a list
-of the different ways to execute client code.</p>
-
-<ul>
-  <li>build and execute an uber jar</li>
-  <li>add <code class="highlighter-rouge">accumulo classpath</code> to your Java classpath</li>
-  <li>use the <code class="highlighter-rouge">accumulo</code> command</li>
-  <li>use the <code class="highlighter-rouge">accumulo-util hadoop-jar</code> command</li>
-</ul>
-
-<h3 id="build-and-execute-an-uber-jar">Build and execute an uber jar</h3>
-
-<p>If you have included <code class="highlighter-rouge">accumulo-core</code> as dependency in your pom, you can build an uber jar
-using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
-an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
-version running on your cluster.</p>
-
-<h3 id="add-accumulo-classpath-to-your-java-classpath">Add ‘accumulo classpath’ to your Java classpath</h3>
-
-<p>To run Accumulo client code using the <code class="highlighter-rouge">java</code> command, use the <code class="highlighter-rouge">accumulo classpath</code> command 
-to include all of Accumulo’s dependencies on your classpath:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
-</code></pre></div></div>
-
-<p>If you would like to review which jars are included, the <code class="highlighter-rouge">accumulo classpath</code> command can
-output a more human readable format using the <code class="highlighter-rouge">-d</code> option which enables debugging:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo classpath -d
-</code></pre></div></div>
-
-<h3 id="use-the-accumulo-command">Use the accumulo command</h3>
-
-<p>Another option for running your code is to use the Accumulo script which can execute a
-main class (if it exists on its classpath):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
-</code></pre></div></div>
-
-<p>While the Accumulo script will add all of Accumulo’s dependencies to the classpath, you
-will need to add any jars that your create or depend on beyond what Accumulo already
-depends on. This can be accomplished by either adding the jars to the <code class="highlighter-rouge">lib/ext</code> directory
-of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
-the accumulo command.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
-</code></pre></div></div>
-
-<h3 id="use-the-accumulo-util-hadoop-jar-command">Use the ‘accumulo-util hadoop-jar’ command</h3>
-
-<p>If you are writing map reduce job that accesses Accumulo, then you can use
-<code class="highlighter-rouge">accumulo-util hadoop-jar</code> to run those jobs. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a>
-for more information.</p>
-
 <h2 id="connecting">Connecting</h2>
 
-<p>All clients must first identify the Accumulo instance to which they will be
-communicating. Code to do this is as follows:</p>
+<p>Before writing Accumulo client code, you will need the following information.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">instanceName</span> <span class="o">=</span> <span class="s">"myinstance"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">zooServers</span> <span class="o">=</span> <span class="s">"zooserver-one,zooserver-two"</span>
-<span class="n">Instance</span> <span class="n">inst</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeperInstance</span><span class="o">(</span><span class="n">instanceName</span><span class="o">,</span> <span class="n">zooServers</span><span class="o">);</span>
+<ul>
+  <li>Accumulo instance name</li>
+  <li>Zookeeper connection string</li>
+  <li>Accumulo username &amp; password</li>
+</ul>
 
-<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">));</span>
-</code></pre></div></div>
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a> object is the main entry point for Accumulo clients. It can be created using one
+of the following methods:</p>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> is the most common implementation of an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a>.
-This general interface allow authentication as an Accumulo user to come from
-a variety of sources or means. The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html">CredentialProviderToken</a> leverages the Hadoop
-CredentialProviders (new in Hadoop 2.6).</p>
+<ol>
+  <li>Using the <code class="highlighter-rouge">accumulo-client.properties</code> file (a template can be found in the <code class="highlighter-rouge">conf/</code> directory
+of the tarball distribution):
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+                     <span class="o">.</span><span class="na">usingProperties</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Using the builder methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a>:
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+                     <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"myuser"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Using a Java Properties object.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">()</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"instance.name"</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"instance.zookeepers"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.method"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.username"</span><span class="o">,</span> <span class="s">"myuser"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.password"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">)</span>
+ <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">usingProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
 
-<p>For example, the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html">CredentialProviderToken</a> can be used in conjunction with a Java
-KeyStore to alleviate passwords stored in cleartext. When stored in HDFS, a single
-KeyStore can be used across an entire instance. Be aware that KeyStores stored on
-the local filesystem must be made available to all nodes in the Accumulo cluster.</p>
+<p>If a <code class="highlighter-rouge">accumulo-client.properties</code> file or a Java Properties object is used to create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a>, the following
+<a href="/docs/2.0/development/client-properties">client properties</a> must be set:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
-<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">);</span>
-</code></pre></div></div>
+<ul>
+  <li><a href="/docs/2.0/development/client-properties#instance_name">instance.name</a></li>
+  <li><a href="/docs/2.0/development/client-properties#instance_zookeepers">instance.zookeepers</a></li>
+  <li><a href="/docs/2.0/development/client-properties#auth_method">auth.method</a></li>
+  <li><a href="/docs/2.0/development/client-properties#auth_username">auth.username</a></li>
+  <li><a href="/docs/2.0/development/client-properties#auth_password">auth.password</a></li>
+</ul>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> can be provided to use the authentication provided by Kerberos.
-Using Kerberos requires external setup and additional configuration, but provides
-a single point of authentication through HDFS, YARN and ZooKeeper and allowing
-for password-less authentication with Accumulo.</p>
+<h1 id="authentication">Authentication</h1>
+
+<p>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a>, the user must be authenticated using one of the following
+implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> below:</p>
+
+<ol>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> is the must commonly used implementation.</li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html">CredentialProviderToken</a> leverages the Hadoop CredentialProviders (new in Hadoop 2.6).
+For example, the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html">CredentialProviderToken</a> can be used in conjunction with a Java KeyStore to
+alleviate passwords stored in cleartext. When stored in HDFS, a single KeyStore can be used across
+an entire instance. Be aware that KeyStores stored on the local filesystem must be made available
+to all nodes in the Accumulo cluster.</li>
+  <li>
+    <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> can be provided to use the authentication provided by Kerberos. Using Kerberos
+requires external setup and additional configuration, but provides a single point of authentication
+through HDFS, YARN and ZooKeeper and allowing for password-less authentication with Accumulo.</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
+ <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+                     <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
 
 <h2 id="writing-data">Writing Data</h2>
 
-<p>Data are written to Accumulo by creating <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Mutation.html">Mutation</a> objects that represent all the
+<p>With a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a> created, it can be used to create objects (like the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a>) for
+reading and writing from Accumulo:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>Data is written to Accumulo by creating <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/data/Mutation.html">Mutation</a> objects that represent all the
 changes to the columns of a single row. The changes are made atomically in the
 TabletServer. Clients then add Mutations to a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a> which submits them to
 the appropriate TabletServers.</p>
@@ -513,25 +506,32 @@ replicas, and waiting for a permanent sync to disk can significantly write speed
 These levels are:</p>
 
 <ul>
-  <li>none: no durability guarantees are made, the WAL is not used</li>
-  <li>log: the WAL is used, but not flushed; loss of the server probably means recent writes are lost</li>
-  <li>flush: updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.</li>
-  <li>sync: updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.</li>
+  <li><code class="highlighter-rouge">none</code> - no durability guarantees are made, the WAL is not used</li>
+  <li><code class="highlighter-rouge">log</code> - the WAL is used, but not flushed; loss of the server probably means recent writes are lost</li>
+  <li><code class="highlighter-rouge">flush</code> - updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.</li>
+  <li><code class="highlighter-rouge">sync</code> - updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.</li>
 </ul>
 
-<p>The user can set the default durability of a table in the shell.  When
-writing, the user can configure the BatchWriter or ConditionalWriter to use
-a different level of durability for the session. This will override the
-default durability setting.</p>
+<p>Durability can be set in multiple ways:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BatchWriterConfig</span> <span class="n">cfg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
-<span class="c1">// We don't care about data loss with these writes:</span>
-<span class="c1">// This is DANGEROUS:</span>
-<span class="n">cfg</span><span class="o">.</span><span class="na">setDurability</span><span class="o">(</span><span class="n">Durability</span><span class="o">.</span><span class="na">NONE</span><span class="o">);</span>
+<ol>
+  <li>The default durability of a table can be set in the Accumulo shell</li>
+  <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/client/Connector.html">Connector</a>, the default durability can be overriden using <code class="highlighter-rouge">withBatchWriterConfig()</code>
+or by setting <a href="/docs/2.0/development/client-properties#batch_writer_durability">batch.writer.durability</a> in <code class="highlighter-rouge">accumulo-client.properties</code>.</li>
+  <li>
+    <p>When a BatchWriter or ConditionalWriter is created, the durability settings above will be overriden
+by the <code class="highlighter-rouge">BatchWriterConfig</code> that is passed in.</p>
 
-<span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
-<span class="n">BatchWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">cfg</span><span class="o">);</span>
-</code></pre></div></div>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">BatchWriterConfig</span> <span class="n">cfg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
+ <span class="c1">// We don't care about data loss with these writes:</span>
+ <span class="c1">// This is DANGEROUS:</span>
+ <span class="n">cfg</span><span class="o">.</span><span class="na">setDurability</span><span class="o">(</span><span class="n">Durability</span><span class="o">.</span><span class="na">NONE</span><span class="o">);</span>
+
+ <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+ <span class="n">BatchWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">cfg</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
 
 <h2 id="reading-data">Reading Data</h2>
 
@@ -612,6 +612,62 @@ TabletServers in parallel.</p>
 You may consider using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.8.1/org/apache/accumulo/core/iterators/user/WholeRowIterator.html">WholeRowIterator</a> with the BatchScanner to achieve
 isolation. The drawback of this approach is that entire rows are read into
 memory on the server side. If a row is too big, it may crash a tablet server.</p>
+
+<h2 id="running-client-code">Running Client Code</h2>
+
+<p>There are multiple ways to run Java code that use Accumulo. Below is a list
+of the different ways to execute client code.</p>
+
+<ul>
+  <li>build and execute an uber jar</li>
+  <li>add <code class="highlighter-rouge">accumulo classpath</code> to your Java classpath</li>
+  <li>use the <code class="highlighter-rouge">accumulo</code> command</li>
+  <li>use the <code class="highlighter-rouge">accumulo-util hadoop-jar</code> command</li>
+</ul>
+
+<h3 id="build-and-execute-an-uber-jar">Build and execute an uber jar</h3>
+
+<p>If you have included <code class="highlighter-rouge">accumulo-core</code> as dependency in your pom, you can build an uber jar
+using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
+an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
+version running on your cluster.</p>
+
+<h3 id="add-accumulo-classpath-to-your-java-classpath">Add ‘accumulo classpath’ to your Java classpath</h3>
+
+<p>To run Accumulo client code using the <code class="highlighter-rouge">java</code> command, use the <code class="highlighter-rouge">accumulo classpath</code> command
+to include all of Accumulo’s dependencies on your classpath:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
+</code></pre></div></div>
+
+<p>If you would like to review which jars are included, the <code class="highlighter-rouge">accumulo classpath</code> command can
+output a more human readable format using the <code class="highlighter-rouge">-d</code> option which enables debugging:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo classpath -d
+</code></pre></div></div>
+
+<h3 id="use-the-accumulo-command">Use the accumulo command</h3>
+
+<p>Another option for running your code is to use the Accumulo script which can execute a
+main class (if it exists on its classpath):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
+</code></pre></div></div>
+
+<p>While the Accumulo script will add all of Accumulo’s dependencies to the classpath, you
+will need to add any jars that your create or depend on beyond what Accumulo already
+depends on. This can be accomplished by either adding the jars to the <code class="highlighter-rouge">lib/ext</code> directory
+of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
+the accumulo command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
+</code></pre></div></div>
+
+<h3 id="use-the-accumulo-util-hadoop-jar-command">Use the ‘accumulo-util hadoop-jar’ command</h3>
+
+<p>If you are writing map reduce job that accesses Accumulo, then you can use
+<code class="highlighter-rouge">accumulo-util hadoop-jar</code> to run those jobs. See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md">MapReduce example</a>
+for more information.</p>
 
 <h2 id="additional-documentation">Additional Documentation</h2>
 

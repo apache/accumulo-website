@@ -224,6 +224,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/development/client-properties">Client Properties</a></div>
+                
               </div>
             </div>
           
@@ -252,7 +254,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/configuration-management">Configuration Management</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Configuration Properties</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -382,15 +384,14 @@ options.</p>
 
 <h2 id="accumuloinputformat-options">AccumuloInputFormat options</h2>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Job</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
-<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setInputInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span>
-        <span class="s">"user"</span><span class="o">,</span>
-        <span class="s">"passwd"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
-        <span class="s">"table"</span><span class="o">,</span>
-        <span class="k">new</span> <span class="nf">Authorizations</span><span class="o">());</span>
+<p>The following code shows how to set up Accumulo</p>
 
-<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setZooKeeperInstance</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">,</span>
-        <span class="s">"zooserver-one,zooserver-two"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Job</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
+<span class="n">ConnectionInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
+<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setConnectionInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info</span><span class="o">);</span>
+<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setInputTableName</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">table</span><span class="o">);</span>
+<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setScanAuthorizations</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">());</span>
 </code></pre></div></div>
 
 <p><strong>Optional Settings:</strong></p>
@@ -476,17 +477,10 @@ used for each table.</p>
 
 <h2 id="accumulooutputformat-options">AccumuloOutputFormat options</h2>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">boolean</span> <span class="n">createTables</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">defaultTable</span> <span class="o">=</span> <span class="s">"mytable"</span><span class="o">;</span>
-
-<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setOutputInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span>
-        <span class="s">"user"</span><span class="o">,</span>
-        <span class="s">"passwd"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
-        <span class="n">createTables</span><span class="o">,</span>
-        <span class="n">defaultTable</span><span class="o">);</span>
-
-<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setZooKeeperInstance</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">,</span>
-        <span class="s">"zooserver-one,zooserver-two"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ConnectionInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
+<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setConnectionInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info</span><span class="o">);</span>
+<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setDefaultTableName</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"mytable"</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p><strong>Optional Settings:</strong></p>
