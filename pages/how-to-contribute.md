@@ -21,12 +21,11 @@ This document provides basic instructions for contributing to Accumulo.  If you 
 
 Accumulo uses GitHub issues to track bugs and features.  Each git repository
 has its own issues.  In GitHub pull request are issues, therefore creating an
-issue before a pull request is not required.  There are situation where
-creating an issue first makes sense and those where it does not.   Contributors
-can make this decision with each contribution.  If unsure, then create an
-issue.  CONTRIBUTING.md in each repository may contain information about issues
-specific to it. If you need help finding an issue to work on, check out the
-[open issues labeled 'help wanted'][helpwanted] or [contact us][contact].
+issue before a pull request is optional. If unsure wether to start with an
+issue or pull request, then create an issue.  For each repository,
+CONTRIBUTING.md may contain information about issues specific to it. If you
+need help finding an issue to work on, check out the
+[open issues labeled 'helpwanted'][helpwanted] or [contact us][contact].
 
 Accumulo previously used [JIRA] for issue tracking, but is now transitioning to
 GitHub issues.  All new issues should be opened in GitHub.  Existing issues in
