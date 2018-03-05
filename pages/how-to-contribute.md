@@ -19,9 +19,20 @@ This document provides basic instructions for contributing to Accumulo.  If you 
 
 ## Issues
 
-Any contribution should have a corresponding issue. Accumulo uses [JIRA] for issue tracking. Before creating an issue,
-you will need to create an [Apache JIRA account][jira-signup]. If you need help finding an issue to work on, check out
-the [open issues labeled for newbies][newbie-issues] or [contact us][contact].
+Accumulo uses GitHub issues to track bugs and features.  Each git repository
+has its own issues.  In GitHub pull request are issues, therefore creating an
+issue before a pull request is not required.  There are situation where
+creating an issue first makes sense and those where it does not.   Contributors
+can make this decision with each contribution.  If unsure, then create an
+issue.  CONTRIBUTING.md in each repository may contain information about issues
+specific to it. If you need help finding an issue to work on, check out the
+[open issues labeled 'help wanted'][helpwanted] or [contact us][contact].
+
+Accumulo previously used [JIRA] for issue tracking, but is now transitioning to
+GitHub issues.  All new issues should be opened in GitHub.  Existing issues in
+JIRA can still be updated.  Eventually JIRA will be transitioned to a read-only
+state for reference.  For finding issues to work, there may still be [open
+issues labeled for newbies][newbie-issues] in JIRA.
 
 ## Repositories
 
@@ -40,13 +51,13 @@ viewed by clicking on `contribute` in the Links column below.
 
 ## Contribution workflow
 
-1. Create an [Apache JIRA account][jira-signup] (for issue tracking) and [GitHub account][github-join] (for pull requests).
-1. Find an [issue][newbie-issues] to work on or create one that describes the work that you want to do.
+1. Create a [GitHub account][github-join] for issues and pull requests.
+1. Find an [issue][helpwanted] to work on or optionally create one that describes the work that you want to do.
 1. [Fork] and [clone] the GitHub repository that you want to contribute to.
 1. Create a branch in the local clone of your fork.
-```    
+```
     git checkout -b accumulo-4321
-```    
+```
 1. Do work and commit to your branch. You can reference [this link][messages] for a guide on how to write good commit log messages.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this [tutorial][squash-tutorial] or [StackOverflow answer][squash-stack].
@@ -62,8 +73,8 @@ viewed by clicking on `contribute` in the Links column below.
 
 ## Coding Guidelines
 
-* If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches. 
-* Accumulo follows [semver] for its public API. Accumulo lists which packages are public API in its [README.md][accumulo-readme]. 
+* If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches.
+* Accumulo follows [semver] for its public API. Accumulo lists which packages are public API in its [README.md][accumulo-readme].
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
 * Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.
 * Use 2 space indents and never use tabs!
@@ -96,7 +107,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
    ```
 1. [Import][eclipse-import] the repository as a Maven project into Eclipse
 1. (Optional) Download and import Eclipse formatting and style guides from Accumulo's [contrib][accumulo-contrib] directory
-  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step. 
+  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step.
   * Import Template: `Preferences` > `Java` > `Code Style` > `Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
 
 ## Helpful Links
@@ -107,6 +118,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 For more details, see the [contributor guide](/contributors-guide/).
 
 [newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
+[helpwanted]: https://github.com/search?utf8=%E2%9C%93&q=state%3Aopen+label%3A%22help+wanted%22+repo%3Aapache%2Faccumulo+repo%3Aapache%2Faccumulo-website+repo%3Aapache%2Faccumulo-examples+repo%3Aapache%2Faccumulo-testing&type=
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
 [ac]: https://github.com/apache/accumulo/blob/master/CONTRIBUTING.md
