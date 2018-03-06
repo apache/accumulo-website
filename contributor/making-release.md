@@ -22,6 +22,14 @@ There are number of things that are required before attempting to build a releas
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
+## Triage issues.
+
+Before creating a release candidate, all open issues with a fix version of the
+release candidate should be triaged.  During the transition from JIRA to GitHub
+issues, anyone doing triage will need to search for open issues in both
+locations.  Searching in both locations is only necessary for branches that
+have not released since the transition started.
+
 ## Create the candidate
 
 **TL;DR**
@@ -114,7 +122,7 @@ Fill out the [add release][addrelease] form to update the projects website.
 After a successful vote, [this website][website-repo] needs to be updated with the new artifacts.
 
   * Update downloads page
-  * Create a post in `_posts/release/` containing release notes (ensure notes contain link to JIRA changes for that version)
+  * Create a post in `_posts/release/` containing release notes
   * Remove previous bug-fix release (if applicable)
   * Update doap_Accumulo.rdf
 

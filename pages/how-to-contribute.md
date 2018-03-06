@@ -21,17 +21,24 @@ This document provides basic instructions for contributing to Accumulo.  If you 
 
 Accumulo uses GitHub issues to track bugs and features.  Each git repository
 has its own issues.  In GitHub pull request are issues, therefore creating an
-issue before a pull request is optional. If unsure wether to start with an
+issue before a pull request is optional. If unsure whether to start with an
 issue or pull request, then create an issue.  For each repository,
 CONTRIBUTING.md may contain information about issues specific to it. If you
 need help finding an issue to work on, check out the
 [open issues labeled 'helpwanted'][helpwanted] or [contact us][contact].
 
-Accumulo previously used [JIRA] for issue tracking, but is now transitioning to
-GitHub issues.  All new issues should be opened in GitHub.  Existing issues in
-JIRA can still be updated.  Eventually JIRA will be transitioned to a read-only
-state for reference.  For finding issues to work, there may still be [open
-issues labeled for newbies][newbie-issues] in JIRA.
+Accumulo previously used [JIRA], but is now transitioning to GitHub issues.
+All new issues should be opened using GitHub. When working an existing JIRA
+issue, please do the following :
+
+ * Open a new GitHub issue or pull request.
+ * Link the GitHub issue to the JIRA issue.
+ * Link the JIRA issue to the GitHub issue.
+ * Close the JIRA issue.
+
+Eventually JIRA will be transitioned to a read-only state for reference.  For
+finding issues to work, there may still be 
+[open issues labeled for newbies][newbie-issues] in JIRA.
 
 ## Repositories
 
@@ -39,14 +46,14 @@ Contributions can be made to the following repositories. While the general contr
 described below, repositories have special instructions in their `CONTRIBUTING.md` file which can be
 viewed by clicking on `contribute` in the Links column below.
 
-| Repository                      | Links    | Description
-| ------------------------------- | -------- | -----------
-| [Accumulo][a]                   | [contribute][ac]  | Core Project
-| [Accumulo Website][w]           | [contribute][wc]  | Source for this website
-| [Accumulo Examples][e]          | [contribute][ec]  | Accumulo example code
-| [Accumulo Testing][t]           | [contribute][tc]  | Accumulo test suites such as continuous ingest and random walk
-| [Accumulo Docker][d]            | [contribute][dc]  | Source for Accumulo Docker image
-| [Accumulo Wikisearch][s]        | [contribute][sc]  | Accumulo example application that indexes and queries Wikipedia data
+| Repository                      | Links                         | Description
+| ------------------------------- | ----------------------------- | -----------
+| [Accumulo][a]                   | [Contribute][ac] [Issues][ai]  | Core Project
+| [Accumulo Website][w]           | [Contribute][wc] [Issues][wi]  | Source for this website
+| [Accumulo Examples][e]          | [Contribute][ec] [Issues][ei]  | Accumulo example code
+| [Accumulo Testing][t]           | [Contribute][tc] [Issues][ti]  | Accumulo test suites such as continuous ingest and random walk
+| [Accumulo Docker][d]            | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
+| [Accumulo Wikisearch][s]        | [Contribute][sc] [Issues][si]  | Accumulo example application that indexes and queries Wikipedia data
 
 ## Contribution workflow
 
@@ -121,16 +128,22 @@ For more details, see the [contributor guide](/contributors-guide/).
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
 [ac]: https://github.com/apache/accumulo/blob/master/CONTRIBUTING.md
+[ai]: https://github.com/apache/accumulo/issues
 [w]: https://github.com/apache/accumulo-website
 [wc]: https://github.com/apache/accumulo-website/blob/master/CONTRIBUTING.md
+[wi]: https://github.com/apache/accumulo-website/issues
 [e]: https://github.com/apache/accumulo-examples
 [ec]: https://github.com/apache/accumulo-examples/blob/master/CONTRIBUTING.md
+[ei]: https://github.com/apache/accumulo-examples/issues
 [t]: https://github.com/apache/accumulo-testing
 [tc]: https://github.com/apache/accumulo-testing/blob/master/CONTRIBUTING.md
+[ti]: https://github.com/apache/accumulo-testing/issues
 [d]: https://github.com/apache/accumulo-docker
 [dc]: https://github.com/apache/accumulo-docker/blob/master/CONTRIBUTING.md
+[di]: https://github.com/apache/accumulo-docker/issues
 [s]: https://github.com/apache/accumulo-wikisearch
 [sc]: https://github.com/apache/accumulo-wikisearch/blob/master/CONTRIBUTING.md
+[si]: https://github.com/apache/accumulo-wikisearch/issues
 [jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
 [github-join]: https://github.com/join
 [manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
