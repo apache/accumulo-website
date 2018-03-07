@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.7.4</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50934829-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50934829-1');
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-1.8.1/">1.8.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.7.3/">1.7.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/1.8/accumulo_user_manual.html">User Manual (1.8)</a></li>
+            <li><a href="/1.8/apidocs">Javadocs (1.8)</a></li>
+            <li><a href="/1.8/examples">Examples (1.8)</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Apache Software Foundation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/LICENSE-2.0">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.7.4</h1>
+          
+          <p>21 Feb 2018</p>
+
+
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">These are draft release notes for a future release of Accumulo! <a href="/release/accumulo-1.8.1/">View the latest release notes</a>.</div>
+
+
+<p>Apache Accumulo 1.7.4 is a maintenance release on the 1.7 version branch. This release contains changes from 46 issues, comprised of bug-fixes, 
+performance improvements, build quality improvements, and more. See <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;version=12339577">Jira</a> or the bottom of this page for a complete list.</p>
+
+<p>Below are resources for this release:</p>
+
+<ul>
+  <li><a href="https://accumulo.apache.org/1.7/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation.</li>
+  <li><a href="https://accumulo.apache.org/1.7/apidocs/">Javadocs</a> - Accumulo 1.7.4 API</li>
+  <li><a href="https://accumulo.apache.org/1.7/examples/">Examples</a> - Code with corresponding readme files that give step by step instructions for running example code.</li>
+</ul>
+
+<p>Accumulo follows <a href="http://semver.org/">Semantic Versioning</a> <a href="https://github.com/apache/accumulo/blob/rel/1.7.4/README.md#api">guidelines</a>.  This release is a  “<a href="http://semver.org/#spec-item-6">patch version</a>”, which means that
+only backwards compatible bug fixes are introduced in this version. A bug fix is defined as an internal change that fixes incorrect behavior. Users
+of any previous 1.7.x release are strongly encouraged to update as soon as possible to benefit from the  bug fixes with very little concern in change
+of underlying functionality.  As always, the Accumulo developers take API compatibility very seriously and have invested much time to ensure that we
+meet the promises set forth to our users. Users of 1.6 or earlier that are seeking to upgrade to 1.7 should consider 1.7.4 as a starting point.</p>
+
+<h2 id="major-changes">Major Changes</h2>
+
+<h3 id="fixed-upgrade-process-to-set-version-on-all-volumes">Fixed upgrade process to set version on all volumes</h3>
+
+<p>During upgrades, only one volume in a multiple HDFS volume was updated with the correct version. This would cause all tablet servers
+to complain and ultimately fail. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4686">ACCUMULO-4686</a> fixes this by setting the version on all volumes.</p>
+
+<h3 id="updated-accumulo-to-work-with-new-releases-of-guava">Updated Accumulo to work with new releases of Guava</h3>
+
+<p>In <a href="https://issues.apache.org/jira/browse/ACCUMULO-4702">ACCUMULO-4702</a>, dependencies on Beta-annotated Guava classes and methods were removed. While Accumulo still
+includes Guava 14 in its tarball, it will work with newer versions of Guava in client code. It has been tested to work
+with Guava 23.</p>
+
+<h3 id="updated-rfile-to-prevent-very-large-blocks">Updated RFile to prevent very large blocks</h3>
+
+<p>RFiles now use windowed statistics (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4669">ACCUMULO-4669</a>) to prevent very large blocks when key statistics are not uniform</p>
+
+<h2 id="notable-changes">Notable Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4506">ACCUMULO-4506</a> - Add a timeout to a replication RPC call</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4619">ACCUMULO-4619</a> - Add splits hung forever</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4633">ACCUMULO-4633</a> - Added check to prevent division by zero</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4640">ACCUMULO-4640</a> - Accumulo shell is expecting instance.volumens in client.conf instead of accumulo-site.xml</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4657">ACCUMULO-4657</a> - BulkImport Performance Bottleneck</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4665">ACCUMULO-4665</a> - Must use the “real” user for RPCs when Kerberos is enabled</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4676">ACCUMULO-4676</a> - Use HTTPOnly flags in monitor to prevent XSS attacks</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4776">ACCUMULO-4776</a> - Fix advertised host in monitor</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4777">ACCUMULO-4777</a> - Root tablet got spammed with 1.8 million log entries</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4787">ACCUMULO-4787</a> - Close input stream in AccumuloReplicaSystem</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4809">ACCUMULO-4809</a> - Avoid blocking during session clean up</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4817">ACCUMULO-4817</a> - Update build plugins and parent POM</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="https://accumulo.apache.org/docs/2.0/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="testing">Testing</h2>
+
+<h2 id="all-changes">All Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1972">ACCUMULO-1972</a> - Fixed Range constructor</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3208">ACCUMULO-3208</a> - Integration test for the OrIterator and cleanup</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3283">ACCUMULO-3283</a> - Create ColumnFQ only once</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3827">ACCUMULO-3827</a> - Set default store types for monitor ssl to jks</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4170">ACCUMULO-4170</a> - Clarify ClientConfiguration javadocs</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4365">ACCUMULO-4365</a> - Fixes to prevent intermittent failures in ShellServerIT and ConditionalWriterIT</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4482">ACCUMULO-4482</a> - Mention snappy compression in docs</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4506">ACCUMULO-4506</a> - Add a timeout to a replication RPC call</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4546">ACCUMULO-4546</a> - Create default log message for table error</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4555">ACCUMULO-4555</a> - Removes parsing of version string in Version class</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4576">ACCUMULO-4576</a> - Suppress warnings from deprecations</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4587">ACCUMULO-4587</a> - Upgrade Monitor jquery to 3.2.1</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4591">ACCUMULO-4591</a> - Add replication latency metrics</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4602">ACCUMULO-4602</a> - Deleted AssignmentThreadsIT</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4619">ACCUMULO-4619</a> - Add splits hung forever</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4627">ACCUMULO-4627</a> - Add corrupt WAL recovery instructions to user manual</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4633">ACCUMULO-4633</a> - Added check to prevent division by zero</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4636">ACCUMULO-4636</a> - System iterator improvements</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4640">ACCUMULO-4640</a> - Accumulo shell is expecting instance.volumens in client.conf instead of accumulo-site.xml</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4648">ACCUMULO-4648</a> - Update voting text in build.sh script</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4657">ACCUMULO-4657</a> - BulkImport Performance Bottleneck</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4658">ACCUMULO-4658</a> - Cache call to ZooKeeper to get table id map for the duration of the method</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4660">ACCUMULO-4660</a> - Sanitize incoming values from HTTP parameters</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4662">ACCUMULO-4662</a> - Fix ambiguous table reference</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4665">ACCUMULO-4665</a> - Use UGI with real Kerberos credentials</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4666">ACCUMULO-4666</a> - Improve KerberosToken sanity-checks and related doc</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4669">ACCUMULO-4669</a> - Use windowed statistics in RFile</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4676">ACCUMULO-4676</a> - Use HTTPOnly flags in monitor to prevent XSS attacks</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4682">ACCUMULO-4682</a> - Enforce import ordering</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4684">ACCUMULO-4684</a> - Basic schema outline for accumulo:replication</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4685">ACCUMULO-4685</a> - Fix minor warnings and bug in FileRefTest</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4686">ACCUMULO-4686</a> - Fix upgrade process to set version in all volumes.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4687">ACCUMULO-4687</a> - Clean up some static-analysis warnings</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4699">ACCUMULO-4699</a> - Fixed queued work key in replication</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4702">ACCUMULO-4702</a> - Code fixes to work with Guava 23</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4713">ACCUMULO-4713</a> - Correct handling min and max timestamps</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4716">ACCUMULO-4716</a> - Don’t cache blks over max array size</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4721">ACCUMULO-4721</a> - Document rfile-info in the user manual</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4741">ACCUMULO-4741</a> - Remove minified files in Monitor</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4774">ACCUMULO-4774</a> - Made conditional writer thread into daemon</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4776">ACCUMULO-4776</a> - Fix advertised host in monitor</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4777">ACCUMULO-4777</a> - Root tablet got spammed with 1.8 million log entries</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4780">ACCUMULO-4780</a> - Add overflow check to seq num in CommitSession</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4781">ACCUMULO-4781</a> - Fixed logging performance issue</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4787">ACCUMULO-4787</a> - Close input stream in AccumuloReplicaSystem</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4809">ACCUMULO-4809</a> - Avoid blocking during session cleanup</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4817">ACCUMULO-4817</a> - Update build plugins and parent POM</li>
+</ul>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2018 The Apache Software Foundation. Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
