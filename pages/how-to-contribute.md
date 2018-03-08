@@ -22,10 +22,9 @@ This document provides basic instructions for contributing to Accumulo.  If you 
 Accumulo uses GitHub issues to track bugs and features.  Each git repository
 has its own issues.  In GitHub pull request are issues, therefore creating an
 issue before a pull request is optional. If unsure whether to start with an
-issue or pull request, then create an issue.  For each repository,
-CONTRIBUTING.md may contain information about issues specific to it. If you
-need help finding an issue to work on, check out the
-[open issues labeled 'helpwanted'][helpwanted] or [contact us][contact].
+issue or pull request, then create an issue. If you need help finding an issue
+to work on, check out the [open issues labeled 'helpwanted'][helpwanted] or
+[contact us][contact].
 
 Accumulo previously used [JIRA], but is now transitioning to GitHub issues.
 All new issues should be opened using GitHub. When working an existing JIRA
@@ -39,6 +38,24 @@ issue, please do the following :
 Eventually JIRA will be transitioned to a read-only state for reference.  For
 finding issues to work, there may still be 
 [open issues labeled for newbies][newbie-issues] in JIRA.
+
+## Labels
+
+For pull request and issues, the following labels are used in the core
+repository. Consider an issue with labels `v1.9.3`, `v2.0.2`, and `bug`.  If
+the issue is open, then its a bug that someone plans to fix in 1.9.3 and 2.0.2.
+If closed, then it was fixed in those versions.
+
+ Label       | Description
+-------------|----------------------------------------------------------------------------
+ blocker     | Indicates a release blocker that must be fixed in labeled versions.
+ bug         |
+ duplicate   |
+ enhancement |
+ vX.Y.Z      | Fix version. The prefix `v` was chosen so that these labels sort last in the drop down list.
+
+Currently only Accumulo committers can set labels.  If you think a label should
+be set, comment on the issue and someone will help.
 
 ## Repositories
 
