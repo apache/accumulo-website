@@ -87,11 +87,9 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 The most recent Apache Accumulo&reg; release is version 1.8.1. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
 
-For convenience, [MD5][MD5SUM_18] and [SHA1][SHA1SUM_18] hashes are also available.
-
 {: .table }
-| **Generic Binaries** | [accumulo-1.8.1-bin.tar.gz][BIN_18] | [ASC][ASC_BIN_18] |
-| **Source**           | [accumulo-1.8.1-src.tar.gz][SRC_18] | [ASC][ASC_SRC_18] |
+| **Generic Binaries** | [accumulo-1.8.1-bin.tar.gz][BIN_18] | [ASC][ASC_BIN_18] | [SHA][SHA_BIN_18] |
+| **Source**           | [accumulo-1.8.1-src.tar.gz][SRC_18] | [ASC][ASC_SRC_18] | [SHA][SHA_SRC_18] |
 
 #### 1.8 Documentation
 * [README][README_18]
@@ -104,11 +102,9 @@ For convenience, [MD5][MD5SUM_18] and [SHA1][SHA1SUM_18] hashes are also availab
 
 The most recent 1.7.x release of Apache Accumulo&reg; is version 1.7.3. See the [release notes][REL_NOTES_17] and [CHANGES][CHANGES_17].
 
-For convenience, [MD5][MD5SUM_17] and [SHA1][SHA1SUM_17] hashes are also available.
-
 {: .table }
-| **Generic Binaries** | [accumulo-1.7.3-bin.tar.gz][BIN_17] | [ASC][ASC_BIN_17] |
-| **Source**           | [accumulo-1.7.3-src.tar.gz][SRC_17] | [ASC][ASC_SRC_17] |
+| **Generic Binaries** | [accumulo-1.7.3-bin.tar.gz][BIN_17] | [ASC][ASC_BIN_17] | [SHA][SHA_BIN_17] |
+| **Source**           | [accumulo-1.7.3-src.tar.gz][SRC_17] | [ASC][ASC_SRC_17] | [SHA][SHA_SRC_17] |
 
 #### 1.7 Documentation
 * [README][README_17]
@@ -127,9 +123,13 @@ Older releases can be found in the [archives][ARCHIVES].
 
 [ASC_BIN_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-bin.tar.gz.asc
 [ASC_SRC_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-src.tar.gz.asc
+[SHA_BIN_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-bin.tar.gz.sha512
+[SHA_SRC_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-src.tar.gz.sha512
 
 [ASC_BIN_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz.asc
 [ASC_SRC_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz.asc
+[SHA_BIN_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz.sha512
+[SHA_SRC_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz.sha512
 
 [BIN_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.3/accumulo-1.7.3-bin.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.3/accumulo-1.7.3-bin.tar.gz" id="/downloads/accumulo-1.7.3-bin.tar.gz" }
@@ -164,8 +164,3 @@ Older releases can be found in the [archives][ARCHIVES].
 [REL_NOTES_17]: {{ site.baseurl }}/release/accumulo-1.7.3/ "1.7.3 Release Notes"
 [REL_NOTES_18]: {{ site.baseurl }}/release/accumulo-1.8.1/ "1.8.1 Release Notes"
 
-[MD5SUM_17]: https://www.apache.org/dist/accumulo/1.7.3/MD5SUM "1.7.3 MD5 file hashes"
-[MD5SUM_18]: https://www.apache.org/dist/accumulo/1.8.1/MD5SUM "1.8.1 MD5 file hashes"
-
-[SHA1SUM_17]: https://www.apache.org/dist/accumulo/1.7.3/SHA1SUM "1.7.3 SHA1 file hashes"
-[SHA1SUM_18]: https://www.apache.org/dist/accumulo/1.8.1/SHA1SUM "1.8.1 SHA1 file hashes"
