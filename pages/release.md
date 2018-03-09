@@ -25,3 +25,11 @@ redirect_from:
   </div>
 {% endfor %}
 </div>
+
+<hr>
+
+Current releases can be [downloaded here][DOWNLOADS] and older releases can be
+downloaded from the [download archive][ARCHIVE_DOWN].
+
+[DOWNLOADS]: {{ site.baseurl }}/downloads/ "Current Downloads"
+[ARCHIVE_DOWN]: https://archive.apache.org/dist/accumulo "Download Archive"

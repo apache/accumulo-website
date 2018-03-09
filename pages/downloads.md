@@ -114,12 +114,13 @@ The most recent 1.7.x release of Apache Accumulo&reg; is version 1.7.3. See the 
 
 ## Older releases
 
-Older releases can be found in the [archives][ARCHIVES].
-
+Older releases are listed in the [release archive][ARCHIVE_REL] and can be
+downloaded from the [download archive][ARCHIVE_DOWN].
 
 [VERIFY_PROCEDURES]: https://www.apache.org/info/verification "Verify"
 [GPG_KEYS]: https://www.apache.org/dist/accumulo/KEYS "KEYS"
-[ARCHIVES]: https://archive.apache.org/dist/accumulo
+[ARCHIVE_DOWN]: https://archive.apache.org/dist/accumulo "Download Archive"
+[ARCHIVE_REL]: {{ site.baseurl }}/release/ "Release Archive"
 
 [ASC_BIN_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-bin.tar.gz.asc
 [ASC_SRC_17]: https://www.apache.org/dist/accumulo/1.7.3/accumulo-1.7.3-src.tar.gz.asc
