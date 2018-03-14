@@ -4,6 +4,10 @@ category: getting-started
 order: 1
 ---
 
+## Background
+
+The design of Apache Accumulo is inspired by Google's [BigTable paper].
+
 ## Data Model
 
 Accumulo provides a richer data model than simple key-value stores, but is not a
@@ -177,6 +181,7 @@ TabletServer failures are noted on the Master's monitor page, accessible via
 
 ![failure handling]({{ site.url }}/images/docs/failure_handling.png)
 
+[BigTable paper]: https://research.google.com/archive/bigtable.html
 [monitor]: {{page.docs_baseurl}}/administration/monitoring-metrics#monitoring
 [tracing]: {{page.docs_baseurl}}/administration/tracing
 [clients]: {{page.docs_baseurl}}/getting-started/clients
