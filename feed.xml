@@ -6,10 +6,39 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 14 Mar 2018 16:58:24 -0400</pubDate>
-    <lastBuildDate>Wed, 14 Mar 2018 16:58:24 -0400</lastBuildDate>
+    <pubDate>Fri, 16 Mar 2018 14:24:47 -0400</pubDate>
+    <lastBuildDate>Fri, 16 Mar 2018 14:24:47 -0400</lastBuildDate>
     <generator>Jekyll v3.6.2</generator>
     
+    
+      <item>
+        <title>Migrating to GitHub Issues</title>
+        <description>&lt;p&gt;Apache Accumulo is migrating from &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO&quot;&gt;JIRA&lt;/a&gt; to &lt;a href=&quot;https://github.com/apache/accumulo/issues&quot;&gt;GitHub issues&lt;/a&gt;. The migration is starting with an initial plan, but it may change as the community uses it.  For a description of the initial operating plan see the &lt;a href=&quot;/how-to-contribute/#issues&quot;&gt;issues section of How to Contribute&lt;/a&gt; and the &lt;a href=&quot;/contributor/making-release#triage-issues&quot;&gt;triaging issues section of Making a Release&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
+
+&lt;p&gt;Doing routine activities in less time is one motivation for the migration.  Below are some examples.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;For GitHub a pull request is an issue. Therefore, creating an issue before a pull request is optional. Before the migration, an issue needed to be created in JIRA before creating a pull request. This was cumbersome for small changes.&lt;/li&gt;
+  &lt;li&gt;When browsing commits in GitHub, issue numbers can be clicked.&lt;/li&gt;
+  &lt;li&gt;Discussions on pull request can easily reference issues with simple markdown syntax.&lt;/li&gt;
+  &lt;li&gt;Commits can close issues if the commit message contains “fixes #xyz”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;migration&quot;&gt;Migration&lt;/h2&gt;
+
+&lt;p&gt;There is no plan to migrate all existing issues in JIRA. The plan is to only migrate issues that someone is interested in or are actively being worked. Migration is done by linking the JIRA and GitHub issues to each other and then closing the JIRA issue. No new issues should be opened in JIRA.  JIRA will eventually be transitioned to a read only state.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 08 Mar 2018 00:00:00 -0500</pubDate>
+        <link>https://accumulo.apache.org/blog/2018/03/08/moving-to-github-issues.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2018/03/08/moving-to-github-issues.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Take the Accumulo Tour!</title>
@@ -1173,162 +1202,6 @@ standards, testing updates, maintaining dependency packages, and more.&lt;/p&gt;
         <pubDate>Mon, 19 Dec 2016 00:00:00 -0500</pubDate>
         <link>https://accumulo.apache.org/blog/2016/12/19/running-on-fedora-25.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2016/12/19/running-on-fedora-25.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Simpler scripts and configuration coming in Accumulo 2.0.0</title>
-        <description>&lt;p&gt;For the upcoming 2.0.0 release, Accumulo’s scripts and configuration &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4490&quot;&gt;were refactored&lt;/a&gt;
-to make Accumulo easier to use. While Accumulo’s documentation (i.e. the user
-manual and &lt;a href=&quot;https://github.com/apache/accumulo/blob/master/INSTALL.md&quot;&gt;INSTALL.md&lt;/a&gt;) were updated with any changes that were made, this blog post provides
-a summary of the changes.&lt;/p&gt;
-
-&lt;h3 id=&quot;fewer-scripts&quot;&gt;Fewer scripts&lt;/h3&gt;
-
-&lt;p&gt;Before 2.0.0, the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory of Accumulo’s binary tarball contained about 20 scripts:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;accumulo-1.8.0/bin/
-accumulo             build_native_library.sh  generate_monitor_certificate.sh  start-here.sh    stop-server.sh
-accumulo_watcher.sh  check-slaves             LogForwarder.sh                  start-server.sh  tdown.sh
-bootstrap_config.sh  config-server.sh         start-all.sh                     stop-all.sh      tool.sh
-bootstrap_hdfs.sh    config.sh                start-daemon.sh                  stop-here.sh     tup.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The number of scripts made it difficult to know which scripts to use.  If you added the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory to your 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt;, it could add unnecessary commands to your PATH or cause commands to be overridden due generic names
-(like ‘start-all.sh’). The number of scripts were reduced by removing scripts that are no longer used and combining
-scripts with similar functionality.&lt;/p&gt;
-
-&lt;p&gt;Starting with 2.0.0, Accumulo will only have 4 scripts in its &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/&lt;/code&gt; directory:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;accumulo-2.0.0/bin/
-accumulo  accumulo-cluster  accumulo-service  accumulo-util
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Below are some notes on this change:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;The ‘accumulo’ script was mostly left alone except for improved usage.&lt;/li&gt;
-  &lt;li&gt;The ‘accumulo-service’ script was created to manage Accumulo processes as services&lt;/li&gt;
-  &lt;li&gt;The ‘accumulo-cluster’ command was created to manage Accumulo on cluster and replaces ‘start-all.sh’ and ‘stop-all.sh’.&lt;/li&gt;
-  &lt;li&gt;The ‘accumulo-util’ command combines many utility scripts such as ‘build_native_library.sh’, ‘tool.sh’, etc into one script.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;less-configuration&quot;&gt;Less configuration&lt;/h3&gt;
-
-&lt;p&gt;Before 2.0.0, Accumulo’s &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/&lt;/code&gt; directory looked like the following (after creating initial config files
-using ‘bootstrap_config.sh’):&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;accumulo-1.8.0/conf/
-accumulo-env.sh          auditLog.xml  generic_logger.properties            masters                    slaves
-accumulo-metrics.xml     client.conf   generic_logger.xml                   monitor                    templates
-accumulo.policy.example  examples      hadoop-metrics2-accumulo.properties  monitor_logger.properties  tracers
-accumulo-site.xml        gc            log4j.properties                     monitor_logger.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;While all of these files have a purpose, many are only used in rare situations. For Accumulo 2.0, the ‘conf/’
-directory now only contains a minimum set of configuration files needed to run Accumulo.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;accumulo-2.0.0/conf/
-accumulo-env.sh  accumulo-site.xml  client.conf  log4j-monitor.properties  log4j.properties  log4j-service.properties  templates
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The Accumulo tarball does contain host files (i.e ‘tservers’, ‘monitor’, etc) by default as these files are only required by
-the ‘accumulo-cluster’ command. However, the script has a command to generate them.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./bin/accumulo-cluster create-config
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Any less common configuration files can still be found in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/templates&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;better-usage&quot;&gt;Better usage&lt;/h3&gt;
-
-&lt;p&gt;Before 2.0.0, the ‘accumulo’ command had a limited usage:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./accumulo-1.8.0/bin/accumulo
-accumulo admin | check-server-config | classpath | create-token | gc | help | info | init | jar &amp;lt;jar&amp;gt; [&amp;lt;main class&amp;gt;] args |
-  login-info | master | minicluster | monitor | proxy | rfile-info | shell | tracer | tserver | version | zookeeper | &amp;lt;accumulo class&amp;gt; args
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;For 2.0.0, all ‘accumulo’ commands were given a short description and organized into the groups.  Below is
-the full usage. It should be noted that usage is limited until the ‘accumulo-env.sh’ configuration file is
-created in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/&lt;/code&gt; by the &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo create-config&lt;/code&gt; command.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./accumulo-2.0.0/bin/accumulo help
-
-Usage: accumulo &amp;lt;command&amp;gt; [-h] (&amp;lt;argument&amp;gt; ...)
-
-  -h   Prints usage for specified command
-
-Core Commands:
-  init                           Initializes Accumulo
-  shell                          Runs Accumulo shell
-  classpath                      Prints Accumulo classpath
-  version                        Prints Accumulo version
-  admin                          Executes administrative commands
-  info                           Prints Accumulo cluster info
-  help                           Prints usage
-  &amp;lt;main class&amp;gt; args              Runs Java &amp;lt;main class&amp;gt; located on Accumulo classpath
-
-Process Commands:
-  gc                             Starts Accumulo garbage collector
-  master                         Starts Accumulo master
-  monitor                        Starts Accumulo monitor
-  minicluster                    Starts Accumulo minicluster
-  proxy                          Starts Accumulo proxy
-  tserver                        Starts Accumulo tablet server
-  tracer                         Starts Accumulo tracer
-  zookeeper                      Starts Apache Zookeeper instance
-
-Advanced Commands:
-  check-server-config            Checks server config
-  create-token                   Creates authentication token
-  login-info                     Prints Accumulo login info
-  rfile-info                     Prints rfile info
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The new ‘accumulo-service’ and ‘accumulo-cluster’ commands also have informative usage.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./accumulo-2.0.0/bin/accumulo-service 
-
-Usage: accumulo-service &amp;lt;service&amp;gt; &amp;lt;command&amp;gt;
-
-Services:
-  gc          Accumulo garbage collector
-  monitor     Accumulo monitor
-  master      Accumulo master
-  tserver     Accumulo tserver
-  tracer      Accumulo tracer
-
-Commands:
-  start       Starts service
-  stop        Stops service
-  kill        Kills service
-
-$ ./accumulo-2.0.0/bin/accumulo-cluster 
-
-Usage: accumulo-cluster &amp;lt;command&amp;gt; (&amp;lt;argument&amp;gt; ...)
-
-Commands:
-  create-config       Creates cluster config
-  start               Starts Accumulo cluster
-  stop                Stops Accumulo cluster
-  start-non-tservers  Starts all services except tservers
-  start-tservers      Starts all tservers on cluster
-  stop-tservers       Stops all tservers on cluster
-  start-here          Starts all services on this node
-  stop-here           Stops all services on this node
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;This post was updated on March 24, 2017 to reflect changes to Accumulo 2.0&lt;/em&gt;&lt;/p&gt;
-
-</description>
-        <pubDate>Wed, 16 Nov 2016 00:00:00 -0500</pubDate>
-        <link>https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html</guid>
         
         
         <category>blog</category>
