@@ -25,4 +25,4 @@ or [create an issue][issue].
 {% endfor %}
 
 [mlist]: /contact-us/#mailing-lists
-[issue]: https://issues.apache.org/jira/projects/ACCUMULO
+[issue]: https://github.com/apache/accumulo-website/issues

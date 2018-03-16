@@ -19,9 +19,43 @@ This document provides basic instructions for contributing to Accumulo.  If you 
 
 ## Issues
 
-Any contribution should have a corresponding issue. Accumulo uses [JIRA] for issue tracking. Before creating an issue,
-you will need to create an [Apache JIRA account][jira-signup]. If you need help finding an issue to work on, check out
-the [open issues labeled for newbies][newbie-issues] or [contact us][contact].
+Accumulo uses GitHub issues to track bugs and features.  Each git repository
+has its own issues.  In GitHub pull request are issues, therefore creating an
+issue before a pull request is optional. If unsure whether to start with an
+issue or pull request, then create an issue. If you need help finding an issue
+to work on, check out the [open issues labeled 'helpwanted'][helpwanted] or
+[contact us][contact].
+
+Accumulo previously used [JIRA], but is now transitioning to GitHub issues.
+All new issues should be opened using GitHub. When working an existing JIRA
+issue, please do the following :
+
+ * Open a new GitHub issue or pull request.
+ * Link the GitHub issue to the JIRA issue.
+ * Link the JIRA issue to the GitHub issue.
+ * Close the JIRA issue.
+
+Eventually JIRA will be transitioned to a read-only state for reference.  For
+finding issues to work, there may still be 
+[open issues labeled for newbies][newbie-issues] in JIRA.
+
+## Labels
+
+For pull request and issues, the following labels are used in the core
+repository. Consider an issue with labels `v1.9.3`, `v2.0.2`, and `bug`.  If
+the issue is open, then its a bug that someone plans to fix in 1.9.3 and 2.0.2.
+If closed, then it was fixed in those versions.
+
+ Label       | Description
+-------------|----------------------------------------------------------------------------
+ blocker     | Indicates a release blocker that must be fixed in labeled versions.
+ bug         |
+ duplicate   |
+ enhancement |
+ vX.Y.Z      | Fix version. The prefix `v` was chosen so that these labels sort last in the drop down list.
+
+Currently only Accumulo committers can set labels.  If you think a label should
+be set, comment on the issue and someone will help.
 
 ## Repositories
 
@@ -29,24 +63,24 @@ Contributions can be made to the following repositories. While the general contr
 described below, repositories have special instructions in their `CONTRIBUTING.md` file which can be
 viewed by clicking on `contribute` in the Links column below.
 
-| Repository                      | Links    | Description
-| ------------------------------- | -------- | -----------
-| [Accumulo][a]                   | [contribute][ac]  | Core Project
-| [Accumulo Website][w]           | [contribute][wc]  | Source for this website
-| [Accumulo Examples][e]          | [contribute][ec]  | Accumulo example code
-| [Accumulo Testing][t]           | [contribute][tc]  | Accumulo test suites such as continuous ingest and random walk
-| [Accumulo Docker][d]            | [contribute][dc]  | Source for Accumulo Docker image
-| [Accumulo Wikisearch][s]        | [contribute][sc]  | Accumulo example application that indexes and queries Wikipedia data
+| Repository                      | Links                         | Description
+| ------------------------------- | ----------------------------- | -----------
+| [Accumulo][a]                   | [Contribute][ac] [Issues][ai]  | Core Project
+| [Accumulo Website][w]           | [Contribute][wc] [Issues][wi]  | Source for this website
+| [Accumulo Examples][e]          | [Contribute][ec] [Issues][ei]  | Accumulo example code
+| [Accumulo Testing][t]           | [Contribute][tc] [Issues][ti]  | Accumulo test suites such as continuous ingest and random walk
+| [Accumulo Docker][d]            | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
+| [Accumulo Wikisearch][s]        | [Contribute][sc] [Issues][si]  | Accumulo example application that indexes and queries Wikipedia data
 
 ## Contribution workflow
 
-1. Create an [Apache JIRA account][jira-signup] (for issue tracking) and [GitHub account][github-join] (for pull requests).
-1. Find an [issue][newbie-issues] to work on or create one that describes the work that you want to do.
+1. Create a [GitHub account][github-join] for issues and pull requests.
+1. Find an [issue][helpwanted] to work on or optionally create one that describes the work that you want to do.
 1. [Fork] and [clone] the GitHub repository that you want to contribute to.
 1. Create a branch in the local clone of your fork.
-```    
+```
     git checkout -b accumulo-4321
-```    
+```
 1. Do work and commit to your branch. You can reference [this link][messages] for a guide on how to write good commit log messages.
 1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this [tutorial][squash-tutorial] or [StackOverflow answer][squash-stack].
@@ -62,8 +96,8 @@ viewed by clicking on `contribute` in the Links column below.
 
 ## Coding Guidelines
 
-* If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches. 
-* Accumulo follows [semver] for its public API. Accumulo lists which packages are public API in its [README.md][accumulo-readme]. 
+* If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches.
+* Accumulo follows [semver] for its public API. Accumulo lists which packages are public API in its [README.md][accumulo-readme].
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
 * Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.
 * Use 2 space indents and never use tabs!
@@ -96,7 +130,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
    ```
 1. [Import][eclipse-import] the repository as a Maven project into Eclipse
 1. (Optional) Download and import Eclipse formatting and style guides from Accumulo's [contrib][accumulo-contrib] directory
-  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step. 
+  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step.
   * Import Template: `Preferences` > `Java` > `Code Style` > `Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
 
 ## Helpful Links
@@ -107,19 +141,26 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 For more details, see the [contributor guide](/contributors-guide/).
 
 [newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
+[helpwanted]: https://github.com/search?utf8=%E2%9C%93&q=state%3Aopen+label%3A%22help+wanted%22+repo%3Aapache%2Faccumulo+repo%3Aapache%2Faccumulo-website+repo%3Aapache%2Faccumulo-examples+repo%3Aapache%2Faccumulo-testing&type=
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
 [ac]: https://github.com/apache/accumulo/blob/master/CONTRIBUTING.md
+[ai]: https://github.com/apache/accumulo/issues
 [w]: https://github.com/apache/accumulo-website
 [wc]: https://github.com/apache/accumulo-website/blob/master/CONTRIBUTING.md
+[wi]: https://github.com/apache/accumulo-website/issues
 [e]: https://github.com/apache/accumulo-examples
 [ec]: https://github.com/apache/accumulo-examples/blob/master/CONTRIBUTING.md
+[ei]: https://github.com/apache/accumulo-examples/issues
 [t]: https://github.com/apache/accumulo-testing
 [tc]: https://github.com/apache/accumulo-testing/blob/master/CONTRIBUTING.md
+[ti]: https://github.com/apache/accumulo-testing/issues
 [d]: https://github.com/apache/accumulo-docker
 [dc]: https://github.com/apache/accumulo-docker/blob/master/CONTRIBUTING.md
+[di]: https://github.com/apache/accumulo-docker/issues
 [s]: https://github.com/apache/accumulo-wikisearch
 [sc]: https://github.com/apache/accumulo-wikisearch/blob/master/CONTRIBUTING.md
+[si]: https://github.com/apache/accumulo-wikisearch/issues
 [jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
 [github-join]: https://github.com/join
 [manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html

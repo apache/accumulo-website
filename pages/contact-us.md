@@ -10,8 +10,7 @@ Below are ways to get in touch with the Apache Accumulo community.
 
 ## Issues
 
-Accumulo uses [JIRA] to track bugs and new features.  Before creating an issue, you will need to create
-an [Apache JIRA account][jira-signup].
+Accumulo uses GitHub issues to track bugs and new features. Visit [How to contribute](/how-to-contribute) for more information.
 
 ## Mailing Lists
 
@@ -25,7 +24,7 @@ follow discussions as they happen.
 | **user**          | General user questions, help, and announcements  | [<span class="glyphicon glyphicon-search"/> Archive][U_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][U_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][U_UN] | [<span class="glyphicon glyphicon-envelope"/> Post][U_P] |
 | **dev**           | Contributor discussions and development activity | [<span class="glyphicon glyphicon-search"/> Archive][D_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][D_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][D_UN] | [<span class="glyphicon glyphicon-envelope"/> Post][D_P] |
 | **commits**       | Code changes                                     | [<span class="glyphicon glyphicon-search"/> Archive][C_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][C_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][C_UN] | |
-| **notifications** | Automated notifications (JIRA, etc.)             | [<span class="glyphicon glyphicon-search"/> Archive][N_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][N_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][N_UN] | |
+| **notifications** | Automated notifications (GitHub, etc.)             | [<span class="glyphicon glyphicon-search"/> Archive][N_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][N_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][N_UN] | |
 
 ## IRC
 
@@ -38,11 +37,6 @@ Contributions to Apache Accumulo are welcome! If you are interested, read [how t
 ## Events
 
 Attend Accumulo events such as [Accumulo Summit][summit] and meetups hosted by [Accumulo Users Group - DC VA MD][meetup-dc].
-
-[JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
-[jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
-
-
 
 [U_A]: https://lists.apache.org/list.html?user@accumulo.apache.org
 {: .btn .btn-primary .btn-xs }
