@@ -95,69 +95,13 @@ from growing without bound.
 Each server process should have log messages from the Metrics2 library about the sinks that were created. Be sure to check
 the Accumulo processes log files when debugging missing metrics output.
 
-For additional information on configuring Metrics2, visit the [Javadoc page for Metrics2](https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html).
+Below are additional resources for configuring Metrics2: 
 
-## View metrics in Grafana/InfuxDB
+* [Javadoc page for Metrics2][metrics2-javadoc]
+* [Blog post][grafana-post] about configuring Grafana/InfluxDB to view Accumulo metrics2
 
-Accumulo metrics can be sent (using Hadoop Metrics2) to [InfluxDB], a time series database, and made viewable in [Grafana], 
-a visualization tool. Below is a screenshot of Accumulo metrics in Grafana:
-
-<img src='/images/docs/accumulo-metrics1.png' width="100%">
-<img src='/images/docs/accumulo-metrics2.png' width="100%">
-
-Following the instructions below to set this up:
-
-1.  Follow the standard installation instructions for [InfluxDB] and [Grafana]. As for versions,
-    the instructions below were written using InfluxDB v0.9.4.2 and Grafana v2.5.0.
-1.  Add the following to your InfluxDB configuration to configure it accept metrics in Graphite
-    format from Accumulo. The configuration below contains templates that transform the Graphite
-    metrics into a format that is usable in InfluxDB.
-    ```
-    [[graphite]]
-      bind-address = ":2003"
-      enabled = true
-      database = "accumulo_metrics"
-      protocol = "tcp"
-      consistency-level = "one"
-      separator = "_"
-      batch-size = 1000
-      batch-pending = 5
-      batch-timeout = "1s"
-      templates = [
-        "accumulo.*.*.*.*.*.*.* measurement.measurement.measurement.d.e.f.host.measurement",
-        "accumulo.*.*.*.*.*.* measurement.measurement.measurement.d.e.host.measurement",
-        "accumulo.*.*.*.*.* measurement.measurement.measurement.d.host.measurement",
-      ]
-    ```
-1. Configure the Accumulo configuration file `hadoop-metrics2-accumulo.properties` to send Graphite
-   metrics to InfluxDB. Below is example configuration. Remember to replace `<INFLUXDB_HOST>` with
-   the actual host.
-    ```
-    *.period=30
-    accumulo.sink.graphite.class=org.apache.hadoop.metrics2.sink.GraphiteSink
-    accumulo.sink.graphite.server_host=<INFLUXDB_HOST>
-    accumulo.sink.graphite.server_port=2003
-    accumulo.sink.graphite.metrics_prefix=accumulo
-    ```
-   Make sure the reporting frequency is set to 30 sec (i.e `*.period=30`). This is required if you are
-   using the provided Grafana dashboards that are configured in the next step.
-1.  Grafana needs to be configured to load dashboard JSON templates from a directory. Accumulo
-    distributes a Grafana dashboard template `grafana-dashboard.json` in its tarball distribution
-    in the directory `conf/templates`. Before restarting Grafana, you should copy the template from
-    your Accumulo installation to the `dashboards/` directory configured below.
-    ```
-    [dashboards.json]
-    enabled = true
-    path = <GRAFANA_HOME>/dashboards
-    ```
-5.  If you restart Grafana, you will see the Accumulo dashboard configured but all of their charts will
-    be empty unless you have Accumulo running and configured to send data to InfluxDB. When you start
-    sending data, you may need to refresh the dashboard page in the browser to start viewing metrics.
-
-[Grafana]: http://grafana.org/
-[InfluxDB]: https://influxdb.com/
-
-
+[grafana-post]: /blog/2018/03/22/view-metrics-in-grafana/
+[metrics2-javadoc]: https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html
 [tracing]: {{page.docs_baseurl}}/administration/tracing
 [monitor.ssl.keyStore]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_keyStore
 [monitor.ssl.keyStorePassword]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_keystorePassword
