@@ -26,6 +26,7 @@ permalink: /people/
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | elserj        | Josh Elser                                        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | etcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
+| jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
 | ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Peterson Technologies][PETERSON]      | [ET][ET] |
@@ -96,7 +97,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Luis Tavarez        |                                                                   | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
-| Mark Owens          |                                                                   | [ET][ET]              |
 | Matt Dailey         |                                                                   |                       |
 | Matthew Dinep       | [Anavation, LLC] [ANAVATION]                                      | [ET][ET]              |
 | Matthew Kirkley     |                                                                   |                       |
