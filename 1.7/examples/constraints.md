@@ -17,7 +17,7 @@ the end shows the inserts were not allowed.
 
     Shell - Apache Accumulo Interactive Shell
     -
-    - version: 1.7.3
+    - version: 1.7.4
     - instance name: instance
     - instance id: 00000000-0000-0000-0000-000000000000
     -
