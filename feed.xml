@@ -6,10 +6,102 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 23 Mar 2018 14:40:54 -0400</pubDate>
-    <lastBuildDate>Fri, 23 Mar 2018 14:40:54 -0400</lastBuildDate>
+    <pubDate>Sat, 24 Mar 2018 12:50:23 -0400</pubDate>
+    <lastBuildDate>Sat, 24 Mar 2018 12:50:23 -0400</lastBuildDate>
     <generator>Jekyll v3.6.2</generator>
     
+    
+      <item>
+        <title>View Accumulo metrics in Grafana</title>
+        <description>&lt;p&gt;The &lt;a href=&quot;http://0.0.0.0:4000/features/#screenshots&quot;&gt;Accumulo monitor&lt;/a&gt; provides the easiest way to view Accumulo metrics but it has two limitations:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The overview page is limited to 10 graphs&lt;/li&gt;
+  &lt;li&gt;These graphs only show metrics for the past two hours&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The Accumulo monitor could be improved to be better a visualizaiton tool for metrics but this doesn’t make
+sense when tools like &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;, &lt;a href=&quot;https://graphiteapp.org/&quot;&gt;Graphite&lt;/a&gt;, and &lt;a href=&quot;http://ganglia.sourceforge.net/&quot;&gt;Ganglia&lt;/a&gt; exist and Accumulo can report metrics to these tools
+using &lt;a href=&quot;/docs/2.0/administration/monitoring-metrics#hadoop-metrics2&quot;&gt;Hadoop Metrics2&lt;/a&gt;. While it’s easy to configure Accumulo to send metrics, the hard part is
+setting up and configuring a metrics visualization tool (i.e Graphite, Ganglia, Grafana/InfluxDB) to collect
+and view these metrics.&lt;/p&gt;
+
+&lt;p&gt;To ease this burden, this post describes how to send Accumulo metrics to &lt;a href=&quot;https://influxdb.com/&quot;&gt;InfluxDB&lt;/a&gt;, a time series database, 
+and make them viewable in &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;, a visualization tool.&lt;/p&gt;
+
+&lt;p&gt;Below is a screenshot of Accumulo metrics in Grafana:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/201803_metrics/accumulo-metrics1.png&quot; width=&quot;100%&quot; /&gt;
+&lt;img src=&quot;/images/blog/201803_metrics/accumulo-metrics2.png&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;set-up-metrics-using-uno&quot;&gt;Set up metrics using Uno&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/astralway/uno&quot;&gt;Uno&lt;/a&gt; can setup and configure InfluxDB/Grafana when it sets up Accumulo using the following command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;uno setup accumulo --with-metrics
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Metrics from Accumulo will be immediately viewable in Grafana at &lt;a href=&quot;http://localhost:3000/&quot;&gt;http://localhost:3000/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;set-up-metrics-manually&quot;&gt;Set up metrics manually&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Follow the standard installation instructions for &lt;a href=&quot;https://influxdb.com/&quot;&gt;InfluxDB&lt;/a&gt; and &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;. As for versions,
+the instructions below were written using InfluxDB v0.9.4.2 and Grafana v2.5.0.&lt;/li&gt;
+  &lt;li&gt;Add the following to your InfluxDB configuration to configure it accept metrics in Graphite
+format from Accumulo. The configuration below contains templates that transform the Graphite
+metrics into a format that is usable in InfluxDB.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[graphite]]
+  bind-address = &quot;:2003&quot;
+  enabled = true
+  database = &quot;accumulo_metrics&quot;
+  protocol = &quot;tcp&quot;
+  consistency-level = &quot;one&quot;
+  separator = &quot;_&quot;
+  batch-size = 1000
+  batch-pending = 5
+  batch-timeout = &quot;1s&quot;
+  templates = [
+    &quot;accumulo.*.*.*.*.*.*.* measurement.measurement.measurement.d.e.f.host.measurement&quot;,
+    &quot;accumulo.*.*.*.*.*.* measurement.measurement.measurement.d.e.host.measurement&quot;,
+    &quot;accumulo.*.*.*.*.* measurement.measurement.measurement.d.host.measurement&quot;,
+  ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Configure the Accumulo configuration file &lt;code class=&quot;highlighter-rouge&quot;&gt;hadoop-metrics2-accumulo.properties&lt;/code&gt; to send Graphite
+metrics to InfluxDB. Below is example configuration. Remember to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;INFLUXDB_HOST&amp;gt;&lt;/code&gt; with
+the actual host.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; *.period=30
+ accumulo.sink.graphite.class=org.apache.hadoop.metrics2.sink.GraphiteSink
+ accumulo.sink.graphite.server_host=&amp;lt;INFLUXDB_HOST&amp;gt;
+ accumulo.sink.graphite.server_port=2003
+ accumulo.sink.graphite.metrics_prefix=accumulo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Make sure the reporting frequency is set to 30 sec (i.e &lt;code class=&quot;highlighter-rouge&quot;&gt;*.period=30&lt;/code&gt;). This is required if you are
+using the provided Grafana dashboards that is configured in the next step.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Grafana needs to be configured to load dashboard JSON templates from a directory. Before restarting
+Grafana, you should copy &lt;a href=&quot;https://raw.githubusercontent.com/astralway/uno/master/conf/grafana/accumulo-dashboard.json&quot;&gt;this Accumulo dashboard template&lt;/a&gt; to the &lt;code class=&quot;highlighter-rouge&quot;&gt;dashboards/&lt;/code&gt; directory
+configured below.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; [dashboards.json]
+ enabled = true
+ path = &amp;lt;GRAFANA_HOME&amp;gt;/dashboards
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;If you restart Grafana, you will see the Accumulo dashboard configured but all of their charts will
+be empty unless you have Accumulo running and configured to send data to InfluxDB. When you start
+sending data, you may need to refresh the dashboard page in the browser to start viewing metrics.&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        <pubDate>Thu, 22 Mar 2018 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Migrating to GitHub Issues</title>
@@ -859,352 +951,6 @@ HDFS High-Availability instances, forcing NameNode failover.&lt;/p&gt;
         
         
         <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>Running Accumulo on Fedora 25</title>
-        <description>&lt;p&gt;Apache Accumulo has been available in &lt;a href=&quot;https://getfedora.org/&quot;&gt;Fedora&lt;/a&gt; since F20. Recently, the Fedora
-packages have been updated to Accumulo version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.6.6&lt;/code&gt; and have made some
-improvements to the default configuration and launch scripts to provide a good
-out-of-box experience. This post will discuss the basic setup procedures for
-running Accumulo in the latest version, &lt;code class=&quot;highlighter-rouge&quot;&gt;Fedora 25&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;prepare-the-system&quot;&gt;Prepare the system&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;WARNING&lt;/strong&gt;: Before you start, be sure you’ve got plenty of free disk space.
-Otherwise, you could run into this &lt;a href=&quot;https://bugzilla.redhat.com/show_bug.cgi?id=1404888&quot;&gt;bug&lt;/a&gt; or see other problems.&lt;/p&gt;
-
-&lt;p&gt;These instructions will assume you’re using Fedora 25, fully up-to-date (&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo
-dnf --refresh upgrade&lt;/code&gt;).&lt;/p&gt;
-
-&lt;h3 id=&quot;install-packages&quot;&gt;Install packages&lt;/h3&gt;
-
-&lt;p&gt;Fedora provides a meta-package to install Accumulo and all of its dependencies.
-It’s a good idea to install the JDK, so you’ll have access to the &lt;code class=&quot;highlighter-rouge&quot;&gt;jps&lt;/code&gt;
-command, and &lt;code class=&quot;highlighter-rouge&quot;&gt;tuned&lt;/code&gt; for setting system performance tuning parameters from a
-profile. It’s also a good idea to ensure the optional hadoop native libraries
-are installed, and you have a good editor (replace &lt;code class=&quot;highlighter-rouge&quot;&gt;vim&lt;/code&gt; with your preferred
-editor):&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dnf install accumulo java-1.8.0-openjdk-devel tuned vim hadoop-common-native
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;It is possible to install only a specific Accumulo service. For the single node
-setup, almost everything is needed. For the multi-node setup, it might make
-more sense to be selective about which you choose to install on each node (for
-example, to only install &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-tserver&lt;/code&gt;).&lt;/p&gt;
-
-&lt;h3 id=&quot;set-up-tuned&quot;&gt;Set up tuned&lt;/h3&gt;
-
-&lt;p&gt;(Optional) &lt;code class=&quot;highlighter-rouge&quot;&gt;tuned&lt;/code&gt; can optimize your server settings, adjusting things like
-your &lt;code class=&quot;highlighter-rouge&quot;&gt;vm.swappiness&lt;/code&gt;. To set up &lt;code class=&quot;highlighter-rouge&quot;&gt;tuned&lt;/code&gt;, do:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start tuned.service     &lt;span class=&quot;c&quot;&gt;# start service&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;tuned-adm profile network-latency &lt;span class=&quot;c&quot;&gt;# pick a good profile&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;tuned-adm active                  &lt;span class=&quot;c&quot;&gt;# verify the selected profile&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;tuned.service    &lt;span class=&quot;c&quot;&gt;# auto-start on reboots&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;set-up-zookeeper&quot;&gt;Set up ZooKeeper&lt;/h3&gt;
-
-&lt;p&gt;You’ll need to set up ZooKeeper, regardless of whether you’ll be running a
-single node or many. So, let’s create its configuration file (the defaults are
-fine):&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now, let’s start ZooKeeper (and set it to run on reboot):&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start zookeeper.service
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;zookeeper.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Note that the default port for ZooKeeper is &lt;code class=&quot;highlighter-rouge&quot;&gt;2181&lt;/code&gt;. Remember the hostname of
-the node where ZooKeeper is running, referred to as &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;zk-dns-name&amp;gt;&lt;/code&gt; later.&lt;/p&gt;
-
-&lt;h2 id=&quot;running-a-single-node&quot;&gt;Running a single node&lt;/h2&gt;
-
-&lt;h3 id=&quot;configure-accumulo&quot;&gt;Configure Accumulo&lt;/h3&gt;
-
-&lt;p&gt;To run on a single node, you don’t need to run HDFS. Accumulo can use the local
-filesystem as a volume instead. By default, it uses &lt;code class=&quot;highlighter-rouge&quot;&gt;/tmp/accumulo&lt;/code&gt;. Let’s
-change that to something which will survive a reboot:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vim /etc/accumulo/accumulo-site.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Change the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;instance.volumes&lt;/code&gt; property from &lt;code class=&quot;highlighter-rouge&quot;&gt;file:///tmp/accumulo&lt;/code&gt;
-to &lt;code class=&quot;highlighter-rouge&quot;&gt;file:///var/tmp/accumulo&lt;/code&gt; in the configuration file (or another preferred
-location).&lt;/p&gt;
-
-&lt;p&gt;While you are editing the Accumulo configuration file, you should also change
-the default &lt;code class=&quot;highlighter-rouge&quot;&gt;instance.secret&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;DEFAULT&lt;/code&gt; to something else. You can also
-change the credentials used by the &lt;code class=&quot;highlighter-rouge&quot;&gt;tracer&lt;/code&gt; service now, too. If you use the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;root&lt;/code&gt; user, you’ll have to set its password to the same one you’ll use later
-when you initialize Accumulo. If you use another user name, you’ll have to
-create that user later.&lt;/p&gt;
-
-&lt;h3 id=&quot;configure-hadoop-client&quot;&gt;Configure Hadoop client&lt;/h3&gt;
-
-&lt;p&gt;Hadoop’s default local filesystem handler isn’t very good at ensuring files are
-written to disk when services are stopped. So, let’s use a better filesystem
-implementation for &lt;code class=&quot;highlighter-rouge&quot;&gt;file://&lt;/code&gt; locations. This implementation may not be as
-robust as a full HDFS instance, but it’s more reliable than the default. Even
-though you’re not going to be running HDFS, the Hadoop client code used in
-Accumulo can still be configured by modifying Hadoop’s configuration file:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vim /etc/hadoop/core-site.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Add a new property:&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.file.impl&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.hadoop.fs.RawLocalFileSystem&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;initialize-accumulo&quot;&gt;Initialize Accumulo&lt;/h3&gt;
-
-&lt;p&gt;Now, initialize Accumulo. You’ll need to do this as the &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; user,
-because the Accumulo services run as the &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; user. This user is created
-automatically by the RPMs if it doesn’t exist when the RPMs are installed. If
-you already have a user and/or group by this name, it will probably not be a
-problem, but be aware that this user will have permissions for the server
-configuration files. To initialize Accumulo as a specific user, use &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo -u&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; accumulo accumulo init
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;As expected, this command will fail if ZooKeeper is not running, or if the
-destination volume (&lt;code class=&quot;highlighter-rouge&quot;&gt;file:///var/tmp/accumulo&lt;/code&gt;) already exists.&lt;/p&gt;
-
-&lt;h3 id=&quot;start-accumulo-services&quot;&gt;Start Accumulo services&lt;/h3&gt;
-
-&lt;p&gt;Now that Accumulo is initialized, you can start its services:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start accumulo-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;master,tserver,gc,tracer,monitor&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Enable the commands to start at boot:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;accumulo-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;master,tserver,gc,tracer,monitor&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;running-multiple-nodes&quot;&gt;Running multiple nodes&lt;/h2&gt;
-
-&lt;h3 id=&quot;amazon-ec2-setup&quot;&gt;Amazon EC2 setup&lt;/h3&gt;
-
-&lt;p&gt;For a multi-node setup, the authors tested these instructions with a Fedora 25
-Cloud AMI on Amazon EC2 with the following characteristics:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;us-east-1&lt;/code&gt; availability zone&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ami-e5757bf2&lt;/code&gt; (latest in &lt;code class=&quot;highlighter-rouge&quot;&gt;us-east-1&lt;/code&gt; at time of writing)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HVM&lt;/code&gt; virtualization type&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gp2&lt;/code&gt; disk type&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;64GB EBS&lt;/code&gt; root volume (no additional storage)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;m4.large&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;m4.xlarge&lt;/code&gt; instance types (tested on both)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt; nodes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For this setup, you should have a name service configured properly. For
-convenience, we used the EC2 provided internal DNS, with internal IP addresses.
-Make sure the nodes can communicate with each other using these names. If
-you’re using EC2, this means making sure they are in the same security group,
-and the security group has an inbound rule for “All traffic” with the source
-set to itself (&lt;code class=&quot;highlighter-rouge&quot;&gt;sg-xxxxxxxx&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;The default user is &lt;code class=&quot;highlighter-rouge&quot;&gt;fedora&lt;/code&gt; for the Fedora Cloud AMIs. For the best
-experience, don’t forget to make sure they are fully up-to-date (&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo dnf
---refresh upgrade&lt;/code&gt;).&lt;/p&gt;
-
-&lt;h3 id=&quot;configure-and-run-hadoop&quot;&gt;Configure and run Hadoop&lt;/h3&gt;
-
-&lt;p&gt;Configuring HDFS is the primary difference between the single and multi-node
-setup. For both Hadoop and Accumulo, you can edit the configuration files on
-one machine, and copy them to the others.&lt;/p&gt;
-
-&lt;p&gt;Pick a server to be the NameNode and identify its DNS name,
-(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;namenode-dns-name&amp;gt;&lt;/code&gt;). Edit Hadoop’s configuration to set the default
-filesystem name to this location:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vim /etc/hadoop/core-site.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Set the value for the property &lt;code class=&quot;highlighter-rouge&quot;&gt;fs.default.name&lt;/code&gt; to
-&lt;code class=&quot;highlighter-rouge&quot;&gt;hdfs://&amp;lt;namenode-dns-name&amp;gt;:8020&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Distribute copies of the changed configuration files to each node.&lt;/p&gt;
-
-&lt;p&gt;Now, format the NameNode. You’ll need to do this as the &lt;code class=&quot;highlighter-rouge&quot;&gt;hdfs&lt;/code&gt; user on the
-NameNode instance:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hdfs hdfs namenode &lt;span class=&quot;nt&quot;&gt;-format&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On the NameNode, start the NameNode service and enable it on reboot:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start hadoop-namenode.service
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;hadoop-namenode.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On each DataNode, start the DataNode service:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start hadoop-datanode.service
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;hadoop-datanode.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;configure-and-run-accumulo&quot;&gt;Configure and run Accumulo&lt;/h3&gt;
-
-&lt;p&gt;Update Accumulo’s configuration to use this HDFS filesystem:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vim /etc/accumulo/accumulo-site.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Change the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;instance.volumes&lt;/code&gt; to
-&lt;code class=&quot;highlighter-rouge&quot;&gt;hdfs://&amp;lt;namenode-dns-name&amp;gt;:8020/accumulo&lt;/code&gt; in the configuration file. Don’t
-forget to also change the default &lt;code class=&quot;highlighter-rouge&quot;&gt;instance.secret&lt;/code&gt; and the trace user’s
-credentials, if necessary. Also, since you will have multiple nodes, you cannot
-use &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:2181&lt;/code&gt; for ZooKeeper, so set &lt;code class=&quot;highlighter-rouge&quot;&gt;instance.zookeeper.host&lt;/code&gt; to
-&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;zk-dns-name&amp;gt;:2181&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Distribute copies of the changed configuration files to each node.&lt;/p&gt;
-
-&lt;p&gt;With HDFS now running, make sure Accumulo has permission to create its
-directory in HDFS, and initialize Accumulo:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hdfs hdfs dfs &lt;span class=&quot;nt&quot;&gt;-chmod&lt;/span&gt; 777 /
-&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; accumulo accumulo init
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After Accumulo has created its directory structure, you can change the
-permissions for the root back to what they were:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hdfs hdfs dfs &lt;span class=&quot;nt&quot;&gt;-chmod&lt;/span&gt; 755 /
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;Note: we only choose to do the above because this is a developer/testing
-environment. Temporarily changing ownership of HDFS is not recommended for
-the root of HDFS.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Now, you can start Accumulo.&lt;/p&gt;
-
-&lt;p&gt;On the NameNode, start all the Accumulo services and enable on reboot:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start accumulo-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;master,tserver,gc,tracer,monitor&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;.service
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;accumulo-&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;master,tserver,gc,tracer,monitor&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On each DataNode, start just the &lt;code class=&quot;highlighter-rouge&quot;&gt;tserver&lt;/code&gt; and enable it on reboot:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start accumulo-tserver.service
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;accumulo-tserver.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;watching-and-using-accumulo&quot;&gt;Watching and using Accumulo&lt;/h2&gt;
-
-&lt;h3 id=&quot;run-the-shell&quot;&gt;Run the shell&lt;/h3&gt;
-
-&lt;p&gt;Run a shell as Accumulo’s root user (the instance name and root password are
-the ones you selected during the initialize step above:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;accumulo shell &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; root &lt;span class=&quot;nt&quot;&gt;-zh&lt;/span&gt; &amp;lt;zk-dns-name&amp;gt;:2181 &lt;span class=&quot;nt&quot;&gt;-zi&lt;/span&gt; &amp;lt;instanceName&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;view-the-monitor-pages&quot;&gt;View the monitor pages&lt;/h3&gt;
-
-&lt;p&gt;You should also be able to view the NameNode monitor page and the Accumulo
-monitor pages. If you are running this in EC2, you can view these over an SSH
-tunnel using the NameNode’s public IP address. If you didn’t give this node a
-public IP address, you can allocate one in EC2 and associate it with this node:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh &lt;span class=&quot;nt&quot;&gt;-L50070&lt;/span&gt;:localhost:50070 &lt;span class=&quot;nt&quot;&gt;-L50095&lt;/span&gt;:localhost:50095 &amp;lt;user&amp;gt;@&amp;lt;host&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Replace &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;user&amp;gt;&lt;/code&gt; with your username (probably &lt;code class=&quot;highlighter-rouge&quot;&gt;fedora&lt;/code&gt; if using the Fedora
-AMI), and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;host&amp;gt;&lt;/code&gt; with the public IP or hostname for your EC2 instance. Now,
-in your local browser, you should be able to navigate to these addresses in
-your localhost: &lt;a href=&quot;http://localhost:50070&quot;&gt;Hadoop monitor (http://localhost:50070)&lt;/a&gt; and &lt;a href=&quot;http://localhost:50095&quot;&gt;Accumulo
-monitor (http://localhost:50095)&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;debugging-commands&quot;&gt;Debugging commands&lt;/h2&gt;
-
-&lt;p&gt;Check the status of a service:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl status &amp;lt;ServiceName&amp;gt;.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Check running Java processes:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;jps &lt;span class=&quot;nt&quot;&gt;-ml&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Check the system logs for a specific service within the last 10 minutes:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;journalctl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &amp;lt;ServiceName&amp;gt; &lt;span class=&quot;nt&quot;&gt;--since&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'10 minutes ago'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Check listening ports:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;netstat &lt;span class=&quot;nt&quot;&gt;-tlnp&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Check DNS name for a given IP address:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;getent hosts &amp;lt;ipaddress&amp;gt; &lt;span class=&quot;c&quot;&gt;# OR&lt;/span&gt;
-hostname &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Perform forward and reverse DNS lookups:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dnf install bind-utils
-dig +short &amp;lt;hostname&amp;gt;     &lt;span class=&quot;c&quot;&gt;# forward DNS lookup&lt;/span&gt;
-dig +short &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; &amp;lt;ipaddress&amp;gt; &lt;span class=&quot;c&quot;&gt;# reverse DNS lookup&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Find the instance ID for your instance name:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;zkCli.sh &lt;span class=&quot;nt&quot;&gt;-server&lt;/span&gt; &amp;lt;host&amp;gt;:2181     &lt;span class=&quot;c&quot;&gt;# replace &amp;lt;host&amp;gt; with your ZooKeeper server DNS name&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; get /accumulo/instances/&amp;lt;name&amp;gt; &lt;span class=&quot;c&quot;&gt;# replace &amp;lt;name&amp;gt; with your instance name&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; quit
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;If the NameNode is listening on the loopback address, you’ll probably need to
-restart the service manually, as well as any Accumulo services which failed.
-This is a &lt;a href=&quot;https://bugzilla.redhat.com/show_bug.cgi?id=1406165&quot;&gt;known issue with Hadoop&lt;/a&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl restart hadoop-namenode.service
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Some helpful rpm commands:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &amp;lt;installed-package-name&amp;gt;              &lt;span class=&quot;c&quot;&gt;# to see info about an installed package&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &amp;lt;rpm-file-name&amp;gt;                    &lt;span class=&quot;c&quot;&gt;# to see info about an rpm file&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--provides&lt;/span&gt; &amp;lt;installed-package-name&amp;gt;      &lt;span class=&quot;c&quot;&gt;# see what a package provides&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--requires&lt;/span&gt; &amp;lt;installed-package-name&amp;gt;      &lt;span class=&quot;c&quot;&gt;# see what a package requires&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &amp;lt;installed-package-name&amp;gt;              &lt;span class=&quot;c&quot;&gt;# list package files&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--whatprovides&lt;/span&gt; &amp;lt;file&amp;gt;                    &lt;span class=&quot;c&quot;&gt;# find rpm which owns &amp;lt;file&amp;gt;&lt;/span&gt;
-rpm &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--whatrequires&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'mvn(groupId:artifactId)'&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# find rpm which requires maven coords&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;helping-out&quot;&gt;Helping out&lt;/h2&gt;
-
-&lt;p&gt;Feel free to get involved with the &lt;a href=&quot;https://fedoraproject.org/wiki/Join_the_package_collection_maintainers&quot;&gt;Fedora&lt;/a&gt; or &lt;a href=&quot;https://fedoraproject.org/wiki/EPEL&quot;&gt;Fedora EPEL&lt;/a&gt;
-(for RHEL/CentOS users) packaging. Contact the Fedora &lt;a href=&quot;https://admin.fedoraproject.org/pkgdb/package/rpms/accumulo/&quot;&gt;maintainers&lt;/a&gt; (user &lt;code class=&quot;highlighter-rouge&quot;&gt;at&lt;/code&gt;
-fedoraproject &lt;code class=&quot;highlighter-rouge&quot;&gt;dot&lt;/code&gt; org) for the Accumulo packages to see how you can help
-patching bugs, adapting the upstream packages to the Fedora packaging
-standards, testing updates, maintaining dependency packages, and more.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 19 Dec 2016 00:00:00 -0500</pubDate>
-        <link>https://accumulo.apache.org/blog/2016/12/19/running-on-fedora-25.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2016/12/19/running-on-fedora-25.html</guid>
-        
-        
-        <category>blog</category>
         
       </item>
     
