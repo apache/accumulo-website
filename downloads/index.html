@@ -154,7 +154,7 @@
 * This function takes a valid URL string as an argument, and uses that URL string
 * as the event label.
 */
-var gaCallback = function(event) {
+var gtagCallback = function(event) {
   var hrefUrl = event.target.getAttribute('href')
   if (event.ctrlKey || event.shiftKey || event.metaKey || event.which == 2) {
     var newWin = true;}
@@ -162,18 +162,27 @@ var gaCallback = function(event) {
   // $(this) != this
   var url = window.location.protocol + "//accumulo.apache.org" + $(this).attr("id")
   if (newWin) {
-    ga('send', 'event', 'outbound', 'click', url, {'nonInteraction': 1});
+    gtag('event', 'click', {
+      'event_category': 'outbound',
+      'event_label': url,
+      'transport_type': 'beacon'
+    });
     return true;
   } else {
-    ga('send', 'event', 'outbound', 'click', url, {'hitCallback':
-    function () {window.location.href = hrefUrl;}}, {'nonInteraction': 1});
+    gtag('event', 'click', {
+      'event_category': 'outbound',
+      'event_label': url,
+      'transport_type': 'beacon',
+      'event_callback': function(){ window.location.href = hrefUrl; }
+    });
     return false;
   }
 };
 
 $( document ).ready(function() {
-  if (ga.hasOwnProperty('loaded') && ga.loaded === true) {
-    $('.download_external').click(gaCallback);
+  // check if gtag is loaded
+  if (typeof gtag === 'function') {
+    $('.download_external').click(gtagCallback);
   }
 });
 
