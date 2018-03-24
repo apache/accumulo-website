@@ -100,7 +100,7 @@ Below are additional resources for configuring Metrics2:
 * [Javadoc page for Metrics2][metrics2-javadoc]
 * [Blog post][grafana-post] about configuring Grafana/InfluxDB to view Accumulo metrics2
 
-[grafana-post]: /blog/2018/03/22/view-metrics-in-grafana/
+[grafana-post]: {{ site.baseurl }}/blog/2018/03/22/view-metrics-in-grafana/
 [metrics2-javadoc]: https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html
 [tracing]: {{page.docs_baseurl}}/administration/tracing
 [monitor.ssl.keyStore]: {{ page.docs_baseurl }}/administration/properties#monitor_ssl_keyStore
