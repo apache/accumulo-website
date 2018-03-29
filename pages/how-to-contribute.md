@@ -33,7 +33,7 @@ issue, please do the following :
  * Open a new GitHub issue or pull request.
  * Link the GitHub issue to the JIRA issue.
  * Link the JIRA issue to the GitHub issue.
- * Close the JIRA issue.
+ * Close the JIRA issue as a duplicate.
 
 Eventually JIRA will be transitioned to a read-only state for reference.  For
 finding issues to work, there may still be 
