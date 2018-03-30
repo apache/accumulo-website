@@ -35,6 +35,7 @@ permalink: /people/
 | mjwall        | Michael Wall                                      | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | mmiller       | [Michael Miller](https://github.com/milleruntime) | [Centroid, LLC][CENTROID]              | [ET][ET] |
 | mwalch        | [Mike Walch](https://github.com/mikewalch)        | [Peterson Technologies][PETERSON]      | [ET][ET] |
+| ngf           | [Nick Felts](https://github.com/pircdef)          | [Praxis Engineering][PRAXIS]           | [ET][ET] |
 | phrocker      | Marc Parisi                                       | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | rweeks        | Russ Weeks                                        | [PHEMI][PHEMI]                         | [PT][PT] |
 | shickey       | Sean Hickey                                       |                                        | [PT][PT] |
@@ -108,7 +109,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Mike Fagan          | [Arcus Research][ARCUS]                                           | [MT][MT]              |
 | Morgan Haskel       |                                                                   |                       |
 | Nguessan Kouame     |                                                                   |                       |
-| Nick Felts          | [Praxis Engineering][PRAXIS]                                      | [ET][ET]              |
 | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Philip Young        |                                                                   |                       |
