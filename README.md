@@ -6,7 +6,7 @@ use [Bundler] to install the necessary dependencies to run and build the website
 ## Install Bundler and dependencies
 
 Ruby is required to use Bundler so first make sure you have Ruby on your machine.  If you are using
-an OS packaged version of Ruby, you will have to also install the ruby-dev (Ubuntu) or 
+an OS packaged version of Ruby, you will have to also install the ruby-dev (Ubuntu) or
 ruby-devel (Fedora) package as well.
 
 With Ruby installed on your machine, you can install [Bundler] using the command below:
@@ -38,12 +38,34 @@ You can just build static HTML files which are viewable in `_config.yml`:
 ## Update the production website
 
 For Apache Accumulo committers, the `asf-site` branch needs to be updated with the generated
-HTML.
+HTML.  Changes to this branch are automagically mirrored to the website.
 
 This can be done easily by invoking the post-commit hook (either by hand, or automatically via configuring
-Git to invoke the post-commit hook).
+Git to invoke the post-commit hook).  The commands below are a guide for committers who wish to publish
+the web site.
 
-`./_devtools/git-hooks/post-commit`
+```bash
+# ensure local asf-site branch is up to date
+git checkout asf-site
+git pull upstream asf-site
+
+# switch to master branch, update it, and build new site
+git checkout master
+git pull upstream master
+./_devtools/git-hooks/post-commit
+
+# switch to asf-site, look at the commit created by post-commit script, and push it if ok
+git checkout asf-site
+git log -p
+git push upstream asf-site
+```
+In the commands above `upstream` is :
+
+```bash
+$ git remote -v | grep upstream
+upstream	https://gitbox.apache.org/repos/asf/accumulo-website/ (fetch)
+upstream	https://gitbox.apache.org/repos/asf/accumulo-website/ (push)
+```
 
 To automatically run this post-commit hook in your local repository, copy
 the given file into your `.git/hook` directory:
