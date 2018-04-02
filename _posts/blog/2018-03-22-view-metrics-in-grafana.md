@@ -80,10 +80,10 @@ Metrics from Accumulo will be immediately viewable in Grafana at [http://localho
     sending data, you may need to refresh the dashboard page in the browser to start viewing metrics.
 
 [Uno]: https://github.com/astralway/uno
-[metrics2]: /docs/2.0/administration/monitoring-metrics#hadoop-metrics2
+[metrics2]: {{ site.baseurl }}/docs/2.0/administration/monitoring-metrics#hadoop-metrics2
 [Graphite]: https://graphiteapp.org/
 [Ganglia]: http://ganglia.sourceforge.net/
-[monitor]: http://0.0.0.0:4000/features/#screenshots
+[monitor]: {{ site.baseurl }}/features/#screenshots
 [Grafana]: http://grafana.org/
 [InfluxDB]: https://influxdb.com/
 [dashboard]: https://raw.githubusercontent.com/astralway/uno/master/conf/grafana/accumulo-dashboard.json
