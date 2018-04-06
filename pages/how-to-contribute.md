@@ -101,7 +101,7 @@ viewed by clicking on `contribute` in the Links column below.
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
 * Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.
 * Use 2 space indents and never use tabs!
-* Use 160-column line width for Java code and Javadoc.
+* Use 100-column line width for Java code and Javadoc.
 * Use a new line with single statement if/else blocks.
 * Do not use Author Tags. The code is developed and owned by the community.
 

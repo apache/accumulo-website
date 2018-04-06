@@ -520,7 +520,7 @@ Use of [Review Board][rb] has slowly diminished and been gradually replaced by G
 | **License Header**              | Always add the current ASF license header as described in [ASF Source Header][srcheaders].            |
 | **Trailing Whitespaces**        | Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this. |
 | **Indentation**                 | Use 2 space indents and never use tabs!                                                               |
-| **Line Wrapping**               | Use 160-column line width for Java code and Javadoc.                                                  |
+| **Line Wrapping**               | Use 100-column line width for Java code and Javadoc.                                                  |
 | **Control Structure New Lines** | Use a new line with single statement if/else blocks.                                                  |
 | **Author Tags**                 | Do not use Author Tags. The code is developed and owned by the community.
 
