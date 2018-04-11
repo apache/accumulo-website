@@ -30,6 +30,7 @@ permalink: /people/
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
 | ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Peterson Technologies][PETERSON]      | [ET][ET] |
+| lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | medined       | David Medinets                                    |                                        |          |
 | mjwall        | Michael Wall                                      | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
@@ -95,7 +96,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
-| Luis Tavarez        |                                                                   | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Matt Dailey         |                                                                   |                       |
