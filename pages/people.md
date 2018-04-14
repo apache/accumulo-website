@@ -52,6 +52,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | name                | organization                                                      | timezone              |
 |---------------------|-------------------------------------------------------------------|-----------------------|
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
+| Adam Lerman         | [Applied Technology Group][ATG]                                   | [ET][ET]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
