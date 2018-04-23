@@ -168,8 +168,6 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [EXAMPLES_19]: {{ site.baseurl }}/1.9/examples "1.9 examples"
 
 [CHANGES_17]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12339577 "1.7.4 CHANGES"
-[CHANGES_19_JIRA]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12339245 "1.9.0 CHANGES (JIRA)"
-[CHANGES_19_GH]: https://github.com/apache/accumulo/issues?q=label%3Av1.9.0 "1.9.0 CHANGES (GitHub)"
 
 [REL_NOTES_17]: {{ site.baseurl }}/release/accumulo-1.7.4/ "1.7.4 Release Notes"
 [REL_NOTES_19]: {{ site.baseurl }}/release/accumulo-1.9.0/ "1.9.0 Release Notes"
