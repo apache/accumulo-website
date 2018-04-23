@@ -92,19 +92,19 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 ## Current Releases
 
-### 1.8.1 **latest**{: .label .label-primary }
+### 1.9.0 **latest**{: .label .label-primary }
 
-The most recent Apache Accumulo&reg; release is version 1.8.1. See the [release notes][REL_NOTES_18] and [CHANGES][CHANGES_18].
+The most recent Apache Accumulo&reg; release is version 1.9.0. See the [release notes][REL_NOTES_19].
 
 {: .table }
-| **Generic Binaries** | [accumulo-1.8.1-bin.tar.gz][BIN_18] | [ASC][ASC_BIN_18] | [SHA][SHA_BIN_18] |
-| **Source**           | [accumulo-1.8.1-src.tar.gz][SRC_18] | [ASC][ASC_SRC_18] | [SHA][SHA_SRC_18] |
+| **Generic Binaries** | [accumulo-1.9.0-bin.tar.gz][BIN_19] | [ASC][ASC_BIN_19] | [SHA][SHA_BIN_19] |
+| **Source**           | [accumulo-1.9.0-src.tar.gz][SRC_19] | [ASC][ASC_SRC_19] | [SHA][SHA_SRC_19] |
 
-#### 1.8 Documentation
-* [README][README_18]
-* [HTML User Manual][MANUAL_HTML_18]
-* [Examples][EXAMPLES_18]
-* [Javadoc][JAVADOC_18]
+#### 1.9 Documentation
+* [README][README_19]
+* [HTML User Manual][MANUAL_HTML_19]
+* [Examples][EXAMPLES_19]
+* [Javadoc][JAVADOC_19]
 
 
 ### 1.7.4
@@ -136,40 +136,39 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [SHA_BIN_17]: https://www.apache.org/dist/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz.sha512
 [SHA_SRC_17]: https://www.apache.org/dist/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz.sha512
 
-[ASC_BIN_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz.asc
-[ASC_SRC_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz.asc
-[SHA_BIN_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz.sha512
-[SHA_SRC_18]: https://www.apache.org/dist/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz.sha512
+[ASC_BIN_19]: https://www.apache.org/dist/accumulo/1.9.0/accumulo-1.9.0-bin.tar.gz.asc
+[ASC_SRC_19]: https://www.apache.org/dist/accumulo/1.9.0/accumulo-1.9.0-src.tar.gz.asc
+[SHA_BIN_19]: https://www.apache.org/dist/accumulo/1.9.0/accumulo-1.9.0-bin.tar.gz.sha512
+[SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.0/accumulo-1.9.0-src.tar.gz.sha512
 
 [BIN_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz" id="/downloads/accumulo-1.7.4-bin.tar.gz" }
 [SRC_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz" id="/downloads/accumulo-1.7.4-src.tar.gz" }
 
-[BIN_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz
-{: .download_external link-suffix="/accumulo/1.8.1/accumulo-1.8.1-bin.tar.gz" id="/downloads/accumulo-1.8.1-bin.tar.gz" }
-[SRC_18]: https://www.apache.org/dyn/closer.lua/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz
-{: .download_external link-suffix="/accumulo/1.8.1/accumulo-1.8.1-src.tar.gz" id="/downloads/accumulo-1.8.1-src.tar.gz" }
+[BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.0/accumulo-1.9.0-bin.tar.gz
+{: .download_external link-suffix="/accumulo/1.9.0/accumulo-1.9.0-bin.tar.gz" id="/downloads/accumulo-1.9.0-bin.tar.gz" }
+[SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.0/accumulo-1.9.0-src.tar.gz
+{: .download_external link-suffix="/accumulo/1.9.0/accumulo-1.9.0-src.tar.gz" id="/downloads/accumulo-1.9.0-src.tar.gz" }
 
 [README_17]: https://github.com/apache/accumulo/blob/rel/1.7.4/README.md
 {: .download_external id="/1.7/README" }
-[README_18]: https://github.com/apache/accumulo/blob/rel/1.8.1/README.md
-{: .download_external id="/1.8/README" }
+[README_19]: https://github.com/apache/accumulo/blob/rel/1.9.0/README.md
+{: .download_external id="/1.9/README" }
 
 [JAVADOC_17]: {{ site.baseurl }}/1.7/apidocs/
 {: .download_external id="/1.7/apidocs/" }
-[JAVADOC_18]: {{ site.baseurl }}/1.8/apidocs/
-{: .download_external id="/1.8/apidocs/" }
+[JAVADOC_19]: {{ site.baseurl }}/1.9/apidocs/
+{: .download_external id="/1.9/apidocs/" }
 
 [MANUAL_HTML_17]: {{ site.baseurl }}/1.7/accumulo_user_manual "1.7 user manual"
-[MANUAL_HTML_18]: {{ site.baseurl }}/1.8/accumulo_user_manual "1.8 user manual"
+[MANUAL_HTML_19]: {{ site.baseurl }}/1.9/accumulo_user_manual "1.9 user manual"
 
 [EXAMPLES_17]: {{ site.baseurl }}/1.7/examples "1.7 examples"
-[EXAMPLES_18]: {{ site.baseurl }}/1.8/examples "1.8 examples"
+[EXAMPLES_19]: {{ site.baseurl }}/1.9/examples "1.9 examples"
 
 [CHANGES_17]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12339577 "1.7.4 CHANGES"
-[CHANGES_18]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12335830 "1.8.1 CHANGES"
 
 [REL_NOTES_17]: {{ site.baseurl }}/release/accumulo-1.7.4/ "1.7.4 Release Notes"
-[REL_NOTES_18]: {{ site.baseurl }}/release/accumulo-1.8.1/ "1.8.1 Release Notes"
+[REL_NOTES_19]: {{ site.baseurl }}/release/accumulo-1.9.0/ "1.9.0 Release Notes"
 

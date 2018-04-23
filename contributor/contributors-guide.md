@@ -62,12 +62,6 @@ Accumulo [tracks issues][jiraloc] with [JIRA][jira]. Prospective code contributo
 
 Accumulo uses [Jenkins][jenkins] and [TravisCI](https://travis-ci.org/apache/accumulo) for automatic builds and continuous integration.
 
-<img src="https://builds.apache.org/job/Accumulo-Master/lastBuild/buildStatus" style="height: 1.1em"> [Master][masterbuild]
-
-<img src="https://builds.apache.org/job/Accumulo-1.8/lastBuild/buildStatus" style="height: 1.1em"> [1.8 Branch][18build]
-
-<img src="https://builds.apache.org/job/Accumulo-1.7/lastBuild/buildStatus" style="height: 1.1em"> [1.7 Branch][17build]
-
 ## Create a Ticket for New Bugs or Feature
 
 If you run into a bug or think there is something that would benefit the project, we encourage you to file an issue at the [Apache Accumulo JIRA][jiraloc] page. Regardless of whether you have the time to provide the fix or implementation yourself, this will be helpful to the project.
@@ -263,7 +257,7 @@ The following steps, originally derived from Apache kafka's
 ### Contributors
 
 To be specific, let's consider a contributor wanting to work on a fix for the
-Jira issue ACCUMULO-12345 that affects the 1.8 release.
+Jira issue ACCUMULO-12345 that affects the 1.9 release.
 
 1. Ensure you configured Git with your information
 
@@ -279,9 +273,9 @@ Jira issue ACCUMULO-12345 that affects the 1.8 release.
     `git fetch && git fetch --tags`
 
 4. For the given issue you intend to work on, choose the 'lowest' fixVersion
-   and create a branch for yourself to work in. This example is against the next release of 1.8
+   and create a branch for yourself to work in. This example is against the next release of 1.9
 
-    `git checkout -b ACCUMULO-12345-my-work origin/1.8`
+    `git checkout -b ACCUMULO-12345-my-work origin/1.9`
 
 5. Make commits as you see fit as you fix the issue, referencing the issue name
    in the commit message:
@@ -312,12 +306,12 @@ Jira issue ACCUMULO-12345 that affects the 1.8 release.
    work, or before you create your patch, rebase your branch against the remote
    to lift your changes to the top of your branch. The branch specified here should be the same one you used in step 4.
 
-    `git pull --rebase origin 1.8`
+    `git pull --rebase origin 1.9`
 
 7. At this point, you can create a patch file from the upstream branch to
    attach to the ACCUMULO-12345 Jira issue. The branch specified here should be the same one you used in step 4.
 
-    `git format-patch --stdout origin/1.8 > ACCUMULO-12345.patch`
+    `git format-patch --stdout origin/1.9 > ACCUMULO-12345.patch`
 
 An alternative to creating a patch is submitting a request to pull your changes
 from some repository, e.g. GitHub. Please include the repository and branch
@@ -370,7 +364,7 @@ contributors:
 
 1. Checkout the branch for the major version which the patch is intended:
 
-    `git checkout 1.8`
+    `git checkout 1.9`
 
 2. Verify the changes introduced by the patch:
 
@@ -386,11 +380,11 @@ contributors:
 
 5. When finished, push the changes:
 
-    `git push origin 1.8`
+    `git push origin 1.9`
 
 6. Merge where appropriate:
 
-    `git checkout master && git merge 1.8`
+    `git checkout master && git merge 1.9`
 
 #### Submit Contribution via Pull-Request
 
@@ -621,10 +615,7 @@ For details about governance policies for the Accumulo project view the followin
 [jiraloc]: https://issues.apache.org/jira/browse/ACCUMULO
 [jira]: https://www.atlassian.com/software/jira
 [newbies]: https://s.apache.org/newbie_accumulo_tickets
-[Jenkins]: https://builds.apache.org/view/A/view/Accumulo
-[masterbuild]: https://builds.apache.org/job/Accumulo-Master
-[18build]: https://builds.apache.org/job/Accumulo-1.8
-[17build]: https://builds.apache.org/job/Accumulo-1.7
+[jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [github-help]: https://help.github.com/
 [ssh]: https://help.github.com/articles/connecting-to-github-with-ssh/
 [forking]: https://help.github.com/articles/fork-a-repo/
