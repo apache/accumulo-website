@@ -6,10 +6,136 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 23 Apr 2018 14:17:16 -0400</pubDate>
-    <lastBuildDate>Mon, 23 Apr 2018 14:17:16 -0400</lastBuildDate>
+    <pubDate>Mon, 23 Apr 2018 17:01:19 -0400</pubDate>
+    <lastBuildDate>Mon, 23 Apr 2018 17:01:19 -0400</lastBuildDate>
     <generator>Jekyll v3.7.3</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 1.9.0</title>
+        <description>&lt;p&gt;Apache Accumulo 1.9.0 is a minor release on the 1.x branch. This release would
+be considered a maintainence release on 1.8 branch except there are some API
+additions which resulted in a new minor release. Users of 1.8.x versions of
+Accumulo should upgrade to 1.9.0. There will be no more bug fix releases on the
+1.8 branch. This release contains changes for nearly a hundred issues. See
+&lt;a href=&quot;https://github.com/apache/accumulo/issues?q=label%3Av1.9.0&quot;&gt;GitHub&lt;/a&gt; and &lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;amp;version=12339245&quot;&gt;JIRA&lt;/a&gt; for a list of changes.&lt;/p&gt;
+
+&lt;p&gt;Below are resources for this release:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.9.0 API&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by
+step instructions for running example code.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;deprecated-clientconfiguration-api-using-commons-config&quot;&gt;Deprecated ClientConfiguration API using commons config&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4611&quot;&gt;ACCUMULO-4611&lt;/a&gt;, public API in ClientConfiguration using commons config
+types was deprecated to better support Hadoop 3 in the future. New methods were
+added to replace these methods which cause this release to be a 1.9.0 release.
+These changes allow removal of commons config from Accumulo’s API in 2.0.0.  If
+using ClientConfiguration, then switching from existing constructors to the new
+static methods &lt;a href=&quot;/1.9/apidocs/org/apache/accumulo/core/client/ClientConfiguration.html#create--&quot;&gt;create()&lt;/a&gt;, &lt;a href=&quot;/1.9/apidocs/org/apache/accumulo/core/client/ClientConfiguration.html#fromFile-java.io.File-&quot;&gt;fromFile()&lt;/a&gt;, or &lt;a href=&quot;/1.9/apidocs/org/apache/accumulo/core/client/ClientConfiguration.html#fromMap-java.util.Map-&quot;&gt;fromMap()&lt;/a&gt; will ensure your code
+works in 2.0.0.&lt;/p&gt;
+
+&lt;h3 id=&quot;performance-improvements&quot;&gt;Performance Improvements&lt;/h3&gt;
+
+&lt;p&gt;Accumulo was profiled while running lots of concurrent small scans. During this
+excercise these performance bugs were found and fixed: &lt;a href=&quot;https://github.com/apache/accumulo/issues/379&quot;&gt;#379&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4778&quot;&gt;ACCUMULO-4778&lt;/a&gt;,
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4779&quot;&gt;ACCUMULO-4779&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4781&quot;&gt;ACCUMULO-4781&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4782&quot;&gt;ACCUMULO-4782&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4788&quot;&gt;ACCUMULO-4788&lt;/a&gt;,
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4789&quot;&gt;ACCUMULO-4789&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4790&quot;&gt;ACCUMULO-4790&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4797&quot;&gt;ACCUMULO-4797&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4798&quot;&gt;ACCUMULO-4798&lt;/a&gt;,
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4799&quot;&gt;ACCUMULO-4799&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4800&quot;&gt;ACCUMULO-4800&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4801&quot;&gt;ACCUMULO-4801&lt;/a&gt;, &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4805&quot;&gt;ACCUMULO-4805&lt;/a&gt;, and
+&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4809&quot;&gt;ACCUMULO-4809&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Below are other significant performance improvements in 1.9.0:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4636&quot;&gt;ACCUMULO-4636&lt;/a&gt; - System iterator performance improvements&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4657&quot;&gt;ACCUMULO-4657&lt;/a&gt; - Avoided expensive BulkImport logging&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4667&quot;&gt;ACCUMULO-4667&lt;/a&gt; - Avoided unnecessary recomputation in LocalityGroupIterator&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/410&quot;&gt;#410&lt;/a&gt; - Fixed inefficient auths check&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fixed-upgrade-process-to-set-version-on-all-volumes&quot;&gt;Fixed upgrade process to set version on all volumes&lt;/h3&gt;
+
+&lt;p&gt;During upgrades, only one volume in a multiple HDFS volume was updated with the
+correct version. This would cause all tablet servers to complain and ultimately
+fail. &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4686&quot;&gt;ACCUMULO-4686&lt;/a&gt; fixes this by setting the version on all volumes.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-accumulo-to-work-with-new-releases-of-guava&quot;&gt;Updated Accumulo to work with new releases of Guava&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4702&quot;&gt;ACCUMULO-4702&lt;/a&gt;, dependencies on Beta-annotated Guava classes and methods
+were removed. While Accumulo still includes Guava 14 in its tarball, it will
+work with newer versions of Guava in client code. It has been tested to work
+with Guava 23.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-rfile-to-prevent-very-large-blocks&quot;&gt;Updated RFile to prevent very large blocks&lt;/h3&gt;
+
+&lt;p&gt;RFiles now use windowed statistics (&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4669&quot;&gt;ACCUMULO-4669&lt;/a&gt;) to prevent very large
+blocks. In 1.8.0 a bug was introduced that caused RFile data block sizes to
+grow very large in the case where key sizes slowly increased.  This could lead
+to degraded query performance or out of memory exceptions on tablet servers.&lt;/p&gt;
+
+&lt;h3 id=&quot;allow-iterators-to-yield&quot;&gt;Allow iterators to yield&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4643&quot;&gt;ACCUMULO-4643&lt;/a&gt; added capability for an iterator to yield control in a seek
+or next call prior to finding a key/value.  Yielding avoids starvation of other
+scans when iterators take a long time to return a key/value. To use this
+feature, implement YieldingKeyValueIterator.&lt;/p&gt;
+
+&lt;h3 id=&quot;disallow-dots--in-iterator-names&quot;&gt;Disallow dots (.) in iterator names&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3389&quot;&gt;ACCUMULO-3389&lt;/a&gt;, we added a check to prevent iterators from being created by
+our API which contained the dot (.) character. In some cases, the presence of a
+dot character could be parsed incorrectly as an iterator option rather than
+part of its name. This caused unexpected problems. Iterator names are no longer
+allowed to contain dots. Any user code doing that will break with an
+IllegalArgumentException.&lt;/p&gt;
+
+&lt;h3 id=&quot;various-security-related-improvements&quot;&gt;Various security-related improvements&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/417&quot;&gt;#417&lt;/a&gt; - Make TLSv1.2 the default for TLS RPC connections&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-2806&quot;&gt;ACCUMULO-2806&lt;/a&gt; - &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt; sets the correct permissions on /accumulo
+to 700&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4587&quot;&gt;ACCUMULO-4587&lt;/a&gt; - use a newer version of JQuery (3.2.1)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4660&quot;&gt;ACCUMULO-4660&lt;/a&gt; - sanitized incoming values from HTTP parameters&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4665&quot;&gt;ACCUMULO-4665&lt;/a&gt; and &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4666&quot;&gt;ACCUMULO-4666&lt;/a&gt; - Kerberos improvements&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4676&quot;&gt;ACCUMULO-4676&lt;/a&gt; - set the HTTPOnly flags for JSESSSIONID in monitor&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;other-notable-changes&quot;&gt;Other Notable Changes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/403&quot;&gt;#403&lt;/a&gt; - Enabled more metrics reporting&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4528&quot;&gt;ACCUMULO-4528&lt;/a&gt; - Add import/export table info to docs&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4655&quot;&gt;ACCUMULO-4655&lt;/a&gt; - Added a Response Time column to the monitor&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4693&quot;&gt;ACCUMULO-4693&lt;/a&gt; - Add process name to metrics&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4721&quot;&gt;ACCUMULO-4721&lt;/a&gt; - Document rfile-info in the user manual&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.0/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
+
+&lt;p&gt;Continuous ingest, random walk, and all integration test were run against RC1.
+Randomwalk was run for 2 days with 7 walkers.  Continuous ingest was run with 9
+nodes for 24 hours followed by a successful verification.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 23 Apr 2018 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.9.0/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.0/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 1.7.4</title>
@@ -617,295 +743,6 @@ over the past years and to those involved before that during its time in the ASF
         <pubDate>Tue, 21 Mar 2017 00:00:00 -0400</pubDate>
         <link>https://accumulo.apache.org/blog/2017/03/21/happy-anniversary-accumulo.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2017/03/21/happy-anniversary-accumulo.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Security Performance Implications</title>
-        <description>
-&lt;p&gt;The purpose of this two part series was to measure the performance impact of
-various security configurations on a cluster running Apache Accumulo’s
-continuous ingest suite. The tests were performed using Amazon Web
-Services (AWS), Hortonworks Data Platform 2.4 and Accumulo 1.7. Each of
-the five different security settings in Accumulo 1.7 was tested including 
-no security, SSL, and SASL with Kerberos authentication for the three quality 
-of protection levels (auth, auth-int, auth-conf).  KDC was MIT.  HDFS was 
-configured to use Kerberos for authentication and had service level 
-authorization on. Other than that, no other security settings (HTTPS, RPC 
-protection, data transfer encryption, etc) were enabled.  Timely was a 
-separate, single node HDFS/Zookeeper/Accumulo instance.&lt;/p&gt;
-
-&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
-
-&lt;p&gt;All runs utilized the continuous ingest suite that ships with Accumulo (a
-standard method to measure performance in Accumulo).  It generates random 
-graph data and inserts it into Accumulo, creating
-a long linked list of entries.  Part 1 was run with just continuous ingest.&lt;br /&gt;
-Based on the test results, there was a measurable performance impact as each additional security configuration was put in place.&lt;/p&gt;
-
-&lt;h2 id=&quot;methodology&quot;&gt;Methodology&lt;/h2&gt;
-
-&lt;p&gt;We ran 5 tests, one for each security configuration.  Each iteration of each test inserted 2 billion entries.  Batch writers were configured with 500K max mem 
-to artificially inflate the overall write overhead. This was performed on a
-small cluster on AWS.&lt;/p&gt;
-
-&lt;p&gt;Each test used one of the following security configurations:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;No security - Default&lt;/li&gt;
-  &lt;li&gt;Two way SSL&lt;/li&gt;
-  &lt;li&gt;Kerberos/SASL with auth
-    &lt;ul&gt;
-      &lt;li&gt;auth is just Kerberos authentication between client and server.  Each end of the RPC definitively knows who the other is.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Kerberos/SASL with auth-int
-    &lt;ul&gt;
-      &lt;li&gt;Builds on auth, also providing message integrity checks of the data going across the wire. You also know that the message you received was not altered.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Kerberos/SASL with auth-conf
-    &lt;ul&gt;
-      &lt;li&gt;Builds on auth-int, also providing confidentiality of the message that was sent to prevent others from reading it (aka wire-encryption).&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For each test, five iterations were run to obtain a min, max, and median
-time elapsed at each security configuration. After each iteration,
-Hadoop, and Zookeeper processes were restarted, Accumulo tables are
-wiped clean and tables are recreated. In addition, pagecache, dentries
-and inodes are dropped by issuing a ‘3’ command on
-/proc/sys/vm/drop_caches to ensure that the OS is not caching things to disk
-that might affect the benchmark. The following sequence was performed 
-between iterations:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Bring down Accumulo&lt;/li&gt;
-  &lt;li&gt;Bring down Zookeeper&lt;/li&gt;
-  &lt;li&gt;Bring down Hadoop&lt;/li&gt;
-  &lt;li&gt;Run sync command&lt;/li&gt;
-  &lt;li&gt;Drop OS cache&lt;/li&gt;
-  &lt;li&gt;Bring up Hadoop&lt;/li&gt;
-  &lt;li&gt;Bring up Zookeeper&lt;/li&gt;
-  &lt;li&gt;Bring up Accumulo&lt;/li&gt;
-  &lt;li&gt;Drop tables&lt;/li&gt;
-  &lt;li&gt;Create tables&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;For each iteration, the results were stored, fed into &lt;a href=&quot;https://nationalsecurityagency.github.io/timely/&quot;&gt;Timely&lt;/a&gt;, and viewed with Grafana.
-Since the runs were executed sequentially, the start epochs for each run did not align.
-To mitigate, the entries for each run were inserted 
-with the same relative epoch for convenient comparison in Grafana.&lt;/p&gt;
-
-&lt;p&gt;The table configurations for Accumulo remain the same throughout the
-different iterations and security levels. The Accumulo site
-configurations differ only due to the different settings for the
-security level configurations.&lt;/p&gt;
-
-&lt;h2 id=&quot;environment&quot;&gt;Environment&lt;/h2&gt;
-
-&lt;p&gt;In order to perform the testing, a small AWS cluster was setup using 14
-hosts on EC2. Two i2.xlarge instances were used as master nodes and eight
-d2.xlarge instances were used for workers. In addition, two c4.4xlarge
-instances were used for ingesters, one m4.2xlarge instance was used for
-Timely, and one m4.xlarge instance was used for Apache Ambari. A logical
-diagram of the setup is depicted below:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/blog/201702_security/figure1.png&quot; alt=&quot;&quot; width=&quot;400px&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Figure 1 - Cluster Layout, Roles, and Instance Types on AWS.&lt;/p&gt;
-
-&lt;p&gt;The types of nodes and their function are given below:&lt;/p&gt;
-
-&lt;table id=&quot;instance_types&quot; class=&quot;table&quot;&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Node Type&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;AWS EC2 Type&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;EC2 Type Details&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Quantity&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Ingest Nodes&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;c4.4xlarge&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;16 core, 30 GB RAM&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Worker Node&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;d2.xlarge&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;4 cores, 30.5 GB RAM, 3x2T GB HD&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;8&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Master Node&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;i2.xlarge&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;4 cores, 30.5 GB RAM, 1x800GB SSD&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Admin Node&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;m4.xlarge&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;4 cores, 16 GB RAM&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Timely Node&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;m4.2xlarge&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;8 cores, 32 GB RAM&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Table 1 – AWS Instance Types, Role, Details, and Quantities&lt;/p&gt;
-
-&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
-
-&lt;p&gt;The median, max, and min of the milliseconds elapsed
-time of all iterations for each test is displayed below. The percentage change
-columns compare the Median, Max, and Min respectively from the no
-security level to each security configuration (e.g. no security Median
-vs. auth-int Median, no security Max vs. auth-int Max).&lt;/p&gt;
-
-&lt;table id=&quot;results&quot; class=&quot;table&quot;&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Security Level&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;Median&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;Standard Deviation&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;Max&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;Min&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;% Change (nosec Median vs. Median)&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;% Change (nosec Max vs. Max)&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;% Change (nosec Min vs. Min)&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;Delta from Previous Level (Median)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;no security&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;7829394&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;139340&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8143035&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;7764309&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;0.00%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;0.00%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;0.00%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;0.00%&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;ssl&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8292760&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;87012&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8464060&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8204955&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;5.92%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;3.94%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;5.68%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;5.92%&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;auth&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8859552&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;134109&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9047971&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;8657618&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;13.16%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;11.11%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;11.51%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;6.83%&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;auth-int&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9500737&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;155968&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9753424&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9282371&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;21.34%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;19.78%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;19.55%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;7.24%&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;auth-conf&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9479635&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;170823&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9776580&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;9282189&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;21.08%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;20.06%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;19.55%&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;-0.22%&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Table 2 – Summarized Time Elapsed for Each Security Level&lt;/p&gt;
-
-&lt;h2 id=&quot;plots&quot;&gt;Plots&lt;/h2&gt;
-
-&lt;p&gt;Below are some snapshots of *stats.out elements via Grafana that were inserted
-into Timely with the same relative start time.  Each graph represents a field 
-in the output generated by &lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7/test/src/main/java/org/apache/accumulo/test/continuous/ContinuousStatsCollector.java&quot;&gt;ContinuousStatsCollector&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;table_recs&quot;&gt;&lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7/core/src/main/java/org/apache/accumulo/core/master/thrift/TableInfo.java#L73&quot;&gt;TABLE_RECS&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;(Number of records in the continuous ingest table.  Down sample=1m, aggregate=avg)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/images/blog/201702_security/tableRecs.png&quot;&gt;&lt;img src=&quot;/images/blog/201702_security/tableRecs.png&quot; alt=&quot;&quot; width=&quot;800px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;total_ingest&quot;&gt;&lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7/core/src/main/java/org/apache/accumulo/core/master/thrift/TableInfo.java#L77&quot;&gt;TOTAL_INGEST&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;(Ingest rate for Accumulo instance.  Down sample=5m, aggregate=avg)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/images/blog/201702_security/totalIngest.png&quot;&gt;&lt;img src=&quot;/images/blog/201702_security/totalIngest.png&quot; alt=&quot;&quot; width=&quot;800px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;avg_filestablet&quot;&gt;&lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7/core/src/main/java/org/apache/accumulo/core/util/Stat.java#L63&quot;&gt;AVG_FILES/TABLET&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;(Average number of files per Accumulo tablet.  Down sample=1m, aggregate=avg)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/images/blog/201702_security/avgFilesTab.png&quot;&gt;&lt;img src=&quot;/images/blog/201702_security/avgFilesTab.png&quot; alt=&quot;&quot; width=&quot;800px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;accumulo_files&quot;&gt;&lt;a href=&quot;https://github.com/apache/accumulo/blob/1.7/test/src/main/java/org/apache/accumulo/test/continuous/ContinuousStatsCollector.java#L127&quot;&gt;ACCUMULO_FILES&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;(Total number of files for Accumulo.  Down sample=1m, aggregate=avg)&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/images/blog/201702_security/accumuloFiles.png&quot;&gt;&lt;img src=&quot;/images/blog/201702_security/accumuloFiles.png&quot; alt=&quot;&quot; width=&quot;800px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;As can be seen in the plots above, the different security settings have 
-relatively consistent, discernible median run characteristics.  The big
-dip in each TOTAL_INGEST coincides with a large number of major
-compactions, a rate decrease for TABLE_RECS, and a decrease in 
-AVG_FILES/TABLET.&lt;/p&gt;
-
-&lt;h2 id=&quot;final-thoughts&quot;&gt;Final Thoughts&lt;/h2&gt;
-
-&lt;p&gt;The biggest performance 
-hits to run duration median (compared to default security) were ~21% for 
-auth-int and auth-conf.  Interesting to note that SSL’s median run duration was 
-lower than all SASL configs and that auth-conf’s was lower than auth-int. 
-Initial  speculation for these oddities revolved around the 
-&lt;a href=&quot;https://github.com/m1ch1/mapkeeper/wiki/Thrift-Java-Servers-Compared&quot;&gt;Thrift server&lt;/a&gt; 
-implementations, but the Thrift differences will not explain the auth-conf/int 
-disparity since both utilize TThreadPoolServer.  It was certainly unexpected that the 
-addition of wire encryption would yield a faster median run duration.  This result 
-prompted, as a sanity check, sniffing the net traffic (in a contrived example 
-not during a timed run) in both auth-conf and auth-int to ensure that the message 
-contents were actually obfuscated in auth-conf (they were) and not obfuscated in 
-auth-int (they weren’t).&lt;/p&gt;
-
-&lt;h2 id=&quot;future-work&quot;&gt;Future Work&lt;/h2&gt;
-
-&lt;p&gt;Part 2 of this series will consist of the same continuous ingest loads and 
-configurations with the addition of a query load on the system.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 06 Mar 2017 00:00:00 -0500</pubDate>
-        <link>https://accumulo.apache.org/blog/2017/03/06/security-performance-implications.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2017/03/06/security-performance-implications.html</guid>
         
         
         <category>blog</category>
