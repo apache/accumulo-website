@@ -135,7 +135,7 @@ developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic 
 
 ## Helpful Links
 
-* **Build resources** - [TravisCI] & [Jenkins][jenkins] ([Master][masterbuild], [1.8 Branch][18build], [1.7 Branch][17build])
+* **Build resources** - [TravisCI] & [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
 
 For more details, see the [contributor guide](/contributors-guide/).
@@ -174,9 +174,6 @@ For more details, see the [contributor guide](/contributors-guide/).
 [Pull Request]: https://help.github.com/articles/about-pull-requests/
 [Push]: https://help.github.com/articles/pushing-to-a-remote/
 [clone]: https://help.github.com/articles/cloning-a-repository/
-[masterbuild]: https://builds.apache.org/job/Accumulo-Master
-[18build]: https://builds.apache.org/job/Accumulo-1.8
-[17build]: https://builds.apache.org/job/Accumulo-1.7
 [srcheaders]: https://www.apache.org/legal/src-headers
 [styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
 [accumulo-readme]: https://github.com/apache/accumulo/blob/master/README.md#api
