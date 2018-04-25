@@ -124,7 +124,7 @@ After a successful vote, [this website][website-repo] needs to be updated with t
   * Update downloads page
   * Create a post in `_posts/release/` containing release notes
   * Remove previous bug-fix release (if applicable)
-  * Update doap_Accumulo.rdf
+  * Update doap/accumulo.rdf
 
 ### Documentation
 
