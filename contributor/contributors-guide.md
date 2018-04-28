@@ -576,7 +576,6 @@ For details about governance policies for the Accumulo project view the followin
    ```shell
    export RC_VERSION=1.9.0
    export RC_STAGING=1070
-   alias mvn='mvn -s /tmp/accumulo-rc-maven.xml'
    ```
 1. Create temporary Maven settings
    ```shell
@@ -607,11 +606,6 @@ For details about governance policies for the Accumulo project view the followin
    </settings>
    EOF
    ```
-1. If a new release candidate is made, update your staging repo ID.
-   ```shell
-   $ export RC_STAGING=1071
-   ```
-
 #### Run the integration tests of projects that use Accumulo
 
 1. Clone the [Accumulo Examples] project:
@@ -620,7 +614,7 @@ For details about governance policies for the Accumulo project view the followin
     ```
 1. Run the integration test
     ```shell
-    $ mvn clean verify -Daccumulo.version=$RC_VERSION
+    $ mvn -s /tmp/accumulo-rc-maven.xml clean verify -Daccumulo.version=$RC_VERSION
     ```
 Below are more projects with integration tests:
 * [Wikisearch] - `https://github.com/apache/accumulo-wikisearch`
