@@ -19,31 +19,25 @@ DataNodes. A proxy client only needs the ability to communicate with the proxy s
 ## Running the Proxy Server
 
 The proxy server is included in the Accumulo tarball distribution and can be run using
-the `accumulo` or `accumulo-service` command. A sample proxy configuration file can be found at
-`conf/templates/proxy.properties`. Create a copy of this file and edit it for your environment:
+the `accumulo` command. The proxy is configured using `accumulo-client.properties` and
+`proxy.properties` which can be found at `conf/templates/proxy.properties`. Create a
+copy of this file and edit it for your environment:
 
     cp ./conf/templates/proxy.properties ./conf/
     vim ./conf/proxy.properties
 
 At the very least, you need to configure the following properties:
 
-    instance=test
-    zookeepers=localhost:2181
     port=42424
     protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
     tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
 
-After `proxy.properties` is configured, the proxy server can be started using the `accumulo`
-or `accumulo-service` commands:
+After `proxy.properties` is configured, the proxy server can be started using the
+`accumulo` command:
 
-To start the proxy in the foreground and log to the console, use the `accumulo` command:
+    accumulo proxy -p /path/to/proxy.properties -c /path/to/accumulo-client.properties &
 
-    accumulo proxy -p /path/to/proxy.properties
-
-To background the process and redirect logs, use the `accumulo-service` command (a `proxy.properties`
-file must exist in `conf/` if using this method):
-
-    accumulo-service proxy start
+Logs will be output to the directory set by `ACCUMULO_LOG_DIR` in `accumulo-env.sh`.
 
 ## Prerequisites for Proxy Clients
 
