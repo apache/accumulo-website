@@ -352,8 +352,9 @@ DataNodes. A proxy client only needs the ability to communicate with the proxy s
 <h2 id="running-the-proxy-server">Running the Proxy Server</h2>
 
 <p>The proxy server is included in the Accumulo tarball distribution and can be run using
-the <code class="highlighter-rouge">accumulo</code> or <code class="highlighter-rouge">accumulo-service</code> command. A sample proxy configuration file can be found at
-<code class="highlighter-rouge">conf/templates/proxy.properties</code>. Create a copy of this file and edit it for your environment:</p>
+the <code class="highlighter-rouge">accumulo</code> command. The proxy is configured using <code class="highlighter-rouge">accumulo-client.properties</code> and
+<code class="highlighter-rouge">proxy.properties</code> which can be found at <code class="highlighter-rouge">conf/templates/proxy.properties</code>. Create a
+copy of this file and edit it for your environment:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp ./conf/templates/proxy.properties ./conf/
 vim ./conf/proxy.properties
@@ -361,26 +362,18 @@ vim ./conf/proxy.properties
 
 <p>At the very least, you need to configure the following properties:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance=test
-zookeepers=localhost:2181
-port=42424
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>port=42424
 protocolFactory=org.apache.thrift.protocol.TCompactProtocol$Factory
 tokenClass=org.apache.accumulo.core.client.security.tokens.PasswordToken
 </code></pre></div></div>
 
-<p>After <code class="highlighter-rouge">proxy.properties</code> is configured, the proxy server can be started using the <code class="highlighter-rouge">accumulo</code>
-or <code class="highlighter-rouge">accumulo-service</code> commands:</p>
+<p>After <code class="highlighter-rouge">proxy.properties</code> is configured, the proxy server can be started using the
+<code class="highlighter-rouge">accumulo</code> command:</p>
 
-<p>To start the proxy in the foreground and log to the console, use the <code class="highlighter-rouge">accumulo</code> command:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo proxy -p /path/to/proxy.properties
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo proxy -p /path/to/proxy.properties -c /path/to/accumulo-client.properties &amp;
 </code></pre></div></div>
 
-<p>To background the process and redirect logs, use the <code class="highlighter-rouge">accumulo-service</code> command (a <code class="highlighter-rouge">proxy.properties</code>
-file must exist in <code class="highlighter-rouge">conf/</code> if using this method):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service proxy start
-</code></pre></div></div>
+<p>Logs will be output to the directory set by <code class="highlighter-rouge">ACCUMULO_LOG_DIR</code> in <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
 
 <h2 id="prerequisites-for-proxy-clients">Prerequisites for Proxy Clients</h2>
 

@@ -825,6 +825,59 @@ are the one who knows that this zero-length change in content is correct!</p>
   <li><a href="/contributor/voting">Voting</a></li>
 </ul>
 
+<h2 id="test-a-accumulo-release">Test a Accumulo release</h2>
+
+<ol>
+  <li>Set the release version, ID for staging repo, and alias to configure Maven with temporary settings:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">RC_VERSION</span><span class="o">=</span>1.9.0
+<span class="nb">export </span><span class="nv">RC_STAGING</span><span class="o">=</span>1070
+</code></pre></div>    </div>
+  </li>
+  <li>Create temporary Maven settings
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> &gt;/tmp/accumulo-rc-maven.xml
+&lt;settings&gt;
+  &lt;profiles&gt;
+    &lt;profile&gt;
+      &lt;id&gt;accumuloRC&lt;/id&gt;
+      &lt;repositories&gt;
+        &lt;repository&gt;
+          &lt;id&gt;accumulorc&lt;/id&gt;
+          &lt;name&gt;accumulorc&lt;/name&gt;
+          &lt;url&gt;https://repository.apache.org/content/repositories/orgapacheaccumulo-\</span><span class="k">${</span><span class="nv">env</span><span class="p">.RC_STAGING</span><span class="k">}</span><span class="sh">/&lt;/url&gt;
+        &lt;/repository&gt;
+      &lt;/repositories&gt;
+      &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+          &lt;id&gt;accumulorcp&lt;/id&gt;
+          &lt;name&gt;accumulorcp&lt;/name&gt;
+          &lt;url&gt;https://repository.apache.org/content/repositories/orgapacheaccumulo-\</span><span class="k">${</span><span class="nv">env</span><span class="p">.RC_STAGING</span><span class="k">}</span><span class="sh">/&lt;/url&gt;
+        &lt;/pluginRepository&gt;
+      &lt;/pluginRepositories&gt;
+    &lt;/profile&gt;
+  &lt;/profiles&gt;
+  &lt;activeProfiles&gt;
+    &lt;activeProfile&gt;accumuloRC&lt;/activeProfile&gt;
+  &lt;/activeProfiles&gt;
+&lt;/settings&gt;
+</span><span class="no">EOF
+</span></code></pre></div>    </div>
+    <h4 id="run-the-integration-tests-of-projects-that-use-accumulo">Run the integration tests of projects that use Accumulo</h4>
+  </li>
+  <li>Clone the <a href="https://github.com/apache/accumulo-examples">Accumulo Examples</a> project:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>git clone https://github.com/apache/accumulo-examples.git
+</code></pre></div>    </div>
+  </li>
+  <li>Run the integration test
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>mvn <span class="nt">-s</span> /tmp/accumulo-rc-maven.xml clean verify <span class="nt">-Daccumulo</span>.version<span class="o">=</span><span class="nv">$RC_VERSION</span>
+</code></pre></div>    </div>
+    <p>Below are more projects with integration tests:</p>
+    <ul>
+      <li><a href="https://github.com/apache/accumulo-wikisearch">Wikisearch</a> - <code class="highlighter-rouge">https://github.com/apache/accumulo-wikisearch</code></li>
+      <li><a href="https://github.com/apache/fluo">Apache Fluo</a> - <code class="highlighter-rouge">https://github.com/apache/fluo</code></li>
+    </ul>
+  </li>
+</ol>
+
 
         </div>
 
