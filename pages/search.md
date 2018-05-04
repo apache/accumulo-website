@@ -11,7 +11,7 @@ Search results are limited to blog posts, release notes, and the 2.0 documentati
       <div class="input-group">
         <input class="form-control" type="text" id="search_box" placeholder="Search for...">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button">Search</button>
+          <button class="btn btn-default" type="submit">Search</button>
         </span>
       </div>
     </form>
