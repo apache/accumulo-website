@@ -655,7 +655,7 @@ Below are more projects with integration tests:
 [manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
 [quickstart1x]: {{ site.baseurl }}/quickstart-1.x/
 [quickstart2x]: {{ site.baseurl }}/quickstart-2.x/
-[Uno]: https://github.com/astralway/uno
+[Uno]: https://github.com/apache/fluo-uno
 [get-involved]: {{ site.baseurl }}/get_involved
 [git]: https://git-scm.com/
 [github]: https://github.com/apache/accumulo
