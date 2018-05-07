@@ -63,7 +63,7 @@ enable higher-level graph algorithms and analytics.
 
 #### Uno and Muchos
 
-[Uno](https://github.com/astralway/uno) and [Muchos](https://github.com/astralway/muchos) provide automation for quickly setting up Accumulo instances for testing.  These project were created to enable Fluo testing, but can be used to setup just Accumulo.
+[Uno](https://github.com/apache/fluo-uno) and [Muchos](https://github.com/apache/fluo-muchos) provide automation for quickly setting up Accumulo instances for testing.  These project were created to enable Fluo testing, but can be used to setup just Accumulo.
 
 ## User-Created Applications
 

@@ -24,8 +24,8 @@ pages.
 Uno git repo.
 
 ```bash
-git clone https://github.com/astralway/uno.git
-cd uno
+git clone https://github.com/apache/fluo-uno.git
+cd fluo-uno
 ```
 
 Uno works out of the box but it can be customized by modifying `conf/uno.conf`.
@@ -62,8 +62,8 @@ If you need a fresh cluster, you can run `uno setup accumulo` again. To kill you
 cloning its git repo.
 
 ```bash
-git clone https://github.com/astralway/muchos.git
-cd muchos
+git clone https://github.com/apache/fluo-muchos.git
+cd fluo-muchos
 ```
 
 Before using Muchos, create `muchos.props` in `conf/` and edit it for your AWS environment.
@@ -96,6 +96,6 @@ reference the [Ansible] code in Muchos to automate management of their own clust
 [install]: https://github.com/apache/accumulo/blob/master/INSTALL.md
 [Hadoop]: https://hadoop.apache.org/
 [Zookeeper]: https://zookeeper.apache.org/
-[Uno]: https://github.com/astralway/uno
-[Muchos]: https://github.com/astralway/muchos
+[Uno]: https://github.com/apache/fluo-uno
+[Muchos]: https://github.com/apache/fluo-muchos
 [Ansible]: https://www.ansible.com/
