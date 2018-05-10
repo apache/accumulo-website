@@ -161,7 +161,7 @@ By default, Accumulo writes out any updates to the Write-Ahead Log (WAL). Every 
 goes into a file in HDFS and is sync'd to disk for maximum durability. In
 the event of a failure, writes held in memory are replayed from the WAL. Like
 all files in HDFS, this file is also replicated. Sending updates to the
-replicas, and waiting for a permanent sync to disk can significantly write speeds.
+replicas, and waiting for a permanent sync to disk can significantly slow down write speeds.
 
 Accumulo allows users to use less tolerant forms of durability when writing.
 These levels are:
