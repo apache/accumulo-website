@@ -91,7 +91,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-1.9.0/">1.9.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.1/">1.9.1 (Latest)</a></li>
             <li><a href="/release/accumulo-1.7.4/">1.7.4</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
@@ -150,20 +150,66 @@
           
           <h1 class="title">Apache Accumulo 1.9.1</h1>
           
-          <p>08 May 2018</p>
+          <p>14 May 2018</p>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">These are draft release notes for a future release of Accumulo! <a href="/release/accumulo-1.9.0/">View the latest release notes</a>.</div>
 
+
+
+
+
+<p>Apache Accumulo 1.9.1 contains bug fixes for a critical data loss bug. Users of
+1.8.0, 1.8.1, or 1.9.0 are encouraged to upgrade immediately.</p>
+
+<ul>
+  <li><a href="/1.9/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation</li>
+  <li><a href="/1.9/apidocs/">Javadocs</a> - Accumulo 1.9 API</li>
+  <li><a href="/1.9/examples/">Examples</a> - Code with corresponding readme files that give step by
+step instructions for running example code</li>
+</ul>
+
+<h2 id="notable-changes">Notable Changes</h2>
+
+<h3 id="fixes-for-critical-wal-data-loss-bugs-affects-versions-180-190">Fixes for Critical WAL Data Loss Bugs (affects versions 1.8.0-1.9.0)</h3>
 
 <p>Accumulo 1.9.1 contains multiple bug fixes for write ahead log recovery. Write
 ahead log recovery is the process of restoring data that was in memory when a
 tablet server died. These bugs could lead to data loss and are present in
-1.8.0, 1.8.1, and 1.9.0.  Because the bugs can negatively impact Accumulo’s
-metadata table, even users that mainly use bulk import may be affected.  It is
-recommended that anyone using 1.8.0 or greater upgrade immediately.  For more
-information see issues <a href="https://github.com/apache/accumulo/issues/441">#441</a> and <a href="https://github.com/apache/accumulo/issues/449">#449</a>.  These issues were fixed in pull
-request <a href="https://github.com/apache/accumulo/issues/443">#443</a> and <a href="https://github.com/apache/accumulo/issues/458">#458</a>.</p>
+1.8.0, 1.8.1, and 1.9.0. Because the bugs can negatively impact Accumulo’s
+metadata table, <strong>even users that mainly use bulk import may be affected</strong>. It
+is <strong>strongly</strong> recommended that anyone using 1.8.0 or greater upgrade
+immediately. For more information see issues <a href="https://github.com/apache/accumulo/issues/441">#441</a> and <a href="https://github.com/apache/accumulo/issues/449">#449</a>. These issues
+were fixed in pull request <a href="https://github.com/apache/accumulo/issues/443">#443</a> and <a href="https://github.com/apache/accumulo/issues/458">#458</a>.</p>
+
+<p>The only users who would not be affected by these bugs would be users already
+running Accumulo without the recommended write-ahead logs enabled at all
+(durability: none), including for the metadata tables. Such users are already
+risking data loss when a server fails, but are not subject to any additional
+risk from these bugs, which occur during automated recovery from such failures.</p>
+
+<h2 id="some-wal-recovery-files-were-not-being-properly-cleaned-up">Some WAL recovery files were not being properly cleaned up</h2>
+
+<p>A less serious bug than the above critical bugs was discovered and fixed,
+pertaing to write-ahead log recovery. This bug involved recovery files not
+being removed properly when no longer required and was fixed in <a href="https://github.com/apache/accumulo/issues/432">#432</a>.</p>
+
+<h2 id="other-changes">Other Changes</h2>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues?q=label%3Av1.9.1">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+  <li><a href="/release/accumulo-1.9.0/">1.9.0 release notes</a> - Release notes showing changes in the previous release, 1.9.0</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.0/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Continuous ingest with agitation and all integration test were run against this
+version. Continuous ingest was run with 9 nodes for 24 hours followed by a
+successful verification. The integration tests were run against both Hadoop
+2.6.4 and Hadoop 3.0.0.</p>
 
 
 
