@@ -21,7 +21,11 @@ redirect_from:
   {% endif %}
   <div class="row" style="margin-top: 15px">
     <div class="col-md-1">{{ release.date | date: "%b %d" }}</div>
-    <div class="col-md-10"><a href="{{ site.baseurl }}{{ release.url }}">{{ release.title }}</a></div>
+    {% if release.archived or release.archived_critical %}
+      <div class="col-md-10"><a href="{{ site.baseurl }}{{ release.url }}">{{ release.title }}</a></div>
+    {% else %}
+      <div class="col-md-10"><strong><a href="{{ site.baseurl }}{{ release.url }}">{{ release.title }}</a>&nbsp;&lArr;&nbsp;current</strong></div>
+    {% endif %}
   </div>
 {% endfor %}
 </div>
