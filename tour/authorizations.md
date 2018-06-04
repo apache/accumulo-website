@@ -24,7 +24,7 @@ We now want to secure our secret identities of the heroes so that only users wit
         ColumnVisibility colVis = new ColumnVisibility(secretId);
         
         // Create a user with the "secretId" authorization and grant him read permissions on our table
-        conn.securityOperations().createLocalUser("commissioner", new PasswordToken("gordanrocks"));
+        conn.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
         conn.securityOperations().changeUserAuthorizations("commissioner", auths);
         conn.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
 ```
