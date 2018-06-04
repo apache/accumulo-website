@@ -16,7 +16,7 @@ static void exercise(MiniAccumuloCluster mac) throws Exception {
     ColumnVisibility colVis = new ColumnVisibility(secretId);
 
     // Create a user with the "secretId" authorization and grant him read permissions on our table
-    conn.securityOperations().createLocalUser("commissioner", new PasswordToken("gordanrocks"));
+    conn.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
     conn.securityOperations().changeUserAuthorizations("commissioner", auths);
     conn.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
 
@@ -43,7 +43,7 @@ static void exercise(MiniAccumuloCluster mac) throws Exception {
     }
 
     // Read and print all rows of the commissioner can see. Pass Scanner proper authorizations
-    Connector commishConn = mac.getConnector("commissioner", "gordanrocks");
+    Connector commishConn = mac.getConnector("commissioner", "gordonrocks");
     try (Scanner scan = commishConn.createScanner("GothamPD", auths)) {
         System.out.println("Gotham Police Department Persons of Interest:");
         for (Map.Entry<Key, Value> entry : scan) {
