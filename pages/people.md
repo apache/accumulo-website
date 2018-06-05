@@ -100,6 +100,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Matt Dailey         |                                                                   |                       |
+| Matthew Boehm       | [Novetta][NOVETTA]                                                | [ET][ET]              |
 | Matthew Dinep       | [Anavation, LLC] [ANAVATION]                                      | [ET][ET]              |
 | Matthew Kirkley     |                                                                   |                       |
 | Matthew Peterson    | [Applied Technology Group][ATG]                                   | [ET][ET]              |
@@ -160,6 +161,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [JHUAPL]: http://www.jhuapl.edu
 [KOVERSE]: http://www.koverse.com
 [MINERKASCH]: http://minerkasch.com
+[NOVETTA]: http://www.novetta.com
 [NSA]: http://www.nsa.gov
 [OBJECTIVE]: http://www.objectivesolutions.com
 [PETERSON]: http://www.ptech-llc.com
