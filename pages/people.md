@@ -95,6 +95,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
+| Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
