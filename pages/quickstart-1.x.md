@@ -97,7 +97,7 @@ When finished, use the following command to stop Accumulo.
 [download]: http://accumulo.apache.org/downloads/
 [build]: {{ "/contributors-guide#building-accumulo-from-source" | relative_url }}
 [zookeeper]: http://zookeeper.apache.org/
-[hdfs]: https:/hadoop.apache.org/
+[hdfs]: https://hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/
 [prsync]: https://code.google.com/p/parallel-ssh/
 [ssh]: https://www.tecmint.com/ssh-passwordless-login-using-ssh-keygen-in-5-easy-steps/
