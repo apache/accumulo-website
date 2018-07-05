@@ -43,20 +43,37 @@ of the following methods:
     Properties props = new Properties()
     props.put("instance.name", "myinstance")
     props.put("instance.zookeepers", "zookeeper1,zookeeper2")
-    props.put("auth.method", "password")
-    props.put("auth.username", "myuser")
-    props.put("auth.password", "mypassword")
+    props.put("auth.type", "password")
+    props.put("auth.principal", "myuser")
+    props.put("auth.token", "mypassword")
     Connector conn = Connector.builder().usingProperties(props).build();
     ```
 
 If a `accumulo-client.properties` file or a Java Properties object is used to create a [Connector], the following
 [client properties][client-props] must be set:
 
-* [instance.name]
-* [instance.zookeepers]
-* [auth.method]
-* [auth.username]
-* [auth.password]
+* [instance.name] - Name of Accumulo instance to connect to
+* [instance.zookeepers] - ZooKeeper connection information for this Accumulo instance
+* [auth.type] - Authentication method. Possible values are `password`, `kerberos`, or authentication token class (i.e `PasswordToken`, `org.apache.accumulo.core.client.security.tokens.PasswordToken`)
+* [auth.principal] - Accumulo principal/username
+* [auth.token] - Token associated with `auth.type`. See table for mapping below:
+
+| auth.type       | expected auth.token     | example auth.token   |
+|-----------------|-------------------------|----------------------|
+| password        | Password string         | mypassword           |
+| kerberos        | Path to Kerberos keytab | /path/to/keytab      |
+| Authentication token class | Base64 encoded token    | AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA |
+
+If a token class is used for `auth.type`, you can create create a Base64 encoded token using the `accumulo create-token` command.
+
+```
+$ accumulo create-token
+Username (aka principal): root
+the password for the principal: ******
+auth.type = org.apache.accumulo.core.client.security.tokens.PasswordToken
+auth.principal = root
+auth.token = AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA
+```
 
 # Authentication
 
@@ -329,9 +346,9 @@ This page covers Accumulo client basics.  Below are links to additional document
 
 [Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
 [client-props]: {{ page.docs_baseurl }}/development/client-properties
-[auth.method]: {{ page.docs_baseurl }}/development/client-properties#auth_method
-[auth.username]: {{ page.docs_baseurl }}/development/client-properties#auth_username
-[auth.password]: {{ page.docs_baseurl }}/development/client-properties#auth_password
+[auth.type]: {{ page.docs_baseurl }}/development/client-properties#auth_type
+[auth.principal]: {{ page.docs_baseurl }}/development/client-properties#auth_principal
+[auth.token]: {{ page.docs_baseurl }}/development/client-properties#auth_token
 [instance.name]: {{ page.docs_baseurl }}/development/client-properties#instance_name
 [instance.zookeepers]: {{ page.docs_baseurl }}/development/client-properties#instance_zookeepers
 [batch.writer.durability]: {{ page.docs_baseurl }}/development/client-properties#batch_writer_durability
