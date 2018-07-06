@@ -13,18 +13,17 @@ Below are properties set in `accumulo-client.properties` that configure [Accumul
 |----------|---------------|-------|-------------|
 | <a name="instance_name" class="prop"></a> instance.name | *empty* |  | Name of Accumulo instance to connect to |
 | <a name="instance_zookeepers" class="prop"></a> instance.zookeepers | localhost:2181 |  | Zookeeper connection information for Accumulo instance |
-| <a name="instance_zookeepers_timeout_sec" class="prop"></a> instance.zookeepers.timeout.sec | 30 |  | Zookeeper session timeout (in seconds) |
-| <a name="auth_method" class="prop"></a> auth.method | password |  | Authentication method (i.e password, kerberos, provider). Set more properties for chosen method below. |
-| <a name="auth_username" class="prop"></a> auth.username | *empty* |  | Accumulo username/principal for chosen authentication method |
-| <a name="auth_kerberos_keytab_path" class="prop"></a> auth.kerberos.keytab.path | *empty* |  | Path to Kerberos keytab |
-| <a name="auth_password" class="prop"></a> auth.password | *empty* |  | Accumulo user password |
-| <a name="auth_provider_name" class="prop"></a> auth.provider.name | *empty* |  | Alias used to extract Accumulo user password from CredentialProvider |
-| <a name="auth_provider_urls" class="prop"></a> auth.provider.urls | *empty* |  | Comma separated list of URLs defining CredentialProvider(s) |
+| <a name="instance_zookeepers_timeout" class="prop"></a> instance.zookeepers.timeout | 30s |  | Zookeeper session timeout |
+| <a name="auth_type" class="prop"></a> auth.type | password |  | Authentication method (i.e password, kerberos, PasswordToken, KerberosToken, etc) |
+| <a name="auth_principal" class="prop"></a> auth.principal | *empty* |  | Accumulo principal/username for chosen authentication method |
+| <a name="auth_token" class="prop"></a> auth.token | *empty* |  | Authentication token (ex. mypassword, /path/to/keytab) |
 | <a name="batch_writer_durability" class="prop"></a> batch.writer.durability | default |  | Change the durability for the BatchWriter session. To use the table's durability setting. use "default" which is the table's durability setting. |
 | <a name="batch_writer_max_latency_sec" class="prop"></a> batch.writer.max.latency.sec | 120 |  | Max amount of time (in seconds) to hold data in memory before flushing it |
 | <a name="batch_writer_max_memory_bytes" class="prop"></a> batch.writer.max.memory.bytes | 52428800 |  | Max memory (in bytes) to batch before writing |
 | <a name="batch_writer_max_timeout_sec" class="prop"></a> batch.writer.max.timeout.sec | 0 |  | Max amount of time (in seconds) an unresponsive server will be re-tried. An exception is thrown when this timeout is exceeded. Set to zero for no timeout. |
 | <a name="batch_writer_max_write_threads" class="prop"></a> batch.writer.max.write.threads | 3 |  | Maximum number of threads to use for writing data to tablet servers. |
+| <a name="batch_scanner_num_query_threads" class="prop"></a> batch.scanner.num.query.threads | 3 |  | Number of concurrent query threads to spawn for querying |
+| <a name="scanner_batch_size" class="prop"></a> scanner.batch.size | 1000 |  | Number of key/value pairs that will be fetched at time from tablet server |
 | <a name="ssl_enabled" class="prop"></a> ssl.enabled | false |  | Enable SSL for client RPC |
 | <a name="ssl_keystore_password" class="prop"></a> ssl.keystore.password | *empty* |  | Password used to encrypt keystore |
 | <a name="ssl_keystore_path" class="prop"></a> ssl.keystore.path | *empty* |  | Path to SSL keystore file |
