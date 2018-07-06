@@ -112,7 +112,7 @@ on how use to use MapReduce with Accumulo, see the [MapReduce documentation][map
 and the [MapReduce example code][mapred-code].
 
 [bulk-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md
-[AccumuloOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html
-[AccumuloFileOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html
+[AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloFileOutputFormat %}
 [mapred-docs]: {{ page.docs_baseurl }}/development/mapreduce
 [mapred-code]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md

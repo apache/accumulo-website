@@ -414,13 +414,13 @@ to the missing values.
 The [Iterator test harness][iterator-test-harness] is generalized testing framework for Accumulo Iterators that can
 identify common pitfalls in user-created Iterators.
 
-[SortedKeyValueIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html
-[IteratorEnvironment]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/IteratorEnvironment.html
-[Filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
-[Combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
-[Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
+[SortedKeyValueIterator]: {% jurl org.apache.accumulo.core.iterators.SortedKeyValueIterator %}
+[IteratorEnvironment]: {% jurl org.apache.accumulo.core.iterators.IteratorEnvironment %}
+[Filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
+[Combiner]: {% jurl org.apache.accumulo.core.iterators.Combiner %}
+[Range]: {% jurl org.apache.accumulo.core.data.Range %}
 [iterator-test-harness]: {{ page.docs_baseurl }}/development/development_tools#iterator-test-harness
-[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
-[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
-[BatchWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
-[WholeRowIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
+[BatchWriter]: {% jurl org.apache.accumulo.core.client.BatchWriter %}
+[WholeRowIterator]: {% jurl org.apache.accumulo.core.iterators.user.WholeRowIterator %}

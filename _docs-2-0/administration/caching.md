@@ -46,4 +46,4 @@ their defaults by setting the following properties:
 [table.cache.index.enable]: {{ page.docs_baseurl }}/administration/properties#table_cache_index_enable
 [tserver.cache.data.size]: {{ page.docs_baseurl }}/administration/properties#tserver_cache_data_size
 [tserver.cache.index.size]: {{ page.docs_baseurl }}/administration/properties#tserver_cache_data_size
-[tableops]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/admin/TableOperations.html#setProperty(java.lang.String, java.lang.String, java.lang.String)
+[tableops]: {% jurl org.apache.accumulo.core.client.admin.TableOperations#setProperty-java.lang.String-java.lang.String-java.lang.String- %}

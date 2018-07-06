@@ -706,17 +706,17 @@ preserved.
 ```
 
 [bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md
-[constraint]: {{ page.javadoc_core }}/org/apache/accumulo/core/constraints/Constraint.html
+[constraint]: {% jurl org.apache.accumulo.core.constraints.Constraint %}
 [constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md
-[iterators-user]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/package-summary.html
-[option-describer]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/OptionDescriber.html
-[combiner]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Combiner.html
+[iterators-user]: {% jurl org.apache.accumulo.core.iterators.user %}
+[option-describer]: {% jurl org.apache.accumulo.core.iterators.OptionDescriber %}
+[combiner]: {% jurl org.apache.accumulo.core.iterators.Combiner %}
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
-[filter]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/Filter.html
+[filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
 [table.majc.compaction.strategy]: {{ page.docs_baseurl}}/administration/properties#table_majc_compaction_strategy
 [config-properties]: {{ page.docs_baseurl}}/administration/properties
-[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
-[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Caching]: {{ page.docs_baseurl }}/administration/caching
 [table.compaction.major.ratio]: {{ page.docs_baseurl}}/administration/properties#table_compaction_major_ratio
 [tserver.compaction.major.concurrent.max]: {{ page.docs_baseurl}}/administration/properties#tserver_compaction_major_concurrent_max

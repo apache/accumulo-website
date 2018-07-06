@@ -71,12 +71,12 @@ sample data.  To use this feature, look at the javadoc of the `setSampler(...)`
 method of [AccumuloFileOutputFormat].
 
 [example]: https://github.com/apache/accumulo-examples/blob/master/docs/sample.md
-[Sampler]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/sample/Sampler.html
-[sample-package]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/sample/package-summary.html
-[skv-iterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html
-[clone-sampling]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/IteratorEnvironment.html#cloneWithSamplingEnabled()
-[AccumuloInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html
-[AccumuloFileOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloFileOutputFormat.html
-[SampleNotPresentException]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/SampleNotPresentException.html
-[BatchScanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchScanner.html
-[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
+[Sampler]: {% jurl org.apache.accumulo.core.client.sample.Sampler %}
+[sample-package]: {% jurl org.apache.accumulo.core.client.sample %}
+[skv-iterator]: {% jurl org.apache.accumulo.core.iterators.SortedKeyValueIterator %}
+[clone-sampling]: {% jurl org.apache.accumulo.core.iterators.IteratorEnvironment#cloneWithSamplingEnabled-- %}
+[AccumuloInputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloInputFormat %}
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloFileOutputFormat %}
+[SampleNotPresentException]: {% jurl org.apache.accumulo.core.client.SampleNotPresentException %}
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}

@@ -35,5 +35,5 @@ Knowing these terms are critical when working closely with Accumulo.  Iterators 
 When working with large amounts of data across many Tablet Servers, a simple Scanner might not do the trick. Next lesson we learn about the power of 
 the multi-threaded BatchScanner!  
 
-[Range]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Range.html
-[TableOperations]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/admin/TableOperations.html
+[Range]: {% jurl org.apache.accumulo.core.data.Range %}
+[TableOperations]: {% jurl org.apache.accumulo.core.client.admin.TableOperations %}

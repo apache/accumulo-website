@@ -170,6 +170,6 @@ AccumuloOutputFormat.setMaxMutationBufferSize(job, 50000000); // bytes
 The [MapReduce example][mapred-example] contains a complete example of using MapReduce with Accumulo.
 
 [mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
-[AccumuloInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloInputFormat.html
-[AccumuloMultiTableInputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloMultiTableInputFormat.html
-[AccumuloOutputFormat]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html
+[AccumuloInputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloInputFormat %}
+[AccumuloMultiTableInputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloMultiTableInputFormat %}
+[AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}

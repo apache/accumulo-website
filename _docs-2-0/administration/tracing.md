@@ -343,12 +343,12 @@ Time  Start  Service@Location       Name
 
 [config-mgmt]: {{ page.docs_baseurl }}/administration/configuration-management
 [Zipkin]: https://github.com/openzipkin/zipkin
-[trace.user]: {{ page.docs_baseurl }}/administration/properties#trace_user
-[trace.token.property.password]: {{ page.docs_baseurl }}/administration/properties#trace_token_property_password
-[trace.port.client]: {{ page.docs_baseurl }}/administration/properties#trace_port_client
-[trace.table]: {{ page.docs_baseurl }}/administration/properties#trace_table
-[trace.zookeeper.path]: {{ page.docs_baseurl }}/administration/properties#trace_zookeeper_path
-[trace.span.receivers]: {{ page.docs_baseurl }}/administration/properties#trace_span_receivers
-[trace.span.receiver.*]: {{ page.docs_baseurl }}/administration/properties#trace_span_receiver_prefix
+[trace.user]: {% sprop trace.user %}
+[trace.token.property.password]: {% sprop trace.token.property.password %}
+[trace.port.client]: {% sprop trace.port.client %}
+[trace.table]: {% sprop trace.table %}
+[trace.zookeeper.path]: {% sprop trace.zookeeper.path %}
+[trace.span.receivers]: {% sprop trace.span.receivers %}
+[trace.span.receiver.*]: {% sprop trace.span.receiver.prefix %}
 [zk-path-client]: {{ page.docs_baseurl }}/development/client-properties#trace_zookeeper_path
 [receivers-client]: {{ page.docs_baseurl }}/development/client-properties#trace_span_receivers
