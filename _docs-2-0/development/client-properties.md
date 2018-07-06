@@ -22,6 +22,8 @@ Below are properties set in `accumulo-client.properties` that configure [Accumul
 | <a name="batch_writer_max_memory_bytes" class="prop"></a> batch.writer.max.memory.bytes | 52428800 |  | Max memory (in bytes) to batch before writing |
 | <a name="batch_writer_max_timeout_sec" class="prop"></a> batch.writer.max.timeout.sec | 0 |  | Max amount of time (in seconds) an unresponsive server will be re-tried. An exception is thrown when this timeout is exceeded. Set to zero for no timeout. |
 | <a name="batch_writer_max_write_threads" class="prop"></a> batch.writer.max.write.threads | 3 |  | Maximum number of threads to use for writing data to tablet servers. |
+| <a name="batch_scanner_num_query_threads" class="prop"></a> batch.scanner.num.query.threads | 3 |  | Number of concurrent query threads to spawn for querying |
+| <a name="scanner_batch_size" class="prop"></a> scanner.batch.size | 1000 |  | Number of key/value pairs that will be fetched at time from tablet server |
 | <a name="ssl_enabled" class="prop"></a> ssl.enabled | false |  | Enable SSL for client RPC |
 | <a name="ssl_keystore_password" class="prop"></a> ssl.keystore.password | *empty* |  | Password used to encrypt keystore |
 | <a name="ssl_keystore_path" class="prop"></a> ssl.keystore.path | *empty* |  | Path to SSL keystore file |
