@@ -74,16 +74,17 @@ the given file into your `.git/hook` directory:
 
 ## Custom liquid tags
 
-Custom liquid tags are used to make linking to javadocs, properties, and documents easier
+Custom liquid tags are used to make linking to javadocs, properties, and documents easier.
+The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 
 | Tag   | Description            | Options                                                                         | Examples                                             | 
 | ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `jlink -f org.apache.accumulo.core.client.Connector` |
-| jurl  | Creates Javadoc URL    | None                                                                            | `jurl org.apache.accumulo.core.client.Connector`     |
-| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties       | `plink -c instance.name`                             |
-| purl  | Creates Property URL   | Default is servery property. Use `-c` to link to client properties              | `plink instance.volumes`                             |
-| dlink | Creates Documentation link | None                                                                            | `dlink getting-stared/clients`                       |
-| durl  | Creates Documentation URL  | None                                                                            | `durl troubleshooting/performance`                   |
+| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}` |
+| jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
+| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties       | `{% plink -c instance.name %}`                             |
+| purl  | Creates Property URL   | Default is servery property. Use `-c` to link to client properties              | `{% plink instance.volumes %}`                             |
+| dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
+| durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
 
 [Jekyll]: https://jekyllrb.com/
 [Bundler]: https://bundler.io/
