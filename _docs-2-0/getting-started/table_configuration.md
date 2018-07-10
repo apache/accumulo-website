@@ -713,14 +713,14 @@ preserved.
 [combiner]: {% jurl org.apache.accumulo.core.iterators.Combiner %}
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
 [filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
-[table.majc.compaction.strategy]: {{ page.docs_baseurl}}/administration/properties#table_majc_compaction_strategy
+[table.majc.compaction.strategy]: {% purl table.majc.compaction.strategy %}
 [config-properties]: {{ page.docs_baseurl}}/administration/properties
 [Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
-[Caching]: {{ page.docs_baseurl }}/administration/caching
-[table.compaction.major.ratio]: {{ page.docs_baseurl}}/administration/properties#table_compaction_major_ratio
-[tserver.compaction.major.concurrent.max]: {{ page.docs_baseurl}}/administration/properties#tserver_compaction_major_concurrent_max
-[tserver.compaction.minor.concurrent.max]: {{ page.docs_baseurl}}/administration/properties#tserver_compaction_minor_concurrent_max
-[table.file.max]: {{ page.docs_baseurl}}/administration/properties#table_file_max
-[table.bloom.enabled]: {{ page.docs_baseurl}}/administration/properties#table_bloom_enabled
-[table.file.compress.type]: {{ page.docs_baseurl}}/administration/properties#table_file_compress_type
+[Caching]: {% durl administration/caching %}
+[table.compaction.major.ratio]: {% purl table.compaction.major.ratio %}
+[tserver.compaction.major.concurrent.max]: {% purl tserver.compaction.major.concurrent.max %}
+[tserver.compaction.minor.concurrent.max]: {% purl tserver.compaction.minor.concurrent.max %}
+[table.file.max]: {% purl table.file.max %}
+[table.bloom.enabled]: {% purl table.bloom.enabled %}
+[table.file.compress.type]: {% purl table.file.compress.type %}

@@ -362,4 +362,4 @@ is struggling to keep up with ingest vs the compaction strategy which reduces th
 
 Write Ahead Logs stay open until they hit the size threshold, which could be many hours or days in some cases. These open files will prevent a DN from finishing its decommissioning process (HDFS-3599) in some versions of Hadoop 2. If you stop the DN, then the WALog file will not be closed and you could lose data. To work around this issue, we now close WALogs on a time period specified by the property `tserver.walog.max.age` with a default period of 24 hours.
 
-[metadata]: {{ page.docs_baseurl }}/troubleshooting/system-metadata-tables
+[metadata]: {% durl troubleshooting/system-metadata-tables %}

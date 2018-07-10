@@ -686,27 +686,27 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 mailing lists at https://accumulo.apache.org for more info.
 
-[quick]: {{ page.docs_baseurl }}/getting-started/quick-install
-[monitor]: {{page.docs_baseurl}}/administration/monitoring-metrics#monitor
-[config-mgmt]: {{page.docs_baseurl}}/administration/configuration-management
-[instance.zookeeper.host]: {{ page.docs_baseurl }}/administration/properties#instance_zookeeper_host
-[instance.secret]: {{ page.docs_baseurl }}/administration/properties#instance_secret
-[monitor.port.log4j]: {{ page.docs_baseurl }}/administration/properties#monitor_port_log4j
-[monitor.port.client]: {{ page.docs_baseurl }}/administration/properties#monitor_port_client
-[tserver.port.client]: {{ page.docs_baseurl }}/administration/properties#tserver_port_client
-[gc.port.client]: {{ page.docs_baseurl }}/administration/properties#gc_port_client
-[master.port.client]: {{ page.docs_baseurl }}/administration/properties#master_port_client
-[trace.port.client]: {{ page.docs_baseurl }}/administration/properties#trace_port_client
-[master.replication.coordinator.port]: {{ page.docs_baseurl }}/administration/properties#master_replication_coordinator_port
-[replication.receipt.service.port]: {{ page.docs_baseurl }}/administration/properties#replication_receipt_service_port
-[tserver.memory.maps.native.enabled]: {{ page.docs_baseurl }}/administration/properties#tserver_memory_maps_native_enabled
-[tserver.memory.maps.max]: {{ page.docs_baseurl }}/administration/properties#tserver_memory_maps_max
-[table.compaction.minor.logs.threshold]: {{ page.docs_baseurl }}/administration/properties#table_compaction_minor_logs_threshold
-[tserver.walog.max.size]: {{ page.docs_baseurl }}/administration/properties#tserver_walog_max_size
-[tserver.wal.blocksize]: {{ page.docs_baseurl }}/administration/properties#tserver_wal_blocksize
-[general.security.credential.provider.paths]: {{ page.docs_baseurl }}/administration/properties#general_security_credential_provider_paths
-[general.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_classpaths
-[general.dynamic.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_dynamic_classpaths
-[general.vfs.classpaths]: {{ page.docs_baseurl }}/administration/properties#general_vfs_classpaths
-[client-conn]: {{ page.docs_baseurl }}/getting-started/clients#connecting
-[client-props]: {{ page.docs_baseurl }}/development/client-properties
+[quick]: {% durl getting-started/quick-install %}
+[monitor]: {% durl administration/monitoring-metrics#monitor %}
+[config-mgmt]: {% durl administration/configuration-management %}
+[instance.zookeeper.host]: {% purl instance.zookeeper.host %}
+[instance.secret]: {% purl instance.secret %}
+[monitor.port.log4j]: {% purl monitor.port.log4j %}
+[monitor.port.client]: {% purl monitor.port.client %}
+[tserver.port.client]: {% purl tserver.port.client %}
+[gc.port.client]: {% purl gc.port.client %}
+[master.port.client]: {% purl master.port.client %}
+[trace.port.client]: {% purl trace.port.client %}
+[master.replication.coordinator.port]: {% purl master.replication.coordinator.port %}
+[replication.receipt.service.port]: {% purl replication.receipt.service.port %}
+[tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
+[tserver.memory.maps.max]: {% purl tserver.memory.maps.max %}
+[table.compaction.minor.logs.threshold]: {% purl table.compaction.minor.logs.threshold %}
+[tserver.walog.max.size]: {% purl tserver.walog.max.size %}
+[tserver.wal.blocksize]: {% purl tserver.wal.blocksize %}
+[general.security.credential.provider.paths]: {% purl general.security.credential.provider.paths %}
+[general.classpaths]: {% purl general.classpaths %}
+[general.dynamic.classpaths]: {% purl general.dynamic.classpaths %}
+[general.vfs.classpaths]: {% purl general.vfs.classpaths %}
+[client-conn]: {% durl getting-started/clients#connecting %}
+[client-props]: {% durl development/client-properties %}

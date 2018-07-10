@@ -15,8 +15,19 @@ def convert_package(package)
   return retval
 end
 
-def render_link(context, text, short, url_only)
+def render_javadoc(context, text, url_only)
   clz = text.strip
+  short = true
+  if not url_only
+    args = text.strip.split(' ', 2)
+    print args
+    if args[0] == '-f'
+      short = false
+      clz = args[1]
+    elsif args[0] == '-c'
+      clz = args[1]
+    end
+  end
   base = context.registers[:site].config['javadoc_base']
   v = context.environments.first["page"]["javadoc_version"]
   if v.nil?
@@ -57,25 +68,14 @@ def render_link(context, text, short, url_only)
   return r
 end
 
-class JavadocFullTag < Liquid::Tag
+class JavadocLinkTag < Liquid::Tag
   def initialize(tag_name, text, tokens)
     super
     @text = text
   end
 
   def render(context)
-    return render_link(context, @text, false, false)
-  end
-end
-
-class JavadocClassTag < Liquid::Tag
-  def initialize(tag_name, text, tokens)
-    super
-    @text = text
-  end
-
-  def render(context)
-    return render_link(context, @text, true, false)
+    return render_javadoc(context, @text, false)
   end
 end
 
@@ -86,60 +86,96 @@ class JavadocUrlTag < Liquid::Tag
   end
 
   def render(context)
-    return render_link(context, @text, false, true)
+    return render_javadoc(context, @text, true)
   end
 end
 
-class ServerPropertyTag < Liquid::Tag
+def render_prop(context, text, link)
+  args = text.split(' ')
+  type = 'server'
+  prop = args[0]
+  if args[0] == '-c'
+    type = 'client'
+    prop = args[1]
+  elsif args[0] == '-s'
+    type = 'server'
+    prop = args[1]
+  end
+  base = context.environments.first["page"]["docs_baseurl"]
+  if base.nil?
+    base = context.registers[:site].config['docs_baseurl']
+  end
+  prop_enc = prop.gsub('.', '_')
+  url = "#{base}/administration/properties##{prop_enc}"
+  if type == 'client'
+    url = "#{base}/development/client-properties##{prop_enc}"
+  end
+  if link
+    return "[#{prop}](#{url})"
+  end
+  return url
+end
+
+class PropertyUrlTag < Liquid::Tag
   def initialize(tag_name, text, tokens)
     super
     @text = text
   end
 
   def render(context)
-    base = context.environments.first["page"]["docs_baseurl"]
-    if base.nil?
-      base = context.registers[:site].config['docs_baseurl']
-    end
-    prop = @text.gsub('.', '_')
-    return "#{base}/administration/properties##{prop}"
+    return render_prop(context, @text, false)
   end
 end
 
-class ClientPropertyTag < Liquid::Tag
+class PropertyLinkTag < Liquid::Tag
   def initialize(tag_name, text, tokens)
     super
     @text = text
   end
 
   def render(context)
-    base = context.environments.first["page"]["docs_baseurl"]
-    if base.nil?
-      base = context.registers[:site].config['docs_baseurl']
-    end
-    prop = @text.gsub('.', '_')
-    return "#{base}/development/client-properties##{prop}"
+    return render_prop(context, @text, true)
   end
 end
 
-class DocTag < Liquid::Tag
+def render_doc(context, text, link)
+  base = context.environments.first["page"]["docs_baseurl"]
+  if base.nil?
+    base = context.registers[:site].config['docs_baseurl']
+  end
+  url = "#{base}/#{@text}"
+  if not link
+    return url
+  end
+  page = @text.split('/').last
+  return "[#{page}](#{url})"
+end
+
+class DocLinkTag < Liquid::Tag
   def initialize(tag_name, text, tokens)
     super
     @text = text
   end
 
   def render(context)
-    base = context.environments.first["page"]["docs_baseurl"]
-    if base.nil?
-      base = context.registers[:site].config['docs_baseurl']
-    end
-    return "#{base}/#{@text}"
+    return render_doc(context, @text, true)
   end
 end
 
-Liquid::Template.register_tag('jfull', JavadocFullTag)
-Liquid::Template.register_tag('jclass', JavadocClassTag)
+class DocUrlTag < Liquid::Tag
+  def initialize(tag_name, text, tokens)
+    super
+    @text = text
+  end
+
+  def render(context)
+    return render_doc(context, @text, false)
+  end
+end
+
+Liquid::Template.register_tag('jlink', JavadocLinkTag)
 Liquid::Template.register_tag('jurl', JavadocUrlTag)
-Liquid::Template.register_tag('sprop', ServerPropertyTag)
-Liquid::Template.register_tag('cprop', ClientPropertyTag)
-Liquid::Template.register_tag('doc', DocTag)
+Liquid::Template.register_tag('plink', PropertyLinkTag)
+Liquid::Template.register_tag('purl', PropertyUrlTag)
+Liquid::Template.register_tag('dlink', DocLinkTag)
+Liquid::Template.register_tag('durl', DocUrlTag)

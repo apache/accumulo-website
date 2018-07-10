@@ -112,7 +112,7 @@ default  | table.compaction.minor.logs.threshold ..... | 3
 default  | table.failures.ignore ..................... | false
 ```
 
-[client-conn]: {{ page.docs_baseurl }}/getting-started/clients#connecting
-[client-props]: {{ page.docs_baseurl }}/development/client-properties
-[props]: {{ page.docs_baseurl }}/administration/properties
-[tableprops]: {{ page.docs_baseurl }}/administration/properties#table_prefix
+[client-conn]: {% durl getting-started/clients#connecting %}
+[client-props]: {% durl development/client-properties %}
+[props]: {% durl administration/properties %}
+[tableprops]: {% purl table.prefix %}

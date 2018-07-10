@@ -48,12 +48,12 @@ information.
 
 The following tablet server and table properties configure summarization.
 
-* [tserver.cache.summary.size]({% sprop tserver.cache.summary.size %})
-* [tserver.summary.partition.threads]({% sprop tserver.summary.partition.threads %})
-* [tserver.summary.remote.threads]({% sprop tserver.summary.remote.threads %})
-* [tserver.summary.retrieval.threads]({% sprop tserver.summary.retreival.threads %})
-* [table.summarizer.*]({% sprop table.summarizer.prefix %})
-* [table.file.summary.maxSize]({% sprop table.file.summary.maxSize %})
+* {% plink tserver.cache.summary.size %}
+* {% plink tserver.summary.partition.threads %}
+* {% plink tserver.summary.remote.threads %}
+* {% plink tserver.summary.retrieval.threads %}
+* [table.summarizer.*]({% purl table.summarizer.prefix %})
+* {% plink table.file.summary.maxSize %}
 
 ## Permissions
 

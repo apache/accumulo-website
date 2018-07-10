@@ -602,6 +602,6 @@ java.lang.AssertionError: AuthenticationToken should not be null
 
 Ensure you have set `trace.token.property.keytab` to point to a keytab for the principal defined in `trace.user` in the `accumulo-site.xml` file for the Monitor, since that should work in all versions of Accumulo.
 
-[sasl.enabled]: {{ page.docs_baseurl }}/development/client-properties#sasl_enabled
-[sasl.qop]: {{ page.docs_baseurl }}/development/client-properties#sasl_qop
-[sasl.kerberos.server.primary]: {{ page.docs_baseurl }}/development/client-properties#sasl_kerberos_server_primary
+[sasl.enabled]: {% purl -c sasl.enabled %}
+[sasl.qop]: {% purl -c sasl.qop %}
+[sasl.kerberos.server.primary]: {% purl -c sasl.kerberos.server.primary %}

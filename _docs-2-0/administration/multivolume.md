@@ -72,5 +72,5 @@ available in Hadoop 2.0, which allows DataNodes to respond to multiple
 NameNode servers, so you do not have to partition your DataNodes by
 NameNode.
 
-[instance.volumes]: {% sprop instance.volumes %}
-[instance.volumes.replacements]: {% sprop instance.volumes.replacements %}
+[instance.volumes]: {% purl instance.volumes %}
+[instance.volumes.replacements]: {% purl instance.volumes.replacements %}
