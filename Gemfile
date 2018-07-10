@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
-gem 'github-pages', '181', group: :jekyll_plugins
+gem 'jekyll', '3.7.3'
+gem 'jekyll-redirect-from', '0.13.0'
 gem 'therubyracer'

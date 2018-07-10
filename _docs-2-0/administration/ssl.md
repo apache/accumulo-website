@@ -127,10 +127,10 @@ methods are equivalent whether the certificate is generate for an Accumulo serve
 [ssl.truststore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_truststore_password
 [ssl.keystore.path]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_path
 [ssl.keystore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_password
-[instance.secret]: {{ page.docs_baseurl }}/administration/properties#instance_secret
-[rpc.javax.net.ssl.trustStore]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_trustStore
-[rpc.javax.net.ssl.trustStorePassword]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_trustStorePassword
-[instance.rpc.ssl.enabled]: {{ page.docs_baseurl }}/administration/properties#instance_rpc_ssl_enabled
-[rpc.javax.net.ssl.keyStore]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_keyStore
-[rpc.javax.net.ssl.keyStorePassword]: {{ page.docs_baseurl }}/administration/properties#rpc_javax_net_ssl_keyStorePassword
-[instance.rpc.ssl.clientAuth]: {{ page.docs_baseurl }}/administration/properties#instance_rpc_ssl_clientAuth
+[instance.secret]: {% sprop instance.secret %}
+[rpc.javax.net.ssl.trustStore]: {% sprop rpc.javax.net.ssl.trustStore %}
+[rpc.javax.net.ssl.trustStorePassword]: {% sprop rpc.javax.net.ssl.trustStorePassword %}
+[instance.rpc.ssl.enabled]: {% sprop instance.rpc.ssl.enabled %}
+[rpc.javax.net.ssl.keyStore]: {% sprop rpc.javax.net.ssl.keyStore %}
+[rpc.javax.net.ssl.keyStorePassword]: {% sprop rpc.javax.net.ssl.keyStorePassword %}
+[instance.rpc.ssl.clientAuth]: {% sprop instance.rpc.ssl.clientAuth %}

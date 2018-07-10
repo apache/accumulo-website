@@ -54,5 +54,5 @@ to read it.  More to come later in the [Authorizations][auths] lesson!
 
 [dmodel]: /tour/data-model
 [auths]: /tour/authorizations
-[Key]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Key.html
-[Scanner]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
+[Key]: {% jurl org.apache.accumulo.core.data.Key %}
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}

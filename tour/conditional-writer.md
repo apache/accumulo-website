@@ -119,12 +119,12 @@ ConditionalWriter.
  * Call [write] passing it the conditional mutation.
  * Return `true` if [getStatus] from the [Result] returned by [write] is [ACCEPTED].
 
-[ConditionalWriter]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html
-[Result]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Result.html
-[createConditionalWriter]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/Connector.html#createConditionalWriter(java.lang.String,%20org.apache.accumulo.core.client.ConditionalWriterConfig)
-[Condition]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Condition.html
-[ConditionalMutation]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/ConditionalMutation.html
-[getStatus]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus()
-[write]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html#write(org.apache.accumulo.core.data.ConditionalMutation)
-[setValue]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Condition.html#setValue(java.lang.CharSequence)
-[ACCEPTED]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED
+[ConditionalWriter]: {% jurl org.apache.accumulo.core.client.ConditionalWriter %}
+[Result]: {% jurl org.apache.accumulo.core.client.ConditionalWriter.Result %}
+[createConditionalWriter]: {% jurl org.apache.accumulo.core.client.Connector#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig- %}
+[Condition]: {% jurl org.apache.accumulo.core.data.Condition %}
+[ConditionalMutation]: {% jurl org.apache.accumulo.core.data.ConditionalMutation %}
+[getStatus]: {% jurl org.apache.accumulo.core.client.ConditionalWriter.Result#getStatus-- %}
+[write]: {% jurl org.apache.accumulo.core.client.ConditionalWriter#write-org.apache.accumulo.core.data.ConditionalMutation- %}
+[setValue]: {% jurl org.apache.accumulo.core.data.Condition#setValue-java.lang.CharSequence- %}
+[ACCEPTED]: {% jurl org.apache.accumulo.core.client.ConditionalWriter.Status#ACCEPTED %}

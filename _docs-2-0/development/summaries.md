@@ -48,12 +48,12 @@ information.
 
 The following tablet server and table properties configure summarization.
 
-* [tserver.cache.summary.size]({{page.docs_baseurl}}/administration/properties#tserver_cache_summary_size)
-* [tserver.summary.partition.threads]({{page.docs_baseurl}}/administration/properties#tserver_summary_partition_threads)
-* [tserver.summary.remote.threads]({{page.docs_baseurl}}/administration/properties#tserver_summary_remote_threads)
-* [tserver.summary.retrieval.threads]({{page.docs_baseurl}}/administration/properties#tserver_summary_retreival_threads)
-* [table.summarizer.*]({{page.docs_baseurl}}/administration/properties#table_summarizer_prefix)
-* [table.file.summary.maxSize]({{page.docs_baseurl}}/administration/properties#table_file_summary_maxSize)
+* [tserver.cache.summary.size]({% sprop tserver.cache.summary.size %})
+* [tserver.summary.partition.threads]({% sprop tserver.summary.partition.threads %})
+* [tserver.summary.remote.threads]({% sprop tserver.summary.remote.threads %})
+* [tserver.summary.retrieval.threads]({% sprop tserver.summary.retreival.threads %})
+* [table.summarizer.*]({% sprop table.summarizer.prefix %})
+* [table.file.summary.maxSize]({% sprop table.file.summary.maxSize %})
 
 ## Permissions
 
