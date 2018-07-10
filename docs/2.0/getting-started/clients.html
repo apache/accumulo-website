@@ -378,9 +378,9 @@ of the tarball distribution):
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="o">()</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"instance.name"</span><span class="o">,</span> <span class="s">"myinstance"</span><span class="o">)</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"instance.zookeepers"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">)</span>
- <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.method"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">)</span>
- <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.username"</span><span class="o">,</span> <span class="s">"myuser"</span><span class="o">)</span>
- <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.password"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.type"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.principal"</span><span class="o">,</span> <span class="s">"myuser"</span><span class="o">)</span>
+ <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.token"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">)</span>
  <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">usingProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
@@ -390,12 +390,49 @@ of the tarball distribution):
 <a href="/docs/2.0/development/client-properties">client properties</a> must be set:</p>
 
 <ul>
-  <li><a href="/docs/2.0/development/client-properties#instance_name">instance.name</a></li>
-  <li><a href="/docs/2.0/development/client-properties#instance_zookeepers">instance.zookeepers</a></li>
-  <li><a href="/docs/2.0/development/client-properties#auth_method">auth.method</a></li>
-  <li><a href="/docs/2.0/development/client-properties#auth_username">auth.username</a></li>
-  <li><a href="/docs/2.0/development/client-properties#auth_password">auth.password</a></li>
+  <li><a href="/docs/2.0/development/client-properties#instance_name">instance.name</a> - Name of Accumulo instance to connect to</li>
+  <li><a href="/docs/2.0/development/client-properties#instance_zookeepers">instance.zookeepers</a> - ZooKeeper connection information for this Accumulo instance</li>
+  <li><a href="/docs/2.0/development/client-properties#auth_type">auth.type</a> - Authentication method. Possible values are <code class="highlighter-rouge">password</code>, <code class="highlighter-rouge">kerberos</code>, or authentication token class (i.e <code class="highlighter-rouge">PasswordToken</code>, <code class="highlighter-rouge">org.apache.accumulo.core.client.security.tokens.PasswordToken</code>)</li>
+  <li><a href="/docs/2.0/development/client-properties#auth_principal">auth.principal</a> - Accumulo principal/username</li>
+  <li><a href="/docs/2.0/development/client-properties#auth_token">auth.token</a> - Token associated with <code class="highlighter-rouge">auth.type</code>. See table for mapping below:</li>
 </ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>auth.type</th>
+      <th>expected auth.token</th>
+      <th>example auth.token</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>password</td>
+      <td>Password string</td>
+      <td>mypassword</td>
+    </tr>
+    <tr>
+      <td>kerberos</td>
+      <td>Path to Kerberos keytab</td>
+      <td>/path/to/keytab</td>
+    </tr>
+    <tr>
+      <td>Authentication token class</td>
+      <td>Base64 encoded token</td>
+      <td>AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If a token class is used for <code class="highlighter-rouge">auth.type</code>, you can create create a Base64 encoded token using the <code class="highlighter-rouge">accumulo create-token</code> command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo create-token
+Username (aka principal): root
+the password for the principal: ******
+auth.type = org.apache.accumulo.core.client.security.tokens.PasswordToken
+auth.principal = root
+auth.token = AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA
+</code></pre></div></div>
 
 <h1 id="authentication">Authentication</h1>
 
