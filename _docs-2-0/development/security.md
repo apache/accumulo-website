@@ -170,7 +170,7 @@ Authorizations mechanism.
 
 Typically, the query services layer sits between Accumulo and user workstations.
 
-[shell]: {{ page.docs_baseurl }}/getting-started/shell
+[shell]: {% durl getting-started/shell %}
 [Key]: {% jurl org.apache.accumulo.core.data.Key %}
 [Value]: {% jurl org.apache.accumulo.core.data.Value %}
 [Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}

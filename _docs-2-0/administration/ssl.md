@@ -32,14 +32,14 @@ these files already exist.
 
 In `accumulo-site.xml`, the following properties are required:
 
-* [rpc.javax.net.ssl.keyStore]  = _The path on the local filesystem to the keystore containing the server's certificate_
-* [rpc.javax.net.ssl.keyStorePassword] = _The password for the keystore containing the server's certificate_
-* [rpc.javax.net.ssl.trustStore] = _The path on the local filesystem to the keystore containing the certificate authority's public key_
-* [rpc.javax.net.ssl.trustStorePassword] = _The password for the keystore containing the certificate authority's public key_
-* [instance.rpc.ssl.enabled] = _true_
+* {% plink rpc.javax.net.ssl.keyStore %}  = _The path on the local filesystem to the keystore containing the server's certificate_
+* {% plink rpc.javax.net.ssl.keyStorePassword %} = _The password for the keystore containing the server's certificate_
+* {% plink rpc.javax.net.ssl.trustStore %} = _The path on the local filesystem to the keystore containing the certificate authority's public key_
+* {% plink rpc.javax.net.ssl.trustStorePassword %} = _The password for the keystore containing the certificate authority's public key_
+* {% plink instance.rpc.ssl.enabled %} = _true_
 
 Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
-`instance.rpc.ssl.clientAuth=true` in `accumulo-site.xml`.
+{% plink instance.rpc.ssl.clientAuth %} `true` in `accumulo-site.xml`.
 This requires that each client has access to  valid certificate to set up a secure connection
 to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
 their own certificate.
@@ -51,15 +51,15 @@ special configuration. This is typically accomplished by [creating Accumulo
 clients][clients] using `accumulo-client.properties` and setting the following
 the properties to connect to an Accumulo instance using SSL:
 
-* [ssl.enabled] to `true`
-* [ssl.truststore.path]
-* [ssl.truststore.password]
+* {% plink -c ssl.enabled %} to `true`
+* {% plink -c ssl.truststore.path %}
+* {% plink -c ssl.truststore.password %}
 
 If two-way SSL is enabled for the Accumulo instance (by setting [instance.rpc.ssl.clientAuth] to `true` in `accumulo-site.xml`),
 Accumulo clients must also define their own certificate by setting the following properties:
 
-* [ssl.keystore.path]
-* [ssl.keystore.password]
+* {% plink -c ssl.keystore.path %}
+* {% plink -c ssl.keystore.password %}
 
 ## Generating SSL material using OpenSSL
 
@@ -122,15 +122,3 @@ The `server.jks` file is the Java keystore containing the certificate for a give
 methods are equivalent whether the certificate is generate for an Accumulo server or a client.
 
 [clients]: {{ page.docs_baseurl }}/getting-started/clients#connecting
-[ssl.enabled]: {{ page.docs_baseurl }}/development/client-properties#ssl_enabled
-[ssl.truststore.path]: {{ page.docs_baseurl }}/development/client-properties#ssl_truststore_path
-[ssl.truststore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_truststore_password
-[ssl.keystore.path]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_path
-[ssl.keystore.password]: {{ page.docs_baseurl }}/development/client-properties#ssl_keystore_password
-[instance.secret]: {% sprop instance.secret %}
-[rpc.javax.net.ssl.trustStore]: {% sprop rpc.javax.net.ssl.trustStore %}
-[rpc.javax.net.ssl.trustStorePassword]: {% sprop rpc.javax.net.ssl.trustStorePassword %}
-[instance.rpc.ssl.enabled]: {% sprop instance.rpc.ssl.enabled %}
-[rpc.javax.net.ssl.keyStore]: {% sprop rpc.javax.net.ssl.keyStore %}
-[rpc.javax.net.ssl.keyStorePassword]: {% sprop rpc.javax.net.ssl.keyStorePassword %}
-[instance.rpc.ssl.clientAuth]: {% sprop instance.rpc.ssl.clientAuth %}

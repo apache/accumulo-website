@@ -67,7 +67,7 @@ trace.span.receiver. when set in the Accumulo configuration.
     tracer.queue.size - max queue size (default 5000)
     tracer.span.min.ms - minimum span length to store (in ms, default 1)
 
-To configure an Accumulo client for tracing, set [trace.span.receivers][receivers-client] and [trace.zookeeper.path][zk-path-client]
+To configure an Accumulo client for tracing, set {% plink -c trace.span.receivers %} and {% plink -c trace.zookeeper.path %}
 in `accumulo-client.properties`. Also, any [trace.span.receiver.*] properties set in `accumulo-site.xml` should be set in
 `accumulo-client.properties`.
 
@@ -343,12 +343,10 @@ Time  Start  Service@Location       Name
 
 [config-mgmt]: {{ page.docs_baseurl }}/administration/configuration-management
 [Zipkin]: https://github.com/openzipkin/zipkin
-[trace.user]: {% sprop trace.user %}
-[trace.token.property.password]: {% sprop trace.token.property.password %}
-[trace.port.client]: {% sprop trace.port.client %}
-[trace.table]: {% sprop trace.table %}
-[trace.zookeeper.path]: {% sprop trace.zookeeper.path %}
-[trace.span.receivers]: {% sprop trace.span.receivers %}
-[trace.span.receiver.*]: {% sprop trace.span.receiver.prefix %}
-[zk-path-client]: {{ page.docs_baseurl }}/development/client-properties#trace_zookeeper_path
-[receivers-client]: {{ page.docs_baseurl }}/development/client-properties#trace_span_receivers
+[trace.user]: {% purl trace.user %}
+[trace.token.property.password]: {% purl trace.token.property.password %}
+[trace.port.client]: {% purl trace.port.client %}
+[trace.table]: {% purl trace.table %}
+[trace.zookeeper.path]: {% purl trace.zookeeper.path %}
+[trace.span.receivers]: {% purl trace.span.receivers %}
+[trace.span.receiver.*]: {% purl trace.span.receiver.prefix %}

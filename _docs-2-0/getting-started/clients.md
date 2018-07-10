@@ -345,13 +345,13 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
 [Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
-[client-props]: {% doc development/client-properties %}
-[auth.type]: {% cprop auth.type %}
-[auth.principal]: {% cprop auth.principal %}
-[auth.token]: {% cprop auth.token %}
-[instance.name]: {% cprop instance.name %}
-[instance.zookeepers]: {% cprop instance.zookeepers %}
-[batch.writer.durability]: {% cprop batch.writer.durability %}
+[client-props]: {% durl development/client-properties %}
+[auth.type]: {% purl -c auth.type %}
+[auth.principal]: {% purl -c auth.principal %}
+[auth.token]: {% purl -c auth.token %}
+[instance.name]: {% purl -c instance.name %}
+[instance.zookeepers]: {% purl -c instance.zookeepers %}
+[batch.writer.durability]: {% purl -c batch.writer.durability %}
 [PasswordToken]: {% jurl org.apache.accumulo.core.client.security.tokens.PasswordToken %}
 [AuthenticationToken]: {% jurl org.apache.accumulo.core.client.security.tokens.AuthenticationToken %}
 [CredentialProviderToken]: {% jurl org.apache.accumulo.core.client.security.tokens.CredentialProviderToken %}
@@ -364,9 +364,9 @@ This page covers Accumulo client basics.  Below are links to additional document
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Range]: {% jurl org.apache.accumulo.core.data.Range %}
 [WholeRowIterator]: {% jurl org.apache.accumulo.core.iterators.user.WholeRowIterator %}
-[Iterators]: {% doc development/iterators %}
-[Proxy]: {% doc development/proxy %}
-[MapReduce]: {% doc development/mapreduce %}
+[Iterators]: {% durl development/iterators %}
+[Proxy]: {% durl development/proxy %}
+[MapReduce]: {% durl development/mapreduce %}
 [mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
 [batch]: https://github.com/apache/accumulo-examples/blob/master/docs/batch.md
 [reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md
