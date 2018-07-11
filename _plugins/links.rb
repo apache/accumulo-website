@@ -20,7 +20,6 @@ def render_javadoc(context, text, url_only)
   short = true
   if not url_only
     args = text.strip.split(' ', 2)
-    print args
     if args[0] == '-f'
       short = false
       clz = args[1]
