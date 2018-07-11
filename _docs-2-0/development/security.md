@@ -170,15 +170,15 @@ Authorizations mechanism.
 
 Typically, the query services layer sits between Accumulo and user workstations.
 
-[shell]: {{ page.docs_baseurl }}/getting-started/shell
-[Key]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Key.html
-[Value]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Value.html
-[Mutation]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
-[ColumnVisibility]: {{ page.javadoc_core }}/org/apache/accumulo/core/security/ColumnVisibility.html
-[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
-[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
-[Authorizations]: {{ page.javadoc_core}}/org/apache/accumulo/core/security/Authorizations.html
-[SecurityOperations]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/admin/SecurityOperations.html
-[Instance]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/Instance.html
-[AuthenticationToken]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
-[PasswordToken]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html
+[shell]: {% durl getting-started/shell %}
+[Key]: {% jurl org.apache.accumulo.core.data.Key %}
+[Value]: {% jurl org.apache.accumulo.core.data.Value %}
+[Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}
+[ColumnVisibility]: {% jurl org.apache.accumulo.core.security.ColumnVisibility %}
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
+[Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}
+[SecurityOperations]: {% jurl org.apache.accumulo.core.client.admin.SecurityOperations %}
+[Instance]: {% jurl org.apache.accumulo.core.client.Instance %}
+[AuthenticationToken]: {% jurl org.apache.accumulo.core.client.security.tokens.AuthenticationToken %}
+[PasswordToken]: {% jurl org.apache.accumulo.core.client.security.tokens.PasswordToken %}

@@ -46,6 +46,6 @@ Key : id0001 hero:name [secretId] 1511900180231 false         Value : Bruce Wayn
 Key : id0002 hero:name [secretId] 1511900180231 false         Value : Dick Grayson
 ```
 
-[Authorizations]: {{ site.javadoc_core }}/org/apache/accumulo/core/security/Authorizations.html
-[ColumnVisibility]: {{ site.javadoc_core }}/org/apache/accumulo/core/security/ColumnVisibility.html
-[Mutation]: {{ site.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
+[Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}
+[ColumnVisibility]: {% jurl org.apache.accumulo.core.security.ColumnVisibility %}
+[Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}

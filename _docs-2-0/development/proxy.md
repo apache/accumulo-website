@@ -374,5 +374,5 @@ if __name__ == "__main__":
     main()
 ```
 
-[Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
+[Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
 [tutorial]: https://thrift.apache.org/tutorial/

@@ -182,9 +182,9 @@ TabletServer failures are noted on the Master's monitor page, accessible via
 ![failure handling]({{ site.url }}/images/docs/failure_handling.png)
 
 [BigTable paper]: https://research.google.com/archive/bigtable.html
-[monitor]: {{page.docs_baseurl}}/administration/monitoring-metrics#monitoring
-[tracing]: {{page.docs_baseurl}}/administration/tracing
-[clients]: {{page.docs_baseurl}}/getting-started/clients
-[merging]: {{page.docs_baseurl}}/getting-started/table_configuration#merging-tablets
-[compaction]: {{page.docs_baseurl}}/getting-started/table_configuration#compaction
-[caching]: {{page.docs_baseurl}}/administration/caching
+[monitor]: {% durl administration/monitoring-metrics#monitoring %}
+[tracing]: {% durl administration/tracing %}
+[clients]: {% durl getting-started/clients %}
+[merging]: {% durl getting-started/table_configuration#merging-tablets %}
+[compaction]: {% durl getting-started/table_configuration#compaction %}
+[caching]: {% durl administration/caching %}

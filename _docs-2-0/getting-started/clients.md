@@ -344,29 +344,29 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [Proxy] - Documentation for interacting with Accumulo using non-Java languages through a proxy server
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
-[Connector]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Connector.html
-[client-props]: {{ page.docs_baseurl }}/development/client-properties
-[auth.type]: {{ page.docs_baseurl }}/development/client-properties#auth_type
-[auth.principal]: {{ page.docs_baseurl }}/development/client-properties#auth_principal
-[auth.token]: {{ page.docs_baseurl }}/development/client-properties#auth_token
-[instance.name]: {{ page.docs_baseurl }}/development/client-properties#instance_name
-[instance.zookeepers]: {{ page.docs_baseurl }}/development/client-properties#instance_zookeepers
-[batch.writer.durability]: {{ page.docs_baseurl }}/development/client-properties#batch_writer_durability
-[PasswordToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/PasswordToken.html
-[AuthenticationToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html
-[CredentialProviderToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/CredentialProviderToken.html
-[KerberosToken]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/security/tokens/KerberosToken.html
-[Mutation]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Mutation.html
-[BatchWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/BatchWriter.html
-[ConditionalWriter]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/ConditionalWriter.html
-[Scanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/Scanner.html
-[IsolatedScanner]: {{ page.javadoc_core }}/org/apache/accumulo/core/client/IsolatedScanner.html
-[BatchScanner]: {{ page.javadoc_core}}/org/apache/accumulo/core/client/BatchScanner.html
-[Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
-[WholeRowIterator]: {{ page.javadoc_core }}/org/apache/accumulo/core/iterators/user/WholeRowIterator.html
-[Iterators]: {{ page.docs_baseurl }}/development/iterators
-[Proxy]: {{ page.docs_baseurl }}/development/proxy
-[MapReduce]: {{ page.docs_baseurl }}/development/mapreduce
+[Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
+[client-props]: {% durl development/client-properties %}
+[auth.type]: {% purl -c auth.type %}
+[auth.principal]: {% purl -c auth.principal %}
+[auth.token]: {% purl -c auth.token %}
+[instance.name]: {% purl -c instance.name %}
+[instance.zookeepers]: {% purl -c instance.zookeepers %}
+[batch.writer.durability]: {% purl -c batch.writer.durability %}
+[PasswordToken]: {% jurl org.apache.accumulo.core.client.security.tokens.PasswordToken %}
+[AuthenticationToken]: {% jurl org.apache.accumulo.core.client.security.tokens.AuthenticationToken %}
+[CredentialProviderToken]: {% jurl org.apache.accumulo.core.client.security.tokens.CredentialProviderToken %}
+[KerberosToken]: {% jurl org.apache.accumulo.core.client.security.tokens.KerberosToken %}
+[Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}
+[BatchWriter]: {% jurl org.apache.accumulo.core.client.BatchWriter %}
+[ConditionalWriter]: {% jurl org.apache.accumulo.core.client.ConditionalWriter %}
+[Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
+[IsolatedScanner]: {% jurl org.apache.accumulo.core.client.IsolatedScanner %}
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
+[Range]: {% jurl org.apache.accumulo.core.data.Range %}
+[WholeRowIterator]: {% jurl org.apache.accumulo.core.iterators.user.WholeRowIterator %}
+[Iterators]: {% durl development/iterators %}
+[Proxy]: {% durl development/proxy %}
+[MapReduce]: {% durl development/mapreduce %}
 [mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
 [batch]: https://github.com/apache/accumulo-examples/blob/master/docs/batch.md
 [reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md

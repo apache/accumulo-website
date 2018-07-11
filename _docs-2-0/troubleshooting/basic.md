@@ -231,5 +231,5 @@ Node count: 22524
 
 Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.
 
-[rfile-info]: {{ page.docs_baseurl }}/troubleshooting/tools#RFileInfo
-[native-maps]: {{ page.docs_baseurl }}/administration/in-depth-install#native-map
+[rfile-info]: {% durl troubleshooting/tools#RFileInfo %}
+[native-maps]: {% durl administration/in-depth-install#native-map %}

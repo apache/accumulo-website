@@ -36,6 +36,6 @@ and `yearsOfService` qualifier.
 
 4. Finally, use the BatchScanner to calculate the average years of service of 2000 villians.
 
-[BatchScanner]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/BatchScanner.html
-[createBatchScanner]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/Connector.html#createBatchScanner(java.lang.String,%20org.apache.accumulo.core.security.Authorizations,%20int)
-[fetchColumn]: {{ site.javadoc_core }}/org/apache/accumulo/core/client/ScannerBase.html#fetchColumn(org.apache.hadoop.io.Text,%20org.apache.hadoop.io.Text)
+[BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
+[createBatchScanner]: {% jurl org.apache.accumulo.core.client.Connector#createBatchScanner-java.lang.String-org.apache.accumulo.core.security.Authorizations-int- %}
+[fetchColumn]: {% jurl org.apache.accumulo.core.client.ScannerBase#fetchColumn-org.apache.hadoop.io.Text-org.apache.hadoop.io.Text- %}

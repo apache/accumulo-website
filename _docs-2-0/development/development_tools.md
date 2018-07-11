@@ -154,7 +154,7 @@ there are still many limitations to the existing test harness. Some of them are:
 
 These are left as future improvements to the harness.
 
-[Range]: {{ page.javadoc_core }}/org/apache/accumulo/core/data/Range.html
-[IteratorTestCase]: {{ page.javadoc_base }}/accumulo-iterator-test-harness/{{ page.latest_release }}/org/apache/accumulo/iteratortest/testcases/IteratorTestCase.html
-[BaseJUnit4IteratorTest]: {{ page.javadoc_base }}/accumulo-iterator-test-harness/{{ page.latest_release }}/org/apache/accumulo/iteratortest/junit4/BaseJUnit4IteratorTest.html
-[MiniAccumuloCluster]: {{ page.javadoc_base }}/accumulo-minicluster/{{ page.latest_release }}/org/apache/accumulo/minicluster/MiniAccumuloCluster.html
+[Range]: {% jurl org.apache.accumulo.core.data.Range %}
+[IteratorTestCase]: {% jurl org.apache.accumulo.iteratortest.testcases.IteratorTestCase %}
+[BaseJUnit4IteratorTest]: {% jurl org.apache.accumulo.iteratortest.junit4.BaseJUnit4IteratorTest %}
+[MiniAccumuloCluster]: {% jurl org.apache.accumulo.minicluster.MiniAccumuloCluster %}
