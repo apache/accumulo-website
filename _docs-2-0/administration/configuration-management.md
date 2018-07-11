@@ -49,11 +49,11 @@ System properties consist of all [properties][props] with **zk mutable: yes** in
 
     config -s PROPERTY=VALUE
 
-If a `table.*` property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).
+If a {% plink table.* %} property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).
 
 #### Zookeeper Table properties
 
-[Table properties][tableprops] consist of all properties with the `table.*` prefix.
+Table properties consist of all properties with the {% plink table.* %} prefix.
 
 Table properties are configured for a table namespace (i.e group of tables) or on a per-table basis.
 
@@ -115,4 +115,3 @@ default  | table.failures.ignore ..................... | false
 [client-conn]: {% durl getting-started/clients#connecting %}
 [client-props]: {% durl development/client-properties %}
 [props]: {% durl administration/properties %}
-[tableprops]: {% purl table.prefix %}

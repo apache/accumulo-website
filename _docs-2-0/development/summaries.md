@@ -51,7 +51,7 @@ The following tablet server and table properties configure summarization.
 * {% plink tserver.summary.partition.threads %}
 * {% plink tserver.summary.remote.threads %}
 * {% plink tserver.summary.retrieval.threads %}
-* [table.summarizer.*]({% purl table.summarizer.prefix %})
+* {% plink table.summarizer.* %})
 * {% plink table.file.summary.maxSize %}
 
 ## Permissions

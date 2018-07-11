@@ -303,7 +303,7 @@ or a `accumulo-client.properties` file containing [client properties][client-pro
 Accumulo has the ability for users to add custom tags to tables.  This allows
 applications to set application-level metadata about a table.  These tags can be
 anything from a table description, administrator notes, date created, etc.
-This is done by naming and setting a property with a prefix `table.custom.*`.
+This is done by naming and setting a property with a prefix {% plink table.custom.* %}.
 
 Currently, table properties are stored in ZooKeeper. This means that the number
 and size of custom properties should be restricted on the order of 10's of properties
