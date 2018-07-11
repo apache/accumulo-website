@@ -274,6 +274,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/upgrading">Upgrading Accumulo</a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.0/administration/scan-executors">Scan Executors</a></div>
+                
               </div>
             </div>
           
@@ -752,7 +754,7 @@ This will only compact tablets that overlap the given row range.</p>
 
 <h3 id="compaction-strategies">Compaction Strategies</h3>
 
-<p>The default behavior of major compactions is defined in the class DefaultCompactionStrategy. 
+<p>The default behavior of major compactions is defined in the class <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/1.9.1/org/apache/accumulo/tserver/compaction/DefaultCompactionStrategy.html">DefaultCompactionStrategy</a>.
 This behavior can be changed by overriding <a href="/docs/2.0/administration/properties#table_majc_compaction_strategy">table.majc.compaction.strategy</a> with a fully
 qualified class name.</p>
 
@@ -762,11 +764,10 @@ qualified class name.</p>
 </code></pre></div></div>
 
 <p>Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
-<code class="highlighter-rouge">org.apache.accumulo.tserver.compaction.*</code> package. <code class="highlighter-rouge">EverythingCompactionStrategy</code> will simply compact all files. This is the 
-strategy used by the user <code class="highlighter-rouge">compact</code> command. <code class="highlighter-rouge">SizeLimitCompactionStrategy</code> compacts files no bigger than the limit set in the
-property <code class="highlighter-rouge">table.majc.compaction.strategy.opts.sizeLimit</code>.</p>
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/1.9.1/org/apache/accumulo/tserver/compaction/package-summary.html">org.apache.accumulo.tserver.compaction</a> package. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/1.9.1/org/apache/accumulo/tserver/compaction/EverythingCompactionStrategy.html">EverythingCompactionStrategy</a>
+will simply compact all files. This is the strategy used by the user <code class="highlighter-rouge">compact</code> command. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/1.9.1/org/apache/accumulo/tserver/compaction/SizeLimitCompactionStrategy.html">SizeLimitCompactionStrategy</a> compacts files no bigger than the limit set in the property <code class="highlighter-rouge">table.majc.compaction.strategy.opts.sizeLimit</code>.</p>
 
-<p><code class="highlighter-rouge">TwoTierCompactionStrategy</code> is a hybrid compaction strategy that supports two types of compression. If the total size of 
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/1.9.1/org/apache/accumulo/tserver/compaction/TwoTierCompactionStrategy.html">TwoTierCompactionStrategy</a> is a hybrid compaction strategy that supports two types of compression. If the total size of
 files being compacted is larger than <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.threshold</code> than a larger 
 compression type will be used. The larger compression type is specified in <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.type</code>. 
 Otherwise, the configured table compression will be used. To use this strategy with minor compactions set <a href="/docs/2.0/administration/properties#table_file_compress_type">table.file.compress.type</a> to <code class="highlighter-rouge">snappy</code> 
