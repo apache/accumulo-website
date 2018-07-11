@@ -421,9 +421,8 @@ The default behavior of major compactions is defined in the class {% jlink org.a
 This behavior can be changed by overriding [table.majc.compaction.strategy] with a fully
 qualified class name.
 
-Custom compaction strategies can have additional properties that are specified following the prefix property:
-
-    table.majc.compaction.strategy.opts.*
+Custom compaction strategies can have additional properties that are specified with the
+{% plink table.majc.compaction.strategy.opts.* %} prefix.
 
 Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
 {% jlink -f org.apache.accumulo.tserver.compaction %} package. {% jlink org.apache.accumulo.tserver.compaction.EverythingCompactionStrategy %}
