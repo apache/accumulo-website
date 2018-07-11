@@ -44,8 +44,8 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 | ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}` |
 | jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
-| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties       | `{% plink -c instance.name %}`                             |
-| purl  | Creates Property URL   | Default is servery property. Use `-c` to link to client properties              | `{% purl instance.volumes %}`                             |
+| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.*`)       | `{% plink -c instance.name %}`                             |
+| purl  | Creates Property URL   | Default is servery property. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.*`)               | `{% purl instance.volumes %}`                             |
 | dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
 | durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
 
