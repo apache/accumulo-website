@@ -22,7 +22,7 @@ dedicated cache for summary data on each tserver with a configurable size.  In
 order for summary data to fit in cache, it should probably be small.
 
 For information on writing a custom summarizer see the javadoc of the {% jlink org.apache.accumulo.core.client.summary.Summarizer %}
-class. The package {% jlink org.apache.accumulo.core.client.summary.summarizers %}
+class. The package {% jlink -f org.apache.accumulo.core.client.summary.summarizers %}
 contains summarizer implementations that ship with Accumulo and can be configured for use.
 
 ## Inaccuracies
