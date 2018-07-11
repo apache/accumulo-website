@@ -21,10 +21,9 @@ for this to be fast the, summary information should fit in cache.  There is a
 dedicated cache for summary data on each tserver with a configurable size.  In
 order for summary data to fit in cache, it should probably be small.
 
-For information on writing a custom summarizer see the javadoc for
-`org.apache.accumulo.core.client.summary.Summarizer`.  The package
-`org.apache.accumulo.core.client.summary.summarizers` contains summarizer
-implementations that ship with Accumulo and can be configured for use.
+For information on writing a custom summarizer see the javadoc of the {% jlink org.apache.accumulo.core.client.summary.Summarizer %}
+class. The package {% jlink org.apache.accumulo.core.client.summary.summarizers %}
+contains summarizer implementations that ship with Accumulo and can be configured for use.
 
 ## Inaccuracies
 
@@ -63,11 +62,10 @@ requires a special permission.  User must have the table permission
 
 ## Bulk import
 
-When generating rfiles to bulk import into Accumulo, those rfiles can contain
+When generating RFiles to bulk import into Accumulo, those RFiles can contain
 summary data.  To use this feature, look at the javadoc on the
-`AccumuloFileOutputFormat.setSummarizers(...)` method.  Also,
-`org.apache.accumulo.core.client.rfile.RFile` has options for creating RFiles
-with embedded summary data.
+`AccumuloFileOutputFormat.setSummarizers(...)` method.  Also, the {% jlink org.apache.accumulo.core.client.rfile.RFile %}
+class has options for creating RFiles with embedded summary data.
 
 ## Examples
 
