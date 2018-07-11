@@ -35,15 +35,18 @@ def render_javadoc(context, text, url_only)
   clz_slash = convert_package(clz)
   clz_name = clz.split('.').last
 
-  jmodule = 'unknown'
-  if clz.start_with?('org.apache.accumulo.core')
-    jmodule = 'accumulo-core'
+  if not clz.start_with?('org.apache.accumulo.')
+    raise "Unknown package prefix for #{clz}"
+  end
+
+  # Default is accumulo-<module> but handle corner cases below
+  jmodule = 'accumulo-' + clz.split('.')[3]
+  if clz.start_with?('org.apache.accumulo.server')
+    jmodule = 'accumulo-server-base'
+  elsif clz.start_with?('org.apache.accumulo.core.client.mapred')
+    jmodule = 'accumulo-client-mapreduce'
   elsif clz.start_with?('org.apache.accumulo.iteratortest')
     jmodule = 'accumulo-iterator-test-harness'
-  elsif clz.start_with?('org.apache.accumulo.minicluster')
-    jmodule = 'accumulo-minicluster'
-  else
-    raise "Unknown package prefix for #{clz}"
   end
 
   if clz_slash.include? "#"
