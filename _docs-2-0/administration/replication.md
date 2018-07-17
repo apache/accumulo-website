@@ -51,7 +51,7 @@ into the following sections.
 
 Each system involved in replication (even the primary) needs a name that uniquely
 identifies it across all peers in the replication graph. This should be considered
-fixed for an instance, and set in `accumulo-site.xml`.
+fixed for an instance, and set using {% plink replication.name %} in `accumulo-site.xml`.
 
 ```xml
 <property>
@@ -130,54 +130,43 @@ On this page, information is broken down into the following sections:
 
 ## Work Assignment
 
-Depending on the schema of a table, different implementations of the WorkAssigner used could
-be configured. The implementation is controlled via the property `replication.work.assigner`
-and the full class name for the implementation. This can be configured via the shell or
-`accumulo-site.xml`.
+Depending on the schema of a table, different implementations of the [WorkAssigner]
+used could be configured. The implementation is controlled via the property {% plink replication.work.assigner %}
+and the full class name for the implementation. This can be configured via the shell or `accumulo-site.xml`.
 
-```xml
-<property>
-    <name>replication.work.assigner</name>
-    <value>org.apache.accumulo.master.replication.SequentialWorkAssigner</value>
-    <description>Implementation used to assign work for replication</description>
-</property>
-```
+Two implementations of [WorkAssigner] are provided:
 
-```
-root@accumulo_primary> config -t my_table -s replication.work.assigner=org.apache.accumulo.master.replication.SequentialWorkAssigner
-```
-
-Two implementations are provided. By default, the `SequentialWorkAssigner` is configured for an
-instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
-replicated in the order in which they were created. This is sufficient to ensure that updates to a table
-will be replayed in the correct order on the peer. This implementation has the downside of only replicating
-a single WAL at a time.
-
-The second implementation, the `UnorderedWorkAssigner` can be used to overcome the limitation
+1. The {% jlink org.apache.accumulo.master.replication.UnorderedWorkAssigner %} can be used to overcome the limitation
 of only a single WAL being replicated to a target and peer at any time. Depending on the table schema,
 it's possible that multiple versions of the same Key with different values are infrequent or nonexistent.
 In this case, parallel replication to a peer and target is possible without any downsides. In the case
 where this implementation is used were column updates are frequent, it is possible that there will be
 an inconsistency between the primary and the peer.
 
+2. The {% jlink org.apache.accumulo.master.replication.SequentialWorkAssigner %} is configured for an
+instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
+replicated in the order in which they were created. This is sufficient to ensure that updates to a table
+will be replayed in the correct order on the peer. This implementation has the downside of only replicating
+a single WAL at a time.
+
+
 ## ReplicaSystems
 
-`ReplicaSystem` is the interface which allows abstraction of replication of data
-to peers of various types. Presently, only an `AccumuloReplicaSystem` is provided
-which will replicate data to another Accumulo instance. A `ReplicaSystem` implementation
-is run inside of the TabletServer process, and can be configured as mentioned in the 
-`Instance Configuration` section of this document. Theoretically, an implementation
-of this interface could send data to other filesystems, databases, etc.
+[ReplicaSystem] is the interface which allows abstraction of replication of data
+to peers of various types. Presently, only an [AccumuloReplicaSystem] is provided
+which will replicate data to another Accumulo instance. A [ReplicaSystem] implementation
+is run inside of the TabletServer process, and can be configured as mentioned in [Instance Configuration][InstanceConfig]
+section of this document. Theoretically, an implementation of this interface could send data to other filesystems, databases, etc.
 
 ### AccumuloReplicaSystem
 
-The `AccumuloReplicaSystem` uses Thrift to communicate with a peer Accumulo instance
+The [AccumuloReplicaSystem] uses Thrift to communicate with a peer Accumulo instance
 and replicate the necessary data. The TabletServer running on the primary will communicate
 with the Master on the peer to request the address of a TabletServer on the peer which
 this TabletServer will use to replicate the data.
 
 The TabletServer on the primary will then replicate data in batches of a configurable
-size (`replication.max.unit.size`). The TabletServer on the peer will report how many
+size ({% plink replication.max.unit.size %}). The TabletServer on the peer will report how many
 records were applied back to the primary, which will be used to record how many records
 were successfully replicated. The TabletServer on the primary will continue to replicate
 data in these batches until no more data can be read from the file.
@@ -187,28 +176,26 @@ data in these batches until no more data can be read from the file.
 There are a number of configuration values that can be used to control how
 the implementation of various components operate.
 
-|Property | Description | Default
-|---------|-------------|--------
-|replication.max.work.queue | Maximum number of files queued for replication at one time | 1000
-|replication.work.assignment.sleep | Time between invocations of the WorkAssigner | 30s
-|replication.worker.threads | Size of threadpool used to replicate data to peers | 4
-|replication.receipt.service.port | Thrift service port to listen for replication requests, can use '0' for a random port | 10002
-|replication.work.attempts | Number of attempts to replicate to a peer before aborting the attempt | 10
-|replication.receiver.min.threads | Minimum number of idle threads for handling incoming replication | 1
-|replication.receiver.threadcheck.time | Time between attempting adjustments of thread pool for incoming replications | 30s
-|replication.max.unit.size | Maximum amount of data to be replicated in one RPC | 64M
-|replication.work.assigner | Work Assigner implementation | org.apache.accumulo.master.replication.SequentialWorkAssigner
-|tserver.replication.batchwriter.replayer.memory| Size of BatchWriter cache to use in applying replication requests | 50M
+* {% plink replication.max.work.queue %} - Maximum number of files queued for replication at one time
+* {% plink replication.work.assignment.sleep %} - Time between invocations of the [WorkAssigner]
+* {% plink replication.worker.threads %} - Size of threadpool used to replicate data to peers
+* {% plink replication.receipt.service.port %} - Thrift service port to listen for replication requests, can use '0' for a random port
+* {% plink replication.work.attempts %} - Number of attempts to replicate to a peer before aborting the attempt
+* {% plink replication.receiver.min.threads %} - Minimum number of idle threads for handling incoming replication
+* {% plink replication.receiver.threadcheck.time %} - Time between attempting adjustments of thread pool for incoming replications
+* {% plink replication.max.unit.size %} - Maximum amount of data to be replicated in one RPC
+* {% plink replication.work.assigner %} - [WorkAssigner] implementation
+* {% plink tserver.replication.batchwriter.replayer.memory %} - Size of BatchWriter cache to use in applying replication requests
 
 ## Example Practical Configuration
 
 A real-life example is now provided to give concrete application of replication configuration. This
 example is a two instance Accumulo system, one primary system and one peer system. They are called
-primary and peer, respectively. Each system also have a table of the same name, "my_table". The instance
-name for each is also the same (primary and peer), and both have ZooKeeper hosts on a node with a hostname
+**primary** and **peer**, respectively. Each system also have a table of the same name, `my_table`. The instance
+name for each is also the same (`primary` and `peer`), and both have ZooKeeper hosts on a node with a hostname
 with that name as well (primary:2181 and peer:2181).
 
-We want to configure these systems so that "my_table" on "primary" replicates to "my_table" on "peer".
+We want to configure these systems so that `my_table` on **primary** replicates to `my_table` on **peer**.
 
 ### accumulo-site.xml
 
@@ -221,7 +208,6 @@ in replication together. In this example, we will use the names provided in the 
 <property>
   <name>replication.name</name>
   <value>primary</value>
-  <description>Defines the unique name</description>
 </property>
 ```
 
@@ -270,10 +256,10 @@ root@primary> createtable my_table
 
 #### Define the Peer as a replication peer to the Primary
 
-We're defining the instance with replication.name of 'peer' as a peer. We provide the implementation of ReplicaSystem
-that we want to use, and the configuration for the AccumuloReplicaSystem. In this case, the configuration is the Accumulo
-Instance name for 'peer' and the ZooKeeper quorum string. The configuration key is of the form
-"replication.peer.$peer_name".
+We're defining the instance with {% plink replication.name %} of `peer` as a peer. We provide the implementation of [ReplicaSystem]
+that we want to use, and the configuration for the [AccumuloReplicaSystem]. In this case, the configuration is the Accumulo
+Instance name for `peer` and the ZooKeeper quorum string. The configuration key is of the form
+`replication.peer.$peer_name`.
 
 ```
 root@primary> config -s replication.peer.peer=org.apache.accumulo.tserver.replication.AccumuloReplicaSystem,peer,$peer_zk_quorum
@@ -292,8 +278,8 @@ root@primary> config -s replication.peer.password.peer=peer
 #### Enable replication on the table
 
 Now that we have defined the peer on the primary and provided the authentication credentials, we need to configure
-our table with the implementation of ReplicaSystem we want to use to replicate to the peer. In this case, our peer 
-is an Accumulo instance, so we want to use the AccumuloReplicaSystem.
+our table with the implementation of [ReplicaSystem] we want to use to replicate to the peer. In this case, our peer
+is an Accumulo instance, so we want to use the [AccumuloReplicaSystem].
 
 The configuration for the AccumuloReplicaSystem is the table ID for the table on the peer instance that we
 want to replicate into. Be sure to use the correct value for $peer_table_id. The configuration key is of
@@ -435,3 +421,8 @@ are processed most quickly and pushed through the replication framework.
 
 The "order" entry is created when the WAL is closed (no longer being written to) and is removed when
 the WAL is fully replicated to all remote locations.
+
+[WorkAssigner]: {% jurl org.apache.accumulo.server.replication.WorkAssigner %}
+[ReplicaSystem]: {% jurl org.apache.accumulo.server.replication.ReplicaSystem %}
+[AccumuloReplicaSystem]: {% jurl org.apache.accumulo.server.replication.AccumuloReplicaSystem %}
+[InstanceConfig]: {% durl administration/replication#instance-configuration %}
