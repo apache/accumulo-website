@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Combiner Example</title>
+<title>Apache Accumulo 1.9.2</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -148,63 +148,104 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Combiner Example</h1>
+          <h1 class="title">Apache Accumulo 1.9.2</h1>
           
-          <p>This tutorial uses the following Java class, which can be found in org.apache.accumulo.examples.simple.combiner in the examples-simple module:</p>
+          <p>18 Jul 2018</p>
+
+
+<div class="alert alert-info" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-1.9.1/">the latest release notes</a>.</p>
+</div>
+
+
+
+
+
+
+<p>Apache Accumulo 1.9.2 contains fixes for critical write-ahead log bugs.
+Users of any previous version of 1.8 or 1.9 are encouraged to upgrade
+immediately to avoid those issues.</p>
 
 <ul>
-  <li>StatsCombiner.java - a combiner that calculates max, min, sum, and count</li>
+  <li><a href="/1.9/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation</li>
+  <li><a href="/1.9/apidocs/">Javadocs</a> - Accumulo 1.9 API</li>
+  <li><a href="/1.9/examples/">Examples</a> - Code with corresponding readme files that give step by
+step instructions for running example code</li>
 </ul>
 
-<p>This is a simple combiner example.  To build this example run maven and then
-copy the produced jar into the accumulo lib dir.  This is already done in the
-tar distribution.</p>
+<h2 id="notable-changes">Notable Changes</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/accumulo shell -u username
-Enter current password for 'username'@'instance': ***
+<h3 id="fixes-for-critical-wal-bugs-affects-versions-180-191">Fixes for Critical WAL Bugs (affects versions 1.8.0-1.9.1)</h3>
 
-Shell - Apache Accumulo Interactive Shell
-<span class="gd">- 
-- version: 1.5.0
-- instance name: instance
-- instance id: 00000000-0000-0000-0000-000000000000
-- 
-- type 'help' for a list of available commands
-- 
-</span>username@instance&gt; createtable runners
-username@instance runners&gt; setiter -t runners -p 10 -scan -minc -majc -n decStats -class org.apache.accumulo.examples.simple.combiner.StatsCombiner
-Combiner that keeps track of min, max, sum, and count
-<span class="gd">----------&gt; set StatsCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: 
-----------&gt; set StatsCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non aplhanum chars using %&lt;hex&gt;.: stat
-----------&gt; set StatsCombiner parameter radix, radix/base of the numbers: 10
-</span>username@instance runners&gt; setiter -t runners -p 11 -scan -minc -majc -n hexStats -class org.apache.accumulo.examples.simple.combiner.StatsCombiner
-Combiner that keeps track of min, max, sum, and count
-<span class="gd">----------&gt; set StatsCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: 
-----------&gt; set StatsCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non aplhanum chars using %&lt;hex&gt;.: hstat
-----------&gt; set StatsCombiner parameter radix, radix/base of the numbers: 16
-</span>username@instance runners&gt; insert 123456 name first Joe
-username@instance runners&gt; insert 123456 stat marathon 240
-username@instance runners&gt; scan
-123456 name:first []    Joe
-123456 stat:marathon []    240,240,240,1
-username@instance runners&gt; insert 123456 stat marathon 230
-username@instance runners&gt; insert 123456 stat marathon 220
-username@instance runners&gt; scan
-123456 name:first []    Joe
-123456 stat:marathon []    220,240,690,3
-username@instance runners&gt; insert 123456 hstat virtualMarathon 6a
-username@instance runners&gt; insert 123456 hstat virtualMarathon 6b
-username@instance runners&gt; scan
-123456 hstat:virtualMarathon []    6a,6b,d5,2
-123456 name:first []    Joe
-123456 stat:marathon []    220,240,690,3
-</code></pre></div></div>
+<p>Multiple bugs were fixed in 1.9.2 which affects the behavior of the write-ahead
+log mechanism. These vary in significance, ranging from moderate to critical.</p>
 
-<p>In this example a table is created and the example stats combiner is applied to
-the column family stat and hstat.  The stats combiner computes min,max,sum, and
-count.  It can be configured to use a different base or radix.  In the example
-above the column family stat is configured for base 10 and the column family
-hstat is configured for base 16.</p>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/537">#537</a> - (Critical) Since 1.8.0, a bug existed which could cause some
+write-ahead logs to be removed (garbage collected) before Accumulo was
+finished with them. These removed logs could have contained important state
+tracking information.  Without the state contained in these logs, some data
+in the remaining logs could have been replayed into a table when not needed.
+This could have reintroduced deleted data, or introduced duplicate data
+(which can interfere with combiners).</li>
+  <li><a href="https://github.com/apache/accumulo/issues/538">#538</a> - (Moderate) A bug was introduced in 1.9.1 which resulted in some
+false positive IllegalStateExceptions to occur, preventing log recovery.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/539">#539</a> - (Moderate) Since 1.8.0, a race condition existed which could cause a log
+file which contains data to be recovered to not be recorded, thus making it
+invisible to recovery, if a tserver died within a very small window. <a href="https://github.com/apache/accumulo/issues/441">#441</a>
+attempted to fix this in 1.9.1, but the proper fix was done in 1.9.2 with PR
+<a href="https://github.com/apache/accumulo/issues/559">#559</a>.</li>
+</ul>
+
+<p>Even if you primarily use bulk ingest, Accumulo’s own metadata tables can be
+affected by these bugs, causing unexpected behavior after an otherwise routine
+and recoverable server failure. As such, these bugs should be a concern to all
+users.</p>
+
+<h3 id="fixes-for-concurrency-bugs-gathering-table-information-affects-180-191">Fixes for concurrency bugs gathering table information (affects 1.8.0-1.9.1)</h3>
+
+<p>Bugs were found with the <code class="highlighter-rouge">master.status.threadpool.size</code> property. If this
+property were set to a value other than <code class="highlighter-rouge">1</code>, it could cause 100% CPU, hanging,
+or <code class="highlighter-rouge">ConcurrentModificationException</code>s.</p>
+
+<p>These bugs were fixed in <a href="https://github.com/apache/accumulo/issues/546">#546</a>.</p>
+
+<h3 id="monitor-time-unit-bug">Monitor time unit bug</h3>
+
+<p>A bug was found in the monitor which displayed time durations (for example,
+those pertaining to bulk imports) in incorrect time units.</p>
+
+<p>This bug was fixed in <a href="https://github.com/apache/accumulo/issues/553">#553</a>.</p>
+
+<h2 id="other-changes">Other Changes</h2>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues?q=label%3Av1.9.2">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+  <li><a href="/release/accumulo-1.9.1/">1.9.1 release notes</a> - Release notes showing changes in the previous release</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.0/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>All ITs passed with Hadoop 3.0.0 (hadoop.profile=3)</li>
+  <li>All ITs passed with Hadoop 2.6.4 (hadoop.profile=2)</li>
+  <li>Ran 3 continuous ingesters successfully for 24 hours on a 10 node cluster
+with agitation and pausing. Verification for all 3 tests was successful.</li>
+  <li>Ran continuous ingest for 24 hours and verified without agitation on a 10
+node cluster.</li>
+  <li>Tested <a href="https://fluo.apache.org">Apache Fluo</a> build and ITs passed against this version.</li>
+  <li>Ran a single-node cluster with <a href="https://github.com/apache/fluo-uno">Uno</a> and created a table, ingested data,
+flushed, compacted, scanned, and deleted the table.</li>
+</ul>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 
         </div>
 

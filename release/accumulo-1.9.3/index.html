@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Combiner Example</title>
+<title>Apache Accumulo 1.9.3</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -148,63 +148,88 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Combiner Example</h1>
+          <h1 class="title">Apache Accumulo 1.9.3</h1>
           
-          <p>This tutorial uses the following Java class, which can be found in org.apache.accumulo.examples.simple.combiner in the examples-simple module:</p>
+          <p>18 Jul 2018</p>
+
+
+<div class="alert alert-info" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-1.9.1/">the latest release notes</a>.</p>
+</div>
+
+
+
+
+
+
+<p>Apache Accumulo 1.9.3 contains bug fixes for ~summary of bugs here~.
+Users of any previous version of 1.8 or 1.9 are encouraged to upgrade
+~immediately or specify recommended timeline~.</p>
 
 <ul>
-  <li>StatsCombiner.java - a combiner that calculates max, min, sum, and count</li>
+  <li><a href="/1.9/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation</li>
+  <li><a href="/1.9/apidocs/">Javadocs</a> - Accumulo 1.9 API</li>
+  <li><a href="/1.9/examples/">Examples</a> - Code with corresponding readme files that give step by
+step instructions for running example code</li>
 </ul>
 
-<p>This is a simple combiner example.  To build this example run maven and then
-copy the produced jar into the accumulo lib dir.  This is already done in the
-tar distribution.</p>
+<h2 id="notable-changes">Notable Changes</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/accumulo shell -u username
-Enter current password for 'username'@'instance': ***
+<h3 id="fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions">Fix ArrayOutOfBounds error when new files are created (affects all previous versions)</h3>
 
-Shell - Apache Accumulo Interactive Shell
-<span class="gd">- 
-- version: 1.5.0
-- instance name: instance
-- instance id: 00000000-0000-0000-0000-000000000000
-- 
-- type 'help' for a list of available commands
-- 
-</span>username@instance&gt; createtable runners
-username@instance runners&gt; setiter -t runners -p 10 -scan -minc -majc -n decStats -class org.apache.accumulo.examples.simple.combiner.StatsCombiner
-Combiner that keeps track of min, max, sum, and count
-<span class="gd">----------&gt; set StatsCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: 
-----------&gt; set StatsCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non aplhanum chars using %&lt;hex&gt;.: stat
-----------&gt; set StatsCombiner parameter radix, radix/base of the numbers: 10
-</span>username@instance runners&gt; setiter -t runners -p 11 -scan -minc -majc -n hexStats -class org.apache.accumulo.examples.simple.combiner.StatsCombiner
-Combiner that keeps track of min, max, sum, and count
-<span class="gd">----------&gt; set StatsCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: 
-----------&gt; set StatsCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non aplhanum chars using %&lt;hex&gt;.: hstat
-----------&gt; set StatsCombiner parameter radix, radix/base of the numbers: 16
-</span>username@instance runners&gt; insert 123456 name first Joe
-username@instance runners&gt; insert 123456 stat marathon 240
-username@instance runners&gt; scan
-123456 name:first []    Joe
-123456 stat:marathon []    240,240,240,1
-username@instance runners&gt; insert 123456 stat marathon 230
-username@instance runners&gt; insert 123456 stat marathon 220
-username@instance runners&gt; scan
-123456 name:first []    Joe
-123456 stat:marathon []    220,240,690,3
-username@instance runners&gt; insert 123456 hstat virtualMarathon 6a
-username@instance runners&gt; insert 123456 hstat virtualMarathon 6b
-username@instance runners&gt; scan
-123456 hstat:virtualMarathon []    6a,6b,d5,2
-123456 name:first []    Joe
-123456 stat:marathon []    220,240,690,3
-</code></pre></div></div>
+<p>Accumulo maintains a 1-up counter to keep file names and other identifiers
+unique. This counter is padded with 0 characters when used in file names. If
+the counter becomes sufficiently large, the padding code in versions prior to
+1.9.3 causes an out of bounds error.</p>
 
-<p>In this example a table is created and the example stats combiner is applied to
-the column family stat and hstat.  The stats combiner computes min,max,sum, and
-count.  It can be configured to use a different base or radix.  In the example
-above the column family stat is configured for base 10 and the column family
-hstat is configured for base 16.</p>
+<p>Most users will not be affected by this bug, since it requires the counter to
+be very large before the error would be seen. Situations which might cause the
+counter to get very large include: having a very old Accumulo cluster that has
+been running for many years, having a very large cluster, having a cluster that
+writes many files very quickly for long periods of time, having altered the
+current value of the counter in ZooKeeper, or if you experience a bug which
+causes the counter value to skip ahead very rapidly.</p>
+
+<p>If you wish to check to see if you are at risk of being impacted by this bug,
+examine the name of RFiles recently created in your system. If you have one or
+more padded 0 characters (after an initial letter), as in I000zy98.rf or
+I0123abc.rf, you are probably at low risk from this bug.</p>
+
+<p>This issue was fixed in pull request <a href="https://github.com/apache/accumulo/issues/562">#562</a></p>
+
+<h3 id="another-notable-item-here-affects-versions">~Another notable item here~ (affects ~versions~)</h3>
+
+<p>More description here. This was fixed in [#NUM].</p>
+
+<h2 id="other-changes">Other Changes</h2>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues?q=label%3Av1.9.3">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+  <li><a href="/release/accumulo-1.9.2/">1.9.2 release notes</a> - Release notes showing changes in the previous release</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.0/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>(Example) All ITs passed with Hadoop 3.0.0 (hadoop.profile=3)</li>
+  <li>(Example) All ITs passed with Hadoop 2.6.4 (hadoop.profile=2)</li>
+  <li>(Example) Ran 3 continuous ingesters successfully for 24 hours on a 10 node cluster
+with agitation and pausing. Verification for all 3 tests was successful.</li>
+  <li>(Example) Ran continuous ingest for 24 hours and verified without agitation on a 10
+node cluster.</li>
+  <li>(Example) Tested <a href="https://fluo.apache.org">Apache Fluo</a> build and ITs passed against this version.</li>
+  <li>(Example) Ran a single-node cluster with <a href="https://github.com/apache/fluo-uno">Uno</a> and created a table, ingested data,
+flushed, compacted, scanned, and deleted the table.</li>
+</ul>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 
         </div>
 
