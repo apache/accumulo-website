@@ -92,13 +92,13 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 ## Current Releases
 
-### 1.9.1 **latest**{: .label .label-primary }
+### 1.9.2 **latest**{: .label .label-primary }
 
-The most recent Apache Accumulo&reg; release is version 1.9.1. See the [release notes][REL_NOTES_19].
+The most recent Apache Accumulo&reg; release is version 1.9.2. See the [release notes][REL_NOTES_19].
 
 {: .table }
-| **Binary** | [accumulo-1.9.1-bin.tar.gz][BIN_19] | [ASC][ASC_BIN_19] | [SHA][SHA_BIN_19] |
-| **Source** | [accumulo-1.9.1-src.tar.gz][SRC_19] | [ASC][ASC_SRC_19] | [SHA][SHA_SRC_19] |
+| **Binary** | [accumulo-1.9.2-bin.tar.gz][BIN_19] | [ASC][ASC_BIN_19] | [SHA][SHA_BIN_19] |
+| **Source** | [accumulo-1.9.2-src.tar.gz][SRC_19] | [ASC][ASC_SRC_19] | [SHA][SHA_SRC_19] |
 
 #### 1.9 Documentation
 * [README][README_19]
@@ -136,24 +136,24 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [SHA_BIN_17]: https://www.apache.org/dist/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz.sha512
 [SHA_SRC_17]: https://www.apache.org/dist/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz.sha512
 
-[ASC_BIN_19]: https://www.apache.org/dist/accumulo/1.9.1/accumulo-1.9.1-bin.tar.gz.asc
-[ASC_SRC_19]: https://www.apache.org/dist/accumulo/1.9.1/accumulo-1.9.1-src.tar.gz.asc
-[SHA_BIN_19]: https://www.apache.org/dist/accumulo/1.9.1/accumulo-1.9.1-bin.tar.gz.sha512
-[SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.1/accumulo-1.9.1-src.tar.gz.sha512
+[ASC_BIN_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz.asc
+[ASC_SRC_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz.asc
+[SHA_BIN_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz.sha512
+[SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz.sha512
 
 [BIN_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.4/accumulo-1.7.4-bin.tar.gz" id="/downloads/accumulo-1.7.4-bin.tar.gz" }
 [SRC_17]: https://www.apache.org/dyn/closer.lua/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz
 {: .download_external link-suffix="/accumulo/1.7.4/accumulo-1.7.4-src.tar.gz" id="/downloads/accumulo-1.7.4-src.tar.gz" }
 
-[BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.1/accumulo-1.9.1-bin.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.1/accumulo-1.9.1-bin.tar.gz" id="/downloads/accumulo-1.9.1-bin.tar.gz" }
-[SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.1/accumulo-1.9.1-src.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.1/accumulo-1.9.1-src.tar.gz" id="/downloads/accumulo-1.9.1-src.tar.gz" }
+[BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz
+{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz" id="/downloads/accumulo-1.9.2-bin.tar.gz" }
+[SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz
+{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz" id="/downloads/accumulo-1.9.2-src.tar.gz" }
 
 [README_17]: https://github.com/apache/accumulo/blob/rel/1.7.4/README.md
 {: .download_external id="/1.7/README" }
-[README_19]: https://github.com/apache/accumulo/blob/rel/1.9.1/README.md
+[README_19]: https://github.com/apache/accumulo/blob/rel/1.9.2/README.md
 {: .download_external id="/1.9/README" }
 
 [JAVADOC_17]: {{ site.baseurl }}/1.7/apidocs/
@@ -170,5 +170,5 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [CHANGES_17]: https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12339577 "1.7.4 CHANGES"
 
 [REL_NOTES_17]: {{ site.baseurl }}/release/accumulo-1.7.4/ "1.7.4 Release Notes"
-[REL_NOTES_19]: {{ site.baseurl }}/release/accumulo-1.9.1/ "1.9.1 Release Notes"
+[REL_NOTES_19]: {{ site.baseurl }}/release/accumulo-1.9.2/ "1.9.2 Release Notes"
 
