@@ -6,10 +6,101 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 18 Jul 2018 18:09:31 -0400</pubDate>
-    <lastBuildDate>Wed, 18 Jul 2018 18:09:31 -0400</lastBuildDate>
+    <pubDate>Thu, 19 Jul 2018 17:34:03 -0400</pubDate>
+    <lastBuildDate>Thu, 19 Jul 2018 17:34:03 -0400</lastBuildDate>
     <generator>Jekyll v3.7.3</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 1.9.2</title>
+        <description>&lt;p&gt;Apache Accumulo 1.9.2 contains fixes for critical write-ahead log bugs.
+Users of any previous version of 1.8 or 1.9 are encouraged to upgrade
+immediately to avoid those issues.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.9 API&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by
+step instructions for running example code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;fixes-for-critical-wal-bugs-affects-versions-180-191&quot;&gt;Fixes for Critical WAL Bugs (affects versions 1.8.0-1.9.1)&lt;/h3&gt;
+
+&lt;p&gt;Multiple bugs were fixed in 1.9.2 which affects the behavior of the write-ahead
+log mechanism. These vary in significance, ranging from moderate to critical.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/537&quot;&gt;#537&lt;/a&gt; - (Critical) Since 1.8.0, a bug existed which could cause some
+write-ahead logs to be removed (garbage collected) before Accumulo was
+finished with them. These removed logs could have contained important state
+tracking information.  Without the state contained in these logs, some data
+in the remaining logs could have been replayed into a table when not needed.
+This could have reintroduced deleted data, or introduced duplicate data
+(which can interfere with combiners).&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/538&quot;&gt;#538&lt;/a&gt; - (Moderate) A bug was introduced in 1.9.1 which resulted in some
+false positive IllegalStateExceptions to occur, preventing log recovery.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/539&quot;&gt;#539&lt;/a&gt; - (Moderate) Since 1.8.0, a race condition existed which could cause a log
+file which contains data to be recovered to not be recorded, thus making it
+invisible to recovery, if a tserver died within a very small window.  &lt;a href=&quot;https://github.com/apache/accumulo/issues/559&quot;&gt;#559&lt;/a&gt; 
+ fixes this issue and may also fix a 1.9.1 deadlock caused by the fix for &lt;a href=&quot;https://github.com/apache/accumulo/issues/441&quot;&gt;#441&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Even if you primarily use bulk ingest, Accumulo’s own metadata tables can be
+affected by these bugs, causing unexpected behavior after an otherwise routine
+and recoverable server failure. As such, these bugs should be a concern to all
+users.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixes-for-concurrency-bugs-gathering-table-information-affects-180-191&quot;&gt;Fixes for concurrency bugs gathering table information (affects 1.8.0-1.9.1)&lt;/h3&gt;
+
+&lt;p&gt;Bugs were found with the &lt;code class=&quot;highlighter-rouge&quot;&gt;master.status.threadpool.size&lt;/code&gt; property. If this
+property were set to a value other than &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;, it could cause 100% CPU, hanging,
+or &lt;code class=&quot;highlighter-rouge&quot;&gt;ConcurrentModificationException&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;p&gt;These bugs were fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/546&quot;&gt;#546&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;monitor-time-unit-bug&quot;&gt;Monitor time unit bug&lt;/h3&gt;
+
+&lt;p&gt;A bug was found in the monitor which displayed time durations (for example,
+those pertaining to bulk imports) in incorrect time units.&lt;/p&gt;
+
+&lt;p&gt;This bug was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/553&quot;&gt;#553&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-changes&quot;&gt;Other Changes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues?q=label%3Av1.9.2&quot;&gt;GitHub&lt;/a&gt; - List of issues tracked on GitHub corresponding to this release&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/release/accumulo-1.9.1/&quot;&gt;1.9.1 release notes&lt;/a&gt; - Release notes showing changes in the previous release&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.0/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;All ITs passed with Hadoop 3.0.0 (hadoop.profile=3)&lt;/li&gt;
+  &lt;li&gt;All ITs passed with Hadoop 2.6.4 (hadoop.profile=2)&lt;/li&gt;
+  &lt;li&gt;Ran 3 continuous ingesters successfully for 24 hours on a 10 node cluster
+with agitation and pausing. Verification for all 3 tests was successful.&lt;/li&gt;
+  &lt;li&gt;Ran continuous ingest for 24 hours and verified without agitation on a 10
+node cluster.&lt;/li&gt;
+  &lt;li&gt;Tested &lt;a href=&quot;https://fluo.apache.org&quot;&gt;Apache Fluo&lt;/a&gt; build and ITs passed against this version.&lt;/li&gt;
+  &lt;li&gt;Ran a single-node cluster with &lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt; and created a table, ingested data,
+flushed, compacted, scanned, and deleted the table.&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Thu, 19 Jul 2018 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.9.2/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.2/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Accumulo Summit is on October 15th!</title>
@@ -550,100 +641,6 @@ and submit a pull request to the &lt;a href=&quot;https://github.com/apache/accu
         <pubDate>Thu, 29 Jun 2017 00:00:00 -0400</pubDate>
         <link>https://accumulo.apache.org/blog/2017/06/29/accumulo-documentation-improvements.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2017/06/29/accumulo-documentation-improvements.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Introducing Uno and Muchos</title>
-        <description>&lt;p&gt;While &lt;a href=&quot;https://github.com/apache/accumulo/blob/master/INSTALL.md&quot;&gt;Accumulo’s installation instructions&lt;/a&gt; are simple, it can be time consuming to install Accumulo
-given its requirement on &lt;a href=&quot;https://hadoop.apache.org/&quot;&gt;Hadoop&lt;/a&gt; and &lt;a href=&quot;https://zookeeper.apache.org/&quot;&gt;Zookeeper&lt;/a&gt; being installed and running. For a one-time production
-installation, this set up time (which can take up to an hour) is not much of an inconvenience. However, it can become a burden
-for developers who need to frequently set up Accumulo to test code changes, switch between different
-versions, or start a fresh instance on a laptop.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/fluo-muchos&quot;&gt;Muchos&lt;/a&gt; are tools that ease the burden on developers of installing Accumulo and its dependencies.
-The names of Uno and Muchos indicate their use case. Uno is designed for running Accumulo on a single node
-while Muchos is designed for running Accumulo on a cluster. While Uno and Muchos will install by default the most
-recent stable release of Accumulo, Hadoop, and Zookeeper, it is easy to configure different versions to
-match a production cluster.&lt;/p&gt;
-
-&lt;p&gt;The sections below show how to use these tools. For more complete documentation, view their respective GitHub
-pages.&lt;/p&gt;
-
-&lt;h2 id=&quot;uno&quot;&gt;Uno&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt; is a command line tool that sets up Accumulo on a single machine. It can be installed by cloning the
-Uno git repo.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/apache/fluo-uno.git
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;fluo-uno
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Uno works out of the box but it can be customized by modifying &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/uno.conf&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;First, download the Accumulo, Hadoop, and Zookeeper tarballs from Apache by using the command below:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/uno fetch accumulo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The fetch command places all tarballs in the &lt;code class=&quot;highlighter-rouge&quot;&gt;downloads/&lt;/code&gt; directory. Uno can be configured (in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/uno.conf&lt;/code&gt;)
-to build an Accumulo tarball from a local git repo when &lt;code class=&quot;highlighter-rouge&quot;&gt;fetch&lt;/code&gt; is called.&lt;/p&gt;
-
-&lt;p&gt;After downloading tarballs, the command below sets up Accumulo, Hadoop &amp;amp; Zookeeper in the &lt;code class=&quot;highlighter-rouge&quot;&gt;install/&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/uno setup accumulo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Accumulo, Hadoop, &amp;amp; Zookeeper are now ready to use. You can view the Accumulo monitor at
-&lt;a href=&quot;http://localhost:9995&quot;&gt;http://localhost:9995&lt;/a&gt;. You can configure your shell using the command below:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;./bin/uno &lt;span class=&quot;nb&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;uno stop accumulo&lt;/code&gt; to cleanly stop your cluster and &lt;code class=&quot;highlighter-rouge&quot;&gt;uno start accumulo&lt;/code&gt; to start it again.&lt;/p&gt;
-
-&lt;p&gt;If you need a fresh cluster, you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;uno setup accumulo&lt;/code&gt; again. To kill your cluster, run &lt;code class=&quot;highlighter-rouge&quot;&gt;uno kill&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;muchos&quot;&gt;Muchos&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/apache/fluo-muchos&quot;&gt;Muchos&lt;/a&gt; is a command line tool that launches an AWS EC2 cluster with Accumulo set up on it. It is installed by
-cloning its git repo.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/apache/fluo-muchos.git
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;fluo-muchos
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Before using Muchos, create &lt;code class=&quot;highlighter-rouge&quot;&gt;muchos.props&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;conf/&lt;/code&gt; and edit it for your AWS environment.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;conf/muchos.props.example conf/muchos.props
-vim conf/muchos.props
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Next, run the command below to launch a cluster in AWS.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;muchos launch &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; mycluster
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After launching the cluster, set up Accumulo on it using the following command.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;muchos setup
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;muchos ssh&lt;/code&gt; to ssh to the cluster and &lt;code class=&quot;highlighter-rouge&quot;&gt;muchos terminate&lt;/code&gt; to terminate all EC2 nodes when you are finished.&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-
-&lt;p&gt;Uno and Muchos automate installing Accumulo for development and testing. While not recommended for production
-use at this time, Muchos is a great reference for running Accumulo in production. System administrators can
-reference the &lt;a href=&quot;https://www.ansible.com/&quot;&gt;Ansible&lt;/a&gt; code in Muchos to automate management of their own clusters.&lt;/p&gt;
-
-</description>
-        <pubDate>Fri, 21 Apr 2017 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/blog/2017/04/21/introducing-uno-and-muchos.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2017/04/21/introducing-uno-and-muchos.html</guid>
         
         
         <category>blog</category>
