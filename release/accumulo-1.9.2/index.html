@@ -205,6 +205,14 @@ or <code class="highlighter-rouge">ConcurrentModificationException</code>s.</p>
 
 <p>These bugs were fixed in <a href="https://github.com/apache/accumulo/issues/546">#546</a>.</p>
 
+<h3 id="caching-of-file-lengths">Caching of file lengths</h3>
+
+<p>RFiles stores metadata at the end of file. When opening a rfile Accumulo
+seeks to the end and reads metadata.  To do this seek the file length is needed. 
+Before opening a file its length is requested from the namenode.  This can
+add more load to a busy namenode.  To alleviate this, a small cache of file lengths was
+added in <a href="https://github.com/apache/accumulo/issues/467">#467</a>.</p>
+
 <h3 id="monitor-time-unit-bug">Monitor time unit bug</h3>
 
 <p>A bug was found in the monitor which displayed time durations (for example,
