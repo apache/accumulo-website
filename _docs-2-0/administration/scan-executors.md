@@ -14,7 +14,7 @@ data.  The long scans noticeably increase the latency of the short scans.
 Accumulo offers two mechanisms to help improve situations like this: multiple
 scan executors and per executor prioritizers.  Additional scan executors can
 give tables dedicated resources.  For each scan executor, an optional
-prioritizer can reorder queued work. 
+prioritizer can reorder queued work.
 
 ### Configuring and using Scan Executors
 
@@ -40,7 +40,7 @@ tserver.scan.executors.<name>.prioritizer.opts.<key>=<value>
 
 After creating an executor, configure {% plink table.scan.dispatcher %} to use it.  A
 dispatcher is Java subclass of {%jlink org.apache.accumulo.core.spi.scan.ScanDispatcher %}
-that decides which scan executor should service a table.  Set the following table 
+that decides which scan executor should service a table.  Set the following table
 property to configure a dispatcher.
 
 ```
@@ -81,12 +81,15 @@ config -s tserver.scan.executors.high.threads=8
 Tablet servers should be restarted after configuring scan executors, then tables can be configured.
 
 ```
+config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW1 -s table.scan.dispatcher.opts.executor=low
+config -t LOW2 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW2 -s table.scan.dispatcher.opts.executor=low
+config -t HIGH -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t HIGH -s table.scan.dispatcher.opts.executor=high
 ```
 
-While not necessary because its the default, it would be safer to also set
+While not necessary because its the default, it is safer to also set
 `table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher`
 for each table.  This ensures things work as expected in the case where
 `table.scan.dispatcher` was set at the system or namespace level.
@@ -123,6 +126,7 @@ table `tex`.
 config -s tserver.scan.executors.special.threads=8
 config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
 createtable tex
+config -t tex -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t tex -s table.scan.dispatcher.opts.heed_hints=true
 ```
 
