@@ -374,7 +374,7 @@ tserver.scan.executors.&lt;name&gt;.prioritizer.opts.&lt;key&gt;=&lt;value&gt;
 
 <p>After creating an executor, configure <a href="/docs/2.0/administration/properties#table_scan_dispatcher">table.scan.dispatcher</a> to use it.  A
 dispatcher is Java subclass of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/spi/scan/ScanDispatcher.html">ScanDispatcher</a>
-that decides which scan executor should service a table.  Set the following table 
+that decides which scan executor should service a table.  Set the following table
 property to configure a dispatcher.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher=&lt;class name&gt;
@@ -413,12 +413,15 @@ config -s tserver.scan.executors.high.threads=8
 
 <p>Tablet servers should be restarted after configuring scan executors, then tables can be configured.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t LOW1 -s table.scan.dispatcher.opts.executor=low
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
+config -t LOW1 -s table.scan.dispatcher.opts.executor=low
+config -t LOW2 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW2 -s table.scan.dispatcher.opts.executor=low
+config -t HIGH -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t HIGH -s table.scan.dispatcher.opts.executor=high
 </code></pre></div></div>
 
-<p>While not necessary because its the default, it would be safer to also set
+<p>While not necessary because its the default, it is safer to also set
 <code class="highlighter-rouge">table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</code>
 for each table.  This ensures things work as expected in the case where
 <code class="highlighter-rouge">table.scan.dispatcher</code> was set at the system or namespace level.</p>
@@ -440,6 +443,34 @@ executor.</p>
 <p>Using the IdleRatioScanPrioritizer in a test with 50 long running scans and 5
 threads repeatedly doing small random lookups made a significant difference.
 In this test the average lookup time for the 5 threads went from 250ms to 5 ms.</p>
+
+<h3 id="providing-hints-from-the-client-side">Providing hints from the client side.</h3>
+
+<p>Scanners can provide hints to ScanDispatchers and ScanPriotizers by calling
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/ScannerBase.html#setExecutionHints-java.util.Map-">setExecutionHints</a> on the Scanner.  What, if anything, is done with these
+hints depends on what is configured for the table and system.  Accumulo’s
+default configuration ignores hints. The following shell commands make it
+possible to choose an executor and set priorities from a scanner for the
+table <code class="highlighter-rouge">tex</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.scan.executors.special.threads=8
+config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
+createtable tex
+config -t tex -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
+config -t tex -s table.scan.dispatcher.opts.heed_hints=true
+</code></pre></div></div>
+
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/spi/scan/HintScanPrioritizer.html">HintScanPrioritizer</a> honors
+hints of the form <code class="highlighter-rouge">priority=&lt;integer&gt;</code> to prioritize scans, with lower integers
+resulting in a higher priority. The <code class="highlighter-rouge">SimpleScanDispatcher</code>, which is the
+default dispatcher, supports the <code class="highlighter-rouge">heed_hints</code> option. By default the
+<code class="highlighter-rouge">SimpleScanDispatcher</code> ignores hints, but when <code class="highlighter-rouge">heed_hints</code> is set to <code class="highlighter-rouge">true</code> it
+will honor hints of the form <code class="highlighter-rouge">executor=&lt;executor name&gt;</code> when choosing an
+executor. After restarting tservers, the following command will start a scan
+that uses the executor <code class="highlighter-rouge">special</code> with a priority of 3.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints priority=3,executor=special
+</code></pre></div></div>
 
 
 
