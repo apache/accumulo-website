@@ -14,7 +14,7 @@ data.  The long scans noticeably increase the latency of the short scans.
 Accumulo offers two mechanisms to help improve situations like this: multiple
 scan executors and per executor prioritizers.  Additional scan executors can
 give tables dedicated resources.  For each scan executor, an optional
-prioritizer can reorder queued work. 
+prioritizer can reorder queued work.
 
 ### Configuring and using Scan Executors
 
@@ -22,7 +22,7 @@ By default, Accumulo sets `tserver.scan.executors.default.threads=16` which
 creates the default scan executor.  To configure additional scan executors,
 chose a unique name and configure {% plink tserver.scan.executors.* %}.  Setting
 the following causes each tablet server to create a scan executor with the
-specified threads.  
+specified threads.
 
 ```
 tserver.scan.executors.<name>.threads=<number>
@@ -30,7 +30,7 @@ tserver.scan.executors.<name>.threads=<number>
 
 Optionally, some of the following can be set.  The `priority` setting
 determines thread priority.  The `prioritizer` settings specifies a class that
-orders pending work.  
+orders pending work.
 
 ```
 tserver.scan.executors.<name>.priority=<number 1 to 10>
@@ -40,7 +40,7 @@ tserver.scan.executors.<name>.prioritizer.opts.<key>=<value>
 
 After creating an executor, configure {% plink table.scan.dispatcher %} to use it.  A
 dispatcher is Java subclass of {%jlink org.apache.accumulo.core.spi.scan.ScanDispatcher %}
-that decides which scan executor should service a table.  Set the following table 
+that decides which scan executor should service a table.  Set the following table
 property to configure a dispatcher.
 
 ```
@@ -56,9 +56,9 @@ table.scan.dispatcher.opts.<key>=<value>
 The default value for `table.scan.dispatcher` is {% jlink org.apache.accumulo.core.spi.scan.SimpleScanDispatcher %}.
 SimpleScanDispatcher supports an `executor` option for choosing a scan
 executor.  If this option is not set, then SimpleScanDispatcher will dispatch
-to the scan executor named `default`.  
+to the scan executor named `default`.
 
-To to tie everything together, consider the following use case.  
+To to tie everything together, consider the following use case.
 
  * Create tables named LOW1 and LOW2 using a scan executor with a single thread.
  * Create a table named HIGH with a dedicated scan executor with 8 threads.
@@ -81,12 +81,15 @@ config -s tserver.scan.executors.high.threads=8
 Tablet servers should be restarted after configuring scan executors, then tables can be configured.
 
 ```
+config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW1 -s table.scan.dispatcher.opts.executor=low
+config -t LOW2 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW2 -s table.scan.dispatcher.opts.executor=low
+config -t HIGH -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t HIGH -s table.scan.dispatcher.opts.executor=high
 ```
 
-While not necessary because its the default, it would be safer to also set
+While not necessary because its the default, it is safer to also set
 `table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher`
 for each table.  This ensures things work as expected in the case where
 `table.scan.dispatcher` was set at the system or namespace level.
@@ -104,11 +107,42 @@ executor.
 
 ```
 tserver.scan.executors.default.prioritizer=org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer
-```  
+```
 
 Using the IdleRatioScanPrioritizer in a test with 50 long running scans and 5
 threads repeatedly doing small random lookups made a significant difference.
-In this test the average lookup time for the 5 threads went from 250ms to 5 ms.  
+In this test the average lookup time for the 5 threads went from 250ms to 5 ms.
+
+### Providing hints from the client side.
+
+Scanners can provide hints to ScanDispatchers and ScanPriotizers by calling
+[setExecutionHints] on the Scanner.  What, if anything, is done with these
+hints depends on what is configured for the table and system.  Accumulo's
+default configuration ignores hints. The following shell commands make it
+possible to choose an executor and set priorities from a scanner for the
+table `tex`.
+
+```
+config -s tserver.scan.executors.special.threads=8
+config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
+createtable tex
+config -t tex -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
+config -t tex -s table.scan.dispatcher.opts.heed_hints=true
+```
+
+The {% jlink org.apache.accumulo.core.spi.scan.HintScanPrioritizer %} honors
+hints of the form `priority=<integer>` to prioritize scans, with lower integers
+resulting in a higher priority. The `SimpleScanDispatcher`, which is the
+default dispatcher, supports the `heed_hints` option. By default the
+`SimpleScanDispatcher` ignores hints, but when `heed_hints` is set to `true` it
+will honor hints of the form `executor=<executor name>` when choosing an
+executor. After restarting tservers, the following command will start a scan
+that uses the executor `special` with a priority of 3.
+
+```
+scan -t tex --execution-hints priority=3,executor=special
+```
 
 [tserver]: {{ page.docs_baseurl }}/getting-started/design#tablet-server-1
+[setExecutionHints]: {% jurl org.apache.accumulo.core.client.ScannerBase#setExecutionHints-java.util.Map- %}
 
