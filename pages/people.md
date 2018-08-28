@@ -63,6 +63,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Charles Williams    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
 | Chris Bennight      |                                                                   |                       |
 | Chris McCubbin      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
+| Chris McTague       | [Peterson Technologies][PETERSON]                                 | [ET][ET]              |
 | Christian Rohling   | [Endgame][ENDGAME]                                                | [ET][ET]              |
 | Damon Brown         | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Dave Wang           | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
