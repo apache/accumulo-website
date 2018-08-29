@@ -7,7 +7,7 @@ The [Accumulo monitor][monitor] provides the easiest way to view Accumulo metric
 1. The overview page is limited to 10 graphs
 1. These graphs only show metrics for the past two hours
 
-The Accumulo monitor could be improved to be better a visualizaiton tool for metrics but this doesn't make
+The Accumulo monitor could be improved to be better a visualization tool for metrics but this doesn't make
 sense when tools like [Grafana], [Graphite], and [Ganglia] exist and Accumulo can report metrics to these tools
 using [Hadoop Metrics2][metrics2]. While it's easy to configure Accumulo to send metrics, the hard part is
 setting up and configuring a metrics visualization tool (i.e Graphite, Ganglia, Grafana/InfluxDB) to collect

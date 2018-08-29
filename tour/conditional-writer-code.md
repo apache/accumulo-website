@@ -2,7 +2,7 @@
 title: Conditional Writer Code
 ---
 
-Below is a solution to the excercise.
+Below is a solution to the exercise.
 
 ```java
   static boolean setAddress(Connector conn, String id, String expectedAddr, String newAddr) {

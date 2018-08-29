@@ -24,7 +24,7 @@ static void exercise(MiniAccumuloCluster mac) throws Exception {
 }
 ```
 
-We want to calculate the average years of service from a sample of 2000 villians. A BatchScanner would be good for this task because we
+We want to calculate the average years of service from a sample of 2000 villains. A BatchScanner would be good for this task because we
 don't need the returned keys to be sorted. Follow these steps to efficiently scan the table with 10,000 entries.
 
 1. After the above code, create a BatchScanner with 5 query threads.  Similar to a Scanner, use the [createBatchScanner] method.
@@ -34,7 +34,7 @@ don't need the returned keys to be sorted. Follow these steps to efficiently sca
 3. We can make the scan more efficient by only bringing back the columns we want.  Use [fetchColumn] to get the `villain` family
 and `yearsOfService` qualifier.
 
-4. Finally, use the BatchScanner to calculate the average years of service of 2000 villians.
+4. Finally, use the BatchScanner to calculate the average years of service of 2000 villains.
 
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [createBatchScanner]: {% jurl org.apache.accumulo.core.client.Connector#createBatchScanner-java.lang.String-org.apache.accumulo.core.security.Authorizations-int- %}

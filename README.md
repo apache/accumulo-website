@@ -52,7 +52,7 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 ## Updating property documentation
 
 Building Accumulo  generates `properties.md` and `client-properties.md`.  To
-regenertate these, do the following.
+regenerate these, do the following.
 
 ```
 cd <accumulo source dir>

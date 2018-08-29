@@ -124,10 +124,10 @@ statistics created by the CountingSummarizer that VisibilitySummarizer extends.
        tooMany                                                      = 0
 
 VisibilitySummarizer has an option `maxCounters` that determines the max number
-of column visibilites it will track.  Below this option is set and compaction
+of column visibilities it will track.  Below this option is set and compaction
 is forced to regenerate summary data.  The new summary data only has three
-visibilites and now the `tooMany` statistic is 4.  This is the number of
-visibilites that were not counted.
+visibilities and now the `tooMany` statistic is 4.  This is the number of
+visibilities that were not counted.
 
 ```
  root@uno summary_test> config -t summary_test -s table.summarizer.vis.opt.maxCounters=3

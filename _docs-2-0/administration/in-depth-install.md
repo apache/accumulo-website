@@ -295,7 +295,7 @@ will expect the KeyStore in the same location.
 ### Client Configuration
 
 Accumulo clients are configured in a different way than Accumulo servers. Clients are
-configured when [an Accumulo Connnector is created][client-conn] using Java builder methods
+configured when [an Accumulo Connector is created][client-conn] using Java builder methods
 or a `accumulo-client.properties` file containing [client properties][client-props].
 
 ### Custom Table Tags

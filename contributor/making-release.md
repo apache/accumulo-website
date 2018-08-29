@@ -186,7 +186,7 @@ if this is the latest release of Accumulo.
 
  * Update the `accumulo.version` property in `pom.xml` of accumulo-examples
  * Run `mvn clean verify` to confirm that nothing breaks
- * Run one of the examples for additinal testing.
+ * Run one of the examples for additional testing.
 
 ## References
 

@@ -131,7 +131,7 @@ RFile (short for Relative Key File) is a file that contains Accumulo's sorted ke
 pairs. The file is written to HDFS by Tablet Servers during a minor compaction. RFiles are
 organized using the Index Sequential Access Method (ISAM). RFiles consist of data (key/value) block,
 index blocks (which are used to find data block), and meta blocks (which contain
-metadata for bloom filters and summary statistics). Data in an RFile is seperated by
+metadata for bloom filters and summary statistics). Data in an RFile is separated by
 locality group. The diagram below shows the logical view and HDFS file view of an RFile.
 
 ![rfile diagram]({{ site.url }}/images/docs/rfile_diagram.png)
