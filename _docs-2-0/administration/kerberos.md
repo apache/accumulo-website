@@ -358,7 +358,7 @@ required to set up the SASL transport.
 
 At this point you should have enough configured on the server and client side to interact with
 the system. You should verify that the administrative user you chose earlier can successfully
-interact with the sytem.
+interact with the system.
 
 While this example logs in via `kinit` with a password, any login method that caches Kerberos tickets
 should work.

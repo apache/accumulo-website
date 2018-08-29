@@ -664,7 +664,7 @@ One of the files is a list of files to distcp as shown below.
 ```
 
 Before the table can be imported, it must be copied using `distcp`. After the
-`distcp` completea, the cloned table may be deleted.
+`distcp` completes, the cloned table may be deleted.
 
 ```
     $ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest

@@ -24,11 +24,11 @@ The index and data block caches are configured for tables by the following prope
 * {% plink table.cache.index.enable %} - enables index block cache on the table (default is `true`)
 
 While the index block cache is enabled by default for all Accumulo tables, users must enable the data block cache by
-settting {% plink table.cache.block.enable %} to `true` in the shell:
+setting {% plink table.cache.block.enable %} to `true` in the shell:
 
     config -t mytable -s table.cache.block.enable=true
 
-Or programatically using [TableOperations.setProperty()][tableops]:
+Or programmatically using [TableOperations.setProperty()][tableops]:
 
 ```java
 conn.tableOperations().setProperty("mytable", "table.cache.block.enable", "true");

@@ -500,7 +500,7 @@ are the one who knows that this zero-length change in content is correct!
 
 Accumulo primarily uses GitHub (via pull requests) for code reviews, but has access to an instance of [Review Board](https://reviews.apache.org/) as well if that is preferred.
 
-Accumulo operates under the [Commit-Then-Review](https://www.apache.org/foundation/glossary#CommitThenReview) (CtR) policy, so a code review does not need to occur prior to commit. However, a commiter has the option to hold a code review before a commit happens if, in their opinion, it would benefit from additional attention. Full details of the code review process for Accumulo is documented [here](./rb)
+Accumulo operates under the [Commit-Then-Review](https://www.apache.org/foundation/glossary#CommitThenReview) (CtR) policy, so a code review does not need to occur prior to commit. However, a committer has the option to hold a code review before a commit happens if, in their opinion, it would benefit from additional attention. Full details of the code review process for Accumulo is documented [here](./rb)
 
 ### Review Board
 

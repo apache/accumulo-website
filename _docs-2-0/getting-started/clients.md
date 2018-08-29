@@ -191,9 +191,9 @@ These levels are:
 Durability can be set in multiple ways:
 
 1. The default durability of a table can be set in the Accumulo shell
-2. When creating a [Connector], the default durability can be overriden using `withBatchWriterConfig()`
+2. When creating a [Connector], the default durability can be overridden using `withBatchWriterConfig()`
    or by setting [batch.writer.durability] in `accumulo-client.properties`.
-3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overriden
+3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
    by the `BatchWriterConfig` that is passed in.
 
     ```java
