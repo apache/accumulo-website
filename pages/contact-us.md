@@ -34,10 +34,6 @@ Drop by and chat about Accumulo at [#accumulo][accumulo-irc] on [freenode].
 
 Contributions to Apache Accumulo are welcome! If you are interested, read [how to contribute][contribute]. If you need help finding something to work on, send a message to our `dev` mailing list and we'll help you find a task that interests you.
 
-## Events
-
-Attend Accumulo events such as [Accumulo Summit][summit] and meetups hosted by [Accumulo Users Group - DC VA MD][meetup-dc].
-
 [U_A]: https://lists.apache.org/list.html?user@accumulo.apache.org
 {: .btn .btn-primary .btn-xs }
 [U_SU]: mailto:user-subscribe@accumulo.apache.org
@@ -70,8 +66,6 @@ Attend Accumulo events such as [Accumulo Summit][summit] and meetups hosted by [
 [N_UN]: mailto:notifications-unsubscribe@accumulo.apache.org
 {: .btn .btn-danger .btn-xs }
 
-[summit]: http://accumulosummit.com
-[meetup-dc]: https://www.meetup.com/Accumulo-Users-DC/
 [accumulo-irc]: irc://chat.freenode.net/accumulo
 [freenode]: https://freenode.net/
 [contribute]: /how-to-contribute/
