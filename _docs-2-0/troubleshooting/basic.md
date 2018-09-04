@@ -195,7 +195,7 @@ It is important to see the word `CONNECTED`!  If you only see
 `CONNECTING` you will need to diagnose zookeeper errors.
 
 Check to make sure that zookeeper is up, and that
-`accumulo-site.xml` has been pointed to
+`accumulo.properties` has been pointed to
 your zookeeper server(s).
 
 **Zookeeper is running, but it does not say CONNECTED**
