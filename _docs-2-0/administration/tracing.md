@@ -68,7 +68,7 @@ trace.span.receiver. when set in the Accumulo configuration.
     tracer.span.min.ms - minimum span length to store (in ms, default 1)
 
 To configure an Accumulo client for tracing, set {% plink -c trace.span.receivers %} and {% plink -c trace.zookeeper.path %}
-in `accumulo-client.properties`. Also, any [trace.span.receiver.*] properties set in `accumulo-site.xml` should be set in
+in `accumulo-client.properties`. Also, any [trace.span.receiver.*] properties set in `accumulo.properties` should be set in
 `accumulo-client.properties`.
 
 Hadoop can also be configured to send traces to Accumulo, as of
@@ -116,12 +116,9 @@ for adding any SpanReceiver to Accumulo:
 `lib/` and NOT in `lib/ext/` so that the new SpanReceiver class
 is visible to the same class loader of htrace-core.
 
-2. Add the following to `accumulo-site.xml`:
+2. Add the following to `accumulo.properties`:
 
-        <property>
-          <name>trace.span.receivers</name>
-          <value>org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver</value>
-        </property>
+        trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 
 3. Restart your Accumulo tablet servers.
 
@@ -144,18 +141,12 @@ this is easily done by adding to your client's pom.xml (taking care to specify a
 3. Instrument your client as in the next section.
 
 Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in `accumulo-client.properties` (if applicable) and Accumulo's `accumulo-site.xml`.
+be placed in `accumulo-client.properties` (if applicable) and Accumulo's `accumulo.properties`.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are
 
-```xml
-<property>
-  <name>trace.span.receiver.zipkin.collector-hostname</name>
-  <value>localhost</value>
-</property>
-<property>
-  <name>trace.span.receiver.zipkin.collector-port</name>
-  <value>9410</value>
-</property>
+```
+trace.span.receiver.zipkin.collector-hostname=localhost
+trace.span.receiver.zipkin.collector-port=9410
 ```
 
 ### Instrumenting a Client

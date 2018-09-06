@@ -17,8 +17,8 @@ Accumulo services (i.e master, tablet server, monitor, etc) are configured using
 set in the following locations (with increasing precedence):
 
 1. Default values
-2. accumulo-site.xml (overrides defaults)
-3. Zookeeper (overrides accumulo-site.xml & defaults)
+2. accumulo.properties (overrides defaults)
+3. Zookeeper (overrides accumulo.properties & defaults)
 
 If a property is set in multiple locations, the value in the location with the highest precedence is used. 
 
@@ -29,11 +29,11 @@ The configuration locations above are described in detail below.
 All [server properties][props] have a default value that is listed for each property on the [properties][props] page. Default values are set in the source code.
 While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.
 
-### accumulo-site.xml
+### accumulo.properties
 
-Setting [server properties][props] in accumulo-site.xml will override their default value. If you are running Accumulo on a cluster, any updates to accumulo-site.xml must
-be synced across the cluster. Accumulo processes (master, tserver, etc) read their local accumulo-site.xml on start up so processes must be restarted to apply changes.
-Certain properties can only be set in accumulo-site.xml. These properties have **zk mutable: no** in their description. Setting properties in accumulo-site.xml allows you
+Setting [server properties][props] in accumulo.properties will override their default value. If you are running Accumulo on a cluster, any updates to accumulo.properties must
+be synced across the cluster. Accumulo processes (master, tserver, etc) read their local accumulo.properties on start up so processes must be restarted to apply changes.
+Certain properties can only be set in accumulo.properties. These properties have **zk mutable: no** in their description. Setting properties in accumulo.properties allows you
 to configure tablet servers with different settings.
 
 ### Zookeeper

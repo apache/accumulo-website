@@ -123,7 +123,7 @@ If you have entries in zookeeper for old instances that you no longer need, remo
 
     $ accumulo org.apache.accumulo.server.util.CleanZookeeper
 
-This command will not delete the instance pointed to by the local `accumulo-site.xml` file.
+This command will not delete the instance pointed to by the local `accumulo.properties` file.
 
 ## DumpZookeeper & RestoreZookeeper
 

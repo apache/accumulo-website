@@ -31,26 +31,27 @@ For convenience, consider adding `accumulo-{{ page.latest_release }}/bin/` to yo
 Accumulo requires running [Zookeeper] and [HDFS] instances which should be set up
 before configuring Accumulo.
 
-The primary configuration files for Accumulo are `accumulo-env.sh` and `accumulo-site.xml`
-which are located in the `conf/` directory.
+The primary configuration files for Accumulo are `accumulo.properties`, `accumulo-env.sh`,
+and `accumulo-client.properties` which are located in the `conf/` directory.
 
-Follow the steps below to configure `accumulo-site.xml`:
+The `accumulo.properties` file configures Accumulo server processes (i.e tablet server, master,
+monitor, etc). Follow these steps to set it up:
 
 1. Run `accumulo-util build-native` to build native code.  If this command fails, disable
-   native maps by setting `tserver.memory.maps.native.enabled` to `false`.
+   native maps by setting {% plink tserver.memory.maps.native.enabled %} to `false`.
 
-2. Set `instance.volumes` to HDFS location where Accumulo will store data. If your namenode
+2. Set {% plink instance.volumes %} to HDFS location where Accumulo will store data. If your namenode
    is running at 192.168.1.9:8020 and you want to store data in `/accumulo` in HDFS, then set
-   `instance.volumes` to `hdfs://192.168.1.9:8020/accumulo`.
+   {% plink instance.volumes %} to `hdfs://192.168.1.9:8020/accumulo`.
 
-3. Set `instance.zookeeper.host` to the location of your Zookeepers
+3. Set {% plink instance.zookeeper.host %} to the location of your Zookeepers
 
-4. (Optional) Change `instance.secret` (which is used by Accumulo processes to communicate)
+4. (Optional) Change {% plink instance.secret %} (which is used by Accumulo processes to communicate)
    from the default. This value should match on all servers.
 
-Follow the steps below to configure `accumulo-env.sh`:
+The `accumulo-env.sh` file sets up environment variables needed by Accumulo:
 
-1. Set `HADOOP_PREFIX` and `ZOOKEEPER_HOME` to the location of your Hadoop and Zookeeper
+1. Set `HADOOP_HOME` and `ZOOKEEPER_HOME` to the location of your Hadoop and Zookeeper
    installations. Accumulo will use these locations to find Hadoop and Zookeeper jars and add
    them to your `CLASSPATH` variable. If you you are running a vendor-specific release of
    Hadoop or Zookeeper, you may need to modify how the `CLASSPATH` variable is built in
@@ -69,6 +70,17 @@ Follow the steps below to configure `accumulo-env.sh`:
 
 3. (Optional) Review the memory settings for the Accumulo master, garbage collector, and monitor
    in the `JAVA_OPTS` section of `accumulo-env.sh`.
+
+The `accumulo-client.properties` file is used by the Accumulo shell and can be passed to Accumulo
+clients to simplify connecting to Accumulo. Below are steps to configure it.
+
+1. Set {% plink -c instance.name %} and {% plink -c instance.zookeepers %} to the Accumulo instance and zookeeper connection
+   string of your instance.
+
+2. Pick an authentication type and set {% plink -c auth.type %} accordingly.  The most common `auth.type`
+   is `password` which requires {% plink -c auth.principal %} to be set and {% plink -c auth.token %} to be set the password
+   of `auth.principal`. For the Accumulo shell, `auth.token` can be commented out and the shell will
+   prompt you for the password of `auth.principal` at login.
 
 ## Initialization
 

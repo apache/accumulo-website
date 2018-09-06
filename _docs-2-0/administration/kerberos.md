@@ -137,7 +137,7 @@ all Accumulo servers must share the same instance and realm principal components
 #### Server Configuration
 
 A number of properties need to be changed to account to properly configure servers
-in `accumulo-site.xml`.
+in `accumulo.properties`.
 
 |Key | Default Value | Description
 |----|---------------|-------------
@@ -200,11 +200,11 @@ also be given by the `-u` or `--user` options.
 If you are enabling Kerberos on an existing cluster, you will need to reinitialize the security system in
 order to replace the existing "root" user with one that can be used with Kerberos. These steps should be
 completed after you have done the previously described configuration changes and will require access to
-a complete `accumulo-site.xml`, including the instance secret. Note that this process will delete all
+a complete `accumulo.properties`, including the instance secret. Note that this process will delete all
 existing users in the system; you will need to reassign user permissions based on Kerberos principals.
 
 1. Ensure Accumulo is not running.
-2. Given the path to a `accumulo-site.xml` with the instance secret, run the security reset tool. If you are
+2. Given the path to a `accumulo.properties` with the instance secret, run the security reset tool. If you are
 prompted for a password you can just hit return, since it won't be used.
 3. Start the Accumulo cluster
 
@@ -242,21 +242,14 @@ access to the secret key material in order to make a secure connection to Accumu
 it can only connect to Accumulo as itself. Impersonation, in this context, refers to the ability
 of the proxy to authenticate to Accumulo as itself, but act on behalf of an Accumulo user.
 
-Accumulo supports basic impersonation of end-users by a third party via static rules in Accumulo's
-site configuration file. These two properties are semi-colon separated properties which are aligned
+Accumulo supports basic impersonation of end-users by a third party via static rules in
+`accumulo.properties`. These two properties are semi-colon separated properties which are aligned
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.
 
-```xml
-<property>
-  <name>instance.rpc.sasl.allowed.user.impersonation</name>
-  <value>$PROXY_USER:*</value>
-</property>
-
-<property>
-  <name>instance.rpc.sasl.allowed.host.impersonation</name>
-  <value>*</value>
-</property>
+```
+instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:*
+instance.rpc.sasl.allowed.host.impersonation=*
 ```
 
 Here, `$PROXY_USER` can impersonate any user from any host.
@@ -264,16 +257,9 @@ Here, `$PROXY_USER` can impersonate any user from any host.
 The following is an example of specifying a subset of users `$PROXY_USER` can impersonate and also
 limiting the hosts from which `$PROXY_USER` can initiate requests from.
 
-```xml
-<property>
-  <name>instance.rpc.sasl.allowed.user.impersonation</name>
-  <value>$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4</value>
-</property>
-
-<property>
-  <name>instance.rpc.sasl.allowed.host.impersonation</name>
-  <value>host1.domain.com,host2.domain.com;*</value>
-</property>
+```
+instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4
+instance.rpc.sasl.allowed.host.impersonation=host1.domain.com,host2.domain.com;*
 ```
 
 Here, `$PROXY_USER` can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
@@ -600,7 +586,7 @@ java.lang.AssertionError: AuthenticationToken should not be null
 
 **A**: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the `trace` table. Accumulo allows the TraceServer to rely on the property `general.kerberos.keytab` as a fallback when logging in the trace user if the `trace.token.property.keytab` property isn't defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor's use of the trace user. The end result is that if you configure `general.kerberos.keytab` and not `trace.token.property.keytab` you will end up with a system that properly logs trace information but can't view it.
 
-Ensure you have set `trace.token.property.keytab` to point to a keytab for the principal defined in `trace.user` in the `accumulo-site.xml` file for the Monitor, since that should work in all versions of Accumulo.
+Ensure you have set `trace.token.property.keytab` to point to a keytab for the principal defined in `trace.user` in the `accumulo.properties` file for the Monitor, since that should work in all versions of Accumulo.
 
 [sasl.enabled]: {% purl -c sasl.enabled %}
 [sasl.qop]: {% purl -c sasl.qop %}

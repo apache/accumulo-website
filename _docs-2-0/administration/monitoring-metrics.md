@@ -41,7 +41,7 @@ is strongly recommended that the Monitor is not exposed to any publicly-accessib
 
 ### SSL
 
-SSL may be enabled for the monitor page by setting the following properties in the `accumulo-site.xml` file:
+SSL may be enabled for the monitor page by setting the following properties in the `accumulo.properties` file:
 
  * {% plink monitor.ssl.keyStore %}
  * {% plink monitor.ssl.keyStorePassword %}
@@ -50,10 +50,10 @@ SSL may be enabled for the monitor page by setting the following properties in t
 
 If the Accumulo conf directory has been configured (in particular the `accumulo-env.sh` file must be set up), the 
 `accumulo-util gen-monitor-cert` command can be used to create the keystore and truststore files with random passwords. The command
-will print out the properties that need to be added to the `accumulo-site.xml` file. The stores can also be generated manually with the
+will print out the properties that need to be added to the `accumulo.properties` file. The stores can also be generated manually with the
 Java `keytool` command, whose usage can be seen in the `accumulo-util` script.
 
-If desired, the SSL ciphers allowed for connections can be controlled via the following properties in `accumulo-site.xml`:
+If desired, the SSL ciphers allowed for connections can be controlled via the following properties in `accumulo.properties`:
 
  * {% plink monitor.ssl.include.ciphers %}
  * {% plink monitor.ssl.exclude.ciphers %}
@@ -70,7 +70,7 @@ Accumulo can expose metrics through a legacy metrics library and using the Hadoo
 ### Legacy Metrics
 
 Accumulo has a legacy metrics library that can be exposes metrics using JMX endpoints or file-based logging. These metrics can
-be enabled by setting {% plink general.legacy.metrics %} to `true` in `accumulo-site.xml` and placing the `accumulo-metrics.xml`
+be enabled by setting {% plink general.legacy.metrics %} to `true` in `accumulo.properties` and placing the `accumulo-metrics.xml`
 configuration file on the classpath (which is typically done by placing the file in the `conf/` directory). A template for
 `accumulo-metrics.xml` can be found in `conf/templates` of the Accumulo tarball.
 

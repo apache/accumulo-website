@@ -32,7 +32,7 @@ network bandwidth must be available between any two machines.
 
 In addition to needing access to ports associated with HDFS and ZooKeeper, Accumulo will
 use the following default ports. Please make sure that they are open, or change
-their value in accumulo-site.xml.
+their value in accumulo.properties.
 
 |Port | Description | Property Name
 |-----|-------------|--------------
@@ -91,7 +91,7 @@ The Accumulo tarball contains a `conf/` directory where Accumulo looks for confi
 installed Accumulo using downstream packaging, the `conf/` could be something else like
 `/etc/accumulo/`.
 
-Before starting Accumulo, the configuration files `accumulo-env.sh` and `accumulo-site.xml` must
+Before starting Accumulo, the configuration files `accumulo-env.sh` and `accumulo.properties` must
 exist in `conf/` and be properly configured. If you are using `accumulo-cluster` to launch
 a cluster, the `conf/` directory must also contain hosts file for Accumulo services (i.e `gc`,
 `masters`, `monitor`, `tservers`, `tracers`). You can either create these files manually or run
@@ -208,14 +208,14 @@ Note that if using domain names rather than IP addresses, DNS must be configured
 properly for all machines participating in the cluster. DNS can be a confusing source
 of errors.
 
-### Configure accumulo-site.xml
+### Configure accumulo.properties
 
-Specify appropriate values for the following properties in `accumulo-site.xml`:
+Specify appropriate values for the following properties in `accumulo.properties`:
 
 * [instance.zookeeper.host] - Enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper
   to coordinate settings between processes and helps finalize TabletServer failure.
 * [instance.secret] - The instance needs a secret to enable secure communication between servers.
-  Configure your secret and make sure that the `accumulo-site.xml` file is not readable to other users.
+  Configure your secret and make sure that the `accumulo.properties` file is not readable to other users.
   For alternatives to storing the [instance.secret] in plaintext, please read the
   [Sensitive Configuration Values](#sensitive-configuration-values) section.
 
@@ -227,7 +227,7 @@ documentation for details.
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
 network. All of the "host" configuration files for Accumulo (`gc`, `masters`, `tservers`, `monitor`,
-`tracers`) as well as `instance.volumes` in accumulo-site.xml must contain some host reference.
+`tracers`) as well as `instance.volumes` in accumulo.properties must contain some host reference.
 
 While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid, it
 is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop cluster.
@@ -242,13 +242,13 @@ Accumulo identifies `localhost:8020` as a different HDFS instance than `127.0.0.
 
 ### Deploy Configuration
 
-Copy accumulo-env.sh and accumulo-site.xml from the `conf/` directory on the master to all Accumulo
+Copy accumulo-env.sh and accumulo.properties from the `conf/` directory on the master to all Accumulo
 tablet servers.  The "host" configuration files files `accumulo-cluster` only need to be on servers
 where that command is run.
 
 ### Sensitive Configuration Values
 
-Accumulo has a number of properties that can be specified via the accumulo-site.xml
+Accumulo has a number of properties that can be specified via the accumulo.properties
 file which are sensitive in nature, [instance.secret] and `trace.token.property.password`
 are two common examples. Both of these properties, if compromised, have the ability
 to result in data being leaked to users who should not have access to that data.
@@ -261,7 +261,7 @@ these classes, the feature will just be unavailable for use.
 
 A comma separated list of CredentialProviders can be configured using the Accumulo Property
 [general.security.credential.provider.paths]. Each configured URL will be consulted
-when the Configuration object for accumulo-site.xml is accessed.
+when the Configuration object for accumulo.properties is accessed.
 
 ### Using a JavaKeyStoreCredentialProvider for storage
 
@@ -275,13 +275,10 @@ The command will then prompt you to enter the secret to use and create a keystor
 
     /path/to/accumulo/conf/accumulo.jceks
 
-Then, accumulo-site.xml must be configured to use this KeyStore as a CredentialProvider:
+Then, `accumulo.properties` must be configured to use this KeyStore as a CredentialProvider:
 
-```xml
-<property>
-    <name>general.security.credential.provider.paths</name>
-    <value>jceks://file/path/to/accumulo/conf/accumulo.jceks</value>
-</property>
+```
+general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/accumulo.jceks
 ```
 
 This configuration will then transparently extract the [instance.secret] from
@@ -330,27 +327,20 @@ The Accumulo classpath can be viewed in human readable format by running `accumu
 ##### ClassLoader Contexts
 
 With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A context is identified
-by a name and references a set of locations from which to load classes and can be specified in the accumulo-site.xml file or added
-using the `config` command in the shell. Below is an example for specify the app1 context in the accumulo-site.xml file:
+by a name and references a set of locations from which to load classes and can be specified in the accumulo.properties file or added
+using the `config` command in the shell. Below is an example for specify the app1 context in the accumulo.properties file:
 
-```xml
-<property>
-  <name>general.vfs.context.classpath.app1</name>
-  <value>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar</value>
-  <description>Application A classpath, loads jars from HDFS and local file system</description>
-</property>
+```
+# Application A classpath, loads jars from HDFS and local file system
+general.vfs.context.classpath.app1=hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar
 ```
 
 The default behavior follows the Java ClassLoader contract in that classes, if they exists, are loaded from the parent classloader first.
 You can override this behavior by delegating to the parent classloader after looking in this classloader first. An example of this
 configuration is:
 
-```xml
-<property>
-  <name>general.vfs.context.classpath.app1.delegation=post</name>
-  <value>hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar</value>
-  <description>Application A classpath, loads jars from HDFS and local file system</description>
-</property>
+```
+general.vfs.context.classpath.app1.delegation=post
 ```
 
 To use contexts in your application you can set the `table.classpath.context` on your tables or use the `setClassLoaderContext()` method on Scanner
@@ -454,17 +444,11 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment variable
 `ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is started. Also, set
-these properties in `accumulo-site.xml`:
+these properties in `accumulo.properties`:
 
-```xml
-  <property>
-    <name>tserver.port.search</name>
-    <value>true</value>
-  </property>
-  <property>
-    <name>replication.receipt.service.port</name>
-    <value>0</value>
-  </property>
+```
+tserver.port.search=true
+replication.receipt.service.port=0
 ```
 
 ## Logging
@@ -513,22 +497,16 @@ that the only volume displayed is the volume from the current namenode's HDFS UR
 
 After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.
 
-Edit `accumulo-site.xml` to notify accumulo that a volume is being replaced. First,
+Edit `accumulo.properties` to notify accumulo that a volume is being replaced. First,
 add the new nameservice volume to the `instance.volumes` property. Next, add the
 `instance.volumes.replacements` property in the form of `old new`. It's important to not include
 the volume that's being replaced in `instance.volumes`, otherwise it's possible accumulo could continue
 to write to the volume.
 
-```xml
-<!-- instance.dfs.uri and instance.dfs.dir should not be set-->
-<property>
-  <name>instance.volumes</name>
-  <value>hdfs://nameservice1/accumulo</value>
-</property>
-<property>
-  <name>instance.volumes.replacements</name>
-  <value>hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo</value>
-</property>
+```
+# instance.dfs.uri and instance.dfs.dir should not be set
+instance.volumes=hdfs://nameservice1/accumulo
+instance.volumes.replacements=hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo
 ```
 
 Run `accumulo init --add-volumes` and start up the accumulo cluster. Verify that the
@@ -605,14 +583,14 @@ process kills do not show up in Accumulo or Hadoop logs.
 
 To calculate the max memory usage of all java virtual machine (JVM) processes
 add the maximum heap size (often limited by a -Xmx... argument, such as in
-accumulo-site.xml) and the off-heap memory usage. Off-heap memory usage
+accumulo.properties) and the off-heap memory usage. Off-heap memory usage
 includes the following:
 
 * "Permanent Space", where the JVM stores Classes, Methods, and other code elements. This can be limited by a JVM flag such as `-XX:MaxPermSize:100m`, and is typically tens of megabytes.
 * Code generation space, where the JVM stores just-in-time compiled code. This is typically small enough to ignore
 * Socket buffers, where the JVM stores send and receive buffers for each socket.
 * Thread stacks, where the JVM allocates memory to manage each thread.
-* Direct memory space and JNI code, where applications can allocate memory outside of the JVM-managed space. For Accumulo, this includes the native in-memory maps that are allocated with the memory.maps.max parameter in accumulo-site.xml.
+* Direct memory space and JNI code, where applications can allocate memory outside of the JVM-managed space. For Accumulo, this includes the native in-memory maps that are allocated with the memory.maps.max parameter in accumulo.properties.
 * Garbage collection space, where the JVM stores information used for garbage collection.
 
 You can assume that each Hadoop and Accumulo process will use ~100-150MB for

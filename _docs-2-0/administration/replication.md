@@ -51,14 +51,11 @@ into the following sections.
 
 Each system involved in replication (even the primary) needs a name that uniquely
 identifies it across all peers in the replication graph. This should be considered
-fixed for an instance, and set using {% plink replication.name %} in `accumulo-site.xml`.
+fixed for an instance, and set using {% plink replication.name %} in `accumulo.properties`.
 
-```xml
-<property>
-    <name>replication.name</name>
-    <value>primary</value>
-    <description>Unique name for this system used by replication</description>
-</property>
+```
+# Unique name for this system used by replication
+replication.name=primary
 ```
 
 ### Instance Configuration
@@ -69,7 +66,7 @@ to connect to this remote peer. In the case of Accumulo, this additional data
 is the Accumulo instance name and ZooKeeper quorum; however, this varies on the
 replication implementation for the peer.
 
-These can be set in the site configuration to ease deployments; however, as they may
+These can be set in `accumulo.properties` to ease deployments; however, as they may
 change, it can be useful to set this information using the Accumulo shell.
 
 To configure a peer with the name `peer1` which is an Accumulo system with an instance name of `accumulo_peer`
@@ -132,7 +129,7 @@ On this page, information is broken down into the following sections:
 
 Depending on the schema of a table, different implementations of the [WorkAssigner]
 used could be configured. The implementation is controlled via the property {% plink replication.work.assigner %}
-and the full class name for the implementation. This can be configured via the shell or `accumulo-site.xml`.
+and the full class name for the implementation. This can be configured via the shell or `accumulo.properties`.
 
 Two implementations of [WorkAssigner] are provided:
 
@@ -197,27 +194,21 @@ with that name as well (primary:2181 and peer:2181).
 
 We want to configure these systems so that `my_table` on **primary** replicates to `my_table` on **peer**.
 
-### accumulo-site.xml
+### accumulo.properties
 
 We can assign the "unique" name that identifies this Accumulo instance among all others that might participate
 in replication together. In this example, we will use the names provided in the description.
 
 #### Primary
 
-```xml
-<property>
-  <name>replication.name</name>
-  <value>primary</value>
-</property>
+```
+replication.name=primary
 ```
 
 #### Peer
 
-```xml
-<property>
-  <name>replication.name</name>
-  <value>peer</value>
-</property>
+```
+replication.name=peer
 ```
 
 ### masters and tservers files
@@ -227,7 +218,7 @@ a local node talking to another local node.
 
 ### Start both instances
 
-The rest of the configuration is dynamic and is best configured on the fly (in ZooKeeper) than in accumulo-site.xml.
+The rest of the configuration is dynamic and is best configured on the fly (in ZooKeeper) than in accumulo.properties.
 
 ### Peer
 

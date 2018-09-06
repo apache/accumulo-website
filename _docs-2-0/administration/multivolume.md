@@ -28,11 +28,8 @@ servers.  The configuration [instance.volumes] should be set to a
 comma-separated list, using full URI references to different NameNode
 servers:
 
-```xml
-<property>
-    <name>instance.volumes</name>
-    <value>hdfs://ns1:9001,hdfs://ns2:9001</value>
-</property>
+```
+instance.volumes=hdfs://ns1:9001,hdfs://ns2:9001
 ```
 
 The introduction of multiple volume support in 1.6 changed the way Accumulo
@@ -52,10 +49,7 @@ ns2 with nsB in Accumulo metadata. For this property to take affect, Accumulo wi
 need to be restarted.
 
 ```xml
-<property>
-    <name>instance.volumes.replacements</name>
-    <value>hdfs://ns1:9001 hdfs://nsA:9001, hdfs://ns2:9001 hdfs://nsB:9001</value>
-</property>
+instance.volumes.replacements=hdfs://ns1:9001 hdfs://nsA:9001, hdfs://ns2:9001 hdfs://nsB:9001
 ```
 
 Using viewfs or HA namenode, introduced in Hadoop 2, offers another option for
