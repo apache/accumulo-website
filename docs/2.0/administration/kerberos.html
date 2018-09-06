@@ -470,7 +470,7 @@ all Accumulo servers must share the same instance and realm principal components
 <h4 id="server-configuration">Server Configuration</h4>
 
 <p>A number of properties need to be changed to account to properly configure servers
-in <code class="highlighter-rouge">accumulo-site.xml</code>.</p>
+in <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
 <table>
   <thead>
@@ -590,12 +590,12 @@ also be given by the <code class="highlighter-rouge">-u</code> or <code class="h
 <p>If you are enabling Kerberos on an existing cluster, you will need to reinitialize the security system in
 order to replace the existing “root” user with one that can be used with Kerberos. These steps should be
 completed after you have done the previously described configuration changes and will require access to
-a complete <code class="highlighter-rouge">accumulo-site.xml</code>, including the instance secret. Note that this process will delete all
+a complete <code class="highlighter-rouge">accumulo.properties</code>, including the instance secret. Note that this process will delete all
 existing users in the system; you will need to reassign user permissions based on Kerberos principals.</p>
 
 <ol>
   <li>Ensure Accumulo is not running.</li>
-  <li>Given the path to a <code class="highlighter-rouge">accumulo-site.xml</code> with the instance secret, run the security reset tool. If you are
+  <li>Given the path to a <code class="highlighter-rouge">accumulo.properties</code> with the instance secret, run the security reset tool. If you are
 prompted for a password you can just hit return, since it won’t be used.</li>
   <li>Start the Accumulo cluster</li>
 </ol>
@@ -632,20 +632,13 @@ access to the secret key material in order to make a secure connection to Accumu
 it can only connect to Accumulo as itself. Impersonation, in this context, refers to the ability
 of the proxy to authenticate to Accumulo as itself, but act on behalf of an Accumulo user.</p>
 
-<p>Accumulo supports basic impersonation of end-users by a third party via static rules in Accumulo’s
-site configuration file. These two properties are semi-colon separated properties which are aligned
+<p>Accumulo supports basic impersonation of end-users by a third party via static rules in
+<code class="highlighter-rouge">accumulo.properties</code>. These two properties are semi-colon separated properties which are aligned
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.</p>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.user.impersonation<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>$PROXY_USER:*<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-
-<span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.host.impersonation<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>*<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:*
+instance.rpc.sasl.allowed.host.impersonation=*
 </code></pre></div></div>
 
 <p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate any user from any host.</p>
@@ -653,15 +646,8 @@ in the host impersonation property value, etc.</p>
 <p>The following is an example of specifying a subset of users <code class="highlighter-rouge">$PROXY_USER</code> can impersonate and also
 limiting the hosts from which <code class="highlighter-rouge">$PROXY_USER</code> can initiate requests from.</p>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.user.impersonation<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-
-<span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>instance.rpc.sasl.allowed.host.impersonation<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>host1.domain.com,host2.domain.com;*<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4
+instance.rpc.sasl.allowed.host.impersonation=host1.domain.com,host2.domain.com;*
 </code></pre></div></div>
 
 <p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
@@ -978,7 +964,7 @@ when I attempt to use the “Recent Traces” page on the Monitor UI I get a sta
 
 <p><strong>A</strong>: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the <code class="highlighter-rouge">trace</code> table. Accumulo allows the TraceServer to rely on the property <code class="highlighter-rouge">general.kerberos.keytab</code> as a fallback when logging in the trace user if the <code class="highlighter-rouge">trace.token.property.keytab</code> property isn’t defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor’s use of the trace user. The end result is that if you configure <code class="highlighter-rouge">general.kerberos.keytab</code> and not <code class="highlighter-rouge">trace.token.property.keytab</code> you will end up with a system that properly logs trace information but can’t view it.</p>
 
-<p>Ensure you have set <code class="highlighter-rouge">trace.token.property.keytab</code> to point to a keytab for the principal defined in <code class="highlighter-rouge">trace.user</code> in the <code class="highlighter-rouge">accumulo-site.xml</code> file for the Monitor, since that should work in all versions of Accumulo.</p>
+<p>Ensure you have set <code class="highlighter-rouge">trace.token.property.keytab</code> to point to a keytab for the principal defined in <code class="highlighter-rouge">trace.user</code> in the <code class="highlighter-rouge">accumulo.properties</code> file for the Monitor, since that should work in all versions of Accumulo.</p>
 
 
 

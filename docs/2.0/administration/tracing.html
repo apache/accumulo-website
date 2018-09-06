@@ -409,7 +409,7 @@ tracer.span.min.ms - minimum span length to store (in ms, default 1)
 </code></pre></div></div>
 
 <p>To configure an Accumulo client for tracing, set <a href="/docs/2.0/development/client-properties#trace_span_receivers">trace.span.receivers</a> and <a href="/docs/2.0/development/client-properties#trace_zookeeper_path">trace.zookeeper.path</a>
-in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo-site.xml</code> should be set in
+in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.0/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo.properties</code> should be set in
 <code class="highlighter-rouge">accumulo-client.properties</code>.</p>
 
 <p>Hadoop can also be configured to send traces to Accumulo, as of
@@ -459,12 +459,9 @@ for adding any SpanReceiver to Accumulo:</p>
 is visible to the same class loader of htrace-core.</p>
   </li>
   <li>
-    <p>Add the following to <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+    <p>Add the following to <code class="highlighter-rouge">accumulo.properties</code>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;property&gt;
-   &lt;name&gt;trace.span.receivers&lt;/name&gt;
-   &lt;value&gt;org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver&lt;/value&gt;
- &lt;/property&gt;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 </code></pre></div>    </div>
   </li>
   <li>
@@ -499,17 +496,11 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 </ol>
 
 <p>Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in <code class="highlighter-rouge">accumulo-client.properties</code> (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo-site.xml</code>.
+be placed in <code class="highlighter-rouge">accumulo-client.properties</code> (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo.properties</code>.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are</p>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-hostname<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>localhost<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-<span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>trace.span.receiver.zipkin.collector-port<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>9410<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trace.span.receiver.zipkin.collector-hostname=localhost
+trace.span.receiver.zipkin.collector-port=9410
 </code></pre></div></div>
 
 <h3 id="instrumenting-a-client">Instrumenting a Client</h3>

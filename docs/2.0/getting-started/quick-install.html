@@ -370,35 +370,36 @@ For convenience, consider adding <code class="highlighter-rouge">accumulo-2.0.0/
 <p>Accumulo requires running <a href="https://zookeeper.apache.org/">Zookeeper</a> and <a href="https://hadoop.apache.org/">HDFS</a> instances which should be set up
 before configuring Accumulo.</p>
 
-<p>The primary configuration files for Accumulo are <code class="highlighter-rouge">accumulo-env.sh</code> and <code class="highlighter-rouge">accumulo-site.xml</code>
-which are located in the <code class="highlighter-rouge">conf/</code> directory.</p>
+<p>The primary configuration files for Accumulo are <code class="highlighter-rouge">accumulo.properties</code>, <code class="highlighter-rouge">accumulo-env.sh</code>,
+and <code class="highlighter-rouge">accumulo-client.properties</code> which are located in the <code class="highlighter-rouge">conf/</code> directory.</p>
 
-<p>Follow the steps below to configure <code class="highlighter-rouge">accumulo-site.xml</code>:</p>
+<p>The <code class="highlighter-rouge">accumulo.properties</code> file configures Accumulo server processes (i.e tablet server, master,
+monitor, etc). Follow these steps to set it up:</p>
 
 <ol>
   <li>
     <p>Run <code class="highlighter-rouge">accumulo-util build-native</code> to build native code.  If this command fails, disable
-native maps by setting <code class="highlighter-rouge">tserver.memory.maps.native.enabled</code> to <code class="highlighter-rouge">false</code>.</p>
+native maps by setting <a href="/docs/2.0/administration/properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a> to <code class="highlighter-rouge">false</code>.</p>
   </li>
   <li>
-    <p>Set <code class="highlighter-rouge">instance.volumes</code> to HDFS location where Accumulo will store data. If your namenode
+    <p>Set <a href="/docs/2.0/administration/properties#instance_volumes">instance.volumes</a> to HDFS location where Accumulo will store data. If your namenode
 is running at 192.168.1.9:8020 and you want to store data in <code class="highlighter-rouge">/accumulo</code> in HDFS, then set
-<code class="highlighter-rouge">instance.volumes</code> to <code class="highlighter-rouge">hdfs://192.168.1.9:8020/accumulo</code>.</p>
+<a href="/docs/2.0/administration/properties#instance_volumes">instance.volumes</a> to <code class="highlighter-rouge">hdfs://192.168.1.9:8020/accumulo</code>.</p>
   </li>
   <li>
-    <p>Set <code class="highlighter-rouge">instance.zookeeper.host</code> to the location of your Zookeepers</p>
+    <p>Set <a href="/docs/2.0/administration/properties#instance_zookeeper_host">instance.zookeeper.host</a> to the location of your Zookeepers</p>
   </li>
   <li>
-    <p>(Optional) Change <code class="highlighter-rouge">instance.secret</code> (which is used by Accumulo processes to communicate)
+    <p>(Optional) Change <a href="/docs/2.0/administration/properties#instance_secret">instance.secret</a> (which is used by Accumulo processes to communicate)
 from the default. This value should match on all servers.</p>
   </li>
 </ol>
 
-<p>Follow the steps below to configure <code class="highlighter-rouge">accumulo-env.sh</code>:</p>
+<p>The <code class="highlighter-rouge">accumulo-env.sh</code> file sets up environment variables needed by Accumulo:</p>
 
 <ol>
   <li>
-    <p>Set <code class="highlighter-rouge">HADOOP_PREFIX</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to the location of your Hadoop and Zookeeper
+    <p>Set <code class="highlighter-rouge">HADOOP_HOME</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to the location of your Hadoop and Zookeeper
 installations. Accumulo will use these locations to find Hadoop and Zookeeper jars and add
 them to your <code class="highlighter-rouge">CLASSPATH</code> variable. If you you are running a vendor-specific release of
 Hadoop or Zookeeper, you may need to modify how the <code class="highlighter-rouge">CLASSPATH</code> variable is built in
@@ -442,6 +443,22 @@ usage in the <code class="highlighter-rouge">JAVA_OPTS</code> section of <code c
   <li>
     <p>(Optional) Review the memory settings for the Accumulo master, garbage collector, and monitor
 in the <code class="highlighter-rouge">JAVA_OPTS</code> section of <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
+  </li>
+</ol>
+
+<p>The <code class="highlighter-rouge">accumulo-client.properties</code> file is used by the Accumulo shell and can be passed to Accumulo
+clients to simplify connecting to Accumulo. Below are steps to configure it.</p>
+
+<ol>
+  <li>
+    <p>Set <a href="/docs/2.0/development/client-properties#instance_name">instance.name</a> and <a href="/docs/2.0/development/client-properties#instance_zookeepers">instance.zookeepers</a> to the Accumulo instance and zookeeper connection
+string of your instance.</p>
+  </li>
+  <li>
+    <p>Pick an authentication type and set <a href="/docs/2.0/development/client-properties#auth_type">auth.type</a> accordingly.  The most common <code class="highlighter-rouge">auth.type</code>
+is <code class="highlighter-rouge">password</code> which requires <a href="/docs/2.0/development/client-properties#auth_principal">auth.principal</a> to be set and <a href="/docs/2.0/development/client-properties#auth_token">auth.token</a> to be set the password
+of <code class="highlighter-rouge">auth.principal</code>. For the Accumulo shell, <code class="highlighter-rouge">auth.token</code> can be commented out and the shell will
+prompt you for the password of <code class="highlighter-rouge">auth.principal</code> at login.</p>
   </li>
 </ol>
 

@@ -387,13 +387,10 @@ into the following sections.</p>
 
 <p>Each system involved in replication (even the primary) needs a name that uniquely
 identifies it across all peers in the replication graph. This should be considered
-fixed for an instance, and set using <a href="/docs/2.0/administration/properties#replication_name">replication.name</a> in <code class="highlighter-rouge">accumulo-site.xml</code>.</p>
+fixed for an instance, and set using <a href="/docs/2.0/administration/properties#replication_name">replication.name</a> in <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-    <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;value&gt;</span>primary<span class="nt">&lt;/value&gt;</span>
-    <span class="nt">&lt;description&gt;</span>Unique name for this system used by replication<span class="nt">&lt;/description&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Unique name for this system used by replication
+replication.name=primary
 </code></pre></div></div>
 
 <h3 id="instance-configuration">Instance Configuration</h3>
@@ -404,7 +401,7 @@ to connect to this remote peer. In the case of Accumulo, this additional data
 is the Accumulo instance name and ZooKeeper quorum; however, this varies on the
 replication implementation for the peer.</p>
 
-<p>These can be set in the site configuration to ease deployments; however, as they may
+<p>These can be set in <code class="highlighter-rouge">accumulo.properties</code> to ease deployments; however, as they may
 change, it can be useful to set this information using the Accumulo shell.</p>
 
 <p>To configure a peer with the name <code class="highlighter-rouge">peer1</code> which is an Accumulo system with an instance name of <code class="highlighter-rouge">accumulo_peer</code>
@@ -465,7 +462,7 @@ Monitor server, using the <code class="highlighter-rouge">Replication</code> lin
 
 <p>Depending on the schema of a table, different implementations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/1.9.2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a>
 used could be configured. The implementation is controlled via the property <a href="/docs/2.0/administration/properties#replication_work_assigner">replication.work.assigner</a>
-and the full class name for the implementation. This can be configured via the shell or <code class="highlighter-rouge">accumulo-site.xml</code>.</p>
+and the full class name for the implementation. This can be configured via the shell or <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
 <p>Two implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/1.9.2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> are provided:</p>
 
@@ -536,25 +533,19 @@ with that name as well (primary:2181 and peer:2181).</p>
 
 <p>We want to configure these systems so that <code class="highlighter-rouge">my_table</code> on <strong>primary</strong> replicates to <code class="highlighter-rouge">my_table</code> on <strong>peer</strong>.</p>
 
-<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+<h3 id="accumuloproperties">accumulo.properties</h3>
 
 <p>We can assign the “unique” name that identifies this Accumulo instance among all others that might participate
 in replication together. In this example, we will use the names provided in the description.</p>
 
 <h4 id="primary">Primary</h4>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>primary<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>replication.name=primary
 </code></pre></div></div>
 
 <h4 id="peer">Peer</h4>
 
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>replication.name<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>peer<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>replication.name=peer
 </code></pre></div></div>
 
 <h3 id="masters-and-tservers-files">masters and tservers files</h3>
@@ -564,7 +555,7 @@ a local node talking to another local node.</p>
 
 <h3 id="start-both-instances">Start both instances</h3>
 
-<p>The rest of the configuration is dynamic and is best configured on the fly (in ZooKeeper) than in accumulo-site.xml.</p>
+<p>The rest of the configuration is dynamic and is best configured on the fly (in ZooKeeper) than in accumulo.properties.</p>
 
 <h3 id="peer-1">Peer</h3>
 
