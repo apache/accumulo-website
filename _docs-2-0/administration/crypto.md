@@ -84,6 +84,22 @@ not allow for encryption of RFiles so any data bulk imported through this proces
 
 Accumulo stores a lot of metadata about the cluster in Zookeeper.  Keep in mind that this metadata does not get encrypted with On Disk encryption enabled.
 
+### GCM performance
+
+The AESCryptoService uses GCM mode for RFiles. [Java 9 introduced GHASH hardware support used by GCM.](http://openjdk.java.net/jeps/246)
+
+A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test encrypted and decrypted arrays of size 131072 bytes 1000000 times. The results are as follows:
+
+    Java 9 GCM times:
+        Time spent encrypting:        209.210s
+        Time spent decrypting:        276.800s
+    Java 8 GCM times:
+        Time spent encrypting:        2,818.440s
+        Time spent decrypting:        2,883.960s
+
+As you can see, there is a significant performance hit when running without the GHASH CPU instruction. It is advised Java 9 or later be used when enabling encryption.
+
+
 [design]: {{ page.docs_baseurl }}/getting-started/design#rfile
 [rfile]: {% jurl org.apache.accumulo.core.client.rfile.RFile %}
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
