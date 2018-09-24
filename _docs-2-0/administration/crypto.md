@@ -6,6 +6,7 @@ order: 14
 
 For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
 for 2.0, making it easier to configure and more secure.  The files that can be encrypted include: [RFiles][design] and Write Ahead Logs (WALs).
+For information on encrypting data over the wire see the section on [SSL].  For information on cryptographic client-server authentication see the section on [Kerberos].
 
 ## Configuration
 
@@ -84,7 +85,7 @@ not allow for encryption of RFiles so any data bulk imported through this proces
 
 Accumulo stores a lot of metadata about the cluster in Zookeeper.  Keep in mind that this metadata does not get encrypted with On Disk encryption enabled.
 
-### GCM performance
+## GCM performance
 
 The AESCryptoService uses GCM mode for RFiles. [Java 9 introduced GHASH hardware support used by GCM.](http://openjdk.java.net/jeps/246)
 
@@ -100,6 +101,8 @@ A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test 
 As you can see, there is a significant performance hit when running without the GHASH CPU instruction. It is advised Java 9 or later be used when enabling encryption.
 
 
-[design]: {{ page.docs_baseurl }}/getting-started/design#rfile
+[SSL]: {% durl administration/ssl %}
+[Kerberos]: {% durl administration/kerberos %}
+[design]: {% durl getting-started/design#rfile %}
 [rfile]: {% jurl org.apache.accumulo.core.client.rfile.RFile %}
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
