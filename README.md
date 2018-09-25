@@ -42,7 +42,7 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 
 | Tag   | Description            | Options                                                                         | Examples                                             | 
 | ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}` |
+| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}`  `{% jlink -f org.apache.accumulo.core.client %}` |
 | jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
 | plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.*`)       | `{% plink -c instance.name %}`                             |
 | purl  | Creates Property URL   | Default is server property. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.*`)               | `{% purl instance.volumes %}`                             |

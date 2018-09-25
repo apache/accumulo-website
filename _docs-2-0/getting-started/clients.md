@@ -16,6 +16,10 @@ If you are using Maven to create Accumulo client code, add the following to your
 </dependency>
 ```
 
+When writing code that uses Accumulo, only use the [Accumulo Public API](/api).
+The `accumulo-core` artifact includes implementation code that falls outside the
+Public API and should be avoided.
+
 ## Connecting
 
 Before writing Accumulo client code, you will need the following information.
