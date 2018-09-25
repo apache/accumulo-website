@@ -7,10 +7,10 @@ Accumulo's public API is composed of all public types in the following
 packages and their sub-packages excluding those named *impl*, *thrift*, or
 *crypto*.
 
- * org.apache.accumulo.core.client
- * org.apache.accumulo.core.data
- * org.apache.accumulo.core.security
- * org.apache.accumulo.minicluster
+ * {% jlink -f org.apache.accumulo.core.client %}
+ * {% jlink -f org.apache.accumulo.core.data %}
+ * {% jlink -f org.apache.accumulo.core.security %}
+ * {% jlink -f org.apache.accumulo.minicluster %}
 
 A type is a class, interface, or enum. Anything with public or protected
 access in an API type is in the API. This includes, but is not limited to:
