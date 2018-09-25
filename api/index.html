@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Tour</title>
+<title>Public API Definition</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -148,63 +148,37 @@
         </div>
         <div id="content">
           
-          <article class="post">
+          <h1 class="title">Public API Definition</h1>
+          
+          <p>Accumulo’s public API is composed of all public types in the following
+packages and their sub-packages excluding those named <em>impl</em>, <em>thrift</em>, or
+<em>crypto</em>.</p>
 
-  <header class="post-header">
-    <h1 class="post-title">Accumulo Tour</h1>
-  </header>
+<ul>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/package-summary.html">org.apache.accumulo.core.client</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/data/package-summary.html">org.apache.accumulo.core.data</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/security/package-summary.html">org.apache.accumulo.core.security</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/1.9.2/org/apache/accumulo/minicluster/package-summary.html">org.apache.accumulo.minicluster</a></li>
+</ul>
 
-  <div class="post-content">
-    
-<p>Welcome to the Accumulo tour! The tour offers a hands on introduction to the <a href="/api">Accumulo Java API</a>, broken down into
-independent steps and exercises. The exercises give you a chance to apply what you have learned by writing code on your
-own. The answers to an exercise are typically provided in the next step.  The tour starts with a 
-<a href="/tour/getting-started/">Getting Started</a> page that will help you get set up.</p>
+<p>A type is a class, interface, or enum. Anything with public or protected
+access in an API type is in the API. This includes, but is not limited to:
+methods, members classes, interfaces, and enums. Package-private types in the
+above packages are <em>not</em> considered public API.</p>
 
-<p>When on a tour page, the left and right keys on the keyboard can be used to navigate. If you have any questions
-or suggestions while going through the tour, please send an email to our <a href="/contact-us/#mailing-lists">mailing list</a>
-or <a href="https://github.com/apache/accumulo-website/issues">create an issue</a>.</p>
+<p>The Accumulo project maintains binary compatibility across this API within a
+major release, as defined in the Java Language Specification 3rd ed. Starting
+with Accumulo 1.6.2 and 1.7.0 all API changes follow <a href="http://semver.org/spec/v2.0.0">semver 2.0</a>.
+Accumulo code outside of the defined API does not follow semver and may change
+in incompatible ways at any release.</p>
 
-<ol>
-  <li>
-    <p><a href="/tour/getting-started/">Getting Started</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/basic-read-write/">Writing and Reading</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/data-model/">Data Model</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/data-model-code/">Data Model Code</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/authorizations/">Authorizations</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/authorizations-code/">Authorizations Code</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/ranges-splits/">Ranges and Splits</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/batch-scanner/">Batch Scanner</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/batch-scanner-code/">Batch Scanner Code</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/conditional-writer/">Conditional Writer</a></p>
-  </li>
-  <li>
-    <p><a href="/tour/conditional-writer-code/">Conditional Writer Code</a></p>
-  </li>
-</ol>
+<p>The following regex matches imports that are <em>not</em> Accumulo public API. This
+regex can be used with <a href="http://checkstyle.sourceforge.net/config_regexp.html">RegexpSingleline</a> to automatically find suspicious
+imports in a project using Accumulo.</p>
 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!core|minicluster).*|core\.(?!client|data|security).*)
+</code></pre></div></div>
 
-  </div>
-
-</article>
 
         </div>
 
