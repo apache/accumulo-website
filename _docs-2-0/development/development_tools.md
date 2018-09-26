@@ -37,8 +37,7 @@ mac.start();
 Once we have our mini cluster running, we will want to interact with the Accumulo client API:
 
 ```java
-Connector conn = Connector.builder().forInstance(mac.getInstanceName(), mac.getZooKeepers())
-                    .usingPassword("root", "password").build();
+AccumuloClient client = mac.getAccumuloClient("root", new PasswordToken("password"));
 ```
 
 Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:

@@ -31,7 +31,8 @@ setting {% plink table.cache.block.enable %} to `true` in the shell:
 Or programmatically using [TableOperations.setProperty()][tableops]:
 
 ```java
-conn.tableOperations().setProperty("mytable", "table.cache.block.enable", "true");
+AccumuloClient client = ... ;
+client.tableOperations().setProperty("mytable", "table.cache.block.enable", "true");
 ```
 
 The size of the index and data block caches (which are shared by all tablets of tablet server) can be changed from
