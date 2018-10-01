@@ -32,6 +32,10 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 [Rya](https://rya.apache.org/) is a scalable RDF triple store built on top of a columnar index store.
 
+#### D4M
+
+[D4M](http://d4m.mit.edu/) is an open source library for large-scale computation that supports graph, matrix, and relational processing. D4M includes an Accumulo connector, among others, to interface with and compute on data in Accumulo tables.
+
 #### Gaffer
 
 [Gaffer](https://github.com/gchq/Gaffer) is an open source framework for constructing and querying very large graphs based on a variety of data storage platforms, including Accumulo.
