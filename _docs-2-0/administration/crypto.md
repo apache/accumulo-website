@@ -58,7 +58,7 @@ For more help getting started see {% jlink org.apache.accumulo.core.security.cry
 
 ## Things to keep in mind
 
-The on disk encryption configured here is only for R-files and Write Ahead Logs (WALs).  The majority of data in Accumulo 
+The on disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
 is written to disk with these files but there are a few scenarios that can take place where data will be unencrypted, 
 even with the crypto service enabled.
 
