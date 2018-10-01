@@ -27,6 +27,10 @@ instance.crypto.opts.key.location=file:///secure/path/to/crypto-key-file
 ```
 The first property tells the crypto service how it will get the key encryption key.  The second property tells the service 
 where to find the key.  For now, the only valid values are "uri" and the path to the key file. The key file can be 16 or 32 bytes. 
+For example, openssl can be used to create a random 32 bytes key:
+```
+openssl rand -out /path/to/keyfile 32
+```
 Initializing Accumulo after these instance properties are set, will enable on disk encryption across your entire cluster.
 
 ## Custom Crypto
