@@ -34,7 +34,7 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### D4M
 
-[D4M](http://d4m.mit.edu/) is an open source library for large-scale computation that supports graph, matrix, and relational processing. D4M includes an Accumulo connector, among others, to interface with and compute on data in Accumulo tables.
+[D4M](https://d4m.mit.edu/) is an open source library for large-scale computation that supports graph, matrix, and relational processing. D4M includes an Accumulo connector, among others, to interface with and compute on data in Accumulo tables.
 
 #### Gaffer
 
