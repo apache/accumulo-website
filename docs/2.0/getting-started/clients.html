@@ -344,7 +344,7 @@
 
     <h2 id="creating-client-code">Creating Client Code</h2>
 
-<p>If you are using Maven to create Accumulo client code, add the following to your pom:</p>
+<p>If you are using Maven to create Accumulo client code, add the following dependency to your pom:</p>
 
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
@@ -357,9 +357,9 @@
 The <code class="highlighter-rouge">accumulo-core</code> artifact includes implementation code that falls outside the
 Public API and should be avoided.</p>
 
-<h2 id="connecting">Connecting</h2>
+<h2 id="creating-an-accumulo-client">Creating an Accumulo Client</h2>
 
-<p>Before writing Accumulo client code, you will need the following information.</p>
+<p>Before creating an Accumulo client, you will need the following information:</p>
 
 <ul>
   <li>Accumulo instance name</li>
@@ -367,18 +367,19 @@ Public API and should be avoided.</p>
   <li>Accumulo username &amp; password</li>
 </ul>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a> object is the main entry point for Accumulo clients. It can be created using one
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object is the main entry point for Accumulo clients. It can be created using one
 of the following methods:</p>
 
 <ol>
   <li>Using the <code class="highlighter-rouge">accumulo-client.properties</code> file (a template can be found in the <code class="highlighter-rouge">conf/</code> directory
 of the tarball distribution):
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
                      <span class="o">.</span><span class="na">usingProperties</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
-  <li>Using the builder methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a>:
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+  <li>Using the builder methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>:
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+                     <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">)</span>
                      <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"myuser"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
@@ -389,12 +390,12 @@ of the tarball distribution):
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.type"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">)</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.principal"</span><span class="o">,</span> <span class="s">"myuser"</span><span class="o">)</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.token"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">)</span>
- <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">usingProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">usingProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>If a <code class="highlighter-rouge">accumulo-client.properties</code> file or a Java Properties object is used to create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a>, the following
+<p>If a <code class="highlighter-rouge">accumulo-client.properties</code> file or a Java Properties object is used to create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the following
 <a href="/docs/2.0/development/client-properties">client properties</a> must be set:</p>
 
 <ul>
@@ -444,7 +445,7 @@ auth.token = AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA
 
 <h1 id="authentication">Authentication</h1>
 
-<p>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a>, the user must be authenticated using one of the following
+<p>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the user must be authenticated using one of the following
 implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> below:</p>
 
 <ol>
@@ -460,7 +461,8 @@ requires external setup and additional configuration, but provides a single poin
 through HDFS, YARN and ZooKeeper and allowing for password-less authentication with Accumulo.</p>
 
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
- <span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+ <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+                     <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
                      <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
@@ -468,10 +470,10 @@ through HDFS, YARN and ZooKeeper and allowing for password-less authentication w
 
 <h2 id="writing-data">Writing Data</h2>
 
-<p>With a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a> created, it can be used to create objects (like the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a>) for
+<p>With a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> created, it can be used to create objects (like the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a>) for
 reading and writing from Accumulo:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>Data is written to Accumulo by creating <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/data/Mutation.html">Mutation</a> objects that represent all the
@@ -507,7 +509,7 @@ batching.</p>
 <span class="n">BatchWriterConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BatchWriterConfig</span><span class="o">();</span>
 <span class="n">config</span><span class="o">.</span><span class="na">setMaxMemory</span><span class="o">(</span><span class="mi">10000000L</span><span class="o">);</span> <span class="c1">// bytes available to batchwriter for buffering mutations</span>
 
-<span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">config</span><span class="o">)</span>
+<span class="n">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">config</span><span class="o">)</span>
 <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
 <span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 </code></pre></div></div>
@@ -561,7 +563,7 @@ These levels are:</p>
 
 <ol>
   <li>The default durability of a table can be set in the Accumulo shell</li>
-  <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/Connector.html">Connector</a>, the default durability can be overridden using <code class="highlighter-rouge">withBatchWriterConfig()</code>
+  <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the default durability can be overridden using <code class="highlighter-rouge">withBatchWriterConfig()</code>
 or by setting <a href="/docs/2.0/development/client-properties#batch_writer_durability">batch.writer.durability</a> in <code class="highlighter-rouge">accumulo-client.properties</code>.</li>
   <li>
     <p>When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
@@ -572,8 +574,7 @@ by the <code class="highlighter-rouge">BatchWriterConfig</code> that is passed i
  <span class="c1">// This is DANGEROUS:</span>
  <span class="n">cfg</span><span class="o">.</span><span class="na">setDurability</span><span class="o">(</span><span class="n">Durability</span><span class="o">.</span><span class="na">NONE</span><span class="o">);</span>
 
- <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
- <span class="n">BatchWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">cfg</span><span class="o">);</span>
+ <span class="n">BatchWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">cfg</span><span class="o">);</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -592,7 +593,7 @@ to return a subset of the columns available.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// specify which visibilities we are allowed to see</span>
 <span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"public"</span><span class="o">);</span>
 
-<span class="n">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
+<span class="n">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
 <span class="n">scan</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="s">"harry"</span><span class="o">,</span><span class="s">"john"</span><span class="o">));</span>
 <span class="n">scan</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">));</span>
 
@@ -642,7 +643,7 @@ TabletServers in parallel.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Range</span><span class="o">&gt;();</span>
 <span class="c1">// populate list of ranges ...</span>
 
-<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
+<span class="n">BatchScanner</span> <span class="n">bscan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
 <span class="n">bscan</span><span class="o">.</span><span class="na">setRanges</span><span class="o">(</span><span class="n">ranges</span><span class="o">);</span>
 <span class="n">bscan</span><span class="o">.</span><span class="na">fetchColumnFamily</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">);</span>
 

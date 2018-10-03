@@ -715,8 +715,8 @@ Valid starting       Expires              Service principal
 
 <h4 id="configuration">Configuration</h4>
 
-<p>The second thing clients need to do is to configure kerberos when an Accumulo Connector is
-created.  This can be done using Connector builder methods or by setting the properties
+<p>The second thing clients need to do is to configure kerberos when an Accumulo client is
+created.  This can be done using client builder methods or by setting the properties
 below in <code class="highlighter-rouge">accumulo-client.properties</code> which can be provided to Accumulo utilities using
 the <code class="highlighter-rouge">--config-file</code> command line option.</p>
 
@@ -766,49 +766,30 @@ accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; quit
 
 <h4 id="delegationtokens-with-mapreduce">DelegationTokens with MapReduce</h4>
 
-<p>To use DelegationTokens in a custom MapReduce job, the call to <code class="highlighter-rouge">setConnectorInfo()</code> method
-on <code class="highlighter-rouge">AccumuloInputFormat</code> or <code class="highlighter-rouge">AccumuloOutputFormat</code> should be the only necessary change. Instead
-of providing an instance of a <code class="highlighter-rouge">KerberosToken</code>, the user must call <code class="highlighter-rouge">SecurityOperations.getDelegationToken</code>
-using a <code class="highlighter-rouge">Connector</code> obtained with that <code class="highlighter-rouge">KerberosToken</code>, and pass the <code class="highlighter-rouge">DelegationToken</code> to
-<code class="highlighter-rouge">setConnectorInfo</code> instead of the <code class="highlighter-rouge">KerberosToken</code>. It is expected that the user launching
-the MapReduce job is already logged in via Kerberos via a keytab or via a locally-cached
-Kerberos ticket-granting-ticket (TGT).</p>
+<p>To use DelegationTokens in a custom MapReduce job, the user should create an <code class="highlighter-rouge">AccumuloClient</code>
+using a <code class="highlighter-rouge">KerberosToken</code> and use it to call <code class="highlighter-rouge">SecurityOperations.getDelegationToken</code>. The
+<code class="highlighter-rouge">DelegationToken</code> that is created can then be used to create a new client using this
+delegation token.  The <code class="highlighter-rouge">ClientInfo</code> object from this client can be passed into the MapReduce
+job. It is expected that the user launching the MapReduce job is already logged in via Kerberos
+via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">getInstance</span><span class="o">();</span>
-<span class="n">KerberosToken</span> <span class="n">kt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
-<span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">);</span>
-<span class="n">DelegationToken</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">KerberosToken</span> <span class="n">kt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
+<span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+<span class="n">DelegationToken</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
+<span class="n">AccumuloClient</span> <span class="n">client2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">changeUser</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
+<span class="n">ClientInfo</span> <span class="n">info2</span> <span class="o">=</span> <span class="n">client2</span><span class="o">.</span><span class="na">info</span><span class="o">();</span>
 
 <span class="c1">// Reading from Accumulo</span>
-<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setConnectorInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
+<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info2</span><span class="o">);</span>
 
 <span class="c1">// Writing to Accumulo</span>
-<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setConnectorInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
+<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info2</span><span class="o">);</span>
 </code></pre></div></div>
-
-<p>If the user passes a <code class="highlighter-rouge">KerberosToken</code> to the <code class="highlighter-rouge">setConnectorInfo</code> method, the implementation will
-attempt to obtain a <code class="highlighter-rouge">DelegationToken</code> automatically, but this does have limitations
-based on the other MapReduce configuration methods already called and permissions granted
-to the calling user. It is best for the user to acquire the DelegationToken on their own
-and provide it directly to <code class="highlighter-rouge">setConnectorInfo</code>.</p>
 
 <p>Users must have the <code class="highlighter-rouge">DELEGATION_TOKEN</code> system permission to call the <code class="highlighter-rouge">getDelegationToken</code>
 method. The obtained delegation token is only valid for the requesting user for a period
 of time dependent on Accumulo’s configuration (<code class="highlighter-rouge">general.delegation.token.lifetime</code>).</p>
-
-<p>It is also possible to obtain and use <code class="highlighter-rouge">DelegationToken</code>s outside of the context
-of MapReduce.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">principal</span> <span class="o">=</span> <span class="s">"user@REALM"</span><span class="o">;</span>
-<span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">getInstance</span><span class="o">();</span>
-<span class="n">Connector</span> <span class="n">connector</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">());</span>
-<span class="n">DelegationToken</span> <span class="n">delegationToken</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
-
-<span class="n">Connector</span> <span class="n">dtConnector</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">delegationToken</span><span class="o">);</span>
-</code></pre></div></div>
-
-<p>Use of the <code class="highlighter-rouge">dtConnector</code> will perform each operation as the original user, but without
-their Kerberos credentials.</p>
 
 <p>For the duration of validity of the <code class="highlighter-rouge">DelegationToken</code>, the user <em>must</em> take the necessary precautions
 to protect the <code class="highlighter-rouge">DelegationToken</code> from prying eyes as it can be used by any user on any host to impersonate

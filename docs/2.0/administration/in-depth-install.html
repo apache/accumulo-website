@@ -499,12 +499,12 @@ the Monitor which is configured by <code class="highlighter-rouge">log4j-monitor
 and specify the following:</p>
 
 <ol>
-  <li>Enter the location of Hadoop for <code class="highlighter-rouge">$HADOOP_PREFIX</code></li>
+  <li>Enter the location of Hadoop for <code class="highlighter-rouge">$HADOOP_HOME</code></li>
   <li>Enter the location of ZooKeeper for <code class="highlighter-rouge">$ZOOKEEPER_HOME</code></li>
   <li>Optionally, choose a different location for Accumulo logs using <code class="highlighter-rouge">$ACCUMULO_LOG_DIR</code></li>
 </ol>
 
-<p>Accumulo uses <code class="highlighter-rouge">HADOOP_PREFIX</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to locate Hadoop and Zookeeper jars
+<p>Accumulo uses <code class="highlighter-rouge">HADOOP_HOME</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to locate Hadoop and Zookeeper jars
 and add them the <code class="highlighter-rouge">CLASSPATH</code> variable. If you are running a vendor-specific release of Hadoop
 or Zookeeper, you may need to change how your <code class="highlighter-rouge">CLASSPATH</code> is built in <code class="highlighter-rouge">accumulo-env.sh</code>. If
 Accumulo has problems later on finding jars, run <code class="highlighter-rouge">accumulo classpath -d</code> to debug and print
@@ -692,9 +692,9 @@ will expect the KeyStore in the same location.</p>
 
 <h3 id="client-configuration">Client Configuration</h3>
 
-<p>Accumulo clients are configured in a different way than Accumulo servers. Clients are
-configured when <a href="/docs/2.0/getting-started/clients#connecting">an Accumulo Connector is created</a> using Java builder methods
-or a <code class="highlighter-rouge">accumulo-client.properties</code> file containing <a href="/docs/2.0/development/client-properties">client properties</a>.</p>
+<p>Accumulo clients are configured in a different way than Accumulo servers. <a href="/docs/2.0/getting-started/clients#creating-an-accumulo-client">Accumulo clients
+are created</a> using Java builder methods or a <code class="highlighter-rouge">accumulo-client.properties</code>
+file containing <a href="/docs/2.0/development/client-properties">client properties</a>.</p>
 
 <h3 id="custom-table-tags">Custom Table Tags</h3>
 
@@ -715,9 +715,9 @@ consideration. There is no enforcement of these warnings via the API.</p>
 <p>Accumulo builds its Java classpath in <code class="highlighter-rouge">accumulo-env.sh</code>.  After an Accumulo application has started, it will load classes from the locations
 specified in the deprecated <a href="/docs/2.0/administration/properties#general_classpaths">general.classpaths</a> property. Additionally, Accumulo will load classes from the locations specified in the
 <a href="/docs/2.0/administration/properties#general_dynamic_classpaths">general.dynamic.classpaths</a> property and will monitor and reload them if they change. The reloading feature is useful during the development
-and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
-/
-Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
+and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.</p>
+
+<p>Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
 uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
 <a href="/docs/2.0/administration/properties#general_classpaths">general.classpaths</a> property in the same manner described above. It differs in that you need to configure the
 <a href="/docs/2.0/administration/properties#general_vfs_classpaths">general.vfs.classpaths</a> property instead of the <a href="/docs/2.0/administration/properties#general_dynamic_classpaths">general.dynamic.classpaths</a> property. As in the default configuration, this alternate

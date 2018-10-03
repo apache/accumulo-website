@@ -419,7 +419,7 @@ results sent back to the client.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
 <span class="n">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
 
-<span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
+<span class="n">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
 </code></pre></div></div>
 
 <h2 id="user-authorizations">User Authorizations</h2>
@@ -452,12 +452,13 @@ disable the bulk import permission.</p>
 authorization, and permission handling.</p>
 
 <p>Authentication verifies the identity of a user. In Accumulo, authentication occurs when
-the <code class="highlighter-rouge">usingToken'</code> method of the [Connector] builder is called with a principal (i.e username)
+the <code class="highlighter-rouge">usingToken'</code> method of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> builder is called with a principal (i.e username)
 and an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> which is an interface with multiple implementations. The most
 common implementation is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.2/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> which is the default authentication method for Accumulo
 out of the box.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Connector</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
                     <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">)).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div></div>
 
