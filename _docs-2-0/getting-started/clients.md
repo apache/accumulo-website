@@ -208,7 +208,6 @@ Durability can be set in multiple ways:
     // This is DANGEROUS:
     cfg.setDurability(Durability.NONE);
 
-    AccumuloClient client = ... ;
     BatchWriter bw = client.createBatchWriter(table, cfg);
     ```
 

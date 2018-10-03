@@ -83,7 +83,6 @@ results sent back to the client.
 // user possesses both admin and system level access
 Authorizations auths = new Authorizations("admin","system");
 
-AccumuloClient client = ... ;
 Scanner s = client.createScanner("table", auths);
 ```
 

@@ -31,7 +31,6 @@ setting {% plink table.cache.block.enable %} to `true` in the shell:
 Or programmatically using [TableOperations.setProperty()][tableops]:
 
 ```java
-AccumuloClient client = ... ;
 client.tableOperations().setProperty("mytable", "table.cache.block.enable", "true");
 ```
 
