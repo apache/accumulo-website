@@ -10,6 +10,6 @@
 [3]: {{ site.baseurl }}/images/GitHub-Mark-32px.png
 [4]: {{ site.baseurl }}/favicon.png
 [TWITTER]: https://twitter.com/apacheaccumulo
-[LINKEDIN]: https://www.linkedin.com/groups/Apache-Accumulo-Professionals-4554913
+[LINKEDIN]: https://www.linkedin.com/groups/4554913/
 [GITHUB]: https://github.com/apache/accumulo
 [IRC]: irc://chat.freenode.net/accumulo
