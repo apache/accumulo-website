@@ -8,7 +8,7 @@ Configuration is managed differently for Accumulo clients and servers.
 
 ## Client Configuration
 
-Accumulo clients are configured when [the Connector is built][client-conn] using builder methods or `accumulo-client.properties`
+[Accumulo clients][accumulo-client] are created using builder methods or `accumulo-client.properties`
 which is configured using [client properties][client-props].
 
 ## Server Configuration
@@ -112,6 +112,6 @@ default  | table.compaction.minor.logs.threshold ..... | 3
 default  | table.failures.ignore ..................... | false
 ```
 
-[client-conn]: {% durl getting-started/clients#connecting %}
+[accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
 [client-props]: {% durl development/client-properties %}
 [props]: {% durl administration/properties %}

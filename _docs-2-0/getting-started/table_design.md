@@ -33,8 +33,10 @@ We could then retrieve any of the columns for a specific userid by specifying th
 userid as the range of a scanner and fetching specific columns:
 
 ```java
+AccumuloClient client = Accumulo.newClient()
+                        .usingProperties("/path/to/accumulo-client.properties").build();
 Range r = new Range(userid, userid); // single row
-Scanner s = conn.createScanner("userdata", auths);
+Scanner s = client.createScanner("userdata", auths);
 s.setRange(r);
 s.fetchColumnFamily(new Text("age"));
 
@@ -165,7 +167,7 @@ for (Entry<Key,Value> entry : indexScanner) {
 }
 
 // now we pass the set of rowIDs to the batch scanner to retrieve them
-BatchScanner bscan = conn.createBatchScanner("table", auths, 10);
+BatchScanner bscan = client.createBatchScanner("table", auths, 10);
 bscan.setRanges(matchingRows);
 bscan.fetchColumnFamily(new Text("attributes"));
 
@@ -277,7 +279,7 @@ BatchScanner within user query code as follows:
 ```java
 Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
 
-BatchScanner bscan = conn.createBatchScanner(table, auths, 20);
+BatchScanner bscan = client.createBatchScanner(table, auths, 20);
 
 IteratorSetting iter = new IteratorSetting(20, "ii", IntersectingIterator.class);
 IntersectingIterator.setColumnFamilies(iter, terms);

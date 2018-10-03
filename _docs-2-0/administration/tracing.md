@@ -172,7 +172,7 @@ import org.apache.htrace.Trace;
 import org.apache.htrace.TraceScope;
 ...
 TraceScope scope = Trace.startSpan("Client Scan", Sampler.ALWAYS);
-BatchScanner scanner = conn.createBatchScanner(...);
+BatchScanner scanner = client.createBatchScanner(...);
 // Configure your scanner
 for (Entry entry : scanner) {
 }

@@ -47,8 +47,8 @@ their own certificate.
 ## Client configuration
 
 To establish a connection to Accumulo servers, each client must also have
-special configuration. This is typically accomplished by [creating Accumulo
-clients][clients] using `accumulo-client.properties` and setting the following
+special configuration. This is typically accomplished by [creating an Accumulo
+client][clients] using `accumulo-client.properties` and setting the following
 the properties to connect to an Accumulo instance using SSL:
 
 * {% plink -c ssl.enabled %} to `true`
@@ -121,4 +121,4 @@ keytool -import -trustcacerts -alias server-crt -file server.crt -keystore serve
 The `server.jks` file is the Java keystore containing the certificate for a given host. The above
 methods are equivalent whether the certificate is generate for an Accumulo server or a client.
 
-[clients]: {{ page.docs_baseurl }}/getting-started/clients#connecting
+[clients]: {{ page.docs_baseurl }}/getting-started/clients#creating-an-accumulo-client

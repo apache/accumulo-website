@@ -328,8 +328,8 @@ Valid starting       Expires              Service principal
 
 #### Configuration
 
-The second thing clients need to do is to configure kerberos when an Accumulo Connector is
-created.  This can be done using Connector builder methods or by setting the properties
+The second thing clients need to do is to configure kerberos when an Accumulo client is
+created.  This can be done using client builder methods or by setting the properties
 below in `accumulo-client.properties` which can be provided to Accumulo utilities using
 the `--config-file` command line option.
 
@@ -378,51 +378,31 @@ $
 
 #### DelegationTokens with MapReduce
 
-To use DelegationTokens in a custom MapReduce job, the call to `setConnectorInfo()` method
-on `AccumuloInputFormat` or `AccumuloOutputFormat` should be the only necessary change. Instead
-of providing an instance of a `KerberosToken`, the user must call `SecurityOperations.getDelegationToken`
-using a `Connector` obtained with that `KerberosToken`, and pass the `DelegationToken` to
-`setConnectorInfo` instead of the `KerberosToken`. It is expected that the user launching
-the MapReduce job is already logged in via Kerberos via a keytab or via a locally-cached
-Kerberos ticket-granting-ticket (TGT).
+To use DelegationTokens in a custom MapReduce job, the user should create an `AccumuloClient`
+using a `KerberosToken` and use it to call `SecurityOperations.getDelegationToken`. The
+`DelegationToken` that is created can then be used to create a new client using this
+delegation token.  The `ClientInfo` object from this client can be passed into the MapReduce
+job. It is expected that the user launching the MapReduce job is already logged in via Kerberos
+via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).
 
 ```java
-Instance instance = getInstance();
 KerberosToken kt = new KerberosToken();
-Connector conn = instance.getConnector(principal, kt);
-DelegationToken dt = conn.securityOperations().getDelegationToken();
+AccumuloClient client = Accumulo.newClient().forInstance("myinstance", "zoo1,zoo2")
+                .usingToken(principal, kt).build();
+DelegationToken dt = client.securityOperations().getDelegationToken();
+AccumuloClient client2 = client.changeUser(principal, dt);
+ClientInfo info2 = client2.info();
 
 // Reading from Accumulo
-AccumuloInputFormat.setConnectorInfo(job, principal, dt);
+AccumuloInputFormat.setClientInfo(job, info2);
 
 // Writing to Accumulo
-AccumuloOutputFormat.setConnectorInfo(job, principal, dt);
+AccumuloOutputFormat.setClientInfo(job, info2);
 ```
-
-If the user passes a `KerberosToken` to the `setConnectorInfo` method, the implementation will
-attempt to obtain a `DelegationToken` automatically, but this does have limitations
-based on the other MapReduce configuration methods already called and permissions granted
-to the calling user. It is best for the user to acquire the DelegationToken on their own
-and provide it directly to `setConnectorInfo`.
 
 Users must have the `DELEGATION_TOKEN` system permission to call the `getDelegationToken`
 method. The obtained delegation token is only valid for the requesting user for a period
 of time dependent on Accumulo's configuration (`general.delegation.token.lifetime`).
-
-It is also possible to obtain and use `DelegationToken`s outside of the context
-of MapReduce.
-
-```java
-String principal = "user@REALM";
-Instance instance = getInstance();
-Connector connector = instance.getConnector(principal, new KerberosToken());
-DelegationToken delegationToken = connector.securityOperations().getDelegationToken();
-
-Connector dtConnector = instance.getConnector(principal, delegationToken);
-```
-
-Use of the `dtConnector` will perform each operation as the original user, but without
-their Kerberos credentials.
 
 For the duration of validity of the `DelegationToken`, the user *must* take the necessary precautions
 to protect the `DelegationToken` from prying eyes as it can be used by any user on any host to impersonate

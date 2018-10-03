@@ -83,7 +83,7 @@ results sent back to the client.
 // user possesses both admin and system level access
 Authorizations auths = new Authorizations("admin","system");
 
-Scanner s = connector.createScanner("table", auths);
+Scanner s = client.createScanner("table", auths);
 ```
 
 ## User Authorizations
@@ -115,13 +115,14 @@ Accumulo has a pluggable security mechanism. It can be broken into three actions
 authorization, and permission handling.
 
 Authentication verifies the identity of a user. In Accumulo, authentication occurs when
-the `usingToken'` method of the [Connector] builder is called with a principal (i.e username)
+the `usingToken'` method of the [AccumuloClient] builder is called with a principal (i.e username)
 and an [AuthenticationToken] which is an interface with multiple implementations. The most
 common implementation is [PasswordToken] which is the default authentication method for Accumulo
 out of the box.
 
 ```java
-Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+AccumuloClient client = Accumulo.newClient()
+                    .forInstance("myinstance", "zookeeper1,zookeper2")
                     .usingToken("user", new PasswordToken("passwd")).build();
 ```
 
@@ -176,6 +177,7 @@ Typically, the query services layer sits between Accumulo and user workstations.
 [Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}
 [ColumnVisibility]: {% jurl org.apache.accumulo.core.security.ColumnVisibility %}
 [Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
+[AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}
 [SecurityOperations]: {% jurl org.apache.accumulo.core.client.admin.SecurityOperations %}

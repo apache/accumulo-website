@@ -6,7 +6,7 @@ order: 3
 
 ## Creating Client Code
 
-If you are using Maven to create Accumulo client code, add the following to your pom:
+If you are using Maven to create Accumulo client code, add the following dependency to your pom:
 
 ```xml
 <dependency>
@@ -20,26 +20,27 @@ When writing code that uses Accumulo, only use the [Accumulo Public API](/api).
 The `accumulo-core` artifact includes implementation code that falls outside the
 Public API and should be avoided.
 
-## Connecting
+## Creating an Accumulo Client
 
-Before writing Accumulo client code, you will need the following information.
+Before creating an Accumulo client, you will need the following information:
 
  * Accumulo instance name
  * Zookeeper connection string
  * Accumulo username & password
 
-The [Connector] object is the main entry point for Accumulo clients. It can be created using one
+The [AccumuloClient] object is the main entry point for Accumulo clients. It can be created using one
 of the following methods:
 
 1. Using the `accumulo-client.properties` file (a template can be found in the `conf/` directory
    of the tarball distribution):
     ```java
-    Connector conn = Connector.builder()
+    AccumuloClient client = Accumulo.newClient()
                         .usingProperties("/path/to/accumulo-client.properties").build();
     ```
-1. Using the builder methods of [Connector]:
+1. Using the builder methods of [AccumuloClient]:
     ```java
-    Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+    AccumuloClient client = Accumulo.newClient()
+                        .forInstance("myinstance", "zookeeper1,zookeeper2")
                         .usingPassword("myuser", "mypassword").build();
     ```
 1. Using a Java Properties object.
@@ -50,10 +51,10 @@ of the following methods:
     props.put("auth.type", "password")
     props.put("auth.principal", "myuser")
     props.put("auth.token", "mypassword")
-    Connector conn = Connector.builder().usingProperties(props).build();
+    AccumuloClient client = Accumulo.newClient().usingProperties(props).build();
     ```
 
-If a `accumulo-client.properties` file or a Java Properties object is used to create a [Connector], the following
+If a `accumulo-client.properties` file or a Java Properties object is used to create a [AccumuloClient], the following
 [client properties][client-props] must be set:
 
 * [instance.name] - Name of Accumulo instance to connect to
@@ -81,7 +82,7 @@ auth.token = AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA
 
 # Authentication
 
-When creating a [Connector], the user must be authenticated using one of the following
+When creating a [AccumuloClient], the user must be authenticated using one of the following
 implementations of [AuthenticationToken] below:
 
 1. [PasswordToken] is the must commonly used implementation.
@@ -96,17 +97,18 @@ implementations of [AuthenticationToken] below:
 
     ```java
     KerberosToken token = new KerberosToken();
-    Connector conn = Connector.builder().forInstance("myinstance", "zookeeper1,zookeper2")
+    AccumuloClient client = Accumulo.newClient()
+                        .forInstance("myinstance", "zookeeper1,zookeper2")
                         .usingToken(token.getPrincipal(), token).build();
     ```
 
 ## Writing Data
 
-With a [Connector] created, it can be used to create objects (like the [BatchWriter]) for
+With a [AccumuloClient] created, it can be used to create objects (like the [BatchWriter]) for
 reading and writing from Accumulo:
 
 ```java
-BatchWriter writer = conn.createBatchWriter("table");
+BatchWriter writer = client.createBatchWriter("table");
 ```
 
 Data is written to Accumulo by creating [Mutation] objects that represent all the
@@ -144,7 +146,7 @@ Mutations are added to a BatchWriter thus:
 BatchWriterConfig config = new BatchWriterConfig();
 config.setMaxMemory(10000000L); // bytes available to batchwriter for buffering mutations
 
-BatchWriter writer = conn.createBatchWriter("table", config)
+BatchWriter writer = client.createBatchWriter("table", config)
 writer.addMutation(mutation);
 writer.close();
 ```
@@ -195,7 +197,7 @@ These levels are:
 Durability can be set in multiple ways:
 
 1. The default durability of a table can be set in the Accumulo shell
-2. When creating a [Connector], the default durability can be overridden using `withBatchWriterConfig()`
+2. When creating a [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
    or by setting [batch.writer.durability] in `accumulo-client.properties`.
 3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
    by the `BatchWriterConfig` that is passed in.
@@ -206,8 +208,7 @@ Durability can be set in multiple ways:
     // This is DANGEROUS:
     cfg.setDurability(Durability.NONE);
 
-    Connection conn = ... ;
-    BatchWriter bw = conn.createBatchWriter(table, cfg);
+    BatchWriter bw = client.createBatchWriter(table, cfg);
     ```
 
 ## Reading Data
@@ -225,7 +226,7 @@ to return a subset of the columns available.
 // specify which visibilities we are allowed to see
 Authorizations auths = new Authorizations("public");
 
-Scanner scan = conn.createScanner("table", auths);
+Scanner scan = client.createScanner("table", auths);
 scan.setRange(new Range("harry","john"));
 scan.fetchColumnFamily(new Text("attributes"));
 
@@ -274,7 +275,7 @@ TabletServers in parallel.
 ArrayList<Range> ranges = new ArrayList<Range>();
 // populate list of ranges ...
 
-BatchScanner bscan = conn.createBatchScanner("table", auths, 10);
+BatchScanner bscan = client.createBatchScanner("table", auths, 10);
 bscan.setRanges(ranges);
 bscan.fetchColumnFamily("attributes");
 
@@ -348,7 +349,7 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [Proxy] - Documentation for interacting with Accumulo using non-Java languages through a proxy server
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
-[Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
+[AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
 [client-props]: {% durl development/client-properties %}
 [auth.type]: {% purl -c auth.type %}
 [auth.principal]: {% purl -c auth.principal %}

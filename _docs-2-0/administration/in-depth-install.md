@@ -108,11 +108,11 @@ the Monitor which is configured by `log4j-monitor.properties`. All Accumulo comm
 Accumulo needs to know where to find the software it depends on. Edit accumulo-env.sh
 and specify the following:
 
-1. Enter the location of Hadoop for `$HADOOP_PREFIX`
+1. Enter the location of Hadoop for `$HADOOP_HOME`
 2. Enter the location of ZooKeeper for `$ZOOKEEPER_HOME`
 3. Optionally, choose a different location for Accumulo logs using `$ACCUMULO_LOG_DIR`
 
-Accumulo uses `HADOOP_PREFIX` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
+Accumulo uses `HADOOP_HOME` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
 and add them the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
 or Zookeeper, you may need to change how your `CLASSPATH` is built in `accumulo-env.sh`. If
 Accumulo has problems later on finding jars, run `accumulo classpath -d` to debug and print
@@ -291,9 +291,9 @@ will expect the KeyStore in the same location.
 
 ### Client Configuration
 
-Accumulo clients are configured in a different way than Accumulo servers. Clients are
-configured when [an Accumulo Connector is created][client-conn] using Java builder methods
-or a `accumulo-client.properties` file containing [client properties][client-props].
+Accumulo clients are configured in a different way than Accumulo servers. [Accumulo clients
+are created][accumulo-client] using Java builder methods or a `accumulo-client.properties`
+file containing [client properties][client-props].
 
 ### Custom Table Tags
 
@@ -315,7 +315,7 @@ Accumulo builds its Java classpath in `accumulo-env.sh`.  After an Accumulo appl
 specified in the deprecated [general.classpaths] property. Additionally, Accumulo will load classes from the locations specified in the
 [general.dynamic.classpaths] property and will monitor and reload them if they change. The reloading feature is useful during the development
 and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
-/
+
 Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
 uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
 [general.classpaths] property in the same manner described above. It differs in that you need to configure the
@@ -686,5 +686,5 @@ mailing lists at https://accumulo.apache.org for more info.
 [general.classpaths]: {% purl general.classpaths %}
 [general.dynamic.classpaths]: {% purl general.dynamic.classpaths %}
 [general.vfs.classpaths]: {% purl general.vfs.classpaths %}
-[client-conn]: {% durl getting-started/clients#connecting %}
+[accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
 [client-props]: {% durl development/client-properties %}

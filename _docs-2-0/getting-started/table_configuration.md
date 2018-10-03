@@ -34,7 +34,8 @@ programmatically as follows:
 ### Managing Locality Groups via the Client API
 
 ```java
-Connector conn;
+AccumuloClient client = Accumulo.newClient()
+                        .usingProperties("/path/to/accumulo-client.properties").build();
 
 HashMap<String,Set<Text>> localityGroups = new HashMap<String, Set<Text>>();
 
@@ -49,10 +50,10 @@ contentColumns.add(new Text("images"));
 localityGroups.put("metadata", metadataColumns);
 localityGroups.put("content", contentColumns);
 
-conn.tableOperations().setLocalityGroups("mytable", localityGroups);
+client.tableOperations().setLocalityGroups("mytable", localityGroups);
 
 // existing locality groups can be obtained as follows
-Map<String, Set<Text>> groups = conn.tableOperations().getLocalityGroups("mytable");
+Map<String, Set<Text>> groups = client.tableOperations().getLocalityGroups("mytable");
 ```
 
 The assignment of Column Families to Locality Groups can be changed at any time. The
@@ -196,7 +197,7 @@ VersioningIterator with the -ndi option in the shell. Also the Java API
 has the following method
 
 ```java
-connector.tableOperations.create(String tableName, boolean limitVersion);
+client.tableOperations.create(String tableName, boolean limitVersion);
 ```
 
 #### Logical Time
