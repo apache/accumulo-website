@@ -19,14 +19,12 @@ class name of the service which will perform crypto on RFiles and WALs.
 instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoService
 ```
 Out of the box, Accumulo provides the `AESCryptoService` for basic encryption needs.  This class provides AES encryption 
-with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional properties 
-below are required by this crypto service to be set using the {% plink instance.crypto.opts.* %} prefix.
+with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
+below is required by this crypto service to be set using the {% plink instance.crypto.opts.* %} prefix.
 ```
-instance.crypto.opts.key.provider=uri
 instance.crypto.opts.key.location=file:///secure/path/to/crypto-key-file
 ```
-The first property tells the crypto service how it will get the key encryption key.  The second property tells the service 
-where to find the key.  For now, the only valid values are "uri" and the path to the key file. The key file can be 16 or 32 bytes. 
+This property tells the crypto service where to find the file containing the key encryption key. The key file can be 16 or 32 bytes.
 For example, openssl can be used to create a random 32 byte key:
 ```
 openssl rand -out /path/to/keyfile 32
