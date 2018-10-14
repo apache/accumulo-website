@@ -48,6 +48,8 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 | purl  | Creates Property URL   | Default is server property. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.*`)               | `{% purl instance.volumes %}`                             |
 | dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
 | durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
+| ghi   | GitHub issue link          | None  | `{% ghi 100 %}` |
+| jira   | Jira issue link          | None  | `{% jira ACCUMULO-1000 %}` |
 
 ## Updating property documentation
 
