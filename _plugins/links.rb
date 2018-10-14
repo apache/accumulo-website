@@ -175,9 +175,40 @@ class DocUrlTag < Liquid::Tag
   end
 end
 
+class GitHubIssueTag < Liquid::Tag
+  def initialize(tag_name, text, tokens)
+    super
+    @text = text
+  end
+
+  def render(context)
+    # TODO sanity check text
+    # TODO support optional pound char like #123
+    url = "https://github.com/apache/accumulo/issues/#{@text}"
+    return "[##{@text}](#{url})"
+  end
+end
+
+class JiraTag < Liquid::Tag
+  def initialize(tag_name, text, tokens)
+    super
+    @text = text
+  end
+
+  def render(context)
+    # TODO sanity check text
+    # TODO accept number without ACCUMULO- prefix
+    url = "https://issues.apache.org/jira/browse/#{@text}"
+    return "[#{@text}](#{url})"
+  end
+end
+
+
 Liquid::Template.register_tag('jlink', JavadocLinkTag)
 Liquid::Template.register_tag('jurl', JavadocUrlTag)
 Liquid::Template.register_tag('plink', PropertyLinkTag)
 Liquid::Template.register_tag('purl', PropertyUrlTag)
 Liquid::Template.register_tag('dlink', DocLinkTag)
 Liquid::Template.register_tag('durl', DocUrlTag)
+Liquid::Template.register_tag('ghi', GitHubIssueTag)
+Liquid::Template.register_tag('jira', JiraTag)
