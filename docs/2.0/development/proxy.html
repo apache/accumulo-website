@@ -91,8 +91,8 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0-alpha-1/">2.0.0-alpha-1 (Preview Release)</a></li>
             <li><a href="/release/accumulo-1.9.2/">1.9.2 (Latest)</a></li>
-            <li><a href="/release/accumulo-1.7.4/">1.7.4</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
@@ -122,7 +122,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/images/feather-small.png" width="70"/><span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
             <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
@@ -518,8 +518,8 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <p>As a warning, this script will create a table in your Accumulo instance and add a few cells to it.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#! /usr/bin/env python
+</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">thrift</span> <span class="kn">import</span> <span class="n">Thrift</span>
@@ -554,8 +554,8 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <p>The example code below shows proxy client code for managing namespaces:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /usr/bin/env python</span>
-
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#! /usr/bin/env python
+</span>
 <span class="kn">from</span> <span class="nn">thrift.protocol</span> <span class="kn">import</span> <span class="n">TCompactProtocol</span>
 <span class="kn">from</span> <span class="nn">thrift.transport</span> <span class="kn">import</span> <span class="n">TSocket</span><span class="p">,</span> <span class="n">TTransport</span>
 
@@ -574,8 +574,8 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
     <span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaces</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
 
-    <span class="c"># create a namespace and give the user1 all permissions</span>
-    <span class="k">print</span> <span class="s">'creating namespace testing'</span>
+    <span class="c1"># create a namespace and give the user1 all permissions
+</span>    <span class="k">print</span> <span class="s">'creating namespace testing'</span>
     <span class="n">client</span><span class="o">.</span><span class="n">createNamespace</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">namespaceExists</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaces</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
@@ -592,21 +592,21 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="n">client</span><span class="o">.</span><span class="n">grantNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 
-    <span class="c"># make sure the last operation worked</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="c1"># make sure the last operation worked
+</span>    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">hasNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> \
             <span class="s">'user1 does</span><span class="se">\'</span><span class="s">nt have namespace permission </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">v</span>
 
     <span class="k">print</span> <span class="s">'default namespace: '</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="n">defaultNamespace</span><span class="p">()</span>
     <span class="k">print</span> <span class="s">'system namespace: '</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="n">systemNamespace</span><span class="p">()</span>
 
-    <span class="c"># grab the namespace properties</span>
-    <span class="k">print</span> <span class="s">'retrieving namespace properties'</span>
+    <span class="c1"># grab the namespace properties
+</span>    <span class="k">print</span> <span class="s">'retrieving namespace properties'</span>
     <span class="n">props</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceProperties</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">props</span> <span class="ow">and</span> <span class="n">props</span><span class="p">[</span><span class="s">'table.compaction.major.ratio'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'3'</span>
 
-    <span class="c"># update a property and verify it is good</span>
-    <span class="k">print</span> <span class="s">'setting namespace property table.compaction.major.ratio = 4'</span>
+    <span class="c1"># update a property and verify it is good
+</span>    <span class="k">print</span> <span class="s">'setting namespace property table.compaction.major.ratio = 4'</span>
     <span class="n">client</span><span class="o">.</span><span class="n">setNamespaceProperty</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'table.compaction.major.ratio'</span><span class="p">,</span> <span class="s">'4'</span><span class="p">)</span>
     <span class="n">props</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceProperties</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">props</span> <span class="ow">and</span> <span class="n">props</span><span class="p">[</span><span class="s">'table.compaction.major.ratio'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'4'</span>
@@ -622,8 +622,8 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
     <span class="n">setting</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getNamespaceIteratorSetting</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'DebugTheThings'</span><span class="p">,</span> <span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">setting</span> <span class="ow">and</span> <span class="n">setting</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span>
 
-    <span class="c"># make sure the iterator is in the list</span>
-    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="c1"># make sure the iterator is in the list
+</span>    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scopes</span> <span class="ow">in</span> <span class="n">iters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span><span class="p">:</span>
@@ -633,11 +633,11 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
     <span class="k">print</span> <span class="s">'checking for iterator conflicts'</span>
 
-    <span class="c"># this next statment should be fine since we are on a different scope</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">checkNamespaceIteratorConflicts</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">MINC</span><span class="p">])</span>
+    <span class="c1"># this next statment should be fine since we are on a different scope
+</span>    <span class="n">client</span><span class="o">.</span><span class="n">checkNamespaceIteratorConflicts</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">MINC</span><span class="p">])</span>
 
-    <span class="c"># this time it should throw an exception since we have already added the iterator with this scope</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="c1"># this time it should throw an exception since we have already added the iterator with this scope
+</span>    <span class="k">try</span><span class="p">:</span>
         <span class="n">client</span><span class="o">.</span><span class="n">checkNamespaceIteratorConflicts</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">setting</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">,</span> <span class="n">IteratorScope</span><span class="o">.</span><span class="n">MINC</span><span class="p">])</span>
     <span class="k">except</span> <span class="n">AccumuloException</span><span class="p">:</span>
         <span class="k">pass</span>
@@ -647,8 +647,8 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
     <span class="k">print</span> <span class="s">'removing debug iterator from namespace testing'</span>
     <span class="n">client</span><span class="o">.</span><span class="n">removeNamespaceIterator</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="s">'DebugTheThings'</span><span class="p">,</span> <span class="p">[</span><span class="n">IteratorScope</span><span class="o">.</span><span class="n">SCAN</span><span class="p">])</span>
 
-    <span class="c"># make sure the iterator is NOT in the list anymore</span>
-    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
+    <span class="c1"># make sure the iterator is NOT in the list anymore
+</span>    <span class="n">iters</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listNamespaceIterators</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scopes</span> <span class="ow">in</span> <span class="n">iters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'DebugTheThings'</span><span class="p">:</span>
@@ -691,13 +691,13 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
                                         <span class="s">'dummy'</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">res</span>
 
-    <span class="c"># revoke the permissions</span>
-    <span class="k">print</span> <span class="s">'revoking namespace permissions for user1'</span>
+    <span class="c1"># revoke the permissions
+</span>    <span class="k">print</span> <span class="s">'revoking namespace permissions for user1'</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="n">client</span><span class="o">.</span><span class="n">revokeNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 
-    <span class="c"># make sure the last operation worked</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="c1"># make sure the last operation worked
+</span>    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NamespacePermission</span><span class="o">.</span><span class="n">_VALUES_TO_NAMES</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">hasNamespacePermission</span><span class="p">(</span><span class="n">login</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'testing'</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> \
             <span class="s">'user1 does</span><span class="se">\'</span><span class="s">nt have namespace permission </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">v</span>
 
