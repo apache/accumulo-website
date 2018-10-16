@@ -1,6 +1,6 @@
 ---
-title: Latest User Manual
-redirect_to: /1.9/apidocs/
+title: Latest Java API
+redirect_to: /docs/2.x/apidocs/
 ---
 
 This page redirects to the latest Accumulo apidocs
