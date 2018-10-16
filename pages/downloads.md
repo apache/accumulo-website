@@ -105,8 +105,8 @@ and should be used for feedback and testing purposes only. See the
 
 #### 2.0 Documentation
 * [README][README_20]
-* [Online User Manual][MANUAL_20]
-* [Javadoc][JAVADOC_20]
+* [Online Documentation][MANUAL_20]
+* [Java API][JAVADOC_20]
 
 ### 1.9.2 **latest**{: .label .label-primary }
 
@@ -120,7 +120,7 @@ The most recent stable Apache Accumulo&reg; release is version 1.9.2. See the [r
 * [README][README_19]
 * [User Manual][MANUAL_19]
 * [Examples][EXAMPLES_19]
-* [Javadoc][JAVADOC_19]
+* [Java API][JAVADOC_19]
 
 ## Older releases
 
@@ -155,12 +155,12 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [README_19]: https://github.com/apache/accumulo/blob/rel/1.9.2/README.md
 {: .download_external id="/1.9/README" }
 
-[JAVADOC_20]: {{ site.baseurl }}/2.x/apidocs/
-{: .download_external id="/2.x/apidocs/" }
+[JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
+{: .download_external id="/docs/2.x/apidocs/" }
 [JAVADOC_19]: {{ site.baseurl }}/1.9/apidocs/
 {: .download_external id="/1.9/apidocs/" }
 
-[MANUAL_20]: {{ site.baseurl }}/docs/2.0 "2.0 online manual"
+[MANUAL_20]: {{ site.baseurl }}/docs/2.x "2.x online manual"
 [MANUAL_19]: {{ site.baseurl }}/1.9/accumulo_user_manual "1.9 user manual"
 
 [EXAMPLES_19]: {{ site.baseurl }}/1.9/examples "1.9 examples"
