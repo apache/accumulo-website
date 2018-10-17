@@ -25,4 +25,4 @@ and submit a pull request to the [website repository][website-repo]. A committer
 [manual]: /1.8/accumulo_user_manual.html
 [accumulo-repo]: https://github.com/apache/accumulo
 [website-repo]: https://github.com/apache/accumulo-website
-[docs-2.0]: /docs/2.0/
+[docs-2.0]: /docs/2.x/

@@ -80,7 +80,7 @@ Metrics from Accumulo will be immediately viewable in Grafana at [http://localho
     sending data, you may need to refresh the dashboard page in the browser to start viewing metrics.
 
 [Uno]: https://github.com/apache/fluo-uno
-[metrics2]: {{ site.baseurl }}/docs/2.0/administration/monitoring-metrics#hadoop-metrics2
+[metrics2]: {{ site.baseurl }}/docs/2.x/administration/monitoring-metrics#hadoop-metrics2
 [Graphite]: https://graphiteapp.org/
 [Ganglia]: http://ganglia.sourceforge.net/
 [monitor]: {{ site.baseurl }}/features/#screenshots
