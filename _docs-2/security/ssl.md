@@ -1,7 +1,7 @@
 ---
 title: SSL
-category: administration
-order: 8
+category: security
+order: 4
 ---
 
 Accumulo, through Thrift's TSSLTransport, provides the ability to encrypt

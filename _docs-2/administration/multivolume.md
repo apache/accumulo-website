@@ -1,7 +1,7 @@
 ---
 title: Multi-Volume Installations
 category: administration
-order: 7
+order: 6
 ---
 
 This is an advanced configuration setting for very large clusters

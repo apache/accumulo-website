@@ -1,7 +1,7 @@
 ---
 title: FATE
 category: administration
-order: 6
+order: 5
 ---
 
 Accumulo must implement a number of distributed, multi-step operations to support

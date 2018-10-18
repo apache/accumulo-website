@@ -1,7 +1,7 @@
 ---
 title: On Disk Encryption
-category: administration
-order: 14
+category: security
+order: 2
 ---
 
 For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
@@ -103,8 +103,8 @@ A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test 
 As you can see, there is a significant performance hit when running without the GHASH CPU instruction. It is advised Java 9 or later be used when enabling encryption.
 
 
-[SSL]: {% durl administration/ssl %}
-[Kerberos]: {% durl administration/kerberos %}
+[SSL]: {% durl security/ssl %}
+[Kerberos]: {% durl security/kerberos %}
 [design]: {% durl getting-started/design#rfile %}
 [rfile]: {% jurl org.apache.accumulo.core.client.rfile.RFile %}
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
