@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - Troubleshooting Tools</title>
+<title>Accumulo Documentation - Glossary</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -161,12 +161,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="true" aria-controls="collapsegetting-started">
                   Getting started
                 </a>
               </h4>
             </div>
-            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsegetting-started" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -305,12 +305,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
                   Troubleshooting
                 </a>
               </h4>
             </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -334,161 +334,217 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Troubleshooting &nbsp;&gt;&gt;&nbsp; Troubleshooting Tools</p>
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Getting started &nbsp;&gt;&gt;&nbsp; Glossary</p>
     
 
     <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
 
     <div class="row">
-      <div class="col-md-10"><h1>Troubleshooting Tools</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/troubleshooting/tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-10"><h1>Glossary</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/getting-started/glossary.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <p>The <code class="highlighter-rouge">accumulo</code> command can be used to run various tools and classes from the command line.</p>
-
-<h2 id="rfileinfo">RFileInfo</h2>
-
-<p>The <code class="highlighter-rouge">rfile-info</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
-2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
-Locality group         : &lt;DEFAULT&gt;
-        Start block          : 0
-        Num   blocks         : 1
-        Index level 0        : 62 bytes  1 blocks
-        First key            : 288be9ab4052fe9e span:34078a86a723e5d3:3da450f02108ced5 [] 1373373521623 false
-        Last key             : start:13fc375709e id:615f5ee2dd822d7a [] 1373373821660 false
-        Num entries          : 466
-        Column families      : [waitForCommits, start, md major compactor 1, md major compactor 2, md major compactor 3,
-                                 bringOnline, prep, md major compactor 4, md major compactor 5, md root major compactor 3,
-                                 minorCompaction, wal, compactFiles, md root major compactor 4, md root major compactor 1,
-                                 md root major compactor 2, compact, id, client:update, span, update, commit, write,
-                                 majorCompaction]
-
-Meta block     : BCFile.index
-      Raw size             : 4 bytes
-      Compressed size      : 12 bytes
-      Compression type     : gz
-
-Meta block     : RFile.index
-      Raw size             : 780 bytes
-      Compressed size      : 344 bytes
-      Compression type     : gz
-</code></pre></div></div>
-
-<p>When trying to diagnose problems related to key size, the <code class="highlighter-rouge">rfile-info</code> tool can provide a histogram of the individual key sizes:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
-...
-Up to size      count      %-age
-         10 :        222  28.23%
-        100 :        244  71.77%
-       1000 :          0   0.00%
-      10000 :          0   0.00%
-     100000 :          0   0.00%
-    1000000 :          0   0.00%
-   10000000 :          0   0.00%
-  100000000 :          0   0.00%
- 1000000000 :          0   0.00%
-10000000000 :          0   0.00%
-</code></pre></div></div>
-
-<p>Likewise, <code class="highlighter-rouge">rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
-row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
-...
-</code></pre></div></div>
-
-<h2 id="getmasterstats">GetMasterStats</h2>
-
-<p>The <code class="highlighter-rouge">GetMasterStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
- OS Load Average: 0.27
-</code></pre></div></div>
-
-<h2 id="findofflinetablets">FindOfflineTablets</h2>
-
-<p>If the Accumulo monitor shows an offline tablet, use <code class="highlighter-rouge">FindOfflineTablets</code> to find out which
-tablet it is.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.FindOfflineTablets
-2&lt;&lt;@(null,null,localhost:9997) is UNASSIGNED  #walogs:2
-</code></pre></div></div>
-
-<p>Here’s what the output means:</p>
-
-<ul>
-  <li>
-    <p><code class="highlighter-rouge">2&lt;&lt;</code> -
-  This is the tablet from (-inf, pass:[+]inf) for the
-  table with id 2.  The command <code class="highlighter-rouge">tables -l</code> in the shell will show table ids for
-  tables.</p>
-  </li>
-  <li>
-    <p><code class="highlighter-rouge">@(null, null, localhost:9997)</code> -
-  Location information.  The
-  format is <code class="highlighter-rouge">@(assigned, hosted, last)</code>.  In this case, the
-  tablet has not been assigned, is not hosted anywhere, and was once
-  hosted on localhost.</p>
-  </li>
-  <li>
-    <p><code class="highlighter-rouge">#walogs:2</code> -
-   The number of write-ahead logs that this tablet requires for recovery.</p>
-  </li>
-</ul>
-
-<p>An unassigned tablet with write-ahead logs is probably waiting for
-logs to be sorted for efficient recovery.</p>
-
-<h2 id="checkformetadataproblems">CheckForMetadataProblems</h2>
-
-<p>The <code class="highlighter-rouge">CheckForMetadataProblems</code> tool can be used to make sure metadata
-tables are up and consistent. It will verify the start/end of
-every tablet matches, and the start and stop for the table is empty:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
-Enter the connection password:
-All is well for table !0
-All is well for table 1
-</code></pre></div></div>
-
-<h2 id="removeentriesformissingfiles">RemoveEntriesForMissingFiles</h2>
-
-<p>If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove the
-the file reference using <code class="highlighter-rouge">RemoveEntriesForMissingFiles</code>. It will check every file reference
-and ensure that the file exists in HDFS.  Optionally, it will remove the reference:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RemoveEntriesForMissingFiles -u root --password
-Enter the connection password:
-2013-07-16 13:10:57,293 [util.RemoveEntriesForMissingFiles] INFO : File /accumulo/tables/2/default_tablet/F0000005.rf
- is missing
-2013-07-16 13:10:57,296 [util.RemoveEntriesForMissingFiles] INFO : 1 files of 3 missing
-</code></pre></div></div>
-
-<h2 id="cleanzookeeper">CleanZookeeper</h2>
-
-<p>If you have entries in zookeeper for old instances that you no longer need, remove them using CleanZookeeper:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CleanZookeeper
-</code></pre></div></div>
-
-<p>This command will not delete the instance pointed to by the local <code class="highlighter-rouge">accumulo.properties</code> file.</p>
-
-<h2 id="dumpzookeeper--restorezookeeper">DumpZookeeper &amp; RestoreZookeeper</h2>
-
-<p>If you would like to backup, or otherwise examine the contents of Zookeeper, there are commands to dump and load to/from XML.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper --root /accumulo &gt;dump.xml
-$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
-</code></pre></div></div>
+    <dl>
+  <dt>authorizations</dt>
+  <dd>
+    <blockquote>
+      <p>a set of strings associated with a user or with a particular scan that will
+be used to determine which key/value pairs are visible to the user.</p>
+    </blockquote>
+  </dd>
+  <dt>cell</dt>
+  <dd>
+    <blockquote>
+      <p>a set of key/value pairs whose keys differ only in timestamp.</p>
+    </blockquote>
+  </dd>
+  <dt>column</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that sorts after the row and is divided into family,
+qualifier, and visibility.</p>
+    </blockquote>
+  </dd>
+  <dt>column family</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that sorts second and controls locality groups, the
+row/column hybrid nature of accumulo.</p>
+    </blockquote>
+  </dd>
+  <dt>column qualifier</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that sorts third and provides additional key
+uniqueness.</p>
+    </blockquote>
+  </dd>
+  <dt>column visibility</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that sorts fourth and controls user access to
+individual key/value pairs. Visibilities are boolean AND (&amp;) and OR (|)
+combinations of authorization strings with parentheses required to determine
+ordering, e.g. (AB&amp;C)|DEF.</p>
+    </blockquote>
+  </dd>
+  <dt>iterator</dt>
+  <dd>
+    <blockquote>
+      <p>a mechanism for modifying tablet-local portions of the key/value space.
+Iterators are used for standard administrative tasks as well as for custom
+processing.</p>
+    </blockquote>
+  </dd>
+  <dt>iterator priority</dt>
+  <dd>
+    <blockquote>
+      <p>an iterator must be configured with a particular scope and priority. When a
+tablet server enters that scope, it will instantiate iterators in priority
+order starting from the smallest priority and ending with the largest, and
+apply each to the data read before rewriting the data or sending the data to
+the user.</p>
+    </blockquote>
+  </dd>
+  <dt>iterator scopes</dt>
+  <dd>
+    <blockquote>
+      <p>the possible scopes for iterators are where the tablet server is already
+reading and/or writing data: minor compaction / flush time (<em>minc</em>
+scope), major compaction / file merging time (<em>majc</em> scope), and query
+time (<em>scan</em> scope).</p>
+    </blockquote>
+  </dd>
+  <dt>gc</dt>
+  <dd>
+    <blockquote>
+      <p>process that identifies temporary files in HDFS that are no longer needed by
+any process, and deletes them.</p>
+    </blockquote>
+  </dd>
+  <dt>key</dt>
+  <dd>
+    <blockquote>
+      <p>the key into the distributed sorted map which is accumulo. The key is
+subdivided into row, column, and timestamp. The column is further divided into
+family, qualifier, and visibility.</p>
+    </blockquote>
+  </dd>
+  <dt>locality group</dt>
+  <dd>
+    <blockquote>
+      <p>a set of column families that will be grouped together on disk. With no
+locality groups configured, data is stored on disk in row order. If each
+column family were configured to be its own locality group, the data for each
+column would be stored separately, in row order. Configuring sets of columns
+into locality groups is a compromise between the two approaches and will
+improve performance when multiple columns are accessed in the same scan.</p>
+    </blockquote>
+  </dd>
+  <dt>log-structured merge-tree</dt>
+  <dd>
+    <blockquote>
+      <p>the sorting / flushing / merging scheme on which BigTable’s design is based.</p>
+    </blockquote>
+  </dd>
+  <dt>logger</dt>
+  <dd>
+    <blockquote>
+      <p>in 1.4 and older, process that accepts updates to tablet servers and writes
+them to local on-disk storage for redundancy. in 1.5 the functionality was
+subsumed by the tablet server and datanode with HDFS writes.</p>
+    </blockquote>
+  </dd>
+  <dt>major compaction</dt>
+  <dd>
+    <blockquote>
+      <p>merging multiple files into a single file. If all of a tablet’s files are
+merged into a single file, it is called a <em>full major compaction</em>.</p>
+    </blockquote>
+  </dd>
+  <dt>master</dt>
+  <dd>
+    <blockquote>
+      <p>process that detects and responds to tablet failures, balances load across
+tablet servers by assigning and migrating tablets when required, coordinates
+table operations, and handles tablet server logistics (startup, shutdown,
+recovery).</p>
+    </blockquote>
+  </dd>
+  <dt>minor compaction</dt>
+  <dd>
+    <blockquote>
+      <p>flushing data from memory to disk. Usually this creates a new file for a
+tablet, but if the memory flushed is merge-sorted in with data from an existing
+file (replacing that file), it is called a <em>merging minor compaction</em>.</p>
+    </blockquote>
+  </dd>
+  <dt>monitor</dt>
+  <dd>
+    <blockquote>
+      <p>process that displays status and usage information for all Accumulo
+components.</p>
+    </blockquote>
+  </dd>
+  <dt>permissions</dt>
+  <dd>
+    <blockquote>
+      <p>administrative abilities that must be given to a user such as creating tables
+or users and changing permissions or configuration parameters.</p>
+    </blockquote>
+  </dd>
+  <dt>row</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that controls atomicity. Keys with the same row are
+guaranteed to remain on a single tablet hosted by a single tablet server,
+therefore multiple key/value pairs can be added to or removed from a row at the
+same time. The row is used for the primary sorting of the key.</p>
+    </blockquote>
+  </dd>
+  <dt>scan</dt>
+  <dd>
+    <blockquote>
+      <p>reading a range of key/value pairs.</p>
+    </blockquote>
+  </dd>
+  <dt>tablet</dt>
+  <dd>
+    <blockquote>
+      <p>a contiguous key range; the unit of work for a tablet server.</p>
+    </blockquote>
+  </dd>
+  <dt>tablet servers</dt>
+  <dd>
+    <blockquote>
+      <p>a set of servers that hosts reads and writes for tablets. Each server hosts
+a distinct set of tablets at any given time, but the tablets may be hosted by
+different servers over time.</p>
+    </blockquote>
+  </dd>
+  <dt>timestamp</dt>
+  <dd>
+    <blockquote>
+      <p>the portion of the key that controls versioning. Otherwise identical keys
+with differing timestamps are considered to be versions of a single
+<em>cell</em>. Accumulo can be configured to keep the <em>N</em> newest
+versions of each <em>cell</em>. When a deletion entry is inserted, it deletes
+all earlier versions for its cell.</p>
+    </blockquote>
+  </dd>
+  <dt>value</dt>
+  <dd>
+    <blockquote>
+      <p>immutable bytes associated with a particular key.</p>
+    </blockquote>
+  </dd>
+</dl>
 
 
 
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/troubleshooting/tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/getting-started/glossary.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
   </div>
 </div>
