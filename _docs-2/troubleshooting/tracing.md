@@ -1,7 +1,7 @@
 ---
 title: Tracing
-category: administration
-order: 5
+category: troubleshooting
+order: 6
 ---
 
 It can be difficult to determine why some operations are taking longer

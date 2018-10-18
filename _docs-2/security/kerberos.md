@@ -1,7 +1,7 @@
 ---
 title: Kerberos
-category: administration
-order: 9
+category: security
+order: 3
 ---
 
 ## Overview
