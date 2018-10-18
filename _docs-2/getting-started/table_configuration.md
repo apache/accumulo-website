@@ -1,7 +1,7 @@
 ---
 title: Table Configuration
 category: getting-started
-order: 6
+order: 7
 ---
 
 Accumulo tables have a few options that can be configured to alter the default

@@ -1,7 +1,7 @@
 ---
 title: Table Design
 category: getting-started
-order: 5
+order: 6
 ---
 
 ### Basic Table

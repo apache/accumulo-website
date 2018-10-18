@@ -1,6 +1,8 @@
 ---
 title: Glossary
-permalink: /glossary/
+category: getting-started
+order: 8
+redirect_from: /glossary/
 ---
 
 authorizations
