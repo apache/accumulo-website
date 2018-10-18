@@ -1,7 +1,10 @@
 ---
 title: Features
-permalink: /features/
-redirect_from: /notable_features
+category: getting-started
+order: 2
+redirect_from:
+  - /features/
+  - /notable_features/
 ---
 
 {::options toc_levels="2" /}

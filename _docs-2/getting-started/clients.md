@@ -1,7 +1,7 @@
 ---
 title: Accumulo Clients
 category: getting-started
-order: 3
+order: 4
 ---
 
 ## Creating Client Code

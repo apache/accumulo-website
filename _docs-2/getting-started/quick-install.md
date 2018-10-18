@@ -1,7 +1,7 @@
 ---
 title: Quick Installation
 category: getting-started
-order: 2
+order: 3
 ---
 
 <!-- IMPORTANT: This file should mirror (with minor differences) INSTALL.md in the Accumulo repo -->
