@@ -1,19 +1,19 @@
 ---
-title: Configuration Management
-category: administration
-order: 2
+title: Configuration Overview
+category: configuration
+order: 1
 ---
 
 Configuration is managed differently for Accumulo clients and servers.
 
 ## Client Configuration
 
-[Accumulo clients][accumulo-client] are created using builder methods or `accumulo-client.properties`
-which is configured using [client properties][client-props].
+[Accumulo clients][accumulo-client] are created using a Java builder methods, Java properties containing
+[client properties][client-props], or an `accumulo-client.properties` file containing [client properties][client-props].
 
 ## Server Configuration
 
-Accumulo services (i.e master, tablet server, monitor, etc) are configured using [server properties][props] whose values can be
+Accumulo services (i.e master, tablet server, monitor, etc) are configured by [server properties][props] whose values can be
 set in the following locations (with increasing precedence):
 
 1. Default values
@@ -113,5 +113,5 @@ default  | table.failures.ignore ..................... | false
 ```
 
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
-[client-props]: {% durl development/client-properties %}
-[props]: {% durl administration/properties %}
+[client-props]: {% durl configuration/client-properties %}
+[props]: {% durl configuration/server-properties %}

@@ -27,7 +27,7 @@ The design of Accumulo's distributed tracing follows that of [Google's Dapper](h
 
 To collect traces, Accumulo needs at least one tracer server running. If you are using `accumulo-cluster` to start your cluster,
 configure your server in `conf/tracers`. The server collects traces from clients and writes them to the `trace` table. The Accumulo
-user that the tracer connects to Accumulo with can be configured with the following properties (see the [configuration management][config-mgmt] 
+user that the tracer connects to Accumulo with can be configured with the following properties (see the [configuration overview][config-mgmt] 
 page for setting Accumulo server properties)
 
  * [trace.user]
@@ -332,7 +332,7 @@ Time  Start  Service@Location       Name
     5+1692           tserver@localhost tablet read ahead 6
 ```
 
-[config-mgmt]: {{ page.docs_baseurl }}/administration/configuration-management
+[config-mgmt]: {% durl configuration/overview %}
 [Zipkin]: https://github.com/openzipkin/zipkin
 [trace.user]: {% purl trace.user %}
 [trace.token.property.password]: {% purl trace.token.property.password %}

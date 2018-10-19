@@ -350,7 +350,7 @@ This page covers Accumulo client basics.  Below are links to additional document
 * [MapReduce] - Documentation for reading and writing to Accumulo using MapReduce.
 
 [AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
-[client-props]: {% durl development/client-properties %}
+[client-props]: {% durl configuration/client-properties %}
 [auth.type]: {% purl -c auth.type %}
 [auth.principal]: {% purl -c auth.principal %}
 [auth.token]: {% purl -c auth.token %}

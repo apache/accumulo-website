@@ -1,7 +1,7 @@
 ---
 title: Caching
 category: administration
-order: 9
+order: 6
 ---
 
 Accumulo [tablet servers][tserver] have **block caches** that buffer data in memory to limit reads from disk.

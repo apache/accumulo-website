@@ -108,9 +108,9 @@ def render_prop(context, text, link)
     base = context.registers[:site].config['docs_baseurl']
   end
   prop_enc = prop.gsub('.', '_').gsub('*', 'prefix')
-  url = "#{base}/administration/properties##{prop_enc}"
+  url = "#{base}/configuration/server-properties##{prop_enc}"
   if type == 'client'
-    url = "#{base}/development/client-properties##{prop_enc}"
+    url = "#{base}/configuration/client-properties##{prop_enc}"
   end
   if link
     return "[#{prop}](#{url})"
