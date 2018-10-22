@@ -55,7 +55,7 @@ the properties to connect to an Accumulo instance using SSL:
 * {% plink -c ssl.truststore.path %}
 * {% plink -c ssl.truststore.password %}
 
-If two-way SSL is enabled for the Accumulo instance (by setting [instance.rpc.ssl.clientAuth] to `true` in `accumulo.properties`),
+If two-way SSL is enabled for the Accumulo instance (by setting {% plink instance.rpc.ssl.clientAuth %} to `true` in `accumulo.properties`),
 Accumulo clients must also define their own certificate by setting the following properties:
 
 * {% plink -c ssl.keystore.path %}
