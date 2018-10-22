@@ -1,7 +1,7 @@
 ---
 title: Upgrading Accumulo
 category: administration
-order: 10
+order: 7
 ---
 
 ## Upgrading from 1.7 to 1.8

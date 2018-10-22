@@ -1,7 +1,7 @@
 ---
 title: Scan Executors
 category: administration
-order: 11
+order: 8
 ---
 
 Accumulo scans operate by repeatedly fetching batches of data from a [tablet

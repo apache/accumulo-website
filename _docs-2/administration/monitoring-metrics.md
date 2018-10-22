@@ -1,7 +1,7 @@
 ---
 title: Monitoring & Metrics
 category: administration
-order: 4
+order: 2
 ---
 
 ## Monitoring

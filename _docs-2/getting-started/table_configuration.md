@@ -713,7 +713,7 @@ preserved.
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
 [filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
 [table.majc.compaction.strategy]: {% purl table.majc.compaction.strategy %}
-[config-properties]: {{ page.docs_baseurl}}/administration/properties
+[config-properties]: {% durl configuration/server-properties %}
 [Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Caching]: {% durl administration/caching %}

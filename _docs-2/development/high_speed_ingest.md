@@ -114,5 +114,5 @@ and the [MapReduce example code][mapred-code].
 [bulk-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloFileOutputFormat %}
-[mapred-docs]: {{ page.docs_baseurl }}/development/mapreduce
+[mapred-docs]: {% durl development/mapreduce %}
 [mapred-code]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md

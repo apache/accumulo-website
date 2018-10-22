@@ -220,7 +220,7 @@ Specify appropriate values for the following properties in `accumulo.properties`
   [Sensitive Configuration Values](#sensitive-configuration-values) section.
 
 Some settings can be modified via the Accumulo shell and take effect immediately, but
-some settings require a process restart to take effect. See the [configuration management][config-mgmt]
+some settings require a process restart to take effect. See the [configuration overview][config-mgmt]
 documentation for details.
 
 ### Hostnames in configuration files
@@ -666,7 +666,7 @@ mailing lists at https://accumulo.apache.org for more info.
 
 [quick]: {% durl getting-started/quick-install %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
-[config-mgmt]: {% durl administration/configuration-management %}
+[config-mgmt]: {% durl configuration/overview %}
 [instance.zookeeper.host]: {% purl instance.zookeeper.host %}
 [instance.secret]: {% purl instance.secret %}
 [monitor.port.log4j]: {% purl monitor.port.log4j %}
@@ -687,4 +687,4 @@ mailing lists at https://accumulo.apache.org for more info.
 [general.dynamic.classpaths]: {% purl general.dynamic.classpaths %}
 [general.vfs.classpaths]: {% purl general.vfs.classpaths %}
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
-[client-props]: {% durl development/client-properties %}
+[client-props]: {% durl configuration/client-properties %}
