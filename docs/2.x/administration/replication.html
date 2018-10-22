@@ -159,6 +159,8 @@
           
         
           
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
@@ -201,6 +203,8 @@
           
         
           
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
@@ -226,8 +230,6 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/client-properties">Client Properties</a></div>
-                
               </div>
             </div>
           
@@ -241,6 +243,8 @@
           
         
       
+        
+          
         
           
         
@@ -279,6 +283,42 @@
       
         
           
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseconfiguration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/overview">Configuration Overview</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/client-properties">Client Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties">Server Properties</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
@@ -291,10 +331,6 @@
                 
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/configuration-management">Configuration Management</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -324,7 +360,11 @@
         
           
         
+          
+        
       
+        
+          
         
           
         
@@ -427,7 +467,7 @@ into the following sections.</p>
 
 <p>Each system involved in replication (even the primary) needs a name that uniquely
 identifies it across all peers in the replication graph. This should be considered
-fixed for an instance, and set using <a href="/docs/2.x/administration/properties#replication_name">replication.name</a> in <code class="highlighter-rouge">accumulo.properties</code>.</p>
+fixed for an instance, and set using <a href="/docs/2.x/configuration/server-properties#replication_name">replication.name</a> in <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Unique name for this system used by replication
 replication.name=primary
@@ -501,7 +541,7 @@ Monitor server, using the <code class="highlighter-rouge">Replication</code> lin
 <h2 id="work-assignment">Work Assignment</h2>
 
 <p>Depending on the schema of a table, different implementations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a>
-used could be configured. The implementation is controlled via the property <a href="/docs/2.x/administration/properties#replication_work_assigner">replication.work.assigner</a>
+used could be configured. The implementation is controlled via the property <a href="/docs/2.x/configuration/server-properties#replication_work_assigner">replication.work.assigner</a>
 and the full class name for the implementation. This can be configured via the shell or <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
 <p>Two implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> are provided:</p>
@@ -540,7 +580,7 @@ with the Master on the peer to request the address of a TabletServer on the peer
 this TabletServer will use to replicate the data.</p>
 
 <p>The TabletServer on the primary will then replicate data in batches of a configurable
-size (<a href="/docs/2.x/administration/properties#replication_max_unit_size">replication.max.unit.size</a>). The TabletServer on the peer will report how many
+size (<a href="/docs/2.x/configuration/server-properties#replication_max_unit_size">replication.max.unit.size</a>). The TabletServer on the peer will report how many
 records were applied back to the primary, which will be used to record how many records
 were successfully replicated. The TabletServer on the primary will continue to replicate
 data in these batches until no more data can be read from the file.</p>
@@ -551,16 +591,16 @@ data in these batches until no more data can be read from the file.</p>
 the implementation of various components operate.</p>
 
 <ul>
-  <li><a href="/docs/2.x/administration/properties#replication_max_work_queue">replication.max.work.queue</a> - Maximum number of files queued for replication at one time</li>
-  <li><a href="/docs/2.x/administration/properties#replication_work_assignment_sleep">replication.work.assignment.sleep</a> - Time between invocations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a></li>
-  <li><a href="/docs/2.x/administration/properties#replication_worker_threads">replication.worker.threads</a> - Size of threadpool used to replicate data to peers</li>
-  <li><a href="/docs/2.x/administration/properties#replication_receipt_service_port">replication.receipt.service.port</a> - Thrift service port to listen for replication requests, can use ‘0’ for a random port</li>
-  <li><a href="/docs/2.x/administration/properties#replication_work_attempts">replication.work.attempts</a> - Number of attempts to replicate to a peer before aborting the attempt</li>
-  <li><a href="/docs/2.x/administration/properties#replication_receiver_min_threads">replication.receiver.min.threads</a> - Minimum number of idle threads for handling incoming replication</li>
-  <li><a href="/docs/2.x/administration/properties#replication_receiver_threadcheck_time">replication.receiver.threadcheck.time</a> - Time between attempting adjustments of thread pool for incoming replications</li>
-  <li><a href="/docs/2.x/administration/properties#replication_max_unit_size">replication.max.unit.size</a> - Maximum amount of data to be replicated in one RPC</li>
-  <li><a href="/docs/2.x/administration/properties#replication_work_assigner">replication.work.assigner</a> - <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> implementation</li>
-  <li><a href="/docs/2.x/administration/properties#tserver_replication_batchwriter_replayer_memory">tserver.replication.batchwriter.replayer.memory</a> - Size of BatchWriter cache to use in applying replication requests</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_max_work_queue">replication.max.work.queue</a> - Maximum number of files queued for replication at one time</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assignment_sleep">replication.work.assignment.sleep</a> - Time between invocations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a></li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_worker_threads">replication.worker.threads</a> - Size of threadpool used to replicate data to peers</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_receipt_service_port">replication.receipt.service.port</a> - Thrift service port to listen for replication requests, can use ‘0’ for a random port</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_work_attempts">replication.work.attempts</a> - Number of attempts to replicate to a peer before aborting the attempt</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_receiver_min_threads">replication.receiver.min.threads</a> - Minimum number of idle threads for handling incoming replication</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_receiver_threadcheck_time">replication.receiver.threadcheck.time</a> - Time between attempting adjustments of thread pool for incoming replications</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_max_unit_size">replication.max.unit.size</a> - Maximum amount of data to be replicated in one RPC</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assigner">replication.work.assigner</a> - <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> implementation</li>
+  <li><a href="/docs/2.x/configuration/server-properties#tserver_replication_batchwriter_replayer_memory">tserver.replication.batchwriter.replayer.memory</a> - Size of BatchWriter cache to use in applying replication requests</li>
 </ul>
 
 <h2 id="example-practical-configuration">Example Practical Configuration</h2>
@@ -622,7 +662,7 @@ root@peer&gt; tables -l
 
 <h4 id="define-the-peer-as-a-replication-peer-to-the-primary">Define the Peer as a replication peer to the Primary</h4>
 
-<p>We’re defining the instance with <a href="/docs/2.x/administration/properties#replication_name">replication.name</a> of <code class="highlighter-rouge">peer</code> as a peer. We provide the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a>
+<p>We’re defining the instance with <a href="/docs/2.x/configuration/server-properties#replication_name">replication.name</a> of <code class="highlighter-rouge">peer</code> as a peer. We provide the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a>
 that we want to use, and the configuration for the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a>. In this case, the configuration is the Accumulo
 Instance name for <code class="highlighter-rouge">peer</code> and the ZooKeeper quorum string. The configuration key is of the form
 <code class="highlighter-rouge">replication.peer.$peer_name</code>.</p>

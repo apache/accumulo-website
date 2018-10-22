@@ -159,6 +159,8 @@
           
         
           
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
@@ -201,6 +203,8 @@
           
         
           
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
@@ -226,8 +230,6 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/client-properties">Client Properties</a></div>
-                
               </div>
             </div>
           
@@ -241,6 +243,8 @@
           
         
       
+        
+          
         
           
         
@@ -279,6 +283,42 @@
       
         
           
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseconfiguration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/overview">Configuration Overview</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/client-properties">Client Properties</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties">Server Properties</a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
@@ -291,10 +331,6 @@
                 
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/configuration-management">Configuration Management</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/properties">Server Properties</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
                 
@@ -324,7 +360,11 @@
         
           
         
+          
+        
       
+        
+          
         
           
         
@@ -403,20 +443,20 @@ other table.</p>
 
 <p>To collect traces, Accumulo needs at least one tracer server running. If you are using <code class="highlighter-rouge">accumulo-cluster</code> to start your cluster,
 configure your server in <code class="highlighter-rouge">conf/tracers</code>. The server collects traces from clients and writes them to the <code class="highlighter-rouge">trace</code> table. The Accumulo
-user that the tracer connects to Accumulo with can be configured with the following properties (see the <a href="/docs/2.x/administration/configuration-management">configuration management</a> 
+user that the tracer connects to Accumulo with can be configured with the following properties (see the <a href="/docs/2.x/configuration/overview">configuration overview</a> 
 page for setting Accumulo server properties)</p>
 
 <ul>
-  <li><a href="/docs/2.x/administration/properties#trace_user">trace.user</a></li>
-  <li><a href="/docs/2.x/administration/properties#trace_token_property_password">trace.token.property.password</a></li>
+  <li><a href="/docs/2.x/configuration/server-properties#trace_user">trace.user</a></li>
+  <li><a href="/docs/2.x/configuration/server-properties#trace_token_property_password">trace.token.property.password</a></li>
 </ul>
 
 <p>Other tracer configuration properties include</p>
 
 <ul>
-  <li><a href="/docs/2.x/administration/properties#trace_port_client">trace.port.client</a> - port tracer listens on</li>
-  <li><a href="/docs/2.x/administration/properties#trace_table">trace.table</a> - table tracer writes to</li>
-  <li><a href="/docs/2.x/administration/properties#trace_zookeeper_path">trace.zookeeper.path</a> - zookeeper path where tracers register</li>
+  <li><a href="/docs/2.x/configuration/server-properties#trace_port_client">trace.port.client</a> - port tracer listens on</li>
+  <li><a href="/docs/2.x/configuration/server-properties#trace_table">trace.table</a> - table tracer writes to</li>
+  <li><a href="/docs/2.x/configuration/server-properties#trace_zookeeper_path">trace.zookeeper.path</a> - zookeeper path where tracers register</li>
 </ul>
 
 <p>The zookeeper path is configured to /tracers by default.  If
@@ -431,10 +471,10 @@ configured is org.apache.accumulo.core.trace.ZooTraceClient, which
 sends spans to an Accumulo Tracer process, as discussed in the
 previous section. This default can be changed to a different span
 receiver, or additional span receivers can be added in a
-comma-separated list, by modifying the property <a href="/docs/2.x/administration/properties#trace_span_receivers">trace.span.receivers</a>.</p>
+comma-separated list, by modifying the property <a href="/docs/2.x/configuration/server-properties#trace_span_receivers">trace.span.receivers</a>.</p>
 
 <p>Individual span receivers may require their own configuration
-parameters, which are grouped under the <a href="/docs/2.x/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a>
+parameters, which are grouped under the <a href="/docs/2.x/configuration/server-properties#trace_span_receiver_prefix">trace.span.receiver.*</a>
 prefix.  ZooTraceClient uses the following properties.  The first
 three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
@@ -448,8 +488,8 @@ tracer.queue.size - max queue size (default 5000)
 tracer.span.min.ms - minimum span length to store (in ms, default 1)
 </code></pre></div></div>
 
-<p>To configure an Accumulo client for tracing, set <a href="/docs/2.x/development/client-properties#trace_span_receivers">trace.span.receivers</a> and <a href="/docs/2.x/development/client-properties#trace_zookeeper_path">trace.zookeeper.path</a>
-in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.x/administration/properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo.properties</code> should be set in
+<p>To configure an Accumulo client for tracing, set <a href="/docs/2.x/configuration/client-properties#trace_span_receivers">trace.span.receivers</a> and <a href="/docs/2.x/configuration/client-properties#trace_zookeeper_path">trace.zookeeper.path</a>
+in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.x/configuration/server-properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo.properties</code> should be set in
 <code class="highlighter-rouge">accumulo-client.properties</code>.</p>
 
 <p>Hadoop can also be configured to send traces to Accumulo, as of
