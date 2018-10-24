@@ -16,23 +16,23 @@ redirect_from:
 
 ### Iterators
 
-A server-side programming mechanism to encode functions such as filtering and
+[Iterators] are a server-side programming mechanism that encode functions such as filtering and
 aggregation within the data management steps (scopes where data is read from or
 written to disk) that happen in the tablet server.
 
-### Cell labels
+### Security labels
 
-An additional portion of the Key that sorts after the column qualifier and
-before the timestamp. It is called column visibility and enables expressive
-cell-level access control. Authorizations are passed with each query to control
-what data is returned to the user. The column visibilities are boolean AND and
-OR combinations of arbitrary strings (such as "(A&amp;B)|C") and authorizations
-are sets of strings (such as {C,D}).
+Accumulo Keys can contain a [security label]({% durl security/labels %})
+(called a Column Visibility) that enables expressive cell-level access control.
+Authorizations are passed with each query to control what data is returned to the user.
+Column visibilities support boolean `AND` and `OR` combinations of arbitrary strings (such
+as `(A&B)|C`) and authorizations are sets of strings (such as `{C,D}`).
 
 ### Constraints
 
-Configurable conditions under which writes to a table will be rejected.
-Constraints are written in Java and configurable on a per table basis.
+[Constraints]({% durl getting-started/table_configuration#constraints %}) are configurable
+conditions under which writes to a table will be rejected. Constraints are written in Java
+and configurable on a per table basis.
 
 ### Sharding
 
@@ -46,20 +46,18 @@ When reading rows, there is no requirement that an entire row fits into memory.
 
 ### Namespaces
 
-In version 1.6.0, the concept of table "namespaces" was created to allow for logical
-grouping and configuration of Accumulo tables. By default, tables are created in a
-default namespace which is the empty string to preserve the feel for how tables operate
-in previous versions. One application of table namespaces is placing the Accumulo root
-and metadata table in an "accumulo" namespace to denote that these tables are used
-internally by Accumulo.
+Table namespaces (since 1.6.0) allow for logical grouping and configuration of Accumulo
+tables. By default, tables are created in a default namespace which is the empty string
+to preserve the feel for how tables operate in previous versions. One application of
+table namespaces is placing the Accumulo root and metadata table in an "accumulo"
+namespace to denote that these tables are used internally by Accumulo.
 
 ### Volume support
 
-Accumulo 1.6.0 migrated its HDFS configuration from a single HDFS host and directory 
-to a collection of HDFS URIs (host and path). This allows Accumulo to operate over 
-multiple disjoint HDFS instances and scale beyond the limits of a single namenode. When 
-used in conjunction with HDFS federation, multiple namenodes can share a pool 
-of datanodes.
+While Accumulo typically runs on a single HDFS instance, it supports [multi-volume installations][multivolume]
+(since 1.6.0) which allow it to run over multiple disjoint HDFS instances and scale beyond the limits
+of a single namenode. When used in conjunction with HDFS federation, multiple namenodes
+can share a pool of datanodes.
 
 ## Integrity/Availability
 
@@ -68,7 +66,7 @@ of datanodes.
 Multiple masters can be configured.  Zookeeper locks are used to determine
 which master is active.  The remaining masters simply wait for the current
 master to lose its lock.  Current master state is held in the metadata table
-and Zookeeper (see [FATE][FATE]).
+and Zookeeper.
 
 ### Logical time
 
@@ -98,10 +96,10 @@ file is imported, but whenever it is read by scans or compactions. At import, a
 time is obtained and always used by the specialized system iterator to set that
 time.
 
-### FATE {#fate}
+### FATE
 
-Fault Tolerant Executor. A framework for executing operations in a fault
-tolerant manner. In the previous release, if the master process died in the
+[FATE] (short for **Fa**ult **T**olerant **E**xecutor) is a framework for executing
+operations in a fault tolerant manner. Before FATE, if the master process died in the
 middle of creating a table it could leave the system in an inconsistent state.
 With this new framework, if the master dies in the middle of create table it
 will continue on restart. Also, the client requesting the create table operation
@@ -147,8 +145,9 @@ does not activate for short scans.
 
 ### Caching
 
-Recently scanned data is cached into memory.  There are separate caches for
-indexes and data.  Caching can be turned on and off for individual tables.
+Recently scanned data is [cached]({% durl administration/caching %}) into memory
+There are separate caches for indexes and data.  Caching can be turned on and off
+for individual tables.
 
 ### Multi-level RFile Index
 
@@ -172,11 +171,6 @@ future seeks faster. This strategy allows Accumulo to dynamically respond to
 read patterns without precomputing block indexes when RFiles are written.
 
 ## Testing
-
-### Mock
-
-The Accumulo client API has a mock implementation that is useful writing unit
-test against Accumulo. Mock Accumulo is in memory and in process.
 
 ### Mini Accumulo Cluster
 
@@ -253,21 +247,17 @@ could be different from the Accumulo nodes.
 
 Accumulo can be a source and/or sink for [MapReduce] jobs.
 
-### Apache Thrift Proxy
+### Proxy
 
-The Accumulo client code contains a lot of complexity.  For example, the 
-client code locates tablets, retries in the case of failures, and supports 
-concurrent reading and writing.  All of this is written in Java.  The thrift
-proxy wraps the Accumulo client API with thrift, making this API easily
-available to other languages like Python, Ruby, C++, etc.
+Accumulo has a [proxy]({% durl development/proxy %}) which enables interaction
+to with Accumulo using other languages like Python, Ruby, C++, etc.
 
 ### Conditional Mutations
 
-In version 1.6.0, Accumulo introduced [Conditional Mutations]
-which allow users to perform efficient, atomic read-modify-write operations on rows. Conditions can
-be defined using equality checks of the values in a column or the absence of a column. For more
-information on using this feature, users can reference the Javadoc for [ConditionalMutation] and
-[ConditionalWriter].
+[Conditional Mutations][ConditionalWriter] (since 1.6.0) allow users to perform efficient, atomic
+read-modify-write operations on rows. Conditions can be defined using equality checks of the values
+in a column or the absence of a column. For more information on using this feature, users can reference
+the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 
 ### Lexicoders
 
@@ -317,10 +307,14 @@ can be used to optimize the data that compactions will write.
 
 ### Monitor page
 
-A simple web server that provides basic information about the system health and
+The [Accumulo Monitor][monitor] provides basic information about the system health and
 performance.  It displays table sizes, ingest and query statistics, server
 load, and last-update information.  It also allows the user to view recent
 diagnostic logs and traces.
+
+<a class="thumbnail" href="{{ site.baseurl }}/images/accumulo-monitor-1.png">
+<img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" alt="monitor overview"/>
+</a>
 
 ### Tracing
 
@@ -376,19 +370,10 @@ was growing.  Without this feature, ingest performance can roughly continue at a
 constant rate, even as scan performance decreases because tablets have too many
 files.
 
-### Loading jars using VFS
-
-User written iterators are a useful way to manipulate data in data in Accumulo. 
-Before 1.5, users had to copy their iterators to each tablet server.  Starting 
-with 1.5, Accumulo can load iterators from HDFS using Apache commons VFS.
-
 ### Encryption
 
-Still a work in progress, Accumulo 1.6.0 introduced encryption at rest (RFiles
-and WriteAheadLogs) and wire encryption (Thrift over SSL) to enhance the level 
-of security that Accumulo provides. It is still a work in progress because the 
-intermediate files created by Accumulo when recovering from a TabletServer
-failure are not encrypted.
+Accumulo can encrypt its [data on disk]({% durl security/on-disk-encryption %}) and
+[data sent over the wire]({% durl security/wire-encryption %}).
 
 ## On-demand Data Management
 
@@ -436,58 +421,14 @@ Added an operation to efficiently delete a range of rows from a table. Tablets
 that fall completely within a range are simply dropped. Tablets overlapping the
 beginning and end of the range are split, compacted, and then merged.
 
-## Screenshots
-
-<div class="row">
-<div class="col-xs-3">
-The following is a screenshot of the Apache Accumulo&reg; monitor overview web page.  Accumulo was running on an eleven node cluster.  The continuous ingest test suite was running to generate load.  Ten continuous ingest clients were running.
-</div>
-<div class="col-xs-9">
-<a class="thumbnail" href="{{ site.baseurl }}/images/overview2.png">
-<img src="{{ site.baseurl }}/images/overview2.png" alt="monitor overview"/>
-</a>
-</div>
-</div>
-
-<div class="row">
-<div class="col-xs-3">
-The following screenshot shows the monitor master page.  This page gives information about individual tables within accumulo.  Continuous ingest is running against the table ci.
-</div>
-<div class="col-xs-9">
-<a class="thumbnail" href="{{ site.baseurl }}/images/master2.png">
-<img src="{{ site.baseurl }}/images/master2.png" alt="monitor master"/>
-</a>
-</div>
-</div>
-
-The data generated by the continuous ingest test suite looks like the following.  The data is random, but forms many giant linked list.  Each ingest client continually generates linked list containing 25 million nodes.  In the shell session below, a few scans are issued to start following the linked list that the first node in the table is part of.
-
-    root@test15 ci> scan 
-    000000000135fbbe 074c:569c []    2db1de18-cd37-407d-b060-481a0a214c90:000000002b2bcfe1:2e15cb9f62fd22ab:fe6f84c7
-    000000000d76dcc9 4f62:0647 []    65f401e8-4f93-498c-bffa-ecc21a8645fd:000000000e7c2bbc:6fad98d023b8f146:a2c4d59f
-    0000000024e07be4 5e56:221d []    5283b4bd-4f18-4af9-a242-c8053b095e04:000000001e1ad441:12de1d82f4a7bf2f:ae231a6a
-    000000003e13cb50 1d0a:415c []    5944afab-8407-4391-9994-91b313e545dd:0000000002d61c91:4890a8885e54b714:d542fafa
-    00000000634d0aaa 310d:1e58 []    2db1de18-cd37-407d-b060-481a0a214c90:000000000c9e8018:4111345bc9afe2bb:4cbfd774
-    000000007d378414 08d2:0066 []    15ab8578-faae-4ebb-9827-26728be78476:0000000052de5aac:06202f405c60726d:8ad4911a
-    000000008c3615d8 3868:5f66 []    8f47568c-a383-4910-83c9-36b75ac66440:0000000067faf572:750d567f3dd0c5bf:5ea938fe
-    0000000090be2a77 7f32:2ca4 []    8f47568c-a383-4910-83c9-36b75ac66440:000000005912be62:47ac0c7bb89013f1:dff13db9
-    00000000a7ca8e58 360f:5763 []    a9f5e129-e260-4a0e-a763-c6e3ef7b3eb6:0000000030bff255:37c8226225c804ba:665f261f
-    00000000f1000713 5079:46bd []    30af7f48-15ae-4ccb-81c9-4662ad74be92:0000000014d408e3:56a9dec63aed4d8f:0f2a44ec
-    000000017e3ca989 56ac:062b []    30af7f48-15ae-4ccb-81c9-4662ad74be92:000000000a8926a1:0bd54c769871aa78:b8e61d77
-    --------------------------------------- hit any key to continue or 'q' to quit -----------------------------------------
-    root@test15 ci> scan -b 2e15cb9f62fd22ab -e 2e15cb9f62fd22ab
-    2e15cb9f62fd22ab 1fc1:1486 []    2db1de18-cd37-407d-b060-481a0a214c90:000000002b1c8da1:53a9e4ba97e4a6e0:4a8bd624
-    root@test15 ci> scan -b 53a9e4ba97e4a6e0 -e 53a9e4ba97e4a6e0
-    53a9e4ba97e4a6e0 37f3:33a2 []    2db1de18-cd37-407d-b060-481a0a214c90:000000002b0d4b61:1c16a4ae1bef9f1f:f03c869b
-    root@test15 ci> scan -b 1c16a4ae1bef9f1f -e 1c16a4ae1bef9f1f
-    1c16a4ae1bef9f1f 07c8:7cd3 []    2db1de18-cd37-407d-b060-481a0a214c90:000000002afe0921:2e3ec09a8d2fdf52:8b82be48
-
-[FATE]: #fate
+[FATE]: {% durl administration/fate %}
 [maven-accumulo-plugin]: {{ site.baseurl }}/release/accumulo-1.6.0/#maven-plugin
-[ConditionalMutation]: {{ site.baseurl }}/1.9/apidocs/org/apache/accumulo/core/data/ConditionalMutation
-[ConditionalWriter]: {{ site.baseurl }}/1.9/apidocs/org/apache/accumulo/core/client/ConditionalWriter
-[BatchScanner]: {{ site.baseurl }}/1.9/accumulo_user_manual#_batchscanner
-[BatchWriter]: {{ site.baseurl }}/1.9/accumulo_user_manual#_batchwriter
-[BulkImport]: {{ site.baseurl }}/1.9/accumulo_user_manual#_bulk_ingest
-[MapReduce]: {{ site.baseurl }}/1.9/accumulo_user_manual#_analytics
-[Conditional Mutations]: {{ site.baseurl }}/1.9/accumulo_user_manual#_conditionalwriter
+[ConditionalMutation]: {% jurl org.apache.accumulo.core.data.ConditionalMutation %}
+[ConditionalWriter]: {% durl getting-started/clients#conditionalwriter %}
+[BatchScanner]: {% durl getting-started/clients#batchscanner %}
+[BatchWriter]: {% durl getting-started/clients#batchwriter %}
+[BulkImport]: {% durl development/high_speed_ingest#bulk-ingest %}
+[MapReduce]: {% durl development/mapreduce %}
+[multivolume]: {% durl administration/multivolume %}
+[Iterators]: {% durl development/iterators %}
+[monitor]: {% durl administration/monitoring-metrics %}

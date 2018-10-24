@@ -8,21 +8,27 @@ order: 2
 
 ### Accumulo Monitor
 
-The Accumulo Monitor provides an interface for monitoring the status and health of
-Accumulo components. The Accumulo Monitor provides a web UI for accessing this information at
-`http://_monitorhost_:9995/`.
+The Accumulo Monitor provides a web UI with information on the health and status of Accumulo.
 
-Things highlighted in yellow may be in need of attention.
-If anything is highlighted in red on the monitor page, it is something that definitely needs attention.
+The monitor can be viewed at:
+ * [http://localhost:9995](http://localhost:9995) - if Accumulo is running locally (for development)
+ * `http://<MONITOR_HOST>:9995/` - if Accumulo is running on a cluster
 
-The Overview page contains some summary information about the Accumulo instance, including the version, instance name, and instance ID.
-There is a table labeled Accumulo Master with current status, a table listing the active Zookeeper servers, and graphs displaying various metrics over time.
-These include ingest and scan performance and other useful measurements.
+The Overview page (shown below) contains some summary information about the Accumulo instance and graphs
+displaying various metrics over time. These include ingest and scan performance and other useful measurements.
+
+<a class="thumbnail" href="{{ site.baseurl }}/images/accumulo-monitor-1.png">
+<img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" alt="monitor overview"/>
+</a>
 
 The Master Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
 Metrics typically include number of entries (key/value pairs), ingest and query rates.
 The number of running scans, major and minor compactions are in the form _number_running_ (_number_queued_).
 Another important metric is hold time, which is the amount of time a tablet has been waiting but unable to flush its memory in a minor compaction.
+
+<a class="thumbnail" href="{{ site.baseurl }}/images/accumulo-monitor-2.png">
+<img src="{{ site.baseurl }}/images/accumulo-monitor-2.png" alt="monitor master"/>
+</a>
 
 The Server Activity page graphically displays tablet server status, with each server represented as a circle or square.
 Different metrics may be assigned to the nodes' color and speed of oscillation.
@@ -38,6 +44,9 @@ The Accumulo monitor does a best-effort to not display any sensitive information
 the monitor is intended to be a tool used with care. It is not a production-grade webservice. It is
 a good idea to whitelist access to the monitor via an authentication proxy or firewall. It
 is strongly recommended that the Monitor is not exposed to any publicly-accessible networks.
+
+Things highlighted in yellow may be in need of attention.
+If anything is highlighted in red on the monitor page, it is something that definitely needs attention.
 
 ### SSL
 

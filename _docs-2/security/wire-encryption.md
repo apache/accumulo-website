@@ -1,5 +1,5 @@
 ---
-title: SSL
+title: Wire Encryption
 category: security
 order: 4
 ---
