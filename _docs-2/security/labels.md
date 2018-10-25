@@ -1,15 +1,14 @@
 ---
-title: Security Features
+title: Security Labels
 category: security
-order: 1
+order: 2
 ---
 
-Accumulo extends the BigTable data model to implement a security mechanism
-known as cell-level security. Every [Key]-[Value] pair has its own security label, stored
-under the column visibility element of the key, which is used to determine whether
-a given user meets the security requirements to read the value. This enables data of
-various security levels to be stored within the same row, and users of varying
-degrees of access to query the same table, while preserving data confidentiality.
+Every [Key]-[Value] pair in Accumulo has its own security label, stored under the column visibility
+element of the key, which is used to determine whether a given user meets the security
+requirements to read the value. This enables data of various security levels to be stored
+within the same row, and users of varying degrees of access to query the same table, while
+preserving data confidentiality.
 
 ## Security Label Expressions
 
@@ -108,68 +107,6 @@ conflict with any existing constraints.
 Any user with the alter table permission can add or remove this constraint.
 This constraint is not applied to bulk imported data, if this a concern then
 disable the bulk import permission.
-
-## Pluggable Security
-
-Accumulo has a pluggable security mechanism. It can be broken into three actions: authentication, 
-authorization, and permission handling.
-
-Authentication verifies the identity of a user. In Accumulo, authentication occurs when
-the `usingToken'` method of the [AccumuloClient] builder is called with a principal (i.e username)
-and an [AuthenticationToken] which is an interface with multiple implementations. The most
-common implementation is [PasswordToken] which is the default authentication method for Accumulo
-out of the box.
-
-```java
-AccumuloClient client = Accumulo.newClient()
-                    .forInstance("myinstance", "zookeeper1,zookeper2")
-                    .usingToken("user", new PasswordToken("passwd")).build();
-```
-
-Once a user is authenticated by the Authenticator, the user has access to the other actions within
-Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission
-Handler. This is what manages all of the permissions, which are divided in system and per table
-level. From there, if a user is doing an action which requires authorizations, the Authorizor is
-queried to determine what authorizations the user has.
-
-This setup allows a variety of different mechanisms to be used for handling different aspects of
-Accumulo's security. A system like Kerberos can be used for authentication, then a system like LDAP
-could be used to determine if a user has a specific permission, and then it may default back to the
-default ZookeeperAuthorizor to determine what Authorizations a user is ultimately allowed to use.
-This is a pluggable system so custom components can be created depending on your need.
-
-## Secure Authorizations Handling
-
-For applications serving many users, it is not expected that an Accumulo user
-will be created for each application user. In this case an Accumulo user with
-all authorizations needed by any of the applications users must be created. To
-service queries, the application should create a scanner with the application
-user's authorizations. These authorizations could be obtained from a trusted 3rd
-party.
-
-Often production systems will integrate with Public-Key Infrastructure (PKI) and
-designate client code within the query layer to negotiate with PKI servers in order
-to authenticate users and retrieve their authorization tokens (credentials). This
-requires users to specify only the information necessary to authenticate themselves
-to the system. Once user identity is established, their credentials can be accessed by
-the client code and passed to Accumulo outside of the reach of the user.
-
-## Query Services Layer
-
-Since the primary method of interaction with Accumulo is through the Java API,
-production environments often call for the implementation of a Query layer. This
-can be done using web services in containers such as Apache Tomcat, but is not a
-requirement. The Query Services Layer provides a mechanism for providing a
-platform on which user facing applications can be built. This allows the application
-designers to isolate potentially complex query logic, and enables a convenient point
-at which to perform essential security functions.
-
-Several production environments choose to implement authentication at this layer,
-where users identifiers are used to retrieve their access credentials which are then
-cached within the query layer and presented to Accumulo through the
-Authorizations mechanism.
-
-Typically, the query services layer sits between Accumulo and user workstations.
 
 [shell]: {% durl getting-started/shell %}
 [Key]: {% jurl org.apache.accumulo.core.data.Key %}
