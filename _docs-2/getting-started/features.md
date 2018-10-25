@@ -16,7 +16,7 @@ redirect_from:
 
 ### Iterators
 
-[Iterators] are a server-side programming mechanism that encode functions such as filtering and
+[Iterators] are server-side programming mechanisms that encode functions such as filtering and
 aggregation within the data management steps (scopes where data is read from or
 written to disk) that happen in the tablet server.
 
@@ -31,8 +31,8 @@ as `(A&B)|C`) and authorizations are sets of strings (such as `{C,D}`).
 ### Constraints
 
 [Constraints]({% durl getting-started/table_configuration#constraints %}) are configurable
-conditions under which writes to a table will be rejected. Constraints are written in Java
-and configurable on a per table basis.
+conditions where table writes are rejected. Constraints are written in Java and configurable
+on a per table basis.
 
 ### Sharding
 
