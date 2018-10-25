@@ -4,6 +4,73 @@ category: administration
 order: 7
 ---
 
+## Upgrading from 1.8/9 to 2.0
+
+Follow the steps below to upgrade your Accumulo instance and client to 2.0.
+
+### Upgrade Accumulo instance
+
+**IMPORTANT!** Before upgrading to Accumulo 2.0, you will need to upgrade to Java 8 and Hadoop 3.x.
+
+Upgrading to Accumulo 2.0 is done by stopping Accumulo 1.8/9 and starting Accumulo 2.0.
+
+Before stopping Accumulo 1.8/9, install Accumulo 2.0 and configure it by following the [2.0 install instructions]({% durl getting-started/quick-install %}).
+
+There are several changes to scripts and configuration in 2.0 so be careful when using configuration or automated setup designed for 1.8/9.
+Below are some changes in 2.0 that you should be aware of:
+* `accumulo.properties` has replaced `accumulo-site.xml`. You can either convert `accumulo-site.xml` by hand
+  from XML to properties or use the following Accumulo command.
+  ```
+  accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
+  ```
+* `accumulo-client.properties` has replaced `client.conf`. The [client properties]({% durl configuration/client-properties %})
+  in the new file are different so take care when customizing.
+* `accumulo-cluster` script has replaced the `start-all.sh` & `stop-all.sh` scripts.
+   - Default host files (i.e `masters`, `monitor`, `gc`) are no longer in `conf/` directory of tarball but can be created using `accumulo-cluster create-config`
+   - Tablet server hosts must be listed in a `tservers` file instead of a `slaves` file. To minimize confusion, Accumulo will not start if the old `slaves` file is present.
+* `accumulo-service` script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
+    - Can be used even if Accumulo was started using `accumulo-cluster` script.
+* Accumulo 2.0 logging is configured by three files. Any previous logging customization should be added to these files.
+    - `log4j-service.properties` for all Accumulo services (except monitor)
+    - `logj4-monitor.properties` for Accumulo monitor
+    - `log4j.properties` for Accumulo clients and commands
+* `accumulo-env.sh` has changed considerably so take care when customizing.
+* Run `accumulo shell` to access the shell using configuration in `conf/accumulo-client.properties`
+
+When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:
+
+```
+./accumulo-1.9.2/bin/stop-all.sh
+./accumulo-2.0.0/bin/accumulo-cluster start
+```
+It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.
+
+### Upgrade Accumulo clients
+
+There several client API changes in 2.0. In most cases, new API has been introduced and the old API was deprecated. While it recommended
+that users start using the new API, the old API will be supported through 2.x.
+
+Below is a list of client API changes that users are required to make for 2.0:
+
+* Update your pom.xml use Accumulo 2.0. Also, update any Hadoop & ZooKeeper dependencies in your pom.xml to match the versions runing on your cluster.
+  ```xml
+  <dependency>
+    <groupId>org.apache.accumulo</groupId>
+    <artifactId>accumulo-core</artifactId>
+    <version>2.0.0</version>
+  </dependency>
+  ```
+* ClientConfiguration objects can no longer be ceated using `new ClientConfiguration()`.
+   * Use `ClientConfiguration.create()` instead
+* Some API deprecated in 1.x releases was dropped
+* Aggregators have been removed
+
+Below is a list of recommended client API changes:
+
+* The API for [creating Accumulo clients]({% durl getting-started/clients#creating-an-accumulo-client %}) has changed in 2.0.
+  * The old API using [ZooKeeeperInstance], [Connector], [Instance], and [ClientConfiguration] has been deprecated.
+  * [Connector] objets can be created from an [AccumuloClient] object using [Connector.from()]
+
 ## Upgrading from 1.7 to 1.8
 
 Upgrades from 1.7 to 1.8 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.7, perform the Accumulo upgrade to 1.8, and then start 1.8. Like previous versions, after 1.8 is started on a 1.7 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.7. Upgrades are still one way. Upgrades from versions prior to 1.7 to 1.8 should follow the below path to 1.7 and then perform the upgrade to 1.8 – direct upgrades to 1.8 for versions other than 1.7 are untested.
@@ -106,4 +173,9 @@ This happens automatically the first time Accumulo 1.5 is started.
 
 [FATE]: https://accumulo.apache.org/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate
 [ACCUMULO-4496]: https://issues.apache.org/jira/browse/ACCUMULO-4496
-
+[ZooKeeeperInstance]: {% jurl org.apache.accumulo.core.client.ZooKeeperInstance %}
+[Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
+[Instance]: {% jurl org.apache.accumulo.core.client.Instance %}
+[ClientConfiguration]: {% jurl org.apache.accumulo.core.client.ClientConfiguration %}
+[AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
+[Connector.from()]: {% jurl org.apache.accumulo.core.client.Connector#from-org.apache.accumulo.core.client.AccumuloClient- %}
