@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - Basic Troubleshooting</title>
+<title>Accumulo Documentation - Security Overview</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -257,12 +257,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="true" aria-controls="collapsesecurity">
                   Security
                 </a>
               </h4>
             </div>
-            <div id="collapsesecurity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsesecurity" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -381,12 +381,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
                   Troubleshooting
                 </a>
               </h4>
             </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -412,253 +412,76 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Troubleshooting &nbsp;&gt;&gt;&nbsp; Basic Troubleshooting</p>
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; Security Overview</p>
     
 
     <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
 
     <div class="row">
-      <div class="col-md-10"><h1>Basic Troubleshooting</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/troubleshooting/basic.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-10"><h1>Security Overview</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/overview.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <h2 id="general">General</h2>
+    <p>This page provides an overview of Accumulo’s security features.</p>
 
-<p><strong>The tablet server does not seem to be running!? What happened?</strong></p>
+<p>A few Accumulo security features have on their own documentation page:</p>
 
-<p>Accumulo is a distributed system.  It is supposed to run on remote
-equipment, across hundreds of computers.  Each program that runs on
-these remote computers writes down events as they occur, into a local
-file. By default, this is defined in <code class="highlighter-rouge">conf/accumulo-env.sh</code> as <code class="highlighter-rouge">ACCUMULO_LOG_DIR</code>.
-Look in the <code class="highlighter-rouge">$ACCUMULO_LOG_DIR/tserver*.log</code> file.  Specifically, check the end of the file.</p>
+<ul>
+  <li><a href="/docs/2.x/security/labels">Security Labels</a></li>
+  <li><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></li>
+  <li><a href="/docs/2.x/security/wire-encryption">Wire Encryption</a></li>
+  <li><a href="/docs/2.x/security/kerberos">Kerberos</a></li>
+</ul>
 
-<p><strong>The tablet server did not start and the debug log does not exists!  What happened?</strong></p>
+<h2 id="pluggable-security">Pluggable Security</h2>
 
-<p>When the individual programs are started, the stdout and stderr output
-of these programs are stored in <code class="highlighter-rouge">.out</code> and <code class="highlighter-rouge">.err</code> files in
-<code class="highlighter-rouge">$ACCUMULO_LOG_DIR</code>.  Often, when there are missing configuration
-options, files or permissions, messages will be left in these files.
-Probably a start-up problem.  Look in <code class="highlighter-rouge">$ACCUMULO_LOG_DIR/tserver*.err</code></p>
+<p>Accumulo has a pluggable security mechanism. It can be broken into three actions: authentication, 
+authorization, and permission handling.</p>
 
-<p><strong>Accumulo is not working, what’s wrong?</strong></p>
+<p>Authentication verifies the identity of a user. In Accumulo, authentication occurs when
+the <code class="highlighter-rouge">usingToken'</code> method of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> builder is called with a principal (i.e username)
+and an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/AuthenticationToken.html">AuthenticationToken</a> which is an interface with multiple implementations. The most
+common implementation is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">PasswordToken</a> which is the default authentication method for Accumulo
+out of the box.</p>
 
-<p>There’s a small web server that collects information about all the
-components that make up a running Accumulo instance. It will highlight
-unusual or unexpected conditions.</p>
-
-<p>Point your browser to the monitor (typically the master host, on port 9995).  Is anything red or yellow?</p>
-
-<p><strong>My browser is reporting connection refused, and I cannot get to the monitor</strong></p>
-
-<p>The monitor program’s output is also written to .err and .out files in
-the <code class="highlighter-rouge">$ACCUMULO_LOG_DIR</code>. Look for problems in this file if the
-<code class="highlighter-rouge">$ACCUMULO_LOG_DIR/monitor*.log</code> file does not exist.</p>
-
-<p>The monitor program is probably not running.  Check the log files for errors.</p>
-
-<p><strong>My browser hangs trying to talk to the monitor.</strong></p>
-
-<p>Your browser needs to be able to reach the monitor program.  Often
-large clusters are firewalled, or use a VPN for internal
-communications. You can use SSH to proxy your browser to the cluster,
-or consult with your system administrator to gain access to the server
-from your browser.</p>
-
-<p>It is sometimes helpful to use a text-only browser to sanity-check the
-monitor while on the machine running the monitor:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ links http://localhost:9995
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"passwd"</span><span class="o">)).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div></div>
 
-<p>Verify that you are not firewalled from the monitor if it is running on a remote host.</p>
+<p>Once a user is authenticated by the Authenticator, the user has access to the other actions within
+Accumulo. All actions in Accumulo are ACLed, and this ACL check is handled by the Permission
+Handler. This is what manages all of the permissions, which are divided in system and per table
+level. From there, if a user is doing an action which requires authorizations, the Authorizor is
+queried to determine what authorizations the user has.</p>
 
-<p><strong>The monitor responds, but there are no numbers for tservers and tables.  The summary page says the master is down.</strong></p>
+<p>This setup allows a variety of different mechanisms to be used for handling different aspects of
+Accumulo’s security. A system like Kerberos can be used for authentication, then a system like LDAP
+could be used to determine if a user has a specific permission, and then it may default back to the
+default ZookeeperAuthorizor to determine what Authorizations a user is ultimately allowed to use.
+This is a pluggable system so custom components can be created depending on your need.</p>
 
-<p>The monitor program gathers all the details about the master and the
-tablet servers through the master. It will be mostly blank if the
-master is down. Check for a running master.</p>
+<h2 id="secure-authorizations-handling">Secure Authorizations Handling</h2>
 
-<h2 id="accumulo-processes">Accumulo Processes</h2>
+<p>For applications serving many users, it is not expected that an Accumulo user
+will be created for each application user. In this case an Accumulo user with
+all authorizations needed by any of the applications users must be created. To
+service queries, the application should create a scanner with the application
+user’s authorizations. These authorizations could be obtained from a trusted 3rd
+party.</p>
 
-<p><strong>My tablet server crashed!  The logs say that it lost its zookeeper lock.</strong></p>
-
-<p>Tablet servers reserve a lock in zookeeper to maintain their ownership
-over the tablets that have been assigned to them.  Part of their
-responsibility for keeping the lock is to send zookeeper a keep-alive
-message periodically.  If the tablet server fails to send a message in
-a timely fashion, zookeeper will remove the lock and notify the tablet
-server.  If the tablet server does not receive a message from
-zookeeper, it will assume its lock has been lost, too.  If a tablet
-server loses its lock, it kills itself: everything assumes it is dead
-already.</p>
-
-<p>Investigate why the tablet server did not send a timely message to
-zookeeper.</p>
-
-<p><strong>I need to decommission a node.  How do I stop the tablet server on it?</strong></p>
-
-<p>Use the admin command:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin stop hostname:9997
-2013-07-16 13:15:38,403 [util.Admin] INFO : Stopping server 12.34.56.78:9997
-</code></pre></div></div>
-
-<p><strong>I cannot login to a tablet server host, and the tablet server will not shut down.  How can I kill the server?</strong></p>
-
-<p>Sometimes you can kill a “stuck” tablet server by deleting its lock in zookeeper:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.TabletServerLocks --list
-                  127.0.0.1:9997 TSERV_CLIENT=127.0.0.1:9997
-$ accumulo org.apache.accumulo.server.util.TabletServerLocks -delete 127.0.0.1:9997
-$ accumulo org.apache.accumulo.server.util.TabletServerLocks -list
-                  127.0.0.1:9997             null
-</code></pre></div></div>
-
-<p>You can find the master and instance id for any accumulo instances using the same zookeeper instance:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.ListInstances
-INFO : Using ZooKeepers localhost:2181
-
- Instance Name       | Instance ID                          | Master
----------------------+--------------------------------------+-------------------------------
-              "test" | 6140b72e-edd8-4126-b2f5-e74a8bbe323b |                127.0.0.1:9999
-</code></pre></div></div>
-
-<p><strong>One of my Accumulo processes died. How do I bring it back?</strong></p>
-
-<p>The easiest way to bring all services online for an Accumulo instance is to run the <code class="highlighter-rouge">accumulo-cluster</code> script.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-cluster start
-</code></pre></div></div>
-
-<p>This process will check the process listing, using <code class="highlighter-rouge">jps</code> on each host before attempting to restart a service on the given host.
-Typically, this check is sufficient except in the face of a hung/zombie process. For large clusters, it may be
-undesirable to ssh to every node in the cluster to ensure that all hosts are running the appropriate processes and <code class="highlighter-rouge">accumulo-service</code> may be of use.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh host_with_dead_process
-$ accumulo-service tserver start
-</code></pre></div></div>
-
-<p><strong>My process died again. Should I restart it via <code class="highlighter-rouge">cron</code> or tools like <code class="highlighter-rouge">supervisord</code>?</strong></p>
-
-<p>A repeatedly dying Accumulo process is a sign of a larger problem. Typically these problems are due to a
-misconfiguration of Accumulo or over-saturation of resources. Blind automation of any service restart inside of Accumulo
-is generally an undesirable situation as it is indicative of a problem that is being masked and ignored. Accumulo
-processes should be stable on the order of months and not require frequent restart.</p>
-
-<h2 id="accumulo-clients">Accumulo Clients</h2>
-
-<p><strong>Accumulo is not showing me any data!</strong></p>
-
-<p>Do you have your auths set so that it matches your visibilities?</p>
-
-<p><strong>What are my visibilities?</strong></p>
-
-<p>Use the <a href="/docs/2.x/troubleshooting/tools#RFileInfo">rfile-info</a> tool on a representative file to get some idea
-of the visibilities in the underlying data.</p>
-
-<p>Note that the use of <code class="highlighter-rouge">rfile-info</code> is an administrative tool and can only
-by used by someone who can access the underlying Accumulo data. It
-does not provide the normal access controls in Accumulo.</p>
-
-<h2 id="ingest">Ingest</h2>
-
-<p><strong>Why does my ingest rate periodically go down during heavy ingest?</strong></p>
-
-<p>Periods of zero or low ingest rates can be caused by Java garbage collection pauses in tablet servers. This problem
-can be mitigated by <a href="/docs/2.x/administration/in-depth-install#native-map">enabling native maps in tablet servers</a>.</p>
-
-<h2 id="hdfs">HDFS</h2>
-
-<p>Accumulo reads and writes to the Hadoop Distributed File System.
-Accumulo needs this file system available at all times for normal operations.</p>
-
-<p><strong>Accumulo is having problems “getting a block blk_1234567890123”. How do I fix it?</strong></p>
-
-<p>This troubleshooting guide does not cover HDFS, but in general, you
-want to make sure that all the datanodes are running and an fsck check
-finds the file system clean:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fsck /accumulo
-</code></pre></div></div>
-
-<p>You can use:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fsck /accumulo/path/to/corrupt/file -locations -blocks -files
-</code></pre></div></div>
-
-<p>to locate the block references of individual corrupt files and use those
-references to search the name node and individual data node logs to determine which
-servers those blocks have been assigned and then try to fix any underlying file
-system issues on those nodes.</p>
-
-<p>On a larger cluster, you may need to increase the number of Xcievers for HDFS DataNodes:</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
-    <span class="nt">&lt;name&gt;</span>dfs.datanode.max.xcievers<span class="nt">&lt;/name&gt;</span>
-    <span class="nt">&lt;value&gt;</span>4096<span class="nt">&lt;/value&gt;</span>
-<span class="nt">&lt;/property&gt;</span>
-</code></pre></div></div>
-
-<p>Verify HDFS is healthy, check the datanode logs.</p>
-
-<h2 id="zookeeper">Zookeeper</h2>
-
-<p><strong>The <code class="highlighter-rouge">accumulo init</code> command is hanging. It says something about talking to zookeeper.</strong></p>
-
-<p>Zookeeper is also a distributed service.  You will need to ensure that
-it is up.  You can run the zookeeper command line tool to connect to
-any one of the zookeeper servers:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ zkCli.sh -server zoohost
-...
-[zk: zoohost:2181(CONNECTED) 0]
-</code></pre></div></div>
-
-<p>It is important to see the word <code class="highlighter-rouge">CONNECTED</code>!  If you only see
-<code class="highlighter-rouge">CONNECTING</code> you will need to diagnose zookeeper errors.</p>
-
-<p>Check to make sure that zookeeper is up, and that
-<code class="highlighter-rouge">accumulo.properties</code> has been pointed to
-your zookeeper server(s).</p>
-
-<p><strong>Zookeeper is running, but it does not say CONNECTED</strong></p>
-
-<p>Zookeeper processes talk to each other to elect a leader.  All updates
-go through the leader and propagate to a majority of all the other
-nodes.  If a majority of the nodes cannot be reached, zookeeper will
-not allow updates.  Zookeeper also limits the number connections to a
-server from any other single host.  By default, this limit can be as small as 10
-and can be reached in some everything-on-one-machine test configurations.</p>
-
-<p>You can check the election status and connection status of clients by
-asking the zookeeper nodes for their status.  You connect to zookeeper
-and ask it with the four-letter <code class="highlighter-rouge">stat</code> command:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc zoohost 2181
-stat
-Zookeeper version: 3.4.5-1392090, built on 09/30/2012 17:52 GMT
-Clients:
- /127.0.0.1:58289[0](queued=0,recved=1,sent=0)
- /127.0.0.1:60231[1](queued=0,recved=53910,sent=53915)
-
-Latency min/avg/max: 0/5/3008
-Received: 1561459
-Sent: 1561592
-Connections: 2
-Outstanding: 0
-Zxid: 0x621a3b
-Mode: standalone
-Node count: 22524
-</code></pre></div></div>
-
-<p>Check zookeeper status, verify that it has a quorum, and has not exceeded maxClientCnxns.</p>
+<p>Often production systems will integrate with Public-Key Infrastructure (PKI) and
+designate client code within the query layer to negotiate with PKI servers in order
+to authenticate users and retrieve their authorization tokens (credentials). This
+requires users to specify only the information necessary to authenticate themselves
+to the system. Once user identity is established, their credentials can be accessed by
+the client code and passed to Accumulo outside of the reach of the user.</p>
 
 
 
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/troubleshooting/basic.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/overview.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
   </div>
 </div>

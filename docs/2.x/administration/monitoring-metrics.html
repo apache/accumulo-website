@@ -266,13 +266,15 @@
               <div class="panel-body">
                 
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/features">Security Features</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/crypto">On Disk Encryption</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/labels">Security Labels</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/wire-encryption">Wire Encryption</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/kerberos">Kerberos</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/ssl">SSL</a></div>
                 
               </div>
             </div>
@@ -424,21 +426,29 @@
 
 <h3 id="accumulo-monitor">Accumulo Monitor</h3>
 
-<p>The Accumulo Monitor provides an interface for monitoring the status and health of
-Accumulo components. The Accumulo Monitor provides a web UI for accessing this information at
-<code class="highlighter-rouge">http://_monitorhost_:9995/</code>.</p>
+<p>The Accumulo Monitor provides a web UI with information on the health and status of Accumulo.</p>
 
-<p>Things highlighted in yellow may be in need of attention.
-If anything is highlighted in red on the monitor page, it is something that definitely needs attention.</p>
+<p>The monitor can be viewed at:</p>
+<ul>
+  <li><a href="http://localhost:9995">http://localhost:9995</a> - if Accumulo is running locally (for development)</li>
+  <li><code class="highlighter-rouge">http://&lt;MONITOR_HOST&gt;:9995/</code> - if Accumulo is running on a cluster</li>
+</ul>
 
-<p>The Overview page contains some summary information about the Accumulo instance, including the version, instance name, and instance ID.
-There is a table labeled Accumulo Master with current status, a table listing the active Zookeeper servers, and graphs displaying various metrics over time.
-These include ingest and scan performance and other useful measurements.</p>
+<p>The Overview page (shown below) contains some summary information about the Accumulo instance and graphs
+displaying various metrics over time. These include ingest and scan performance and other useful measurements.</p>
+
+<p><a class="thumbnail" href="/images/accumulo-monitor-1.png">
+<img src="/images/accumulo-monitor-1.png" alt="monitor overview" />
+</a></p>
 
 <p>The Master Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
 Metrics typically include number of entries (key/value pairs), ingest and query rates.
 The number of running scans, major and minor compactions are in the form <em>number_running</em> (<em>number_queued</em>).
 Another important metric is hold time, which is the amount of time a tablet has been waiting but unable to flush its memory in a minor compaction.</p>
+
+<p><a class="thumbnail" href="/images/accumulo-monitor-2.png">
+<img src="/images/accumulo-monitor-2.png" alt="monitor master" />
+</a></p>
 
 <p>The Server Activity page graphically displays tablet server status, with each server represented as a circle or square.
 Different metrics may be assigned to the nodes’ color and speed of oscillation.
@@ -454,6 +464,9 @@ Also, the XML and JSON links provide metrics in XML and JSON formats, respective
 the monitor is intended to be a tool used with care. It is not a production-grade webservice. It is
 a good idea to whitelist access to the monitor via an authentication proxy or firewall. It
 is strongly recommended that the Monitor is not exposed to any publicly-accessible networks.</p>
+
+<p>Things highlighted in yellow may be in need of attention.
+If anything is highlighted in red on the monitor page, it is something that definitely needs attention.</p>
 
 <h3 id="ssl">SSL</h3>
 

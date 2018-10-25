@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - On Disk Encryption</title>
+<title>Accumulo Documentation - Wire Encryption</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -266,13 +266,15 @@
               <div class="panel-body">
                 
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/features">Security Features</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/crypto">On Disk Encryption</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/labels">Security Labels</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/wire-encryption">Wire Encryption</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/kerberos">Kerberos</a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/ssl">SSL</a></div>
                 
               </div>
             </div>
@@ -410,114 +412,142 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; On Disk Encryption</p>
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; Wire Encryption</p>
     
 
     <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for a future release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
 
     <div class="row">
-      <div class="col-md-10"><h1>On Disk Encryption</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/crypto.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-10"><h1>Wire Encryption</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/wire-encryption.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <p>For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
-for 2.0, making it easier to configure and more secure.  The files that can be encrypted include: <a href="/docs/2.x/getting-started/design#rfile">RFiles</a> and Write Ahead Logs (WALs).
-For information on encrypting data over the wire see the section on <a href="/docs/2.x/security/ssl">SSL</a>.  For information on cryptographic client-server authentication see the section on <a href="/docs/2.x/security/kerberos">Kerberos</a>.</p>
+    <p>Accumulo, through Thrift’s TSSLTransport, provides the ability to encrypt
+wire communication between Accumulo servers and clients using secure
+sockets layer (SSL). SSL certificates signed by the same certificate authority
+control the “circle of trust” in which a secure connection can be established.
+Typically, each host running Accumulo processes would be given a certificate
+which identifies itself.</p>
 
-<h2 id="configuration">Configuration</h2>
+<p>Clients can optionally also be given a certificate, when client-auth is enabled,
+which prevents unwanted clients from accessing the system. The SSL integration
+presently provides no authentication support within Accumulo (an Accumulo username
+and password are still required) and is only used to establish a means for
+secure communication.</p>
 
-<p>To encrypt all tables on disk, encryption must be enabled before an Accumulo instance is initialized.  If on disk 
-encryption is enabled on an existing cluster, only files created after it is enabled will be encrypted 
-(root and metadata tables will not be encrypted in this case) and existing data won’t be encrypted until compaction.  To configure on disk encryption, add the 
-<a href="/docs/2.x/configuration/server-properties#instance_crypto_service">instance.crypto.service</a> property to your <code class="highlighter-rouge">accumulo.properties</code> file.  The value of this property is the
-class name of the service which will perform crypto on RFiles and WALs.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoService
-</code></pre></div></div>
-<p>Out of the box, Accumulo provides the <code class="highlighter-rouge">AESCryptoService</code> for basic encryption needs.  This class provides AES encryption 
-with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
-below is required by this crypto service to be set using the <a href="/docs/2.x/configuration/server-properties#instance_crypto_opts_prefix">instance.crypto.opts.*</a> prefix.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.opts.key.uri=file:///secure/path/to/crypto-key-file
-</code></pre></div></div>
-<p>This property tells the crypto service where to find the file containing the key encryption key. The key file can be 16 or 32 bytes.
-For example, openssl can be used to create a random 32 byte key:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -out /path/to/keyfile 32
-</code></pre></div></div>
-<p>Initializing Accumulo after these instance properties are set, will enable on disk encryption across your entire cluster.</p>
+<h2 id="server-configuration">Server configuration</h2>
 
-<h2 id="custom-crypto">Custom Crypto</h2>
+<p>As previously mentioned, the circle of trust is established by the certificate
+authority which created the certificates in use. Because of the tight coupling
+of certificate generation with an organization’s policies, Accumulo does not
+provide a method in which to automatically create the necessary SSL components.</p>
 
-<p>The new crypto interface for 2.0 allows for easier custom implementation of encryption and decryption. Your
-class only has to implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/spi/crypto/CryptoService.html">CryptoService</a> interface to work with Accumulo.
-The interface has 3 methods:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">conf</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">CryptoException</span><span class="o">;</span>
-  <span class="n">FileEncrypter</span> <span class="nf">getFileEncrypter</span><span class="o">(</span><span class="n">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
-  <span class="n">FileDecrypter</span> <span class="nf">getFileDecrypter</span><span class="o">(</span><span class="n">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
-</code></pre></div></div>
-<p>The <code class="highlighter-rouge">init</code> method is where you will initialize any resources required for crypto and will get called once per Tablet Server.
-The <code class="highlighter-rouge">getFileEncrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/spi/crypto/FileEncrypter.html">FileEncrypter</a> 
-for encryption and the <code class="highlighter-rouge">getFileDecrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/spi/crypto/FileDecrypter.html">FileDecrypter</a> 
-for decryption. The <code class="highlighter-rouge">CryptoEnvironment</code> passed into these methods will provide the scope of the crypto. 
-The FileEncrypter has two methods:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">OutputStream</span> <span class="nf">encryptStream</span><span class="o">(</span><span class="n">OutputStream</span> <span class="n">outputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
-  <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getDecryptionParameters</span><span class="o">();</span>
-</code></pre></div></div>
-<p>The <code class="highlighter-rouge">encryptStream</code> method performs the encryption on the provided OutputStream and returns an OutputStream, most likely 
-wrapped in at least one other OutputStream.  The <code class="highlighter-rouge">getDecryptionParameters</code> returns a byte array of anything that will be 
-required to perform decryption. The FileDecrypter only has one method:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">InputStream</span> <span class="nf">decryptStream</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">inputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
-</code></pre></div></div>
-<p>For more help getting started see <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/security/crypto/impl/AESCryptoService.html">AESCryptoService</a>.</p>
+<p>Administrators without existing infrastructure built on SSL are encourage to
+use OpenSSL and the <code class="highlighter-rouge">keytool</code> command. An example of these commands are
+included in a section below. Accumulo servers require a certificate and keystore,
+in the form of Java KeyStores, to enable SSL. The following configuration assumes
+these files already exist.</p>
 
-<h2 id="things-to-keep-in-mind">Things to keep in mind</h2>
+<p>In <code class="highlighter-rouge">accumulo.properties</code>, the following properties are required:</p>
 
-<p>The on disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
-is written to disk with these files but there are a few scenarios that can take place where data will be unencrypted, 
-even with the crypto service enabled.</p>
+<ul>
+  <li><a href="/docs/2.x/configuration/server-properties#rpc_javax_net_ssl_keyStore">rpc.javax.net.ssl.keyStore</a>  = <em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
+  <li><a href="/docs/2.x/configuration/server-properties#rpc_javax_net_ssl_keyStorePassword">rpc.javax.net.ssl.keyStorePassword</a> = <em>The password for the keystore containing the server’s certificate</em></li>
+  <li><a href="/docs/2.x/configuration/server-properties#rpc_javax_net_ssl_trustStore">rpc.javax.net.ssl.trustStore</a> = <em>The path on the local filesystem to the keystore containing the certificate authority’s public key</em></li>
+  <li><a href="/docs/2.x/configuration/server-properties#rpc_javax_net_ssl_trustStorePassword">rpc.javax.net.ssl.trustStorePassword</a> = <em>The password for the keystore containing the certificate authority’s public key</em></li>
+  <li><a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_enabled">instance.rpc.ssl.enabled</a> = <em>true</em></li>
+</ul>
 
-<h3 id="sorted-wals">Sorted WALs</h3>
+<p>Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
+<a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> <code class="highlighter-rouge">true</code> in <code class="highlighter-rouge">accumulo.properties</code>.
+This requires that each client has access to  valid certificate to set up a secure connection
+to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
+their own certificate.</p>
 
-<p>If a tablet server is killed with WALs enabled, Accumulo will create temporary sorted WALs during recovery that are unencrypted.<br />
-These files will only contain recent data that has not been compacted but will be written to the disk unencrypted. Once recovery 
-is finished, these unencrypted files will be removed.</p>
+<h2 id="client-configuration">Client configuration</h2>
 
-<h3 id="data-in-memory--logs">Data in Memory &amp; Logs</h3>
+<p>To establish a connection to Accumulo servers, each client must also have
+special configuration. This is typically accomplished by <a href="/docs/2.x/getting-started/clients#creating-an-accumulo-client">creating an Accumulo
+client</a> using <code class="highlighter-rouge">accumulo-client.properties</code> and setting the following
+the properties to connect to an Accumulo instance using SSL:</p>
 
-<p>For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory 
-while Accumulo is running.  Depending on the situation, this also means that some data can be printed to logs. A stacktrace being logged 
-during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging but 
-its the additional data that gets encrypted on disk that could be exposed in a log file.</p>
+<ul>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_enabled">ssl.enabled</a> to <code class="highlighter-rouge">true</code></li>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_truststore_path">ssl.truststore.path</a></li>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_truststore_password">ssl.truststore.password</a></li>
+</ul>
 
-<h3 id="bulk-import">Bulk Import</h3>
+<p>If two-way SSL is enabled for the Accumulo instance (by setting <a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> to <code class="highlighter-rouge">true</code> in <code class="highlighter-rouge">accumulo.properties</code>),
+Accumulo clients must also define their own certificate by setting the following properties:</p>
 
-<p>There are 2 ways to create RFiles for bulk ingest: with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> and during Map Reduce using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-client-mapreduce/2.0.0-alpha-1/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html">AccumuloOutputFormat</a>.<br />
-The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> allows passing in the configuration properties for encryption mentioned above.  The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-client-mapreduce/2.0.0-alpha-1/org/apache/accumulo/core/client/mapred/AccumuloOutputFormat.html">AccumuloOutputFormat</a> does 
-not allow for encryption of RFiles so any data bulk imported through this process will be unencrypted.</p>
+<ul>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_keystore_path">ssl.keystore.path</a></li>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_keystore_password">ssl.keystore.password</a></li>
+</ul>
 
-<h3 id="zookeeper">Zookeeper</h3>
+<h2 id="generating-ssl-material-using-openssl">Generating SSL material using OpenSSL</h2>
 
-<p>Accumulo stores a lot of metadata about the cluster in Zookeeper.  Keep in mind that this metadata does not get encrypted with On Disk encryption enabled.</p>
+<p>The following is included as an example for generating your own SSL material (certificate authority and server/client
+certificates) using OpenSSL and Java’s KeyTool command.</p>
 
-<h2 id="gcm-performance">GCM performance</h2>
+<h3 id="generate-a-certificate-authority">Generate a certificate authority</h3>
 
-<p>The AESCryptoService uses GCM mode for RFiles. <a href="http://openjdk.java.net/jeps/246">Java 9 introduced GHASH hardware support used by GCM.</a></p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a private key</span>
+openssl genrsa <span class="nt">-des3</span> <span class="nt">-out</span> root.key 4096
 
-<p>A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test encrypted and decrypted arrays of size 131072 bytes 1000000 times. The results are as follows:</p>
+<span class="c"># Create a certificate request using the private key</span>
+openssl req <span class="nt">-x509</span> <span class="nt">-new</span> <span class="nt">-key</span> root.key <span class="nt">-days</span> 365 <span class="nt">-out</span> root.pem
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Java 9 GCM times:
-    Time spent encrypting:        209.210s
-    Time spent decrypting:        276.800s
-Java 8 GCM times:
-    Time spent encrypting:        2,818.440s
-    Time spent decrypting:        2,883.960s
+<span class="c"># Generate a Base64-encoded version of the PEM just created</span>
+openssl x509 <span class="nt">-outform</span> der <span class="nt">-in</span> root.pem <span class="nt">-out</span> root.der
+
+<span class="c"># Import the key into a Java KeyStore</span>
+keytool <span class="nt">-import</span> <span class="nt">-alias</span> root-key <span class="nt">-keystore</span> truststore.jks <span class="nt">-file</span> root.der
+
+<span class="c"># Remove the DER formatted key file (as we don't need it anymore)</span>
+<span class="nb">rm </span>root.der
 </code></pre></div></div>
 
-<p>As you can see, there is a significant performance hit when running without the GHASH CPU instruction. It is advised Java 9 or later be used when enabling encryption.</p>
+<p>The <code class="highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
+
+<h3 id="generate-a-certificatekeystore-per-host">Generate a certificate/keystore per host</h3>
+
+<p>It’s common that each host in the instance is issued its own certificate (notably to ensure that revocation procedures
+can be easily followed). The following steps can be taken for each host.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create the private key for our server</span>
+openssl genrsa <span class="nt">-out</span> server.key 4096
+
+<span class="c"># Generate a certificate signing request (CSR) with our private key</span>
+openssl req <span class="nt">-new</span> <span class="nt">-key</span> server.key <span class="nt">-out</span> server.csr
+
+<span class="c"># Use the CSR and the CA to create a certificate for the server (a reply to the CSR)</span>
+openssl x509 <span class="nt">-req</span> <span class="nt">-in</span> server.csr <span class="nt">-CA</span> root.pem <span class="nt">-CAkey</span> root.key <span class="nt">-CAcreateserial</span> <span class="se">\</span>
+    <span class="nt">-out</span> server.crt <span class="nt">-days</span> 365
+
+<span class="c"># Use the certificate and the private key for our server to create PKCS12 file</span>
+openssl pkcs12 <span class="nt">-export</span> <span class="nt">-in</span> server.crt <span class="nt">-inkey</span> server.key <span class="nt">-certfile</span> server.crt <span class="se">\</span>
+    <span class="nt">-name</span> <span class="s1">'server-key'</span> <span class="nt">-out</span> server.p12
+
+<span class="c"># Create a Java KeyStore for the server using the PKCS12 file (private key)</span>
+keytool <span class="nt">-importkeystore</span> <span class="nt">-srckeystore</span> server.p12 <span class="nt">-srcstoretype</span> pkcs12 <span class="nt">-destkeystore</span> <span class="se">\</span>
+    server.jks <span class="nt">-deststoretype</span> JKS
+
+<span class="c"># Remove the PKCS12 file as we don't need it</span>
+<span class="nb">rm </span>server.p12
+
+<span class="c"># Import the CA-signed certificate to the keystore</span>
+keytool <span class="nt">-import</span> <span class="nt">-trustcacerts</span> <span class="nt">-alias</span> server-crt <span class="nt">-file</span> server.crt <span class="nt">-keystore</span> server.jks
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
+methods are equivalent whether the certificate is generate for an Accumulo server or a client.</p>
 
 
 
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/crypto.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/wire-encryption.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
   </div>
 </div>
