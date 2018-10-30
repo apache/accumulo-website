@@ -4,42 +4,6 @@ permalink: /downloads/
 ---
 
 <script type="text/javascript">
-/**
-* Function that tracks a click on an outbound link in Google Analytics.
-* This function takes a valid URL string as an argument, and uses that URL string
-* as the event label.
-*/
-var gtagCallback = function(event) {
-  var hrefUrl = event.target.getAttribute('href')
-  if (event.ctrlKey || event.shiftKey || event.metaKey || event.which == 2) {
-    var newWin = true;}
-
-  // $(this) != this
-  var url = window.location.protocol + "//accumulo.apache.org" + $(this).attr("id")
-  if (newWin) {
-    gtag('event', 'click', {
-      'event_category': 'outbound',
-      'event_label': url,
-      'transport_type': 'beacon'
-    });
-    return true;
-  } else {
-    gtag('event', 'click', {
-      'event_category': 'outbound',
-      'event_label': url,
-      'transport_type': 'beacon',
-      'event_callback': function(){ window.location.href = hrefUrl; }
-    });
-    return false;
-  }
-};
-
-$( document ).ready(function() {
-  // check if gtag is loaded
-  if (typeof gtag === 'function') {
-    $('.download_external').click(gtagCallback);
-  }
-});
 
 var updateLinks = function(mirror) {
   $('a[link-suffix]').each(function(i, obj) {
