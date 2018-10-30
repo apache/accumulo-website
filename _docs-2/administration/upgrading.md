@@ -30,12 +30,18 @@ Below are some changes in 2.0 that you should be aware of:
    - Tablet server hosts must be listed in a `tservers` file instead of a `slaves` file. To minimize confusion, Accumulo will not start if the old `slaves` file is present.
 * `accumulo-service` script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
     - Can be used even if Accumulo was started using `accumulo-cluster` script.
-* Accumulo 2.0 logging is configured by three files. Any previous logging customization should be added to these files.
+* `accumulo-env.sh` constructs environment variables (such as `JAVA_OPTS` and `CLASSPATH`) used when running Accumulo processes
+    - This file was used in Accumulo 1.x but has changed signficantly for 2.0
+    - Environment variables (such as `$cmd`, `$bin`, `$conf`) are set before `accumulo-env.sh` is loaded and can be used to customize environment.
+    - The `JAVA_OPTS` variable can be customized to pass command-line arguments to the `java` command that starts Accumulo processes.
+    - The `CLASSPATH` variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
+      distributions of Hadoop.
+* Logging is configured in `accumulo-env.sh` for Accumulo processes. The following log4j configuration files in the `conf/` directory will be used if
+  `accumulo-env.sh` is not modified. These files can be modified to turn on/off logging for Accumulo processes:
     - `log4j-service.properties` for all Accumulo services (except monitor)
     - `logj4-monitor.properties` for Accumulo monitor
     - `log4j.properties` for Accumulo clients and commands
-* `accumulo-env.sh` has changed considerably so take care when customizing.
-* Run `accumulo shell` to access the shell using configuration in `conf/accumulo-client.properties`
+* Run the command `accumulo shell` to access the shell using configuration in `conf/accumulo-client.properties`
 
 When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:
 
