@@ -53,8 +53,8 @@ It is recommended that users test this upgrade on development or test clusters b
 
 ### Upgrade Accumulo clients
 
-There several client API changes in 2.0. In most cases, new API has been introduced and the old API was deprecated. While it recommended
-that users start using the new API, the old API will be supported through 2.x.
+There several client API changes in 2.0. In most cases, new API was introduced and the old API was only deprecated. While it is recommended
+that users start using the new API, the old API will continue to be supported through 2.x.
 
 Below is a list of client API changes that users are required to make for 2.0:
 
@@ -75,7 +75,7 @@ Below is a list of recommended client API changes:
 
 * The API for [creating Accumulo clients]({% durl getting-started/clients#creating-an-accumulo-client %}) has changed in 2.0.
   * The old API using [ZooKeeeperInstance], [Connector], [Instance], and [ClientConfiguration] has been deprecated.
-  * [Connector] objets can be created from an [AccumuloClient] object using [Connector.from()]
+  * [Connector] objects can be created from an [AccumuloClient] object using [Connector.from()]
 
 ## Upgrading from 1.7 to 1.8
 
