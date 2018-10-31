@@ -33,7 +33,7 @@ Below are some changes in 2.0 that you should be aware of:
 * `accumulo-env.sh` constructs environment variables (such as `JAVA_OPTS` and `CLASSPATH`) used when running Accumulo processes
     - This file was used in Accumulo 1.x but has changed signficantly for 2.0
     - Environment variables (such as `$cmd`, `$bin`, `$conf`) are set before `accumulo-env.sh` is loaded and can be used to customize environment.
-    - The `JAVA_OPTS` variable can be customized to pass command-line arguments to the `java` command that starts Accumulo processes.
+    - The `JAVA_OPTS` variable is constructed in `accumulo-env.sh` to pass command-line arguments to the `java` command that the starts the Accumulo processes (i.e. `java $JAVA_OPTS main.class.for.$cmd`).
     - The `CLASSPATH` variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
       distributions of Hadoop.
 * Logging is configured in `accumulo-env.sh` for Accumulo processes. The following log4j configuration files in the `conf/` directory will be used if
