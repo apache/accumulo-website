@@ -422,7 +422,104 @@
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/administration/upgrading.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <h2 id="upgrading-from-17-to-18">Upgrading from 1.7 to 1.8</h2>
+    <h2 id="upgrading-from-189-to-20">Upgrading from 1.8/9 to 2.0</h2>
+
+<p>Follow the steps below to upgrade your Accumulo instance and client to 2.0.</p>
+
+<h3 id="upgrade-accumulo-instance">Upgrade Accumulo instance</h3>
+
+<p><strong>IMPORTANT!</strong> Before upgrading to Accumulo 2.0, you will need to upgrade to Java 8 and Hadoop 3.x.</p>
+
+<p>Upgrading to Accumulo 2.0 is done by stopping Accumulo 1.8/9 and starting Accumulo 2.0.</p>
+
+<p>Before stopping Accumulo 1.8/9, install Accumulo 2.0 and configure it by following the <a href="/docs/2.x/getting-started/quick-install">2.0 install instructions</a>.</p>
+
+<p>There are several changes to scripts and configuration in 2.0 so be careful when using configuration or automated setup designed for 1.8/9.
+Below are some changes in 2.0 that you should be aware of:</p>
+<ul>
+  <li><code class="highlighter-rouge">accumulo.properties</code> has replaced <code class="highlighter-rouge">accumulo-site.xml</code>. You can either convert <code class="highlighter-rouge">accumulo-site.xml</code> by hand
+from XML to properties or use the following Accumulo command.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">accumulo-client.properties</code> has replaced <code class="highlighter-rouge">client.conf</code>. The <a href="/docs/2.x/configuration/client-properties">client properties</a>
+in the new file are different so take care when customizing.</li>
+  <li><code class="highlighter-rouge">accumulo-cluster</code> script has replaced the <code class="highlighter-rouge">start-all.sh</code> &amp; <code class="highlighter-rouge">stop-all.sh</code> scripts.
+    <ul>
+      <li>Default host files (i.e <code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">monitor</code>, <code class="highlighter-rouge">gc</code>) are no longer in <code class="highlighter-rouge">conf/</code> directory of tarball but can be created using <code class="highlighter-rouge">accumulo-cluster create-config</code></li>
+      <li>Tablet server hosts must be listed in a <code class="highlighter-rouge">tservers</code> file instead of a <code class="highlighter-rouge">slaves</code> file. To minimize confusion, Accumulo will not start if the old <code class="highlighter-rouge">slaves</code> file is present.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">accumulo-service</code> script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
+    <ul>
+      <li>Can be used even if Accumulo was started using <code class="highlighter-rouge">accumulo-cluster</code> script.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">accumulo-env.sh</code> constructs environment variables (such as <code class="highlighter-rouge">JAVA_OPTS</code> and <code class="highlighter-rouge">CLASSPATH</code>) used when running Accumulo processes
+    <ul>
+      <li>This file was used in Accumulo 1.x but has changed signficantly for 2.0</li>
+      <li>Environment variables (such as <code class="highlighter-rouge">$cmd</code>, <code class="highlighter-rouge">$bin</code>, <code class="highlighter-rouge">$conf</code>) are set before <code class="highlighter-rouge">accumulo-env.sh</code> is loaded and can be used to customize environment.</li>
+      <li>The <code class="highlighter-rouge">JAVA_OPTS</code> variable is constructed in <code class="highlighter-rouge">accumulo-env.sh</code> to pass command-line arguments to the <code class="highlighter-rouge">java</code> command that the starts Accumulo processes
+(i.e. <code class="highlighter-rouge">java $JAVA_OPTS main.class.for.$cmd</code>).</li>
+      <li>The <code class="highlighter-rouge">CLASSPATH</code> variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
+distributions of Hadoop.</li>
+    </ul>
+  </li>
+  <li>Logging is configured in <code class="highlighter-rouge">accumulo-env.sh</code> for Accumulo processes. The following log4j configuration files in the <code class="highlighter-rouge">conf/</code> directory will be used if
+<code class="highlighter-rouge">accumulo-env.sh</code> is not modified. These files can be modified to turn on/off logging for Accumulo processes:
+    <ul>
+      <li><code class="highlighter-rouge">log4j-service.properties</code> for all Accumulo services (except monitor)</li>
+      <li><code class="highlighter-rouge">logj4-monitor.properties</code> for Accumulo monitor</li>
+      <li><code class="highlighter-rouge">log4j.properties</code> for Accumulo clients and commands</li>
+    </ul>
+  </li>
+  <li>Run the command <code class="highlighter-rouge">accumulo shell</code> to access the shell using configuration in <code class="highlighter-rouge">conf/accumulo-client.properties</code></li>
+</ul>
+
+<p>When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./accumulo-1.9.2/bin/stop-all.sh
+./accumulo-2.0.0/bin/accumulo-cluster start
+</code></pre></div></div>
+<p>It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.</p>
+
+<h3 id="upgrade-accumulo-clients">Upgrade Accumulo clients</h3>
+
+<p>There several client API changes in 2.0. In most cases, new API was introduced and the old API was only deprecated. While it is recommended
+that users start using the new API, the old API will continue to be supported through 2.x.</p>
+
+<p>Below is a list of client API changes that users are required to make for 2.0:</p>
+
+<ul>
+  <li>Update your pom.xml use Accumulo 2.0. Also, update any Hadoop &amp; ZooKeeper dependencies in your pom.xml to match the versions runing on your cluster.
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-core<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>ClientConfiguration objects can no longer be ceated using <code class="highlighter-rouge">new ClientConfiguration()</code>.
+    <ul>
+      <li>Use <code class="highlighter-rouge">ClientConfiguration.create()</code> instead</li>
+    </ul>
+  </li>
+  <li>Some API deprecated in 1.x releases was dropped</li>
+  <li>Aggregators have been removed</li>
+</ul>
+
+<p>Below is a list of recommended client API changes:</p>
+
+<ul>
+  <li>The API for <a href="/docs/2.x/getting-started/clients#creating-an-accumulo-client">creating Accumulo clients</a> has changed in 2.0.
+    <ul>
+      <li>The old API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/ZooKeeperInstance.html">ZooKeeeperInstance</a>, <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html">Connector</a>, <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Instance.html">Instance</a>, and <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/ClientConfiguration.html">ClientConfiguration</a> has been deprecated.</li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html">Connector</a> objects can be created from an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html#from-org.apache.accumulo.core.client.AccumuloClient-">Connector.from()</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="upgrading-from-17-to-18">Upgrading from 1.7 to 1.8</h2>
 
 <p>Upgrades from 1.7 to 1.8 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.7, perform the Accumulo upgrade to 1.8, and then start 1.8. Like previous versions, after 1.8 is started on a 1.7 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.7. Upgrades are still one way. Upgrades from versions prior to 1.7 to 1.8 should follow the below path to 1.7 and then perform the upgrade to 1.8 – direct upgrades to 1.8 for versions other than 1.7 are untested.</p>
 
