@@ -261,12 +261,8 @@ the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 
 ### Lexicoders
 
-Common boilerplate code that exists when interacting with Accumulo is the conversion
-of Java objects to lexicographically sorted bytes, e.g. ensure that the byte representation
-of the number 9 sorts before the byte representation of the number 11. Version 1.6.0 introduced
-Lexicoders which have numerous implementations that support for efficient translation from common
-Java primitives to byte arrays and vice versa. These classes can greatly reduce the burden in
-re-implementing common programming mistakes in encoding.
+[Lexicoders]({% durl getting-started/table_design#lexicoders) (since 1.6.0) help encode data (i.e numbers, dates)
+into Accumulo keys in a way that their natural sort order is preserved.
 
 ## Extensible Behaviors
 
