@@ -106,18 +106,16 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz.sha512
 
 [BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-bin.tar.gz
-{: .download_external link-suffix="/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-bin.tar.gz" id="/downloads/accumulo-2.0.0-alpha-1-bin.tar.gz" }
+{: link-suffix="/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-bin.tar.gz" }
 [SRC_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-src.tar.gz
-{: .download_external link-suffix="/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-src.tar.gz" id="/downloads/accumulo-2.0.0-alpha-1-src.tar.gz" }
+{: link-suffix="/accumulo/2.0.0-alpha-1/accumulo-2.0.0-alpha-1-src.tar.gz" }
 [BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz" id="/downloads/accumulo-1.9.2-bin.tar.gz" }
+{: link-suffix="/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz" }
 [SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz" id="/downloads/accumulo-1.9.2-src.tar.gz" }
+{: link-suffix="/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz" }
 
 [README_20]: https://github.com/apache/accumulo/blob/rel/2.0.0-alpha-1/README.md
-{: .download_external id="/2.0-alpha-1/README" }
 [README_19]: https://github.com/apache/accumulo/blob/rel/1.9.2/README.md
-{: .download_external id="/1.9/README" }
 
 [JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
 {: .download_external id="/docs/2.x/apidocs/" }
