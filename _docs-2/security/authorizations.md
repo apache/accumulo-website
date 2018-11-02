@@ -1,8 +1,18 @@
 ---
-title: Security Labels
+title: Authorizations
 category: security
-order: 2
+order: 4
 ---
+
+In Accumulo, data is written with [security labels] that limit access to only users with the proper
+[authorizations][auths].
+
+## Configuration
+
+Accumulo's [Authorizor] is configured by setting {% plink instance.security.authorizer %}. The default
+authorizor is described below.
+
+## Security Labels
 
 Every [Key]-[Value] pair in Accumulo has its own security label, stored under the column visibility
 element of the key, which is used to determine whether a given user meets the security
@@ -10,26 +20,21 @@ requirements to read the value. This enables data of various security levels to 
 within the same row, and users of varying degrees of access to query the same table, while
 preserving data confidentiality.
 
-## Security Label Expressions
+### Writing labeled data
 
-When mutations are applied, users can specify a security label for each value. This is
-done as the [Mutation] is created by passing a [ColumnVisibility] object to the put()
-method:
+When [writing data to Accumulo]({% durl getting-started/clients#writing-data %}), users can
+specify a security label for each value by passing a [ColumnVisibilty] to the [Mutation].
 
 ```java
-Text rowID = new Text("row1");
-Text colFam = new Text("myColFam");
-Text colQual = new Text("myColQual");
-ColumnVisibility colVis = new ColumnVisibility("public");
-long timestamp = System.currentTimeMillis();
-
-Value value = new Value("myValue");
-
-Mutation mutation = new Mutation(rowID);
-mutation.put(colFam, colQual, colVis, timestamp, value);
+try (BatchWriter writer = client.createBatchWriter("employees")) {
+  Mutation mut = new Mutation("employee1");
+  mut.at().family("pay").qualifier("salary").visibility("payroll").value("50000");
+  mut.at().family("pay").qualifier("period").visibility("public").value("monthly");
+  writer.addMutation(mut)
+}
 ```
 
-## Security Label Expression Syntax
+### Security Label Expression Syntax
 
 Security labels consist of a set of user-defined tokens that are required to read the
 value the label is associated with. The set of tokens required can be specified using
@@ -85,7 +90,7 @@ Authorizations auths = new Authorizations("admin","system");
 Scanner s = client.createScanner("table", auths);
 ```
 
-## User Authorizations
+### User Authorizations
 
 Each Accumulo user has a set of associated security labels. To manipulate these in
 the [Accumulo shell][shell], use the `setuaths` and `getauths` commands. They can be
@@ -108,6 +113,24 @@ Any user with the alter table permission can add or remove this constraint.
 This constraint is not applied to bulk imported data, if this a concern then
 disable the bulk import permission.
 
+### Advanced Authorizations Handling
+
+For applications serving many users, it is not expected that an Accumulo user
+will be created for each application user. In this case an Accumulo user with
+all authorizations needed by any of the applications users must be created. To
+service queries, the application should create a scanner with the application
+user's authorizations. These authorizations could be obtained from a trusted 3rd
+party.
+
+Often production systems will integrate with Public-Key Infrastructure (PKI) and
+designate client code within the query layer to negotiate with PKI servers in order
+to authenticate users and retrieve their authorization tokens (credentials). This
+requires users to specify only the information necessary to authenticate themselves
+to the system. Once user identity is established, their credentials can be accessed by
+the client code and passed to Accumulo outside of the reach of the user.
+
+[security labels]: {% durl security/authorizations#security-labels %}
+[auths]: {% durl security/authorizations#authorizations %}
 [shell]: {% durl getting-started/shell %}
 [Key]: {% jurl org.apache.accumulo.core.data.Key %}
 [Value]: {% jurl org.apache.accumulo.core.data.Value %}
@@ -121,3 +144,4 @@ disable the bulk import permission.
 [Instance]: {% jurl org.apache.accumulo.core.client.Instance %}
 [AuthenticationToken]: {% jurl org.apache.accumulo.core.client.security.tokens.AuthenticationToken %}
 [PasswordToken]: {% jurl org.apache.accumulo.core.client.security.tokens.PasswordToken %}
+[Authorizor]: {% jurl org.apache.accumulo.server.security.handler.Authorizor %}
