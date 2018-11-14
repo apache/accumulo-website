@@ -32,7 +32,7 @@ network bandwidth must be available between any two machines.
 
 In addition to needing access to ports associated with HDFS and ZooKeeper, Accumulo will
 use the following default ports. Please make sure that they are open, or change
-their value in accumulo.properties.
+their value in [accumulo.properties].
 
 |Port | Description | Property Name
 |-----|-------------|--------------
@@ -91,21 +91,21 @@ The Accumulo tarball contains a `conf/` directory where Accumulo looks for confi
 installed Accumulo using downstream packaging, the `conf/` could be something else like
 `/etc/accumulo/`.
 
-Before starting Accumulo, the configuration files `accumulo-env.sh` and `accumulo.properties` must
+Before starting Accumulo, the configuration files [accumulo-env.sh] and [accumulo.properties] must
 exist in `conf/` and be properly configured. If you are using `accumulo-cluster` to launch
-a cluster, the `conf/` directory must also contain hosts file for Accumulo services (i.e `gc`,
-`masters`, `monitor`, `tservers`, `tracers`). You can either create these files manually or run
+a cluster, the `conf/` directory must also contain host files for Accumulo services (i.e [gc],
+[masters], [monitor][monitor-host], [tservers], [tracers]). You can either create these files manually or run
 `accumulo-cluster create-config`.
 
-Logging is configured in `accumulo-env.sh` to use three log4j configuration files in `conf/`. The
+Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e Master, TabletServer, Garbage Collector) is configured by `log4j-service.properties` except for
-the Monitor which is configured by `log4j-monitor.properties`. All Accumulo commands (i.e `init`,
-`shell`, etc) are configured by `log4j.properties`.
+(i.e Master, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
+the Monitor which is configured by [log4j-monitor.properties]. All Accumulo commands (i.e `init`,
+`shell`, etc) are configured by [log4j.properties].
 
 ### Configure accumulo-env.sh
 
-Accumulo needs to know where to find the software it depends on. Edit accumulo-env.sh
+Accumulo needs to know where to find the software it depends on. Edit [accumulo-env.sh]
 and specify the following:
 
 1. Enter the location of Hadoop for `$HADOOP_HOME`
@@ -114,12 +114,12 @@ and specify the following:
 
 Accumulo uses `HADOOP_HOME` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
 and add them the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
-or Zookeeper, you may need to change how your `CLASSPATH` is built in `accumulo-env.sh`. If
+or Zookeeper, you may need to change how your `CLASSPATH` is built in [accumulo-env.sh]. If
 Accumulo has problems later on finding jars, run `accumulo classpath -d` to debug and print
 Accumulo's classpath.
 
 You may want to change the default memory settings for Accumulo's TabletServer which are
-by set in the `JAVA_OPTS` settings for 'tservers' in `accumulo-env.sh`. Note the
+by set in the `JAVA_OPTS` settings for 'tservers' in [accumulo-env.sh]. Note the
 syntax is that of the Java JVM command line options. This value should be less than the
 physical memory of the machines running TabletServers.
 
@@ -128,7 +128,7 @@ process. Reduce these if they exceed the physical RAM of your hardware and
 increase them, within the bounds of the physical RAM, if a process fails because of
 insufficient memory.
 
-Note that you will be specifying the Java heap space in accumulo-env.sh. You should
+Note that you will be specifying the Java heap space in [accumulo-env.sh]. You should
 make sure that the total heap space used for the Accumulo tserver and the Hadoop
 DataNode and TaskTracker is less than the available memory on each worker node in
 the cluster. On large clusters, it is recommended that the Accumulo master, Hadoop
@@ -164,7 +164,7 @@ After building the native map from the source, you will find the artifact in
 in this directory for the map library. If the file is renamed or moved from its
 target directory, the tablet server may not be able to find it. The system can
 also locate the native maps shared library by setting `LD_LIBRARY_PATH`
-(or `DYLD_LIBRARY_PATH` on Mac OS X) in `accumulo-env.sh`.
+(or `DYLD_LIBRARY_PATH` on Mac OS X) in [accumulo-env.sh].
 
 #### Native Maps Configuration
 
@@ -201,8 +201,9 @@ performance to the write-ahead log file which will slow ingest.
 If you are using `accumulo-cluster` to start a cluster, configure the following on the
 machine that will serve as the Accumulo master:
 
-1. Write the IP address or domain name of the Accumulo Master to the `conf/masters` file.
-2. Write the IP addresses or domain name of the machines that will be TabletServers in `conf/tservers`, one per line.
+1. Run `accumulo-cluster create-config` to create the [masters] and [tservers] files.
+2. Write the IP address or domain name of the Accumulo Master to the [masters] file in `conf/`.
+3. Write the IP addresses or domain name of the machines that will be TabletServers to the [tservers] file in `conf/`, one per line.
 
 Note that if using domain names rather than IP addresses, DNS must be configured
 properly for all machines participating in the cluster. DNS can be a confusing source
@@ -210,12 +211,12 @@ of errors.
 
 ### Configure accumulo.properties
 
-Specify appropriate values for the following properties in `accumulo.properties`:
+Specify appropriate values for the following properties in [accumulo.properties]:
 
 * [instance.zookeeper.host] - Enables Accumulo to find ZooKeeper. Accumulo uses ZooKeeper
   to coordinate settings between processes and helps finalize TabletServer failure.
 * [instance.secret] - The instance needs a secret to enable secure communication between servers.
-  Configure your secret and make sure that the `accumulo.properties` file is not readable to other users.
+  Configure your secret and make sure that the [accumulo.properties] file is not readable to other users.
   For alternatives to storing the [instance.secret] in plaintext, please read the
   [Sensitive Configuration Values](#sensitive-configuration-values) section.
 
@@ -226,8 +227,8 @@ documentation for details.
 ### Hostnames in configuration files
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
-network. All of the "host" configuration files for Accumulo (`gc`, `masters`, `tservers`, `monitor`,
-`tracers`) as well as `instance.volumes` in accumulo.properties must contain some host reference.
+network. All of the "host" configuration files for Accumulo ([gc], [masters], [tservers], [monitor][monitor-host],
+[tracers]) as well as [instance.volumes] in [accumulo.properties] must contain some host reference.
 
 While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid, it
 is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop cluster.
@@ -242,13 +243,13 @@ Accumulo identifies `localhost:8020` as a different HDFS instance than `127.0.0.
 
 ### Deploy Configuration
 
-Copy accumulo-env.sh and accumulo.properties from the `conf/` directory on the master to all Accumulo
+Copy [accumulo-env.sh] and [accumulo.properties] from the `conf/` directory on the master to all Accumulo
 tablet servers.  The "host" configuration files files `accumulo-cluster` only need to be on servers
 where that command is run.
 
 ### Sensitive Configuration Values
 
-Accumulo has a number of properties that can be specified via the accumulo.properties
+Accumulo has a number of properties that can be specified via the [accumulo.properties]
 file which are sensitive in nature, [instance.secret] and `trace.token.property.password`
 are two common examples. Both of these properties, if compromised, have the ability
 to result in data being leaked to users who should not have access to that data.
@@ -261,7 +262,7 @@ these classes, the feature will just be unavailable for use.
 
 A comma separated list of CredentialProviders can be configured using the Accumulo Property
 [general.security.credential.provider.paths]. Each configured URL will be consulted
-when the Configuration object for accumulo.properties is accessed.
+when the Configuration object for [accumulo.properties] is accessed.
 
 ### Using a JavaKeyStoreCredentialProvider for storage
 
@@ -275,7 +276,7 @@ The command will then prompt you to enter the secret to use and create a keystor
 
     /path/to/accumulo/conf/accumulo.jceks
 
-Then, `accumulo.properties` must be configured to use this KeyStore as a CredentialProvider:
+Then, [accumulo.properties] must be configured to use this KeyStore as a CredentialProvider:
 
 ```
 general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/accumulo.jceks
@@ -292,7 +293,7 @@ will expect the KeyStore in the same location.
 ### Client Configuration
 
 Accumulo clients are configured in a different way than Accumulo servers. [Accumulo clients
-are created][accumulo-client] using Java builder methods or a `accumulo-client.properties`
+are created][accumulo-client] using Java builder methods or a [accumulo-client.properties]
 file containing [client properties][client-props].
 
 ### Custom Table Tags
@@ -311,7 +312,7 @@ consideration. There is no enforcement of these warnings via the API.
 
 ### Configuring the ClassLoader
 
-Accumulo builds its Java classpath in `accumulo-env.sh`.  After an Accumulo application has started, it will load classes from the locations
+Accumulo builds its Java classpath in [accumulo-env.sh].  After an Accumulo application has started, it will load classes from the locations
 specified in the deprecated [general.classpaths] property. Additionally, Accumulo will load classes from the locations specified in the
 [general.dynamic.classpaths] property and will monitor and reload them if they change. The reloading feature is useful during the development
 and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
@@ -327,8 +328,8 @@ The Accumulo classpath can be viewed in human readable format by running `accumu
 ##### ClassLoader Contexts
 
 With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A context is identified
-by a name and references a set of locations from which to load classes and can be specified in the accumulo.properties file or added
-using the `config` command in the shell. Below is an example for specify the app1 context in the accumulo.properties file:
+by a name and references a set of locations from which to load classes and can be specified in the [accumulo.properties] file or added
+using the `config` command in the shell. Below is an example for specify the app1 context in the [accumulo.properties] file:
 
 ```
 # Application A classpath, loads jars from HDFS and local file system
@@ -444,7 +445,7 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment variable
 `ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is started. Also, set
-these properties in `accumulo.properties`:
+these properties in [accumulo.properties]:
 
 ```
 tserver.port.search=true
@@ -454,7 +455,7 @@ replication.receipt.service.port=0
 ## Logging
 
 Accumulo processes each write to a set of log files. By default, these logs are found at directory
-set by `ACCUMULO_LOG_DIR` in `accumulo-env.sh`.
+set by `ACCUMULO_LOG_DIR` in [accumulo-env.sh].
 
 ## Recovery
 
@@ -497,10 +498,10 @@ that the only volume displayed is the volume from the current namenode's HDFS UR
 
 After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA nameservice.
 
-Edit `accumulo.properties` to notify accumulo that a volume is being replaced. First,
-add the new nameservice volume to the `instance.volumes` property. Next, add the
-`instance.volumes.replacements` property in the form of `old new`. It's important to not include
-the volume that's being replaced in `instance.volumes`, otherwise it's possible accumulo could continue
+Edit [accumulo.properties] to notify accumulo that a volume is being replaced. First,
+add the new nameservice volume to the [instance.volumes] property. Next, add the
+[instance.volumes.replacements] property in the form of `old new`. It's important to not include
+the volume that's being replaced in [instance.volumes], otherwise it's possible accumulo could continue
 to write to the volume.
 
 ```
@@ -667,6 +668,8 @@ mailing lists at https://accumulo.apache.org for more info.
 [quick]: {% durl getting-started/quick-install %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
 [config-mgmt]: {% durl configuration/overview %}
+[instance.volumes]: {% purl instance.volumes %}
+[instance.volumes.replacements]: {% purl instance.volumes.replacements %}
 [instance.zookeeper.host]: {% purl instance.zookeeper.host %}
 [instance.secret]: {% purl instance.secret %}
 [monitor.port.log4j]: {% purl monitor.port.log4j %}
@@ -688,3 +691,15 @@ mailing lists at https://accumulo.apache.org for more info.
 [general.vfs.classpaths]: {% purl general.vfs.classpaths %}
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
 [client-props]: {% durl configuration/client-properties %}
+[accumulo-env.sh]: {% durl configuration/files#accumulo-envsh %}
+[accumulo.properties]: {% durl configuration/files#accumuloproperties %}
+[accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
+[gc]: {% durl configuration/files#gc %}
+[master]: {% durl configuration/files#gc %}
+[monitor-host]: {% durl configuration/files#monitor %}
+[masters]: {% durl configuration/files#masters %}
+[tservers]: {% durl configuration/files#tservers %}
+[tracers]: {% durl configuration/files#tracers %}
+[log4j-service.properties]: {% durl configuration/files#log4j-serviceproperties %}
+[log4j-monitor.properties]: {% durl configuration/files#log4j-monitorproperties %}
+[log4j.properties]: {% durl configuration/files#log4jproperties %}

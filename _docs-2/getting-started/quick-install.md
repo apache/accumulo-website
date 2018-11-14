@@ -31,10 +31,10 @@ For convenience, consider adding `accumulo-{{ page.latest_release }}/bin/` to yo
 Accumulo requires running [Zookeeper] and [HDFS] instances which should be set up
 before configuring Accumulo.
 
-The primary configuration files for Accumulo are `accumulo.properties`, `accumulo-env.sh`,
-and `accumulo-client.properties` which are located in the `conf/` directory.
+The primary configuration files for Accumulo are [accumulo.properties], [accumulo-env.sh],
+and [accumulo-client.properties] which are located in the `conf/` directory.
 
-The `accumulo.properties` file configures Accumulo server processes (i.e tablet server, master,
+The [accumulo.properties] file configures Accumulo server processes (i.e tablet server, master,
 monitor, etc). Follow these steps to set it up:
 
 1. Run `accumulo-util build-native` to build native code.  If this command fails, disable
@@ -49,19 +49,19 @@ monitor, etc). Follow these steps to set it up:
 4. (Optional) Change {% plink instance.secret %} (which is used by Accumulo processes to communicate)
    from the default. This value should match on all servers.
 
-The `accumulo-env.sh` file sets up environment variables needed by Accumulo:
+The [accumulo-env.sh] file sets up environment variables needed by Accumulo:
 
 1. Set `HADOOP_HOME` and `ZOOKEEPER_HOME` to the location of your Hadoop and Zookeeper
    installations. Accumulo will use these locations to find Hadoop and Zookeeper jars and add
    them to your `CLASSPATH` variable. If you you are running a vendor-specific release of
    Hadoop or Zookeeper, you may need to modify how the `CLASSPATH` variable is built in
-   `accumulo-env.sh`. If Accumulo has problems loading classes when you start it, run 
+   [accumulo-env.sh]. If Accumulo has problems loading classes when you start it, run 
    `accumulo classpath -d` to debug and print Accumulo's classpath.
 
 2. Accumulo tablet servers are configured by default to use 1GB of memory (768MB is allocated to
    JVM and 256MB is allocated for native maps). Native maps are allocated memory equal to 33% of
    the tserver JVM heap. The table below can be used if you would like to change tserver memory
-   usage in the `JAVA_OPTS` section of `accumulo-env.sh`:
+   usage in the `JAVA_OPTS` section of [accumulo-env.sh]:
 
     | Native? | 512MB             | 1GB               | 2GB                 | 3GB           |
     |---------|-------------------|-------------------|---------------------|---------------|
@@ -69,9 +69,9 @@ The `accumulo-env.sh` file sets up environment variables needed by Accumulo:
     | No      | -Xmx512m -Xms512m | -Xmx1g -Xms1g     | -Xmx2g -Xms2g       | -Xmx3g -Xms3g |
 
 3. (Optional) Review the memory settings for the Accumulo master, garbage collector, and monitor
-   in the `JAVA_OPTS` section of `accumulo-env.sh`.
+   in the `JAVA_OPTS` section of [accumulo-env.sh].
 
-The `accumulo-client.properties` file is used by the Accumulo shell and can be passed to Accumulo
+The [accumulo-client.properties] file is used by the Accumulo shell and can be passed to Accumulo
 clients to simplify connecting to Accumulo. Below are steps to configure it.
 
 1. Set {% plink -c instance.name %} and {% plink -c instance.zookeepers %} to the Accumulo instance and zookeeper connection
@@ -135,7 +135,7 @@ to be created. Use the command below to create them:
 
     accumulo-cluster create-config
 
-This creates five files (`masters`, `gc`, `monitor`, `tservers`, & `tracers`)
+This creates five files ([masters], [gc], [monitor], [tservers], & [tracers])
 in the `conf/` directory that contain the node names where Accumulo services
 are run on your cluster. By default, all files are configured to `localhost`. If
 you are running a single-node Accumulo cluster, theses files do not need to be
@@ -146,14 +146,14 @@ changed and the next section should be skipped.
 If you are running an Accumulo cluster on multiple nodes, the following files
 in `conf/` should be configured with a newline separated list of node names:
 
- * `masters` : Accumulo primary coordinating process. Must specify one node. Can
+ * [masters] : Accumulo primary coordinating process. Must specify one node. Can
                specify a few for fault tolerance.
- * `gc`      : Accumulo garbage collector. Must specify one node. Can specify a
+ * [gc]      : Accumulo garbage collector. Must specify one node. Can specify a
                few for fault tolerance.
- * `monitor` : Node where Accumulo monitoring web server is run.
- * `tservers`: Accumulo worker processes. List all of the nodes where tablet servers
+ * [monitor] : Node where Accumulo monitoring web server is run.
+ * [tservers] : Accumulo worker processes. List all of the nodes where tablet servers
                should run in this file.
- * `tracers` : Optional capability. Can specify zero or more nodes. 
+ * [tracers] : Optional capability. Can specify zero or more nodes. 
 
 The Accumulo, Hadoop, and Zookeeper software should be present at the same
 location on every node. Also the files in the `conf` directory must be copied
@@ -196,3 +196,12 @@ When finished, use the following commands to stop Accumulo:
 [pdcp]: https://code.google.com/p/pdsh/
 [prsync]: https://code.google.com/p/parallel-ssh/
 [pwl]: https://www.google.com/search?q=hadoop+passwordless+ssh&ie=utf-8&oe=utf-8
+[accumulo-env.sh]: {% durl configuration/files#accumulo-envsh %}
+[accumulo.properties]: {% durl configuration/files#accumuloproperties %}
+[accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
+[gc]: {% durl configuration/files#gc %}
+[master]: {% durl configuration/files#gc %}
+[monitor]: {% durl configuration/files#monitor %}
+[masters]: {% durl configuration/files#masters %}
+[tservers]: {% durl configuration/files#tservers %}
+[tracers]: {% durl configuration/files#tracers %}
