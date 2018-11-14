@@ -35,13 +35,13 @@ of the following methods:
    of the tarball distribution):
     ```java
     AccumuloClient client = Accumulo.newClient()
-                        .usingProperties("/path/to/accumulo-client.properties").build();
+                              .from("/path/to/accumulo-client.properties").build();
     ```
 1. Using the builder methods of [AccumuloClient]:
     ```java
     AccumuloClient client = Accumulo.newClient()
-                        .forInstance("myinstance", "zookeeper1,zookeeper2")
-                        .usingPassword("myuser", "mypassword").build();
+                              .to("myinstance", "zookeeper1,zookeeper2")
+                              .as("myuser", "mypassword").build();
     ```
 1. Using a Java Properties object.
     ```java
@@ -51,7 +51,7 @@ of the following methods:
     props.put("auth.type", "password")
     props.put("auth.principal", "myuser")
     props.put("auth.token", "mypassword")
-    AccumuloClient client = Accumulo.newClient().usingProperties(props).build();
+    AccumuloClient client = Accumulo.newClient().from(props).build();
     ```
 
 If a `accumulo-client.properties` file or a Java Properties object is used to create a [AccumuloClient], the following
@@ -97,9 +97,8 @@ implementations of [AuthenticationToken] below:
 
     ```java
     KerberosToken token = new KerberosToken();
-    AccumuloClient client = Accumulo.newClient()
-                        .forInstance("myinstance", "zookeeper1,zookeper2")
-                        .usingToken(token.getPrincipal(), token).build();
+    AccumuloClient client = Accumulo.newClient().to("myinstance", "zookeeper1,zookeper2")
+                              .as(token.getPrincipal(), token).build();
     ```
 
 ## Writing Data

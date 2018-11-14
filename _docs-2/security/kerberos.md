@@ -1,7 +1,7 @@
 ---
 title: Kerberos
 category: security
-order: 6
+order: 7
 ---
 
 ## Overview
@@ -387,8 +387,8 @@ via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).
 
 ```java
 KerberosToken kt = new KerberosToken();
-AccumuloClient client = Accumulo.newClient().forInstance("myinstance", "zoo1,zoo2")
-                .usingToken(principal, kt).build();
+AccumuloClient client = Accumulo.newClient().to("myinstance", "zoo1,zoo2")
+                          .as(principal, kt).build();
 DelegationToken dt = client.securityOperations().getDelegationToken();
 AccumuloClient client2 = client.changeUser(principal, dt);
 ClientInfo info2 = client2.info();

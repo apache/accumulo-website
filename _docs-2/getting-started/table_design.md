@@ -34,7 +34,7 @@ userid as the range of a scanner and fetching specific columns:
 
 ```java
 AccumuloClient client = Accumulo.newClient()
-                        .usingProperties("/path/to/accumulo-client.properties").build();
+                          .from("/path/to/accumulo-client.properties").build();
 Range r = new Range(userid, userid); // single row
 Scanner s = client.createScanner("userdata", auths);
 s.setRange(r);
