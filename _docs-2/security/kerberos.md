@@ -1,7 +1,7 @@
 ---
 title: Kerberos
 category: security
-order: 5
+order: 7
 ---
 
 ## Overview
@@ -139,20 +139,20 @@ all Accumulo servers must share the same instance and realm principal components
 A number of properties need to be changed to account to properly configure servers
 in `accumulo.properties`.
 
-|Key | Default Value | Description
+|Key | Suggested Value | Description
 |----|---------------|-------------
-| general.kerberos.keytab | /etc/security/keytabs/accumulo.service.keytab | The path to the keytab for Accumulo on local filesystem. Change the value to the actual path on your system.
-| general.kerberos.principal | accumulo/_HOST@REALM | The Kerberos principal for Accumulo, needs to match the keytab. "_HOST" can be used instead of the actual hostname in the principal and will be automatically expanded to the current FQDN which reduces the configuration file burden.
-|instance.rpc.sasl.enabled | true | Enables SASL for the Thrift Servers (supports GSSAPI)
-|rpc.sasl.qop | auth | One of "auth", "auth-int", or "auth-conf". These map to the SASL defined properties for quality of protection. "auth" is authentication only. "auth-int" is authentication and data integrity. "auth-conf" is authentication, data integrity and confidentiality.
-|instance.security.authenticator | org.apache.accumulo.server.security.handler.KerberosAuthenticator | Configures Accumulo to use the Kerberos principal as the Accumulo username/principal
-|instance.security.authorizor | org.apache.accumulo.server.security.handler.KerberosAuthorizor | Configures Accumulo to use the Kerberos principal for authorization purposes
-|instance.security.permissionHandler | org.apache.accumulo.server.security.handler.KerberosPermissionHandler| Configures Accumulo to use the Kerberos principal for permission purposes
-|trace.token.type | org.apache.accumulo.core.client.security.tokens.KerberosToken | Configures the Accumulo Tracer to use the KerberosToken for authentication when serializing traces to the trace table.
-|trace.user | accumulo/_HOST@REALM | The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal KerberosToken and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same `_HOST` replacement is performed on this value, substituted the FQDN for `_HOST`.
-|trace.token.property.keytab | | You can optionally specify the path to a keytab file for the principal given in the `trace.user` property. If you don't set this path, it will default to the value given in `general.kerberos.principal`.
-|general.delegation.token.lifetime | 7d | The length of time that the server-side secret used to create delegation tokens is valid. After a server-side secret expires, a delegation token created with that secret is no longer valid.
-|general.delegation.token.update.interval| 1d | The frequency in which new server-side secrets should be generated to create delegation tokens for clients. Generating new secrets reduces the likelihood of cryptographic attacks.
+| {% plink general.kerberos.keytab %} | /etc/security/keytabs/accumulo.service.keytab | The path to the keytab for Accumulo on local filesystem. Change the value to the actual path on your system.
+| {% plink general.kerberos.principal %} | accumulo/_HOST@REALM | The Kerberos principal for Accumulo, needs to match the keytab. "_HOST" can be used instead of the actual hostname in the principal and will be automatically expanded to the current FQDN which reduces the configuration file burden.
+| {% plink instance.rpc.sasl.enabled %} | true | Enables SASL for the Thrift Servers (supports GSSAPI)
+| {% plink rpc.sasl.qop %} | auth | One of "auth", "auth-int", or "auth-conf". These map to the SASL defined properties for quality of protection. "auth" is authentication only. "auth-int" is authentication and data integrity. "auth-conf" is authentication, data integrity and confidentiality.
+| {% plink instance.security.authenticator %} | {% jlink -f org.apache.accumulo.server.security.handler.KerberosAuthenticator %} | Configures Accumulo to use the Kerberos principal as the Accumulo username/principal
+| {% plink instance.security.authorizor %} | {% jlink -f org.apache.accumulo.server.security.handler.KerberosAuthorizor %} | Configures Accumulo to use the Kerberos principal for authorization purposes
+| {% plink instance.security.permissionHandler %} | {% jlink -f org.apache.accumulo.server.security.handler.KerberosPermissionHandler %} | Configures Accumulo to use the Kerberos principal for permission purposes
+| {% plink trace.token.type %} | {% jlink -f org.apache.accumulo.core.client.security.tokens.KerberosToken %} | Configures the Accumulo Tracer to use the [KerberosToken] for authentication when serializing traces to the trace table.
+| {% plink trace.user %} | accumulo/_HOST@REALM | The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal [KerberosToken] and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same `_HOST` replacement is performed on this value, substituted the FQDN for `_HOST`.
+| trace.token.property.keytab | | You can optionally specify the path to a keytab file for the principal given in the `trace.user` property. If you don't set this path, it will default to the value given in `general.kerberos.principal`.
+| {% plink general.delegation.token.lifetime %} | 7d | The length of time that the server-side secret used to create delegation tokens is valid. After a server-side secret expires, a delegation token created with that secret is no longer valid.
+| {% plink general.delegation.token.update.interval %} | 1d | The frequency in which new server-side secrets should be generated to create delegation tokens for clients. Generating new secrets reduces the likelihood of cryptographic attacks.
 
 Although it should be a prerequisite, it is ever important that you have DNS properly
 configured for your nodes and that Accumulo is configured to use the FQDN. It
@@ -168,7 +168,7 @@ by adding the JVM system property `-Djava.security.krb5.conf=/path/to/other/krb5
 
 #### KerberosAuthenticator
 
-The `KerberosAuthenticator` is an implementation of the pluggable security interfaces
+The [KerberosAuthenticator] is an implementation of the pluggable security interfaces
 that Accumulo provides. It builds on top of what the default ZooKeeper-based implementation,
 but removes the need to create user accounts with passwords in Accumulo for clients. As
 long as a client has a valid Kerberos identity, they can connect to and interact with
@@ -378,17 +378,17 @@ $
 
 #### DelegationTokens with MapReduce
 
-To use DelegationTokens in a custom MapReduce job, the user should create an `AccumuloClient`
-using a `KerberosToken` and use it to call `SecurityOperations.getDelegationToken`. The
-`DelegationToken` that is created can then be used to create a new client using this
-delegation token.  The `ClientInfo` object from this client can be passed into the MapReduce
+To use DelegationTokens in a custom MapReduce job, the user should create an [AccumuloClient]
+using a [KerberosToken] and use it to call `SecurityOperations.getDelegationToken`. The
+[DelegationToken] that is created can then be used to create a new client using this
+delegation token.  The [ClientInfo] object from this client can be passed into the MapReduce
 job. It is expected that the user launching the MapReduce job is already logged in via Kerberos
 via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).
 
 ```java
 KerberosToken kt = new KerberosToken();
-AccumuloClient client = Accumulo.newClient().forInstance("myinstance", "zoo1,zoo2")
-                .usingToken(principal, kt).build();
+AccumuloClient client = Accumulo.newClient().to("myinstance", "zoo1,zoo2")
+                          .as(principal, kt).build();
 DelegationToken dt = client.securityOperations().getDelegationToken();
 AccumuloClient client2 = client.changeUser(principal, dt);
 ClientInfo info2 = client2.info();
@@ -404,7 +404,7 @@ Users must have the `DELEGATION_TOKEN` system permission to call the `getDelegat
 method. The obtained delegation token is only valid for the requesting user for a period
 of time dependent on Accumulo's configuration (`general.delegation.token.lifetime`).
 
-For the duration of validity of the `DelegationToken`, the user *must* take the necessary precautions
+For the duration of validity of the [DelegationToken], the user *must* take the necessary precautions
 to protect the `DelegationToken` from prying eyes as it can be used by any user on any host to impersonate
 the user who requested the `DelegationToken`. YARN ensures that passing the delegation token from the client
 JVM to each YARN task is secure, even in multi-tenant instances.
@@ -571,3 +571,8 @@ Ensure you have set `trace.token.property.keytab` to point to a keytab for the p
 [sasl.enabled]: {% purl -c sasl.enabled %}
 [sasl.qop]: {% purl -c sasl.qop %}
 [sasl.kerberos.server.primary]: {% purl -c sasl.kerberos.server.primary %}
+[KerberosAuthenticator]: {% jurl org.apache.accumulo.server.security.handler.KerberosAuthenticator %}
+[AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
+[KerberosToken]: {% jurl org.apache.accumulo.core.client.security.tokens.KerberosToken %}
+[DelegationToken]: {% jurl org.apache.accumulo.core.client.security.tokens.DelegationToken %}
+[ClientInfo]: {% jurl org.apache.accumulo.core.client.ClientInfo %}

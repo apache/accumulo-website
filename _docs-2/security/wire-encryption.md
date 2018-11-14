@@ -1,7 +1,7 @@
 ---
 title: Wire Encryption
 category: security
-order: 4
+order: 6
 ---
 
 Accumulo, through Thrift's TSSLTransport, provides the ability to encrypt

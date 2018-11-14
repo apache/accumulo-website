@@ -54,8 +54,8 @@ The following code shows how to set up Accumulo
 
 ```java
 Job job = new Job(getConf());
-ClientInfo info = Accumulo.newClient().forInstance("myinstance","zoo1,zoo2")
-                        .usingPassword("user", "passwd").info()
+ClientInfo info = Accumulo.newClient().to("myinstance","zoo1,zoo2")
+                        .as("user", "passwd").info()
 AccumuloInputFormat.setClientInfo(job, info);
 AccumuloInputFormat.setInputTableName(job, table);
 AccumuloInputFormat.setScanAuthorizations(job, new Authorizations());
@@ -154,8 +154,8 @@ class MyMapper extends Mapper<Key,Value,WritableComparable,Writable> {
 ## AccumuloOutputFormat options
 
 ```java
-ClientInfo info = Accumulo.newClient().forInstance("myinstance","zoo1,zoo2")
-                        .usingPassword("user", "passwd").info()
+ClientInfo info = Accumulo.newClient().to("myinstance","zoo1,zoo2")
+                        .as("user", "passwd").info()
 AccumuloOutputFormat.setClientInfo(job, info);
 AccumuloOutputFormat.setDefaultTableName(job, "mytable");
 ```

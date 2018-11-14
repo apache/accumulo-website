@@ -22,7 +22,7 @@ written to disk) that happen in the tablet server.
 
 ### Security labels
 
-Accumulo Keys can contain a [security label]({% durl security/labels %})
+Accumulo Keys can contain a [security label]({% durl security/authorizations#security-labels %})
 (called a Column Visibility) that enables expressive cell-level access control.
 Authorizations are passed with each query to control what data is returned to the user.
 Column visibilities support boolean `AND` and `OR` combinations of arbitrary strings (such

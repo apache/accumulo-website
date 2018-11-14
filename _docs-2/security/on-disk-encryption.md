@@ -1,7 +1,7 @@
 ---
 title: On Disk Encryption
 category: security
-order: 3
+order: 5
 ---
 
 For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 

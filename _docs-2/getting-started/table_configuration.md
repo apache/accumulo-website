@@ -35,7 +35,7 @@ programmatically as follows:
 
 ```java
 AccumuloClient client = Accumulo.newClient()
-                        .usingProperties("/path/to/accumulo-client.properties").build();
+                          .from("/path/to/accumulo-client.properties").build();
 
 HashMap<String,Set<Text>> localityGroups = new HashMap<String, Set<Text>>();
 
