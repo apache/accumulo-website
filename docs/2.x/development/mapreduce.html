@@ -268,7 +268,11 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/labels">Security Labels</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
                 
@@ -471,8 +475,8 @@ options.</p>
 <p>The following code shows how to set up Accumulo</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Job</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
-<span class="n">ClientInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
-                        <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
+<span class="n">ClientInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info</span><span class="o">);</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setInputTableName</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">table</span><span class="o">);</span>
 <span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setScanAuthorizations</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="k">new</span> <span class="n">Authorizations</span><span class="o">());</span>
@@ -561,8 +565,8 @@ used for each table.</p>
 
 <h2 id="accumulooutputformat-options">AccumuloOutputFormat options</h2>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ClientInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
-                        <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ClientInfo</span> <span class="n">info</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">info</span><span class="o">()</span>
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info</span><span class="o">);</span>
 <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setDefaultTableName</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="s">"mytable"</span><span class="o">);</span>
 </code></pre></div></div>

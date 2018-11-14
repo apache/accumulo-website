@@ -268,7 +268,11 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/labels">Security Labels</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
                 
@@ -454,13 +458,13 @@ of the following methods:</p>
   <li>Using the <code class="highlighter-rouge">accumulo-client.properties</code> file (a template can be found in the <code class="highlighter-rouge">conf/</code> directory
 of the tarball distribution):
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
-                     <span class="o">.</span><span class="na">usingProperties</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+                           <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
   <li>Using the builder methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>:
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
-                     <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">)</span>
-                     <span class="o">.</span><span class="na">usingPassword</span><span class="o">(</span><span class="s">"myuser"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+                           <span class="o">.</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeeper2"</span><span class="o">)</span>
+                           <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"myuser"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
   <li>Using a Java Properties object.
@@ -470,7 +474,7 @@ of the tarball distribution):
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.type"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">)</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.principal"</span><span class="o">,</span> <span class="s">"myuser"</span><span class="o">)</span>
  <span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"auth.token"</span><span class="o">,</span> <span class="s">"mypassword"</span><span class="o">)</span>
- <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">usingProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">from</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -541,9 +545,8 @@ requires external setup and additional configuration, but provides a single poin
 through HDFS, YARN and ZooKeeper and allowing for password-less authentication with Accumulo.</p>
 
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">KerberosToken</span> <span class="n">token</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
- <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
-                     <span class="o">.</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
-                     <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zookeeper1,zookeper2"</span><span class="o">)</span>
+                           <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">getPrincipal</span><span class="o">(),</span> <span class="n">token</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 </code></pre></div>    </div>
   </li>
 </ol>

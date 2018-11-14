@@ -268,7 +268,11 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview</a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/labels">Security Labels</a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions</a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations</a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
                 
@@ -558,55 +562,55 @@ in <code class="highlighter-rouge">accumulo.properties</code>.</p>
   <thead>
     <tr>
       <th>Key</th>
-      <th>Default Value</th>
+      <th>Suggested Value</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>general.kerberos.keytab</td>
+      <td><a href="/docs/2.x/configuration/server-properties#general_kerberos_keytab">general.kerberos.keytab</a></td>
       <td>/etc/security/keytabs/accumulo.service.keytab</td>
       <td>The path to the keytab for Accumulo on local filesystem. Change the value to the actual path on your system.</td>
     </tr>
     <tr>
-      <td>general.kerberos.principal</td>
+      <td><a href="/docs/2.x/configuration/server-properties#general_kerberos_principal">general.kerberos.principal</a></td>
       <td>accumulo/_HOST@REALM</td>
       <td>The Kerberos principal for Accumulo, needs to match the keytab. “_HOST” can be used instead of the actual hostname in the principal and will be automatically expanded to the current FQDN which reduces the configuration file burden.</td>
     </tr>
     <tr>
-      <td>instance.rpc.sasl.enabled</td>
+      <td><a href="/docs/2.x/configuration/server-properties#instance_rpc_sasl_enabled">instance.rpc.sasl.enabled</a></td>
       <td>true</td>
       <td>Enables SASL for the Thrift Servers (supports GSSAPI)</td>
     </tr>
     <tr>
-      <td>rpc.sasl.qop</td>
+      <td><a href="/docs/2.x/configuration/server-properties#rpc_sasl_qop">rpc.sasl.qop</a></td>
       <td>auth</td>
       <td>One of “auth”, “auth-int”, or “auth-conf”. These map to the SASL defined properties for quality of protection. “auth” is authentication only. “auth-int” is authentication and data integrity. “auth-conf” is authentication, data integrity and confidentiality.</td>
     </tr>
     <tr>
-      <td>instance.security.authenticator</td>
-      <td>org.apache.accumulo.server.security.handler.KerberosAuthenticator</td>
+      <td><a href="/docs/2.x/configuration/server-properties#instance_security_authenticator">instance.security.authenticator</a></td>
+      <td><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/security/handler/KerberosAuthenticator.html">org.apache.accumulo.server.security.handler.KerberosAuthenticator</a></td>
       <td>Configures Accumulo to use the Kerberos principal as the Accumulo username/principal</td>
     </tr>
     <tr>
-      <td>instance.security.authorizor</td>
-      <td>org.apache.accumulo.server.security.handler.KerberosAuthorizor</td>
+      <td><a href="/docs/2.x/configuration/server-properties#instance_security_authorizor">instance.security.authorizor</a></td>
+      <td><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/security/handler/KerberosAuthorizor.html">org.apache.accumulo.server.security.handler.KerberosAuthorizor</a></td>
       <td>Configures Accumulo to use the Kerberos principal for authorization purposes</td>
     </tr>
     <tr>
-      <td>instance.security.permissionHandler</td>
-      <td>org.apache.accumulo.server.security.handler.KerberosPermissionHandler</td>
+      <td><a href="/docs/2.x/configuration/server-properties#instance_security_permissionHandler">instance.security.permissionHandler</a></td>
+      <td><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/security/handler/KerberosPermissionHandler.html">org.apache.accumulo.server.security.handler.KerberosPermissionHandler</a></td>
       <td>Configures Accumulo to use the Kerberos principal for permission purposes</td>
     </tr>
     <tr>
-      <td>trace.token.type</td>
-      <td>org.apache.accumulo.core.client.security.tokens.KerberosToken</td>
-      <td>Configures the Accumulo Tracer to use the KerberosToken for authentication when serializing traces to the trace table.</td>
+      <td><a href="/docs/2.x/configuration/server-properties#trace_token_type">trace.token.type</a></td>
+      <td><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">org.apache.accumulo.core.client.security.tokens.KerberosToken</a></td>
+      <td>Configures the Accumulo Tracer to use the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> for authentication when serializing traces to the trace table.</td>
     </tr>
     <tr>
-      <td>trace.user</td>
+      <td><a href="/docs/2.x/configuration/server-properties#trace_user">trace.user</a></td>
       <td>accumulo/_HOST@REALM</td>
-      <td>The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal KerberosToken and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same <code class="highlighter-rouge">_HOST</code> replacement is performed on this value, substituted the FQDN for <code class="highlighter-rouge">_HOST</code>.</td>
+      <td>The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same <code class="highlighter-rouge">_HOST</code> replacement is performed on this value, substituted the FQDN for <code class="highlighter-rouge">_HOST</code>.</td>
     </tr>
     <tr>
       <td>trace.token.property.keytab</td>
@@ -614,12 +618,12 @@ in <code class="highlighter-rouge">accumulo.properties</code>.</p>
       <td>You can optionally specify the path to a keytab file for the principal given in the <code class="highlighter-rouge">trace.user</code> property. If you don’t set this path, it will default to the value given in <code class="highlighter-rouge">general.kerberos.principal</code>.</td>
     </tr>
     <tr>
-      <td>general.delegation.token.lifetime</td>
+      <td><a href="/docs/2.x/configuration/server-properties#general_delegation_token_lifetime">general.delegation.token.lifetime</a></td>
       <td>7d</td>
       <td>The length of time that the server-side secret used to create delegation tokens is valid. After a server-side secret expires, a delegation token created with that secret is no longer valid.</td>
     </tr>
     <tr>
-      <td>general.delegation.token.update.interval</td>
+      <td><a href="/docs/2.x/configuration/server-properties#general_delegation_token_update_interval">general.delegation.token.update.interval</a></td>
       <td>1d</td>
       <td>The frequency in which new server-side secrets should be generated to create delegation tokens for clients. Generating new secrets reduces the likelihood of cryptographic attacks.</td>
     </tr>
@@ -640,7 +644,7 @@ by adding the JVM system property <code class="highlighter-rouge">-Djava.securit
 
 <h4 id="kerberosauthenticator">KerberosAuthenticator</h4>
 
-<p>The <code class="highlighter-rouge">KerberosAuthenticator</code> is an implementation of the pluggable security interfaces
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-1/org/apache/accumulo/server/security/handler/KerberosAuthenticator.html">KerberosAuthenticator</a> is an implementation of the pluggable security interfaces
 that Accumulo provides. It builds on top of what the default ZooKeeper-based implementation,
 but removes the need to create user accounts with passwords in Accumulo for clients. As
 long as a client has a valid Kerberos identity, they can connect to and interact with
@@ -846,16 +850,16 @@ accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; quit
 
 <h4 id="delegationtokens-with-mapreduce">DelegationTokens with MapReduce</h4>
 
-<p>To use DelegationTokens in a custom MapReduce job, the user should create an <code class="highlighter-rouge">AccumuloClient</code>
-using a <code class="highlighter-rouge">KerberosToken</code> and use it to call <code class="highlighter-rouge">SecurityOperations.getDelegationToken</code>. The
-<code class="highlighter-rouge">DelegationToken</code> that is created can then be used to create a new client using this
-delegation token.  The <code class="highlighter-rouge">ClientInfo</code> object from this client can be passed into the MapReduce
+<p>To use DelegationTokens in a custom MapReduce job, the user should create an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>
+using a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and use it to call <code class="highlighter-rouge">SecurityOperations.getDelegationToken</code>. The
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/DelegationToken.html">DelegationToken</a> that is created can then be used to create a new client using this
+delegation token.  The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/ClientInfo.html">ClientInfo</a> object from this client can be passed into the MapReduce
 job. It is expected that the user launching the MapReduce job is already logged in via Kerberos
 via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">KerberosToken</span> <span class="n">kt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KerberosToken</span><span class="o">();</span>
-<span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">forInstance</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zoo1,zoo2"</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">usingToken</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+<span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                          <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 <span class="n">DelegationToken</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
 <span class="n">AccumuloClient</span> <span class="n">client2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">changeUser</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
 <span class="n">ClientInfo</span> <span class="n">info2</span> <span class="o">=</span> <span class="n">client2</span><span class="o">.</span><span class="na">info</span><span class="o">();</span>
@@ -871,7 +875,7 @@ via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).</p>
 method. The obtained delegation token is only valid for the requesting user for a period
 of time dependent on Accumulo’s configuration (<code class="highlighter-rouge">general.delegation.token.lifetime</code>).</p>
 
-<p>For the duration of validity of the <code class="highlighter-rouge">DelegationToken</code>, the user <em>must</em> take the necessary precautions
+<p>For the duration of validity of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/security/tokens/DelegationToken.html">DelegationToken</a>, the user <em>must</em> take the necessary precautions
 to protect the <code class="highlighter-rouge">DelegationToken</code> from prying eyes as it can be used by any user on any host to impersonate
 the user who requested the <code class="highlighter-rouge">DelegationToken</code>. YARN ensures that passing the delegation token from the client
 JVM to each YARN task is secure, even in multi-tenant instances.</p>
