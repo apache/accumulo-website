@@ -770,6 +770,21 @@ overridden by using the <code class="highlighter-rouge">--local-wal-directories<
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 </code></pre></div></div>
 
+<p><strong>I am trying to start the master after upgrading but the upgrade is aborting with the following message:</strong>
+  <code class="highlighter-rouge">org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.</code></p>
+
+<p>You can use the shell to delete completed FATE transactions using the following:</p>
+
+<ul>
+  <li>Start tservers</li>
+  <li>Start shell</li>
+  <li>Run <code class="highlighter-rouge">fate print</code> to list all</li>
+  <li>If completed, just delete with <code class="highlighter-rouge">fate delete</code></li>
+  <li>Start masters once there are no more fate operations</li>
+</ul>
+
+<p>If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.</p>
+
 <h2 id="file-naming-conventions">File Naming Conventions</h2>
 
 <p><strong>Why are files named like they are? Why do some start with <code class="highlighter-rouge">C</code> and others with <code class="highlighter-rouge">F</code>?</strong></p>
