@@ -31,7 +31,7 @@ Before creating an Accumulo client, you will need the following information:
 The [AccumuloClient] object is the main entry point for Accumulo clients. It can be created using one
 of the following methods:
 
-1. Using the `accumulo-client.properties` file (a template can be found in the `conf/` directory
+1. Using the [accumulo-client.properties] file (a template can be found in the `conf/` directory
    of the tarball distribution):
     ```java
     AccumuloClient client = Accumulo.newClient()
@@ -54,7 +54,7 @@ of the following methods:
     AccumuloClient client = Accumulo.newClient().from(props).build();
     ```
 
-If a `accumulo-client.properties` file or a Java Properties object is used to create a [AccumuloClient], the following
+If an [accumulo-client.properties] file or a Java Properties object is used to create a [AccumuloClient], the following
 [client properties][client-props] must be set:
 
 * [instance.name] - Name of Accumulo instance to connect to
@@ -197,7 +197,7 @@ Durability can be set in multiple ways:
 
 1. The default durability of a table can be set in the Accumulo shell
 2. When creating a [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
-   or by setting [batch.writer.durability] in `accumulo-client.properties`.
+   or by setting [batch.writer.durability] in [accumulo-client.properties].
 3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
    by the `BatchWriterConfig` that is passed in.
 
@@ -375,3 +375,4 @@ This page covers Accumulo client basics.  Below are links to additional document
 [batch]: https://github.com/apache/accumulo-examples/blob/master/docs/batch.md
 [reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md
 [isolation]: https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md
+[accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}

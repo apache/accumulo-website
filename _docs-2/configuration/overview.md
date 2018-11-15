@@ -9,7 +9,7 @@ Configuration is managed differently for Accumulo clients and servers.
 ## Client Configuration
 
 [Accumulo clients][accumulo-client] are created using a Java builder methods, Java properties containing
-[client properties][client-props], or an `accumulo-client.properties` file containing [client properties][client-props].
+[client properties][client-props], or an [accumulo-client.properties] file containing [client properties][client-props].
 
 ## Server Configuration
 
@@ -115,3 +115,4 @@ default  | table.failures.ignore ..................... | false
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
 [client-props]: {% durl configuration/client-properties %}
 [props]: {% durl configuration/server-properties %}
+[accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
