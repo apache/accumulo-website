@@ -8,17 +8,17 @@ Configuration is managed differently for Accumulo clients and servers.
 
 ## Client Configuration
 
-[Accumulo clients][accumulo-client] are created using a Java builder methods, Java properties containing
-[client properties][client-props], or an [accumulo-client.properties] file containing [client properties][client-props].
+[Accumulo clients][accumulo-client] are created using Java builder methods, a Java properties object or an
+[accumulo-client.properties] file containing [client properties].
 
 ## Server Configuration
 
-Accumulo services (i.e master, tablet server, monitor, etc) are configured by [server properties][props] whose values can be
+Accumulo services (i.e master, tablet server, monitor, etc) are configured by [server properties] whose values can be
 set in the following locations (with increasing precedence):
 
 1. Default values
-2. accumulo.properties (overrides defaults)
-3. Zookeeper (overrides accumulo.properties & defaults)
+2. [accumulo.properties] (overrides defaults)
+3. Zookeeper (overrides [accumulo.properties] & defaults)
 
 If a property is set in multiple locations, the value in the location with the highest precedence is used. 
 
@@ -26,26 +26,26 @@ The configuration locations above are described in detail below.
 
 ### Default values
 
-All [server properties][props] have a default value that is listed for each property on the [properties][props] page. Default values are set in the source code.
+All [server properties] have a default value. Default values are set in the source code and can be viewed for each property on the [server properties] page.
 While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.
 
 ### accumulo.properties
 
-Setting [server properties][props] in accumulo.properties will override their default value. If you are running Accumulo on a cluster, any updates to accumulo.properties must
-be synced across the cluster. Accumulo processes (master, tserver, etc) read their local accumulo.properties on start up so processes must be restarted to apply changes.
+Setting [server properties] in [accumulo.properties] will override their default value. If you are running Accumulo on a cluster, any updates to accumulo.properties must
+be synced across the cluster. Accumulo processes (master, tserver, etc) read their local [accumulo.properties] on start up so processes must be restarted to apply changes.
 Certain properties can only be set in accumulo.properties. These properties have **zk mutable: no** in their description. Setting properties in accumulo.properties allows you
 to configure tablet servers with different settings.
 
 ### Zookeeper
 
-Many [server properties][props] can be set in Zookeeper using the Accumulo API or shell. These properties can identified by **zk mutable: yes** in their description on
-the [properties page][props]. Zookeeper properties can be applied on a per-table or system-wide basis. Per-table properties take precedence over system-wide
+Many [server properties] can be set in Zookeeper using the Accumulo API or shell. These properties can identified by **zk mutable: yes** in their description on
+the [server properties] page. Zookeeper properties can be applied on a per-table or system-wide basis. Per-table properties take precedence over system-wide
 properties. While most properties set in Zookeeper take effect immediately, some require a restart of the process which is indicated in **zk mutable** section
 of their description.
 
 #### Zookeeper System properties
 
-System properties consist of all [properties][props] with **zk mutable: yes** in their description. They are set with the following shell command:
+System properties consist of all [server properties] with **zk mutable: yes** in their description. They are set with the following shell command:
 
     config -s PROPERTY=VALUE
 
@@ -69,7 +69,7 @@ Per-table settings take precedent over table namespace settings.  Both take prec
 
 #### Zookeeper Considerations
 
-Any [properties][props] that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
+Any [server properties] that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
 are two areas in which there aren't any fail safes built into the API that can prevent the user from making this mistake.
 
@@ -89,14 +89,12 @@ is set in multiple locations but the value `1.6` set in the `table` scope is use
 
 ```
 root@accumulo-instance> config -t foo
----------+---------------------------------------------+------------------------------------------------------
+---------+---------------------------------------------+-----------------------
 SCOPE    | NAME                                        | VALUE
----------+---------------------------------------------+------------------------------------------------------
-default  | table.balancer ............................ | org.apache.accumulo.server.master.balancer.DefaultLoadBalancer
+---------+---------------------------------------------+-----------------------
 default  | table.bloom.enabled ....................... | false
 default  | table.bloom.error.rate .................... | 0.5%
 default  | table.bloom.hash.type ..................... | murmur
-default  | table.bloom.key.functor ................... | org.apache.accumulo.core.file.keyfunctor.RowFunctor
 default  | table.bloom.load.threshold ................ | 1
 default  | table.bloom.size .......................... | 1048576
 default  | table.cache.block.enable .................. | false
@@ -113,6 +111,7 @@ default  | table.failures.ignore ..................... | false
 ```
 
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
-[client-props]: {% durl configuration/client-properties %}
-[props]: {% durl configuration/server-properties %}
+[client properties]: {% durl configuration/client-properties %}
+[server properties]: {% durl configuration/server-properties %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
+[accumulo.properties]: {% durl configuration/files#accumuloproperties %}
