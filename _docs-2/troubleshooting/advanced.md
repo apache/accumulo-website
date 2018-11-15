@@ -330,6 +330,19 @@ overridden by using the `--local-wal-directories` option on the tool. It can be 
 
     accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 
+**I am trying to start the master after upgrading but the upgrade is aborting with the following message:**
+  `org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.`
+
+You can use the shell to delete completed FATE transactions using the following:
+
+* Start tservers
+* Start shell
+* Run `fate print` to list all
+* If completed, just delete with `fate delete`
+* Start masters once there are no more fate operations
+
+If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.
+
 ## File Naming Conventions
 
 **Why are files named like they are? Why do some start with `C` and others with `F`?**
