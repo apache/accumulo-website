@@ -647,7 +647,14 @@ These levels are:</p>
 <p>Durability can be set in multiple ways:</p>
 
 <ol>
-  <li>The default durability of a table can be set in the Accumulo shell</li>
+  <li>The default durability of all tables can be set using <a href="/docs/2.x/configuration/server-properties#table_durability">table.durability</a>.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -s table.durability=flush
+</code></pre></div>    </div>
+  </li>
+  <li>The default durability of a table can be overriden by setting <a href="/docs/2.x/configuration/server-properties#table_durability">table.durability</a> for that table.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -t mytable -s table.durability=sync
+</code></pre></div>    </div>
+  </li>
   <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the default durability can be overridden using <code class="highlighter-rouge">withBatchWriterConfig()</code>
 or by setting <a href="/docs/2.x/configuration/client-properties#batch_writer_durability">batch.writer.durability</a> in <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a>.</li>
   <li>
