@@ -195,10 +195,17 @@ These levels are:
 
 Durability can be set in multiple ways:
 
-1. The default durability of a table can be set in the Accumulo shell
-2. When creating a [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
+1. The default durability of all tables can be set using [table.durability].
+    ```
+    root@uno> config -s table.durability=flush
+    ```
+2. The default durability of a table can be overriden by setting [table.durability] for that table.
+    ```
+    root@uno> config -t mytable -s table.durability=sync
+    ```
+3. When creating a [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
    or by setting [batch.writer.durability] in [accumulo-client.properties].
-3. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
+4. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
    by the `BatchWriterConfig` that is passed in.
 
     ```java
@@ -376,3 +383,4 @@ This page covers Accumulo client basics.  Below are links to additional document
 [reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md
 [isolation]: https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
+[table.durability]: {% purl table.durability %}
