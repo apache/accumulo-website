@@ -7,8 +7,8 @@ order: 7
 Accumulo tables have a few options that can be configured to alter the default
 behavior of Accumulo as well as improve performance based on the data stored.
 These include locality groups, constraints, bloom filters, iterators, and block
-cache.  See the [configuration properties documentation][config-properties] for
-a complete list of available configuration options.
+cache.  See the [server properties] documentation for a complete list of available
+configuration options.
 
 ## Locality Groups
 
@@ -713,7 +713,7 @@ preserved.
 [combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
 [filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
 [table.majc.compaction.strategy]: {% purl table.majc.compaction.strategy %}
-[config-properties]: {% durl configuration/server-properties %}
+[server properties]: {% durl configuration/server-properties %}
 [Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Caching]: {% durl administration/caching %}
