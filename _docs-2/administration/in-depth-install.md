@@ -5,7 +5,7 @@ order: 1
 ---
 
 This document provides detailed instructions for installing Accumulo. For basic
-instructions, see the [quick installation guide][quick].
+instructions, see the [quick start].
 
 ## Hardware
 
@@ -665,7 +665,7 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 mailing lists at https://accumulo.apache.org for more info.
 
-[quick]: {% durl getting-started/quick-install %}
+[quick start]: {% durl getting-started/quickstart %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
 [config-mgmt]: {% durl configuration/overview %}
 [instance.volumes]: {% purl instance.volumes %}

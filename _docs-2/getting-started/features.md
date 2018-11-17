@@ -1,7 +1,7 @@
 ---
 title: Features
 category: getting-started
-order: 2
+order: 3
 redirect_from:
   - /features/
   - /notable_features/

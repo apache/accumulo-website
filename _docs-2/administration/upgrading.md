@@ -14,7 +14,7 @@ Follow the steps below to upgrade your Accumulo instance and client to 2.0.
 
 Upgrading to Accumulo 2.0 is done by stopping Accumulo 1.8/9 and starting Accumulo 2.0.
 
-Before stopping Accumulo 1.8/9, install Accumulo 2.0 and configure it by following the [2.0 install instructions]({% durl getting-started/quick-install %}).
+Before stopping Accumulo 1.8/9, install Accumulo 2.0 and configure it by following the [2.0 quick start]({% durl getting-started/quickstart %}).
 
 There are several changes to scripts and configuration in 2.0 so be careful when using configuration or automated setup designed for 1.8/9.
 Below are some changes in 2.0 that you should be aware of:

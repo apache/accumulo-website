@@ -19,7 +19,7 @@ All authentication methods implement [Authenticator]. The default (password-base
 
 ## Root user
 
-When [Accumulo is initialized]({% durl getting-started/quick-install#initialization %}), a `root` user is created and given
+When [Accumulo is initialized]({% durl getting-started/quickstart#initialization %}), a `root` user is created and given
 a password.  This `root` user is used to create other users. 
 
 ## Creating users
