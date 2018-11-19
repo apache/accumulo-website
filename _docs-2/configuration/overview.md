@@ -33,10 +33,10 @@ While default values have the lowest precedence, they are usually optimal.  Howe
 
 ### Site
 
-Site configuration refers to [server properties] set in the [accumulo.properties] file. Site configuration will override the default value of a property. If you are
-running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their local [accumulo.properties]
-on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have **zk mutable: no** in their description.
-Setting properties in accumulo.properties allows you to configure tablet servers with different settings.
+Site configuration refers to [server properties] set in the [accumulo.properties] file which can be found in the `conf/` directory. Site configuration will override the default value
+of a property. If you are running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their
+local [accumulo.properties] on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have **zk mutable: no**
+in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.
 
 Site configuration can be overriden when starting an Accumulo process on the command line (by using the `-o` option):
 ```

@@ -10,10 +10,10 @@ Accumulo has the following configuration files which can be found in the
 ## accumulo.properties
 
 Configures Accumulo server processes using [server properties]({% durl configuration/server-properties %}).
-This file is needed on every host that runs Accumulo processes so any configuration should be replicated to
-all hosts of the Accumulo cluster. If a property is not configured here, it might have been
-[configured another way]({% durl configuration/overview %}).  See the [quick start] for help with configuring
-this file.
+This file can be found in the `conf/` direcory. It is needed on every host that runs Accumulo processes.
+Therfore, any configuration should be replicated to all hosts of the Accumulo cluster. If a property is not
+configured here, it might have been [configured another way]({% durl configuration/overview %}).  See the
+[quick start] for help with configuring this file.
 
 ## accumulo-client.properties
 
