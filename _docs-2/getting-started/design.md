@@ -1,7 +1,7 @@
 ---
-title: Accumulo Design
+title: Design
 category: getting-started
-order: 1
+order: 2
 ---
 
 ## Background

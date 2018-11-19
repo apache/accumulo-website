@@ -1,12 +1,10 @@
 ---
-title: Quick Installation
+title: Quick Start
 category: getting-started
-order: 3
+order: 1
 ---
 
-<!-- IMPORTANT: This file should mirror (with minor differences) INSTALL.md in the Accumulo repo -->
-
-This document provides basic instructions for installing Accumulo. For detailed instructions,
+This quick start provides basic instructions for installing and running Accumulo. For detailed instructions,
 see the [in-depth installation guide][in-depth].
 
 Either [download] or [build] a binary distribution of Accumulo from source code and

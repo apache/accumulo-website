@@ -12,7 +12,7 @@ Accumulo has the following configuration files which can be found in the
 Configures Accumulo server processes using [server properties]({% durl configuration/server-properties %}).
 This file is needed on every host that runs Accumulo processes so any configuration should be replicated to
 all hosts of the Accumulo cluster. If a property is not configured here, it might have been
-[configured another way]({% durl configuration/overview %}).  See the [quick install] for help with configuring
+[configured another way]({% durl configuration/overview %}).  See the [quick start] for help with configuring
 this file.
 
 ## accumulo-client.properties
@@ -26,7 +26,7 @@ AccumuloClient client = Accumulo.newClient()
                            .from("/path/to/accumulo-client.properties").build();
 ```
 
-See the [quick install] for help with configuring this file.
+See the [quick start] for help with configuring this file.
 
 ## accumulo-env.sh
 
@@ -83,4 +83,4 @@ to run standby Tracers that can take over if the lead Tracer fails.
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
 [Tracer]: {% durl getting-started/design#tracer %}
-[quick install]: {% durl getting-started/quick-install#configuring-accumulo %}
+[quick start]: {% durl getting-started/quickstart#configuring-accumulo %}
