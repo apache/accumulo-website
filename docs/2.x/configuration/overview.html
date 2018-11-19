@@ -437,66 +437,79 @@
 
 <h2 id="server-configuration">Server Configuration</h2>
 
-<p>Accumulo services (i.e master, tablet server, monitor, etc) are configured by <a href="/docs/2.x/configuration/server-properties">server properties</a> whose values can be
-set in the following locations (with increasing precedence):</p>
+<p>Accumulo processes (i.e master, tablet server, monitor, etc) are configured by <a href="/docs/2.x/configuration/server-properties">server properties</a> whose values can be
+set in the following configuration locations (with increasing precedence) that are described in detail below:</p>
 
 <ol>
-  <li>Default values</li>
-  <li><a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> (overrides defaults)</li>
-  <li>Zookeeper (overrides <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> &amp; defaults)</li>
+  <li><a href="#default">Default</a> - All properties have a default value</li>
+  <li><a href="#site">Site</a> - Properties set in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a></li>
+  <li><a href="#system">System</a> - Properties set using shell or Java API that apply to entire Accumulo instance</li>
+  <li><a href="#namespace">Namespace</a> - Table properties set using shell or Java API that apply to a table namespace</li>
+  <li><a href="#table">Table</a> - Table properties set using shell or Java API that apply to a table.</li>
 </ol>
 
 <p>If a property is set in multiple locations, the value in the location with the highest precedence is used.</p>
 
-<p>The configuration locations above are described in detail below.</p>
+<p>These configuration locations are described in detail below:</p>
 
-<h3 id="default-values">Default values</h3>
+<h3 id="default">Default</h3>
 
 <p>All <a href="/docs/2.x/configuration/server-properties">server properties</a> have a default value. Default values are set in the source code and can be viewed for each property on the <a href="/docs/2.x/configuration/server-properties">server properties</a> page.
 While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.</p>
 
-<h3 id="accumuloproperties">accumulo.properties</h3>
+<h3 id="site">Site</h3>
 
-<p>Setting <a href="/docs/2.x/configuration/server-properties">server properties</a> in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> will override their default value. If you are running Accumulo on a cluster, any updates to accumulo.properties must
-be synced across the cluster. Accumulo processes (master, tserver, etc) read their local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> on start up so processes must be restarted to apply changes.
-Certain properties can only be set in accumulo.properties. These properties have <strong>zk mutable: no</strong> in their description. Setting properties in accumulo.properties allows you
-to configure tablet servers with different settings.</p>
+<p>Site configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file. Site configuration will override the default value of a property. If you are
+running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>
+on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have <strong>zk mutable: no</strong> in their description.
+Setting properties in accumulo.properties allows you to configure tablet servers with different settings.</p>
 
-<h3 id="zookeeper">Zookeeper</h3>
+<p>Site configuration can be overriden when starting an Accumulo process on the command line (by using the <code class="highlighter-rouge">-o</code> option):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
+</code></pre></div></div>
+<p>Overriding properties is useful if you can’t change <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. It’s done when <a href="https://github.com/apache/accumulo-docker">running Accumulo using Docker</a>.</p>
 
-<p>Many <a href="/docs/2.x/configuration/server-properties">server properties</a> can be set in Zookeeper using the Accumulo API or shell. These properties can identified by <strong>zk mutable: yes</strong> in their description on
-the <a href="/docs/2.x/configuration/server-properties">server properties</a> page. Zookeeper properties can be applied on a per-table or system-wide basis. Per-table properties take precedence over system-wide
-properties. While most properties set in Zookeeper take effect immediately, some require a restart of the process which is indicated in <strong>zk mutable</strong> section
-of their description.</p>
+<h3 id="system">System</h3>
 
-<h4 id="zookeeper-system-properties">Zookeeper System properties</h4>
-
-<p>System properties consist of all <a href="/docs/2.x/configuration/server-properties">server properties</a> with <strong>zk mutable: yes</strong> in their description. They are set with the following shell command:</p>
+<p>System configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set for the entire Accumulo instance/cluster. These settings are stored in ZooKeeper and can identified by <strong>zk mutable: yes</strong>
+in their description on the <a href="/docs/2.x/configuration/server-properties">server properties</a> page. System configuration will override any site configuration set in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. While most system configuration
+settings take effect immediately, some require a restart of the process which is indicated in the <strong>zk mutable</strong> section of their description. System configuration can be set using
+the following shell command:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s PROPERTY=VALUE
 </code></pre></div></div>
 
-<p>If a <a href="/docs/2.x/configuration/server-properties#table_prefix">table.*</a> property is set using this method, the value will apply to all tables except those configured on per-table basis (which have higher precedence).</p>
+<p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/admin/InstanceOperations.html">InstanceOperations</a> in the Java API:</p>
 
-<h4 id="zookeeper-table-properties">Zookeeper Table properties</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"flush"</span><span class="o">);</span>
+</code></pre></div></div>
 
-<p>Table properties consist of all properties with the <a href="/docs/2.x/configuration/server-properties#table_prefix">table.*</a> prefix.</p>
+<h3 id="namespace">Namespace</h3>
 
-<p>Table properties are configured for a table namespace (i.e group of tables) or on a per-table basis.</p>
-
-<p>To configure a table property for a namespace, use the following command:</p>
+<p>Namespace configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
+will override System configuration and can be set using the following shell command:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
 </code></pre></div></div>
 
-<p>To configure a table property for a specific table, use the following command:</p>
+<p>It can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/admin/NamespaceOperations.html">NamespaceOperations</a> in the Java API:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">namespaceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mynamespace"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"sync"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="table">Table</h3>
+
+<p>Table configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
 </code></pre></div></div>
 
-<p>Per-table settings take precedent over table namespace settings.  Both take precedent over system properties.</p>
+<p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/admin/TableOperations.html">TableOperations</a> in the Java API:</p>
 
-<h4 id="zookeeper-considerations">Zookeeper Considerations</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="zookeeper-considerations">Zookeeper Considerations</h3>
 
 <p>Any <a href="/docs/2.x/configuration/server-properties">server properties</a> that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
