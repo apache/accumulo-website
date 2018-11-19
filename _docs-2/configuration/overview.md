@@ -38,6 +38,12 @@ running Accumulo on a cluster, any updates to accumulo.properties must be synced
 on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have **zk mutable: no** in their description.
 Setting properties in accumulo.properties allows you to configure tablet servers with different settings.
 
+Site configuration can be overriden on the command line (using the `-o` option):
+```
+accumulo tserver -o instance.secret=mysecret -o instance.volumes=hdfs://localhost:8020/accumulo -o instance.zookeeper.host=localhost:2181
+```
+Overriding properties is useful if you can't change [accumulo.properties] and is done when running Accumulo using the [Accumulo docker image](https://github.com/apache/accumulo-docker).
+
 ### System
 
 System configuration refers to [server properties] set for the entire Accumulo instance/cluster. These settings are stored in ZooKeeper and can identified by **zk mutable: yes**
