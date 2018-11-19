@@ -7,6 +7,17 @@ order: 1
 This quick start provides basic instructions for installing and running Accumulo. For detailed instructions,
 see the [in-depth installation guide][in-depth].
 
+## Consider using automated tools
+
+There are external tools that automate installing and running Accumulo:
+
+* [Uno] sets up Accumulo on a single machine for developement
+* [Muchos] sets up Accumulo on a cluster (optionally launched in Amazon EC2)
+
+These tools automate the instructions below but are primarily used for development and testing.
+
+## Install Accumulo
+
 Either [download] or [build] a binary distribution of Accumulo from source code and
 unpack as follows.
 
@@ -203,3 +214,5 @@ When finished, use the following commands to stop Accumulo:
 [masters]: {% durl configuration/files#masters %}
 [tservers]: {% durl configuration/files#tservers %}
 [tracers]: {% durl configuration/files#tracers %}
+[Uno]: https://github.com/apache/fluo-uno
+[Muchos]: https://github.com/apache/fluo-muchos
