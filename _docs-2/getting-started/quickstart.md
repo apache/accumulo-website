@@ -9,12 +9,12 @@ see the [in-depth installation guide][in-depth].
 
 ## Consider using automated tools
 
-There are external tools that automate installing and running Accumulo:
+If you are setting up Accumulo for **testing or development,** consider using the following tools:
 
-* [Uno] sets up Accumulo on a single machine for developement
+* [Uno] sets up Accumulo on a single machine for development
 * [Muchos] sets up Accumulo on a cluster (optionally launched in Amazon EC2)
 
-These tools automate the instructions below but are primarily used for development and testing.
+If you are setting up Accumulo for a **production** environment, follow the instructions in this quick start.
 
 ## Install Accumulo
 
