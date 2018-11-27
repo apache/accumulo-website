@@ -13,6 +13,21 @@ can be set via these two format classes to do the following:
 * Restrict the scan to a range of rows
 * Restrict the input to a subset of available columns
 
+## Configuration
+
+Since 2.0.0, Accumulo no longer has the same versions of dependencies (i.e Guava, etc) as Hadoop.
+When launching a MapReduce job that reads or writes to Accumulo, you should build a shaded jar
+with all of your dependencies and complete the following steps so YARN only includes Hadoop code
+(and not all of Hadoop dependencies) when running your MapReduce job:
+
+1. Set `export HADOOP_USE_CLIENT_CLASSLOADER=true` in your environment before submitting
+   your job with `yarn` command.
+
+2. Set the following in your Job configuration.
+    ```java
+    job.getConfiguration().set("mapreduce.job.classloader", "true");
+    ```
+
 ## Mapper and Reducer classes
 
 To read from an Accumulo table create a Mapper with the following class
