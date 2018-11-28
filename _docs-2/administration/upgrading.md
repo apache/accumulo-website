@@ -42,6 +42,7 @@ Below are some changes in 2.0 that you should be aware of:
     - `log4j-service.properties` for all Accumulo services (except monitor)
     - `logj4-monitor.properties` for Accumulo monitor
     - `log4j.properties` for Accumulo clients and commands
+* [New Hadoop configuration is required]({% durl development/mapreduce#configuration %}) when reading or writing to Accumulo using MapReduce.
 * Run the command `accumulo shell` to access the shell using configuration in `conf/accumulo-client.properties`
 
 When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:
