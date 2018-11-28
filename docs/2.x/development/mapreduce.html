@@ -439,6 +439,25 @@ can be set via these two format classes to do the following:</p>
   <li>Restrict the input to a subset of available columns</li>
 </ul>
 
+<h2 id="configuration">Configuration</h2>
+
+<p>Since 2.0.0, Accumulo no longer has the same versions of dependencies (i.e Guava, etc) as Hadoop.
+When launching a MapReduce job that reads or writes to Accumulo, you should build a shaded jar
+with all of your dependencies and complete the following steps so YARN only includes Hadoop code
+(and not all of Hadoop dependencies) when running your MapReduce job:</p>
+
+<ol>
+  <li>
+    <p>Set <code class="highlighter-rouge">export HADOOP_USE_CLIENT_CLASSLOADER=true</code> in your environment before submitting
+your job with <code class="highlighter-rouge">yarn</code> command.</p>
+  </li>
+  <li>
+    <p>Set the following in your Job configuration.</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">job</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"mapreduce.job.classloader"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
 <h2 id="mapper-and-reducer-classes">Mapper and Reducer classes</h2>
 
 <p>To read from an Accumulo table create a Mapper with the following class
