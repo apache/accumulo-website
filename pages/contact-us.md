@@ -28,7 +28,7 @@ follow discussions as they happen.
 
 ## Slack
 
-Drop by and chat about Accumulo at `#accumulo` channel on the [ASF Slack workspace][asf-slack] (Join using this [invite link][slack-invite]).
+Drop by and chat about Accumulo at the [#accumulo][accumulo-channel] channel on the [ASF Slack workspace][asf-slack]. Join using this [invite link][slack-invite]. If you have trouble joining, email `dev@accumulo.apache.org` for an invite.
 
 ## Contributions
 
@@ -67,5 +67,6 @@ Contributions to Apache Accumulo are welcome! If you are interested, read [how t
 {: .btn .btn-danger .btn-xs }
 
 [asf-slack]: https://the-asf.slack.com/
+[accumulo-channel]: https://the-asf.slack.com/messages/CERNB8NDC
 [slack-invite]: https://s.apache.org/slack-invite
 [contribute]: /how-to-contribute/
