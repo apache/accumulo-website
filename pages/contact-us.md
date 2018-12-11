@@ -26,9 +26,9 @@ follow discussions as they happen.
 | **commits**       | Code changes                                     | [<span class="glyphicon glyphicon-search"/> Archive][C_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][C_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][C_UN] | |
 | **notifications** | Automated notifications (GitHub, etc.)             | [<span class="glyphicon glyphicon-search"/> Archive][N_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][N_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][N_UN] | |
 
-## IRC
+## Slack
 
-Drop by and chat about Accumulo at [#accumulo][accumulo-irc] on [freenode].
+Drop by and chat about Accumulo at the [#accumulo][accumulo-channel] channel on the [ASF Slack workspace][asf-slack]. Join using this [invite link][slack-invite]. If you have trouble joining, email `dev@accumulo.apache.org` for an invite.
 
 ## Contributions
 
@@ -66,6 +66,7 @@ Contributions to Apache Accumulo are welcome! If you are interested, read [how t
 [N_UN]: mailto:notifications-unsubscribe@accumulo.apache.org
 {: .btn .btn-danger .btn-xs }
 
-[accumulo-irc]: irc://chat.freenode.net/accumulo
-[freenode]: https://freenode.net/
+[asf-slack]: https://the-asf.slack.com/
+[accumulo-channel]: https://the-asf.slack.com/messages/CERNB8NDC
+[slack-invite]: https://s.apache.org/slack-invite
 [contribute]: /how-to-contribute/
