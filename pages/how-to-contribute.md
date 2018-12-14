@@ -7,10 +7,10 @@ redirect_from: /contributor/
 Contributions are welcome to all Apache Accumulo repositories. While most contributions are code,
 there are other ways to contribute to Accumulo:
 
-* answer questions on mailing lists
-* review pull requests
-* verify and test new releases
-* update the Accumulo website and documentation
+* answer questions on [mailing lists](/contact-us/#mailing-lists)
+* review [pull requests](https://github.com/apache/accumulo/pulls)
+* verify and test new [releases](/release/)
+* update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
 
 Contributions are reviewed (via GitHub pull requests) by
 the community before being merged by a committer.
@@ -97,7 +97,7 @@ viewed by clicking on `contribute` in the Links column below.
 ## Coding Guidelines
 
 * If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches.
-* Accumulo follows [semver] for its public API. Accumulo lists which packages are public API in its [README.md][accumulo-readme].
+* Accumulo follows [semver] for its [public API](/api/).
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
 * Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.
 * Use 2 space indents and never use tabs!
