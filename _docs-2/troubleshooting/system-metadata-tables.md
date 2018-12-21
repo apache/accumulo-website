@@ -34,7 +34,6 @@ Now let's take a look at the metadata for this table:
     3< file:/default_tablet/F000009y.rf []    186,1
     3< last:13fe86cd27101e5 []    127.0.0.1:9997
     3< loc:13fe86cd27101e5 []    127.0.0.1:9997
-    3< log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995|6
     3< srv:dir []    /default_tablet
     3< srv:flush []    1
     3< srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001$13fe86cd27101e5
@@ -53,24 +52,18 @@ Let's decode this little session:
 
 * `last:13fe86cd27101e5 []    127.0.0.1:9997` -
     Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
-    unique tablet server lock data was `13fe86cd27101e5+. The default balancer
+    unique tablet server lock data was `13fe86cd27101e5`. The default balancer
     will tend to put tablets back on their last location.
 
 * `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
     The current location of this tablet.
-
-* `log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0. ...` -
-    This tablet has a reference to a single write-ahead log. This file can be found in
-    `/accumulo/wal/127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995`. The value
-    of this entry could refer to multiple files. This tablet's data is encoded as
-    `6` within the log.
 
 * `srv:dir []    /default_tablet` -
     Files written for this tablet will be placed into
     `/accumulo/tables/3/default_tablet`.
 
 * `srv:flush []    1` -
-    Flush id.  This table has successfully completed the flush with the id of +1+.
+    Flush id.  This table has successfully completed the flush with the id of `1`.
 
 * `srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5` -
     This is the lock information for the tablet holding the present lock.  This
@@ -79,7 +72,7 @@ Let's decode this little session:
     lock.
 
 * `srv:time []    M1373998392323` -
-    This indicates the time time type (+M+ for milliseconds or +L+ for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server's system time.
+    This indicates the time time type (`M` for milliseconds or `L` for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server's system time.
 
 * `~tab:~pr []    \x00` -
     The end-row marker for the previous tablet (prev-row).  The first byte
