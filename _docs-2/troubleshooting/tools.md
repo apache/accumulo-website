@@ -125,10 +125,24 @@ If you have entries in zookeeper for old instances that you no longer need, remo
 
 This command will not delete the instance pointed to by the local `accumulo.properties` file.
 
-## DumpZookeeper & RestoreZookeeper
+## accumulo-util dump-zoo
 
-If you would like to backup, or otherwise examine the contents of Zookeeper, there are commands to dump and load to/from XML.
+To view the contents of ZooKeeper, run the following command:
 
-    $ accumulo org.apache.accumulo.server.util.DumpZookeeper --root /accumulo >dump.xml
+    $ accumulo-util dump-zoo
+
+It can also be run using the `accumulo` command and full class name.
+
+    $ accumulo org.apache.accumulo.server.util.DumpZookeeper
+
+If you would like to backup ZooKeeper, run the following command to write its contents as XML to file.
+
+    $ accumulo-util dump-zoo --xml --root /accumulo >dump.xml
+
+# RestoreZookeeper
+
+An XML dump file can be later used to restore ZooKeeper.
+
     $ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite < dump.xml
 
+This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using `accumulo-util`.
