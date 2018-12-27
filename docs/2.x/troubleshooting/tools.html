@@ -560,14 +560,31 @@ Enter the connection password:
 
 <p>This command will not delete the instance pointed to by the local <code class="highlighter-rouge">accumulo.properties</code> file.</p>
 
-<h2 id="dumpzookeeper--restorezookeeper">DumpZookeeper &amp; RestoreZookeeper</h2>
+<h2 id="accumulo-util-dump-zoo">accumulo-util dump-zoo</h2>
 
-<p>If you would like to backup, or otherwise examine the contents of Zookeeper, there are commands to dump and load to/from XML.</p>
+<p>To view the contents of ZooKeeper, run the following command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper --root /accumulo &gt;dump.xml
-$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo
 </code></pre></div></div>
 
+<p>It can also be run using the <code class="highlighter-rouge">accumulo</code> command and full class name.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper
+</code></pre></div></div>
+
+<p>If you would like to backup ZooKeeper, run the following command to write its contents as XML to file.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo --xml --root /accumulo &gt;dump.xml
+</code></pre></div></div>
+
+<h1 id="restorezookeeper">RestoreZookeeper</h1>
+
+<p>An XML dump file can be later used to restore ZooKeeper.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
+</code></pre></div></div>
+
+<p>This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using <code class="highlighter-rouge">accumulo-util</code>.</p>
 
 
     <div class="row" style="margin-top: 20px;">
