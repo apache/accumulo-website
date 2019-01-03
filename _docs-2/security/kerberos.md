@@ -390,14 +390,14 @@ KerberosToken kt = new KerberosToken();
 AccumuloClient client = Accumulo.newClient().to("myinstance", "zoo1,zoo2")
                           .as(principal, kt).build();
 DelegationToken dt = client.securityOperations().getDelegationToken();
-AccumuloClient client2 = client.changeUser(principal, dt);
-ClientInfo info2 = client2.info();
+Properties props = Accumulo.newClientProperties().from(client.properties())
+                          .as(principal, dt).build();
 
 // Reading from Accumulo
-AccumuloInputFormat.setClientInfo(job, info2);
+AccumuloInputFormat.configure().clientProperties(props).store(job);
 
 // Writing to Accumulo
-AccumuloOutputFormat.setClientInfo(job, info2);
+AccumuloOutputFormat.configure().clientProperties(props).store(job);
 ```
 
 Users must have the `DELEGATION_TOKEN` system permission to call the `getDelegationToken`

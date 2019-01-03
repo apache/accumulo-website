@@ -43,8 +43,8 @@ def render_javadoc(context, text, url_only)
   jmodule = 'accumulo-' + clz.split('.')[3]
   if clz.start_with?('org.apache.accumulo.server')
     jmodule = 'accumulo-server-base'
-  elsif clz.start_with?('org.apache.accumulo.core.client.mapred')
-    jmodule = 'accumulo-client-mapreduce'
+  elsif clz.start_with?('org.apache.accumulo.hadoop.mapred')
+    jmodule = 'accumulo-hadoop-mapreduce'
   elsif clz.start_with?('org.apache.accumulo.iteratortest')
     jmodule = 'accumulo-iterator-test-harness'
   end
