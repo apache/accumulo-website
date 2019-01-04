@@ -104,4 +104,4 @@ As you can see, there is a significant performance hit when running without the 
 [Kerberos]: {% durl security/kerberos %}
 [design]: {% durl getting-started/design#rfile %}
 [rfile]: {% jurl org.apache.accumulo.core.client.rfile.RFile %}
-[AccumuloOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}

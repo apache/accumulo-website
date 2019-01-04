@@ -42,8 +42,7 @@ Follow the steps below to create a MapReduce job that reads from an Accumulo tab
     job.setInputFormatClass(AccumuloInputFormat.class);
     Properties props = Accumulo.newClientProperties().to("myinstance","zoo1,zoo2")
                             .as("user", "passwd").build();
-    AccumuloInputFormat.configure().clientProperties(props).table(table)
-          .auths(Authorizations.EMPTY).store(job);
+    AccumuloInputFormat.configure().clientProperties(props).table(table).store(job);
     ```
     [AccumuloInputFormat] has optional settings.
     ```java
@@ -54,10 +53,10 @@ Follow the steps below to create a MapReduce job that reads from an Accumulo tab
     RegExFilter.setRegexs(is, ".*suffix", null, null, null, true);
 
     AccumuloInputFormat.configure().clientProperties(props).table(table)
-        .auths(Authorizations.EMPTY)
-        .ranges(ranges)           // optional: only read specified ranges
-        .fetchColumns(columns)    // optional: only read specified columns
-        .addIterator(is)          // optional: add iterator that matches row IDs
+        .auths(Authorizations.EMPTY) // optional: default to user's auths if not set
+        .ranges(ranges)              // optional: only read specified ranges
+        .fetchColumns(columns)       // optional: only read specified columns
+        .addIterator(is)             // optional: add iterator that matches row IDs
         .store(job);
     ```
     [AccumuloInputFormat] can also be configured to read from multiple Accumulo tables.
