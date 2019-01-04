@@ -85,6 +85,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jay Shipper         |                                                                   |                       |
 | Jeff Field          | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jeffrey S. Schwartz |                                                                   |                       |
+| Jeffrey Zeiberg     | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Jenna Huston        |                                                                   | [ET][ET]              |
 | Jerry He            | [IBM][IBM]                                                        | [PT][PT]              |
 | Jesse Yates         |                                                                   |                       |
@@ -98,6 +99,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
+| Kyle Van Gilson     |                                                                   |                       |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
@@ -138,7 +140,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
-| Kyle Van Gilson     |                                                                   |                       |
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: http://www.anavationllc.com/
