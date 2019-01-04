@@ -78,8 +78,8 @@ its the additional data that gets encrypted on disk that could be exposed in a l
 
 ### Bulk Import
 
-There are 2 ways to create RFiles for bulk ingest: with the [RFile API][rfile] and during Map Reduce using [AccumuloOutputFormat].  
-The [RFile API][rfile] allows passing in the configuration properties for encryption mentioned above.  The [AccumuloOutputFormat] does 
+There are 2 ways to create RFiles for bulk ingest: with the [RFile API][rfile] and during Map Reduce using [AccumuloFileOutputFormat].  
+The [RFile API][rfile] allows passing in the configuration properties for encryption mentioned above.  The [AccumuloFileOutputFormat] does 
 not allow for encryption of RFiles so any data bulk imported through this process will be unencrypted.
 
 ### Zookeeper
@@ -104,4 +104,4 @@ As you can see, there is a significant performance hit when running without the 
 [Kerberos]: {% durl security/kerberos %}
 [design]: {% durl getting-started/design#rfile %}
 [rfile]: {% jurl org.apache.accumulo.core.client.rfile.RFile %}
-[AccumuloOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloOutputFormat %}
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}

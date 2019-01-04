@@ -63,8 +63,8 @@ requires a special permission.  User must have the table permission
 ## Bulk import
 
 When generating RFiles to bulk import into Accumulo, those RFiles can contain
-summary data.  To use this feature, look at the javadoc on the
-`AccumuloFileOutputFormat.setSummarizers(...)` method.  Also, the {% jlink org.apache.accumulo.core.client.rfile.RFile %}
+summary data.  To use this feature, look at the javadoc of `summarizers()` in the `configure()` method
+of AccumuloFileOutputFormat.  Also, the {% jlink org.apache.accumulo.core.client.rfile.RFile %}
 class has options for creating RFiles with embedded summary data.
 
 ## Examples
@@ -218,3 +218,4 @@ root@uno summary_test> summaries
 root@uno summary_test>   
 ```
 
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}

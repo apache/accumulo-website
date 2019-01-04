@@ -52,8 +52,8 @@ Sample data can also be scanned from within an Accumulo [SortedKeyValueIterator]
 To see how to do this, look at the example iterator referenced in the [sampling example][example].
 Also, consult the javadoc on [IteratorEnvironment.cloneWithSamplingEnabled()][clone-sampling].
 
-Map reduce jobs using the [AccumuloInputFormat] can also read sample data.  See
-the javadoc for the `setSamplerConfiguration()` method of [AccumuloInputFormat].
+MapReduce jobs using the [AccumuloInputFormat] can also read sample data.  See the javadoc
+for `samplerConfiguration()` in the `configure()` method of [AccumuloInputFormat].
 
 Scans over sample data will throw a [SampleNotPresentException] in the following cases :
 
@@ -67,7 +67,7 @@ generated with the same configuration.
 ## Bulk import
 
 When generating rfiles to bulk import into Accumulo, those rfiles can contain
-sample data.  To use this feature, look at the javadoc of the `setSampler(...)`
+sample data.  To use this feature, look at the javadoc of `sampler()` in the `configure()`
 method of [AccumuloFileOutputFormat].
 
 [example]: https://github.com/apache/accumulo-examples/blob/master/docs/sample.md
@@ -75,8 +75,8 @@ method of [AccumuloFileOutputFormat].
 [sample-package]: {% jurl org.apache.accumulo.core.client.sample %}
 [skv-iterator]: {% jurl org.apache.accumulo.core.iterators.SortedKeyValueIterator %}
 [clone-sampling]: {% jurl org.apache.accumulo.core.iterators.IteratorEnvironment#cloneWithSamplingEnabled-- %}
-[AccumuloInputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloInputFormat %}
-[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.core.client.mapred.AccumuloFileOutputFormat %}
+[AccumuloInputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat %}
+[AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
 [SampleNotPresentException]: {% jurl org.apache.accumulo.core.client.SampleNotPresentException %}
 [BatchScanner]: {% jurl org.apache.accumulo.core.client.BatchScanner %}
 [Scanner]: {% jurl org.apache.accumulo.core.client.Scanner %}
