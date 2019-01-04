@@ -139,6 +139,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
 | Kyle Van Gilson     |                                                                   |                       |
+| Jeffrey Zeiberg     | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: http://www.anavationllc.com/
