@@ -863,14 +863,14 @@ via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).</p>
 <span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span> <span class="s">"zoo1,zoo2"</span><span class="o">)</span>
                           <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">kt</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 <span class="n">DelegationToken</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">getDelegationToken</span><span class="o">();</span>
-<span class="n">AccumuloClient</span> <span class="n">client2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">changeUser</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">);</span>
-<span class="n">ClientInfo</span> <span class="n">info2</span> <span class="o">=</span> <span class="n">client2</span><span class="o">.</span><span class="na">info</span><span class="o">();</span>
+<span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">from</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">properties</span><span class="o">())</span>
+                          <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="n">principal</span><span class="o">,</span> <span class="n">dt</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 
 <span class="c1">// Reading from Accumulo</span>
-<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info2</span><span class="o">);</span>
+<span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
 
 <span class="c1">// Writing to Accumulo</span>
-<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">setClientInfo</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="n">info2</span><span class="o">);</span>
+<span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>Users must have the <code class="highlighter-rouge">DELEGATION_TOKEN</code> system permission to call the <code class="highlighter-rouge">getDelegationToken</code>
@@ -1051,7 +1051,7 @@ when I attempt to use the “Recent Traces” page on the Monitor UI I get a sta
 
   <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
 
-  <p>Copyright © 2011-2018 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+  <p>Copyright © 2011-2019 <a href="https://www.apache.org">The Apache Software Foundation</a>.
 Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
 
   <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
