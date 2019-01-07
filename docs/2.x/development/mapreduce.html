@@ -432,10 +432,49 @@
 
 <h2 id="general-mapreduce-configuration">General MapReduce configuration</h2>
 
-<p>Since 2.0.0, Accumulo no longer has the same dependency versions (i.e Guava, etc) as Hadoop.
-When launching a MapReduce job that reads or writes to Accumulo, you should build a shaded jar
-with all of your dependencies and complete the following steps so YARN only includes Hadoop code
-(and not all of Hadoop dependencies) when running your MapReduce job:</p>
+<h3 id="add-accumulos-mapreduce-api-to-your-dependencies">Add Accumulo’s MapReduce API to your dependencies</h3>
+
+<p>If you are using Maven, add the following dependency to your <code class="highlighter-rouge">pom.xml</code> to use Accumulo’s MapReduce API:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-hadoop-mapreduce<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.0-alpha-1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>The MapReduce API consists of the following classes:</p>
+
+<ul>
+  <li>If using Hadoop’s <strong>mapreduce</strong> API:
+    <ul>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat</a></li>
+    </ul>
+  </li>
+  <li>If using Hadoop’s <strong>mapred</strong> API:
+    <ul>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapred/AccumuloInputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloInputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapred/AccumuloOutputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloOutputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapred/AccumuloFileOutputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloFileOutputFormat</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Before 2.0, the MapReduce API resided in the <code class="highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="highlighter-rouge">accumulo-core</code> jar.
+While this old API still exists and can be used, it has been deprecated and will be removed eventually.</p>
+
+<h3 id="configure-dependencies-for-your-mapreduce-job">Configure dependencies for your MapReduce job</h3>
+
+<p>Before 2.0, Accumulo used the same versions for dependencies (such as Guava) as Hadoop. This allowed
+MapReduce jobs to run with both Accumulo’s &amp; Hadoop’s dependencies on the classpath.</p>
+
+<p>Since 2.0, Accumulo no longer has the same versions for dependencies as Hadoop. While this allows
+Accumulo to update its dependencies more frequently, it can cause problems if both Accumulo’s &amp;
+Hadoop’s dependencies are on the classpath of the MapReduce job. When launching a MapReduce job that
+use Accumulo, you should build a shaded jar with all of your dependencies and complete the following
+steps so YARN only includes Hadoop code (and not all of Hadoop’s dependencies) when running your MapReduce job:</p>
 
 <ol>
   <li>
@@ -467,7 +506,7 @@ your job with <code class="highlighter-rouge">yarn</code> command.</p>
   <li>
     <p>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
 
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
  <span class="n">job</span><span class="o">.</span><span class="na">setInputFormatClass</span><span class="o">(</span><span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
  <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
                          <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
@@ -488,7 +527,7 @@ your job with <code class="highlighter-rouge">yarn</code> command.</p>
      <span class="o">.</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
 </code></pre></div>    </div>
     <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a> can also be configured to read from multiple Accumulo tables.</p>
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
  <span class="n">job</span><span class="o">.</span><span class="na">setInputFormatClass</span><span class="o">(</span><span class="n">AccumuloInputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
  <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
                          <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
@@ -533,12 +572,38 @@ your job with <code class="highlighter-rouge">yarn</code> command.</p>
  options.</p>
   </li>
   <li>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">AccumuloOutputFormat</a>.
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getConf</span><span class="o">());</span>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
  <span class="n">job</span><span class="o">.</span><span class="na">setOutputFormatClass</span><span class="o">(</span><span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
  <span class="n">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
                          <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
  <span class="n">AccumuloOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">)</span>
      <span class="o">.</span><span class="na">defaultTable</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="write-output-to-rfiles-in-hdfs">Write output to RFiles in HDFS</h2>
+
+<p>Follow the step below to have a MapReduce job output to RFiles in HDFS. These files
+can then be bulk imported into Accumulo:</p>
+
+<ol>
+  <li>Create a Mapper or Reducer with <code class="highlighter-rouge">Key</code> &amp; <code class="highlighter-rouge">Value</code> as output parameters.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">class</span> <span class="nc">MyReducer</span> <span class="kd">extends</span> <span class="n">Reducer</span><span class="o">&lt;</span><span class="n">WritableComparable</span><span class="o">,</span> <span class="n">Writable</span><span class="o">,</span> <span class="n">Key</span><span class="o">,</span> <span class="n">Value</span><span class="o">&gt;</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="n">WritableComparable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">values</span><span class="o">,</span> <span class="n">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+         <span class="n">Key</span> <span class="n">key</span><span class="o">;</span>
+         <span class="n">Value</span> <span class="n">value</span><span class="o">;</span>
+         <span class="c1">// create Key &amp; Value based on input</span>
+         <span class="n">c</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+     <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-1/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="n">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+ <span class="n">job</span><span class="o">.</span><span class="na">setOutputFormatClass</span><span class="o">(</span><span class="n">AccumuloFileOutputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="n">AccumuloFileOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">()</span>
+     <span class="o">.</span><span class="na">outputPath</span><span class="o">(</span><span class="k">new</span> <span class="n">Path</span><span class="o">(</span><span class="s">"hdfs://localhost:8020/myoutput/"</span><span class="o">)).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
 </code></pre></div>    </div>
   </li>
 </ol>

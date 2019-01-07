@@ -479,7 +479,7 @@ distributions of Hadoop.</li>
       <li><code class="highlighter-rouge">log4j.properties</code> for Accumulo clients and commands</li>
     </ul>
   </li>
-  <li><a href="/docs/2.x/development/mapreduce#configuration">New Hadoop configuration is required</a> when reading or writing to Accumulo using MapReduce.</li>
+  <li>MapReduce jobs that read/write from Accumulo <a href="/docs/2.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">must configure their dependencies differently</a>.</li>
   <li>Run the command <code class="highlighter-rouge">accumulo shell</code> to access the shell using configuration in <code class="highlighter-rouge">conf/accumulo-client.properties</code></li>
 </ul>
 
@@ -522,6 +522,15 @@ that users start using the new API, the old API will continue to be supported th
     <ul>
       <li>The old API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/ZooKeeperInstance.html">ZooKeeeperInstance</a>, <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html">Connector</a>, <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Instance.html">Instance</a>, and <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/ClientConfiguration.html">ClientConfiguration</a> has been deprecated.</li>
       <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html">Connector</a> objects can be created from an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-1/org/apache/accumulo/core/client/Connector.html#from-org.apache.accumulo.core.client.AccumuloClient-">Connector.from()</a></li>
+    </ul>
+  </li>
+  <li>Accumulo’s <a href="/docs/2.x/development/mapreduce">MapReduce API</a> has changed in 2.0.
+    <ul>
+      <li>A new API has been introduced in the <code class="highlighter-rouge">org.apache.accumulo.hadoop</code> package of the <code class="highlighter-rouge">accumulo-hadoop-mapreduce</code> jar.</li>
+      <li>The old API in the <code class="highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="highlighter-rouge">accumulo-core</code> has been deprecated and will
+eventually be removed.</li>
+      <li>For both the old and new API, you must <a href="/docs/2.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">configure dependencies differently</a>
+when creating your MapReduce job.</li>
     </ul>
   </li>
 </ul>
