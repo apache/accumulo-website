@@ -42,7 +42,7 @@ Below are some changes in 2.0 that you should be aware of:
     - `log4j-service.properties` for all Accumulo services (except monitor)
     - `logj4-monitor.properties` for Accumulo monitor
     - `log4j.properties` for Accumulo clients and commands
-* [New Hadoop configuration is required]({% durl development/mapreduce#configuration %}) when reading or writing to Accumulo using MapReduce.
+* MapReduce jobs that read/write from Accumulo [must configure their dependencies differently]({% durl development/mapreduce#configure-dependencies-for-your-mapreduce-job %}).
 * Run the command `accumulo shell` to access the shell using configuration in `conf/accumulo-client.properties`
 
 When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:
@@ -78,6 +78,12 @@ Below is a list of recommended client API changes:
 * The API for [creating Accumulo clients]({% durl getting-started/clients#creating-an-accumulo-client %}) has changed in 2.0.
   * The old API using [ZooKeeeperInstance], [Connector], [Instance], and [ClientConfiguration] has been deprecated.
   * [Connector] objects can be created from an [AccumuloClient] object using [Connector.from()]
+* Accumulo's [MapReduce API]({% durl development/mapreduce %}) has changed in 2.0.
+  * A new API has been introduced in the `org.apache.accumulo.hadoop` package of the `accumulo-hadoop-mapreduce` jar.
+  * The old API in the `org.apache.accumulo.core.client` package of the `accumulo-core` has been deprecated and will
+    eventually be removed.
+  * For both the old and new API, you must [configure dependencies differently]({% durl development/mapreduce#configure-dependencies-for-your-mapreduce-job %})
+    when creating your MapReduce job.
 
 ## Upgrading from 1.7 to 1.8
 
