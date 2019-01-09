@@ -305,7 +305,6 @@ of the different ways to execute client code.
 * build and execute an uber jar
 * add `accumulo classpath` to your Java classpath
 * use the `accumulo` command
-* use the `accumulo-util hadoop-jar` command
 
 ### Build and execute an uber jar
 
@@ -321,11 +320,6 @@ to include all of Accumulo's dependencies on your classpath:
 
     java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
 
-If you would like to review which jars are included, the `accumulo classpath` command can
-output a more human readable format using the `-d` option which enables debugging:
-
-    accumulo classpath -d
-
 ### Use the accumulo command
 
 Another option for running your code is to use the Accumulo script which can execute a
@@ -340,12 +334,6 @@ of your Accumulo installation or by adding jars to the CLASSPATH variable before
 the accumulo command.
 
     export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
-
-### Use the 'accumulo-util hadoop-jar' command
-
-If you are writing map reduce job that accesses Accumulo, then you can use
-`accumulo-util hadoop-jar` to run those jobs. See the [MapReduce example][mapred-example]
-for more information.
 
 ## Additional Documentation
 

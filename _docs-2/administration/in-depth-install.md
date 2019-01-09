@@ -115,8 +115,8 @@ and specify the following:
 Accumulo uses `HADOOP_HOME` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
 and add them the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
 or Zookeeper, you may need to change how your `CLASSPATH` is built in [accumulo-env.sh]. If
-Accumulo has problems later on finding jars, run `accumulo classpath -d` to debug and print
-Accumulo's classpath.
+Accumulo has problems later on finding jars, run `accumulo classpath` to print Accumulo's
+classpath.
 
 You may want to change the default memory settings for Accumulo's TabletServer which are
 by set in the `JAVA_OPTS` settings for 'tservers' in [accumulo-env.sh]. Note the
@@ -312,18 +312,18 @@ consideration. There is no enforcement of these warnings via the API.
 
 ### Configuring the ClassLoader
 
-Accumulo builds its Java classpath in [accumulo-env.sh].  After an Accumulo application has started, it will load classes from the locations
-specified in the deprecated [general.classpaths] property. Additionally, Accumulo will load classes from the locations specified in the
-[general.dynamic.classpaths] property and will monitor and reload them if they change. The reloading feature is useful during the development
-and testing of iterators as new or modified iterator classes can be deployed to Accumulo without having to restart the database.
+Accumulo builds its Java classpath in [accumulo-env.sh]. This classpath can be viewed by running `accumulo classpath`.
+
+After an Accumulo application has started, it will load classes from the locations specified in the deprecated [general.classpaths] property.
+Additionally, Accumulo will load classes from the locations specified in the [general.dynamic.classpaths] property and will monitor and reload
+them if they change. The reloading feature is useful during the development and testing of iterators as new or modified iterator classes can be
+deployed to Accumulo without having to restart the database.
 
 Accumulo also has an alternate configuration for the classloader which will allow it to load classes from remote locations. This mechanism
 uses Apache Commons VFS which enables locations such as http and hdfs to be used. This alternate configuration also uses the
 [general.classpaths] property in the same manner described above. It differs in that you need to configure the
 [general.vfs.classpaths] property instead of the [general.dynamic.classpaths] property. As in the default configuration, this alternate
 configuration will also monitor the vfs locations for changes and reload if necessary.
-
-The Accumulo classpath can be viewed in human readable format by running `accumulo classpath -d`.
 
 ##### ClassLoader Contexts
 
