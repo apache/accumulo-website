@@ -65,7 +65,7 @@ The [accumulo-env.sh] file sets up environment variables needed by Accumulo:
    them to your `CLASSPATH` variable. If you you are running a vendor-specific release of
    Hadoop or Zookeeper, you may need to modify how the `CLASSPATH` variable is built in
    [accumulo-env.sh]. If Accumulo has problems loading classes when you start it, run 
-   `accumulo classpath -d` to debug and print Accumulo's classpath.
+   `accumulo classpath` to print Accumulo's classpath.
 
 2. Accumulo tablet servers are configured by default to use 1GB of memory (768MB is allocated to
    JVM and 256MB is allocated for native maps). Native maps are allocated memory equal to 33% of
