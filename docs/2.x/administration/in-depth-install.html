@@ -912,16 +912,16 @@ can be use to start/stop processes on a node.</p>
 
 <h4 id="a-note-on-rolling-restarts">A note on rolling restarts</h4>
 
-<p>For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant 
-load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting 
-<code class="highlighter-rouge">table.suspend.duration</code> to a positive value.</p>
+<p>For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant
+load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting
+<a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> to a positive value.</p>
 
-<p>With <code class="highlighter-rouge">table.suspend.duration</code> set to, say, <code class="highlighter-rouge">5m</code>, Accumulo will wait 
+<p>With <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> set to, say, <code class="highlighter-rouge">5m</code>, Accumulo will wait
 for 5 minutes for any dead TabletServer to return before reassigning that TabletServer’s responsibilities to other TabletServers.
-If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer 
+If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer
 its original responsibilities.</p>
 
-<p>It is important not to choose too large a value for <code class="highlighter-rouge">table.suspend.duration</code>, as during this time, all scans against the 
+<p>It is important not to choose too large a value for <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a>, as during this time, all scans against the
 data that TabletServer had hosted will block (or time out).</p>
 
 <h3 id="running-multiple-tabletservers-on-a-single-node">Running multiple TabletServers on a single node</h3>
