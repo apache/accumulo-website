@@ -171,9 +171,22 @@ can then be bulk imported into Accumulo:
         .outputPath(new Path("hdfs://localhost:8020/myoutput/")).store(job);
     ```
 
-The [MapReduce example][mapred-example] contains a complete example of using MapReduce with Accumulo.
+## Example Code
 
-[mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
+The [Accumulo Examples repo][examples-repo] has several MapReduce examples:
+
+* [wordcount] - Uses MapReduce and Accumulo to do a word count on text files
+* [regex] - Uses MapReduce and Accumulo to find data using regular expressions
+* [rowhash] - Uses MapReduce to read a table and write to a new column in the same table
+* [tablettofile] - Uses MapReduce to read a table and write one of its columns to a file in HDFS
+* [uniquecols] - Uses MapReduce to count unique columns in Accumulo
+
 [AccumuloInputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat %}
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
+[examples-repo]: https://github.com/apache/accumulo-examples/
+[wordcount]: https://github.com/apache/accumulo-examples/blob/master/docs/wordcount.md
+[regex]: https://github.com/apache/accumulo-examples/blob/master/docs/regex.md
+[rowhash]: https://github.com/apache/accumulo-examples/blob/master/docs/rowhash.md
+[tablettofile]: https://github.com/apache/accumulo-examples/blob/master/docs/tablettofile.md
+[uniquecols]: https://github.com/apache/accumulo-examples/blob/master/docs/uniquecols.md
