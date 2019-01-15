@@ -424,16 +424,16 @@ can be use to start/stop processes on a node.
 
 #### A note on rolling restarts
 
-For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant 
-load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting 
-`table.suspend.duration` to a positive value.  
+For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant
+load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting
+[table.suspend.duration] to a positive value.
 
-With `table.suspend.duration` set to, say, `5m`, Accumulo will wait 
+With [table.suspend.duration] set to, say, `5m`, Accumulo will wait
 for 5 minutes for any dead TabletServer to return before reassigning that TabletServer's responsibilities to other TabletServers.
-If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer 
+If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer
 its original responsibilities.
 
-It is important not to choose too large a value for `table.suspend.duration`, as during this time, all scans against the 
+It is important not to choose too large a value for [table.suspend.duration], as during this time, all scans against the
 data that TabletServer had hosted will block (or time out).
 
 ### Running multiple TabletServers on a single node
@@ -678,6 +678,7 @@ mailing lists at https://accumulo.apache.org for more info.
 [gc.port.client]: {% purl gc.port.client %}
 [master.port.client]: {% purl master.port.client %}
 [trace.port.client]: {% purl trace.port.client %}
+[table.suspend.duration]: {% purl table.suspend.duration %}
 [master.replication.coordinator.port]: {% purl master.replication.coordinator.port %}
 [replication.receipt.service.port]: {% purl replication.receipt.service.port %}
 [tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
