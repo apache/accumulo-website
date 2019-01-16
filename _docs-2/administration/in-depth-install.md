@@ -344,7 +344,7 @@ configuration is:
 general.vfs.context.classpath.app1.delegation=post
 ```
 
-To use contexts in your application you can set the `table.classpath.context` on your tables or use the `setClassLoaderContext()` method on Scanner
+To use contexts in your application you can set the {% plink table.classpath.context %} on your tables or use the `setClassLoaderContext()` method on Scanner
 and BatchScanner passing in the name of the context, app1 in the example above. Setting the property on the table allows your minc, majc, and scan 
 iterators to load classes from the locations defined by the context. Passing the context name to the scanners allows you to override the table setting
 to load only scan time iterators from a different location. 
@@ -445,12 +445,10 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment variable
 `ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is started. Also, set
-these properties in [accumulo.properties]:
+the these properties in [accumulo.properties]:
 
-```
-tserver.port.search=true
-replication.receipt.service.port=0
-```
+* {% plink tserver.port.search %} = `true`
+* {% plink replication.receipt.service.port %} = `0`
 
 ## Logging
 
