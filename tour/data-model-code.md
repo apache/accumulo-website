@@ -6,44 +6,47 @@ Below is the solution for the exercise.
 
 ```java
 static void exercise(MiniAccumuloCluster mac) {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
 
-    // Create a row for Batman
-    Mutation mutation1 = new Mutation("id0001");
-    mutation1.put("hero","alias", "Batman");
-    mutation1.put("hero","name", "Bruce Wayne");
-    mutation1.put("hero","wearsCape?", "true");
+  // Create an AccumuloClient to Mini Accumulo
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties()).build()) {
 
-    // Create a row for Robin
-    Mutation mutation2 = new Mutation("id0002");
-    mutation2.put("hero","alias", "Robin");
-    mutation2.put("hero","name", "Dick Grayson");
-    mutation2.put("hero","wearsCape?", "true");
+    // Create the GothamPD table
+    client.tableOperations().create("GothamPD");
 
-    // Create a row for Joker
-    Mutation mutation3 = new Mutation("id0003");
-    mutation3.put("villain","alias", "Joker");
-    mutation3.put("villain","name", "Unknown");
-    mutation3.put("villain","wearsCape?", "false");
+    // Create a BatchWriter to the GothamPD table
+    // Data is available for scans after BatchWriter is closed
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+      // Create a row for Batman
+      Mutation mut1 = new Mutation("id0001");
+      mut1.at().family("hero").qualifier("alias").put("Batman");
+      mut1.at().family("hero").qualifier("name").put("Bruce Wayne");
+      mut1.at().family("hero").qualifier("wearsCape?").put("true");
+      writer.addMutation(mut1);
 
-    // Create a BatchWriter to the GothamPD table and add your mutations to it.
-    // Once the BatchWriter is closed by the try w/ resources, data will be available to scans.
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
-        writer.addMutation(mutation1);
-        writer.addMutation(mutation2);
-        writer.addMutation(mutation3);
+      // Create a row for Robin
+      Mutation mut2 = new Mutation("id0002");
+      mut2.at().family("hero").qualifier("alias").put("Robin");
+      mut2.at().family("hero").qualifier("name").put("Dick Grayson");
+      mut2.at().family("hero").qualifier("wearsCape?").put("true");
+      writer.addMutation(mut2);
+
+      // Create a row for Joker
+      Mutation mut3 = new Mutation("id0002");
+      mut3.at().family("villain").qualifier("alias").put("Joker");
+      mut3.at().family("villain").qualifier("name").put("Unknown");
+      mut3.at().family("villain").qualifier("wearsCape?").put("false");
+      writer.addMutation(mut3);
     }
 
-    // Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.
-    try (Scanner scan = conn.createScanner("GothamPD", Authorizations.EMPTY)) {
-        System.out.println("Gotham Police Department Persons of Interest:");
-        // A Scanner is an extension of java.lang.Iterable so behaves just like one.
-        for (Map.Entry<Key, Value> entry : scan) {
-            System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
-        }
+    // Read and print all rows of the "GothamPD" table
+    try (Scanner scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+      System.out.println("Gotham Police Department Persons of Interest:");
+      // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+      for (Map.Entry<Key, Value> entry : scan) {
+        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
+      }
     }
+  }
 }
 ```
 

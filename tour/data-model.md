@@ -17,7 +17,7 @@ The **value** is where the actual data is stored. For brevity, we often refer to
 Take a closer look at the Mutation object created in the first exercise:
 ```java
 Mutation mutation = new Mutation("id0001");
-mutation.put("hero","alias", "Batman");
+mutation.at().family("hero").qualifier("alias").put("Batman");
 ```
 It can be broken down as follows: <br/>
 **Row ID**: id0001  **Column Family**: hero  **Column Qualifier**: alias  **Value**: Batman

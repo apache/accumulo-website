@@ -7,31 +7,34 @@ write and read from a table.
 
 ```java
 static void exercise(MiniAccumuloCluster mac) {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
 
-    // Create a Mutation object to hold all changes to a row in a table.  Each row has a unique row ID.
-    Mutation mutation = new Mutation("id0001");
+  // Create an AccumuloClient to Mini Accumulo
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties()).build()) {
 
-    // Create key/value pairs for Batman.  Put them in the "hero" family.
-    mutation.put("hero","alias", "Batman");
-    mutation.put("hero","name", "Bruce Wayne");
-    mutation.put("hero","wearsCape?", "true");
+    // Create the GothamPD table
+    client.tableOperations().create("GothamPD");
 
-    // Create a BatchWriter to the GothamPD table and add your mutation to it. Try w/ resources will close for us.
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
-        writer.addMutation(mutation);
+    // Create a BatchWriter to the GothamPD table and add Batman
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+      // Create a Mutation that modifies the 'id0001' row
+      Mutation mutation = new Mutation("id0001");
+      // Create entries for Batman in the row
+      mutation.at().family("hero").qualifier("alias").put("Batman");
+      mutation.at().family("hero").qualifier("name").put("Bruce Wayne");
+      mutation.at().family("hero").qualifier("wearsCape?").put("true");
+      // Add the mutation to the BatchWriter
+      writer.addMutation(mutation);
     }
 
-    // Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.
-    try (Scanner scan = conn.createScanner("GothamPD", Authorizations.EMPTY)) {
-        System.out.println("Gotham Police Department Persons of Interest:");
-        // A Scanner is an extension of java.lang.Iterable so behaves just like one.
-        for (Map.Entry<Key, Value> entry : scan) {
-            System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
-        }
+    // Read and print all rows of the "GothamPD" table
+    try (Scanner scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+      System.out.println("Gotham Police Department Persons of Interest:");
+      // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+      for (Map.Entry<Key, Value> entry : scan) {
+        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
+      }
     }
+  }
 }
 ```
 

@@ -6,50 +6,56 @@ Below is a solution for the exercise.
 
 ```java
 static void exercise(MiniAccumuloCluster mac) throws Exception {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
 
-    // Create a "secretId" authorization & visibility
-    final String secretId = "secretId";
-    Authorizations auths = new Authorizations(secretId);
-    ColumnVisibility colVis = new ColumnVisibility(secretId);
+  // Create an AccumuloClient to Mini Accumulo
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties()).build()) {
 
-    // Create a user with the "secretId" authorization and grant him read permissions on our table
-    conn.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
-    conn.securityOperations().changeUserAuthorizations("commissioner", auths);
-    conn.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
+    // Create the GothamPD table
+    client.tableOperations().create("GothamPD");
 
-    // Create 3 Mutation objects, securing the proper columns.
-    Mutation mutation1 = new Mutation("id0001");
-    mutation1.put("hero","alias", "Batman");
-    mutation1.put("hero","name", colVis, "Bruce Wayne");
-    mutation1.put("hero","wearsCape?", "true");
-    Mutation mutation2 = new Mutation("id0002");
-    mutation2.put("hero","alias", "Robin");
-    mutation2.put("hero","name", colVis,"Dick Grayson");
-    mutation2.put("hero","wearsCape?", "true");
-    Mutation mutation3 = new Mutation("id0003");
-    mutation3.put("villain","alias", "Joker");
-    mutation3.put("villain","name", "Unknown");
-    mutation3.put("villain","wearsCape?", "false");
+    // Create a 'commissioner' user with the "secretId" authorization and grant it read permissions on our table
+    client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
+    client.securityOperations().changeUserAuthorizations("commissioner", new Authorizations("secretId"));
+    client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
 
-    // Create a BatchWriter to the GothamPD table and add your mutations to it.
-    // Once the BatchWriter is closed by the try w/ resources, data will be available to scans.
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
-        writer.addMutation(mutation1);
-        writer.addMutation(mutation2);
-        writer.addMutation(mutation3);
+    // Create a BatchWriter to the GothamPD table
+    // Data is available for scans after BatchWriter is closed
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+      // Create a row for Batman
+      Mutation mut1 = new Mutation("id0001");
+      mut1.at().family("hero").qualifier("alias").put("Batman");
+      mut1.at().family("hero").qualifier("name").visibility("secretId").put("Bruce Wayne");
+      mut1.at().family("hero").qualifier("wearsCape?").put("true");
+      writer.addMutation(mut1);
+
+      // Create a row for Robin
+      Mutation mut2 = new Mutation("id0002");
+      mut2.at().family("hero").qualifier("alias").put("Robin");
+      mut2.at().family("hero").qualifier("name").visibility("secretId").put("Dick Grayson");
+      mut2.at().family("hero").qualifier("wearsCape?").put("true");
+      writer.addMutation(mut2);
+
+      // Create a row for Joker
+      Mutation mut3 = new Mutation("id0002");
+      mut3.at().family("villain").qualifier("alias").put("Joker");
+      mut3.at().family("villain").qualifier("name").put("Unknown");
+      mut3.at().family("villain").qualifier("wearsCape?").put("false");
+      writer.addMutation(mut3);
     }
+  }
 
-    // Read and print all rows of the commissioner can see. Pass Scanner proper authorizations
-    Connector commishConn = mac.getConnector("commissioner", "gordonrocks");
-    try (Scanner scan = commishConn.createScanner("GothamPD", auths)) {
-        System.out.println("Gotham Police Department Persons of Interest:");
-        for (Map.Entry<Key, Value> entry : scan) {
-            System.out.printf("Key : %-60s  Value : %s\n", entry.getKey(), entry.getValue());
-        }
+  // Create a client as the 'commissioner' user
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties())
+      .as("commissioner", "gordonrocks").build()) {
+    // Scan the GothamPD table using the authorizations of the 'commissioner' user
+    try (Scanner scan = client.createScanner("GothamPD")) {
+      System.out.println("Gotham Police Department Persons of Interest:");
+      // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+      for (Map.Entry<Key, Value> entry : scan) {
+        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
+      }
     }
+  }
 }
 ```
 

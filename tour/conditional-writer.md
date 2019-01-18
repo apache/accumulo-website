@@ -36,58 +36,58 @@ is the batch writer always makes the update, even when the value has
 changed since it was read.
 
 ```java
-  static String getAddress(Connector conn, String id) {
-    // The IsolatedScanner ensures partial changes to a row are not seen
-    try (Scanner scanner = new IsolatedScanner(conn.createScanner("GothamPD", Authorizations.EMPTY))) {
-      scanner.setRange(Range.exact(id, "location", "home"));
-      for (Entry<Key,Value> entry : scanner) {
-        return entry.getValue().toString();
-      }
-      return null;
-    } catch (TableNotFoundException e) {
-      throw new RuntimeException(e);
+static String getAddress(AccumuloClient client, String id) {
+  // The IsolatedScanner ensures partial changes to a row are not seen
+  try (Scanner scanner = new IsolatedScanner(client.createScanner("GothamPD", Authorizations.EMPTY))) {
+    scanner.setRange(Range.exact(id, "location", "home"));
+    for (Map.Entry<Key,Value> entry : scanner) {
+      return entry.getValue().toString();
     }
+    return null;
+  } catch (TableNotFoundException e) {
+    throw new RuntimeException(e);
   }
+}
 
-  static boolean setAddress(Connector conn, String id, String expectedAddr, String newAddr) {
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
-      Mutation mutation = new Mutation(id);
-      mutation.put("location", "home", newAddr);
-      writer.addMutation(mutation);
-      return true;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+static boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
+  try (BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    Mutation mutation = new Mutation(id);
+    mutation.at().family("location").qualifier("home").put(newAddr);
+    writer.addMutation(mutation);
+    return true;
+  } catch (Exception e) {
+    throw new RuntimeException(e);
   }
+}
 
-  public static Future<Void> modifyAddress(Connector conn, String id, Function<String,String> modifier) {
-    return CompletableFuture.runAsync(() -> {
+public static Future<Void> modifyAddress(AccumuloClient client, String id, Function<String,String> modifier) {
+  return CompletableFuture.runAsync(() -> {
       String currAddr, newAddr;
       do {
-        currAddr = getAddress(conn, id);
-        newAddr = modifier.apply(currAddr);
-        System.out.printf("Thread %3d attempting change %20s -> %-20s\n",
-            Thread.currentThread().getId(), "'"+currAddr+"'", "'"+newAddr+"'");
-      } while (!setAddress(conn, id, currAddr, newAddr));
-    });
-  }
+      currAddr = getAddress(client, id);
+      newAddr = modifier.apply(currAddr);
+      System.out.printf("Thread %3d attempting change %20s -> %-20s\n",
+          Thread.currentThread().getId(), "'"+currAddr+"'", "'"+newAddr+"'");
+      } while (!setAddress(client, id, currAddr, newAddr));
+      });
+}
 
-  static void exercise(MiniAccumuloCluster mac) throws Exception {
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
+static void exercise(MiniAccumuloCluster mac) throws Exception {
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties()).build()) {
+    client.tableOperations().create("GothamPD");
 
     String id = "id0001";
 
-    setAddress(conn, id, null, "  1007 Mountain Drive, Gotham, New York  ");
+    setAddress(client, id, null, "  1007 Mountain Drive, Gotham, New York  ");
 
     // create async operation to trim whitespace
-    Future<Void> future1 = modifyAddress(conn, id, String::trim);
+    Future<Void> future1 = modifyAddress(client, id, String::trim);
 
     // create async operation to replace Dr with Drive
-    Future<Void> future2 = modifyAddress(conn, id, addr -> addr.replace("Drive", "Dr"));
+    Future<Void> future2 = modifyAddress(client, id, addr -> addr.replace("Drive", "Dr"));
 
     // create async operation to replace New York with NY
-    Future<Void> future3 = modifyAddress(conn, id, addr -> addr.replace("New York", "NY"));
+    Future<Void> future3 = modifyAddress(client, id, addr -> addr.replace("New York", "NY"));
 
     // wait for async operations to complete
     future1.get();
@@ -95,8 +95,9 @@ changed since it was read.
     future3.get();
 
     // print the address stored in Accumulo
-    System.out.println("Final address : '"+getAddress(conn, id)+"'");
+    System.out.println("Final address : '"+getAddress(client, id)+"'");
   }
+}
 ```
 
 The following is one of a few possible outputs.  Notice that only the
@@ -121,7 +122,7 @@ ConditionalWriter.
 
 [ConditionalWriter]: {% jurl org.apache.accumulo.core.client.ConditionalWriter %}
 [Result]: {% jurl org.apache.accumulo.core.client.ConditionalWriter.Result %}
-[createConditionalWriter]: {% jurl org.apache.accumulo.core.client.Connector#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig- %}
+[createConditionalWriter]: {% jurl org.apache.accumulo.core.client.AccumuloClient#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig- %}
 [Condition]: {% jurl org.apache.accumulo.core.data.Condition %}
 [ConditionalMutation]: {% jurl org.apache.accumulo.core.data.ConditionalMutation %}
 [getStatus]: {% jurl org.apache.accumulo.core.client.ConditionalWriter.Result#getStatus-- %}
