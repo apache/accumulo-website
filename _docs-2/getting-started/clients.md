@@ -115,19 +115,12 @@ changes to the columns of a single row. The changes are made atomically in the
 TabletServer. Clients then add Mutations to a [BatchWriter] which submits them to
 the appropriate TabletServers.
 
-Mutations can be created thus:
+The code below shows how a Mutation is created.
 
 ```java
-Text rowID = new Text("row1");
-Text colFam = new Text("myColFam");
-Text colQual = new Text("myColQual");
-ColumnVisibility colVis = new ColumnVisibility("public");
-long timestamp = System.currentTimeMillis();
-
-Value value = new Value("myValue".getBytes());
-
-Mutation mutation = new Mutation(rowID);
-mutation.put(colFam, colQual, colVis, timestamp, value);
+Mutation mutation = new Mutation("row1");
+mutation.at().family("myColFam1").qualifier("myColQual1").visibility("public").put("myValue1");
+mutation.at().family("myColFam2").qualifier("myColQual2").visibility("public").put("myValue2");
 ```
 
 ### BatchWriter
@@ -138,16 +131,14 @@ amortize network overhead. Care must be taken to avoid changing the contents of
 any Object passed to the BatchWriter since it keeps objects in memory while
 batching.
 
-Mutations are added to a BatchWriter thus:
+The code below shows how a Mutation is added to a BatchWriter:
 
 ```java
-// BatchWriterConfig has reasonable defaults
-BatchWriterConfig config = new BatchWriterConfig();
-config.setMaxMemory(10000000L); // bytes available to batchwriter for buffering mutations
-
-BatchWriter writer = client.createBatchWriter("table", config)
-writer.addMutation(mutation);
-writer.close();
+try (BatchWriter writer = client.createBatchWriter("mytable")) {
+  Mutation m = new Mutation("row1");
+  m.at().family("myfam").qualifier("myqual").visibility("public").put("myval");
+  writer.addMutation(m);
+}
 ```
 
 For more example code, see the [batch writing and scanning example][batch].
@@ -224,21 +215,37 @@ to efficiently return ranges of consecutive keys and their associated values.
 
 ### Scanner
 
-To retrieve data, Clients use a [Scanner], which acts like an Iterator over
-keys and values. Scanners can be configured to start and stop at particular keys, and
+To retrieve data, create a [Scanner] using [AccumuloClient]. A Scanner acts like an Iterator over
+keys and values in the table.
+
+If a [Scanner] is created without [Authorizations], it use all [Authorizations] granted
+to the user that created the [AccumuloClient]:
+
+```java
+Scanner s = client.createScanner("table");
+```
+
+A scanner can also be created to only use a subset of a user's [Authorizations].
+
+```java
+Scanner s = client.createScanner("table", new Authorizations("public"));
+```
+
+Scanners can be configured to start and stop at particular keys, and
 to return a subset of the columns available.
 
 ```java
-// specify which visibilities we are allowed to see
+// specify which visibilities should be returned
 Authorizations auths = new Authorizations("public");
 
-Scanner scan = client.createScanner("table", auths);
-scan.setRange(new Range("harry","john"));
-scan.fetchColumnFamily(new Text("attributes"));
+try (Scanner scan = client.createScanner("table", auths)) {
+  scan.setRange(new Range("harry","john"));
+  scan.fetchColumnFamily(new Text("attributes"));
 
-for (Entry<Key,Value> entry : scan) {
-  Text row = entry.getKey().getRow();
-  Value value = entry.getValue();
+  for (Entry<Key,Value> entry : scan) {
+    Text row = entry.getKey().getRow();
+    Value value = entry.getValue();
+  }
 }
 ```
 
@@ -281,12 +288,13 @@ TabletServers in parallel.
 ArrayList<Range> ranges = new ArrayList<Range>();
 // populate list of ranges ...
 
-BatchScanner bscan = client.createBatchScanner("table", auths, 10);
-bscan.setRanges(ranges);
-bscan.fetchColumnFamily("attributes");
+try (BatchScanner bscan = client.createBatchScanner("table", auths, 10)) {
+  bscan.setRanges(ranges);
+  bscan.fetchColumnFamily("attributes");
 
-for (Entry<Key,Value> entry : bscan) {
-  System.out.println(entry.getValue());
+  for (Entry<Key,Value> entry : bscan) {
+    System.out.println(entry.getValue());
+  }
 }
 ```
 
@@ -371,3 +379,4 @@ This page covers Accumulo client basics.  Below are links to additional document
 [isolation]: https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [table.durability]: {% purl table.durability %}
+[Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}
