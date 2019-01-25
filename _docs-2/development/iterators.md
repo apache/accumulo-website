@@ -12,7 +12,7 @@ in the iteration, Accumulo Iterators must also support the ability to "move" (`s
 iteration (the Accumulo table). Accumulo Iterators are designed to be concatenated together, similar to applying a
 series of transformations to a list of elements. Accumulo Iterators can duplicate their underlying source to create
 multiple "pointers" over the same underlying data (which is extremely powerful since each stream is sorted) or they can
-merge multiple Iterators into a single view. In this sense, a collection of Iterators operating in tandem is close to
+merge multiple Iterators into a single view. In this sense, a collection of Iterators operating in tandem is closer to
 a tree-structure than a list, but there is always a sense of a flow of Key-Value pairs through some Iterators. Iterators
 are not designed to act as triggers nor are they designed to operate outside of the purview of a single table.
 
