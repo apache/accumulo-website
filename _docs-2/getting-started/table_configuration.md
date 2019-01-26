@@ -631,8 +631,6 @@ importing tables.
 The shell session below illustrates creating a table, inserting data, and
 exporting the table.
 
-
-```
     root@test15> createtable table1
     root@test15 table1> insert a cf1 cq1 v1
     root@test15 table1> insert h cf1 cq1 v2
@@ -649,12 +647,10 @@ exporting the table.
     root@test15 table1> offline table1_exp
     root@test15 table1> exporttable -t table1_exp /tmp/table1_export
     root@test15 table1> quit
-```
 
 After executing the export command, a few files are created in the hdfs dir.
 One of the files is a list of files to distcp as shown below.
 
-```
     $ hadoop fs -ls /tmp/table1_export
     Found 2 items
     -rw-r--r--   3 user supergroup        162 2012-07-25 09:56 /tmp/table1_export/distcp.txt
@@ -662,20 +658,16 @@ One of the files is a list of files to distcp as shown below.
     $ hadoop fs -cat /tmp/table1_export/distcp.txt
     hdfs://n1.example.com:6093/accumulo/tables/3/default_tablet/F0000000.rf
     hdfs://n1.example.com:6093/tmp/table1_export/exportMetadata.zip
-```
 
 Before the table can be imported, it must be copied using `distcp`. After the
 `distcp` completes, the cloned table may be deleted.
 
-```
     $ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest
-```
 
 The Accumulo shell session below shows importing the table and inspecting it.
 The data, splits, config, and logical time information for the table were
 preserved.
 
-```
     root@test15> importtable table1_copy /tmp/table1_export_dest
     root@test15> table table1_copy
     root@test15 table1_copy> scan
@@ -702,11 +694,10 @@ preserved.
     5;b srv:time []    M1343224500467
     5;r srv:time []    M1343224500467
     5< srv:time []    M1343224500467
-```
 
 [bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md
 [constraint]: {% jurl org.apache.accumulo.core.constraints.Constraint %}
-[constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/contraints.md
+[constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/constraints.md
 [iterators-user]: {% jurl org.apache.accumulo.core.iterators.user %}
 [option-describer]: {% jurl org.apache.accumulo.core.iterators.OptionDescriber %}
 [combiner]: {% jurl org.apache.accumulo.core.iterators.Combiner %}
