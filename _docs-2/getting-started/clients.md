@@ -218,7 +218,7 @@ to efficiently return ranges of consecutive keys and their associated values.
 To retrieve data, create a [Scanner] using [AccumuloClient]. A Scanner acts like an Iterator over
 keys and values in the table.
 
-If a [Scanner] is created without [Authorizations], it use all [Authorizations] granted
+If a [Scanner] is created without [Authorizations], it uses all [Authorizations] granted
 to the user that created the [AccumuloClient]:
 
 ```java
@@ -235,7 +235,7 @@ Scanners can be configured to start and stop at particular keys, and
 to return a subset of the columns available.
 
 ```java
-// specify which visibilities should be returned
+// return data with visibilities that match specified auths
 Authorizations auths = new Authorizations("public");
 
 try (Scanner scan = client.createScanner("table", auths)) {
