@@ -42,7 +42,7 @@ MapReduce jobs to run with both Accumulo's & Hadoop's dependencies on the classp
 Since 2.0, Accumulo no longer has the same versions for dependencies as Hadoop. While this allows
 Accumulo to update its dependencies more frequently, it can cause problems if both Accumulo's &
 Hadoop's dependencies are on the classpath of the MapReduce job. When launching a MapReduce job that
-use Accumulo, you should build a shaded jar with all of your dependencies and complete the following
+use Accumulo, you should build a [shaded jar] with all of your dependencies and complete the following
 steps so YARN only includes Hadoop code (and not all of Hadoop's dependencies) when running your MapReduce job:
 
 1. Set `export HADOOP_USE_CLIENT_CLASSLOADER=true` in your environment before submitting
@@ -171,9 +171,23 @@ can then be bulk imported into Accumulo:
         .outputPath(new Path("hdfs://localhost:8020/myoutput/")).store(job);
     ```
 
-The [MapReduce example][mapred-example] contains a complete example of using MapReduce with Accumulo.
+## Example Code
 
-[mapred-example]: https://github.com/apache/accumulo-examples/blob/master/docs/mapred.md
+The [Accumulo Examples repo][examples-repo] has several MapReduce examples:
+
+* [wordcount] - Uses MapReduce and Accumulo to do a word count on text files
+* [regex] - Uses MapReduce and Accumulo to find data using regular expressions
+* [rowhash] - Uses MapReduce to read a table and write to a new column in the same table
+* [tablettofile] - Uses MapReduce to read a table and write one of its columns to a file in HDFS
+* [uniquecols] - Uses MapReduce to count unique columns in Accumulo
+
+[shaded jar]: https://maven.apache.org/plugins/maven-shade-plugin/index.html
 [AccumuloInputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat %}
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
+[examples-repo]: https://github.com/apache/accumulo-examples/
+[wordcount]: https://github.com/apache/accumulo-examples/blob/master/docs/wordcount.md
+[regex]: https://github.com/apache/accumulo-examples/blob/master/docs/regex.md
+[rowhash]: https://github.com/apache/accumulo-examples/blob/master/docs/rowhash.md
+[tablettofile]: https://github.com/apache/accumulo-examples/blob/master/docs/tablettofile.md
+[uniquecols]: https://github.com/apache/accumulo-examples/blob/master/docs/uniquecols.md

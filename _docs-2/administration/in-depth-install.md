@@ -344,7 +344,7 @@ configuration is:
 general.vfs.context.classpath.app1.delegation=post
 ```
 
-To use contexts in your application you can set the `table.classpath.context` on your tables or use the `setClassLoaderContext()` method on Scanner
+To use contexts in your application you can set the {% plink table.classpath.context %} on your tables or use the `setClassLoaderContext()` method on Scanner
 and BatchScanner passing in the name of the context, app1 in the example above. Setting the property on the table allows your minc, majc, and scan 
 iterators to load classes from the locations defined by the context. Passing the context name to the scanners allows you to override the table setting
 to load only scan time iterators from a different location. 
@@ -424,16 +424,16 @@ can be use to start/stop processes on a node.
 
 #### A note on rolling restarts
 
-For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant 
-load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting 
-`table.suspend.duration` to a positive value.  
+For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window can place significant
+load on the Master server.  If slightly lower availability is acceptable, this load can be reduced by globally setting
+[table.suspend.duration] to a positive value.
 
-With `table.suspend.duration` set to, say, `5m`, Accumulo will wait 
+With [table.suspend.duration] set to, say, `5m`, Accumulo will wait
 for 5 minutes for any dead TabletServer to return before reassigning that TabletServer's responsibilities to other TabletServers.
-If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer 
+If the TabletServer returns to the cluster before the specified timeout has elapsed, Accumulo will assign the TabletServer
 its original responsibilities.
 
-It is important not to choose too large a value for `table.suspend.duration`, as during this time, all scans against the 
+It is important not to choose too large a value for [table.suspend.duration], as during this time, all scans against the
 data that TabletServer had hosted will block (or time out).
 
 ### Running multiple TabletServers on a single node
@@ -445,12 +445,10 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment variable
 `ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is started. Also, set
-these properties in [accumulo.properties]:
+the these properties in [accumulo.properties]:
 
-```
-tserver.port.search=true
-replication.receipt.service.port=0
-```
+* {% plink tserver.port.search %} = `true`
+* {% plink replication.receipt.service.port %} = `0`
 
 ## Logging
 
@@ -678,6 +676,7 @@ mailing lists at https://accumulo.apache.org for more info.
 [gc.port.client]: {% purl gc.port.client %}
 [master.port.client]: {% purl master.port.client %}
 [trace.port.client]: {% purl trace.port.client %}
+[table.suspend.duration]: {% purl table.suspend.duration %}
 [master.replication.coordinator.port]: {% purl master.replication.coordinator.port %}
 [replication.receipt.service.port]: {% purl replication.receipt.service.port %}
 [tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
