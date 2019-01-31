@@ -6,8 +6,10 @@ redirect_from: /projects
 
 The Apache Accumulo community is happy to promote and encourage use of Accumulo in ways that are novel and reusable
 by other users within the community. As such, we're happy to curate a list of projects related to Accumulo to give
-them visibility to a larger audience. To have you project listed here, send a request to the
-[developer's mailing list](mailto:dev@accumulo.apache.org)
+them visibility to a larger audience. The following list is provided without endorsement.
+
+To request a new listing here, email the [developer's mailing list](mailto:dev@accumulo.apache.org)
+or [edit this page and create a pull request](https://github.com/apache/accumulo-website/edit/master/pages/related-projects.md).
 
 ## Open source projects using Accumulo
 
