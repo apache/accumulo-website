@@ -91,7 +91,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-1/">2.0.0-alpha-1 (Preview Release)</a></li>
+            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
             <li><a href="/release/accumulo-1.9.2/">1.9.2 (Latest)</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
@@ -153,7 +153,7 @@
 
 <div class="alert alert-info" style="margin-bottom: 0px;" role="alert">
   <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.0.0-alpha-1/">the latest release notes</a>.</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-2.0.0-alpha-2/">the latest release notes</a>.</p>
 </div>
 
 
@@ -170,10 +170,20 @@ to documentation for new features in addition to issues.</p>
 
 <h3 id="new-api-for-creating-connections-to-accumulo">New API for creating connections to Accumulo</h3>
 
-<p>A fluent API for clients to build <code class="highlighter-rouge">Connector</code> objects was introduced in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4784">ACCUMULO-4784</a>.
-The new API deprecates <code class="highlighter-rouge">ClientConfiguration</code> and introduces its own properties
-file called <code class="highlighter-rouge">accumulo-client.properties</code> that ships with the Accumulo tarball.
-See the <a href="/docs/2.x/getting-started/clients">client documentation</a> for more information on how to use the new API.</p>
+<p>A fluent API for creating Accumulo clients was introduced in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4784">ACCUMULO-4784</a> and <a href="https://github.com/apache/accumulo/issues/634">#634</a>.
+The <code class="highlighter-rouge">Connector</code> and <code class="highlighter-rouge">ZooKeeperInstance</code> objects have been deprecated and replaced by
+<code class="highlighter-rouge">AccumuloClient</code> which is created from the <code class="highlighter-rouge">Accumulo</code> entry point. The new API also deprecates
+<code class="highlighter-rouge">ClientConfiguration</code> and introduces its own properties file called <code class="highlighter-rouge">accumulo-client.properties</code>
+that ships with the Accumulo tarball. The new API has the following benefits over the old API:</p>
+<ul>
+  <li>All connection information can be specifed in properties file to create the client. This was not
+possible with old API.</li>
+  <li>The new API does not require <code class="highlighter-rouge">ZooKeeperInstance</code> to be created first before creating a client.</li>
+  <li>The new client is closeable and does not rely on shared static resource management</li>
+  <li>Clients can be created using a new Java builder, <code class="highlighter-rouge">Properties</code> object, or <code class="highlighter-rouge">accumulo-client.properties</code></li>
+  <li>Clients can now be created with default settings for <code class="highlighter-rouge">BatchWriter</code>, <code class="highlighter-rouge">Scanner</code>, etc.
+See the <a href="/docs/2.x/getting-started/clients">client documentation</a> for more information on how to use the new API.</li>
+</ul>
 
 <h3 id="hadoop-3-and-java-8">Hadoop 3 and Java 8.</h3>
 
