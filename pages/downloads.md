@@ -118,9 +118,7 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [README_19]: https://github.com/apache/accumulo/blob/rel/1.9.2/README.md
 
 [JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
-{: .download_external id="/docs/2.x/apidocs/" }
 [JAVADOC_19]: {{ site.baseurl }}/1.9/apidocs/
-{: .download_external id="/1.9/apidocs/" }
 
 [MANUAL_20]: {{ site.baseurl }}/docs/2.x "2.x online manual"
 [MANUAL_19]: {{ site.baseurl }}/1.9/accumulo_user_manual "1.9 user manual"
