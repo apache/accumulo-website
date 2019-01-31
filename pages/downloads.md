@@ -4,42 +4,6 @@ permalink: /downloads/
 ---
 
 <script type="text/javascript">
-/**
-* Function that tracks a click on an outbound link in Google Analytics.
-* This function takes a valid URL string as an argument, and uses that URL string
-* as the event label.
-*/
-var gtagCallback = function(event) {
-  var hrefUrl = event.target.getAttribute('href')
-  if (event.ctrlKey || event.shiftKey || event.metaKey || event.which == 2) {
-    var newWin = true;}
-
-  // $(this) != this
-  var url = window.location.protocol + "//accumulo.apache.org" + $(this).attr("id")
-  if (newWin) {
-    gtag('event', 'click', {
-      'event_category': 'outbound',
-      'event_label': url,
-      'transport_type': 'beacon'
-    });
-    return true;
-  } else {
-    gtag('event', 'click', {
-      'event_category': 'outbound',
-      'event_label': url,
-      'transport_type': 'beacon',
-      'event_callback': function(){ window.location.href = hrefUrl; }
-    });
-    return false;
-  }
-};
-
-$( document ).ready(function() {
-  // check if gtag is loaded
-  if (typeof gtag === 'function') {
-    $('.download_external').click(gtagCallback);
-  }
-});
 
 var updateLinks = function(mirror) {
   $('a[link-suffix]').each(function(i, obj) {
@@ -142,18 +106,16 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz.sha512
 
 [BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz
-{: .download_external link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz" id="/downloads/accumulo-2.0.0-alpha-2-bin.tar.gz" }
+{: link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz" }
 [SRC_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz
-{: .download_external link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz" id="/downloads/accumulo-2.0.0-alpha-2-src.tar.gz" }
+{: link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz" }
 [BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz" id="/downloads/accumulo-1.9.2-bin.tar.gz" }
+{: link-suffix="/accumulo/1.9.2/accumulo-1.9.2-bin.tar.gz" }
 [SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz
-{: .download_external link-suffix="/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz" id="/downloads/accumulo-1.9.2-src.tar.gz" }
+{: link-suffix="/accumulo/1.9.2/accumulo-1.9.2-src.tar.gz" }
 
 [README_20]: https://github.com/apache/accumulo/blob/rel/2.0.0-alpha-2/README.md
-{: .download_external id="/2.0-alpha-2/README" }
 [README_19]: https://github.com/apache/accumulo/blob/rel/1.9.2/README.md
-{: .download_external id="/1.9/README" }
 
 [JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
 {: .download_external id="/docs/2.x/apidocs/" }
