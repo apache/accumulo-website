@@ -20,7 +20,7 @@ permalink: /people/
 | cawaring      | Chris Waring                                      |                                        |          |
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
 | ctubbsii      | [Christopher Tubbs](https://github.com/ctubbsii)  | [NSA][NSA]                             | [ET][ET] |
-| dhutchis      | Dylan Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
+| dhutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
 | dlmarion      | Dave Marion                                       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
@@ -179,7 +179,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [TERALYTICS]: http://www.teralytics.net/
 [TETRA]: http://www.tetraconcepts.com
 [TIBER]: http://www.tibertechnologies.com
-[UW]: http://www.uw.edu
+[UW]: https://www.washington.edu/
 [WAVE]: http://www.wavestrike.com/
 [BST]: http://www.timeanddate.com/time/zones/bst
 [CT]: http://www.timeanddate.com/time/zones/ct
