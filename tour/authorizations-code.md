@@ -44,16 +44,13 @@ static void exercise(MiniAccumuloCluster mac) throws Exception {
     }
   }
 
-  // Create a client as the 'commissioner' user
-  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties())
-      .as("commissioner", "gordonrocks").build()) {
-    // Scan the GothamPD table using the authorizations of the 'commissioner' user
-    try (Scanner scan = client.createScanner("GothamPD")) {
-      System.out.println("Gotham Police Department Persons of Interest:");
-      // A Scanner is an extension of java.lang.Iterable so behaves just like one.
-      for (Map.Entry<Key, Value> entry : scan) {
-        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
-      }
+  // Create a client as the 'commissioner' user and can the GothamPD table
+  try (AccumuloClient client = Accumulo.newClient().from(mac.getClientProperties()).as("commissioner", "gordonrocks").build();
+       Scanner scan = client.createScanner("GothamPD")) {
+    System.out.println("Gotham Police Department Persons of Interest:");
+    // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+    for (Map.Entry<Key, Value> entry : scan) {
+      System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
     }
   }
 }
