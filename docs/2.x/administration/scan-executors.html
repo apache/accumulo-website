@@ -533,21 +533,36 @@ table <code class="highlighter-rouge">tex</code>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.scan.executors.special.threads=8
 config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
+config -s tserver.scan.executors.special.prioritizer.opts.priority.alpha=1
+config -s tserver.scan.executors.special.prioritizer.opts.priority.gamma=3
 createtable tex
 config -t tex -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
-config -t tex -s table.scan.dispatcher.opts.heed_hints=true
+config -t tex -s table.scan.dispatcher.opts.executor.alpha=special
+config -t tex -s table.scan.dispatcher.opts.executor.gamma=special
 </code></pre></div></div>
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/HintScanPrioritizer.html">HintScanPrioritizer</a> honors
-hints of the form <code class="highlighter-rouge">priority=&lt;integer&gt;</code> to prioritize scans, with lower integers
-resulting in a higher priority. The <code class="highlighter-rouge">SimpleScanDispatcher</code>, which is the
-default dispatcher, supports the <code class="highlighter-rouge">heed_hints</code> option. By default the
-<code class="highlighter-rouge">SimpleScanDispatcher</code> ignores hints, but when <code class="highlighter-rouge">heed_hints</code> is set to <code class="highlighter-rouge">true</code> it
-will honor hints of the form <code class="highlighter-rouge">executor=&lt;executor name&gt;</code> when choosing an
-executor. After restarting tservers, the following command will start a scan
-that uses the executor <code class="highlighter-rouge">special</code> with a priority of 3.</p>
+hints of the form <code class="highlighter-rouge">priority=&lt;integer&gt;</code> or <code class="highlighter-rouge">scan_type=&lt;type&gt;</code> to prioritize
+scans, with lower integers resulting in a higher priority.  When a hint
+specifies a scan type it is mapped to a priority based on the prioritizer
+configuration.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints priority=3,executor=special
+<p>The <code class="highlighter-rouge">SimpleScanDispatcher</code>, which is the default dispatcher, supports
+<code class="highlighter-rouge">executor.&lt;type&gt;=&lt;executor&gt;</code> options. When a scanner sets a hint of the form
+<code class="highlighter-rouge">scan_type=&lt;type&gt;</code> it will use the executor configured for that type.</p>
+
+<p>After restarting tservers, the following command will start a scan that uses
+the executor <code class="highlighter-rouge">special</code> with a priority of 3.  The scan dispatcher maps the scan
+type <code class="highlighter-rouge">gamma</code> to the executor <code class="highlighter-rouge">special</code>.  The prioritizer maps the scan type
+<code class="highlighter-rouge">gamma</code> to a priority of 3.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=gamma
+</code></pre></div></div>
+
+<p>The following command will start a scan that uses the executor <code class="highlighter-rouge">special</code> with a
+priority of 1.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=alpha
 </code></pre></div></div>
 
 

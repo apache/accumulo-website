@@ -842,13 +842,25 @@ qualified class name.</p>
 
 <p>Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0-alpha-2/org/apache/accumulo/tserver/compaction/package-summary.html">org.apache.accumulo.tserver.compaction</a> package. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0-alpha-2/org/apache/accumulo/tserver/compaction/EverythingCompactionStrategy.html">EverythingCompactionStrategy</a>
-will simply compact all files. This is the strategy used by the user <code class="highlighter-rouge">compact</code> command. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0-alpha-2/org/apache/accumulo/tserver/compaction/SizeLimitCompactionStrategy.html">SizeLimitCompactionStrategy</a> compacts files no bigger than the limit set in the property <code class="highlighter-rouge">table.majc.compaction.strategy.opts.sizeLimit</code>.</p>
+will simply compact all files. This is the strategy used by the user <code class="highlighter-rouge">compact</code> command.</p>
 
-<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0-alpha-2/org/apache/accumulo/tserver/compaction/TwoTierCompactionStrategy.html">TwoTierCompactionStrategy</a> is a hybrid compaction strategy that supports two types of compression. If the total size of
-files being compacted is larger than <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.threshold</code> than a larger 
-compression type will be used. The larger compression type is specified in <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.type</code>. 
-Otherwise, the configured table compression will be used. To use this strategy with minor compactions set <a href="/docs/2.x/configuration/server-properties#table_file_compress_type">table.file.compress.type</a> to <code class="highlighter-rouge">snappy</code> 
-and set a different compress type in <code class="highlighter-rouge">table.majc.compaction.strategy.opts.file.large.compress.type</code> for larger files.</p>
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0-alpha-2/org/apache/accumulo/tserver/compaction/strategies/BasicCompactionStrategy.html">BasicCompactionStrategy</a> is
+a compaction strategy that supports a few options based on file size.  It
+supports filtering out large files from ever being included in a compaction.
+It also supports using a different compression algorithm for larger files.
+This allows frequent compactions of smaller files to use a fast algorithm and
+infrequent compactions of more data to use a slower algorithm.  Using this may
+enable an increase in throughput w/o using a lot more space.</p>
+
+<p>The following shell command configures a table to use snappy for small files,
+gzip for files over 100M, and avoid compacting any file larger than 250M.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t myTable -s table.file.compress.type=snappy
+config -t myTable -s table.majc.compaction.strategy=org.apache.accumulo.tserver.compaction.strategies.BasicCompactionStrategy
+config -t myTable -s table.majc.compaction.strategy.opts.filter.size=250M
+config -t myTable -s table.majc.compaction.strategy.opts.large.compress.threshold=100M
+config -t myTable -s table.majc.compaction.strategy.opts.large.compress.type=gzip
+</code></pre></div></div>
 
 <h2 id="pre-splitting-tables">Pre-splitting tables</h2>
 
