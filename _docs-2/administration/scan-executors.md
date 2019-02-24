@@ -125,22 +125,38 @@ table `tex`.
 ```
 config -s tserver.scan.executors.special.threads=8
 config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
+config -s tserver.scan.executors.special.prioritizer.opts.priority.alpha=1
+config -s tserver.scan.executors.special.prioritizer.opts.priority.gamma=3
 createtable tex
 config -t tex -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
-config -t tex -s table.scan.dispatcher.opts.heed_hints=true
+config -t tex -s table.scan.dispatcher.opts.executor.alpha=special
+config -t tex -s table.scan.dispatcher.opts.executor.gamma=special
 ```
 
 The {% jlink org.apache.accumulo.core.spi.scan.HintScanPrioritizer %} honors
-hints of the form `priority=<integer>` to prioritize scans, with lower integers
-resulting in a higher priority. The `SimpleScanDispatcher`, which is the
-default dispatcher, supports the `heed_hints` option. By default the
-`SimpleScanDispatcher` ignores hints, but when `heed_hints` is set to `true` it
-will honor hints of the form `executor=<executor name>` when choosing an
-executor. After restarting tservers, the following command will start a scan
-that uses the executor `special` with a priority of 3.
+hints of the form `priority=<integer>` or `scan_type=<type>` to prioritize
+scans, with lower integers resulting in a higher priority.  When a hint
+specifies a scan type it is mapped to a priority based on the prioritizer
+configuration.
+
+The `SimpleScanDispatcher`, which is the default dispatcher, supports
+`executor.<type>=<executor>` options. When a scanner sets a hint of the form
+`scan_type=<type>` it will use the executor configured for that type. 
+
+After restarting tservers, the following command will start a scan that uses
+the executor `special` with a priority of 3.  The scan dispatcher maps the scan
+type `gamma` to the executor `special`.  The prioritizer maps the scan type
+`gamma` to a priority of 3.
 
 ```
-scan -t tex --execution-hints priority=3,executor=special
+scan -t tex --execution-hints scan_type=gamma
+```
+
+The following command will start a scan that uses the executor `special` with a
+priority of 1.
+
+```
+scan -t tex --execution-hints scan_type=alpha
 ```
 
 [tserver]: {{ page.docs_baseurl }}/getting-started/design#tablet-server-1
