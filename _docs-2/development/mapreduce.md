@@ -79,7 +79,7 @@ Follow the steps below to create a MapReduce job that reads from an Accumulo tab
     [AccumuloInputFormat] has optional settings.
     ```java
     List<Range> ranges = new ArrayList<Range>();
-    List<Pair<Text,Text>> columns = new ArrayList<Pair<Text,Text>>();
+    Collection<IteratorSetting.Column> columns = new ArrayList<IteratorSetting.Column>();
     // populate ranges & columns
     IteratorSetting is = new IteratorSetting(30, RexExFilter.class);
     RegExFilter.setRegexs(is, ".*suffix", null, null, null, true);
