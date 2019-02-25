@@ -240,7 +240,7 @@ Authorizations auths = new Authorizations("public");
 
 try (Scanner scan = client.createScanner("table", auths)) {
   scan.setRange(new Range("harry","john"));
-  scan.fetchColumnFamily(new Text("attributes"));
+  scan.fetchColumnFamily("attributes");
 
   for (Entry<Key,Value> entry : scan) {
     Text row = entry.getKey().getRow();

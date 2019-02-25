@@ -21,11 +21,9 @@ name in the column family, and a blank column qualifier:
 
 ```java
 Mutation m = new Mutation(userid);
-final String column_qualifier = "";
-m.put("age", column_qualifier, age);
-m.put("address", column_qualifier, address);
-m.put("balance", column_qualifier, account_balance);
-
+m.at().family("age").put(age);
+m.at().family("address").put(address);
+m.at().family("balance").put(account_balance);
 writer.add(m);
 ```
 
@@ -38,7 +36,7 @@ AccumuloClient client = Accumulo.newClient()
 Range r = new Range(userid, userid); // single row
 Scanner s = client.createScanner("userdata", auths);
 s.setRange(r);
-s.fetchColumnFamily(new Text("age"));
+s.fetchColumnFamily("age");
 
 for (Entry<Key,Value> entry : s) {
   System.out.println(entry.getValue().toString());
@@ -102,7 +100,7 @@ Date hour = new Date(epoch - (epoch % 3600000));
 
 // encode the rowId so that it is sorted lexicographically
 Mutation mutation = new Mutation(dateEncoder.encode(hour));
-mutation.put(new Text("colf"), new Text("colq"), new Value(new byte[]{}));
+mutation.at().family("colf").qualifier("colq").put(new byte[]{});
 ```
 
 If we want to return the most recent date first, we can reverse the sort order
@@ -119,7 +117,7 @@ Date hour = new Date(epoch - (epoch % 3600000));
 
 // encode the rowId so that it sorts in reverse lexicographic order
 Mutation mutation = new Mutation(reverseEncoder.encode(hour));
-mutation.put(new Text("colf"), new Text("colq"), new Value(new byte[]{}));
+mutation.at().family("colf").qualifier("colq").put(new byte[]{});
 ```
 
 ### Indexing
@@ -153,26 +151,26 @@ and returns an Iterator over all the rows retrieved. The rows returned are NOT i
 sorted order, as is the case with the basic Scanner interface.
 
 ```java
-// first we scan the index for IDs of rows matching our query
-Text term = new Text("mySearchTerm");
-
 HashSet<Range> matchingRows = new HashSet<Range>();
 
-Scanner indexScanner = createScanner("index", auths);
-indexScanner.setRange(new Range(term, term));
+// first we scan the index for IDs of rows matching our query
+try (Scanner indexScanner = client.createScanner("index", auths)) {
+  indexScanner.setRange(Range.exact("mySearchTerm");
 
-// we retrieve the matching rowIDs and create a set of ranges
-for (Entry<Key,Value> entry : indexScanner) {
+  // we retrieve the matching rowIDs and create a set of ranges
+  for (Entry<Key,Value> entry : indexScanner) {
     matchingRows.add(new Range(entry.getKey().getColumnQualifier()));
+  }
 }
 
 // now we pass the set of rowIDs to the batch scanner to retrieve them
-BatchScanner bscan = client.createBatchScanner("table", auths, 10);
-bscan.setRanges(matchingRows);
-bscan.fetchColumnFamily(new Text("attributes"));
+try (BatchScanner bscan = client.createBatchScanner("table", auths, 10)) {
+  bscan.setRanges(matchingRows);
+  bscan.fetchColumnFamily("attributes");
 
-for (Entry<Key,Value> entry : bscan) {
+  for (Entry<Key,Value> entry : bscan) {
     System.out.println(entry.getValue());
+  }
 }
 ```
 
@@ -279,16 +277,17 @@ BatchScanner within user query code as follows:
 ```java
 Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
 
-BatchScanner bscan = client.createBatchScanner(table, auths, 20);
+try (BatchScanner bscan = client.createBatchScanner(table, auths, 20)) {
 
-IteratorSetting iter = new IteratorSetting(20, "ii", IntersectingIterator.class);
-IntersectingIterator.setColumnFamilies(iter, terms);
+  IteratorSetting iter = new IteratorSetting(20, "ii", IntersectingIterator.class);
+  IntersectingIterator.setColumnFamilies(iter, terms);
 
-bscan.addScanIterator(iter);
-bscan.setRanges(Collections.singleton(new Range()));
+  bscan.addScanIterator(iter);
+  bscan.setRanges(Collections.singleton(new Range()));
 
-for (Entry<Key,Value> entry : bscan) {
+  for (Entry<Key,Value> entry : bscan) {
     System.out.println(" " + entry.getKey().getColumnQualifier());
+  }
 }
 ```
 
