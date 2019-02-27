@@ -84,6 +84,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jason Then          |                                                                   |                       |
 | Jay Shipper         |                                                                   |                       |
 | Jeff Field          | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
+| Jeffrey Manno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Jeffrey S. Schwartz |                                                                   |                       |
 | Jeffrey Zeiberg     | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Jenna Huston        |                                                                   | [ET][ET]              |
