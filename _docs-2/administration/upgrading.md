@@ -23,6 +23,10 @@ Below are some changes in 2.0 that you should be aware of:
   ```
   accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
   ```
+* The following [server properties]({% durl configuration/server-properties %}) were deprecated for 2.0:
+   * {% plink general.classpaths %}
+   * {% plink tserver.metadata.readahead.concurrent.max %}
+   * {% plink tserver.readahead.concurrent.max  %}
 * `accumulo-client.properties` has replaced `client.conf`. The [client properties]({% durl configuration/client-properties %})
   in the new file are different so take care when customizing.
 * `accumulo-cluster` script has replaced the `start-all.sh` & `stop-all.sh` scripts.
