@@ -450,6 +450,14 @@ the these properties in [accumulo.properties]:
 * {% plink tserver.port.search %} = `true`
 * {% plink replication.receipt.service.port %} = `0`
 
+Multiple TabletServers cannot be started using the `accumulo-cluster` or `accumulo-service` commands at this time.
+The `accumulo` command must be used:
+
+```
+ACCUMULO_SERVICE_INSTANCE=1; ./bin/accumulo tserver &> ./logs/tserver1.out &
+ACCUMULO_SERVICE_INSTANCE=2; ./bin/accumulo tserver &> ./logs/tserver2.out &
+```
+
 ## Logging
 
 Accumulo processes each write to a set of log files. By default, these logs are found at directory
