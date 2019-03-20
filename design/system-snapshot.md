@@ -11,24 +11,28 @@ not have to be the only one.
 ## Overview
 
 Being able to take snapshots of an entire Accumulo system and roll back to
-snapshot would support many administrative use cases.  This design outlines one
-possible way to do that.
+snapshot would support many administrative use cases(outlined in
+{% ghi 1044 %}).  This design outlines one possible way to implement snapshots.
 
 The goal behavior is that a snapshot contains all data that was flushed or bulk
 imported before the snapshot operation started.  A snapshot may contain
 information written to a table while the snapshot operation is in progress.
 
-Each snapshot would be composed of :
+Each snapshot would be an composed of an tree of immutable files in DFS.  This
+tree would have the following three levels.
 
- * A snapshot of all metadata.  This would be accomplished by copying all data 
-   in ZK into a file in DFS.
- * A snapshot of all data. This would be accomplished by keeping pointers to
-   a version of the root tablet in DFS.  The root tablet snapshot would point
-   to a version of the metadata tablets, which points to a version of user
-   tablet data.
+ * **Root Node**: A snapshot of all ZK metadata. This would be accomplished by
+    copying all data in ZK into a file in DFS. This must be done correctly
+    with concurrent operations. If {% ghi 936%} is implemented, then a
+    snapshot of Zookeeper is a snapshot of everything needed.
+ * **Internal nodes**: The root node would point a version of the root tablet in
+    DFS. The root tablet snapshot would point to a version of the metadata
+    tablets in DFS.
+ * **Leaf nodes**:  The metadata nodes would point user table data in HDFS.
+    This would form a snapshot of the data in each table.
 
-If {% ghi 936%} is implemented, then a snapshot of Zookeeper is a snapshot of
-everything needed.
+The root snapshot node would also store info like per table config that is
+stored in zookeeper, in addition to pointing to other files.
 
 Snapshots would be stored as files in a `/accumulo/snapshots/` directory with a
 copy on every volume.
@@ -83,7 +87,9 @@ More thought needs to be given to write ahead logs.  This design ignores them
 and only concerns itself with flushed data.
 
 Pausing FATE ops may not be needed.  More design work is needed in the general
-area of FATE ops.
+area of FATE ops. Ideally the snapshot operation would be extemely fast.
+Pausing FATE ops could be very slow.  The reason behind pausing is to get a
+consistent view of FATE and the root+metadata tables.
 
 ### Listing snapshots
 
@@ -123,6 +129,3 @@ immutable, the list of files for a snapshot could be computed once and stored.
 This would make GC more efficient by avoiding random accesses to read the
 metadata table snapshot.  The precomputed list of files could also contain size
 info, which would be useful for analyzing space usage quickly.
-
-
-
