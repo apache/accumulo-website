@@ -171,11 +171,10 @@ collection information in its own versioned schema.  As long as 2.1 can read
 the version of that schema, then the restoration can happen.
 
 If a user is running Accumulo 2.2 they should be able to restore snapshots S2,
-and S1 or S2 with some caveats.  The caveats are that S1 and S2 must have no
-FATE ops in progress and the restorations should cause upgrade to run.  The
-reason upgrade should run is because Zookeeper and Accumulo metadata may need
-to be updated.  The reason there can be no FATE ops is because upgrade
-disallows this.
+and S1 with some caveats.  The caveats are that S1 must have no FATE ops in
+progress and the restorations should cause upgrade to run.  The reason upgrade
+should run is because Zookeeper and Accumulo metadata may need to be updated.
+The reason there can be no FATE ops is because upgrade disallows this.
 
 The Accumuo upgrade process should check for snapshots and ensure it can
 use/understand them.  If not, then the upgrade should fail.  For example if
