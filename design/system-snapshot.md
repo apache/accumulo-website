@@ -112,6 +112,10 @@ preserved.
 A user API and related shell command would delete snapshots.  The
 implementation could simply delete the related files `/accumulo/snapshots/`.
 The GC would need to be tolerant of file being deleted while its reading them.
+This could be a FATE op that get the snapshot lock.  That would handle the
+case of deleting a snapshot that is in the process of being created more
+gracefully.
+
 
 ### Accumulo GC changes
 
