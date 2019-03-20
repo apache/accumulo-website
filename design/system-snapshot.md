@@ -155,3 +155,45 @@ immutable, the list of files for a snapshot could be computed once and stored.
 This would make GC more efficient by avoiding random accesses to read the
 metadata table snapshot.  The precomputed list of files could also contain size
 info, which would be useful for analyzing space usage quickly.
+
+### Upgrade and downgrade considerations.
+
+For upgrade purposes the entire snapshot data schema should be designed with
+upgrades and downgrades in mind. Suppose a user has the following snapshots
+
+ * Snapshot S1 created by Accumulo 2.1
+ * Snapshot S2 created by Accumulo 2.2
+
+Suppose a user wants to run Accumulo 2.1 and restore snapshot S2.   This
+implies that Accumulo 2.1 needs to be able to reliably read data from later
+versions for GC purposes.  One possible way to solve this is to store garbage
+collection information in its own versioned schema.  As long as 2.1 can read
+the version of that schema, then the restoration can happen.
+
+If a user is running Accumulo 2.2 they should be able to restore snapshots S2,
+and S1 or S2 with some caveats.  The caveats are that S1 and S2 must have no
+FATE ops in progress and the restorations should cause upgrade to run.  The
+reason upgrade should run is because Zookeeper and Accumulo metadata may need
+to be updated.  The reason there can be no FATE ops is because upgrade
+disallows this.
+
+The Accumuo upgrade process should check for snapshots and ensure it can
+use/understand them.  If not, then the upgrade should fail.  For example if
+Accumulo 2.6 can no longer read snapshot data from 2.1 then this should cause
+upgrade to fail.
+
+Below is a very incomplete example schema for the snapshot data file. It is
+here to illustrate some of the points above, but is not well thought out.
+
+```json
+{
+  "snapshot_schema_version" : 1
+  "accumulo_version" : 2.1.2
+  "zookeeper_data" : "serialized zookeeper snapshot"
+  "garbage_collection_data" : {
+     "schema_version" : 1
+     "referenced_dirs" : []
+     "referenced_files" : []
+  }
+}
+```
