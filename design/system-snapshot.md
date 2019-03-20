@@ -76,7 +76,8 @@ snapshot. The FATE op would do the following :
  1. pause Accumulo GC
  1. flush metadata table
  1. flush root table (probably need to to fix {% ghi 798 %})
- 1. Create snapshot copying ZK to DFS (this is the snapshot assuming #936 is done)
+ 1. Create snapshot copying ZK to DFS (this is the snapshot assuming 
+    {% ghi 936 %} is done)
  1. Unpause everything. When the GC is unpaused, it should start fresh reading
     all snapshots available.
  1. release snapshot lock
