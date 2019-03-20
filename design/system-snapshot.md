@@ -71,11 +71,14 @@ snapshot. The FATE op would do the following :
  1. get snapshot lock in ZK (prevents concurrent snapshot operations)
  1. ensure snapshot name is not in use
  1. pause changing props in ZK
- 1. pause non-snapshot fate ops (let them finish current step, but do not
-    execute next step).   Temporarily stop accepting new FATE ops.
+ 1. pause non-snapshot FATE ops (let running fate ops keep running, but pause
+    any changes to the fate data store in ZK). 
  1. pause Accumulo GC
  1. flush metadata table
  1. flush root table (probably need to to fix {% ghi 798 %})
+ 1. TODO should the root and metadata table be checked for consistency?
+    Ongoing split and FATE ops that may cause inconsistency should resolve after
+    the snapshot is restored, so this seems uneeded.
  1. Create snapshot copying ZK to DFS (this is the snapshot assuming 
     {% ghi 936 %} is done)
  1. Unpause everything. When the GC is unpaused, it should start fresh reading
@@ -87,10 +90,28 @@ A user could optionally flush some or all tables before taking a snapshot.
 More thought needs to be given to write ahead logs.  This design ignores them
 and only concerns itself with flushed data.
 
-Pausing FATE ops may not be needed.  More design work is needed in the general
-area of FATE ops. Ideally the snapshot operation would be extemely fast.
-Pausing FATE ops could be very slow.  The reason behind pausing is to get a
-consistent view of FATE and the root+metadata tables.
+The reason behind pausing FATE ops is to get a consistent view of FATE and the
+root+metadata tables.  FATE ops are composed of a series of steps persisted in
+zookeeper.  Each FATE step may mutate ZK, Accumulo metadata table, and/or HDFS.
+Each FATE step is supposed to be idempotent meaning that in the case of failure
+its safe to run it again.  Once a FATE step successfully completes, it expects
+that any changes it made to other data stores (ZK, metadata table, etc) are
+persisted.  The problem this design needs to solve is ensuring that data
+related to completed FATE steps is present in the snapshot.  This guarantee
+needs to be made in the face of concurrency.
+
+Pausing changes to the FATE data store in Zookeeper before flushing the
+metadata table is one way to solve this problem.  If a currently running FATE
+step completes while a snapshot is running, then it will not be able to push
+the next step in ZK. Pushing the next step in ZK would mark the current step as
+complete/successful. This means that when a snapshot is restored it will force
+any FATE steps that were running when the snapshot operation started to rerun.
+When the step reruns it should redo any needed changes to the metadata table
+and/or ZK.
+
+All of the Pause operations could be started concurrently, waiting for all to
+finish before proceeding.  Alternatively GC could be paused first and FATE last
+in sequential order with the goal of minimizing latency for user operations.
 
 ### Listing snapshots
 
