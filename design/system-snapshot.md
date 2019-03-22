@@ -196,3 +196,16 @@ here to illustrate some of the points above, but is not well thought out.
   }
 }
 ```
+
+## Possible problems
+
+There are some possible problems aread this design does not explore in depth
+that need more attention.
+
+ * Evolution of volumes over time.  If snapshots have different volumes than
+   each other and the current system, what are the implications of this for
+   garbage collection?  Does the snapshot need to serialize the volume config?
+ * Unique file names.  Accumulo gives each file it creates a globally unique
+   file name.  If the system is rolled back to an older snapshot, with files
+   from new snapshots still present, there is a potential for name collisions.
+   What are the implications of this?
