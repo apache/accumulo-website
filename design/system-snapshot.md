@@ -209,3 +209,4 @@ that need more attention.
    file name.  If the system is rolled back to an older snapshot, with files
    from new snapshots still present, there is a potential for name collisions.
    What are the implications of this?
+ * What else?
