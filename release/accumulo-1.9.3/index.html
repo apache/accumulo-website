@@ -164,6 +164,30 @@ step instructions for running example code</li>
 
 <h2 id="notable-changes">Notable Changes</h2>
 
+<h3 id="multiple-fixes-for-write-ahead-logs">Multiple Fixes for Write Ahead Logs</h3>
+
+<p>Fixes issues where a reference may be created in zookeeper and referenced in the metadata table or 
+a large number of empty wal files are created, which can slow recovery.</p>
+
+<p>Fix improper handling of new WAL failure <a href="https://github.com/apache/accumulo/issues/1005">#949</a> <a href="https://github.com/apache/accumulo/issues/1057">#1057</a>  Fixes issues where a wal that 
+does not exist (create failed or was deleted by a tserver) but the reference was created in 
+zookeeper. The reference to the non-existent wal causes metadata operations to hang until reference
+is removed.</p>
+
+<p>Fix Unreferenced closed WALs that were never written to <a href="https://github.com/apache/accumulo/issues/845">#823</a> Fixes issue where failures
+could result in the creation of many files with a header and no data. Recovery treated these 
+as an “empty” files during recovery.</p>
+
+<p>Handle many tablets referencing many WALs <a href="https://github.com/apache/accumulo/issues/860">#854</a> Reduces the number of wals that a tserver
+references, this speeds recovery by reducing the number of wals needed during recovery. When a the
+number of wals referenced by a tserver exceeds a threshold, the tserver will flush and minor 
+compactthe oldest log to limit the number of wal references.</p>
+
+<p>Fix WAL RecoveryLogReader error on failed file <a href="https://github.com/apache/accumulo/issues/1048">#961</a> If a tserver fails sorting, a marker 
+file is written to the recovery directory. The presence of this marker prevented any subsequent 
+attempts at recovery from succeeding. 
+(originally <a href="https://issues.apache.org/jira/browse/ACCUMULO-4861">ACCUMULO-4861</a></p>
+
 <h3 id="fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions">Fix ArrayOutOfBounds error when new files are created (affects all previous versions)</h3>
 
 <p>Accumulo maintains a 1-up counter to keep file names and other identifiers
@@ -186,15 +210,132 @@ I0123abc.rf, you are probably at low risk from this bug.</p>
 
 <p>This issue was fixed in pull request <a href="https://github.com/apache/accumulo/issues/562">#562</a></p>
 
-<h3 id="another-notable-item-here-affects-versions">~Another notable item here~ (affects ~versions~)</h3>
+<h3 id="stop-locking-during-compaction">Stop locking during compaction</h3>
 
-<p>More description here. This was fixed in [#NUM].</p>
+<p>Compactions were acquiring the tablet lock between each key value. 
+This created unnecessary contention with other operations like scan and 
+bulk imports.  For <a href="https://github.com/apache/accumulo/issues/1031">#1031 </a> the the synchronization was removed
+by <a href="https://github.com/apache/accumulo/issues/1032">#1032 </a>.</p>
 
-<h2 id="other-changes">Other Changes</h2>
+<h3 id="fixed-splitting-tablets-with-files-and-no-data">Fixed splitting tablets with files and no data</h3>
+
+<p>The split code assumed that if a tablet had files that it had data in
+those files.  There are some edge case where this is not true.  Updated
+the split code to handle this <a href="https://github.com/apache/accumulo/issues/998">#998 </a> <a href="https://github.com/apache/accumulo/issues/999">#999 </a> .</p>
+
+<h3 id="log-when-a-scan-waits-a-long-time-for-files">Log when a scan waits a long time for files.</h3>
+
+<p>Accumulo has a configurable limit on the max number of files open in a
+tserver for all scans.  When too many files are open, scans must wait.
+In <a href="https://github.com/apache/accumulo/issues/978">#978 </a> and <a href="https://github.com/apache/accumulo/issues/981">#981 </a> scans that wait too long for files
+now log a message.</p>
+
+<h3 id="fixed-race-condition-in-table-existance-check">Fixed race condition in table existance check.</h3>
+
+<p>The Accumulo client code that checks if tables exists had a race 
+condition.  The race was fixed in <a href="https://github.com/apache/accumulo/issues/768">#768 </a> and <a href="https://github.com/apache/accumulo/issues/973">#973 </a></p>
+
+<h3 id="support-running-mini-accumulo-using-java-11">Support running Mini Accumulo using Java 11</h3>
+
+<p>Mini Accumulo made some assumptions about classloaders that were no 
+longer true in Java 11.  This caused Mini to fail in Java 11.  In 
+<a href="https://github.com/apache/accumulo/issues/924">#924 </a> Mini was updated to work with Java 11, while still working
+with Java 7 and 8.</p>
+
+<h3 id="fixed-issue-with-improperly-configured-snappy">Fixed issue with improperly configured Snappy</h3>
+
+<p>If snappy was configured for a table and the snappy libraries were not 
+available on the system then this could cause minor compactions to hang
+forever.  In <a href="https://github.com/apache/accumulo/issues/920">#920 </a> and <a href="https://github.com/apache/accumulo/issues/925">#925 </a> this was fixed and minor 
+compactions will proceed when a different compression is configured.</p>
+
+<h3 id="handle-bad-locality-group-config">Handle bad locality group config.</h3>
+
+<p>Improperly configured locality groups could cause a tablet to become
+inoperative.  This was fixed in <a href="https://github.com/apache/accumulo/issues/819">#819 </a> and <a href="https://github.com/apache/accumulo/issues/840">#840 </a>.</p>
+
+<h3 id="fixed-bulk-import-race-condition">Fixed bulk import race condition.</h3>
+
+<p>There was a race condition in bulk import that could result in files
+being imported after a bulk import transaction had completed.  In the
+worst case these files were already compacted and garbage collected. 
+This would cause a tablet to have a reference to a file that did not 
+exists.  No data would have been lost, but it would cause scans to fail.
+The race was fixed in <a href="https://github.com/apache/accumulo/issues/800">#800 </a> and <a href="https://github.com/apache/accumulo/issues/837">#837 </a></p>
+
+<p>TODO document <a href="https://github.com/apache/accumulo/issues/759">#759 </a> <a href="https://github.com/apache/accumulo/issues/710">#710 </a> <a href="https://github.com/apache/accumulo/issues/669">#669</a></p>
+
+<h3 id="another-notable-item-here-affects-versions"><del>Another notable item here (affects versions)</del></h3>
+
+<h2 id="useful-links">Useful links</h2>
 
 <ul>
+  <li><a href="https://github.com/apache/accumulo/compare/rel/1.9.2...apache:rel/1.9.3">All Changes since 1.9.2</a></li>
   <li><a href="https://github.com/apache/accumulo/issues?q=label%3Av1.9.3">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
   <li><a href="/release/accumulo-1.9.2/">1.9.2 release notes</a> - Release notes showing changes in the previous release</li>
+</ul>
+
+<h2 id="other-changes-reference-will-drop-this-list-upon-release"><del>Other Changes reference (will drop this list upon release)</del></h2>
+
+<ul>
+  <li>07d6346b1 Fix <a href="https://github.com/apache/accumulo/issues/994">#994</a> Consider mutation queue in example config <a href="https://github.com/apache/accumulo/issues/1055">#1055</a></li>
+  <li>fae5fb29a Fixes <a href="https://github.com/apache/accumulo/issues/949">#949</a> improper handling of new WAL failure <a href="https://github.com/apache/accumulo/issues/1005">#1005</a></li>
+  <li>0a2457b5b Fix warning - remove unused log field</li>
+  <li>62886c4e8 Update master metrics to provide FATE operational metrics. <a href="https://github.com/apache/accumulo/issues/1046">#1046</a></li>
+  <li>e92ef4ecf Fixes <a href="https://github.com/apache/accumulo/issues/1041">#1041</a> Provides proper volumes to chooser from import table command</li>
+  <li>deafe74ae fixes <a href="https://github.com/apache/accumulo/issues/1031">#1031</a> fix concurrency bug and remove unused code <a href="https://github.com/apache/accumulo/issues/1032">#1032</a></li>
+  <li>ba943671a Update checkstyle (CVE-2019-9658)</li>
+  <li>84907b3ab Fix possible bug and improve errors in Tablet <a href="https://github.com/apache/accumulo/issues/1027">#1027</a></li>
+  <li>e0841b77a Update to libthrift 0.9.3-1 <a href="https://github.com/apache/accumulo/issues/1029">#1029</a></li>
+  <li>d450ef401 Fix accumulo script <a href="https://github.com/apache/accumulo/issues/1020">#1020</a></li>
+  <li>59e056cb5 fixes <a href="https://github.com/apache/accumulo/issues/998">#998</a> handle splitting tablet with no data and files <a href="https://github.com/apache/accumulo/issues/999">#999</a></li>
+  <li>b3ff32a8f Fix build in latest Eclipse (for 1.9 branch)</li>
+  <li>a3793e68c Clean up accumulo script</li>
+  <li>acd2d9f73 Improve log4j lookup <a href="https://github.com/apache/accumulo/issues/919">#919</a></li>
+  <li>6ec00cf34 Add logging for slow file permits requests. <a href="https://github.com/apache/accumulo/issues/981">#978</a></li>
+  <li>89cfb66db fixes <a href="https://github.com/apache/accumulo/issues/768">#768</a> fix race condition in generation of table map <a href="https://github.com/apache/accumulo/issues/973">#973</a></li>
+  <li>d7fa411c7 Format the thrift files</li>
+  <li>739ca1c10 Refactor FATE AdminUtil spliting getStatus method. <a href="https://github.com/apache/accumulo/issues/891">#891</a></li>
+  <li>cee8fa1c4 Upgrade process should not assume the administrative user is named ‘root’. <a href="https://github.com/apache/accumulo/issues/944">#944</a></li>
+  <li>61c44919d Support running MiniAccumuloCluster using Java 11 <a href="https://github.com/apache/accumulo/issues/924">#924</a></li>
+  <li>787a52884 fixes <a href="https://github.com/apache/accumulo/issues/920">#920</a> retry minc on unsatisfied link error <a href="https://github.com/apache/accumulo/issues/925">#925</a></li>
+  <li>577dd9a64 During tablet recovery filter logs out that do not define tablet. <a href="https://github.com/apache/accumulo/issues/881">#881</a></li>
+  <li>c8b413261 <a href="https://github.com/apache/accumulo/issues/859">#859</a> - Fix CLASSPATH bug causing cur dir to be added <a href="https://github.com/apache/accumulo/issues/864">#864</a></li>
+  <li>2c2840b18 Fix race condition when getting WALs for dead tserver <a href="https://github.com/apache/accumulo/issues/866">#866</a></li>
+  <li>3862a408b fixes <a href="https://github.com/apache/accumulo/issues/819">#819</a> Handle bad locality group config. <a href="https://github.com/apache/accumulo/issues/840">#840</a></li>
+  <li>db5f18b1f fixes <a href="https://github.com/apache/accumulo/issues/800">#800</a> avoid importing files for completed bulk transactions <a href="https://github.com/apache/accumulo/issues/837">#837</a></li>
+  <li>a5e341c89 Fix warnings by adding missing generic types</li>
+  <li>1be829848 fixes ACCUMULO-4410: Master did not resume balancing after administrative tserver shutdown</li>
+  <li>ba572b4f8 Format C++ code (manually)</li>
+  <li>df1061b79 fixes <a href="https://github.com/apache/accumulo/issues/767">#767</a> correct allocation issue in native maps <a href="https://github.com/apache/accumulo/issues/769">#769</a></li>
+  <li>61a6eb8fc Merge branch ‘pr-697’ into 1.9</li>
+  <li>447b52d38 Minor clean up from <a href="https://github.com/apache/accumulo/issues/766">#766</a></li>
+  <li>be6154b5a Include commons-configuration in our convenience binaries for Hadoop 2. <a href="https://github.com/apache/accumulo/issues/766">#766</a></li>
+  <li>b6409effe Only requeue compaction when there was activity <a href="https://github.com/apache/accumulo/issues/759">#759</a></li>
+  <li>1d3578841 Revert commons-vfs2 version <a href="https://github.com/apache/accumulo/issues/728">#728</a></li>
+  <li>725a450c8 Make the ACCUMULO_MONITOR_BIND_ALL property case-insensitive checking</li>
+  <li>ff452a486 fixes <a href="https://github.com/apache/accumulo/issues/587">#587</a> In table delete wait for tablets assigned to dead servers <a href="https://github.com/apache/accumulo/issues/727">#727</a></li>
+  <li>5de8d0f1e TableName from baseSplit is ignored, when getting inputTableConfig within AbstractInputFormat.initialize() <a href="https://github.com/apache/accumulo/issues/711">#711</a></li>
+  <li>32bfafe93 Assign all TabletServers to default pool if empty <a href="https://github.com/apache/accumulo/issues/710">#710</a></li>
+  <li>4bd9d6f68 ACCUMULO-4496 Update user manual and error messages for FATE upgrade failure.</li>
+  <li>987ae65cc Use optimized writeV methods in Mutations <a href="https://github.com/apache/accumulo/issues/669">#669</a></li>
+  <li>06d80292d Update commons-configuration to latest 1.x <a href="https://github.com/apache/accumulo/issues/659">#659</a></li>
+  <li>159c97a3f Introduce a property for a key password for the Monitor keystore file</li>
+  <li>6933ddbc3 Revert “Do not require a password on the truststore JKS”</li>
+  <li>a590a0ffe Roll back maven-invoker-plugin 3.1.0-&gt;3.0.1</li>
+  <li>c6fe62c9f Remove httpclient dependency. <a href="https://github.com/apache/accumulo/issues/655">#655</a></li>
+  <li>d83276577 AccumuloFileOutputFormatITs need to look on local filesystem for results written into JUnit provided temp dir. <a href="https://github.com/apache/accumulo/issues/654">#654</a></li>
+  <li>bc1b55b81 Correct how Continuous Ingest specifies the debug log file <a href="https://github.com/apache/accumulo/issues/651">#651</a></li>
+  <li>1213c9a9d Do not require a password on the truststore JKS</li>
+  <li>9c2ef2f5d Fix javadoc doclint settings</li>
+  <li>bc260dcd6 Upgrade findbugs to spotbugs for 1.9</li>
+  <li>177680829 Fix <a href="https://github.com/apache/accumulo/issues/626">#626</a> Update to apache-21 parent POM</li>
+  <li>851c2d133 Fix <a href="https://github.com/apache/accumulo/issues/639">#639</a> Update JUnit usage</li>
+  <li>25472ae0d Use slf4j syntax for key in log message</li>
+  <li>96e8828fd Put stacktrace back in visibility exceptions</li>
+  <li>eee579d7c Fix <a href="https://github.com/apache/accumulo/issues/596">#596</a> Fix compilation on Java 7</li>
+  <li>7fd1f7823 Improve info given in visibility exceptions <a href="https://github.com/apache/accumulo/issues/578">#578</a></li>
+  <li>bffa3c4e1 Improved comments for <a href="https://github.com/apache/accumulo/issues/559">#559</a> changes <a href="https://github.com/apache/accumulo/issues/566">#566</a></li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
