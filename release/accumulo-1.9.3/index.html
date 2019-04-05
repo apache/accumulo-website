@@ -151,9 +151,9 @@
 
 
 
-<p>Apache Accumulo 1.9.3 contains bug fixes for ~summary of bugs here~.
+<p>Apache Accumulo 1.9.3 contains bug fixes for Write Ahead Logs and compaction.
 Users of any previous version of 1.8 or 1.9 are encouraged to upgrade
-~immediately or specify recommended timeline~.</p>
+<del>immediately or specify recommended timeline</del>.</p>
 
 <ul>
   <li><a href="/1.9/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation</li>
@@ -210,10 +210,6 @@ performance of mutations overall since the Hadoop WriteableUtils method can make
 multiple write calls per long. <a href="https://github.com/apache/accumulo/issues/669">#669</a></p>
   </li>
 </ul>
-
-<p>Moved optimized writeVLong and writeVInt to UnsynchronizedBuffer
-to replace use of WriteableUtils methods. Each optimized method will
-only make one write call to the underlying outputstream.</p>
 
 <h3 id="multiple-fixes-for-compaction-issues">Multiple Fixes for Compaction Issues</h3>
 
@@ -274,13 +270,6 @@ hadoop metrics2 configuration files.</p>
 
 <p>Versions of libstdc++ 8.2 and higher triggered errors within within the native map code. 
 This release fixes issues <a href="https://github.com/apache/accumulo/issues/767">#767</a>, <a href="https://github.com/apache/accumulo/issues/769">#769</a> and …</p>
-
-<h3 id="stop-locking-during-compaction">Stop locking during compaction</h3>
-
-<p>Compactions were acquiring the tablet lock between each key value. 
-This created unnecessary contention with other operations like scan and 
-bulk imports.  For <a href="https://github.com/apache/accumulo/issues/1031">#1031</a> the the synchronization was removed
-by <a href="https://github.com/apache/accumulo/issues/1032">#1032</a>.</p>
 
 <h3 id="fixed-splitting-tablets-with-files-and-no-data">Fixed splitting tablets with files and no data</h3>
 
