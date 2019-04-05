@@ -166,48 +166,42 @@ step instructions for running example code</li>
 
 <h3 id="multiple-fixes-for-write-ahead-logs">Multiple Fixes for Write Ahead Logs</h3>
 
-<p>This release fixes a number of issues with Write Ahead Logs that slow or prevent recovery 
-and in some cases lead to data loss. The fixes reduce the number of WALS that need to be 
-referenced by a tserver, improve error handing of WAL issues, and improve WAL clean up processes.</p>
+<p>This release fixes Write Ahead Logs issues that slow or prevent recovery
+and in some cases lead to data loss. The fixes reduce the number of WALS
+referenced by a tserver, improve error handing, and improve clean up.</p>
 
 <ul>
   <li>
-    <p>Eliminates a race condition that could result in data loss during recovery. 
-In cases where the GC deletes unreferenced WAL files as the master is simultaneously 
-attempting to create the list of WALs necessary for recovery, the master will skip 
-files that should be used in the recovery, resulting in data loss. Fixed in <a href="https://github.com/apache/accumulo/issues/866">#866</a>.</p>
+    <p>Eliminates a race condition that could result in data loss during recovery.
+If the GC deletes unreferenced WALs from ZK while the master is reading
+recovery WALs from ZK, the master may skip WALs it should not, resulting in
+data loss.  Fixed in <a href="https://github.com/apache/accumulo/issues/866">#866</a>.</p>
   </li>
   <li>
-    <p>If the metadata table has references to a non-existent WAL file, operations 
-for that table will hang. This occurs when files published to zookeeper have existing 
-references but subsequent failures have occurred in the WAL files, or if a tserver 
-removes the file.  Reported in <a href="https://github.com/apache/accumulo/issues/949">#949</a> and fixed in <a href="https://github.com/apache/accumulo/issues/1057">#1005</a>.</p>
+    <p>Opening a new WAL in DFS may fail, but still be advertised in ZK. This could
+result in a missing WAL during recovery, preventing tablets from loading.
+There is no data loss in this case, just WAL references that should not exists.
+Reported in <a href="https://github.com/apache/accumulo/issues/949">#949</a> and fixed in <a href="https://github.com/apache/accumulo/issues/1057">#1005</a>.</p>
   </li>
   <li>
-    <p>tserver failures could result in the creation of many files that are unreferenced and 
-never written to, resulting in files with a header but no data. Recovery tries to 
-handle these as “empty” files which slows the recovery process. This was fixed in <a href="https://github.com/apache/accumulo/issues/845">#823</a>.</p>
+    <p>tserver failures could result in many empty WALs that unnecessarily slow recovery.
+This was fixed in <a href="https://github.com/apache/accumulo/issues/845">#823</a>.</p>
   </li>
   <li>
-    <p>When the number of WALs referenced by a tserver exceeds a threshold, the tserver will 
-flush and minor compact the oldest log to limit the number of wal references needed by 
-that tserver. This reduces the number of WALs referenced by many tservers and speeds 
-recovery by reducing the number of WALs needed during recovery.  Addressed by <a href="https://github.com/apache/accumulo/issues/860">#854</a>.</p>
+    <p>Some write patterns caused tservers to unnecessarily reference a lot of WALs,
+which could slow any recovery.  In <a href="https://github.com/apache/accumulo/issues/860">#854</a> the max WALs referenced was
+limited regardless of the write pattern, avoiding long recovery times.</p>
   </li>
   <li>
     <p>During tablet recovery, filter out logs that do not define the tablet. <a href="https://github.com/apache/accumulo/issues/881">#881</a></p>
   </li>
   <li>
-    <p>If a tserver fails sorting, a marker file is written to the recovery directory. 
-The presence of this marker prevents any subsequent attempts at recovery from succeeding. 
+    <p>If a tserver fails sorting, a marker file is written to the recovery directory.
+This marker prevents any subsequent recovery attempts from succeeding.
 Fixed by modifying the WAL RecoveryLogReader to handle failed file markers in <a href="https://github.com/apache/accumulo/issues/1048">#961</a>.</p>
   </li>
   <li>
-    <p>Use UnsynchronizedBuffer for optimized writeV methods (writeVLong abd writeVInt) 
-in Mutations so that only one write call is necessary to the underlying outputstream. 
-This was mainly done as an attempt to improve WAL performance. It “should” help 
-performance of mutations overall since the Hadoop WriteableUtils method can make 
-multiple write calls per long. <a href="https://github.com/apache/accumulo/issues/669">#669</a></p>
+    <p>Improve performance of serializing mutations to a WAL by avoiding frequent synchronization. <a href="https://github.com/apache/accumulo/issues/669">#669</a></p>
   </li>
 </ul>
 
@@ -215,9 +209,9 @@ multiple write calls per long. <a href="https://github.com/apache/accumulo/issue
 
 <ul>
   <li>
-    <p>Stop locking during compaction.  Compactions were acquiring the tablet lock between each 
-key value. This created unnecessary contention with other operations like scan and 
-bulk imports.  For <a href="https://github.com/apache/accumulo/issues/1031">#1031</a> the the synchronization was removed by <a href="https://github.com/apache/accumulo/issues/1032">#1032</a>.</p>
+    <p>Stop locking during compaction.  Compactions acquired the tablet lock between each
+key value. This created unnecessary contention with other operations like scan and
+bulk imports.  The synchronization was removed <a href="https://github.com/apache/accumulo/issues/1032">#1031</a>.</p>
   </li>
   <li>
     <p>Only re-queue compaction when there is activity. <a href="https://github.com/apache/accumulo/issues/759">#759</a></p>
@@ -226,25 +220,8 @@ bulk imports.  For <a href="https://github.com/apache/accumulo/issues/1031">#103
 
 <h3 id="fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions">Fix ArrayOutOfBounds error when new files are created (affects all previous versions)</h3>
 
-<p>Accumulo maintains a 1-up counter to keep file names and other identifiers
-unique. This counter is padded with 0 characters when used in file names. If
-the counter becomes sufficiently large, the padding code in versions prior to
-1.9.3 causes an out of bounds error.</p>
-
-<p>Most users will not be affected by this bug, since it requires the counter to
-be very large before the error would be seen. Situations which might cause the
-counter to get very large include: having a very old Accumulo cluster that has
-been running for many years, having a very large cluster, having a cluster that
-writes many files very quickly for long periods of time, having altered the
-current value of the counter in ZooKeeper, or if you experience a bug which
-causes the counter value to skip ahead very rapidly.</p>
-
-<p>If you wish to check to see if you are at risk of being impacted by this bug,
-examine the name of RFiles recently created in your system. If you have one or
-more padded 0 characters (after an initial letter), as in I000zy98.rf or
-I0123abc.rf, you are probably at low risk from this bug.</p>
-
-<p>This issue was fixed in pull request <a href="https://github.com/apache/accumulo/issues/562">#562</a></p>
+<p>If the 7 digit base 36 number used to name files attempted to go to 8 digits,
+then compactions would fail.  This was fixed in <a href="https://github.com/apache/accumulo/issues/562">#562</a>.</p>
 
 <h3 id="updated-master-metrics-to-include-fate-metrics">Updated Master Metrics to include FATE metrics.</h3>
 
@@ -255,7 +232,7 @@ I0123abc.rf, you are probably at low risk from this bug.</p>
   <li>a count of zookeeper connection errors when the snapshot is taken.</li>
 </ul>
 
-<p>The number of child operations provides a light-weight surrogate for FATE transaction 
+<p>The number of child operations provides a light-weight surrogate for FATE transaction
 progression between snapshots. The metrics are controlled with the following properties:</p>
 
 <ul>
@@ -263,13 +240,13 @@ progression between snapshots. The metrics are controlled with the following pro
   <li>master.fate.metrics.min.update.interval - default to <em>60s</em> - there is a hard limit of 10s.</li>
 </ul>
 
-<p>When enabled, the metrics are published to JMX and can optionally be configured using standard 
+<p>When enabled, the metrics are published to JMX and can optionally be configured using standard
 hadoop metrics2 configuration files.</p>
 
 <h3 id="fixed-issues-with-native-maps-with-libstdc-82-and-higher">Fixed issues with Native Maps with libstdc++ 8.2 and higher</h3>
 
-<p>Versions of libstdc++ 8.2 and higher triggered errors within within the native map code. 
-This release fixes issues <a href="https://github.com/apache/accumulo/issues/767">#767</a>, <a href="https://github.com/apache/accumulo/issues/769">#769</a> and …</p>
+<p>Versions of libstdc++ 8.2 and higher triggered errors within within the native map code.
+This release fixes issues <a href="https://github.com/apache/accumulo/issues/767">#767</a>, <a href="https://github.com/apache/accumulo/issues/769">#769</a>, <a href="https://github.com/apache/accumulo/issues/1064">#1064 </a>, and <a href="https://github.com/apache/accumulo/issues/1070">#1070 </a>.</p>
 
 <h3 id="fixed-splitting-tablets-with-files-and-no-data">Fixed splitting tablets with files and no data</h3>
 
@@ -285,21 +262,20 @@ In <a href="https://github.com/apache/accumulo/issues/978">#978</a> and <a href=
 
 <h3 id="fixed-race-condition-in-table-existence-check">Fixed race condition in table existence check.</h3>
 
-<p>The Accumulo client code that checks if tables exists had a race 
+<p>The Accumulo client code that checks if tables exists had a race
 condition.  The race was fixed in <a href="https://github.com/apache/accumulo/issues/768">#768</a> and <a href="https://github.com/apache/accumulo/issues/973">#973</a></p>
 
 <h3 id="support-running-mini-accumulo-using-java-11">Support running Mini Accumulo using Java 11</h3>
 
-<p>Mini Accumulo made some assumptions about classloaders that were no 
-longer true in Java 11.  This caused Mini to fail in Java 11.  In 
+<p>Mini Accumulo made some assumptions about classloaders that were no
+longer true in Java 11.  This caused Mini to fail in Java 11.  In
 <a href="https://github.com/apache/accumulo/issues/924">#924</a> Mini was updated to work with Java 11, while still working
 with Java 7 and 8.</p>
 
 <h3 id="fixed-issue-with-improperly-configured-snappy">Fixed issue with improperly configured Snappy</h3>
 
-<p>If snappy was configured for a table and the snappy libraries were not 
-available on the system then this could cause minor compactions to hang
-forever.  In <a href="https://github.com/apache/accumulo/issues/920">#920</a> and <a href="https://github.com/apache/accumulo/issues/925">#925</a> this was fixed and minor 
+<p>If snappy was configured and the snappy libraries were not available then minor
+compactions could hang forever.  In <a href="https://github.com/apache/accumulo/issues/920">#920</a> and <a href="https://github.com/apache/accumulo/issues/925">#925</a> this was fixed and minor
 compactions will proceed when a different compression is configured.</p>
 
 <h3 id="handle-bad-locality-group-config">Handle bad locality group config.</h3>
@@ -311,19 +287,19 @@ inoperative.  This was fixed in <a href="https://github.com/apache/accumulo/issu
 
 <p>There was a race condition in bulk import that could result in files
 being imported after a bulk import transaction had completed.  In the
-worst case these files were already compacted and garbage collected. 
-This would cause a tablet to have a reference to a file that did not 
+worst case these files were already compacted and garbage collected.
+This would cause a tablet to have a reference to a file that did not
 exists.  No data would have been lost, but it would cause scans to fail.
 The race was fixed in <a href="https://github.com/apache/accumulo/issues/800">#800</a> and <a href="https://github.com/apache/accumulo/issues/837">#837</a></p>
 
 <h3 id="fixed-issue-with-hostregextableloadbalancer">Fixed issue with HostRegexTableLoadBalancer</h3>
 
-<p>This addresses an issue when using the HostRegexTableLoadBalancer 
-when the default pool is empty. The load balancer will not assign the tablets at all. 
-Here, we select a random pool to assign the tablets to. This behavior is on by 
-default in the HostRegexTableLoadBalancer but can be disabled via 
+<p>This addresses an issue when using the HostRegexTableLoadBalancer
+when the default pool is empty. The load balancer will not assign the tablets at all.
+Here, we select a random pool to assign the tablets to. This behavior is on by
+default in the HostRegexTableLoadBalancer but can be disabled via
 HostRegexTableLoadBalancer configuration setting
- <em>table.custom.balancer.host.regex.HostTableLoadBalancer.ALL</em><br />
+ <em>table.custom.balancer.host.regex.HostTableLoadBalancer.ALL</em>
  Fixed in <a href="https://github.com/apache/accumulo/issues/691">#691</a> - backported to 1.9 in <a href="https://github.com/apache/accumulo/issues/710">#710</a></p>
 
 <h3 id="update-to-libthrift-version">Update to libthrift version</h3>
