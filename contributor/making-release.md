@@ -8,18 +8,18 @@ redirect_from:
 
 Follow these steps to make a release of Apache Accumulo. 
 
-1. [Setup]
-2. [Update the CHANGES file]
-3. [Triage Issues]
-4. [Create the candidate]
-5. [Vote]
-6. [Promote the artifacts]
-7. [Create the final Git tag]
-8. [Copy artifacts to dist.apache.org]
-9. [Update projects.apache.org]
-10. [Update Documentation]
-11. [Update Javadocs]
-12. [Update Accumulo Examples]
+1. [Setup](#setup)
+2. [Update the CHANGES file](#update-the-changes-file)
+3. [Triage Issues](#triage-issues)
+4. [Create the candidate](#create-the-candidate)
+5. [Vote](#vote)
+6. [Promote the artifacts](#promote-the-artifacts)
+7. [Create the final Git tag](#create-the-final-git-tag)
+8. [Copy artifacts to dist.apache.org](#copy-artifacts-to-distapacheorg)
+9. [Update projects.apache.org](#update-projectsapacheorg)
+10. [Update Documentation](#update-documentation)
+11. [Update Javadocs](#update-javadocs)
+12. [Update Accumulo Examples](#update-accumulo-examples)
 
 TODO: Incorporate these where appropriate
 In git: 
@@ -237,19 +237,6 @@ Some good references that explain a few things:
 - [Christopher talks about making releases][3]
 - [Publishing Maven Artifacts][4]
 - [Publishing Releases][5]
-
-[Setup]: #setup
-[Update the CHANGES file]: #update-the-changes-file
-[Triage Issues]: #triage-issues
-[Create the candidate]: #create-the-candidate
-[Vote]: #vote
-[Promote the artifacts]: #promote-the-artifacts
-[Create the final Git tag]: #create-the-final-git-tag
-[Copy artifacts to dist.apache.org]: #copy-artifacts-to-distapacheorg
-[Update projects.apache.org]: #update-projectsapacheorg
-[Update Documentation]: #update-documentation
-[Update Javadocs]: #update-javadocs
-[Update Accumulo Examples]: #update-accumulo-examples
 
 [1]: https://www.apache.org/dev/release-signing
 [2]: https://repository.apache.org
