@@ -6,10 +6,190 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 05 Apr 2019 15:51:40 -0400</pubDate>
-    <lastBuildDate>Fri, 05 Apr 2019 15:51:40 -0400</lastBuildDate>
+    <pubDate>Thu, 11 Apr 2019 16:35:04 -0400</pubDate>
+    <lastBuildDate>Thu, 11 Apr 2019 16:35:04 -0400</lastBuildDate>
     <generator>Jekyll v3.7.3</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 1.9.3</title>
+        <description>&lt;p&gt;Apache Accumulo 1.9.3 contains bug fixes for Write Ahead Logs and compaction.
+Users of 1.9.2 are encouraged to upgrade.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.9 API&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by
+step instructions for running example code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-write-ahead-logs&quot;&gt;Multiple Fixes for Write Ahead Logs&lt;/h3&gt;
+
+&lt;p&gt;This release fixes Write Ahead Logs issues that slow or prevent recovery
+and in some cases lead to data loss. The fixes reduce the number of WALS
+referenced by a tserver, improve error handing, and improve clean up.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Eliminates a race condition that could result in data loss during recovery.
+If the GC deletes unreferenced WALs from ZK while the master is reading
+recovery WALs from ZK, the master may skip WALs it should not, resulting in
+data loss.  Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/866&quot;&gt;#866&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Opening a new WAL in DFS may fail, but still be advertised in ZK. This could
+result in a missing WAL during recovery, preventing tablets from loading.
+There is no data loss in this case, just WAL references that should not exists.
+Reported in &lt;a href=&quot;https://github.com/apache/accumulo/issues/949&quot;&gt;#949&lt;/a&gt; and fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1057&quot;&gt;#1005&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;tserver failures could result in many empty WALs that unnecessarily slow recovery.
+This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/845&quot;&gt;#823&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Some write patterns caused tservers to unnecessarily reference a lot of WALs,
+which could slow any recovery.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/860&quot;&gt;#854&lt;/a&gt; the max WALs referenced was
+limited regardless of the write pattern, avoiding long recovery times.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;During tablet recovery, filter out logs that do not define the tablet. &lt;a href=&quot;https://github.com/apache/accumulo/issues/881&quot;&gt;#881&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If a tserver fails sorting, a marker file is written to the recovery directory.
+This marker prevents any subsequent recovery attempts from succeeding.
+Fixed by modifying the WAL RecoveryLogReader to handle failed file markers in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1048&quot;&gt;#961&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Improve performance of serializing mutations to a WAL by avoiding frequent synchronization. &lt;a href=&quot;https://github.com/apache/accumulo/issues/669&quot;&gt;#669&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-compaction-issues&quot;&gt;Multiple Fixes for Compaction Issues&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Stop locking during compaction.  Compactions acquired the tablet lock between each
+key value. This created unnecessary contention with other operations like scan and
+bulk imports.  The synchronization was removed &lt;a href=&quot;https://github.com/apache/accumulo/issues/1032&quot;&gt;#1031&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Only re-queue compaction when there is activity. &lt;a href=&quot;https://github.com/apache/accumulo/issues/759&quot;&gt;#759&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions&quot;&gt;Fix ArrayOutOfBounds error when new files are created (affects all previous versions)&lt;/h3&gt;
+
+&lt;p&gt;If the 7 digit base 36 number used to name files attempted to go to 8 digits,
+then compactions would fail.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/562&quot;&gt;#562&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-master-metrics-to-include-fate-metrics&quot;&gt;Updated Master Metrics to include FATE metrics.&lt;/h3&gt;
+
+&lt;p&gt;Added master metrics to provide a snapshot of current FATE operations.  The metrics added:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the number of current FATE transactions in progress,&lt;/li&gt;
+  &lt;li&gt;the count of child operations that have occurred on the zookeeper FATE node&lt;/li&gt;
+  &lt;li&gt;a count of zookeeper connection errors when the snapshot is taken.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The number of child operations provides a light-weight surrogate for FATE transaction
+progression between snapshots. The metrics are controlled with the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;master.fate.metrics.enabled - default to &lt;em&gt;false&lt;/em&gt; preserve current metric reporting&lt;/li&gt;
+  &lt;li&gt;master.fate.metrics.min.update.interval - default to &lt;em&gt;60s&lt;/em&gt; - there is a hard limit of 10s.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When enabled, the metrics are published to JMX and can optionally be configured using standard
+hadoop metrics2 configuration files.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issues-with-native-maps-with-libstdc-82-and-higher&quot;&gt;Fixed issues with Native Maps with libstdc++ 8.2 and higher&lt;/h3&gt;
+
+&lt;p&gt;Versions of libstdc++ 8.2 and higher triggered errors within within the native map code.
+This release fixes issues &lt;a href=&quot;https://github.com/apache/accumulo/issues/767&quot;&gt;#767&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/769&quot;&gt;#769&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/1064&quot;&gt;#1064 &lt;/a&gt;, and &lt;a href=&quot;https://github.com/apache/accumulo/issues/1070&quot;&gt;#1070 &lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-splitting-tablets-with-files-and-no-data&quot;&gt;Fixed splitting tablets with files and no data&lt;/h3&gt;
+
+&lt;p&gt;The split code assumed that if a tablet had files that it had data in
+those files.  There are some edge case where this is not true.  Updated
+the split code to handle this &lt;a href=&quot;https://github.com/apache/accumulo/issues/999&quot;&gt;#998&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;log-when-a-scan-waits-a-long-time-for-files&quot;&gt;Log when a scan waits a long time for files.&lt;/h3&gt;
+
+&lt;p&gt;Accumulo has a configurable limit on the max number of files open in a
+tserver for all scans.  When too many files are open, scans must wait.
+In &lt;a href=&quot;https://github.com/apache/accumulo/issues/978&quot;&gt;#978&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/981&quot;&gt;#981&lt;/a&gt; scans that wait too long for files now log a message.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-race-condition-in-table-existence-check&quot;&gt;Fixed race condition in table existence check.&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo client code that checks if tables exists had a race
+condition.  The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/768&quot;&gt;#768&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/973&quot;&gt;#973&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;support-running-mini-accumulo-using-java-11&quot;&gt;Support running Mini Accumulo using Java 11&lt;/h3&gt;
+
+&lt;p&gt;Mini Accumulo made some assumptions about classloaders that were no
+longer true in Java 11.  This caused Mini to fail in Java 11.  In
+&lt;a href=&quot;https://github.com/apache/accumulo/issues/924&quot;&gt;#924&lt;/a&gt; Mini was updated to work with Java 11, while still working
+with Java 7 and 8.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-improperly-configured-snappy&quot;&gt;Fixed issue with improperly configured Snappy&lt;/h3&gt;
+
+&lt;p&gt;If snappy was configured and the snappy libraries were not available then minor
+compactions could hang forever.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/920&quot;&gt;#920&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/925&quot;&gt;#925&lt;/a&gt; this was fixed and minor
+compactions will proceed when a different compression is configured.&lt;/p&gt;
+
+&lt;h3 id=&quot;handle-bad-locality-group-config&quot;&gt;Handle bad locality group config.&lt;/h3&gt;
+
+&lt;p&gt;Improperly configured locality groups could cause a tablet to become
+inoperative.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/819&quot;&gt;#819&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/840&quot;&gt;#840&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-bulk-import-race-condition&quot;&gt;Fixed bulk import race condition.&lt;/h3&gt;
+
+&lt;p&gt;There was a race condition in bulk import that could result in files
+being imported after a bulk import transaction had completed.  In the
+worst case these files were already compacted and garbage collected.
+This would cause a tablet to have a reference to a file that did not
+exists.  No data would have been lost, but it would cause scans to fail.
+The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/800&quot;&gt;#800&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/837&quot;&gt;#837&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-hostregextableloadbalancer&quot;&gt;Fixed issue with HostRegexTableLoadBalancer&lt;/h3&gt;
+
+&lt;p&gt;This addresses an issue when using the HostRegexTableLoadBalancer
+when the default pool is empty. The load balancer will not assign the tablets at all.
+Here, we select a random pool to assign the tablets to. This behavior is on by
+default in the HostRegexTableLoadBalancer but can be disabled via
+HostRegexTableLoadBalancer configuration setting
+ &lt;em&gt;table.custom.balancer.host.regex.HostTableLoadBalancer.ALL&lt;/em&gt;
+ Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/691&quot;&gt;#691&lt;/a&gt; - backported to 1.9 in &lt;a href=&quot;https://github.com/apache/accumulo/issues/710&quot;&gt;#710&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;update-to-libthrift-version&quot;&gt;Update to libthrift version&lt;/h3&gt;
+
+&lt;p&gt;The packaged, binary  tarball contains updated version of libthrift to version 0.9.3-1 to
+address thrift CVE. Issue &lt;a href=&quot;https://github.com/apache/accumulo/issues/1029&quot;&gt;#1029&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;useful-links&quot;&gt;Useful links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://lists.apache.org/thread.html/62a490ee3005ef2ec1f3865f6a9539efc082abc49c90892b49005eed@%3Cdev.accumulo.apache.org%3E&quot;&gt;Release VOTE email thread&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/compare/rel/1.9.2...apache:rel/1.9.3&quot;&gt;All Changes since 1.9.2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues?q=label%3Av1.9.3&quot;&gt;GitHub&lt;/a&gt; - List of issues tracked on GitHub corresponding to this release&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/release/accumulo-1.9.2/&quot;&gt;1.9.2 release notes&lt;/a&gt; - Release notes showing changes in the previous release&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 10 Apr 2019 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.9.3/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.3/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>NoSQL Day 2019</title>
@@ -639,35 +819,6 @@ sending data, you may need to refresh the dashboard page in the browser to start
         <pubDate>Thu, 22 Mar 2018 00:00:00 -0400</pubDate>
         <link>https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Migrating to GitHub Issues</title>
-        <description>&lt;p&gt;Apache Accumulo is migrating from &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO&quot;&gt;JIRA&lt;/a&gt; to &lt;a href=&quot;https://github.com/apache/accumulo/issues&quot;&gt;GitHub issues&lt;/a&gt;. The migration is starting with an initial plan, but it may change as the community uses it.  For a description of the initial operating plan see the &lt;a href=&quot;/how-to-contribute/#issues&quot;&gt;issues section of How to Contribute&lt;/a&gt; and the &lt;a href=&quot;/contributor/making-release#triage-issues&quot;&gt;triaging issues section of Making a Release&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
-
-&lt;p&gt;Doing routine activities in less time is one motivation for the migration.  Below are some examples.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;For GitHub a pull request is an issue. Therefore, creating an issue before a pull request is optional. Before the migration, an issue needed to be created in JIRA before creating a pull request. This was cumbersome for small changes.&lt;/li&gt;
-  &lt;li&gt;When browsing commits in GitHub, issue numbers can be clicked.&lt;/li&gt;
-  &lt;li&gt;Discussions on pull request can easily reference issues with simple markdown syntax.&lt;/li&gt;
-  &lt;li&gt;Commits can close issues if the commit message contains “fixes #xyz”&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;migration&quot;&gt;Migration&lt;/h2&gt;
-
-&lt;p&gt;There is no plan to migrate all existing issues in JIRA. The plan is to only migrate issues that someone is interested in or are actively being worked. Migration is done by linking the JIRA and GitHub issues to each other and then closing the JIRA issue. No new issues should be opened in JIRA.  JIRA will eventually be transitioned to a read only state.&lt;/p&gt;
-
-</description>
-        <pubDate>Fri, 16 Mar 2018 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/blog/2018/03/16/moving-to-github-issues.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2018/03/16/moving-to-github-issues.html</guid>
         
         
         <category>blog</category>
