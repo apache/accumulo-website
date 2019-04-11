@@ -941,6 +941,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_master_bulk_retries">master.bulk.retries</a></li>
 <li><a href="#_master_bulk_threadpool_size">master.bulk.threadpool.size</a></li>
 <li><a href="#_master_bulk_timeout">master.bulk.timeout</a></li>
+<li><a href="#_master_fate_metrics_enabled">master.fate.metrics.enabled</a></li>
+<li><a href="#_master_fate_metrics_min_update_interval">master.fate.metrics.min.update.interval</a></li>
 <li><a href="#_master_fate_threadpool_size">master.fate.threadpool.size</a></li>
 <li><a href="#_master_lease_recovery_interval">master.lease.recovery.interval</a></li>
 <li><a href="#_master_metadata_suspendable">master.metadata.suspendable</a></li>
@@ -1003,6 +1005,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_tserver_server_threads_minimum">tserver.server.threads.minimum</a></li>
 <li><a href="#_tserver_session_idle_max">tserver.session.idle.max</a></li>
 <li><a href="#_tserver_session_update_idle_max">tserver.session.update.idle.max</a></li>
+<li><a href="#_tserver_slow_filepermit_time">tserver.slow.filepermit.time</a></li>
 <li><a href="#_tserver_slow_flush_time">tserver.slow.flush.time</a></li>
 <li><a href="#_tserver_sort_buffer_size">tserver.sort.buffer.size</a></li>
 <li><a href="#_tserver_tablet_split_midpoint_files_max">tserver.tablet.split.midpoint.files.max</a></li>
@@ -1043,6 +1046,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_monitor_ssl_exclude_ciphers">monitor.ssl.exclude.ciphers</a></li>
 <li><a href="#_monitor_ssl_include_ciphers">monitor.ssl.include.ciphers</a></li>
 <li><a href="#_monitor_ssl_include_protocols">monitor.ssl.include.protocols</a></li>
+<li><a href="#_monitor_ssl_keypassword">monitor.ssl.keyPassword</a></li>
 <li><a href="#_monitor_ssl_keystore">monitor.ssl.keyStore</a></li>
 <li><a href="#_monitor_ssl_keystorepassword">monitor.ssl.keyStorePassword</a></li>
 <li><a href="#_monitor_ssl_keystoretype">monitor.ssl.keyStoreType</a></li>
@@ -9492,6 +9496,40 @@ overriden by using the <code>--local-wal-directories</code> option on the tool. 
 <pre>$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.tserver.log.LocalWALRecovery</pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Q</strong> Trying to start the master after upgrading, the upgrade is aborting with the aborting with the following message:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>org.apache.accumulo.core.client.AccumuloException:
+Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>A</strong> You can use the shell to delete completed FATE transactions using the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start tservers</p>
+</li>
+<li>
+<p>Start shell</p>
+</li>
+<li>
+<p>Run fate print to list all</p>
+</li>
+<li>
+<p>If completed, just delete with fate delete</p>
+</li>
+<li>
+<p>Start masters once there are no more fate operations</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_file_naming_conventions">20.10. File Naming Conventions</h3>
@@ -10231,6 +10269,28 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 </div>
 </div>
 <div class="sect4">
+<h5 id="_master_fate_metrics_enabled">master.fate.metrics.enabled</h5>
+<div class="paragraph">
+<p>Enable reporting of FATE metrics in JMX (and logging with Hadoop Metrics2</p>
+</div>
+<div class="paragraph">
+<p><em>Type:</em> BOOLEAN<br>
+<em>Zookeeper Mutable:</em> yes<br>
+<em>Default Value:</em> <code>false</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_master_fate_metrics_min_update_interval">master.fate.metrics.min.update.interval</h5>
+<div class="paragraph">
+<p>Limit calls from metric sinks to zookeeper to update interval</p>
+</div>
+<div class="paragraph">
+<p><em>Type:</em> TIMEDURATION<br>
+<em>Zookeeper Mutable:</em> yes<br>
+<em>Default Value:</em> <code>60s</code></p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="_master_fate_threadpool_size">master.fate.threadpool.size</h5>
 <div class="paragraph">
 <p>The number of threads used to run FAult-Tolerant Executions. These are primarily table operations like merge.</p>
@@ -10875,6 +10935,17 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 </div>
 </div>
 <div class="sect4">
+<h5 id="_tserver_slow_filepermit_time">tserver.slow.filepermit.time</h5>
+<div class="paragraph">
+<p>If a thread blocks more than this period of time waiting to get file permits, debugging information will be written.</p>
+</div>
+<div class="paragraph">
+<p><em>Type:</em> TIMEDURATION<br>
+<em>Zookeeper Mutable:</em> yes<br>
+<em>Default Value:</em> <code>100ms</code></p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="_tserver_slow_flush_time">tserver.slow.flush.time</h5>
 <div class="paragraph">
 <p>If a flush to the write-ahead log takes longer than this period of time, debugging information will written, and may result in a log rollover.</p>
@@ -11231,6 +11302,17 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 <p><em>Type:</em> STRING<br>
 <em>Zookeeper Mutable:</em> no<br>
 <em>Default Value:</em> <code>TLSv1.2</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_monitor_ssl_keypassword">monitor.ssl.keyPassword</h5>
+<div class="paragraph">
+<p>Optional: the password for the private key in the keyStore. When not provided, this defaults to the keystore password.</p>
+</div>
+<div class="paragraph">
+<p><em>Type:</em> STRING<br>
+<em>Zookeeper Mutable:</em> no<br>
+<em>Default Value:</em> <em>empty</em></p>
 </div>
 </div>
 <div class="sect4">
@@ -12177,7 +12259,7 @@ An example is <em>java.lang.String</em>, rather than <em>String</em></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-15 23:23:12 EDT
+Last updated 2019-04-11 16:24:53 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
