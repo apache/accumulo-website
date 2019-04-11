@@ -31,10 +31,6 @@ In dist-SVN:
 * Upload release artifacts, signatures, and sha512 sums to 
 dist/release area for mirrors 
 
-In Nexus: 
-* Release the 1.9.3-rc3 staging repository to Maven Central 
-* Drop old (rc1,rc2) staging repos 
-
 In GitHub: 
 * Updated 1.9.3 label description in GitHub issues to say "was fixed" 
 * Ensured no open issues with 1.9.3 label 
@@ -140,6 +136,9 @@ If the vote passes, follow the steps below.
 
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
 a process to get the release out to all of the mirrors.
+In Nexus:
+* Release the 1.9.3-rc3 staging repository to Maven Central
+* Drop old (rc1,rc2) staging repos
 
 ## Create the final Git tag
 
