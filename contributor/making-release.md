@@ -9,17 +9,10 @@ redirect_from:
 Follow these steps to make a release of Apache Accumulo. 
 
 1. [Setup](#setup)
-2. [Update the CHANGES file](#update-the-changes-file)
-3. [Triage Issues](#triage-issues)
-4. [Create the candidate](#create-the-candidate)
-5. [Vote](#vote)
-6. [Promote the artifacts](#promote-the-artifacts)
-7. [Create the final Git tag](#create-the-final-git-tag)
-8. [Copy artifacts to dist.apache.org](#copy-artifacts-to-distapacheorg)
-9. [Update projects.apache.org](#update-projectsapacheorg)
-10. [Update Documentation](#update-documentation)
-11. [Update Javadocs](#update-javadocs)
-12. [Update Accumulo Examples](#update-accumulo-examples)
+2. [Triage Issues](#triage-issues)
+3. [Create the candidate](#create-the-candidate)
+4. [Vote](#vote)
+5. [Post release tasks](#post-release-tasks)
 
 TODO: Incorporate these where appropriate
 In git: 
@@ -52,22 +45,13 @@ There are number of things that are required before attempting to build a releas
 2. Ensure that you're using the correct major release of Java (check javadoc too).
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
    the maven-release-plugin and staging the release candidate).
-4. Ensure that you have a texlive distribution installed so you are able to build the documentation.
-5. Have a clean workspace before starting.
+4. Have a clean workspace before starting.
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
-## Update the CHANGES file 
-
-Update the CHANGES file so that it's in sync with Jira (manual process).
-
 ## Triage issues.
 
-Before creating a release candidate, all open issues with a fix version of the
-release candidate should be triaged.  During the transition from JIRA to GitHub
-issues, anyone doing triage will need to search for open issues in both
-locations.  Searching in both locations is only necessary for branches that
-have not released since the transition started.
+Before creating a release candidate, all open issues with a fix version of the release candidate should be triaged.
 
 ## Create the candidate
 
@@ -132,6 +116,8 @@ until the release ultimately passes if you choose), and fix what needs fixing.
 
 If the vote passes, follow the steps below.
 
+# Post release Tasks
+
 ## Promote the artifacts 
 
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
@@ -167,10 +153,10 @@ After a successful vote, [this website][website-repo] needs to be updated with t
   * Create a post in `_posts/release/` containing release notes
   * Remove previous bug-fix release (if applicable)
   * Update doap/accumulo.rdf
-  * complete release notes 
-  * update previous release notes (as archived or archived-critical) 
-  * update _config.yml 
-  * update _includes/nav.html 
+  * Complete release notes
+  * Update previous release notes (as archived or archived-critical)
+  * Update `_config.yml`
+  * Update `_includes/nav.html`
 
 ## Update Documentation
 
@@ -206,8 +192,7 @@ Once a collection is created for a major release, developers can make documentat
 
 ## Update Javadocs
 
-Javadocs are easy to update. Using the latest JDK7 or later (at least JDK 7u21
-to avoid known [vulnerabilities][7]), follow these steps:
+Javadocs are easy to update. Using the latest JDK8 or later, follow these steps:
 
 1. Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release
 2. Build the javadocs with `mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs`
@@ -243,8 +228,6 @@ Some good references that explain a few things:
 [3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
 [4]: https://www.apache.org/dev/publishing-maven-artifacts
 [5]: https://www.apache.org/dev/release-publishing
-[7]: https://www.kb.cert.org/vuls/id/225657
-[8]: https://www.apache.org/dev/cmsref#extpaths
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
 [verify]: {{ "/contributor/verifying-release" | relative_url }}
 [examples]: https://github.com/apache/accumulo-examples
