@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Table-to-File Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,93 +136,51 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Table-to-File Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>This example uses mapreduce to extract specified columns from an existing table.</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<p>To run this example you will need some data in a table. The following will
+put a trivial amount of data into accumulo using the accumulo shell:</p>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+Shell - Apache Accumulo Interactive Shell
+- version: 1.5.0
+- instance name: instance
+- instance id: 00000000-0000-0000-0000-000000000000
+-
+- type 'help' for a list of available commands
+-
+username@instance&gt; createtable input
+username@instance&gt; insert dog cf cq dogvalue
+username@instance&gt; insert cat cf cq catvalue
+username@instance&gt; insert junk family qualifier junkvalue
+username@instance&gt; quit
+</code></pre></div></div>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>The TableToFile class configures a map-only job to read the specified columns and
+write the key/value pairs to a file in HDFS.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<p>The following will extract the rows containing the column “cf:cq”:</p>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.TableToFile -u user -p passwd -i instance -t input --columns cf:cq --output /tmp/output
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+$ hadoop fs -ls /tmp/output
+-rw-r--r--   1 username supergroup          0 2013-01-10 14:44 /tmp/output/_SUCCESS
+drwxr-xr-x   - username supergroup          0 2013-01-10 14:44 /tmp/output/_logs
+drwxr-xr-x   - username supergroup          0 2013-01-10 14:44 /tmp/output/_logs/history
+-rw-r--r--   1 username supergroup       9049 2013-01-10 14:44 /tmp/output/_logs/history/job_201301081658_0011_1357847072863_username_TableToFile%5F1357847071434
+-rw-r--r--   1 username supergroup      26172 2013-01-10 14:44 /tmp/output/_logs/history/job_201301081658_0011_conf.xml
+-rw-r--r--   1 username supergroup         50 2013-01-10 14:44 /tmp/output/part-m-00000
+</code></pre></div></div>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<p>We can see the output of our little map-reduce job:</p>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
-
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
-
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
-
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
-
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -text /tmp/output/output/part-m-00000
+catrow cf:cq []	catvalue
+dogrow cf:cq []	dogvalue
+$
+</code></pre></div></div>
 
 
         </div>

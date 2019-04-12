@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo File System Archive Example (Data Only)</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,94 +136,53 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo File System Archive Example (Data Only)</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>This example archives file data into an Accumulo table. Files with duplicate data are only stored once.
+The example has the following classes:</p>
 
-<ol>
+<ul>
+  <li>CharacterHistogram - A MapReduce that computes a histogram of byte frequency for each file and stores the histogram alongside the file data. An example use of the ChunkInputFormat.</li>
+  <li>ChunkCombiner - An Iterator that dedupes file data and sets their visibilities to a combined visibility based on current references to the file data.</li>
+  <li>ChunkInputFormat - An Accumulo InputFormat that provides keys containing file info (List&lt;Entry&lt;Key,Value») and values with an InputStream over the file (ChunkInputStream).</li>
+  <li>ChunkInputStream - An input stream over file data stored in Accumulo.</li>
+  <li>FileDataIngest - Takes a list of files and archives them into Accumulo keyed on hashes of the files.</li>
+  <li>FileDataQuery - Retrieves file data based on the hash of the file. (Used by the dirlist.Viewer.)</li>
+  <li>KeyUtil - A utility for creating and parsing null-byte separated strings into/from Text objects.</li>
   <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td>VisibilityCombiner - A utility for merging visibilities into the form (VIS1)</td>
+          <td>(VIS2)</td>
+          <td>…</td>
+        </tr>
+      </tbody>
+    </table>
   </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+</ul>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<p>This example is coupled with the dirlist example. See README.dirlist for instructions.</p>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>If you haven’t already run the README.dirlist example, ingest a file with FileDataIngest.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.filedata.FileDataIngest -i instance -z zookeepers -u username -p password -t dataTable --auths exampleVis --chunk 1000 $ACCUMULO_HOME/README
+</code></pre></div></div>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<p>Open the accumulo shell and look at the data. The row is the MD5 hash of the file, which you can verify by running a command such as ‘md5sum’ on the file.</p>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; scan -t dataTable
+</code></pre></div></div>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<p>Run the CharacterHistogram MapReduce to add some information about the file.</p>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.filedata.CharacterHistogram -i instance -z zookeepers -u username -p password -t dataTable --auths exampleVis --vis exampleVis
+</code></pre></div></div>
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+<p>Scan again to see the histogram stored in the ‘info’ column family.</p>
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
-
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
-
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
-
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; scan -t dataTable
+</code></pre></div></div>
 
         </div>
 

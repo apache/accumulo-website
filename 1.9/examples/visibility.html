@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Visibility, Authorizations, and Permissions Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,93 +136,128 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Visibility, Authorizations, and Permissions Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <h2 id="creating-a-new-user">Creating a new user</h2>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@instance&gt; createuser username
+Enter new password for 'username': ********
+Please confirm new password for 'username': ********
+root@instance&gt; user username
+Enter password for user username: ********
+username@instance&gt; createtable vistest
+06 10:48:47,931 [shell.Shell] ERROR: org.apache.accumulo.core.client.AccumuloSecurityException: Error PERMISSION_DENIED - User does not have permission to perform this action
+username@instance&gt; userpermissions
+System permissions:
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+Table permissions (accumulo.metadata): Table.READ
+username@instance&gt;
+</code></pre></div></div>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>A user does not by default have permission to create a table.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<h2 id="granting-permissions-to-a-user">Granting permissions to a user</h2>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; user root
+Enter password for user root: ********
+root@instance&gt; grant -s System.CREATE_TABLE -u username
+root@instance&gt; user username
+Enter password for user username: ********
+username@instance&gt; createtable vistest
+username@instance&gt; userpermissions
+System permissions: System.CREATE_TABLE
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+Table permissions (accumulo.metadata): Table.READ
+Table permissions (vistest): Table.READ, Table.WRITE, Table.BULK_IMPORT, Table.ALTER_TABLE, Table.GRANT, Table.DROP_TABLE
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<h2 id="inserting-data-with-visibilities">Inserting data with visibilities</h2>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<p>Visibilities are boolean AND (&amp;) and OR (|) combinations of authorization
+tokens. Authorization tokens are arbitrary strings taken from a restricted
+ASCII character set. Parentheses are required to specify order of operations
+in visibilities.</p>
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; insert row f1 q1 v1 -l A
+username@instance vistest&gt; insert row f2 q2 v2 -l A&amp;B
+username@instance vistest&gt; insert row f3 q3 v3 -l apple&amp;carrot|broccoli|spinach
+06 11:19:01,432 [shell.Shell] ERROR: org.apache.accumulo.core.util.BadArgumentException: cannot mix | and &amp; near index 12
+apple&amp;carrot|broccoli|spinach
+            ^
+username@instance vistest&gt; insert row f3 q3 v3 -l (apple&amp;carrot)|broccoli|spinach
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
+<h2 id="scanning-with-authorizations">Scanning with authorizations</h2>
 
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
+<p>Authorizations are sets of authorization tokens. Each Accumulo user has
+authorizations and each Accumulo scan has authorizations. Scan authorizations
+are only allowed to be a subset of the user’s authorizations. By default, a
+user’s authorizations set is empty.</p>
 
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; scan
+username@instance vistest&gt; scan -s A
+06 11:43:14,951 [shell.Shell] ERROR: java.lang.RuntimeException: org.apache.accumulo.core.client.AccumuloSecurityException: Error BAD_AUTHORIZATIONS - The user does not have the specified authorizations assigned
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
+<h2 id="setting-authorizations-for-a-user">Setting authorizations for a user</h2>
 
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; setauths -s A
+06 11:53:42,056 [shell.Shell] ERROR: org.apache.accumulo.core.client.AccumuloSecurityException: Error PERMISSION_DENIED - User does not have permission to perform this action
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
+<p>A user cannot set authorizations unless the user has the System.ALTER_USER permission.
+The root user has this permission.</p>
 
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ********
+root@instance vistest&gt; setauths -s A -u username
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; scan -s A
+row f1:q1 [A]    v1
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
+<p>The default authorizations for a scan are the user’s entire set of authorizations.</p>
 
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ********
+root@instance vistest&gt; setauths -s A,B,broccoli -u username
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+row f2:q2 [A&amp;B]    v2
+row f3:q3 [(apple&amp;carrot)|broccoli|spinach]    v3
+username@instance vistest&gt; scan -s B
+username@instance vistest&gt;
+</code></pre></div></div>
 
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
+<p>If you want, you can limit a user to only be able to insert data which they can read themselves.
+It can be set with the following constraint.</p>
 
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ******
+root@instance vistest&gt; config -t vistest -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; insert row f4 q4 v4 -l spinach
+    Constraint Failures:
+        ConstraintViolationSummary(constrainClass:org.apache.accumulo.core.security.VisibilityConstraint, violationCode:2, violationDescription:User does not have authorization on column visibility, numberOfViolatingMutations:1)
+username@instance vistest&gt; insert row f4 q4 v4 -l spinach|broccoli
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+row f2:q2 [A&amp;B]    v2
+row f3:q3 [(apple&amp;carrot)|broccoli|spinach]    v3
+row f4:q4 [spinach|broccoli]    v4
+username@instance vistest&gt;
+</code></pre></div></div>
 
 
         </div>

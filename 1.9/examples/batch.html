@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Batch Writing and Scanning Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,94 +136,49 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Batch Writing and Scanning Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>This tutorial uses the following Java classes, which can be found in org.apache.accumulo.examples.simple.client in the examples-simple module:</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<ul>
+  <li>SequentialBatchWriter.java - writes mutations with sequential rows and random values</li>
+  <li>RandomBatchWriter.java - used by SequentialBatchWriter to generate random values</li>
+  <li>RandomBatchScanner.java - reads random rows and verifies their values</li>
+</ul>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<p>This is an example of how to use the batch writer and batch scanner. To compile
+the example, run maven and copy the produced jar into the accumulo lib dir.
+This is already done in the tar distribution.</p>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>Below are commands that add 10000 entries to accumulo and then do 100 random
+queries. The write command generates random 50 byte values.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<p>Be sure to use the name of your instance (given as instance here) and the appropriate
+list of zookeeper nodes (given as zookeepers here).</p>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<p>Before you run this, you must ensure that the user you are running has the
+“exampleVis” authorization. (you can set this in the shell with “setauths -u username -s exampleVis”)</p>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u root -e "setauths -u username -s exampleVis"
+</code></pre></div></div>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<p>You must also create the table, batchtest1, ahead of time. (In the shell, use “createtable batchtest1”)</p>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -e "createtable batchtest1"
+$ ./bin/accumulo org.apache.accumulo.examples.simple.client.SequentialBatchWriter -i instance -z zookeepers -u username -p password -t batchtest1 --start 0 --num 10000 --size 50 --batchMemory 20M --batchLatency 500 --batchThreads 20 --vis exampleVis
+$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -i instance -z zookeepers -u username -p password -t batchtest1 --num 100 --min 0 --max 10000 --size 50 --scanThreads 20 --auths exampleVis
+07 11:33:11,103 [client.CountingVerifyingReceiver] INFO : Generating 100 random queries...
+07 11:33:11,112 [client.CountingVerifyingReceiver] INFO : finished
+07 11:33:11,260 [client.CountingVerifyingReceiver] INFO : 694.44 lookups/sec   0.14 secs
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+07 11:33:11,260 [client.CountingVerifyingReceiver] INFO : num results : 100
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
+07 11:33:11,364 [client.CountingVerifyingReceiver] INFO : Generating 100 random queries...
+07 11:33:11,370 [client.CountingVerifyingReceiver] INFO : finished
+07 11:33:11,416 [client.CountingVerifyingReceiver] INFO : 2173.91 lookups/sec   0.05 secs
 
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
-
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
-
+07 11:33:11,416 [client.CountingVerifyingReceiver] INFO : num results : 100
+</code></pre></div></div>
 
         </div>
 

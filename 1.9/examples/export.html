@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Export/Import Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,93 +136,83 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Export/Import Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>Accumulo provides a mechanism to export and import tables. This README shows
+how to use this feature.</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<p>The shell session below shows creating a table, inserting data, and exporting
+the table. A table must be offline to export it, and it should remain offline
+for the duration of the distcp. An easy way to take a table offline without
+interuppting access to it is to clone it and take the clone offline.</p>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; createtable table1
+root@test15 table1&gt; insert a cf1 cq1 v1
+root@test15 table1&gt; insert h cf1 cq1 v2
+root@test15 table1&gt; insert z cf1 cq1 v3
+root@test15 table1&gt; insert z cf1 cq2 v4
+root@test15 table1&gt; addsplits -t table1 b r
+root@test15 table1&gt; scan
+a cf1:cq1 []    v1
+h cf1:cq1 []    v2
+z cf1:cq1 []    v3
+z cf1:cq2 []    v4
+root@test15&gt; config -t table1 -s table.split.threshold=100M
+root@test15 table1&gt; clonetable table1 table1_exp
+root@test15 table1&gt; offline table1_exp
+root@test15 table1&gt; exporttable -t table1_exp /tmp/table1_export
+root@test15 table1&gt; quit
+</code></pre></div></div>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>After executing the export command, a few files are created in the hdfs dir.
+One of the files is a list of files to distcp as shown below.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -ls /tmp/table1_export
+Found 2 items
+-rw-r--r--   3 user supergroup        162 2012-07-25 09:56 /tmp/table1_export/distcp.txt
+-rw-r--r--   3 user supergroup        821 2012-07-25 09:56 /tmp/table1_export/exportMetadata.zip
+$ hadoop fs -cat /tmp/table1_export/distcp.txt
+hdfs://n1.example.com:6093/accumulo/tables/3/default_tablet/F0000000.rf
+hdfs://n1.example.com:6093/tmp/table1_export/exportMetadata.zip
+</code></pre></div></div>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<p>Before the table can be imported, it must be copied using distcp. After the
+discp completed, the cloned table may be deleted.</p>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest
+</code></pre></div></div>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<p>The Accumulo shell session below shows importing the table and inspecting it.
+The data, splits, config, and logical time information for the table were
+preserved.</p>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
-
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
-
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
-
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
-
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; importtable table1_copy /tmp/table1_export_dest
+root@test15&gt; table table1_copy
+root@test15 table1_copy&gt; scan
+a cf1:cq1 []    v1
+h cf1:cq1 []    v2
+z cf1:cq1 []    v3
+z cf1:cq2 []    v4
+root@test15 table1_copy&gt; getsplits -t table1_copy
+b
+r
+root@test15&gt; config -t table1_copy -f split
+---------+--------------------------+-------------------------------------------
+SCOPE    | NAME                     | VALUE
+---------+--------------------------+-------------------------------------------
+default  | table.split.threshold .. | 1G
+table    |    @override ........... | 100M
+---------+--------------------------+-------------------------------------------
+root@test15&gt; tables -l
+accumulo.metadata    =&gt;        !0
+accumulo.root        =&gt;        +r
+table1_copy          =&gt;         5
+trace                =&gt;         1
+root@test15 table1_copy&gt; scan -t accumulo.metadata -b 5 -c srv:time
+5;b srv:time []    M1343224500467
+5;r srv:time []    M1343224500467
+5&lt; srv:time []    M1343224500467
+</code></pre></div></div>
 
 
         </div>

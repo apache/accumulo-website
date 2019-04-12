@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Shard Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,94 +136,64 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Shard Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>Accumulo has an iterator called the intersecting iterator which supports querying a term index that is partitioned by
+document, or “sharded”. This example shows how to use the intersecting iterator through these four programs:</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<ul>
+  <li>Index.java - Indexes a set of text files into an Accumulo table</li>
+  <li>Query.java - Finds documents containing a given set of terms.</li>
+  <li>Reverse.java - Reads the index table and writes a map of documents to terms into another table.</li>
+  <li>ContinuousQuery.java  Uses the table populated by Reverse.java to select N random terms per document. Then it continuously and randomly queries those terms.</li>
+</ul>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<p>To run these example programs, create two tables like below.</p>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable shard
+username@instance shard&gt; createtable doc2term
+</code></pre></div></div>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<p>After creating the tables, index some files. The following command indexes all of the java files in the Accumulo source code.</p>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /local/username/workspace/accumulo/
+$ find core/src server/src -name "*.java" | xargs ./bin/accumulo org.apache.accumulo.examples.simple.shard.Index -i instance -z zookeepers -t shard -u username -p password --partitions 30
+</code></pre></div></div>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<p>The following command queries the index to find all files containing ‘foo’ and ‘bar’.</p>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd $ACCUMULO_HOME
+$ ./bin/accumulo org.apache.accumulo.examples.simple.shard.Query -i instance -z zookeepers -t shard -u username -p password foo bar
+/local/username/workspace/accumulo/src/core/src/test/java/accumulo/core/security/ColumnVisibilityTest.java
+/local/username/workspace/accumulo/src/core/src/test/java/accumulo/core/client/mock/MockConnectorTest.java
+/local/username/workspace/accumulo/src/core/src/test/java/accumulo/core/security/VisibilityEvaluatorTest.java
+/local/username/workspace/accumulo/src/server/src/main/java/accumulo/test/functional/RowDeleteTest.java
+/local/username/workspace/accumulo/src/server/src/test/java/accumulo/server/logger/TestLogWriter.java
+/local/username/workspace/accumulo/src/server/src/main/java/accumulo/test/functional/DeleteEverythingTest.java
+/local/username/workspace/accumulo/src/core/src/test/java/accumulo/core/data/KeyExtentTest.java
+/local/username/workspace/accumulo/src/server/src/test/java/accumulo/server/constraints/MetadataConstraintsTest.java
+/local/username/workspace/accumulo/src/core/src/test/java/accumulo/core/iterators/WholeRowIteratorTest.java
+/local/username/workspace/accumulo/src/server/src/test/java/accumulo/server/util/DefaultMapTest.java
+/local/username/workspace/accumulo/src/server/src/test/java/accumulo/server/tabletserver/InMemoryMapTest.java
+</code></pre></div></div>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<p>In order to run ContinuousQuery, we need to run Reverse.java to populate doc2term.</p>
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.shard.Reverse -i instance -z zookeepers --shardTable shard --doc2Term doc2term -u username -p password
+</code></pre></div></div>
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
+<p>Below ContinuousQuery is run using 5 terms. So it selects 5 random terms from each document, then it continually
+randomly selects one set of 5 terms and queries. It prints the number of matching documents and the time in seconds.</p>
 
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
-
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
-
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.shard.ContinuousQuery -i instance -z zookeepers --shardTable shard --doc2Term doc2term -u username -p password --terms 5
+[public, core, class, binarycomparable, b] 2  0.081
+[wordtodelete, unindexdocument, doctablename, putdelete, insert] 1  0.041
+[import, columnvisibilityinterpreterfactory, illegalstateexception, cv, columnvisibility] 1  0.049
+[getpackage, testversion, util, version, 55] 1  0.048
+[for, static, println, public, the] 55  0.211
+[sleeptime, wrappingiterator, options, long, utilwaitthread] 1  0.057
+[string, public, long, 0, wait] 12  0.132
+</code></pre></div></div>
 
         </div>
 

@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo MapReduce Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,93 +136,144 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo MapReduce Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>This example uses mapreduce and accumulo to compute word counts for a set of
+documents. This is accomplished using a map-only mapreduce job and a
+accumulo table with combiners.</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<p>To run this example you will need a directory in HDFS containing text files.
+The accumulo readme will be used to show how to run this example.</p>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -copyFromLocal $ACCUMULO_HOME/README /user/username/wc/Accumulo.README
+$ hadoop fs -ls /user/username/wc
+Found 1 items
+-rw-r--r--   2 username supergroup       9359 2009-07-15 17:54 /user/username/wc/Accumulo.README
+</code></pre></div></div>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<p>The first part of running this example is to create a table with a combiner
+for the column family count.</p>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+Shell - Apache Accumulo Interactive Shell
+<span class="gd">- version: 1.5.0
+- instance name: instance
+- instance id: 00000000-0000-0000-0000-000000000000
+-
+- type 'help' for a list of available commands
+-
+</span>username@instance&gt; createtable wordCount
+username@instance wordCount&gt; setiter -class org.apache.accumulo.core.iterators.user.SummingCombiner -p 10 -t wordCount -majc -minc -scan
+SummingCombiner interprets Values as Longs and adds them together. A variety of encodings (variable length, fixed length, or string) are available
+<span class="gd">----------&gt; set SummingCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: false
+----------&gt; set SummingCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non-alphanum chars using %&lt;hex&gt;.: count
+----------&gt; set SummingCombiner parameter lossy, if true, failed decodes are ignored. Otherwise combiner will error on failed decodes (default false): &lt;TRUE|FALSE&gt;: false
+----------&gt; set SummingCombiner parameter type, &lt;VARLEN|FIXEDLEN|STRING|fullClassName&gt;: STRING
+</span>username@instance wordCount&gt; quit
+</code></pre></div></div>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<p>After creating the table, run the word count map reduce job.</p>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.WordCount -i instance -z zookeepers  --input /user/username/wc -t wordCount -u username -p password
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+11/02/07 18:20:11 INFO input.FileInputFormat: Total input paths to process : 1
+11/02/07 18:20:12 INFO mapred.JobClient: Running job: job_201102071740_0003
+11/02/07 18:20:13 INFO mapred.JobClient:  map 0% reduce 0%
+11/02/07 18:20:20 INFO mapred.JobClient:  map 100% reduce 0%
+11/02/07 18:20:22 INFO mapred.JobClient: Job complete: job_201102071740_0003
+11/02/07 18:20:22 INFO mapred.JobClient: Counters: 6
+11/02/07 18:20:22 INFO mapred.JobClient:   Job Counters
+11/02/07 18:20:22 INFO mapred.JobClient:     Launched map tasks=1
+11/02/07 18:20:22 INFO mapred.JobClient:     Data-local map tasks=1
+11/02/07 18:20:22 INFO mapred.JobClient:   FileSystemCounters
+11/02/07 18:20:22 INFO mapred.JobClient:     HDFS_BYTES_READ=10487
+11/02/07 18:20:22 INFO mapred.JobClient:   Map-Reduce Framework
+11/02/07 18:20:22 INFO mapred.JobClient:     Map input records=255
+11/02/07 18:20:22 INFO mapred.JobClient:     Spilled Records=0
+11/02/07 18:20:22 INFO mapred.JobClient:     Map output records=1452
+</code></pre></div></div>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<p>After the map reduce job completes, query the accumulo table to see word
+counts.</p>
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+username@instance&gt; table wordCount
+username@instance wordCount&gt; scan -b the
+the count:20080906 []    75
+their count:20080906 []    2
+them count:20080906 []    1
+then count:20080906 []    1
+there count:20080906 []    1
+these count:20080906 []    3
+this count:20080906 []    6
+through count:20080906 []    1
+time count:20080906 []    3
+time. count:20080906 []    1
+to count:20080906 []    27
+total count:20080906 []    1
+tserver, count:20080906 []    1
+tserver.compaction.major.concurrent.max count:20080906 []    1
+...
+</code></pre></div></div>
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
+<p>Another example to look at is
+org.apache.accumulo.examples.simple.mapreduce.UniqueColumns. This example
+computes the unique set of columns in a table and shows how a map reduce job
+can directly read a tables files from HDFS.</p>
 
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
+<p>One more example available is
+org.apache.accumulo.examples.simple.mapreduce.TokenFileWordCount.
+The TokenFileWordCount example works exactly the same as the WordCount example
+explained above except that it uses a token file rather than giving the
+password directly to the map-reduce job (this avoids having the password
+displayed in the job’s configuration which is world-readable).</p>
 
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
+<p>To create a token file, use the create-token utility</p>
 
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
+<p>$ ./bin/accumulo create-token</p>
 
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
+<p>It defaults to creating a PasswordToken, but you can specify the token class
+with -tc (requires the fully qualified class name). Based on the token class,
+it will prompt you for each property required to create the token.</p>
 
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
+<p>The last value it prompts for is a local filename to save to. If this file
+exists, it will append the new token to the end. Multiple tokens can exist in
+a file, but only the first one for each user will be recognized.</p>
 
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
+<p>Rather than waiting for the prompts, you can specify some options when calling
+create-token, for example</p>
 
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
+<p>$ ./bin/accumulo create-token -u root -p secret -f root.pw</p>
 
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
+<p>would create a token file containing a PasswordToken for
+user ‘root’ with password ‘secret’ and saved to ‘root.pw’</p>
 
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
+<p>This local file needs to be uploaded to hdfs to be used with the
+map-reduce job. For example, if the file were ‘root.pw’ in the local directory:</p>
 
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
+<p>$ hadoop fs -put root.pw root.pw</p>
 
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
+<p>This would put ‘root.pw’ in the user’s home directory in hdfs.</p>
 
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
+<p>Because the basic WordCount example uses Opts to parse its arguments
+(which extends ClientOnRequiredTable), you can use a token file with
+the basic WordCount example by calling the same command as explained above
+except replacing the password with the token file (rather than -p, use -tf).</p>
 
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
+<p>$ ./bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.WordCount -i instance -z zookeepers  –input /user/username/wc -t wordCount -u username -tf tokenfile</p>
 
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
+<p>In the above examples, username was ‘root’ and tokenfile was ‘root.pw’</p>
 
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
+<p>However, if you don’t want to use the Opts class to parse arguments,
+the TokenFileWordCount is an example of using the token file manually.</p>
 
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
+<p>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.TokenFileWordCount instance zookeepers username tokenfile /user/username/wc wordCount</p>
 
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
+<p>The results should be the same as the WordCount example except that the
+authentication token was not stored in the configuration. It was instead
+stored in a file that the map-reduce job pulled into the distributed cache.
+(If you ran either of these on the same table right after the
+WordCount example, then the resulting counts should just double.)</p>
 
 
         </div>

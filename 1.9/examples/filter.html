@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo Examples</title>
+<title>Apache Accumulo Filter Example</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,94 +136,104 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo Examples</h1>
+          <h1 class="title">Apache Accumulo Filter Example</h1>
           
-          <p>Before running any of the examples, the following steps must be performed.</p>
+          <p>This is a simple filter example. It uses the AgeOffFilter that is provided as
+part of the core package org.apache.accumulo.core.iterators.user. Filters are
+iterators that select desired key/value pairs (or weed out undesired ones).
+Filters extend the org.apache.accumulo.core.iterators.Filter class
+and must implement a method accept(Key k, Value v). This method returns true
+if the key/value pair are to be delivered and false if they are to be ignored.
+Filter takes a “negate” parameter which defaults to false. If set to true, the
+return value of the accept method is negated, so that key/value pairs accepted
+by the method are omitted by the Filter.</p>
 
-<ol>
-  <li>
-    <p>Install and run Accumulo via the instructions found in $ACCUMULO_HOME/README.
-Remember the instance name. It will be referred to as “instance” throughout
-the examples. A comma-separated list of zookeeper servers will be referred
-to as “zookeepers”.</p>
-  </li>
-  <li>
-    <p>Create an Accumulo user (see the <a href="../accumulo_user_manual#_user_administration">user manual</a>), or use the root user.
-The “username” Accumulo user name with password “password” is used
-throughout the examples. This user needs the ability to create tables.</p>
-  </li>
-</ol>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable filtertest
+username@instance filtertest&gt; setiter -t filtertest -scan -p 10 -n myfilter -ageoff
+AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
+<span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
+----------&gt; set AgeOffFilter parameter ttl, time to live (milliseconds): 30000
+----------&gt; set AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day:
+</span>username@instance filtertest&gt; scan
+username@instance filtertest&gt; insert foo a b c
+username@instance filtertest&gt; scan
+foo a:b []    c
+username@instance filtertest&gt;
+</code></pre></div></div>
 
-<p>In all commands, you will need to replace “instance”, “zookeepers”,
-“username”, and “password” with the values you set for your Accumulo instance.</p>
+<p>… wait 30 seconds …</p>
 
-<p>Commands intended to be run in bash are prefixed by ‘$’. These are always
-assumed to be run from the $ACCUMULO_HOME directory.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; scan
+username@instance filtertest&gt;
+</code></pre></div></div>
 
-<p>Commands intended to be run in the Accumulo shell are prefixed by ‘&gt;’.</p>
+<p>Note the absence of the entry inserted more than 30 seconds ago. Since the
+scope was set to “scan”, this means the entry is still in Accumulo, but is
+being filtered out at query time. To delete entries from Accumulo based on
+the ages of their timestamps, AgeOffFilters should be set up for the “minc”
+and “majc” scopes, as well.</p>
 
-<p>Each README in the examples directory highlights the use of particular
-features of Apache Accumulo.</p>
+<p>To force an ageoff of the persisted data, after setting up the ageoff iterator
+on the “minc” and “majc” scopes you can flush and compact your table. This will
+happen automatically as a background operation on any table that is being
+actively written to, but can also be requested in the shell.</p>
 
-<p><a href="batch">batch</a>:       Using the batch writer and batch scanner.</p>
+<p>The first setiter command used the special -ageoff flag to specify the
+AgeOffFilter, but any Filter can be configured by using the -class flag. The
+following commands show how to enable the AgeOffFilter for the minc and majc
+scopes using the -class flag, then flush and compact the table.</p>
 
-<p><a href="bloom">bloom</a>:       Creating a bloom filter enabled table to increase query
-                       performance.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; setiter -t filtertest -minc -majc -p 10 -n myfilter -class org.apache.accumulo.core.iterators.user.AgeOffFilter
+AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
+<span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
+----------&gt; set AgeOffFilter parameter ttl, time to live (milliseconds): 30000
+----------&gt; set AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day:
+</span>username@instance filtertest&gt; flush
+06 10:42:24,806 [shell.Shell] INFO : Flush of table filtertest initiated...
+username@instance filtertest&gt; compact
+06 10:42:36,781 [shell.Shell] INFO : Compaction of table filtertest started for given range
+username@instance filtertest&gt; flush -t filtertest -w
+06 10:42:52,881 [shell.Shell] INFO : Flush of table filtertest completed.
+username@instance filtertest&gt; compact -t filtertest -w
+06 10:43:00,632 [shell.Shell] INFO : Compacting table ...
+06 10:43:01,307 [shell.Shell] INFO : Compaction of table filtertest completed for given range
+username@instance filtertest&gt;
+</code></pre></div></div>
 
-<p><a href="bulkIngest">bulkIngest</a>:  Ingesting bulk data using map/reduce jobs on Hadoop.</p>
+<p>By default, flush and compact execute in the background, but with the -w flag
+they will wait to return until the operation has completed. Both are
+demonstrated above, though only one call to each would be necessary. A
+specific table can be specified with -t.</p>
 
-<p><a href="classpath">classpath</a>:   Using per-table classpaths.</p>
+<p>After the compaction runs, the newly created files will not contain any data
+that should have been aged off, and the Accumulo garbage collector will remove
+the old files.</p>
 
-<p><a href="client">client</a>:      Using table operations, reading and writing data in Java.</p>
+<p>To see the iterator settings for a table, use config.</p>
 
-<p><a href="combiner">combiner</a>:    Using example StatsCombiner to find min, max, sum, and
-                       count.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; config -t filtertest -f iterator
+---------+---------------------------------------------+---------------------------------------------------------------------------
+SCOPE    | NAME                                        | VALUE
+---------+---------------------------------------------+---------------------------------------------------------------------------
+table    | table.iterator.majc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.majc.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.majc.vers .................. | 20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table    | table.iterator.majc.vers.opt.maxVersions .. | 1
+table    | table.iterator.minc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.minc.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.minc.vers .................. | 20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table    | table.iterator.minc.vers.opt.maxVersions .. | 1
+table    | table.iterator.scan.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.scan.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table    | table.iterator.scan.vers.opt.maxVersions .. | 1
+---------+---------------------------------------------+---------------------------------------------------------------------------
+username@instance filtertest&gt;
+</code></pre></div></div>
 
-<p><a href="constraints">constraints</a>: Using constraints with tables.</p>
-
-<p><a href="dirlist">dirlist</a>:     Storing filesystem information.</p>
-
-<p><a href="export">export</a>:      Exporting and importing tables.</p>
-
-<p><a href="filedata">filedata</a>:    Storing file data.</p>
-
-<p><a href="filter">filter</a>:      Using the AgeOffFilter to remove records more than 30
-                       seconds old.</p>
-
-<p><a href="helloworld">helloworld</a>:  Inserting records both inside map/reduce jobs and
-                       outside. And reading records between two rows.</p>
-
-<p><a href="isolation">isolation</a>:   Using the isolated scanner to ensure partial changes
-                       are not seen.</p>
-
-<p><a href="mapred">mapred</a>:      Using MapReduce to read from and write to Accumulo
-                       tables.</p>
-
-<p><a href="maxmutation">maxmutation</a>: Limiting mutation size to avoid running out of memory.</p>
-
-<p><a href="regex">regex</a>:       Using MapReduce and Accumulo to find data using regular
-                       expressions.</p>
-
-<p><a href="reservations">reservations</a>: Running a reservation system with Conditional Mutations.</p>
-
-<p><a href="rgbalancer">rgbalancer</a>: Spreading out groups of tablets with a Regex Group Balancer.</p>
-
-<p><a href="rowhash">rowhash</a>:     Using MapReduce to read a table and write to a new
-                       column in the same table.</p>
-
-<p><a href="sample">sample</a>:      Building and using sample data in Accumulo.</p>
-
-<p><a href="shard">shard</a>:       Using the intersecting iterator with a term index
-                       partitioned by document.</p>
-
-<p><a href="tabletofile">tabletofile</a>: Using MapReduce to read a table and write one of its
-                       columns to a file in HDFS.</p>
-
-<p><a href="terasort">terasort</a>:    Generating random data and sorting it using Accumulo.</p>
-
-<p><a href="visibility">visibility</a> :  Using visibilities (or combinations of authorizations).
-                       Also shows user permissions.</p>
-
+<p>When setting new iterators, make sure to order their priority numbers
+(specified with -p) in the order you would like the iterators to be applied.
+Also, each iterator must have a unique name and priority within each scope.</p>
 
         </div>
 
