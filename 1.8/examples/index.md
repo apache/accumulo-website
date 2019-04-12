@@ -63,6 +63,10 @@ features of Apache Accumulo.
    [regex](regex):       Using MapReduce and Accumulo to find data using regular
                        expressions.
 
+   [reservations](reservations): Running a reservation system with Conditional Mutations.
+
+   [rgbalancer](rgbalancer): Spreading out groups of tablets with a Regex Group Balancer.
+
    [rowhash](rowhash):     Using MapReduce to read a table and write to a new
                        column in the same table.
 
