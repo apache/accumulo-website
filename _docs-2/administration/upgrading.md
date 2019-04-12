@@ -52,7 +52,7 @@ Below are some changes in 2.0 that you should be aware of:
 When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:
 
 ```
-./accumulo-1.9.2/bin/stop-all.sh
+./accumulo-1.9.3/bin/stop-all.sh
 ./accumulo-2.0.0/bin/accumulo-cluster start
 ```
 It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.
