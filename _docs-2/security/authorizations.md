@@ -9,8 +9,9 @@ In Accumulo, data is written with [security labels] that limit access to only us
 
 ## Configuration
 
-Accumulo's [Authorizor] is configured by setting {% plink instance.security.authorizer %}. The default
-authorizor is described below.
+Accumulo's [Authorizor] is configured by setting {% plink instance.security.authorizor %}. The default
+authorizor is the {% jlink org.apache.accumulo.server.security.handler.ZKAuthorizor %} which is described
+below.
 
 ## Security Labels
 

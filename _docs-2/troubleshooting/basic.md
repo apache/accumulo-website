@@ -128,7 +128,8 @@ processes should be stable on the order of months and not require frequent resta
 
 **Accumulo is not showing me any data!**
 
-Do you have your auths set so that it matches your visibilities?
+Is your client configured with authorizations that match your visibilities?  See the
+[Authorizations documentation]({% durl security/authorizations %}) for help.
 
 **What are my visibilities?**
 
