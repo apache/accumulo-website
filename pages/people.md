@@ -73,7 +73,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Dima Spivak         | [Cloudera][CLOUDERA]                                              |                       |
 | Ed Kohlwey          | [Booz Allen Hamilton][BOOZ]                                       |                       |
 | Edward Yoon         |                                                                   |                       |
-| Elina Wise	      | [Arctic Slope Regional Corp.][ASRC]				  | [ET][ET]
+| Elina Wise          | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Eugene Cheipesh     |                                                                   |                       |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Hayden Marchant     |                                                                   |                       |
