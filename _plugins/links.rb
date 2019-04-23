@@ -203,6 +203,23 @@ class JiraTag < Liquid::Tag
   end
 end
 
+class GitHubCodeTag < Liquid::Tag
+  def initialize(tag_name, text, tokens)
+    super
+    @text = text
+  end
+
+  def render(context)
+    path = @text.strip
+    file_name = path.split('/').last
+    branch = context.environments.first["page"]["gh_branch"]
+    if branch.nil?
+      branch = context.registers[:site].config["gh_branch"]
+    end
+    url = "https://github.com/apache/accumulo/blob/#{branch}/#{path}"
+    return "[#{file_name}](#{url})"
+  end
+end
 
 Liquid::Template.register_tag('jlink', JavadocLinkTag)
 Liquid::Template.register_tag('jurl', JavadocUrlTag)
@@ -211,4 +228,5 @@ Liquid::Template.register_tag('purl', PropertyUrlTag)
 Liquid::Template.register_tag('dlink', DocLinkTag)
 Liquid::Template.register_tag('durl', DocUrlTag)
 Liquid::Template.register_tag('ghi', GitHubIssueTag)
+Liquid::Template.register_tag('ghc', GitHubCodeTag)
 Liquid::Template.register_tag('jira', JiraTag)

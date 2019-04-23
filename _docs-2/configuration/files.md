@@ -9,17 +9,19 @@ Accumulo has the following configuration files which can be found in the
 
 ## accumulo.properties
 
-Configures Accumulo server processes using [server properties]({% durl configuration/server-properties %}).
-This file can be found in the `conf/` direcory. It is needed on every host that runs Accumulo processes.
-Therfore, any configuration should be replicated to all hosts of the Accumulo cluster. If a property is not
-configured here, it might have been [configured another way]({% durl configuration/overview %}).  See the
-[quick start] for help with configuring this file.
+The {% ghc assemble/conf/accumulo.properties %} file configures Accumulo server processes using
+[server properties]({% durl configuration/server-properties %}). This file can be found in the `conf/`
+direcory. It is needed on every host that runs Accumulo processes. Therfore, any configuration should be
+replicated to all hosts of the Accumulo cluster. If a property is not configured here, it might have been
+[configured another way]({% durl configuration/overview %}).  See the [quick start] for help with
+configuring this file.
 
 ## accumulo-client.properties
 
-Configures Accumulo client processes using [client properties]({% durl configuration/client-properties %}).
-If run `accumulo shell` without arguments, the Accumulo connection information in this file will be used.
-This file can be used to create an AccumuloClient in Java using the following code:
+The `accumulo-client.properties` file configures Accumulo client processes using
+[client properties]({% durl configuration/client-properties %}). If `accumulo shell` is run without arguments,
+the Accumulo connection information in this file will be used. This file can be used to create an AccumuloClient
+in Java using the following code:
 
 ```java
 AccumuloClient client = Accumulo.newClient()
@@ -30,22 +32,24 @@ See the [quick start] for help with configuring this file.
 
 ## accumulo-env.sh
 
-Configures the Java classpath and JVM options needed to run Accumulo processes. See the [quick install]
-for help with configuring this file. 
+The {% ghc assemble/conf/accumulo-env.sh %} file configures the Java classpath and JVM options needed to run
+Accumulo processes. See the [quick install] for help with configuring this file.
 
 ## Log configuration files
 
 ### log4j-service.properties
 
-Configures logging for most Accumulo services (i.e [Master], [Tablet Server], [Garbage Collector]) except for the Monitor.
+The {% ghc assemble/conf/log4j-service.properties %} file configures logging for most Accumulo services
+(i.e [Master], [Tablet Server], [Garbage Collector]) except for the Monitor.
 
 ### log4j-monitor.properties
 
-Configures logging for the [Monitor].
+The {% ghc assemble/conf/log4j-monitor.properties %} file configures logging for the [Monitor].
 
 ### log4j.properties
 
-Configures logging for Accumulo commands (i.e `accumulo init`, `accumulo shell`, etc).
+The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumulo commands (i.e `accumulo init`,
+`accumulo shell`, etc).
 
 ## Host files
 
