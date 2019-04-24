@@ -51,10 +51,12 @@ Write your data to Accumulo by creating an AccumuloClient for each partition and
 data in the partition using a BatchWriter.
 
 ```java
+// Spark will automatically serialize this properties object and send it to each partition
 Properties props = Accumulo.newClientProperties()
                     .from("/path/to/accumulo-client.properties").build();
 JavaPairRDD<Key, Value> dataToWrite = ... ;
 dataToWrite.foreachPartition(iter -> {
+  // Create client inside partition so that Spark does not attempt to serialize it.
   try (AccumuloClient client = Accumulo.newClient().from(props).build();
        BatchWriter bw = client.createBatchWriter(outputTable)) {
     iter.forEachRemaining(kv -> {
