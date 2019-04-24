@@ -49,7 +49,7 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 | dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
 | durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
 | ghi   | GitHub issue link          | None  | `{% ghi 100 %}` |
-| ghc   | GitHub code link          | None  | `{% ghc server/tserver/src/main/java/org/apache/accumulo/tserver/TabletServer.java %}` |
+| ghc   | GitHub code link          | Branch defaults to `gh_branch` setting in `_config.yml`. Override using `-b` | `{% ghc server/tserver/src/main/java/org/apache/accumulo/tserver/TabletServer.java %}` `{% ghc -t 1.9 README.md %}` |
 | jira   | Jira issue link          | None  | `{% jira ACCUMULO-1000 %}` |
 
 ## Updating property documentation
