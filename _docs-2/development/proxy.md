@@ -1,7 +1,7 @@
 ---
 title: Proxy
 category: development
-order: 3
+order: 7
 ---
 
 The proxy API allows the interaction with Accumulo with languages other than Java.
