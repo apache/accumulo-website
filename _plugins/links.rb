@@ -210,12 +210,17 @@ class GitHubCodeTag < Liquid::Tag
   end
 
   def render(context)
-    path = @text.strip
-    file_name = path.split('/').last
+    args = @text.split(' ')
+    path = args[0]
     branch = context.environments.first["page"]["gh_branch"]
     if branch.nil?
       branch = context.registers[:site].config["gh_branch"]
     end
+    if args[0] == '-b'
+      branch = args[1]
+      path = args[2]
+    end
+    file_name = path.split('/').last
     url = "https://github.com/apache/accumulo/blob/#{branch}/#{path}"
     return "[#{file_name}](#{url})"
   end
