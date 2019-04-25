@@ -6,10 +6,27 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 25 Apr 2019 13:41:24 -0400</pubDate>
-    <lastBuildDate>Thu, 25 Apr 2019 13:41:24 -0400</lastBuildDate>
+    <pubDate>Thu, 25 Apr 2019 16:05:50 -0400</pubDate>
+    <lastBuildDate>Thu, 25 Apr 2019 16:05:50 -0400</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
+    
+      <item>
+        <title>Using Apache Spark with Accumulo</title>
+        <description>&lt;p&gt;&lt;a href=&quot;https://spark.apache.org/&quot;&gt;Apache Spark&lt;/a&gt; applications can read from and write to Accumulo tables.  To
+get started using Spark with Accumulo, checkout the &lt;a href=&quot;/docs/2.x/development/spark&quot;&gt;Spark documentation&lt;/a&gt; in
+the 2.0 Accumulo user manual. The &lt;a href=&quot;https://github.com/apache/accumulo-examples/tree/master/spark&quot;&gt;Spark example&lt;/a&gt; application is a good starting point
+for using Spark with Accumulo.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 24 Apr 2019 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/04/24/using-spark-with-accumulo.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/04/24/using-spark-with-accumulo.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 1.9.3</title>
@@ -730,98 +747,6 @@ on Hadoop 2.2.0, the IT passed with a newer version of Hadoop.&lt;/p&gt;
         
         
         <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>View Accumulo metrics in Grafana</title>
-        <description>&lt;p&gt;The &lt;a href=&quot;/features/#screenshots&quot;&gt;Accumulo monitor&lt;/a&gt; provides the easiest way to view Accumulo metrics but it has two limitations:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;The overview page is limited to 10 graphs&lt;/li&gt;
-  &lt;li&gt;These graphs only show metrics for the past two hours&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The Accumulo monitor could be improved to be better a visualization tool for metrics but this doesn’t make
-sense when tools like &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;, &lt;a href=&quot;https://graphiteapp.org/&quot;&gt;Graphite&lt;/a&gt;, and &lt;a href=&quot;http://ganglia.sourceforge.net/&quot;&gt;Ganglia&lt;/a&gt; exist and Accumulo can report metrics to these tools
-using &lt;a href=&quot;/docs/2.x/administration/monitoring-metrics#hadoop-metrics2&quot;&gt;Hadoop Metrics2&lt;/a&gt;. While it’s easy to configure Accumulo to send metrics, the hard part is
-setting up and configuring a metrics visualization tool (i.e Graphite, Ganglia, Grafana/InfluxDB) to collect
-and view these metrics.&lt;/p&gt;
-
-&lt;p&gt;To ease this burden, this post describes how to send Accumulo metrics to &lt;a href=&quot;https://influxdb.com/&quot;&gt;InfluxDB&lt;/a&gt;, a time series database, 
-and make them viewable in &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;, a visualization tool.&lt;/p&gt;
-
-&lt;p&gt;Below is a screenshot of Accumulo metrics in Grafana:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/blog/201803_metrics/accumulo-metrics1.png&quot; width=&quot;100%&quot; /&gt;
-&lt;img src=&quot;/images/blog/201803_metrics/accumulo-metrics2.png&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;set-up-metrics-using-uno&quot;&gt;Set up metrics using Uno&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt; can setup and configure InfluxDB/Grafana when it sets up Accumulo using the following command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;uno setup accumulo --with-metrics
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Metrics from Accumulo will be immediately viewable in Grafana at &lt;a href=&quot;http://localhost:3000/&quot;&gt;http://localhost:3000/&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;set-up-metrics-manually&quot;&gt;Set up metrics manually&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Follow the standard installation instructions for &lt;a href=&quot;https://influxdb.com/&quot;&gt;InfluxDB&lt;/a&gt; and &lt;a href=&quot;http://grafana.org/&quot;&gt;Grafana&lt;/a&gt;. As for versions,
-the instructions below were written using InfluxDB v0.9.4.2 and Grafana v2.5.0.&lt;/li&gt;
-  &lt;li&gt;Add the following to your InfluxDB configuration to configure it accept metrics in Graphite
-format from Accumulo. The configuration below contains templates that transform the Graphite
-metrics into a format that is usable in InfluxDB.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[graphite]]
-  bind-address = &quot;:2003&quot;
-  enabled = true
-  database = &quot;accumulo_metrics&quot;
-  protocol = &quot;tcp&quot;
-  consistency-level = &quot;one&quot;
-  separator = &quot;_&quot;
-  batch-size = 1000
-  batch-pending = 5
-  batch-timeout = &quot;1s&quot;
-  templates = [
-    &quot;accumulo.*.*.*.*.*.*.* measurement.measurement.measurement.d.e.f.host.measurement&quot;,
-    &quot;accumulo.*.*.*.*.*.* measurement.measurement.measurement.d.e.host.measurement&quot;,
-    &quot;accumulo.*.*.*.*.* measurement.measurement.measurement.d.host.measurement&quot;,
-  ]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Configure the Accumulo configuration file &lt;code class=&quot;highlighter-rouge&quot;&gt;hadoop-metrics2-accumulo.properties&lt;/code&gt; to send Graphite
-metrics to InfluxDB. Below is example configuration. Remember to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;INFLUXDB_HOST&amp;gt;&lt;/code&gt; with
-the actual host.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; *.period=30
- accumulo.sink.graphite.class=org.apache.hadoop.metrics2.sink.GraphiteSink
- accumulo.sink.graphite.server_host=&amp;lt;INFLUXDB_HOST&amp;gt;
- accumulo.sink.graphite.server_port=2003
- accumulo.sink.graphite.metrics_prefix=accumulo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;Make sure the reporting frequency is set to 30 sec (i.e &lt;code class=&quot;highlighter-rouge&quot;&gt;*.period=30&lt;/code&gt;). This is required if you are
-using the provided Grafana dashboards that is configured in the next step.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Grafana needs to be configured to load dashboard JSON templates from a directory. Before restarting
-Grafana, you should copy &lt;a href=&quot;https://raw.githubusercontent.com/apache/fluo-uno/master/conf/grafana/accumulo-dashboard.json&quot;&gt;this Accumulo dashboard template&lt;/a&gt; to the &lt;code class=&quot;highlighter-rouge&quot;&gt;dashboards/&lt;/code&gt; directory
-configured below.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; [dashboards.json]
- enabled = true
- path = &amp;lt;GRAFANA_HOME&amp;gt;/dashboards
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;If you restart Grafana, you will see the Accumulo dashboard configured but all of their charts will
-be empty unless you have Accumulo running and configured to send data to InfluxDB. When you start
-sending data, you may need to refresh the dashboard page in the browser to start viewing metrics.&lt;/li&gt;
-&lt;/ol&gt;
-
-</description>
-        <pubDate>Thu, 22 Mar 2018 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2018/03/22/view-metrics-in-grafana.html</guid>
-        
-        
-        <category>blog</category>
         
       </item>
     
