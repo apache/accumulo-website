@@ -77,6 +77,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Eugene Cheipesh     |                                                                   |                       |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Hayden Marchant     |                                                                   |                       |
+| Holly Keebler       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
 | James Fiori         | [Flywheel Data][FLYWHEEL]                                         | [ET][ET]              |
