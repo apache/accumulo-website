@@ -4,7 +4,7 @@ category: development
 order: 3
 ---
 
-[Apache Spark] applications can read and write from Accumulo tables.
+[Apache Spark] applications can read from and write to Accumulo tables.
 
 Before reading this documentation, it may help to review the [MapReduce]
 documentation as API created for MapReduce jobs is used by Spark.
@@ -16,7 +16,7 @@ This documentation references code from the Accumulo [Spark example].
 1. Create a [shaded jar] with your Spark code and all of your dependencies (excluding
    Spark and Hadoop). When creating the shaded jar, you should relocate Guava
    as Accumulo uses a different version. The [pom.xml] in the [Spark example] is
-   a good reference and can be used a a starting point for a Spark application.
+   a good reference and can be used as a starting point for a Spark application.
 
 2. Submit the job by running `spark-submit` with your shaded jar. You should pass
    in the location of your `accumulo-client.properties` that will be used to connect
@@ -43,7 +43,7 @@ JavaPairRDD<Key,Value> data = sc.newAPIHadoopRDD(job.getConfiguration(),
 
 ## Writing to Accumulo table
 
-There are two ways to write an Accumulo table.
+There are two ways to write to an Accumulo table in Spark applications.
 
 ### Use a BatchWriter
 
@@ -95,7 +95,7 @@ try (AccumuloClient client = Accumulo.newClient().from(props).build()) {
 
 ## Reference
 
-* [Spark example] - Accumulo example application that uses Spark to read & write from Accumulo
+* [Spark example] - Example Spark application that reads from and writes to Accumulo
 * [MapReduce] - Documentation on reading/writing to Accumulo using MapReduce
 * [Apache Spark] - Spark project website
 
