@@ -88,6 +88,13 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
+### Audit
+Accumulo has a robust audit service that logs most table actions, both successful and 
+failed attempts.  Audit logs are not enabled by default, but can be turned 
+on by editing the conf/log4j-service.properties file.  Audit logs are written to the same 
+location as the master, monitor and tserver logs, unless redirected in the conf/log4j-
+service.properties file.  Audit logs can be configured for the shell in conf/log4j.properties.
+
 ### Client
 
 Accumulo has a client library that can be used to write applications that write and read

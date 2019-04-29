@@ -40,7 +40,7 @@ Accumulo processes. See the [quick install] for help with configuring this file.
 ### log4j-service.properties
 
 The {% ghc assemble/conf/log4j-service.properties %} file configures logging for most Accumulo services
-(i.e [Master], [Tablet Server], [Garbage Collector]) except for the Monitor.
+(i.e [Master], [Tablet Server], [Garbage Collector], [Audit]) except for the Monitor.
 
 ### log4j-monitor.properties
 
@@ -87,4 +87,5 @@ to run standby Tracers that can take over if the lead Tracer fails.
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
 [Tracer]: {% durl getting-started/design#tracer %}
+[Audit]: {% durl getting-started/design#audit %}
 [quick start]: {% durl getting-started/quickstart#configuring-accumulo %}
