@@ -18,7 +18,7 @@ The [Master] has the following responsibilities:
   * [detect and respond][update] to [TabletServer] failures
   * assign and balance tablets to Tablet Servers using a [TabletBalancer]
   * handle table creation, alteration and deletion requests from clients using the [TableManager]
-  * coordinate changes to write-ahead logs using the [WalStateManager].
+  * coordinate sorting of WALs and associates WALs to tablets
   * report general status
 
 ## Metadata Tables
@@ -29,6 +29,12 @@ The [Master] has the following responsibilities:
   * metadata for the `accumulo.root` table is stored in ZooKeeper
   * tables are read using [MetaDataTableScanner]
   * tables are modified using [MetadataTableUtil]
+
+## FATE
+
+  * performs repeatable, persisted operations
+  * operations are stored in ZooKeeper
+  * [Master] acts as execution system to run operations
 
 ## Tablet Server
 
@@ -43,12 +49,16 @@ The [TabletServer] has the following responsiblities:
     key/value pairs from all files & memory
   * perform recovery of a [Tablet] that was previously on a server that failed
     and reapply any writes found in the write-ahead log to the tablet
+  * peform compactions of files associated with [Tablet]
+  * cache data from files into memory
+  * manage bulk imports of files into Accumulo
 
 ## Garbage Collector
 
 The [GarbageCollector] has the following repsonsibilities:
 
   * [identify RFiles] in HDFS that are no longer needed and delete them
+  * remove write-ahead logs that are no longer needed
   * multiple garbage collectors can be run to provide hot-standby support
 
 [Master]: {% ghcu server/master/src/main/java/org/apache/accumulo/master/Master.java %}
