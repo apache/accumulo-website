@@ -88,9 +88,6 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
-### Audit
-Accumulo has a robust and fully configurable audit logging service that logs most table actions, both successful and failed attempts.  Audit logs are managed through the slf4j named logger `org.apache.accumulo.audit`.  The logger can be added to an existing logging framework or the sample file  `conf/log4j-service.properties` can be used to provide basic audit logging.
-
 ### Client
 
 Accumulo has a client library that can be used to write applications that write and read

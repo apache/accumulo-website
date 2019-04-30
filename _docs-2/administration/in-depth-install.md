@@ -463,6 +463,9 @@ ACCUMULO_SERVICE_INSTANCE=2; ./bin/accumulo tserver &> ./logs/tserver2.out &
 Accumulo processes each write to a set of log files. By default, these logs are found at directory
 set by `ACCUMULO_LOG_DIR` in [accumulo-env.sh].
 
+## Audit
+Accumulo has a robust and fully configurable audit logger that logs most table actions, both successful and failed attempts.  Audit logs are managed through the slf4j named logger `org.apache.accumulo.audit`.  The logger can be added to an existing logging framework or the sample file  `conf/log4j-service.properties` can be used to provide basic audit logging.
+
 ## Recovery
 
 In the event of TabletServer failure or error on shutting Accumulo down, some
