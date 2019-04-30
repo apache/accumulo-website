@@ -24,9 +24,9 @@ The [Master] has the following responsibilities:
 ## Metadata Tables
 
   * Accumulo has two metadata tables
-     * accumulo.metadata table (id: !0) contains metadata for user tables
-     * accumulo.root table (id: +r) contains metadata for accumulo.metadata
-  * metadata for the accumulo.root table is stored in ZooKeeper
+     * `accumulo.metadata` table (id: !0) contains metadata for user tables
+     * `accumulo.root` table (id: +r) contains metadata for `accumulo.metadata`
+  * metadata for the `accumulo.root` table is stored in ZooKeeper
   * tables are read using [MetaDataTableScanner]
   * tables are modified using [MetadataTableUtil]
 
