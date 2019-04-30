@@ -89,11 +89,7 @@ forwarding of logs from remote hosts to the Monitor, only one Monitor process sh
 at one time. Leader election will be performed internally to choose the active Monitor.
 
 ### Audit
-Accumulo has a robust audit service that logs most table actions, both successful and 
-failed attempts.  Audit logs are not enabled by default, but can be turned 
-on by editing the conf/log4j-service.properties file.  Audit logs are written to the same 
-location as the master, monitor and tserver logs, unless redirected in the conf/log4j-
-service.properties file.  Audit logs can be configured for the shell in conf/log4j.properties.
+Accumulo has a robust and fully configurable audit logging service that logs most table actions, both successful and failed attempts.  Audit logs are managed through the slf4j named logger `org.apache.accumulo.audit`.  The logger can be added to an existing logging framework or the sample file  `conf/log4j-service.properties` can be used to provide basic audit logging.
 
 ### Client
 
