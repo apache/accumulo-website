@@ -49,7 +49,7 @@ The [TabletServer] has the following responsiblities:
     key/value pairs from all files & memory
   * perform recovery of a [Tablet] that was previously on a server that failed
     and reapply any writes found in the write-ahead log to the tablet
-  * peform compactions of files associated with [Tablet]
+  * perform compactions of files associated with a [Tablet]
   * cache data from files into memory
   * manage bulk imports of files into Accumulo
 
