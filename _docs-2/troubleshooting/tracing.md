@@ -340,4 +340,4 @@ Time  Start  Service@Location       Name
 [trace.table]: {% purl trace.table %}
 [trace.zookeeper.path]: {% purl trace.zookeeper.path %}
 [trace.span.receivers]: {% purl trace.span.receivers %}
-[trace.span.receiver.*]: {% purl trace.span.receiver.* %}
+[trace.span.receiver.*]: {% purl trace.span.receiver.\* %}

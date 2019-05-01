@@ -130,6 +130,6 @@ default  | table.failures.ignore ..................... | false
 [accumulo-client]: {% durl getting-started/clients#creating-an-accumulo-client %}
 [client properties]: {% durl configuration/client-properties %}
 [server properties]: {% durl configuration/server-properties %}
-[table.* properties]: {% purl table.* %}
+[table.* properties]: {% purl table.\* %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [accumulo.properties]: {% durl configuration/files#accumuloproperties %}

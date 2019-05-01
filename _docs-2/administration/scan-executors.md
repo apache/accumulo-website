@@ -20,7 +20,7 @@ prioritizer can reorder queued work.
 
 By default, Accumulo sets `tserver.scan.executors.default.threads=16` which
 creates the default scan executor.  To configure additional scan executors,
-chose a unique name and configure {% plink tserver.scan.executors.* %}.  Setting
+chose a unique name and configure {% plink tserver.scan.executors.\* %}.  Setting
 the following causes each tablet server to create a scan executor with the
 specified threads.
 

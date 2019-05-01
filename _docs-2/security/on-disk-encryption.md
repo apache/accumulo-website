@@ -19,7 +19,7 @@ instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoS
 ```
 Out of the box, Accumulo provides the `AESCryptoService` for basic encryption needs.  This class provides AES encryption 
 with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
-below is required by this crypto service to be set using the {% plink instance.crypto.opts.* %} prefix.
+below is required by this crypto service to be set using the {% plink instance.crypto.opts.\* %} prefix.
 ```
 instance.crypto.opts.key.uri=file:///secure/path/to/crypto-key-file
 ```
