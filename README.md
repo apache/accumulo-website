@@ -9,7 +9,7 @@ will execute Main.java with all of the correct dependencies on the classpath.
 mvn -q clean compile exec:java
 ```
 
-The command takes a bit to run because it starts a MiniAccumuloCluster each time.
+The above command will compile the project and run a MiniAccumuloCluster.
 
 MiniAccumuloCluster is a mini version of Accumulo that runs on your local filesystem.  It should only be used for
 development purposes. Files and logs used by MiniAccumuloCluster can be seen in the generated directory:
@@ -17,6 +17,11 @@ development purposes. Files and logs used by MiniAccumuloCluster can be seen in 
 ```commandline
 target/mac########
 ```
+
+The version of Accumulo is defined in pom.xml and the tour should work with the Accumulo versions:
+* 1.8.*
+* 1.9.*
+* 2.0.*
 
 Running _mvn clean_ will remove any files created by previous runs.
 
