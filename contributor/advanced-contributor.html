@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Using Review Board</title>
+<title>Advanced Contributor</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,113 +136,128 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Using Review Board</h1>
+          <h1 class="title">Advanced Contributor</h1>
           
-          <p>The Apache Software Foundation provides an <a href="https://reviews.apache.org">instance</a> of
-<a href="https://www.reviewboard.org">Review Board</a> (RB) for projects to use in code reviews. Here is how RB can
-be used to support development in the context of the
-<a href="/contributor/bylaws">Apache Accumulo bylaws</a>.</p>
+          <h2 id="apply-patch-from-contributor">Apply patch from contributor</h2>
 
-<p>Contributors to Accumulo are encouraged to use RB for non-trivial patches and
-any time feedback is desired. No one is required to use RB, but its ready
-availability and better interface for feedback can help with reviews. Committers
-seeking review prior to pushing changes can also benefit similarly. It should
-be noted that more recently the use of GitHub has been overtaking the use of 
-Review Board for code reviews.</p>
+<p>Developers should use the following steps to apply patches from
+contributors:</p>
 
-<h2 id="roles-for-review-board">Roles for Review Board</h2>
+<ol>
+  <li>
+    <p>Checkout the branch for the major version which the patch is intended:</p>
 
-<h3 id="optional-pre-commit-review">Optional Pre-Commit Review</h3>
+    <p><code class="highlighter-rouge">git checkout 1.9</code></p>
+  </li>
+  <li>
+    <p>Verify the changes introduced by the patch:</p>
 
-<p>Accumulo operates under the <a href="https://www.apache.org/foundation/glossary#CommitThenReview">Commit-Then-Review</a> (CtR) policy, so code
-review does not need to occur prior to commit. However, a committer may opt to
-hold a code review before commit for changes that, in their opinion, would
-benefit from additional attention. RB can be used to conduct such code reviews.</p>
+    <p><code class="highlighter-rouge">git apply --stat ACCUMULO-12345.patch</code></p>
+  </li>
+  <li>
+    <p>Verify that the patch applies cleanly:</p>
 
-<h3 id="consensus-approval-after-a-code-change-veto">Consensus Approval after a Code Change Veto</h3>
+    <p><code class="highlighter-rouge">git apply --check ACCUMULO-12345.patch</code></p>
+  </li>
+  <li>
+    <p>If all is well, apply the patch:</p>
 
-<p>Code changes are approved by lazy approval, with consensus approval following
-a veto (see the <a href="/contributor/bylaws#actions">Actions</a> section of the bylaws). RB can be used
-to coordinate a consensus approval vote by providing a convenient view of the
-code change under consideration. The vote itself must still be held on the
-developer mailing list.</p>
+    <p><code class="highlighter-rouge">git am --signoff &lt; ACCUMULO-12345.patch</code></p>
+  </li>
+  <li>
+    <p>When finished, push the changes:</p>
 
-<h2 id="guidelines-for-posting-a-review">Guidelines for Posting a Review</h2>
+    <p><code class="highlighter-rouge">git push origin 1.9</code></p>
+  </li>
+  <li>
+    <p>Merge where appropriate:</p>
 
-<ul>
-  <li>It is best to post a git-generated patch as the basis for a review. RB does
-not support patches containing multiple commits, so either squash commits
-first, or submit a diff spanning the changeset. The <code class="highlighter-rouge">rbt</code> and <code class="highlighter-rouge">post-review</code>
-tools generate diffs.</li>
-  <li>Strive to make your changes small. Reviewers are less likely to want to
-trudge through a review with lots of changes, and are more likely to miss
-problems.</li>
-  <li>Begin the summary of the review with a JIRA issue number. A review must
-always be associated with a JIRA issue. The issue number should also be
-entered in the “Bugs” field of the review, providing a link to JIRA.</li>
-  <li>The “Branch” field should contain the name of the branch that the code change
-is based on (e.g., the base of your git feature branch).</li>
-  <li>Include the “accumulo” user group as reviewers. Also include specific people
-as individual reviewers, even if they are in the “accumulo” group, if you
-deem them of primary importance for the review (e.g., you have been working
-out problems with the review with them, they are expert in the area).</li>
-  <li>Use the description to summarize the change under review. Include helpful
-instructions to the reviewers here.</li>
-  <li>Describe any testing done on the change. It is not expected that reviewers
-will do their own testing, and they may reject the review if you have not
-done sufficient testing yourself.</li>
-  <li>Avoid submitting generated code for review if it can be reproduced by a
-reviewer.</li>
-</ul>
+    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git merge 1.9</code></p>
+  </li>
+</ol>
 
-<p>After the review is published, set the status of the associated JIRA issue to
-“Patch Available” as a signal to reviewers. Also, link to the review from the
-issue (More -&gt; Link -&gt; Web Link) to help viewers of the issue find the review
-and assess its progress.</p>
+<h2 id="merging-change-to-multiple-versions">Merging change to multiple versions</h2>
 
-<h2 id="guidelines-for-reviewing-code">Guidelines for Reviewing Code</h2>
+<p>Merging can be a very confusing topic for users switching to Git, but it can be
+summarized fairly easily.</p>
 
-<ul>
-  <li>Try to associate comments with relevant lines of code in the review.</li>
-  <li>By default, each comment opens a review issue. If a comment pertains to
-something that should not block the review from completing successfully, then
-clear the “Open an issue” checkbox before saving your feedback. Examples that
-might qualify as non-issues: minor formatting/whitespace issues, spelling
-mistakes, general background questions.</li>
-  <li>If a review looks good, be sure to “Ship It” by either using the “Ship It!”
-button or by submitting a general review with the “Ship It” checkbox checked.</li>
-</ul>
+<ol>
+  <li>
+    <p><strong>Precondition</strong>: choose the right branch to start! (lowest, applicable version
+for the change)</p>
+  </li>
+  <li>
+    <p>Get your changes fixed for that earliest version.</p>
+  </li>
+  <li>
+    <p>Switch to the next highest version which future minor versions will be
+released (non-EOL major release series).</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">git-merge</code> the branch from #1 into the current.</p>
+  </li>
+  <li>
+    <p>In the face of conflicts, use options from <code class="highlighter-rouge">git-merge</code> to help you.</p>
 
-<h2 id="guidelines-for-completing-a-review">Guidelines for Completing a Review</h2>
+    <ul>
+      <li><code class="highlighter-rouge">git checkout new-version &amp;&amp; git merge --stat old-version</code></li>
+      <li><code class="highlighter-rouge">git checkout new-version &amp;&amp; git merge --no-commit old-version</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>Treat your current branch as the branch from #2, and repeat from #2.</p>
+  </li>
+</ol>
 
-<p>These guidelines do not apply to consensus approval votes, since the vote
-completion depends on the votes registered in the developer mailing list.</p>
+<p>When merging changes across major releases, there is always the possibility of
+changes which are applicable/necessary in one release, but not in any future
+releases, changes which are different in implementation due to API changes, or
+any number of other cases. Whatever the actual case is, the developer who made
+the first set of changes (you) is the one responsible for performing the merge
+through the rest of the active versions. Even when the merge may results in a
+zero-length change in content, this is incredibly important to record, as you
+are the one who knows that this zero-length change in content is correct!</p>
 
-<ul>
-  <li>Use your judgement for the number of “Ship It”s you want to receive to
-consider a review passed. Usually, getting one “Ship It” is enough to proceed
-with a commit. It is recommended that the “Ship It” be from a committer who
-is a neutral party not involved in the change under review.</li>
-  <li>Use your judgement for the minimum time length you set for the review. Simple
-changes can be up for just a day, while complex ones should take up to seven.</li>
-  <li>Review time should be extended in the face of problems discovered in the
-review. Update the review with improved code instead of discarding (i.e.,
-closing unsuccessfully) it and beginning a new one.</li>
-  <li>A review should not be “submitted” (i.e., closed successfully) unless there
-are no outstanding issues. Check with reviewers to ensure that their issues
-are resolved satisfactorily.</li>
-  <li>A review should be “discarded” if the code requires major rework or it
-becomes obvious it should never be committed (due to design changes,
-becoming overcome by events, being back-burnered, etc.).</li>
-  <li>Don’t leave a review open indefinitely. Once you have received sufficient
-feedback to submit or discard it, do so. If there has been no activity for
-some time, discard the review. A new one can always be created later.</li>
-</ul>
+<h2 id="code-review-process">Code review process</h2>
 
-<p>Once you’ve closed a review as submitted, if you are unable to commit your
-changes yourself, attach the final version of them to the relevant JIRA issue.
-They should be in the form of a patch containing a single commit,
-<a href="/contributor/git#contributors">per the final steps of the contribution process</a>.</p>
+<p>Accumulo primarily uses GitHub (via pull requests) for code reviews.</p>
+
+<p>Accumulo operates under the <a href="https://www.apache.org/foundation/glossary#CommitThenReview">Commit-Then-Review</a> (CtR) policy, so a code review does not need to occur prior to commit. However, a committer has the option to hold a code review before a commit happens if, in their opinion, it would benefit from additional attention. Full details of the code review process for Accumulo is documented <a href="./rb">here</a></p>
+
+<h2 id="coding-practices">Coding Practices</h2>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><strong>License Header</strong></td>
+      <td>Always add the current ASF license header as described in [ASF Source Header][srcheaders].</td>
+    </tr>
+    <tr>
+      <td><strong>Trailing Whitespaces</strong></td>
+      <td>Remove all trailing whitespaces. Eclipse users can use Source→Cleanup option to accomplish this.</td>
+    </tr>
+    <tr>
+      <td><strong>Indentation</strong></td>
+      <td>Use 2 space indents and never use tabs!</td>
+    </tr>
+    <tr>
+      <td><strong>Line Wrapping</strong></td>
+      <td>Use 100-column line width for Java code and Javadoc.</td>
+    </tr>
+    <tr>
+      <td><strong>Control Structure New Lines</strong></td>
+      <td>Use a new line with single statement if/else blocks.</td>
+    </tr>
+    <tr>
+      <td><strong>Author Tags</strong></td>
+      <td>Do not use Author Tags. The code is developed and owned by the community.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="merging-practices">Merging Practices</h2>
+
+<p>Changes should be merged from earlier branches of Accumulo to later branches. Ask the <a href="mailto:dev@accumulo.apache.org">dev list</a> for instructions.</p>
 
 
         </div>

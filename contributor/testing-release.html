@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Contributor Guide</title>
+<title>Testing a release</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -136,41 +136,60 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Contributor Guide</h1>
+          <h1 class="title">Testing a release</h1>
           
-          <p><strong>Please read the <a href="/how-to-contribute/">How to Contribute</a> page first before reading this guide.</strong> This page contains additional project
-documentation.</p>
+          <h2 id="test-a-accumulo-release">Test a Accumulo release</h2>
 
-<h2 id="for-contributors">For Contributors</h2>
-
-<p>The docs below provide additional information for contributors.</p>
-
-<ul>
-  <li><a href="/contributor/building">Building Accumulo</a></li>
-  <li><a href="/contributor/advanced-contributor">Advanced Contributor</a></li>
-</ul>
-
-<h2 id="for-committers">For Committers</h2>
-
-<p>The docs below are for committers but may be of interest to contributors as well.</p>
-
-<ul>
-  <li><a href="/contributor/release-management">Release Management</a></li>
-  <li><a href="/contributor/making-release">Making a Release</a></li>
-  <li><a href="/contributor/verifying-release">Verifying a Release</a></li>
-  <li><a href="/contributor/testing-release">Testing a Release</a></li>
-</ul>
-
-<h2 id="project-governance">Project Governance</h2>
-
-<p>For details about governance policies for the Accumulo project view the following links.</p>
-
-<ul>
-  <li><a href="/contributor/bylaws">Bylaws</a></li>
-  <li><a href="/contributor/consensusBuilding">Consensus Building</a></li>
-  <li><a href="/contributor/lazyConsensus">Lazy Consensus</a></li>
-  <li><a href="/contributor/voting">Voting</a></li>
-</ul>
+<ol>
+  <li>Set the release version, ID for staging repo, and alias to configure Maven with temporary settings:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">RC_VERSION</span><span class="o">=</span>1.9.0
+<span class="nb">export </span><span class="nv">RC_STAGING</span><span class="o">=</span>1070
+</code></pre></div>    </div>
+  </li>
+  <li>Create temporary Maven settings
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> &gt;/tmp/accumulo-rc-maven.xml
+&lt;settings&gt;
+  &lt;profiles&gt;
+    &lt;profile&gt;
+      &lt;id&gt;accumuloRC&lt;/id&gt;
+      &lt;repositories&gt;
+        &lt;repository&gt;
+          &lt;id&gt;accumulorc&lt;/id&gt;
+          &lt;name&gt;accumulorc&lt;/name&gt;
+          &lt;url&gt;https://repository.apache.org/content/repositories/orgapacheaccumulo-\</span><span class="k">${</span><span class="nv">env</span><span class="p">.RC_STAGING</span><span class="k">}</span><span class="sh">/&lt;/url&gt;
+        &lt;/repository&gt;
+      &lt;/repositories&gt;
+      &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+          &lt;id&gt;accumulorcp&lt;/id&gt;
+          &lt;name&gt;accumulorcp&lt;/name&gt;
+          &lt;url&gt;https://repository.apache.org/content/repositories/orgapacheaccumulo-\</span><span class="k">${</span><span class="nv">env</span><span class="p">.RC_STAGING</span><span class="k">}</span><span class="sh">/&lt;/url&gt;
+        &lt;/pluginRepository&gt;
+      &lt;/pluginRepositories&gt;
+    &lt;/profile&gt;
+  &lt;/profiles&gt;
+  &lt;activeProfiles&gt;
+    &lt;activeProfile&gt;accumuloRC&lt;/activeProfile&gt;
+  &lt;/activeProfiles&gt;
+&lt;/settings&gt;
+</span><span class="no">EOF
+</span></code></pre></div>    </div>
+    <h4 id="run-the-integration-tests-of-projects-that-use-accumulo">Run the integration tests of projects that use Accumulo</h4>
+  </li>
+  <li>Clone the <a href="https://github.com/apache/accumulo-examples">Accumulo Examples</a> project:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>git clone https://github.com/apache/accumulo-examples.git
+</code></pre></div>    </div>
+  </li>
+  <li>Run the integration test
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>mvn <span class="nt">-s</span> /tmp/accumulo-rc-maven.xml clean verify <span class="nt">-Daccumulo</span>.version<span class="o">=</span><span class="nv">$RC_VERSION</span>
+</code></pre></div>    </div>
+    <p>Below are more projects with integration tests:</p>
+    <ul>
+      <li><a href="https://github.com/apache/accumulo-wikisearch">Wikisearch</a> - <code class="highlighter-rouge">https://github.com/apache/accumulo-wikisearch</code></li>
+      <li><a href="https://github.com/apache/fluo">Apache Fluo</a> - <code class="highlighter-rouge">https://github.com/apache/fluo</code></li>
+    </ul>
+  </li>
+</ol>
 
 
         </div>
