@@ -16,7 +16,7 @@ If you are setting up Accumulo for **testing or development,** consider using th
 
 If you are setting up Accumulo for a **production** environment, follow the instructions in this quick start.
 
-## Install Accumulo
+## Install Blah blah
 
 Either [download] or [build] a binary distribution of Accumulo from source code and
 unpack as follows.
