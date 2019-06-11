@@ -170,6 +170,25 @@ early programming assignments which implement their own tree data structures. `d
 copy on its sources (the children), copies itself, attaches the copies of the children, and
 then returns itself.
 
+## Yielding Interface
+
+If you have implemented an iterator with a next or seek call that can take a very long time
+resulting in starving out other scans within the same thread pool, try implementing the
+optional YieldingKeyValueIterator interface which SortedKeyValueIterator extends.
+
+```java
+default void enableYielding(YieldCallback callback) { }
+```
+
+### enableYielding
+
+The implementation of this method should simply cache the supplied callback as a member of
+the iterator. Then one can call the yield(Key key) method on the callback within a next or
+seek call when the iterator is to yield control.  The supplied key will be used as the
+start key in a follow-on seek call's range allowing the iterator to continue where it left
+off. Note when an iterator yields, the hasTop() method must return false.  Also note that
+the enableYielding method will not be called in isolation mode.
+
 ## TabletServer invocation of Iterators
 
 The following code is a general outline for how TabletServers invoke Iterators.
@@ -187,21 +206,34 @@ while (!overSizeLimit(batch)) {
         source = iter;
     }
 
-    // read a batch of data to return to client
+    // read a batch of data to return to client from
     // the last iterator, the "top"
     SortedKeyValueIterator topIter = source;
-    topIter.seek(getRangeFromUser(), ...)
+
+    YieldCallback cb = new YieldCallback();
+    topIter.enableYielding(cb)
+
+    topIter.seek(range, ...)
 
     while (topIter.hasTop() && !overSizeLimit(batch)) {
         key = topIter.getTopKey()
         val = topIter.getTopValue()
         batch.add(new KeyValue(key, val)
+        // remember the last key returned
+        setLastKeyReturned(key);
         if (systemDataSourcesChanged()) {
             // code does not show isolation case, which will
             // keep using same data sources until a row boundary is hit
             range = new Range(key, false, range.endKey(), range.endKeyInclusive());
             break;
         }
+        topIter.next()
+    }
+
+    if (cb.hasYielded()) {
+        // remember the yield key as the last key returned
+        setLastKeyReturned(cb.getKey());
+        break;
     }
 }
 //return batch of key values to client
@@ -213,15 +245,12 @@ Additionally, the obtuse "re-seek" case can be outlined as the following:
 // Given the above
 List<KeyValue> batch = getNextBatch();
 
-// Store off lastKeyReturned for this client
-lastKeyReturned = batch.get(batch.size() - 1).getKey();
-
 // thread goes away (client stops asking for the next batch).
 
 // Eventually client comes back
 // Setup as before...
-Range userRange = getRangeFromUser();
-Range actualRange = new Range(lastKeyReturned, false, userRange.getEndKey(), userRange.isEndKeyInclusive());
+Range userRange = getRangeFromClient();
+Range actualRange = new Range(getLastKeyReturned(), false, userRange.getEndKey(), userRange.isEndKeyInclusive());
 
 // Use the actualRange, not the user provided one
 topIter.seek(actualRange);
