@@ -18,7 +18,7 @@ are not designed to act as triggers nor are they designed to operate outside of 
 
 Understanding how TabletServers invoke the methods on a [SortedKeyValueIterator] can be obtuse as the actual code is
 buried within the implementation of the TabletServer; however, it is generally unnecessary to have a strong
-understanding of this as the interface provides clear definitions about what each action each method should take. This
+understanding of this as the interface provides clear definitions about what each method should take. This
 chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
 pitfalls.
 
