@@ -30,7 +30,7 @@ allow each system to determine if a peer has already has the data in which
 the system wants to send.
 
 Data is replicated by using the Write-Ahead logs (WAL) that each TabletServer is
-already maintaining. TabletServers records which WALs have data that need to be
+already maintaining. TabletServers record which WALs have data that need to be
 replicated to the `accumulo.metadata` table. The Master uses these records,
 combined with the local Accumulo table that the WAL was used with, to create records
 in the `replication` table which track which peers the given WAL should be

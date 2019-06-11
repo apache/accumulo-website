@@ -7,7 +7,7 @@ use [Bundler] to install the necessary dependencies to run and build the website
 
 Ruby is required to use Bundler so first make sure you have Ruby on your machine.  If you are using
 an OS packaged version of Ruby, you will have to also install the ruby-dev (Ubuntu) or
-ruby-devel (Fedora) package as well. Depending on your OS, you may also need other packages, such as 
+ruby-devel (Fedora) package as well. Depending on your OS, you may also need other packages, such as
 ruby-full, make, gcc, nodejs, build-essentials, or patch.
 
 With Ruby installed on your machine, you can install [Bundler] using the command below:
