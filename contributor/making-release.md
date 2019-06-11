@@ -6,7 +6,7 @@ redirect_from:
   - /governance/releasing
 ---
 
-Follow these steps to make a release of Apache Accumulo. 
+Follow these steps to make a release of Apache Accumulo.
 
 1. [Setup](#setup)
 2. [Triage Issues](#triage-issues)
@@ -14,28 +14,6 @@ Follow these steps to make a release of Apache Accumulo.
 4. [Vote](#vote)
 5. [Post release tasks](#post-release-tasks)
 
-TODO: Incorporate these where appropriate
-In git: 
-* Merge 1.9.3-rc3-next into 1.9, and 1.9 into master to preserve history 
-* Create GPG-signed release tag rel/1.9.3 
-* Clean up RC branches 
-
-In dist-SVN: 
-* Upload release artifacts, signatures, and sha512 sums to 
-dist/release area for mirrors 
-
-In GitHub: 
-* Updated 1.9.3 label description in GitHub issues to say "was fixed" 
-* Ensured no open issues with 1.9.3 label 
-
-Miscellaneous: 
-* Updated release info at reporter.apache.org 
-
-In dist-SVN: 
-* Archive 1.9.2 artifacts (after updating website) 
-
-Email: 
-* Draft and send announcement 
 
 ## Setup
 
@@ -114,7 +92,8 @@ in the release notes.
 If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
 until the release ultimately passes if you choose), and fix what needs fixing.
 
-If the vote passes, follow the steps below.
+If the vote passes, send a draft announcement to the Dev list and once someone reviews it, email the release
+announcement.
 
 # Post release Tasks
 
