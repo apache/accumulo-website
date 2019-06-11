@@ -6,7 +6,36 @@ redirect_from:
   - /governance/releasing
 ---
 
-This is a guide for the creation of a release of Apache Accumulo. 
+Follow these steps to make a release of Apache Accumulo. 
+
+1. [Setup](#setup)
+2. [Triage Issues](#triage-issues)
+3. [Create the candidate](#create-the-candidate)
+4. [Vote](#vote)
+5. [Post release tasks](#post-release-tasks)
+
+TODO: Incorporate these where appropriate
+In git: 
+* Merge 1.9.3-rc3-next into 1.9, and 1.9 into master to preserve history 
+* Create GPG-signed release tag rel/1.9.3 
+* Clean up RC branches 
+
+In dist-SVN: 
+* Upload release artifacts, signatures, and sha512 sums to 
+dist/release area for mirrors 
+
+In GitHub: 
+* Updated 1.9.3 label description in GitHub issues to say "was fixed" 
+* Ensured no open issues with 1.9.3 label 
+
+Miscellaneous: 
+* Updated release info at reporter.apache.org 
+
+In dist-SVN: 
+* Archive 1.9.2 artifacts (after updating website) 
+
+Email: 
+* Draft and send announcement 
 
 ## Setup
 
@@ -16,19 +45,13 @@ There are number of things that are required before attempting to build a releas
 2. Ensure that you're using the correct major release of Java (check javadoc too).
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
    the maven-release-plugin and staging the release candidate).
-4. Update the CHANGES file so that it's in sync with Jira (manual process).
-5. Ensure that you have a texlive distribution installed so you are able to build the documentation.
-6. Have a clean workspace before starting.
+4. Have a clean workspace before starting.
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
 ## Triage issues.
 
-Before creating a release candidate, all open issues with a fix version of the
-release candidate should be triaged.  During the transition from JIRA to GitHub
-issues, anyone doing triage will need to search for open issues in both
-locations.  Searching in both locations is only necessary for branches that
-have not released since the transition started.
+Before creating a release candidate, all open issues with a fix version of the release candidate should be triaged.
 
 ## Create the candidate
 
@@ -93,10 +116,15 @@ until the release ultimately passes if you choose), and fix what needs fixing.
 
 If the vote passes, follow the steps below.
 
+# Post release Tasks
+
 ## Promote the artifacts 
 
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
 a process to get the release out to all of the mirrors.
+In Nexus:
+* Release the 1.9.3-rc3 staging repository to Maven Central
+* Drop old (rc1,rc2) staging repos
 
 ## Create the final Git tag
 
@@ -125,8 +153,12 @@ After a successful vote, [this website][website-repo] needs to be updated with t
   * Create a post in `_posts/release/` containing release notes
   * Remove previous bug-fix release (if applicable)
   * Update doap/accumulo.rdf
+  * Complete release notes
+  * Update previous release notes (as archived or archived-critical)
+  * Update `_config.yml`
+  * Update `_includes/nav.html`
 
-### Documentation
+## Update Documentation
 
 Starting with 2.0.0, the source code for the Accumulo documentation was moved to the [accumulo-website repo][website-repo] except
 for two markdown files that should be changed in the Accumulo repo and copied/mirrored to the website repo for releases.
@@ -158,10 +190,9 @@ Once a collection is created for a major release, developers can make documentat
 
 **For 1.x minor & bugfix releases,** copy `accumulo_user_manual.html` generated for release to the `1.x/` directory in the [accumulo-website repo][website-repo].
 
-### Javadocs
+## Update Javadocs
 
-Javadocs are easy to update. Using the latest JDK7 or later (at least JDK 7u21
-to avoid known [vulnerabilities][7]), follow these steps:
+Javadocs are easy to update. Using the latest JDK8 or later, follow these steps:
 
 1. Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release
 2. Build the javadocs with `mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs`
@@ -197,8 +228,6 @@ Some good references that explain a few things:
 [3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
 [4]: https://www.apache.org/dev/publishing-maven-artifacts
 [5]: https://www.apache.org/dev/release-publishing
-[7]: https://www.kb.cert.org/vuls/id/225657
-[8]: https://www.apache.org/dev/cmsref#extpaths
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
 [verify]: {{ "/contributor/verifying-release" | relative_url }}
 [examples]: https://github.com/apache/accumulo-examples
