@@ -8,7 +8,7 @@ Accumulo [SortedKeyValueIterators][SortedKeyValueIterator], commonly referred to
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
-in the iteration, Accumulo Iterators must also support the ability to "move" (`seek`) to an specified point in the
+in the iteration, Accumulo Iterators must also support the ability to "move" (`seek`) to a specified point in the
 iteration (the Accumulo table). Accumulo Iterators are designed to be concatenated together, similar to applying a
 series of transformations to a list of elements. Accumulo Iterators can duplicate their underlying source to create
 multiple "pointers" over the same underlying data (which is extremely powerful since each stream is sorted) or they can
