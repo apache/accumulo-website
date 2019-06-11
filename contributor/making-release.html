@@ -138,7 +138,15 @@
           
           <h1 class="title">Making a Release</h1>
           
-          <p>This is a guide for the creation of a release of Apache Accumulo.</p>
+          <p>Follow these steps to make a release of Apache Accumulo.</p>
+
+<ol>
+  <li><a href="#setup">Setup</a></li>
+  <li><a href="#triage-issues">Triage Issues</a></li>
+  <li><a href="#create-the-candidate">Create the candidate</a></li>
+  <li><a href="#vote">Vote</a></li>
+  <li><a href="#post-release-tasks">Post release tasks</a></li>
+</ol>
 
 <h2 id="setup">Setup</h2>
 
@@ -149,8 +157,6 @@
   <li>Ensure that you’re using the correct major release of Java (check javadoc too).</li>
   <li>Ensure that you’re building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
 the maven-release-plugin and staging the release candidate).</li>
-  <li>Update the CHANGES file so that it’s in sync with Jira (manual process).</li>
-  <li>Ensure that you have a texlive distribution installed so you are able to build the documentation.</li>
   <li>Have a clean workspace before starting.</li>
 </ol>
 
@@ -158,11 +164,7 @@ the maven-release-plugin and staging the release candidate).</li>
 
 <h2 id="triage-issues">Triage issues.</h2>
 
-<p>Before creating a release candidate, all open issues with a fix version of the
-release candidate should be triaged.  During the transition from JIRA to GitHub
-issues, anyone doing triage will need to search for open issues in both
-locations.  Searching in both locations is only necessary for branches that
-have not released since the transition started.</p>
+<p>Before creating a release candidate, all open issues with a fix version of the release candidate should be triaged.</p>
 
 <h2 id="create-the-candidate">Create the candidate</h2>
 
@@ -227,12 +229,20 @@ in the release notes.</p>
 <p>If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
 until the release ultimately passes if you choose), and fix what needs fixing.</p>
 
-<p>If the vote passes, follow the steps below.</p>
+<p>If the vote passes, send a draft announcement to the Dev list and once someone reviews it, email the release
+announcement.</p>
+
+<h1 id="post-release-tasks">Post release Tasks</h1>
 
 <h2 id="promote-the-artifacts">Promote the artifacts</h2>
 
 <p>Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
-a process to get the release out to all of the mirrors.</p>
+a process to get the release out to all of the mirrors.
+In Nexus:</p>
+<ul>
+  <li>Release the 1.9.3-rc3 staging repository to Maven Central</li>
+  <li>Drop old (rc1,rc2) staging repos</li>
+</ul>
 
 <h2 id="create-the-final-git-tag">Create the final Git tag</h2>
 
@@ -262,9 +272,13 @@ automatically.</p>
   <li>Create a post in <code class="highlighter-rouge">_posts/release/</code> containing release notes</li>
   <li>Remove previous bug-fix release (if applicable)</li>
   <li>Update doap/accumulo.rdf</li>
+  <li>Complete release notes</li>
+  <li>Update previous release notes (as archived or archived-critical)</li>
+  <li>Update <code class="highlighter-rouge">_config.yml</code></li>
+  <li>Update <code class="highlighter-rouge">_includes/nav.html</code></li>
 </ul>
 
-<h3 id="documentation">Documentation</h3>
+<h2 id="update-documentation">Update Documentation</h2>
 
 <p>Starting with 2.0.0, the source code for the Accumulo documentation was moved to the <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a> except
 for two markdown files that should be changed in the Accumulo repo and copied/mirrored to the website repo for releases.</p>
@@ -310,10 +324,9 @@ releases.</p>
 
 <p><strong>For 1.x minor &amp; bugfix releases,</strong> copy <code class="highlighter-rouge">accumulo_user_manual.html</code> generated for release to the <code class="highlighter-rouge">1.x/</code> directory in the <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a>.</p>
 
-<h3 id="javadocs">Javadocs</h3>
+<h2 id="update-javadocs">Update Javadocs</h2>
 
-<p>Javadocs are easy to update. Using the latest JDK7 or later (at least JDK 7u21
-to avoid known <a href="https://www.kb.cert.org/vuls/id/225657">vulnerabilities</a>), follow these steps:</p>
+<p>Javadocs are easy to update. Using the latest JDK8 or later, follow these steps:</p>
 
 <ol>
   <li>Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release</li>
