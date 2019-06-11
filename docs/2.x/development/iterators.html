@@ -424,7 +424,7 @@
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
-in the iteration, Accumulo Iterators must also support the ability to “move” (<code class="highlighter-rouge">seek</code>) to an specified point in the
+in the iteration, Accumulo Iterators must also support the ability to “move” (<code class="highlighter-rouge">seek</code>) to a specified point in the
 iteration (the Accumulo table). Accumulo Iterators are designed to be concatenated together, similar to applying a
 series of transformations to a list of elements. Accumulo Iterators can duplicate their underlying source to create
 multiple “pointers” over the same underlying data (which is extremely powerful since each stream is sorted) or they can
@@ -434,7 +434,7 @@ are not designed to act as triggers nor are they designed to operate outside of 
 
 <p>Understanding how TabletServers invoke the methods on a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> can be obtuse as the actual code is
 buried within the implementation of the TabletServer; however, it is generally unnecessary to have a strong
-understanding of this as the interface provides clear definitions about what each action each method should take. This
+understanding of this as the interface provides clear definitions about what each method should take. This
 chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
 pitfalls.</p>
 
@@ -587,6 +587,24 @@ early programming assignments which implement their own tree data structures. <c
 copy on its sources (the children), copies itself, attaches the copies of the children, and
 then returns itself.</p>
 
+<h2 id="yielding-interface">Yielding Interface</h2>
+
+<p>If you have implemented an iterator with a next or seek call that can take a very long time
+resulting in starving out other scans within the same thread pool, try implementing the
+optional YieldingKeyValueIterator interface which SortedKeyValueIterator extends.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span> <span class="kt">void</span> <span class="nf">enableYielding</span><span class="o">(</span><span class="n">YieldCallback</span> <span class="n">callback</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="enableyielding">enableYielding</h3>
+
+<p>The implementation of this method should simply cache the supplied callback as a member of
+the iterator. Then one can call the yield(Key key) method on the callback within a next or
+seek call when the iterator is to yield control.  The supplied key will be used as the
+start key in a follow-on seek call’s range allowing the iterator to continue where it left
+off. Note when an iterator yields, the hasTop() method must return false.  Also note that
+the enableYielding method will not be called in isolation mode.</p>
+
 <h2 id="tabletserver-invocation-of-iterators">TabletServer invocation of Iterators</h2>
 
 <p>The following code is a general outline for how TabletServers invoke Iterators.</p>
@@ -603,21 +621,34 @@ then returns itself.</p>
         <span class="n">source</span> <span class="o">=</span> <span class="n">iter</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="c1">// read a batch of data to return to client</span>
+    <span class="c1">// read a batch of data to return to client from</span>
     <span class="c1">// the last iterator, the "top"</span>
     <span class="n">SortedKeyValueIterator</span> <span class="n">topIter</span> <span class="o">=</span> <span class="n">source</span><span class="o">;</span>
-    <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">getRangeFromUser</span><span class="o">(),</span> <span class="o">...)</span>
+
+    <span class="n">YieldCallback</span> <span class="n">cb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">YieldCallback</span><span class="o">();</span>
+    <span class="n">topIter</span><span class="o">.</span><span class="na">enableYielding</span><span class="o">(</span><span class="n">cb</span><span class="o">)</span>
+
+    <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">range</span><span class="o">,</span> <span class="o">...)</span>
 
     <span class="k">while</span> <span class="o">(</span><span class="n">topIter</span><span class="o">.</span><span class="na">hasTop</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">))</span> <span class="o">{</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopKey</span><span class="o">()</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopValue</span><span class="o">()</span>
         <span class="n">batch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">KeyValue</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span>
+        <span class="c1">// remember the last key returned</span>
+        <span class="n">setLastKeyReturned</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">systemDataSourcesChanged</span><span class="o">())</span> <span class="o">{</span>
             <span class="c1">// code does not show isolation case, which will</span>
             <span class="c1">// keep using same data sources until a row boundary is hit</span>
             <span class="n">range</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">range</span><span class="o">.</span><span class="na">endKey</span><span class="o">(),</span> <span class="n">range</span><span class="o">.</span><span class="na">endKeyInclusive</span><span class="o">());</span>
             <span class="k">break</span><span class="o">;</span>
         <span class="o">}</span>
+        <span class="n">topIter</span><span class="o">.</span><span class="na">next</span><span class="o">()</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">hasYielded</span><span class="o">())</span> <span class="o">{</span>
+        <span class="c1">// remember the yield key as the last key returned</span>
+        <span class="n">setLastKeyReturned</span><span class="o">(</span><span class="n">cb</span><span class="o">.</span><span class="na">getKey</span><span class="o">());</span>
+        <span class="k">break</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 <span class="c1">//return batch of key values to client</span>
@@ -628,15 +659,12 @@ then returns itself.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Given the above</span>
 <span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">getNextBatch</span><span class="o">();</span>
 
-<span class="c1">// Store off lastKeyReturned for this client</span>
-<span class="n">lastKeyReturned</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">batch</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">).</span><span class="na">getKey</span><span class="o">();</span>
-
 <span class="c1">// thread goes away (client stops asking for the next batch).</span>
 
 <span class="c1">// Eventually client comes back</span>
 <span class="c1">// Setup as before...</span>
-<span class="n">Range</span> <span class="n">userRange</span> <span class="o">=</span> <span class="n">getRangeFromUser</span><span class="o">();</span>
-<span class="n">Range</span> <span class="n">actualRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">lastKeyReturned</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">userRange</span><span class="o">.</span><span class="na">getEndKey</span><span class="o">(),</span> <span class="n">userRange</span><span class="o">.</span><span class="na">isEndKeyInclusive</span><span class="o">());</span>
+<span class="n">Range</span> <span class="n">userRange</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
+<span class="n">Range</span> <span class="n">actualRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">getLastKeyReturned</span><span class="o">(),</span> <span class="kc">false</span><span class="o">,</span> <span class="n">userRange</span><span class="o">.</span><span class="na">getEndKey</span><span class="o">(),</span> <span class="n">userRange</span><span class="o">.</span><span class="na">isEndKeyInclusive</span><span class="o">());</span>
 
 <span class="c1">// Use the actualRange, not the user provided one</span>
 <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">actualRange</span><span class="o">);</span>
