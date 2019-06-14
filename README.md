@@ -61,8 +61,8 @@ regenerate these, do the following.
 ```
 cd <accumulo source dir>
 mvn package -DskipTests
-cp ./core/target/generated-docs/server-properties.md <accumulo website source>/_docs-2/administration
-cp ./core/target/generated-docs/client-properties.md <accumulo website source>/_docs-2/administration
+cp ./core/target/generated-docs/server-properties.md <accumulo website source>/_docs-2/configuration
+cp ./core/target/generated-docs/client-properties.md <accumulo website source>/_docs-2/configuration
 ```
 
 ## Update the production website
