@@ -41,21 +41,28 @@ finding issues to work, there may still be
 
 ## Labels
 
-For pull request and issues, the following labels are used in the core
-repository. Consider an issue with labels `v1.9.3`, `v2.0.2`, and `bug`.  If
-the issue is open, then its a bug that someone plans to fix in 1.9.3 and 2.0.2.
-If closed, then it was fixed in those versions.
-
- Label       | Description
--------------|----------------------------------------------------------------------------
- blocker     | Indicates a release blocker that must be fixed in labeled versions.
- bug         |
- duplicate   |
- enhancement |
- vX.Y.Z      | Fix version. The prefix `v` was chosen so that these labels sort last in the drop down list.
+Labels, such as `bug`, `enhancement`, and `duplicate`, are used to
+descriptively organize issues and pull requests. Issues labeled with `blocker`
+indicate that the developers have determined that the issue must be fixed prior
+to a release (to be used in conjunction with a version-specific project board;
+see the next section for information on project boards).
 
 Currently only Accumulo committers can set labels.  If you think a label should
 be set, comment on the issue and someone will help.
+
+## Project Boards (Projects)
+
+Project boards (also "projects") are used to track the status of issues and
+pull requests for a specific milestone. Projects with names such as `2.1.0`,
+and `1.9.2` are used for tracking issues associated with a particular release
+and release planning. These are set up as basic Kanban boards with automation,
+with `To do`, `In progress`, and `Done` statuses. These projects are marked as
+"closed" when the version indicated is released. Other projects may exist for
+miscellaneous puposes, such as tracking multiple issues related to a larger
+effort. These projects will be named appropriate to indicate their purpose.
+
+Committers manage the project boards. If you need help with a project board or
+have questions, contact the developers using the link at the top of this page.
 
 ## Repositories
 
