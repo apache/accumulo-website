@@ -591,10 +591,10 @@ your application call</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.accumulo.core.trace.DistributedTrace</span><span class="o">;</span>
 <span class="o">...</span>
-<span class="n">DistributedTrace</span><span class="o">.</span><span class="na">enable</span><span class="o">(</span><span class="n">hostname</span><span class="o">,</span> <span class="s">"myApplication"</span><span class="o">);</span>
+<span class="nc">DistributedTrace</span><span class="o">.</span><span class="na">enable</span><span class="o">(</span><span class="n">hostname</span><span class="o">,</span> <span class="s">"myApplication"</span><span class="o">);</span>
 <span class="c1">// do some tracing</span>
 <span class="o">...</span>
-<span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
+<span class="nc">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Once tracing has been enabled, a client can wrap an operation in a trace.</p>
@@ -603,10 +603,10 @@ your application call</p>
 <span class="kn">import</span> <span class="nn">org.apache.htrace.Trace</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.apache.htrace.TraceScope</span><span class="o">;</span>
 <span class="o">...</span>
-<span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Scan"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
-<span class="n">BatchScanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(...);</span>
+<span class="nc">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Scan"</span><span class="o">,</span> <span class="nc">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
+<span class="nc">BatchScanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchScanner</span><span class="o">(...);</span>
 <span class="c1">// Configure your scanner</span>
-<span class="k">for</span> <span class="o">(</span><span class="n">Entry</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
+<span class="k">for</span> <span class="o">(</span><span class="nc">Entry</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
 <span class="o">}</span>
 <span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 </code></pre></div></div>
@@ -619,13 +619,13 @@ Don’t forget to specify a Sampler at the top-level span
 because the default Sampler only samples when part of a pre-existing trace,
 which will never occur in a client that never specifies a Sampler.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Update"</span><span class="o">,</span> <span class="n">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">TraceScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Client Update"</span><span class="o">,</span> <span class="nc">Sampler</span><span class="o">.</span><span class="na">ALWAYS</span><span class="o">);</span>
 <span class="o">...</span>
-<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
+<span class="nc">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
 <span class="o">...</span>
 <span class="n">readScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="o">...</span>
-<span class="n">TraceScope</span> <span class="n">writeScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Write"</span><span class="o">);</span>
+<span class="nc">TraceScope</span> <span class="n">writeScope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Write"</span><span class="o">);</span>
 <span class="o">...</span>
 <span class="n">writeScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="n">scope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
@@ -636,12 +636,12 @@ Checking whether currently tracing is necessary when using a sampler other than 
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
 <span class="kt">int</span> <span class="n">numberOfEntriesRead</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
+<span class="nc">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">);</span>
 <span class="c1">// Do the read, update the counter</span>
 <span class="o">...</span>
-<span class="k">if</span> <span class="o">(</span><span class="n">Trace</span><span class="o">.</span><span class="na">isTracing</span><span class="o">)</span>
-  <span class="n">readScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addKVAnnotation</span><span class="o">(</span><span class="s">"Number of Entries Read"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">),</span>
-      <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">numberOfEntriesRead</span><span class="o">).</span><span class="na">getBytes</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">));</span>
+<span class="k">if</span> <span class="o">(</span><span class="nc">Trace</span><span class="o">.</span><span class="na">isTracing</span><span class="o">)</span>
+  <span class="n">readScope</span><span class="o">.</span><span class="na">getSpan</span><span class="o">().</span><span class="na">addKVAnnotation</span><span class="o">(</span><span class="s">"Number of Entries Read"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="nc">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">),</span>
+      <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">numberOfEntriesRead</span><span class="o">).</span><span class="na">getBytes</span><span class="o">(</span><span class="nc">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">));</span>
 </code></pre></div></div>
 
 <p>It is also possible to add timeline annotations to your spans.
@@ -658,17 +658,17 @@ help enable tracing for 1-in-1000 operations</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.htrace.impl.CountSampler</span><span class="o">;</span>
 <span class="o">...</span>
-<span class="n">Sampler</span> <span class="n">sampler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountSampler</span><span class="o">(</span><span class="n">HTraceConfiguration</span><span class="o">.</span><span class="na">fromMap</span><span class="o">(</span>
-    <span class="n">Collections</span><span class="o">.</span><span class="na">singletonMap</span><span class="o">(</span><span class="n">CountSampler</span><span class="o">.</span><span class="na">SAMPLER_FREQUENCY_CONF_KEY</span><span class="o">,</span> <span class="s">"1000"</span><span class="o">)));</span>
+<span class="nc">Sampler</span> <span class="n">sampler</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CountSampler</span><span class="o">(</span><span class="nc">HTraceConfiguration</span><span class="o">.</span><span class="na">fromMap</span><span class="o">(</span>
+    <span class="nc">Collections</span><span class="o">.</span><span class="na">singletonMap</span><span class="o">(</span><span class="nc">CountSampler</span><span class="o">.</span><span class="na">SAMPLER_FREQUENCY_CONF_KEY</span><span class="o">,</span> <span class="s">"1000"</span><span class="o">)));</span>
 <span class="o">...</span>
-<span class="n">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">,</span> <span class="n">sampler</span><span class="o">);</span>
+<span class="nc">TraceScope</span> <span class="n">readScope</span> <span class="o">=</span> <span class="nc">Trace</span><span class="o">.</span><span class="na">startSpan</span><span class="o">(</span><span class="s">"Read"</span><span class="o">,</span> <span class="n">sampler</span><span class="o">);</span>
 <span class="o">...</span>
 <span class="n">readScope</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Remember to close all spans and disable tracing when finished.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">DistributedTrace</span><span class="o">.</span><span class="na">disable</span><span class="o">();</span>
 </code></pre></div></div>
 
 <h2 id="viewing-collected-traces">Viewing Collected Traces</h2>

@@ -455,19 +455,19 @@ Iterators must have a public no-args constructor.</p>
 
 <p>A normal implementation of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> defines functionality for the following methods:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="nc">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="nc">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">;</span>
 
 <span class="kt">boolean</span> <span class="nf">hasTop</span><span class="o">();</span>
 
-<span class="kt">void</span> <span class="nf">next</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">next</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">;</span>
 
-<span class="kt">void</span> <span class="nf">seek</span><span class="o">(</span><span class="n">Range</span> <span class="n">range</span><span class="o">,</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">ByteSequence</span><span class="o">&gt;</span> <span class="n">columnFamilies</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">inclusive</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">;</span>
+<span class="kt">void</span> <span class="nf">seek</span><span class="o">(</span><span class="nc">Range</span> <span class="n">range</span><span class="o">,</span> <span class="nc">Collection</span><span class="o">&lt;</span><span class="nc">ByteSequence</span><span class="o">&gt;</span> <span class="n">columnFamilies</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">inclusive</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">;</span>
 
-<span class="n">Key</span> <span class="nf">getTopKey</span><span class="o">();</span>
+<span class="nc">Key</span> <span class="nf">getTopKey</span><span class="o">();</span>
 
-<span class="n">Value</span> <span class="nf">getTopValue</span><span class="o">();</span>
+<span class="nc">Value</span> <span class="nf">getTopValue</span><span class="o">();</span>
 
-<span class="n">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">deepCopy</span><span class="o">(</span><span class="n">IteratorEnvironment</span> <span class="n">env</span><span class="o">);</span>
+<span class="nc">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="nf">deepCopy</span><span class="o">(</span><span class="nc">IteratorEnvironment</span> <span class="n">env</span><span class="o">);</span>
 </code></pre></div></div>
 
 <h3 id="init">init</h3>
@@ -593,7 +593,7 @@ then returns itself.</p>
 resulting in starving out other scans within the same thread pool, try implementing the
 optional YieldingKeyValueIterator interface which SortedKeyValueIterator extends.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span> <span class="kt">void</span> <span class="nf">enableYielding</span><span class="o">(</span><span class="n">YieldCallback</span> <span class="n">callback</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span> <span class="kt">void</span> <span class="nf">enableYielding</span><span class="o">(</span><span class="nc">YieldCallback</span> <span class="n">callback</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
 </code></pre></div></div>
 
 <h3 id="enableyielding">enableYielding</h3>
@@ -609,23 +609,23 @@ the enableYielding method will not be called in isolation mode.</p>
 
 <p>The following code is a general outline for how TabletServers invoke Iterators.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span><span class="o">;</span>
-<span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">List</span><span class="o">&lt;</span><span class="nc">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span><span class="o">;</span>
+<span class="nc">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
 <span class="k">while</span> <span class="o">(!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">))</span> <span class="o">{</span>
-    <span class="n">SortedKeyValueIterator</span> <span class="n">source</span> <span class="o">=</span> <span class="n">getSystemIterator</span><span class="o">();</span>
+    <span class="nc">SortedKeyValueIterator</span> <span class="n">source</span> <span class="o">=</span> <span class="n">getSystemIterator</span><span class="o">();</span>
 
-    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">clzName</span> <span class="o">:</span> <span class="n">getUserIterators</span><span class="o">())</span> <span class="o">{</span>
-        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clz</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">clzName</span><span class="o">);</span>
-        <span class="n">SortedKeyValueIterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="o">(</span><span class="n">SortedKeyValueIterator</span><span class="o">)</span> <span class="n">clz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">clzName</span> <span class="o">:</span> <span class="n">getUserIterators</span><span class="o">())</span> <span class="o">{</span>
+        <span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clz</span> <span class="o">=</span> <span class="nc">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">clzName</span><span class="o">);</span>
+        <span class="nc">SortedKeyValueIterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SortedKeyValueIterator</span><span class="o">)</span> <span class="n">clz</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
         <span class="n">iter</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">source</span><span class="o">,</span> <span class="n">opts</span><span class="o">,</span> <span class="n">env</span><span class="o">);</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">iter</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="c1">// read a batch of data to return to client from</span>
     <span class="c1">// the last iterator, the "top"</span>
-    <span class="n">SortedKeyValueIterator</span> <span class="n">topIter</span> <span class="o">=</span> <span class="n">source</span><span class="o">;</span>
+    <span class="nc">SortedKeyValueIterator</span> <span class="n">topIter</span> <span class="o">=</span> <span class="n">source</span><span class="o">;</span>
 
-    <span class="n">YieldCallback</span> <span class="n">cb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">YieldCallback</span><span class="o">();</span>
+    <span class="nc">YieldCallback</span> <span class="n">cb</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">YieldCallback</span><span class="o">();</span>
     <span class="n">topIter</span><span class="o">.</span><span class="na">enableYielding</span><span class="o">(</span><span class="n">cb</span><span class="o">)</span>
 
     <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">range</span><span class="o">,</span> <span class="o">...)</span>
@@ -633,13 +633,13 @@ the enableYielding method will not be called in isolation mode.</p>
     <span class="k">while</span> <span class="o">(</span><span class="n">topIter</span><span class="o">.</span><span class="na">hasTop</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">overSizeLimit</span><span class="o">(</span><span class="n">batch</span><span class="o">))</span> <span class="o">{</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopKey</span><span class="o">()</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">topIter</span><span class="o">.</span><span class="na">getTopValue</span><span class="o">()</span>
-        <span class="n">batch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">KeyValue</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span>
+        <span class="n">batch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">KeyValue</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span>
         <span class="c1">// remember the last key returned</span>
         <span class="n">setLastKeyReturned</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">systemDataSourcesChanged</span><span class="o">())</span> <span class="o">{</span>
             <span class="c1">// code does not show isolation case, which will</span>
             <span class="c1">// keep using same data sources until a row boundary is hit</span>
-            <span class="n">range</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">range</span><span class="o">.</span><span class="na">endKey</span><span class="o">(),</span> <span class="n">range</span><span class="o">.</span><span class="na">endKeyInclusive</span><span class="o">());</span>
+            <span class="n">range</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Range</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">range</span><span class="o">.</span><span class="na">endKey</span><span class="o">(),</span> <span class="n">range</span><span class="o">.</span><span class="na">endKeyInclusive</span><span class="o">());</span>
             <span class="k">break</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="n">topIter</span><span class="o">.</span><span class="na">next</span><span class="o">()</span>
@@ -657,14 +657,14 @@ the enableYielding method will not be called in isolation mode.</p>
 <p>Additionally, the obtuse “re-seek” case can be outlined as the following:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Given the above</span>
-<span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">getNextBatch</span><span class="o">();</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">KeyValue</span><span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">getNextBatch</span><span class="o">();</span>
 
 <span class="c1">// thread goes away (client stops asking for the next batch).</span>
 
 <span class="c1">// Eventually client comes back</span>
 <span class="c1">// Setup as before...</span>
-<span class="n">Range</span> <span class="n">userRange</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
-<span class="n">Range</span> <span class="n">actualRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Range</span><span class="o">(</span><span class="n">getLastKeyReturned</span><span class="o">(),</span> <span class="kc">false</span><span class="o">,</span> <span class="n">userRange</span><span class="o">.</span><span class="na">getEndKey</span><span class="o">(),</span> <span class="n">userRange</span><span class="o">.</span><span class="na">isEndKeyInclusive</span><span class="o">());</span>
+<span class="nc">Range</span> <span class="n">userRange</span> <span class="o">=</span> <span class="n">getRangeFromClient</span><span class="o">();</span>
+<span class="nc">Range</span> <span class="n">actualRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Range</span><span class="o">(</span><span class="n">getLastKeyReturned</span><span class="o">(),</span> <span class="kc">false</span><span class="o">,</span> <span class="n">userRange</span><span class="o">.</span><span class="na">getEndKey</span><span class="o">(),</span> <span class="n">userRange</span><span class="o">.</span><span class="na">isEndKeyInclusive</span><span class="o">());</span>
 
 <span class="c1">// Use the actualRange, not the user provided one</span>
 <span class="n">topIter</span><span class="o">.</span><span class="na">seek</span><span class="o">(</span><span class="n">actualRange</span><span class="o">);</span>

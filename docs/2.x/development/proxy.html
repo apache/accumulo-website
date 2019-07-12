@@ -493,9 +493,9 @@ For example, <code class="highlighter-rouge">pip install thrift</code> will inst
 of connecting to a Thrift service), the methods on the proxy client will be available. The
 first thing to do is log in:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Map</span> <span class="n">password</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;();</span>
 <span class="n">password</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"password"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">);</span>
-<span class="n">ByteBuffer</span> <span class="n">token</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+<span class="nc">ByteBuffer</span> <span class="n">token</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>Once logged in, the token returned will be used for most subsequent calls to the client.
@@ -503,29 +503,29 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <p>First, create a table.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">createTable</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">TimeType</span><span class="o">.</span><span class="na">MILLIS</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">createTable</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="nc">TimeType</span><span class="o">.</span><span class="na">MILLIS</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>Next, add some data:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// first, create a writer on the server</span>
-<span class="n">String</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createWriter</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">WriterOptions</span><span class="o">());</span>
+<span class="nc">String</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createWriter</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">WriterOptions</span><span class="o">());</span>
 
 <span class="c1">//rowid</span>
-<span class="n">ByteBuffer</span> <span class="n">rowid</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="s">"UUID"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+<span class="nc">ByteBuffer</span> <span class="n">rowid</span> <span class="o">=</span> <span class="nc">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="s">"UUID"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
 
 <span class="c1">//mutation like class</span>
-<span class="n">ColumnUpdate</span> <span class="n">cu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColumnUpdate</span><span class="o">();</span>
+<span class="nc">ColumnUpdate</span> <span class="n">cu</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnUpdate</span><span class="o">();</span>
 <span class="n">cu</span><span class="o">.</span><span class="na">setColFamily</span><span class="o">(</span><span class="s">"MyFamily"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
 <span class="n">cu</span><span class="o">.</span><span class="na">setColQualifier</span><span class="o">(</span><span class="s">"MyQualifier"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
 <span class="n">cu</span><span class="o">.</span><span class="na">setColVisibility</span><span class="o">(</span><span class="s">"VisLabel"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
 <span class="n">cu</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="s">"Some Value."</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
 
-<span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;</span> <span class="n">updates</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;();</span>
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">ColumnUpdate</span><span class="o">&gt;</span> <span class="n">updates</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">ColumnUpdate</span><span class="o">&gt;();</span>
 <span class="n">updates</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cu</span><span class="o">);</span>
 
 <span class="c1">// build column updates</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">ByteBuffer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;&gt;</span> <span class="n">cellsToUpdate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">ByteBuffer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ColumnUpdate</span><span class="o">&gt;&gt;();</span>
+<span class="nc">Map</span><span class="o">&lt;</span><span class="nc">ByteBuffer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">ColumnUpdate</span><span class="o">&gt;&gt;</span> <span class="n">cellsToUpdate</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">ByteBuffer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">ColumnUpdate</span><span class="o">&gt;&gt;();</span>
 <span class="n">cellsToUpdate</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rowid</span><span class="o">,</span> <span class="n">updates</span><span class="o">);</span>
 
 <span class="c1">// send updates to the server</span>
@@ -536,10 +536,10 @@ Let’s create a table, add some data, scan the table, and delete it.</p>
 
 <p>Scan for the data and batch the return of the results on the server:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="n">ScanOptions</span><span class="o">());</span>
-<span class="n">ScanResult</span> <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">nextK</span><span class="o">(</span><span class="n">scanner</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">scanner</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="s">"myTable"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ScanOptions</span><span class="o">());</span>
+<span class="nc">ScanResult</span> <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">nextK</span><span class="o">(</span><span class="n">scanner</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
 
-<span class="k">for</span><span class="o">(</span><span class="n">KeyValue</span> <span class="n">keyValue</span> <span class="o">:</span> <span class="n">results</span><span class="o">.</span><span class="na">getResultsIterator</span><span class="o">())</span> <span class="o">{</span>
+<span class="k">for</span><span class="o">(</span><span class="nc">KeyValue</span> <span class="n">keyValue</span> <span class="o">:</span> <span class="n">results</span><span class="o">.</span><span class="na">getResultsIterator</span><span class="o">())</span> <span class="o">{</span>
   <span class="c1">// do something with results</span>
 <span class="o">}</span>
 

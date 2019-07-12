@@ -148,18 +148,18 @@ Filter takes a “negate” parameter which defaults to false. If set to true, t
 return value of the accept method is negated, so that key/value pairs accepted
 by the method are omitted by the Filter.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable filtertest
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">username@instance&gt; createtable filtertest
 username@instance filtertest&gt; setiter -t filtertest -scan -p 10 -n myfilter -ageoff
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
-<span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
+</span><span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
 ----------&gt; set AgeOffFilter parameter ttl, time to live (milliseconds): 30000
 ----------&gt; set AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day:
-</span>username@instance filtertest&gt; scan
+</span><span class="p">username@instance filtertest&gt; scan
 username@instance filtertest&gt; insert foo a b c
 username@instance filtertest&gt; scan
 foo a:b []    c
 username@instance filtertest&gt;
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>… wait 30 seconds …</p>
 
@@ -183,12 +183,12 @@ AgeOffFilter, but any Filter can be configured by using the -class flag. The
 following commands show how to enable the AgeOffFilter for the minc and majc
 scopes using the -class flag, then flush and compact the table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; setiter -t filtertest -minc -majc -p 10 -n myfilter -class org.apache.accumulo.core.iterators.user.AgeOffFilter
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">username@instance filtertest&gt; setiter -t filtertest -minc -majc -p 10 -n myfilter -class org.apache.accumulo.core.iterators.user.AgeOffFilter
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
-<span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
+</span><span class="gd">----------&gt; set AgeOffFilter parameter negate, default false keeps k/v that pass accept method, true rejects k/v that pass accept method:
 ----------&gt; set AgeOffFilter parameter ttl, time to live (milliseconds): 30000
 ----------&gt; set AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day:
-</span>username@instance filtertest&gt; flush
+</span><span class="p">username@instance filtertest&gt; flush
 06 10:42:24,806 [shell.Shell] INFO : Flush of table filtertest initiated...
 username@instance filtertest&gt; compact
 06 10:42:36,781 [shell.Shell] INFO : Compaction of table filtertest started for given range
@@ -198,7 +198,7 @@ username@instance filtertest&gt; compact -t filtertest -w
 06 10:43:00,632 [shell.Shell] INFO : Compacting table ...
 06 10:43:01,307 [shell.Shell] INFO : Compaction of table filtertest completed for given range
 username@instance filtertest&gt;
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>By default, flush and compact execute in the background, but with the -w flag
 they will wait to return until the operation has completed. Both are

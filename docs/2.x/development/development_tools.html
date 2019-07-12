@@ -443,14 +443,14 @@ as a test dependency:</p>
 
 <p>To start it up, you will need to supply an empty directory and a root password as arguments:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
-<span class="n">MiniAccumuloCluster</span> <span class="n">mac</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">File</span> <span class="n">tempDirectory</span> <span class="o">=</span> <span class="c1">// JUnit and Guava supply mechanisms for creating temp directories</span>
+<span class="nc">MiniAccumuloCluster</span> <span class="n">mac</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MiniAccumuloCluster</span><span class="o">(</span><span class="n">tempDirectory</span><span class="o">,</span> <span class="s">"password"</span><span class="o">);</span>
 <span class="n">mac</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
 </code></pre></div></div>
 
 <p>Once we have our mini cluster running, we will want to interact with the Accumulo client API:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">mac</span><span class="o">.</span><span class="na">getAccumuloClient</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="n">PasswordToken</span><span class="o">(</span><span class="s">"password"</span><span class="o">));</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">mac</span><span class="o">.</span><span class="na">getAccumuloClient</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">PasswordToken</span><span class="o">(</span><span class="s">"password"</span><span class="o">));</span>
 </code></pre></div></div>
 
 <p>Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:</p>
@@ -512,44 +512,44 @@ output dataset for the iterator being tested.</p>
 <span class="kn">import</span> <span class="nn">org.apache.accumulo.iteratortest.testcases.IteratorTestCase</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.runners.Parameterized.Parameters</span><span class="o">;</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyIteratorTest</span> <span class="kd">extends</span> <span class="n">BaseJUnit4IteratorTest</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyIteratorTest</span> <span class="kd">extends</span> <span class="nc">BaseJUnit4IteratorTest</span> <span class="o">{</span>
 
   <span class="nd">@Parameters</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span><span class="o">[][]</span> <span class="nf">parameters</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kd">final</span> <span class="n">IteratorTestInput</span> <span class="n">input</span> <span class="o">=</span> <span class="n">createIteratorInput</span><span class="o">();</span>
-    <span class="kd">final</span> <span class="n">IteratorTestOutput</span> <span class="n">output</span> <span class="o">=</span> <span class="n">createIteratorOutput</span><span class="o">();</span>
-    <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">IteratorTestCase</span><span class="o">&gt;</span> <span class="n">testCases</span> <span class="o">=</span> <span class="n">IteratorTestCaseFinder</span><span class="o">.</span><span class="na">findAllTestCases</span><span class="o">();</span>
-    <span class="k">return</span> <span class="n">BaseJUnit4IteratorTest</span><span class="o">.</span><span class="na">createParameters</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="n">output</span><span class="o">,</span> <span class="n">tests</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Object</span><span class="o">[][]</span> <span class="nf">parameters</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="nc">IteratorTestInput</span> <span class="n">input</span> <span class="o">=</span> <span class="n">createIteratorInput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="nc">IteratorTestOutput</span> <span class="n">output</span> <span class="o">=</span> <span class="n">createIteratorOutput</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">IteratorTestCase</span><span class="o">&gt;</span> <span class="n">testCases</span> <span class="o">=</span> <span class="nc">IteratorTestCaseFinder</span><span class="o">.</span><span class="na">findAllTestCases</span><span class="o">();</span>
+    <span class="k">return</span> <span class="nc">BaseJUnit4IteratorTest</span><span class="o">.</span><span class="na">createParameters</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="n">output</span><span class="o">,</span> <span class="n">tests</span><span class="o">);</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">INPUT_DATA</span> <span class="o">=</span> <span class="n">createInputData</span><span class="o">();</span>
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">OUTPUT_DATA</span> <span class="o">=</span> <span class="n">createOutputData</span><span class="o">();</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">SortedMap</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="no">INPUT_DATA</span> <span class="o">=</span> <span class="n">createInputData</span><span class="o">();</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">SortedMap</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="no">OUTPUT_DATA</span> <span class="o">=</span> <span class="n">createOutputData</span><span class="o">();</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createInputData</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">SortedMap</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="nf">createInputData</span><span class="o">()</span> <span class="o">{</span>
     <span class="c1">// TODO -- implement this method</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">SortedMap</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">,</span><span class="n">Value</span><span class="o">&gt;</span> <span class="nf">createOutputData</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">SortedMap</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="nf">createOutputData</span><span class="o">()</span> <span class="o">{</span>
     <span class="c1">// TODO -- implement this method</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestInput</span> <span class="nf">createIteratorInput</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">options</span> <span class="o">=</span> <span class="n">createIteratorOptions</span><span class="o">();</span> 
-    <span class="kd">final</span> <span class="n">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">createRange</span><span class="o">();</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestInput</span><span class="o">(</span><span class="n">MyIterator</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">options</span><span class="o">,</span> <span class="n">range</span><span class="o">,</span> <span class="n">INPUT_DATA</span><span class="o">);</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">IteratorTestInput</span> <span class="nf">createIteratorInput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">options</span> <span class="o">=</span> <span class="n">createIteratorOptions</span><span class="o">();</span> 
+    <span class="kd">final</span> <span class="nc">Range</span> <span class="n">range</span> <span class="o">=</span> <span class="n">createRange</span><span class="o">();</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestInput</span><span class="o">(</span><span class="nc">MyIterator</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">options</span><span class="o">,</span> <span class="n">range</span><span class="o">,</span> <span class="no">INPUT_DATA</span><span class="o">);</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">createIteratorOptions</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">createIteratorOptions</span><span class="o">()</span> <span class="o">{</span>
     <span class="c1">// TODO -- implement this method</span>
     <span class="c1">// Tip: Use INPUT_DATA if helpful in generating output</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Range</span> <span class="nf">createRange</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Range</span> <span class="nf">createRange</span><span class="o">()</span> <span class="o">{</span>
     <span class="c1">// TODO -- implement this method</span>
   <span class="o">}</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">IteratorTestOutput</span> <span class="nf">createIteratorOutput</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestOutput</span><span class="o">(</span><span class="n">OUTPUT_DATA</span><span class="o">);</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="nc">IteratorTestOutput</span> <span class="nf">createIteratorOutput</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">IteratorTestOutput</span><span class="o">(</span><span class="no">OUTPUT_DATA</span><span class="o">);</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>

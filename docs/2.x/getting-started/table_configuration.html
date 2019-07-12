@@ -450,18 +450,18 @@ user@myinstance mytable&gt; getgroups -t mytable
 
 <h3 id="managing-locality-groups-via-the-client-api">Managing Locality Groups via the Client API</h3>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
                           <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
 
-<span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">localityGroups</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;();</span>
+<span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;</span> <span class="n">localityGroups</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;();</span>
 
-<span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">metadataColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;();</span>
-<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"domain"</span><span class="o">));</span>
-<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"link"</span><span class="o">));</span>
+<span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">metadataColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;();</span>
+<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"domain"</span><span class="o">));</span>
+<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"link"</span><span class="o">));</span>
 
-<span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">contentColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;();</span>
-<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"body"</span><span class="o">));</span>
-<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"images"</span><span class="o">));</span>
+<span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">contentColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;();</span>
+<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"body"</span><span class="o">));</span>
+<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"images"</span><span class="o">));</span>
 
 <span class="n">localityGroups</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"metadata"</span><span class="o">,</span> <span class="n">metadataColumns</span><span class="o">);</span>
 <span class="n">localityGroups</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"content"</span><span class="o">,</span> <span class="n">contentColumns</span><span class="o">);</span>
@@ -469,7 +469,7 @@ user@myinstance mytable&gt; getgroups -t mytable
 <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="n">localityGroups</span><span class="o">);</span>
 
 <span class="c1">// existing locality groups can be obtained as follows</span>
-<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;&gt;</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">getLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">);</span>
+<span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">getLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>The assignment of Column Families to Locality Groups can be changed at any time. The
@@ -564,7 +564,7 @@ stack.</p>
 
 <h3 id="setting-iterators-programmatically">Setting Iterators Programmatically</h3>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="k">new</span> <span class="nc">IteratorSetting</span><span class="o">(</span>
     <span class="mi">15</span><span class="o">,</span> <span class="c1">// priority</span>
     <span class="s">"myiter"</span><span class="o">,</span> <span class="c1">// name this iterator</span>
     <span class="s">"com.company.MyIterator"</span> <span class="c1">// class name</span>
@@ -574,7 +574,7 @@ stack.</p>
 <p>Some iterators take additional parameters from client code, as in the following
 example:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IteratorSetting</span><span class="o">(...);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IteratorSetting</span><span class="o">(...);</span>
 <span class="n">iter</span><span class="o">.</span><span class="na">addOption</span><span class="o">(</span><span class="s">"myoptionname"</span><span class="o">,</span> <span class="s">"myoptionvalue"</span><span class="o">);</span>
 <span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="n">iter</span><span class="o">)</span>
 </code></pre></div></div>
@@ -611,7 +611,7 @@ VersioningIterator and keep one version. A table can be created without the
 VersioningIterator with the -ndi option in the shell. Also the Java API
 has the following method</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">limitVersion</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">limitVersion</span><span class="o">);</span>
 </code></pre></div></div>
 
 <h4 id="logical-time">Logical Time</h4>
