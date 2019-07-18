@@ -104,6 +104,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
+| Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Matt Dailey         |                                                                   |                       |
