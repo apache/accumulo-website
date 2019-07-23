@@ -124,6 +124,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Philip Young        |                                                                   |                       |
 | Pushpinder Heer     | [Applied Technical Systems][ATSID]                                | [PT][PT]              |
 | Ravi Mutyala        | [Hortonworks][HORTONWORKS]                                        | [CT][CT]              |
+| Richard Eggert II   | [MasterPeace Solutions, Ltd][MASTERPEACE]                         | [ET][ET]              |
 | Russell Carter Jr   | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Ryan Fishel         | [Cloudera][CLOUDERA]                                              |                       |
 | Ryan Leary          |                                                                   |                       |
@@ -168,6 +169,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [IBM]: http://www.ibm.com
 [JHUAPL]: http://www.jhuapl.edu
 [KOVERSE]: http://www.koverse.com
+[MASTERPEACE]: https://www.masterpeaceltd.com
 [MINERKASCH]: http://minerkasch.com
 [NOVETTA]: http://www.novetta.com
 [NSA]: http://www.nsa.gov
