@@ -175,11 +175,12 @@ possible with old API.</li>
 See the <a href="/docs/2.x/getting-started/clients">client documentation</a> for more information on how to use the new API.</li>
 </ul>
 
-<h3 id="hadoop-3-and-java-8">Hadoop 3 and Java 8.</h3>
+<h3 id="hadoop-3-java-8--11">Hadoop 3 Java 8 &amp; 11.</h3>
 
 <p>Accumulo 2.x expects at least Java 8 and Hadoop 3.  It is built against Java 8
 and Hadoop 3 and the binary tarball is targeted to work with a Java 8 and
-Hadoop 3 system.  See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4826">ACCUMULO-4826 </a>,  <a href="https://github.com/apache/accumulo/issues/531">#531 </a>, and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4299">ACCUMULO-4299 </a>.</p>
+Hadoop 3 system.  See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4826">ACCUMULO-4826 </a>,  <a href="https://github.com/apache/accumulo/issues/531">#531 </a>, and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4299">ACCUMULO-4299 </a>.  Running with Java 11 is also supported, but Java 11 is not
+required.</p>
 
 <h3 id="simplified-accumulo-scripts-and-configuration-files">Simplified Accumulo scripts and configuration files</h3>
 
@@ -223,8 +224,11 @@ TODO link to javadoc for new API. See <a href="https://github.com/apache/accumul
 <p><a href="/docs/2.x/development/summaries">Summaries</a> enables continually generating
 statistics about a table with user defined functions.  This feature can inform
 a user about what is in their table and be used by compaction strategies to
-make decisions.  For example, using this feature it would be possible to compact
-all tablets where deletes are more than 25% of the data.</p>
+make decisions.  For example, using this feature it would be possible to
+compact all tablets where deletes are more than 25% of the data. Another
+example use case is optimizing filtering compactions by enabling smart
+selection of files with pertinent data. Examples of filtering compactions are
+age off and removal of non-compliant data.</p>
 
 <h3 id="scan-executors">Scan Executors</h3>
 
@@ -232,6 +236,15 @@ all tablets where deletes are more than 25% of the data.</p>
 and dedicating scan resources. Each executor has a configurable number of
 threads and an optional custom prioritizer.  Tables can be configured in a
 flexible way to dispatch scans to different executors.</p>
+
+<h3 id="spi-package">SPI package</h3>
+
+<p>All new pluggable components introduced in 2.0 were placed under a new SPI
+package.  The SPI package is analyzed by <a href="https://code.revelc.net/apilyzer-maven-plugin/">Apilyzer</a> at build time to ensure
+plugins only use SPI and API types.  This prevents plugins from using internal
+Accumulo types that are inherently unstable over time.  Plugins created before
+2.0 do use internal types and are less stable.  The new pluggable interfaces
+should be much more stable.</p>
 
 <h3 id="official-accumulo-docker-image-was-created">Official Accumulo docker image was created</h3>
 
