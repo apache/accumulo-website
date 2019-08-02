@@ -93,7 +93,8 @@ Accumulo 2.0 will work with versions of Java up to 11.  It is not required, but 
 ## New Crypto
 
 On disk encryption was redone to be more secure and flexible. For an in depth description of how Accumulo 
-does on disk encryption, see the [user manual][crypto].
+does on disk encryption, see the [user manual][crypto].  NOTE: This is currently an experimental feature.
+An experimental feature is considered a work in progress or incomplete and could change.
 
 [FATE]: {% dlink /administration/fate %}
 [new-bulk]: https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api
