@@ -40,7 +40,7 @@ function loadScripts(doc, tag) {
     $.get(pathtoroot + "module-search-index.zip")
             .done(function() {
                 JSZipUtils.getBinaryContent(pathtoroot + "module-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
+                    var zip = new JSZip();
                     zip.load(data);
                     moduleSearchIndex = JSON.parse(zip.file("module-search-index.json").asText());
                 });
@@ -48,7 +48,7 @@ function loadScripts(doc, tag) {
     $.get(pathtoroot + "package-search-index.zip")
             .done(function() {
                 JSZipUtils.getBinaryContent(pathtoroot + "package-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
+                    var zip = new JSZip();
                     zip.load(data);
                     packageSearchIndex = JSON.parse(zip.file("package-search-index.json").asText());
                 });
@@ -56,7 +56,7 @@ function loadScripts(doc, tag) {
     $.get(pathtoroot + "type-search-index.zip")
             .done(function() {
                 JSZipUtils.getBinaryContent(pathtoroot + "type-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
+                    var zip = new JSZip();
                     zip.load(data);
                     typeSearchIndex = JSON.parse(zip.file("type-search-index.json").asText());
                 });
@@ -64,7 +64,7 @@ function loadScripts(doc, tag) {
     $.get(pathtoroot + "member-search-index.zip")
             .done(function() {
                 JSZipUtils.getBinaryContent(pathtoroot + "member-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
+                    var zip = new JSZip();
                     zip.load(data);
                     memberSearchIndex = JSON.parse(zip.file("member-search-index.json").asText());
                 });
@@ -72,7 +72,7 @@ function loadScripts(doc, tag) {
     $.get(pathtoroot + "tag-search-index.zip")
             .done(function() {
                 JSZipUtils.getBinaryContent(pathtoroot + "tag-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
+                    var zip = new JSZip();
                     zip.load(data);
                     tagSearchIndex = JSON.parse(zip.file("tag-search-index.json").asText());
                 });
