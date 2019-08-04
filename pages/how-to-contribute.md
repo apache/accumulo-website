@@ -170,7 +170,7 @@ For more details, see the [contributor guide](/contributors-guide/).
 [si]: https://github.com/apache/accumulo-wikisearch/issues
 [jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
 [github-join]: https://github.com/join
-[manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
+[manual]: {{ site.docs_baseurl }}
 [JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo

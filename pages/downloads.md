@@ -45,8 +45,7 @@ var mirrorsCallback = function(json) {
 };
 
 // get mirrors when page is ready
-var mirrorURL = window.location.protocol + "//accumulo.apache.org/mirrors.cgi"; // http[s]://accumulo.apache.org/mirrors.cgi
-$(function() { $.getJSON(mirrorURL + "?as_json", mirrorsCallback); });
+$(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirrorsCallback); });
 
 </script>
 
@@ -56,25 +55,25 @@ Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using 
 
 ## Current Releases
 
-### 2.0.0-alpha-2 **preview**{: .label .label-primary}
+### 2.0.0 **latest**{: .label .label-primary }
 
-The 2.0.0-alpha-2 release of Apache Accumulo&reg; has been made available as a
-preview release for 2.0.0. This version is *not* suitable for production use,
-and should be used for feedback and testing purposes only. See the
-[release notes][REL_NOTES_20] for more details.
+The 2.0.0 release of Apache Accumulo&reg; is the latest release, containing
+the newest features, bug fixes, performance enhancements, and more.
+See the [release notes][REL_NOTES_20] for more details about this release.
 
 {: .table }
-| **Binary** | [accumulo-2.0.0-alpha-2-bin.tar.gz][BIN_20] | [ASC][ASC_BIN_20] | [SHA][SHA_BIN_20] |
-| **Source** | [accumulo-2.0.0-alpha-2-src.tar.gz][SRC_20] | [ASC][ASC_SRC_20] | [SHA][SHA_SRC_20] |
+| **Binary** | [accumulo-2.0.0-bin.tar.gz][BIN_20] | [ASC][ASC_BIN_20] | [SHA][SHA_BIN_20] |
+| **Source** | [accumulo-2.0.0-src.tar.gz][SRC_20] | [ASC][ASC_SRC_20] | [SHA][SHA_SRC_20] |
 
 #### 2.0 Documentation
 * [README][README_20]
 * [Online Documentation][MANUAL_20]
 * [Java API][JAVADOC_20]
 
-### 1.9.3 **latest**{: .label .label-primary }
+### 1.9.3 **maintenance**{: .label .label-info }
 
-The most recent stable Apache Accumulo&reg; release is version 1.9.3. See the [release notes][REL_NOTES_19].
+The most recent 1.9 maintenance release of Apache Accumulo&reg; is version 1.9.3.
+See the [release notes][REL_NOTES_19] for more details about this release.
 
 {: .table }
 | **Binary** | [accumulo-1.9.3-bin.tar.gz][BIN_19] | [ASC][ASC_BIN_19] | [SHA][SHA_BIN_19] |
@@ -96,25 +95,25 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 [ARCHIVE_DOWN]: https://archive.apache.org/dist/accumulo "Download Archive"
 [ARCHIVE_REL]: {{ site.baseurl }}/release/ "Release Archive"
 
-[ASC_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz.asc
-[ASC_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz.asc
-[SHA_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz.sha512
-[SHA_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz.sha512
+[ASC_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.asc
+[ASC_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.asc
+[SHA_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.sha512
+[SHA_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.sha512
 [ASC_BIN_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.asc
 [ASC_SRC_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.asc
 [SHA_BIN_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.sha512
 [SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.sha512
 
-[BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz
-{: link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-bin.tar.gz" }
-[SRC_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz
-{: link-suffix="/accumulo/2.0.0-alpha-2/accumulo-2.0.0-alpha-2-src.tar.gz" }
+[BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz
+{: link-suffix="/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz" }
+[SRC_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz
+{: link-suffix="/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz" }
 [BIN_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz
 {: link-suffix="/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz" }
 [SRC_19]: https://www.apache.org/dyn/closer.lua/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz
 {: link-suffix="/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz" }
 
-[README_20]: https://github.com/apache/accumulo/blob/rel/2.0.0-alpha-2/README.md
+[README_20]: https://github.com/apache/accumulo/blob/rel/2.0.0/README.md
 [README_19]: https://github.com/apache/accumulo/blob/rel/1.9.3/README.md
 
 [JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
@@ -125,6 +124,6 @@ downloaded from the [download archive][ARCHIVE_DOWN].
 
 [EXAMPLES_19]: {{ site.baseurl }}/1.9/examples "1.9 examples"
 
-[REL_NOTES_20]: {{ site.baseurl }}/release/accumulo-2.0.0-alpha-2/ "2.0.0-alpha-2 Release Notes"
+[REL_NOTES_20]: {{ site.baseurl }}/release/accumulo-2.0.0/ "2.0.0 Release Notes"
 [REL_NOTES_19]: {{ site.baseurl }}/release/accumulo-1.9.3/ "1.9.3 Release Notes"
 

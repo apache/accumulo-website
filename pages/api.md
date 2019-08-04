@@ -11,6 +11,7 @@ packages and their sub-packages excluding those named *impl*, *thrift*, or
  * {% jlink -f org.apache.accumulo.core.data %}
  * {% jlink -f org.apache.accumulo.core.security %}
  * {% jlink -f org.apache.accumulo.minicluster %}
+ * {% jlink -f org.apache.accumulo.hadoop %} (since 2.0.0)
 
 A type is a class, interface, or enum. Anything with public or protected
 access in an API type is in the API. This includes, but is not limited to:
@@ -27,8 +28,17 @@ The following regex matches imports that are *not* Accumulo public API. This
 regex can be used with [RegexpSingleline] to automatically find suspicious
 imports in a project using Accumulo.
 
+For 1.9 and earlier:
+
+```regex
+import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!(core\.(client|data|security)|minicluster)\.).*)
 ```
-import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!core|minicluster).*|core\.(?!client|data|security).*)
+
+For 2.0 and later, this can be simplified, because sub-packages not intended
+for public API were relocated, and also altered to include the new MapReduce module:
+
+```regex
+import\s+org\.apache\.accumulo\.(?!(core\.(client|data|security)|minicluster|hadoop)\.).*
 ```
 
 [semver]: http://semver.org/spec/v2.0.0

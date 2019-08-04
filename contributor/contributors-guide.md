@@ -32,7 +32,7 @@ For details about governance policies for the Accumulo project view the followin
 - [Voting][voting]
 
 [How to Contribute]: /how-to-contribute/
-[manual]: {{ site.baseurl }}/{{ site.latest_minor_release }}/accumulo_user_manual.html
+[manual]: {{ site.docs_baseurl }}
 [get-involved]: {{ site.baseurl }}/get_involved
 [mirror]: https://github.com/apache/accumulo
 [repo]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
