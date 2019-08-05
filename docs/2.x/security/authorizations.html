@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; Authorizations</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>Authorizations</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/authorizations.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -426,13 +424,13 @@
 
 <h2 id="configuration">Configuration</h2>
 
-<p>Accumulo’s <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/security/handler/Authorizor.html">Authorizor</a> is configured by setting <a href="/docs/2.x/configuration/server-properties#instance_security_authorizor">instance.security.authorizor</a>. The default
-authorizor is the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/security/handler/ZKAuthorizor.html">ZKAuthorizor</a> which is described
+<p>Accumulo’s <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/security/handler/Authorizor.html">Authorizor</a> is configured by setting <a href="/docs/2.x/configuration/server-properties#instance_security_authorizor">instance.security.authorizor</a>. The default
+authorizor is the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/security/handler/ZKAuthorizor.html">ZKAuthorizor</a> which is described
 below.</p>
 
 <h2 id="security-labels">Security Labels</h2>
 
-<p>Every <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/data/Key.html">Key</a>-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/data/Value.html">Value</a> pair in Accumulo has its own security label, stored under the column visibility
+<p>Every <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Key.html">Key</a>-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Value.html">Value</a> pair in Accumulo has its own security label, stored under the column visibility
 element of the key, which is used to determine whether a given user meets the security
 requirements to read the value. This enables data of various security levels to be stored
 within the same row, and users of varying degrees of access to query the same table, while
@@ -441,7 +439,7 @@ preserving data confidentiality.</p>
 <h3 id="writing-labeled-data">Writing labeled data</h3>
 
 <p>When <a href="/docs/2.x/getting-started/clients#writing-data">writing data to Accumulo</a>, users can
-specify a security label for each value by passing a [ColumnVisibilty] to the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/data/Mutation.html">Mutation</a>.</p>
+specify a security label for each value by passing a [ColumnVisibilty] to the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html">Mutation</a>.</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"employees"</span><span class="o">))</span> <span class="o">{</span>
   <span class="nc">Mutation</span> <span class="n">mut</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"employee1"</span><span class="o">);</span>
@@ -493,12 +491,12 @@ precedence of the operators.</p>
 <h2 id="authorizations">Authorizations</h2>
 
 <p>When clients attempt to read data from Accumulo, any security labels present are
-examined against an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> object passed by the client code when the
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are created. If the Authorizations are determined to be
+examined against an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> object passed by the client code when the
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are created. If the Authorizations are determined to be
 insufficient to satisfy the security label, the value is suppressed from the set of
 results sent back to the client.</p>
 
-<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> are specified as a comma-separated list of tokens the user possesses:</p>
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> are specified as a comma-separated list of tokens the user possesses:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
 <span class="nc">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Authorizations</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
@@ -511,9 +509,9 @@ results sent back to the client.</p>
 <p>Each Accumulo user has a set of associated security labels. To manipulate these in
 the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>, use the <code class="highlighter-rouge">setuaths</code> and <code class="highlighter-rouge">getauths</code> commands. They can be
 retrieved and modified in Java using <code class="highlighter-rouge">getUserAuthorizations</code> and <code class="highlighter-rouge">changeUserAuthorizations</code>
-methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>.</p>
+methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>.</p>
 
-<p>When a user creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> a set of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> is passed.
+<p>When a user creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> a set of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> is passed.
 If the Authorizations passed to the scanner are not a subset of the user’s Authorizations,
 then an exception will be thrown.</p>
 

@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Replication</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>Replication</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/administration/replication.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -541,15 +539,15 @@ Monitor server, using the <code class="highlighter-rouge">Replication</code> lin
 
 <h2 id="work-assignment">Work Assignment</h2>
 
-<p>Depending on the schema of a table, different implementations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a>
+<p>Depending on the schema of a table, different implementations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a>
 used could be configured. The implementation is controlled via the property <a href="/docs/2.x/configuration/server-properties#replication_work_assigner">replication.work.assigner</a>
 and the full class name for the implementation. This can be configured via the shell or <code class="highlighter-rouge">accumulo.properties</code>.</p>
 
-<p>Two implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> are provided:</p>
+<p>Two implementations of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> are provided:</p>
 
 <ol>
   <li>
-    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.0.0-alpha-2/org/apache/accumulo/master/replication/UnorderedWorkAssigner.html">UnorderedWorkAssigner</a> can be used to overcome the limitation
+    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.0.0/org/apache/accumulo/master/replication/UnorderedWorkAssigner.html">UnorderedWorkAssigner</a> can be used to overcome the limitation
 of only a single WAL being replicated to a target and peer at any time. Depending on the table schema,
 it’s possible that multiple versions of the same Key with different values are infrequent or nonexistent.
 In this case, parallel replication to a peer and target is possible without any downsides. In the case
@@ -557,7 +555,7 @@ where this implementation is used were column updates are frequent, it is possib
 an inconsistency between the primary and the peer.</p>
   </li>
   <li>
-    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.0.0-alpha-2/org/apache/accumulo/master/replication/SequentialWorkAssigner.html">SequentialWorkAssigner</a> is configured for an
+    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.0.0/org/apache/accumulo/master/replication/SequentialWorkAssigner.html">SequentialWorkAssigner</a> is configured for an
 instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
 replicated in the order in which they were created. This is sufficient to ensure that updates to a table
 will be replayed in the correct order on the peer. This implementation has the downside of only replicating
@@ -567,15 +565,15 @@ a single WAL at a time.</p>
 
 <h2 id="replicasystems">ReplicaSystems</h2>
 
-<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> is the interface which allows abstraction of replication of data
-to peers of various types. Presently, only an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a> is provided
-which will replicate data to another Accumulo instance. A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> implementation
+<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> is the interface which allows abstraction of replication of data
+to peers of various types. Presently, only an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a> is provided
+which will replicate data to another Accumulo instance. A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> implementation
 is run inside of the TabletServer process, and can be configured as mentioned in <a href="/docs/2.x/administration/replication#instance-configuration">Instance Configuration</a>
 section of this document. Theoretically, an implementation of this interface could send data to other filesystems, databases, etc.</p>
 
 <h3 id="accumuloreplicasystem">AccumuloReplicaSystem</h3>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a> uses Thrift to communicate with a peer Accumulo instance
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a> uses Thrift to communicate with a peer Accumulo instance
 and replicate the necessary data. The TabletServer running on the primary will communicate
 with the Master on the peer to request the address of a TabletServer on the peer which
 this TabletServer will use to replicate the data.</p>
@@ -593,14 +591,14 @@ the implementation of various components operate.</p>
 
 <ul>
   <li><a href="/docs/2.x/configuration/server-properties#replication_max_work_queue">replication.max.work.queue</a> - Maximum number of files queued for replication at one time</li>
-  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assignment_sleep">replication.work.assignment.sleep</a> - Time between invocations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a></li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assignment_sleep">replication.work.assignment.sleep</a> - Time between invocations of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a></li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_worker_threads">replication.worker.threads</a> - Size of threadpool used to replicate data to peers</li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_receipt_service_port">replication.receipt.service.port</a> - Thrift service port to listen for replication requests, can use ‘0’ for a random port</li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_work_attempts">replication.work.attempts</a> - Number of attempts to replicate to a peer before aborting the attempt</li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_receiver_min_threads">replication.receiver.min.threads</a> - Minimum number of idle threads for handling incoming replication</li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_receiver_threadcheck_time">replication.receiver.threadcheck.time</a> - Time between attempting adjustments of thread pool for incoming replications</li>
   <li><a href="/docs/2.x/configuration/server-properties#replication_max_unit_size">replication.max.unit.size</a> - Maximum amount of data to be replicated in one RPC</li>
-  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assigner">replication.work.assigner</a> - <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> implementation</li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_work_assigner">replication.work.assigner</a> - <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/WorkAssigner.html">WorkAssigner</a> implementation</li>
   <li><a href="/docs/2.x/configuration/server-properties#tserver_replication_batchwriter_replayer_memory">tserver.replication.batchwriter.replayer.memory</a> - Size of BatchWriter cache to use in applying replication requests</li>
 </ul>
 
@@ -663,8 +661,8 @@ root@peer&gt; tables -l
 
 <h4 id="define-the-peer-as-a-replication-peer-to-the-primary">Define the Peer as a replication peer to the Primary</h4>
 
-<p>We’re defining the instance with <a href="/docs/2.x/configuration/server-properties#replication_name">replication.name</a> of <code class="highlighter-rouge">peer</code> as a peer. We provide the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a>
-that we want to use, and the configuration for the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a>. In this case, the configuration is the Accumulo
+<p>We’re defining the instance with <a href="/docs/2.x/configuration/server-properties#replication_name">replication.name</a> of <code class="highlighter-rouge">peer</code> as a peer. We provide the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a>
+that we want to use, and the configuration for the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a>. In this case, the configuration is the Accumulo
 Instance name for <code class="highlighter-rouge">peer</code> and the ZooKeeper quorum string. The configuration key is of the form
 <code class="highlighter-rouge">replication.peer.$peer_name</code>.</p>
 
@@ -683,8 +681,8 @@ root@primary&gt; config -s replication.peer.password.peer=peer
 <h4 id="enable-replication-on-the-table">Enable replication on the table</h4>
 
 <p>Now that we have defined the peer on the primary and provided the authentication credentials, we need to configure
-our table with the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> we want to use to replicate to the peer. In this case, our peer
-is an Accumulo instance, so we want to use the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a>.</p>
+our table with the implementation of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/ReplicaSystem.html">ReplicaSystem</a> we want to use to replicate to the peer. In this case, our peer
+is an Accumulo instance, so we want to use the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a>.</p>
 
 <p>The configuration for the AccumuloReplicaSystem is the table ID for the table on the peer instance that we
 want to replicate into. Be sure to use the correct value for $peer_table_id. The configuration key is of

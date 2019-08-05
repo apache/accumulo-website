@@ -6,10 +6,218 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 05 Aug 2019 11:46:01 -0400</pubDate>
-    <lastBuildDate>Mon, 05 Aug 2019 11:46:01 -0400</lastBuildDate>
+    <pubDate>Mon, 05 Aug 2019 19:15:33 -0400</pubDate>
+    <lastBuildDate>Mon, 05 Aug 2019 19:15:33 -0400</lastBuildDate>
     <generator>Jekyll v3.8.6</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 2.0.0</title>
+        <description>&lt;p&gt;Apache Accumulo 2.0.0 is a significant release.  These release notes are still a work in
+progress. The notes are fairly complete in terms of features added to 2.0, but some
+features may still be missing.  Also, the notes will be updated in the future to point
+to documentation for new features in addition to issues.&lt;/p&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;new-api-for-creating-connections-to-accumulo&quot;&gt;New API for creating connections to Accumulo&lt;/h3&gt;
+
+&lt;p&gt;A fluent API for creating Accumulo clients was introduced in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4784&quot;&gt;ACCUMULO-4784&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/634&quot;&gt;#634&lt;/a&gt;.
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;Connector&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ZooKeeperInstance&lt;/code&gt; objects have been deprecated and replaced by
+&lt;code class=&quot;highlighter-rouge&quot;&gt;AccumuloClient&lt;/code&gt; which is created from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Accumulo&lt;/code&gt; entry point. The new API also deprecates
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ClientConfiguration&lt;/code&gt; and introduces its own properties file called &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt;
+that ships with the Accumulo tarball. The new API has the following benefits over the old API:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;All connection information can be specifed in properties file to create the client. This was not
+possible with old API.&lt;/li&gt;
+  &lt;li&gt;The new API does not require &lt;code class=&quot;highlighter-rouge&quot;&gt;ZooKeeperInstance&lt;/code&gt; to be created first before creating a client.&lt;/li&gt;
+  &lt;li&gt;The new client is closeable and does not rely on shared static resource management&lt;/li&gt;
+  &lt;li&gt;Clients can be created using a new Java builder, &lt;code class=&quot;highlighter-rouge&quot;&gt;Properties&lt;/code&gt; object, or &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Clients can now be created with default settings for &lt;code class=&quot;highlighter-rouge&quot;&gt;BatchWriter&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Scanner&lt;/code&gt;, etc.&lt;/li&gt;
+  &lt;li&gt;Create scanners with default authorizations. &lt;a href=&quot;https://github.com/apache/accumulo/issues/744&quot;&gt;#744 &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See the &lt;a href=&quot;/docs/2.x/getting-started/clients&quot;&gt;client documentation&lt;/a&gt; for more information on how to use the new API.&lt;/p&gt;
+
+&lt;h3 id=&quot;hadoop-3-java-8--11&quot;&gt;Hadoop 3 Java 8 &amp;amp; 11.&lt;/h3&gt;
+
+&lt;p&gt;Accumulo 2.x expects at least Java 8 and Hadoop 3.  It is built against Java 8
+and Hadoop 3 and the binary tarball is targeted to work with a Java 8 and
+Hadoop 3 system.  See &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4826&quot;&gt;ACCUMULO-4826 &lt;/a&gt;,  &lt;a href=&quot;https://github.com/apache/accumulo/issues/531&quot;&gt;#531 &lt;/a&gt;, and &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4299&quot;&gt;ACCUMULO-4299 &lt;/a&gt;.  Running with Java 11 is also supported, but Java 11 is not
+required.&lt;/p&gt;
+
+&lt;h3 id=&quot;simplified-accumulo-scripts-and-configuration-files&quot;&gt;Simplified Accumulo scripts and configuration files&lt;/h3&gt;
+
+&lt;p&gt;Accumulo’s scripts and configuration were refactored in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4490&quot;&gt;ACCUMULO-4490&lt;/a&gt; to make Accumulo
+easier to use. The number of scripts in the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; directory of the Accumulo release tarball
+has been reduced from 20 scripts to the four scripts below:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; - mostly left alone except for improved usage&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-service&lt;/code&gt; - manage Accumulo processes as services&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-cluster&lt;/code&gt; - manage Accumulo on cluster. Replaces &lt;code class=&quot;highlighter-rouge&quot;&gt;start-all.sh&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;stop-all.sh&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-util&lt;/code&gt; - combines many utility scripts into one script.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Read &lt;a href=&quot;/blog/2016/11/16/simpler-scripts-and-config.html&quot;&gt;this blog post&lt;/a&gt; for more information on this change.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-bulk-import-api&quot;&gt;New Bulk Import API&lt;/h3&gt;
+
+&lt;p&gt;A new bulk import API was added in 2.0 that has very different implementation.  This new API supports the following new functionality.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bulk import to an offline table.&lt;/li&gt;
+  &lt;li&gt;Load plans that specify where files go in a table which avoids opening the
+files for inspection.&lt;/li&gt;
+  &lt;li&gt;Inspection of file on the client side. Inspection of all files is done
+before the FATE operation starts.  This results in less namenode operations
+and fail-fast for bad files (no longer need a fail directory).&lt;/li&gt;
+  &lt;li&gt;A new improved algorithm to load files into tablets.  This new algorithm
+scans the metadata table and makes asynchronous load calls to all tablets.
+This queues load operations on all tablets at around the same time.  The
+async RPC calls and beforehand inspection make the bulk load FATE operation
+much shorter.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The shell command for doing bulk load supports the old and new API.  To use the
+new API from the shell simply omit the failure directory argument.
+For the API, use the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/TableOperations.html#importDirectory(java.lang.String)&quot;&gt;new fluent API&lt;/a&gt;.
+See &lt;a href=&quot;https://github.com/apache/accumulo/issues/436&quot;&gt;#436 &lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/472&quot;&gt;#472 &lt;/a&gt;, and &lt;a href=&quot;https://github.com/apache/accumulo/issues/570&quot;&gt;#570 &lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;summaries&quot;&gt;Summaries&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/docs/2.x/development/summaries&quot;&gt;Summaries&lt;/a&gt; enables continually generating
+statistics about a table with user defined functions.  This feature can inform
+a user about what is in their table and be used by compaction strategies to
+make decisions.  For example, using this feature it would be possible to
+compact all tablets where deletes are more than 25% of the data. Another
+example use case is optimizing filtering compactions by enabling smart
+selection of files with pertinent data. Examples of filtering compactions are
+age off and removal of non-compliant data.&lt;/p&gt;
+
+&lt;h3 id=&quot;scan-executors&quot;&gt;Scan Executors&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/docs/2.x/administration/scan-executors&quot;&gt;Scan executors&lt;/a&gt; support prioritizing
+and dedicating scan resources. Each executor has a configurable number of
+threads and an optional custom prioritizer.  Tables can be configured in a
+flexible way to dispatch scans to different executors.&lt;/p&gt;
+
+&lt;h3 id=&quot;spi-package&quot;&gt;SPI package&lt;/h3&gt;
+
+&lt;p&gt;All new pluggable components introduced in 2.0 were placed under a new SPI
+package.  The SPI package is analyzed by &lt;a href=&quot;https://code.revelc.net/apilyzer-maven-plugin/&quot;&gt;Apilyzer&lt;/a&gt; at build time to ensure
+plugins only use SPI and API types.  This prevents plugins from using internal
+Accumulo types that are inherently unstable over time.  Plugins created before
+2.0 do use internal types and are less stable.  The new pluggable interfaces
+should be much more stable.&lt;/p&gt;
+
+&lt;h3 id=&quot;official-accumulo-docker-image-was-created&quot;&gt;Official Accumulo docker image was created&lt;/h3&gt;
+
+&lt;p&gt;An &lt;a href=&quot;https://github.com/apache/accumulo-docker&quot;&gt;official Accumulo docker images&lt;/a&gt; was created in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4706&quot;&gt;ACCUMULO-4706&lt;/a&gt; to make
+it easier for users to run Accumulo in Docker. To support running in Docker, a few changes were
+made to Accumulo:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;--upload-accumulo-site&lt;/code&gt; option was added to &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt; to set properties in accumulo-site.xml
+to Zookeeper during initialization.&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;-o &amp;lt;key&amp;gt;=&amp;lt;value&amp;gt;&lt;/code&gt; option was added to the &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; command to override configuration that could
+not be set in Zookeeper.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;updated-and-improved-accumulo-documentation&quot;&gt;Updated and improved Accumulo documentation&lt;/h3&gt;
+
+&lt;p&gt;Accumulo’s documentation has been refactored with the following improvements:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Documentation source now lives in &lt;a href=&quot;https://github.com/apache/accumulo-website&quot;&gt;accumulo-website repo&lt;/a&gt; so changes
+are now immediately viewable.&lt;/li&gt;
+  &lt;li&gt;Improved navigation using a new sidebar&lt;/li&gt;
+  &lt;li&gt;Better linking to Javadocs, between documentation pages, and to configuration properties.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Accumulo’s documentation was also reviewed and changes were made to improve accuracy and remove
+out of date documentation.&lt;/p&gt;
+
+&lt;h3 id=&quot;moved-accumulo-examples-to-its-own-repo&quot;&gt;Moved Accumulo Examples to its own repo&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo examples were moved out the accumulo repo to the &lt;a href=&quot;https://github.com/apache/accumulo-examples&quot;&gt;accumulo-examples repo&lt;/a&gt;
+which has the following benefits:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Accumulo examples are no longer released with Accumulo and can be continuously improved.&lt;/li&gt;
+  &lt;li&gt;The Accumulo API version used by the examples can be updated right before Accumulo is released
+to test for any changes to the API that break semver.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;simplified-accumulo-logging-configuration&quot;&gt;Simplified Accumulo logging configuration&lt;/h3&gt;
+
+&lt;p&gt;The log4j configuration of Accumulo services was improved in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4588&quot;&gt;ACCUMULO-4588&lt;/a&gt; with the following changes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Logging is now configured using standard log4j JVM property ‘log4j.configuration’ in accumulo-env.sh.&lt;/li&gt;
+  &lt;li&gt;Tarball ships with fewer log4j config files (3 rather than 6) which are all log4j properties files.&lt;/li&gt;
+  &lt;li&gt;Log4j XML can still be used by editing accumulo-env.sh&lt;/li&gt;
+  &lt;li&gt;Removed auditLog.xml and added audit log configuration to log4j-service properties files&lt;/li&gt;
+  &lt;li&gt;Accumulo conf/ directory no longer has an examples/ directory. Configuration files ship in conf/ and are
+used by default.&lt;/li&gt;
+  &lt;li&gt;Accumulo monitor by default will bind to 0.0.0.0 but will advertise hostname looked up in Java for log
+forwarding&lt;/li&gt;
+  &lt;li&gt;Switched to use full hostnames rather than short hostnames for logging&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;removed-comparison-of-value-with-byte-in-valueequals&quot;&gt;Removed comparison of Value with byte[] in Value.equals()&lt;/h3&gt;
+
+&lt;p&gt;Replaced the ability to use &lt;code class=&quot;highlighter-rouge&quot;&gt;Value.equals(byte[])&lt;/code&gt; to check if the contents of a
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; object was equal to a given byte array in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4726&quot;&gt;ACCUMULO-4726&lt;/a&gt;. To perform
+that check, you must now use the newly added &lt;code class=&quot;highlighter-rouge&quot;&gt;Value.contentEquals(byte[])&lt;/code&gt;
+method. This corrects the behavior of the &lt;code class=&quot;highlighter-rouge&quot;&gt;equals&lt;/code&gt; method so that it conforms
+to the API contract documented in the javadoc inherited from its superclass.
+However, it will break any code that was relying on the undocumented and broken
+behavior to compare &lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; objects with byte arrays. Such comparisons will now
+always return &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;, even if the contents are equal.&lt;/p&gt;
+
+&lt;h3 id=&quot;other-notable-changes&quot;&gt;Other Notable Changes&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3652&quot;&gt;ACCUMULO-3652&lt;/a&gt; - Replaced string concatenation in log statements with slf4j
+where applicable. Removed tserver TLevel logging class.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4449&quot;&gt;ACCUMULO-4449&lt;/a&gt; - Removed ‘slave’ terminology and replaced with ‘tserver’ in
+most cases. The former ‘slaves’ config file is now named ‘tservers’. Added checks to
+scripts to fail if ‘slaves’ file is present.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4808&quot;&gt;ACCUMULO-4808 &lt;/a&gt; - Can now create table with splits and offline.  Specifying splits
+at table creation time can be much faster than adding splits after creation.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4463&quot;&gt;ACCUMULO-4463 &lt;/a&gt; - Caching is now pluggable.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4177&quot;&gt;ACCUMULO-4177 &lt;/a&gt; - New built in cache implementation based on TinyLFU.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4376&quot;&gt;ACCUMULO-4376 &lt;/a&gt; &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4746&quot;&gt;ACCUMULO-4746 &lt;/a&gt; - Mutation and Key Fluent APIs allow easy mixing of types.  For example a family of type &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; and qualifier of type &lt;code class=&quot;highlighter-rouge&quot;&gt;byte[]&lt;/code&gt; is much easier to write using this new API.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4771&quot;&gt;ACCUMULO-4771 &lt;/a&gt; - The Accumulo monitor was completely rewritten.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4732&quot;&gt;ACCUMULO-4732 &lt;/a&gt; - Specify iterators and locality groups at table creation time.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4612&quot;&gt;ACCUMULO-4612 &lt;/a&gt; - Use percentages for memory related configuration.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-1787&quot;&gt;ACCUMULO-1787 &lt;/a&gt; - Two tier compaction strategy.  Support compacting small files with snappy and large files with gzip.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/560&quot;&gt;#560 &lt;/a&gt; - Provide new Crypto interface &amp;amp; impl&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/536&quot;&gt;#536 &lt;/a&gt; - Removed mock Accumulo.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/438&quot;&gt;#438 &lt;/a&gt; - Added support for ZStandard compression&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/404&quot;&gt;#404 &lt;/a&gt; - Added basic Grafana dashboard example.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1102&quot;&gt;#1102 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1100&quot;&gt;#1100 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1037&quot;&gt;#1037 &lt;/a&gt; - Removed lock contention in different areas.  These locks caused threads working unrelated task to impede each other.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1033&quot;&gt;#1033 &lt;/a&gt; - Optimized the default compaction strategy.  In some cases the Accumulo would rewrite data O(N^2) times over repeated compactions.  With this change the amount of rewriting is always logarithmic.&lt;/li&gt;
+  &lt;li&gt;Many performance improvements mentioned in the 1.9.X release notes are also available in 2.0.&lt;/li&gt;
+  &lt;li&gt;Scanners close server side sessions on close &lt;a href=&quot;https://github.com/apache/accumulo/issues/813&quot;&gt;#813 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/905&quot;&gt;#905 &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
+
+</description>
+        <pubDate>Fri, 02 Aug 2019 00:00:00 -0400</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-2.0.0/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-2.0.0/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Using Apache Spark with Accumulo</title>
@@ -615,135 +823,6 @@ nodes for 24 hours followed by a successful verification.&lt;/p&gt;
         <pubDate>Mon, 23 Apr 2018 00:00:00 -0400</pubDate>
         <link>https://accumulo.apache.org/release/accumulo-1.9.0/</link>
         <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.0/</guid>
-        
-        
-        <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>Apache Accumulo 1.7.4</title>
-        <description>&lt;p&gt;Apache Accumulo 1.7.4 is a maintenance release on the 1.7 version branch. This release contains changes from 46 issues, comprised of bug-fixes, 
-performance improvements, build quality improvements, and more. See &lt;a href=&quot;https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;amp;version=12339577&quot;&gt;Jira&lt;/a&gt; or the bottom of this page for a complete list.&lt;/p&gt;
-
-&lt;p&gt;Below are resources for this release:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://accumulo.apache.org/1.7/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://accumulo.apache.org/1.7/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.7.4 API&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://accumulo.apache.org/1.7/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by step instructions for running example code.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Accumulo follows &lt;a href=&quot;http://semver.org/&quot;&gt;Semantic Versioning&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/blob/rel/1.7.4/README.md#api&quot;&gt;guidelines&lt;/a&gt;.  This release is a  “&lt;a href=&quot;http://semver.org/#spec-item-6&quot;&gt;patch version&lt;/a&gt;”, which means that
-only backwards compatible bug fixes are introduced in this version. A bug fix is defined as an internal change that fixes incorrect behavior. Users
-of any previous 1.7.x release are strongly encouraged to update as soon as possible to benefit from the  bug fixes with very little concern in change
-of underlying functionality.  As always, the Accumulo developers take API compatibility very seriously and have invested much time to ensure that we
-meet the promises set forth to our users. Users of 1.6 or earlier that are seeking to upgrade to 1.7 should consider 1.7.4 as a starting point.&lt;/p&gt;
-
-&lt;h2 id=&quot;major-changes&quot;&gt;Major Changes&lt;/h2&gt;
-
-&lt;h3 id=&quot;fixed-upgrade-process-to-set-version-on-all-volumes&quot;&gt;Fixed upgrade process to set version on all volumes&lt;/h3&gt;
-
-&lt;p&gt;During upgrades, only one volume in a multiple HDFS volume was updated with the correct version. This would cause all tablet servers
-to complain and ultimately fail. &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4686&quot;&gt;ACCUMULO-4686&lt;/a&gt; fixes this by setting the version on all volumes.&lt;/p&gt;
-
-&lt;h3 id=&quot;updated-accumulo-to-work-with-new-releases-of-guava&quot;&gt;Updated Accumulo to work with new releases of Guava&lt;/h3&gt;
-
-&lt;p&gt;In &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4702&quot;&gt;ACCUMULO-4702&lt;/a&gt;, dependencies on Beta-annotated Guava classes and methods were removed. While Accumulo still
-includes Guava 14 in its tarball, it will work with newer versions of Guava in client code. It has been tested to work
-with Guava 23.&lt;/p&gt;
-
-&lt;h3 id=&quot;updated-rfile-to-prevent-very-large-blocks&quot;&gt;Updated RFile to prevent very large blocks&lt;/h3&gt;
-
-&lt;p&gt;RFiles now use windowed statistics (&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4669&quot;&gt;ACCUMULO-4669&lt;/a&gt;) to prevent very large blocks.  In 1.7.3 a bug was introduced that
-caused RFile data block sizes to grow very large in the case where key sizes slowly increased.  This could lead
-to degraded query performance or out of memory exceptions on tablet servers.&lt;/p&gt;
-
-&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4506&quot;&gt;ACCUMULO-4506&lt;/a&gt; - Add a timeout to a replication RPC call&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4619&quot;&gt;ACCUMULO-4619&lt;/a&gt; - Add splits hung forever&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4633&quot;&gt;ACCUMULO-4633&lt;/a&gt; - Added check to prevent division by zero&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4640&quot;&gt;ACCUMULO-4640&lt;/a&gt; - Accumulo shell is expecting instance.volumens in client.conf instead of accumulo-site.xml&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4657&quot;&gt;ACCUMULO-4657&lt;/a&gt; - BulkImport Performance Bottleneck&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4665&quot;&gt;ACCUMULO-4665&lt;/a&gt; - Must use the “real” user for RPCs when Kerberos is enabled&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4676&quot;&gt;ACCUMULO-4676&lt;/a&gt; - Use HTTPOnly flags in monitor to prevent XSS attacks&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4776&quot;&gt;ACCUMULO-4776&lt;/a&gt; - Fix advertised host in monitor&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4777&quot;&gt;ACCUMULO-4777&lt;/a&gt; - Root tablet got spammed with 1.8 million log entries&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4787&quot;&gt;ACCUMULO-4787&lt;/a&gt; - Close input stream in AccumuloReplicaSystem&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4809&quot;&gt;ACCUMULO-4809&lt;/a&gt; - Avoid blocking during session clean up&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4817&quot;&gt;ACCUMULO-4817&lt;/a&gt; - Update build plugins and parent POM&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
-
-&lt;p&gt;View the &lt;a href=&quot;https://accumulo.apache.org/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
-
-&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
-
-&lt;p&gt;Continuous ingest, random walk, and all integration test were run against RC0.
-A few bugs were found and fixed before RC1.  Randomwalk was run overnight with
-4 walkers.  Continuous ingest was run with 9 nodes for 22 hours followed by a
-successful verification.  A Kerberos IT failed because the 1.7.4 pom depends
-on Hadoop 2.2.0, the IT passed with a newer version of Hadoop.&lt;/p&gt;
-
-&lt;h2 id=&quot;all-changes&quot;&gt;All Changes&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-1972&quot;&gt;ACCUMULO-1972&lt;/a&gt; - Fixed Range constructor&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3208&quot;&gt;ACCUMULO-3208&lt;/a&gt; - Integration test for the OrIterator and cleanup&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3283&quot;&gt;ACCUMULO-3283&lt;/a&gt; - Create ColumnFQ only once&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3827&quot;&gt;ACCUMULO-3827&lt;/a&gt; - Set default store types for monitor ssl to jks&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4170&quot;&gt;ACCUMULO-4170&lt;/a&gt; - Clarify ClientConfiguration javadocs&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4365&quot;&gt;ACCUMULO-4365&lt;/a&gt; - Fixes to prevent intermittent failures in ShellServerIT and ConditionalWriterIT&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4482&quot;&gt;ACCUMULO-4482&lt;/a&gt; - Mention snappy compression in docs&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4506&quot;&gt;ACCUMULO-4506&lt;/a&gt; - Add a timeout to a replication RPC call&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4546&quot;&gt;ACCUMULO-4546&lt;/a&gt; - Create default log message for table error&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4555&quot;&gt;ACCUMULO-4555&lt;/a&gt; - Removes parsing of version string in Version class&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4576&quot;&gt;ACCUMULO-4576&lt;/a&gt; - Suppress warnings from deprecations&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4587&quot;&gt;ACCUMULO-4587&lt;/a&gt; - Upgrade Monitor jquery to 3.2.1&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4591&quot;&gt;ACCUMULO-4591&lt;/a&gt; - Add replication latency metrics&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4602&quot;&gt;ACCUMULO-4602&lt;/a&gt; - Deleted AssignmentThreadsIT&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4619&quot;&gt;ACCUMULO-4619&lt;/a&gt; - Add splits hung forever&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4627&quot;&gt;ACCUMULO-4627&lt;/a&gt; - Add corrupt WAL recovery instructions to user manual&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4633&quot;&gt;ACCUMULO-4633&lt;/a&gt; - Added check to prevent division by zero&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4636&quot;&gt;ACCUMULO-4636&lt;/a&gt; - System iterator improvements&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4640&quot;&gt;ACCUMULO-4640&lt;/a&gt; - Accumulo shell is expecting instance.volumens in client.conf instead of accumulo-site.xml&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4648&quot;&gt;ACCUMULO-4648&lt;/a&gt; - Update voting text in build.sh script&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4657&quot;&gt;ACCUMULO-4657&lt;/a&gt; - BulkImport Performance Bottleneck&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4658&quot;&gt;ACCUMULO-4658&lt;/a&gt; - Cache call to ZooKeeper to get table id map for the duration of the method&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4660&quot;&gt;ACCUMULO-4660&lt;/a&gt; - Sanitize incoming values from HTTP parameters&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4662&quot;&gt;ACCUMULO-4662&lt;/a&gt; - Fix ambiguous table reference&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4665&quot;&gt;ACCUMULO-4665&lt;/a&gt; - Use UGI with real Kerberos credentials&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4666&quot;&gt;ACCUMULO-4666&lt;/a&gt; - Improve KerberosToken sanity-checks and related doc&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4669&quot;&gt;ACCUMULO-4669&lt;/a&gt; - Use windowed statistics in RFile&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4676&quot;&gt;ACCUMULO-4676&lt;/a&gt; - Use HTTPOnly flags in monitor to prevent XSS attacks&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4682&quot;&gt;ACCUMULO-4682&lt;/a&gt; - Enforce import ordering&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4684&quot;&gt;ACCUMULO-4684&lt;/a&gt; - Basic schema outline for accumulo:replication&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4685&quot;&gt;ACCUMULO-4685&lt;/a&gt; - Fix minor warnings and bug in FileRefTest&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4686&quot;&gt;ACCUMULO-4686&lt;/a&gt; - Fix upgrade process to set version in all volumes.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4687&quot;&gt;ACCUMULO-4687&lt;/a&gt; - Clean up some static-analysis warnings&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4699&quot;&gt;ACCUMULO-4699&lt;/a&gt; - Fixed queued work key in replication&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4702&quot;&gt;ACCUMULO-4702&lt;/a&gt; - Code fixes to work with Guava 23&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4713&quot;&gt;ACCUMULO-4713&lt;/a&gt; - Correct handling min and max timestamps&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4716&quot;&gt;ACCUMULO-4716&lt;/a&gt; - Don’t cache blks over max array size&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4721&quot;&gt;ACCUMULO-4721&lt;/a&gt; - Document rfile-info in the user manual&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4741&quot;&gt;ACCUMULO-4741&lt;/a&gt; - Remove minified files in Monitor&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4774&quot;&gt;ACCUMULO-4774&lt;/a&gt; - Made conditional writer thread into daemon&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4776&quot;&gt;ACCUMULO-4776&lt;/a&gt; - Fix advertised host in monitor&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4777&quot;&gt;ACCUMULO-4777&lt;/a&gt; - Root tablet got spammed with 1.8 million log entries&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4780&quot;&gt;ACCUMULO-4780&lt;/a&gt; - Add overflow check to seq num in CommitSession&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4781&quot;&gt;ACCUMULO-4781&lt;/a&gt; - Fixed logging performance issue&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4787&quot;&gt;ACCUMULO-4787&lt;/a&gt; - Close input stream in AccumuloReplicaSystem&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4809&quot;&gt;ACCUMULO-4809&lt;/a&gt; - Avoid blocking during session cleanup&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4817&quot;&gt;ACCUMULO-4817&lt;/a&gt; - Update build plugins and parent POM&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        <pubDate>Fri, 23 Mar 2018 00:00:00 -0400</pubDate>
-        <link>https://accumulo.apache.org/release/accumulo-1.7.4/</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.7.4/</guid>
         
         
         <category>release</category>

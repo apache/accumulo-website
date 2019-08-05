@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; Spark</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>Spark</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/development/spark.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -453,7 +451,7 @@ to your Accumulo instance.</p>
 
 <h2 id="reading-from-accumulo-table">Reading from Accumulo table</h2>
 
-<p>Apache Spark can read from an Accumulo table by using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-2/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
+<p>Apache Spark can read from an Accumulo table by using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="nc">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
 <span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">table</span><span class="o">(</span><span class="n">inputTable</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
@@ -494,7 +492,7 @@ data in the partition using a BatchWriter.</p>
 
 <p>Partition your data and write it to RFiles. The <a href="https://github.com/apache/accumulo-examples/blob/master/spark/src/main/java/org/apache/accumulo/spark/CopyPlus5K.java#L44">AccumuloRangePartitioner</a> found in the Accumulo
 Spark example can be used for partitioning data. After your data has been written to an output
-directory using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-2/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> as RFiles, bulk import this directory into Accumulo.</p>
+directory using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> as RFiles, bulk import this directory into Accumulo.</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Write Spark output to HDFS</span>
 <span class="nc">JavaPairRDD</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">dataToWrite</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>

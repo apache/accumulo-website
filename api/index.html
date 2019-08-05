@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -144,10 +144,11 @@ packages and their sub-packages excluding those named <em>impl</em>, <em>thrift<
 <em>crypto</em>.</p>
 
 <ul>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.3/org/apache/accumulo/core/client/package-summary.html">org.apache.accumulo.core.client</a></li>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.3/org/apache/accumulo/core/data/package-summary.html">org.apache.accumulo.core.data</a></li>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/1.9.3/org/apache/accumulo/core/security/package-summary.html">org.apache.accumulo.core.security</a></li>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/1.9.3/org/apache/accumulo/minicluster/package-summary.html">org.apache.accumulo.minicluster</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/package-summary.html">org.apache.accumulo.core.client</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/package-summary.html">org.apache.accumulo.core.data</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/package-summary.html">org.apache.accumulo.core.security</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/2.0.0/org/apache/accumulo/minicluster/package-summary.html">org.apache.accumulo.minicluster</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop/2.0.0/org/apache/accumulo/hadoop/package-summary.html">org.apache.accumulo.hadoop</a> (since 2.0.0)</li>
 </ul>
 
 <p>A type is a class, interface, or enum. Anything with public or protected
@@ -165,8 +166,16 @@ in incompatible ways at any release.</p>
 regex can be used with <a href="http://checkstyle.sourceforge.net/config_regexp.html">RegexpSingleline</a> to automatically find suspicious
 imports in a project using Accumulo.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!core|minicluster).*|core\.(?!client|data|security).*)
-</code></pre></div></div>
+<p>For 1.9 and earlier:</p>
+
+<pre><code class="language-regex">import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!(core\.(client|data|security)|minicluster)\.).*)
+</code></pre>
+
+<p>For 2.0 and later, this can be simplified, because sub-packages not intended
+for public API were relocated, and also altered to include the new MapReduce module:</p>
+
+<pre><code class="language-regex">import\s+org\.apache\.accumulo\.(?!(core\.(client|data|security)|minicluster|hadoop)\.).*
+</code></pre>
 
 
         </div>

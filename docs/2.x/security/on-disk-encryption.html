@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; On Disk Encryption</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>On Disk Encryption</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/on-disk-encryption.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -447,15 +445,15 @@ For example, openssl can be used to create a random 32 byte key:</p>
 <h2 id="custom-crypto">Custom Crypto</h2>
 
 <p>The new crypto interface for 2.0 allows for easier custom implementation of encryption and decryption. Your
-class only has to implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/crypto/CryptoService.html">CryptoService</a> interface to work with Accumulo.
+class only has to implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/CryptoService.html">CryptoService</a> interface to work with Accumulo.
 The interface has 3 methods:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">conf</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">CryptoException</span><span class="o">;</span>
   <span class="nc">FileEncrypter</span> <span class="nf">getFileEncrypter</span><span class="o">(</span><span class="nc">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
   <span class="nc">FileDecrypter</span> <span class="nf">getFileDecrypter</span><span class="o">(</span><span class="nc">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
 </code></pre></div></div>
 <p>The <code class="highlighter-rouge">init</code> method is where you will initialize any resources required for crypto and will get called once per Tablet Server.
-The <code class="highlighter-rouge">getFileEncrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/crypto/FileEncrypter.html">FileEncrypter</a> 
-for encryption and the <code class="highlighter-rouge">getFileDecrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/crypto/FileDecrypter.html">FileDecrypter</a> 
+The <code class="highlighter-rouge">getFileEncrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileEncrypter.html">FileEncrypter</a> 
+for encryption and the <code class="highlighter-rouge">getFileDecrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileDecrypter.html">FileDecrypter</a> 
 for decryption. The <code class="highlighter-rouge">CryptoEnvironment</code> passed into these methods will provide the scope of the crypto. 
 The FileEncrypter has two methods:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">OutputStream</span> <span class="nf">encryptStream</span><span class="o">(</span><span class="nc">OutputStream</span> <span class="n">outputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
@@ -466,7 +464,7 @@ wrapped in at least one other OutputStream.  The <code class="highlighter-rouge"
 required to perform decryption. The FileDecrypter only has one method:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">InputStream</span> <span class="nf">decryptStream</span><span class="o">(</span><span class="nc">InputStream</span> <span class="n">inputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
 </code></pre></div></div>
-<p>For more help getting started see <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/crypto/impl/AESCryptoService.html">AESCryptoService</a>.</p>
+<p>For more help getting started see <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/crypto/impl/AESCryptoService.html">AESCryptoService</a>.</p>
 
 <h2 id="things-to-keep-in-mind">Things to keep in mind</h2>
 
@@ -489,8 +487,8 @@ its the additional data that gets encrypted on disk that could be exposed in a l
 
 <h3 id="bulk-import">Bulk Import</h3>
 
-<p>There are 2 ways to create RFiles for bulk ingest: with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> and during Map Reduce using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-2/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.<br />
-The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> allows passing in the configuration properties for encryption mentioned above.  The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0-alpha-2/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> does 
+<p>There are 2 ways to create RFiles for bulk ingest: with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> and during Map Reduce using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.<br />
+The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/rfile/RFile.html">RFile API</a> allows passing in the configuration properties for encryption mentioned above.  The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a> does 
 not allow for encryption of RFiles so any data bulk imported through this process will be unencrypted.</p>
 
 <h3 id="zookeeper">Zookeeper</h3>

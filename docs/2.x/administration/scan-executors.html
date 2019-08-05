@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Administration &nbsp;&gt;&gt;&nbsp; Scan Executors</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>Scan Executors</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/administration/scan-executors.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -454,7 +452,7 @@ tserver.scan.executors.&lt;name&gt;.prioritizer.opts.&lt;key&gt;=&lt;value&gt;
 </code></pre></div></div>
 
 <p>After creating an executor, configure <a href="/docs/2.x/configuration/server-properties#table_scan_dispatcher">table.scan.dispatcher</a> to use it.  A
-dispatcher is Java subclass of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/ScanDispatcher.html">ScanDispatcher</a>
+dispatcher is Java subclass of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/ScanDispatcher.html">ScanDispatcher</a>
 that decides which scan executor should service a table.  Set the following table
 property to configure a dispatcher.</p>
 
@@ -466,7 +464,7 @@ property to configure a dispatcher.</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher.opts.&lt;key&gt;=&lt;value&gt;
 </code></pre></div></div>
 
-<p>The default value for <code class="highlighter-rouge">table.scan.dispatcher</code> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">SimpleScanDispatcher</a>.
+<p>The default value for <code class="highlighter-rouge">table.scan.dispatcher</code> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">SimpleScanDispatcher</a>.
 SimpleScanDispatcher supports an <code class="highlighter-rouge">executor</code> option for choosing a scan
 executor.  If this option is not set, then SimpleScanDispatcher will dispatch
 to the scan executor named <code class="highlighter-rouge">default</code>.</p>
@@ -510,8 +508,8 @@ for each table.  This ensures things work as expected in the case where
 <h3 id="configuring-and-using-scan-prioritizers">Configuring and using Scan Prioritizers.</h3>
 
 <p>When all scan executor threads are busy, incoming work is queued.  By
-default this queue has a FIFO order.  A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/ScanPrioritizer.html">ScanPrioritizer</a> can be configured to
-reorder the queue.  Accumulo ships with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/IdleRatioScanPrioritizer.html">IdleRatioScanPrioritizer</a> which
+default this queue has a FIFO order.  A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/ScanPrioritizer.html">ScanPrioritizer</a> can be configured to
+reorder the queue.  Accumulo ships with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/IdleRatioScanPrioritizer.html">IdleRatioScanPrioritizer</a> which
 orders the queue by the ratio of run time to idle time.  For example, a scan
 with a run time of 50ms and an idle time of 200ms would have a ratio of .25.
 If .25 were the lowest ratio on the queue, then it would be the next in line.
@@ -528,7 +526,7 @@ In this test the average lookup time for the 5 threads went from 250ms to 5 ms.<
 <h3 id="providing-hints-from-the-client-side">Providing hints from the client side.</h3>
 
 <p>Scanners can provide hints to ScanDispatchers and ScanPriotizers by calling
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/ScannerBase.html#setExecutionHints-java.util.Map-">setExecutionHints</a> on the Scanner.  What, if anything, is done with these
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ScannerBase.html#setExecutionHints-java.util.Map-">setExecutionHints</a> on the Scanner.  What, if anything, is done with these
 hints depends on what is configured for the table and system.  Accumulo’s
 default configuration ignores hints. The following shell commands make it
 possible to choose an executor and set priorities from a scanner for the
@@ -544,7 +542,7 @@ config -t tex -s table.scan.dispatcher.opts.executor.alpha=special
 config -t tex -s table.scan.dispatcher.opts.executor.gamma=special
 </code></pre></div></div>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/spi/scan/HintScanPrioritizer.html">HintScanPrioritizer</a> honors
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/HintScanPrioritizer.html">HintScanPrioritizer</a> honors
 hints of the form <code class="highlighter-rouge">priority=&lt;integer&gt;</code> or <code class="highlighter-rouge">scan_type=&lt;type&gt;</code> to prioritize
 scans, with lower integers resulting in a higher priority.  When a hint
 specifies a scan type it is mapped to a priority based on the prioritizer

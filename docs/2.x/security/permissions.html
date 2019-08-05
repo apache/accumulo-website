@@ -81,15 +81,15 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0-alpha-2/">2.0.0-alpha-2 (Preview Release)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x/getting-started/quickstart">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
             <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
@@ -414,8 +414,6 @@
     <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; Permissions</p>
     
 
-    <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">This documentation is for an alpha release of Accumulo! <a href="/1.9/accumulo_user_manual.html">View documentation for the latest release</a>.</div>
-
     <div class="row">
       <div class="col-md-10"><h1>Permissions</h1></div>
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/security/permissions.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
@@ -426,16 +424,16 @@
 <p>Accumulo has three types of permissions:</p>
 
 <ul>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/SystemPermission.html">SystemPermission</a></li>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/NamespacePermission.html">NamespacePermission</a></li>
-  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/security/TablePermission.html">TablePermission</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/SystemPermission.html">SystemPermission</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/NamespacePermission.html">NamespacePermission</a></li>
+  <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/TablePermission.html">TablePermission</a></li>
 </ul>
 
-<p>These permissions are managed by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a> in Java API or the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>.</p>
+<p>These permissions are managed by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a> in Java API or the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>.</p>
 
 <h2 id="configuration">Configuration</h2>
 
-<p>Accumulo’s <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0-alpha-2/org/apache/accumulo/server/security/handler/PermissionHandler.html">PermissionHandler</a> is configured by setting <a href="/docs/2.x/configuration/server-properties#instance_security_permissionHandler">instance.security.permissionHandler</a>.</p>
+<p>Accumulo’s <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.0.0/org/apache/accumulo/server/security/handler/PermissionHandler.html">PermissionHandler</a> is configured by setting <a href="/docs/2.x/configuration/server-properties#instance_security_permissionHandler">instance.security.permissionHandler</a>.</p>
 
 <p>The default permission handler is described below.</p>
 
@@ -446,7 +444,7 @@
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; grant System.CREATE_TABLE -s -u bob
 </code></pre></div></div>
 
-<p>Or in the Java API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>:</p>
+<p>Or in the Java API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">grantSystem</span><span class="o">(</span><span class="s">"bob"</span><span class="o">,</span> <span class="nc">SystemPermission</span><span class="o">.</span><span class="na">CREATE_TABLE</span><span class="o">);</span>
 </code></pre></div></div>
@@ -472,7 +470,7 @@ Table permissions (accumulo.root): Table.READ
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; revoke System.CREATE_TABLE -s -u bob
 </code></pre></div></div>
 
-<p>Or in the Java API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0-alpha-2/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>:</p>
+<p>Or in the Java API using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">().</span><span class="na">revokeSystemPermission</span><span class="o">(</span><span class="s">"bob"</span><span class="o">,</span> <span class="nc">SystemPermission</span><span class="o">.</span><span class="na">CREATE_TABLE</span><span class="o">);</span>
 </code></pre></div></div>
