@@ -70,7 +70,7 @@ See the [release notes][REL_NOTES_20] for more details about this release.
 * [Online Documentation][MANUAL_20]
 * [Java API][JAVADOC_20]
 
-### 1.9.3 **maintenance**{: .label .label-info }
+### 1.9.3 **previous**{: .label .label-primary }
 
 The most recent 1.9 maintenance release of Apache Accumulo&reg; is version 1.9.3.
 See the [release notes][REL_NOTES_19] for more details about this release.
