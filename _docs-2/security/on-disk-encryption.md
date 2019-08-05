@@ -5,7 +5,7 @@ order: 5
 ---
 
 For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
-for 2.0, making it easier to configure and more secure.  The files that can be encrypted include: [RFiles][design] and Write Ahead Logs (WALs).
+for 2.0, making it easier to configure and more secure.  The files that can be encrypted include: [RFiles][design] and Write Ahead Logs (WALs). NOTE: This feature is considered experimental. For more information, see the [notes below](#things-to-keep-in-mind).
 
 ## Configuration
 
