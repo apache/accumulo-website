@@ -11,8 +11,8 @@ permalink: /people/
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
-| alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
+| alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
@@ -153,7 +153,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [ARCUS]: http://www.arcus-research.com
 [ARGYLE]: http://www.argyledata.com
 [ASRC]: http://www.asrc.com
-[ATG]: http://www.appliedtech-group.com/
+[ATG]: http://www.atg-us.com/
 [ATSID]: http://www.atsid.com
 [ATT]: http://www.att.com
 [BASISTECH]: http://www.basistech.com
