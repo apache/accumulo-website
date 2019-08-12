@@ -75,7 +75,7 @@ try (AccumuloClient client = Accumulo.newClient()
 As you can see the client is also closable, which gives developers more control over resources.
 See the [Accumulo entry point javadoc][client].
 
-Key and Mutation have new fluent APIs:
+Key and Mutation have new fluent APIs, which now allow mixing of ```String``` and ```byte[]``` types.
 
 ```java
 Key newKey = Key.builder().row("foo").family("bar").build();
