@@ -1,6 +1,7 @@
 ---
-title: "Why Upgrade to Accumulo 2.0"
+title: "Top 10 Reasons to Upgrade"
 author: Mike Miller
+reviewers: Keith Turner, Christopher Tubbs
 ---
 
 Accumulo 2.0 has been in development for quite some time now and is packed with new features, bug
@@ -13,12 +14,12 @@ My top 10 reasons to upgrade. For all changes see the [release notes][rel]
 * [New Bulk Import](#new-bulk-import)
 * [Simplified Scripts and Config](#simplified-scripts-and-config)
 * [New Monitor](#new-monitor)
-* [New Accumulo Client](#new-accumulo-client)
-* [Hadoop 3](#hadoop-3-support)
+* [New APIs](#new-apis)
 * [Offline creation](#offline-creation)
 * [Search Documentation](#search-documentation)
-* [Java 11 Support](#java-8-11-support)
 * [On disk encryption](#new-crypto)
+* [ZStandard Compression](#zstandard-compression)
+* [New Scan Executors](#new-scan-executors)
 
 ### Summaries
 
@@ -54,12 +55,15 @@ cleaner and more maintainable than the previous version. Here is a screen shot:
 
 <img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" width="50%"/>
 
-## New Accumulo Client
+## New APIs
 
 Connecting to Accumulo is now easier with a single point of entry for clients. It can now be done with 
-a fluent API, 2 imports (AccumuloClient & Accumulo) and using minimal code:
+a fluent API, 2 imports and using minimal code:
 
 ```java
+import org.apache.accumulo.core.client.Accumulo;
+import org.apache.accumulo.core.client.AccumuloClient;
+
 try (AccumuloClient client = Accumulo.newClient()
           .to("instance", "zk")
           .as("user", "pass").build()) {
@@ -69,12 +73,19 @@ try (AccumuloClient client = Accumulo.newClient()
 ```
 
 As you can see the client is also closable, which gives developers more control over resources.
-See the [Accumulo entry point javadoc][client] for more info. 
+See the [Accumulo entry point javadoc][client].
 
-## Hadoop 3 Support
+Key and Mutation have new fluent APIs:
 
-Upgrading to Hadoop 3 brings all the fixes and improvements that have been made to Hadoop over the
-years to your cluster.  [Checkout all the new features of Hadoop 3][hadoop3]. 
+```java
+Key newKey = Key.builder().row("foo").family("bar").build();
+
+Mutation m = new Mutation("row0017");
+m.at().family("001").qualifier(new byte[] {0,1}).put("v99");
+m.at().family("002").qualifier(new byte[] {0,1}).delete();
+```
+
+More examples for [Key] and [Mutation].
 
 ## Offline creation
 
@@ -84,11 +95,7 @@ See the [GitHub issue][offline].
 ## Search Documentation
 
 New ability to quickly search documentation on the website. The user manual was completely redone 
-for 2.0. Check it out [here][manual]. Users can now quickly [search] the website across all 2.0 documentation.
-
-## Java 8-11 Support
-
-Accumulo 2.0 will work with versions of Java up to 11.  It is not required, but will build and run with Java 11.
+for 2.0. Check it out [here][manual]. Users can now quickly [search] the website across all 2.x documentation.
 
 ## New Crypto
 
@@ -96,14 +103,36 @@ On disk encryption was redone to be more secure and flexible. For an in depth de
 does on disk encryption, see the [user manual][crypto].  NOTE: This is currently an experimental feature.
 An experimental feature is considered a work in progress or incomplete and could change.
 
+## Zstandard compression
+
+Support for Zstandard compression was added in 2.0.  It has been measured to perform better than 
+gzip (better compression ratio and speed) and snappy (better compression ratio). Checkout Facebook's [github][zstd] for Zstandard and
+the [table.file.compress.type][z-config] property for configuring Accumulo.
+
+## New Scan Executors
+
+Users now have more control over scans with the new scan executors.  Tables can be configured to utilize these 
+powerful new mechanisms using just a few properties, giving user control over things like scan prioritization and 
+better cluster resource utilization.
+
+For example, a cluster has a bunch of long running scans and one really fast scan.  The long running scans will eat up 
+a majority of the server resources causing the one really fast scan to be delayed.  Scan executors allow an admin 
+to configure the cluster in a way that allows the one fast scan to be prioritized and not have to wait.
+
+Checkout some examples in the [user guide][scans].
+
 [FATE]: {% dlink /administration/fate %}
 [new-bulk]: https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api
 [scripts]: https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html
 [summary]: {% dlink /development/summaries %}
 [client]: {% jurl org.apache.accumulo.core.client.Accumulo %}
-[hadoop3]: https://hadoop.apache.org/docs/r3.0.0/
+[Key]: https://github.com/apache/accumulo/blob/master/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java
+[Mutation]: https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()
 [offline]: {% ghi 573 %}
 [manual]: {% dlink /getting-started/quickstart %}
 [search]: https://accumulo.apache.org/search/
-[crypto]: https://accumulo.apache.org/docs/2.x/security/on-disk-encryption
+[crypto]: {% dlink /security/on-disk-encryption %}
 [rel]: https://accumulo.apache.org/release/accumulo-2.0.0/
+[zstd]: https://facebook.github.io/zstd/
+[z-config]: {% dlink /configuration/server-properties %}
+[scans]: {% dlink /administration/scan-executors %}
