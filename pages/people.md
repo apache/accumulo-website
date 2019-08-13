@@ -27,6 +27,7 @@ permalink: /people/
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | elserj        | Josh Elser                                        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | etcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
+| hkeebler      | Holly Keebler                                     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
 | ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
@@ -77,7 +78,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Eugene Cheipesh     |                                                                   |                       |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Hayden Marchant     |                                                                   |                       |
-| Holly Keebler       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
 | James Fiori         | [Flywheel Data][FLYWHEEL]                                         | [ET][ET]              |
