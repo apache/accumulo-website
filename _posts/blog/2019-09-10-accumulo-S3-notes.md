@@ -68,14 +68,14 @@ export CLASSPATH
 Set the following in `accumulo.properties` and then run `accumulo init`, but don't start Accumulo.
 
 
-```
+```ini
 instance.volumes=hdfs://<name node>/accumulo
 ```
 
 After running Accumulo init we need to configure storing write ahead logs in
 HDFS.  Set the following in `accumulo.properties`.
 
-```
+```ini
 instance.volumes=hdfs://<name node>/accumulo,s3a://<bucket>/accumulo
 general.volume.chooser=org.apache.accumulo.server.fs.PreferredVolumeChooser
 general.custom.volume.preferred.default=s3a://<bucket>/accumulo
