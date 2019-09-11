@@ -90,7 +90,7 @@ More examples for [Key] and [Mutation].
 ## Offline creation
 
 Tables can now be created with splits offline.  This frees up online resources to perform other critical operations.
-See the [GitHub issue][offline].
+See {% ghi 573 %}.
 
 ## Search Documentation
 
@@ -121,18 +121,17 @@ to configure the cluster in a way that allows the one fast scan to be prioritize
 
 Checkout some examples in the [user guide][scans].
 
-[FATE]: {% dlink /administration/fate %}
+[FATE]: {% durl /administration/fate %}
 [new-bulk]: https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api
 [scripts]: https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html
-[summary]: {% dlink /development/summaries %}
+[summary]: {% durl /development/summaries %}
 [client]: {% jurl org.apache.accumulo.core.client.Accumulo %}
 [Key]: https://github.com/apache/accumulo/blob/master/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java
 [Mutation]: https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()
-[offline]: {% ghi 573 %}
-[manual]: {% dlink /getting-started/quickstart %}
+[manual]: {% durl /getting-started/quickstart %}
 [search]: https://accumulo.apache.org/search/
-[crypto]: {% dlink /security/on-disk-encryption %}
+[crypto]: {% durl /security/on-disk-encryption %}
 [rel]: https://accumulo.apache.org/release/accumulo-2.0.0/
 [zstd]: https://facebook.github.io/zstd/
-[z-config]: {% dlink /configuration/server-properties %}
-[scans]: {% dlink /administration/scan-executors %}
+[z-config]: {% durl /configuration/server-properties %}
+[scans]: {% durl /administration/scan-executors %}
