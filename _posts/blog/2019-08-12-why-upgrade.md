@@ -87,10 +87,18 @@ m.at().family("002").qualifier(new byte[] {0,1}).delete();
 
 More examples for [Key] and [Mutation].
 
-## Offline creation
+## Table creation options
 
-Tables can now be created with splits offline.  This frees up online resources to perform other critical operations.
-See {% ghi 573 %}.
+Tables can now be created with splits, which is much faster than creating a
+table and then adding splits.  Tables can also be created in an offline state
+now.  The new bulk import API supports offline tables.  This enables the
+following method of getting a lot of data into a new table very quickly.
+
+  * Create offline table with splits
+  * Bulk import into new offline table
+  * Bring table online
+
+See the javadoc for {% jlink org.apache.accumulo.core.client.admin.NewTableConfiguration %} and search for methods introduced in 2.0.0 for more information.
 
 ## Search Documentation
 
