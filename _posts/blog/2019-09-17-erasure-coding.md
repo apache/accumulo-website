@@ -170,8 +170,9 @@ attributed to missing data, and how much to simply having less computing power a
 
 ### Conclusion
 HDFS with erasure coding has the potential to double your available Accumulo storage, at the cost of a hit in
-random seek times, but a potential increase in sequential scan performance. We hope to see Accumulo natively 
-support erasure coding at some point in the future.
+random seek times, but a potential increase in sequential scan performance. We will be proposing some changes
+to Accumulo to make working with EC a bit easier. Our initial thoughts are collected in this 
+Accumulo dev list [post](https://lists.apache.org/thread.html/4ac5b0f664e15fa120e748892612f1e417b7dee3e1539669d179900c@%3Cdev.accumulo.apache.org%3E).
 
 [EC Myths]: https://www.slideshare.net/HadoopSummit/debunking-the-myths-of-hdfs-erasure-coding-performance
 [EC Introduction]: https://blog.cloudera.com/introduction-to-hdfs-erasure-coding-in-apache-hadoop/
