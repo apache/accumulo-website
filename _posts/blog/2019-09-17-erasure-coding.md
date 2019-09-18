@@ -123,7 +123,7 @@ effect on the write times than the choice of underlying encoding for the directo
 
 Of much more importance to Accumulo performance is read latency. A frequent use case for our group is to obtain a
 number of row IDs from an index and then use a BatchScanner to read those individual rows.
-In this use case, the time to access a single row is far more important that the raw I/O performance.  To test
+In this use case, the time to access a single row is far more important than the raw I/O performance.  To test
 Accumulo's performance with EC for this use case, we did a series of tests against a 10 billion row table,
 with each row consisting of 10 columns.  16 Spark executors each performed 10000 queries, where each query
 sought 10 random rows.  Thus 16 million individual rows were returned in batches of 10.  For each batch of
