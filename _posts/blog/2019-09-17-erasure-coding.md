@@ -22,48 +22,48 @@ introduced EC as a better way to achieve durability.  More info can be
 found [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html).
 EC behaves much like RAID 5 or 6...for *k* blocks of data, *m* blocks of
 parity data are generated, from which the original data can be recovered in the
-event of disk or node failures (erasures, in EC parlance).  A typical EC scheme to use is Reed-Solomon 6-3, where
-6 blocks of data produce 3 blocks of parity, an overhead of only 50%.  In addition
-to the factor of 2 increase in available disk space, RS-6-3 is also more fault
-tolerant...a loss of 3 data blocks can be tolerated, compared to triple replication
-where only two blocks can be lost.
+event of disk or node failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3, where
+6 data blocks produce 3 parity blocks, an overhead of only 50%.  In addition
+to doubling the available disk space, RS-6-3 is also more fault
+tolerant...a loss of 3 data blocks can be tolerated, where triple replication
+can only lose two blocks.
 
-More storage, better resiliency, so what's the catch?  One concern with using EC is
-the time spent calculating the parity blocks.  Unlike the default replication write
-path, where a client writes a block, and then the DataNodes take care of replicating
+More storage, better resiliency, so what's the catch?  One concern is
+the time spent calculating the parity blocks.  Unlike replication
+, where a client writes a block, and then the DataNodes replicate
 the data, an EC HDFS client is responsible for computing the parity and sending that
 to the DataNodes.  This increases the CPU and network load on the client.  The CPU
-hit can be mitigated through the use of the Intel ISA-L library, but only on CPUs
-that support the AVX or AVX2 instruction sets.  (See [EC Myths] and [EC Introduction]
+hit can be mitigated by using Intels ISA-L library, but only on CPUs
+that support AVX or AVX2 instructions.  (See [EC Myths] and [EC Introduction]
 for some interesting claims). In addition, unlike the serial replication I/O path,
-the EC I/O path is parallel providing greater throughput. In our testing, we've found that sequential writes to 
-an EC encoded directory can be as much as 3 times faster than to a directory with 
-replication, and reads are up to 2 times faster.
+the EC I/O path is parallel providing greater throughput. In our testing, sequential writes to 
+an EC directory were as much as 3 times faster than a replication directory 
+, and reads were up to 2 times faster.
 
-Another side effect of EC is the loss of data locality.  For performance reasons, EC
+Another side effect of EC is loss of data locality.  For performance reasons, EC
 data blocks are striped, so multiple DataNodes must be contacted to read a single
-block of data.  For large sequential reads this doesn't appear to be much of a
+block of data.  For large sequential reads this is not a
 problem, but it can be an issue for small random lookups.  For the latter case,
-we've found that using RS 6-3 with 64KB stripes can mitigate some of the random lookup pain
+using RS 6-3 with 64KB stripes mitigates some of the random lookup pain
 without compromising sequential read/write performance.
 
 #### Important Warning
 
 Before continuing, an important caveat;  the current implementation of EC on Hadoop supports neither hsync
 nor hflush.  Both of these operations are silent no-ops (EC [limitations]).  We discovered this the hard
-way when a power loss in our data center resulted in the corruption of our write-ahead logs, which were
-stored in an erasure coded directory.  If you plan to use EC with your Accumulo instance, be sure that
-at the very least your WAL directory is using replication.  It's probably a good idea to keep the
+way when a data center power loss resulted in write-ahead log corruption, which were
+stored in an EC directory.  To avoid this problem ensure all 
+WAL directories use replication.  It's probably a good idea to keep the
 accumulo namespace replicated as well, but we have no evidence to back up that assertion.  As with all
 things, don't test on production data.
 
 ### EC Performance
 
-To test the performance of EC, we created a series of clusters on AWS.  Our Accumulo stack consisted of
+To test EC performance, we created a series of clusters on AWS.  Our Accumulo stack consisted of
 Hadoop 3.1.1 built with the Intel ISA-L library enabled, Zookeeper 3.4.13, and Accumulo 1.9.3 configured
 to work with Hadoop 3 (we did our testing before the official release of Accumulo 2.0). The encoding
-policy is set on a per-directory basis using the [hdfs] command-line tool. To set the encoding policy
-for an Accumulo table, you must first find the table ID (for instance using the Accumulo shell's
+policy is set per-directory using the [hdfs] command-line tool. To set the encoding policy
+for an Accumulo table, first find the table ID (for instance using the Accumulo shell's
 "table -l" command), and then from the command line set the policy for the corresponding directory
 under /accumulo/tables.  Note that changing the policy on a directory will set the policy for
 child directories, but will not change any files contained within.  To change the policy on an existing
@@ -94,9 +94,9 @@ as we'll show later.
 Our read tests are not as dramatic as those in [EC Myths], but still looking good for EC.  Here we show the
 results for reading back the 1TB file created in the write test using 16 Spark executors.  In addition to
 the straight read tests, we also performed tests with 2 DataNodes disabled to simulate the performance hit
-in the event of failures which require data repair in the foreground.  Finally, we tested the read performance
-after a background rebuild of the filesystem.  We did this to see whether the foreground rebuild or
-simply the loss of 2 DataNodes was the major contributor to any performance degradation.  As can be seen,
+of failures which require data repair in the foreground.  Finally, we tested the read performance
+after a background rebuild of the filesystem.  We did this to see if the foreground rebuild or
+the loss of 2 DataNodes was the major contributor to any performance degradation.  As can be seen,
 EC read performance is close to 2X faster than replication, even in the face of failures.
 
 |Encoding|32 nodes<br>no failures|30 nodes<br>with failures|30 nodes<br>no failures|
@@ -130,8 +130,8 @@ with each row consisting of 10 columns.  16 Spark executors each performed 10000
 sought 10 random rows.  Thus 16 million individual rows were returned in batches of 10.  For each batch of
 10, the time in milliseconds was captured, and theses times were collected in a histogram of 50ms buckets, with
 a catch-all bucket for queries that took over 1 second.  For this test we reconfigured our cluster to make use
-of the newer c5n.4xlarge nodes which feature must faster networking speeds (15 Gbps sustained vs 5 Gbps for 
-c5.4xlarge). Because these faster nodes are in short supply, we ran with only 16 HDFS nodes (c5n.4xlarge), 
+of c5n.4xlarge nodes featuring must faster networking speeds (15 Gbps sustained vs 5 Gbps for 
+c5.4xlarge). Because these nodes are in short supply, we ran with only 16 HDFS nodes (c5n.4xlarge), 
 but still had 16 Spark nodes (also c5n.4xlarge).  Zookeeper and master nodes remained the same.
 
 In the table below, we show the min, max, and average times in milliseconds for each batch of 10 across
@@ -146,7 +146,7 @@ four different encoding policies.  The clear winner here is replication, and the
 |Replication|11|23|731|
 
 The above results also hold in the event of errors.  The next table shows the same test, but with 2 DataNodes
-disabled to simulate system failures that require foreground rebuilds.  Again, replication wins, and RS 10-4 1MB
+disabled to simulate failures that require foreground rebuilds.  Again, replication wins, and RS 10-4 1MB
 loses, but RS 6-3 64KB remains a viable option.
 
 |Encoding|Min|Avg|Max|
