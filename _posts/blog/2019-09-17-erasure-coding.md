@@ -4,7 +4,8 @@ author: Ed Seidl
 reviewers:
 ---
 
-HDFS by default uses triple replication for both performance and durability reasons.  Hadoop 3, 
+HDFS by default stores multiple copies of each file for both performance and durability reasons. 
+The number of copies is controlled via HDFS replication settings, and by default is set to 3. Hadoop 3, 
 introduced the use of erasure coding (EC), which improves durability while decreasing overhead.
 Since Accumulo 2.0 now supports Hadoop 3, it's time to take a look at whether using
 EC with Accumulo makes sense.
