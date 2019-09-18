@@ -6,7 +6,7 @@ reviewers:
 
 HDFS by default uses triple replication for both performance and durability reasons.  Hadoop 3, 
 introduced the use of erasure coding (EC), which improves durability while decreasing overhead.
-Since Accumulo 2.0 now directly supports Hadoop 3, it's time to take a look at whether using
+Since Accumulo 2.0 now supports Hadoop 3, it's time to take a look at whether using
 EC with Accumulo makes sense.
 
 * [EC Intro](#ec-intro)
