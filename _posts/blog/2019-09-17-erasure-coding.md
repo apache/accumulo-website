@@ -15,7 +15,7 @@ EC with Accumulo makes sense.
 
 ### EC Intro
 
-By default HDFS file systems achieve durability via block replication.  Usually
+By default HDFS achieves durability via block replication.  Usually
 the replication level is set to 3, resulting in a disk overhead of 200%. Hadoop 3 
 introduced EC as a better way to achieve durability.  More info can be
 found [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html).
