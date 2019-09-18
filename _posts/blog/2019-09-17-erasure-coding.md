@@ -79,7 +79,7 @@ for each of the directory encodings Reed-Solomon (RS) 6-3 with 64KB stripes, RS 
 RS 10-4 with 1MB stripes, and the default triple replication.  We also varied the number of concurrent
 Spark executors, performing tests with 16 executors that did not stress the cluster in any area, and with
 128 executors which exhausted our network bandwidth allotment of 5 Gbps. As can be seen, in the 16 executor
-environment, we saw greater than a 3X bump in bandwidth using RS 10-4 with 1MB stripes over triple replication.
+environment, we saw greater than a 3X bump in throughput using RS 10-4 with 1MB stripes over triple replication.
 At saturation, the speed up was still over 2X, which is in line with the results from [EC Myths]. Also of note,
 using RS 6-3 with 64KB stripes performed better than the same with 1MB stripes, which is a nice result for Accumulo, 
 as we'll show later.
@@ -160,11 +160,13 @@ The images below show a plots of the histograms.  The third plot was generated w
 all missing data had been repaired.  Again, this was done to see how much of the performance degradation could be
 attributed to missing data, and how much to simply having less computing power available.
 
-<img src='/images/blog/201909_ec/ec-latency-16.png' width="75%">
+<center>
+<img src='/images/blog/201909_ec/ec-latency-16.png' width="75%"><br><br>
 
-<img src='/images/blog/201909_ec/ec-latency-14e.png' width="75%">
+<img src='/images/blog/201909_ec/ec-latency-14e.png' width="75%"><br><br>
 
 <img src='/images/blog/201909_ec/ec-latency-14.png' width="75%">
+</center>
 
 ### Conclusion
 HDFS with erasure coding has the potential to double your available Accumulo storage, at the cost of a hit in
