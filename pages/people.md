@@ -106,6 +106,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
+| Mandar Inamdar      | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Matt Dailey         |                                                                   |                       |
 | Matthew Boehm       | [Novetta][NOVETTA]                                                | [ET][ET]              |
@@ -170,6 +171,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [JHUAPL]: http://www.jhuapl.edu
 [KOVERSE]: http://www.koverse.com
 [MASTERPEACE]: https://www.masterpeaceltd.com
+[MICROSOFT]: http://www.microsoft.com
 [MINERKASCH]: http://minerkasch.com
 [NOVETTA]: http://www.novetta.com
 [NSA]: http://www.nsa.gov
