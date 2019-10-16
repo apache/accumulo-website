@@ -25,7 +25,7 @@ All clients must first identify the Accumulo instance to which they will be comm
 
 ## <a id="Writing_Data"></a> Writing Data
 
-Data are written to Accumulo by creating Mutation objects that represent all the changes to the columns of a single row. The changes are made atomically in the TabletServer. Clients then add Mutations to a BatchWriter which submits them to the appropriate TabletServers. 
+Data is written to Accumulo by creating Mutation objects that represent all the changes to the columns of a single row. The changes are made atomically in the TabletServer. Clients then add Mutations to a BatchWriter which submits them to the appropriate TabletServers. 
 
 Mutations can be created thus: 
     
