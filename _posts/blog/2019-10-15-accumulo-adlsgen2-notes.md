@@ -1,5 +1,5 @@
 ---
-title: "Using ADLS Gen2 as a data store for Accumulo"
+title: "Using Azure Data Lake Gen2 storage as a data store for Accumulo"
 author: Karthick Narendran
 ---
 
@@ -19,7 +19,7 @@ automatically managed identity in [Azure AD](https://docs.microsoft.com/en-us/az
 and it avoids the need for credentials or other sensitive information from being stored in code 
 or configs/JCEKS. Plus, it comes free with Azure AD.  
 
-At least the following settings should be added to Hadoop's `core-site.xml` file on each node in the cluster. 
+At least the following should be added to Hadoop's `core-site.xml` on each node. 
 
 ```xml
 <property>
