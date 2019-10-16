@@ -76,8 +76,10 @@ CLASSPATH="${CLASSPATH}:${HADOOP_HOME}/share/hadoop/common/lib/jackson-mapper-as
 export CLASSPATH
 ```
 
-Set the following in `accumulo.properties` and then run `accumulo init`, but don't start Accumulo.
+Tried adding `-Dorg.wildfly.openssl.path` to `JAVA_OPTS` in `accumulo-env.sh`, but it 
+did not appear to work, this needs further investigation.
 
+Set the following in `accumulo.properties` and then run `accumulo init`, but don't start Accumulo.
 
 ```ini
 instance.volumes=hdfs://<name node>/accumulo
@@ -91,7 +93,6 @@ instance.volumes=hdfs://<namenode>/accumulo,abfss://<file_system>@<storage_accou
 general.volume.chooser=org.apache.accumulo.server.fs.PreferredVolumeChooser
 general.custom.volume.preferred.default=abfss://<file_system>@<storage_account_name>.dfs.core.windows.net/accumulo
 general.custom.volume.preferred.logger=hdfs://<namenode>/accumulo
-
 ```
 
 Run `accumulo init --add-volumes` to initialize the Azure DLS Gen2 volume.  Doing this
