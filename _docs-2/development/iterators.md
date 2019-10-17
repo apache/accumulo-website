@@ -16,24 +16,13 @@ merge multiple Iterators into a single view. In this sense, a collection of Iter
 a tree-structure than a list, but there is always a sense of a flow of Key-Value pairs through some Iterators. Iterators
 are not designed to act as triggers nor are they designed to operate outside of the purview of a single table.
 
-Understanding how TabletServers invoke the methods on a [SortedKeyValueIterator] can be obtuse as the actual code is
-buried within the implementation of the TabletServer; however, it is generally unnecessary to have a strong
-understanding of this as the interface provides clear definitions about what each method should take. This
-chapter aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
+This guide aims to provide a more detailed description of how Iterators are invoked, some best practices and some common
 pitfalls.
 
 ## Instantiation
 
 To invoke an Accumulo Iterator inside of the TabletServer, the Iterator class must be on the classpath of every
-TabletServer. For production environments, it is common to place a JAR file which contains the Iterator in
-`lib/`.  In development environments, it is convenient to instead place the JAR file in `lib/ext/` as JAR files
-in this directory are dynamically reloaded by the TabletServers alleviating the need to restart Accumulo while
-testing an Iterator. Advanced classloader features which enable other types of filesystems and per-table classpath
-configurations (as opposed to process-wide classpaths). These features are not covered here, but elsewhere in the user
-manual.
-
-Accumulo references the Iterator class by name and uses Java reflection to instantiate the Iterator. This means that
-Iterators must have a public no-args constructor.
+TabletServer. It is common to place a JAR file which contains the Iterator in `lib/`. Accumulo references the Iterator class by name and uses Java reflection to instantiate the Iterator. This means that Iterators must have a public no-args constructor.
 
 ## Interface
 
@@ -76,8 +65,7 @@ optimize itself.
 
 ### seek
 
-The `seek` method is likely the most confusing method on the Iterator interface. The purpose of this method is to
-advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
+The purpose of the seek method is to advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
 the implementation of this method returns some additional processing is performed which may further advance the current
 position past the `startKey` of the [Range]. This, however, is dependent on the functionality the iterator provides. For
 example, a filtering iterator would consume a number Key-Value pairs which do not meets its criteria before `seek`
