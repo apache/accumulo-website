@@ -14,7 +14,7 @@ permalink: /people/
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 | alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
-| billie        | Billie Rinaldi                                    | [Hortonworks][HORTONWORKS]             | [ET][ET] |
+| billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
 | brianloss     | Brian Loss                                        | [Praxis Engineering][PRAXIS]           | [ET][ET] |
 | busbey        | Sean Busbey                                       | [Cloudera][CLOUDERA]                   | [CT][CT] |
