@@ -5,13 +5,12 @@ title: Batch Scanner Code
 Below is a solution to the exercise.
 
 ```java
-static void exercise(MiniAccumuloCluster mac) throws Exception {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
+static void exercise(AccumuloClient client) throws Exception {
+    // create a table called "GothamPD".
+    client.tableOperations().create("GothamPD");
 
     // Generate 10,000 rows of henchman data
-    try(BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try(BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
         for(int i = 0; i < 10_000; i++) {
             Mutation m = new Mutation(String.format("id%04d", i));
             m.put("villain", "alias", "henchman" + i);
@@ -22,7 +21,7 @@ static void exercise(MiniAccumuloCluster mac) throws Exception {
     }
 
     // 1. Create a BatchScanner with 5 query threads
-    try(BatchScanner batchScanner = conn.createBatchScanner("GothamPD", Authorizations.EMPTY, 5)) {
+    try(BatchScanner batchScanner = client.createBatchScanner("GothamPD", Authorizations.EMPTY, 5)) {
         // 2. Create a collection of 2 sample ranges and set it to the batchScanner
         List ranges = new ArrayList<Range>();
         ranges.add(new Range("id1000", "id1999"));

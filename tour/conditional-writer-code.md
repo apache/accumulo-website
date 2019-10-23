@@ -5,8 +5,8 @@ title: Conditional Writer Code
 Below is a solution to the exercise.
 
 ```java
-  static boolean setAddress(Connector conn, String id, String expectedAddr, String newAddr) {
-    try (ConditionalWriter writer = conn.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
+  static boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
+    try (ConditionalWriter writer = client.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
       Condition condition = new Condition("location", "home");
       if(expectedAddr != null) {
         condition.setValue(expectedAddr);

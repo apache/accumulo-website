@@ -18,10 +18,6 @@ When on a tour page, the left and right keys on the keyboard can be used to navi
 or suggestions while going through the tour, please send an email to our [mailing list][mlist]
 or [create an issue][issue].
 
-Tour excercises are run using MiniAccumulo which does not work with Java 11.
-This problem will be fixed when 1.9.3 and 2.0.0 are released.  See {% ghi 942
-%}.
-
 {% for p in tour_pages %}
   {% assign doc_url = p | prepend: '/tour/' | append: '/' %}
   {% assign link_to_page = site.pages | where:'url',doc_url | first %}

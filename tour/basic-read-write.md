@@ -6,10 +6,9 @@ data in tables and rows.  Each row in an Accumulo table can hold many key/value 
 write and read from a table.
 
 ```java
-static void exercise(MiniAccumuloCluster mac) {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
+static void exercise(AccumuloClient client) throws Exception {
+    // create a table called "GothamPD".
+    client.tableOperations().create("GothamPD");
 
     // Create a Mutation object to hold all changes to a row in a table.  Each row has a unique row ID.
     Mutation mutation = new Mutation("id0001");
@@ -20,12 +19,12 @@ static void exercise(MiniAccumuloCluster mac) {
     mutation.put("hero","wearsCape?", "true");
 
     // Create a BatchWriter to the GothamPD table and add your mutation to it. Try w/ resources will close for us.
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
         writer.addMutation(mutation);
     }
 
     // Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.
-    try (Scanner scan = conn.createScanner("GothamPD", Authorizations.EMPTY)) {
+    try (Scanner scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
         System.out.println("Gotham Police Department Persons of Interest:");
         // A Scanner is an extension of java.lang.Iterable so behaves just like one.
         for (Map.Entry<Key, Value> entry : scan) {
@@ -35,11 +34,7 @@ static void exercise(MiniAccumuloCluster mac) {
 }
 ```
 
-Copy this code into your `exercise` method and run it using the command below.
-
-```commandline
-mvn -q clean compile exec:java
-``` 
+Copy this code into your `exercise` method then compile and run.
 
 Good job! That is all it takes to write and read from Accumulo.
 

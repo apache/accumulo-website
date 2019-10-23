@@ -13,20 +13,22 @@ cd tour
 ```commandline
 vim ./src/main/java/tour/Main.java
 ```
-Notice the main method creates a MiniAccumuloCluster with a root password of "tourguide".  MiniAccumuloCluster is a mini
+Notice the main method creates a [MiniAccumuloCluster] with a root password of "tourpass".  [MiniAccumuloCluster] is a mini
 version of Accumulo that runs on your local filesystem.  It should only be used for development purposes but will work
-great here on the tour.  Files and logs used by MiniAccumuloCluster can be seen in the `target/mac######` directory. 
+great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be seen in the `target/mac######` directory.
 
 3. Modify the _exercise_ method to print a hello message. You will put your code in this method for each lesson.
     ```java
-    static void exercise(MiniAccumuloCluster mac) {
+    static void exercise(AccumuloClient client) {
         // start writing your code here
         System.out.println("Hello world");
     }
     ```
-4. Build and run to make sure everything is cool.
+4. Use the following Maven command to build the tour and the provided bash script to run it.
 ```commandline
-mvn -q clean compile exec:java
+mvn clean package
+./run
 ```
 
 [Main.java]: https://github.com/apache/accumulo-website/blob/tour/src/main/java/tour/Main.java
+[MiniAccumuloCluster]: {% jurl org.apache.accumulo.minicluster.MiniAccumuloCluster %}
