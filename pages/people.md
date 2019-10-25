@@ -73,6 +73,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Dennis Patrone      | [The Johns Hopkins University Applied Physics Laboratory][JHUAPL] | [ET][ET]              |
 | Dima Spivak         | [Cloudera][CLOUDERA]                                              |                       |
 | Ed Kohlwey          | [Booz Allen Hamilton][BOOZ]                                       |                       |
+| Ed Seidl            | [Lawrence Livermore National Laboratory][LLNL]                    | [PT][PT]              |
 | Edward Yoon         |                                                                   |                       |
 | Elina Wise          | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Eugene Cheipesh     |                                                                   |                       |
@@ -170,6 +171,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [IBM]: http://www.ibm.com
 [JHUAPL]: http://www.jhuapl.edu
 [KOVERSE]: http://www.koverse.com
+[LLNL]: https://www.llnl.gov
 [MASTERPEACE]: https://www.masterpeaceltd.com
 [MICROSOFT]: http://www.microsoft.com
 [MINERKASCH]: http://minerkasch.com
