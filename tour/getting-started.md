@@ -24,10 +24,9 @@ great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be see
         System.out.println("Hello world");
     }
     ```
-4. Use the following Maven command to build the tour and the provided bash script to run it.
+4. Use the following Maven command to build and run the tour.
 ```commandline
-mvn clean package
-./run
+mvn clean compile exec:exec
 ```
 
 [Main.java]: https://github.com/apache/accumulo-website/blob/tour/src/main/java/tour/Main.java

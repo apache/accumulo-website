@@ -4,6 +4,8 @@ title: Authorizations Code
 
 Below is a solution for the exercise.
 
+Make sure to pass the MiniAccumuloCluster to the ```exercise``` method in order to create a second client.
+
 ```java
 static void exercise(MiniAccumuloCluster mac, AccumuloClient client) throws Exception {
     // create a table called "GothamPD".
@@ -42,14 +44,14 @@ static void exercise(MiniAccumuloCluster mac, AccumuloClient client) throws Exce
     }
 
     // Read and print all rows of the commissioner can see. Pass Scanner proper authorizations
-    AccumuloClient commishConn = mac.createAccumuloClient("commissioner", new PasswordToken("gordonrocks"));
-    try (Scanner scan = commishConn.createScanner("GothamPD", auths)) {
+    AccumuloClient commishClient = mac.createAccumuloClient("commissioner", new PasswordToken("gordonrocks"));
+    try (Scanner scan = commishClient.createScanner("GothamPD", auths)) {
         System.out.println("Gotham Police Department Persons of Interest:");
         for (Map.Entry<Key, Value> entry : scan) {
             System.out.printf("Key : %-60s  Value : %s\n", entry.getKey(), entry.getValue());
         }
     }
-    commishConn.close();
+    commishClient.close();
 }
 ```
 
