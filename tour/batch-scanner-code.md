@@ -10,7 +10,7 @@ static void exercise(AccumuloClient client) throws Exception {
     client.tableOperations().create("GothamPD");
 
     // Generate 10,000 rows of henchman data
-    try(BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try(BatchWriter writer = client.createBatchWriter("GothamPD")) {
         for(int i = 0; i < 10_000; i++) {
             Mutation m = new Mutation(String.format("id%04d", i));
             m.put("villain", "alias", "henchman" + i);

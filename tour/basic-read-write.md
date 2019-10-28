@@ -19,7 +19,7 @@ static void exercise(AccumuloClient client) throws Exception {
     mutation.put("hero","wearsCape?", "true");
 
     // Create a BatchWriter to the GothamPD table and add your mutation to it. Try w/ resources will close for us.
-    try (BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
         writer.addMutation(mutation);
     }
 
