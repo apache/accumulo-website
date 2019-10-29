@@ -56,6 +56,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
+| Arvind Shyamsundar  | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Benjamin Fach       |                                                                   |                       |
