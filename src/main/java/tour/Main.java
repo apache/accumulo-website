@@ -47,8 +47,8 @@ public class Main {
 
         mac.start();
 
-	try (AccumuloClient client = mac.createAccumuloClient("root", new PasswordToken("tourpass"))) {
-            exercise(client);
+        try (AccumuloClient client = mac.createAccumuloClient("root", new PasswordToken("tourpass"))) {
+                exercise(client);
         }
         mac.stop();
     }
