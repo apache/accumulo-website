@@ -38,9 +38,15 @@ the Mutation API and modify the code so the `colVis` variable created above secu
 * Replace the `Authorizations.EMPTY` in the Scanner with the `auths` variable created above and run it again.
 * This should result in an error since the root user doesn't have the authorizations we tried to pass to the Scanner.
 
-4. Get a client for the "commissioner" and from it create a Scanner with the authorizations needed to view the secret identities.
+4. Use the following to create a client for the "commissioner" using the [Accumulo] entry point.
+```java
+try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties())
+    .as("commissioner", "gordonrocks").build();
+```
 
-5. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
+5. Using the commissioner client, create a Scanner with the authorizations needed to view the secret identities.
+
+6. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
 ```commandline
 Key : id0001 hero:name [secretId] 1511900180231 false         Value : Bruce Wayne
 Key : id0002 hero:name [secretId] 1511900180231 false         Value : Dick Grayson
@@ -49,3 +55,4 @@ Key : id0002 hero:name [secretId] 1511900180231 false         Value : Dick Grays
 [Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}
 [ColumnVisibility]: {% jurl org.apache.accumulo.core.security.ColumnVisibility %}
 [Mutation]: {% jurl org.apache.accumulo.core.data.Mutation %}
+[Accumulo]: {% jurl org.apache.accumulo.core.client.Accumulo %}
