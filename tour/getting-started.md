@@ -26,7 +26,7 @@ great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be see
     ```
 4. Use the following Maven command to build and run the tour.
 ```commandline
-mvn clean compile exec:exec
+mvn -q clean compile exec:exec
 ```
 
 [Main.java]: https://github.com/apache/accumulo-website/blob/tour/src/main/java/tour/Main.java

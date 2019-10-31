@@ -50,7 +50,7 @@ changed since it was read.
   }
 
   static boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
-    try (BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
       Mutation mutation = new Mutation(id);
       mutation.put("location", "home", newAddr);
       writer.addMutation(mutation);

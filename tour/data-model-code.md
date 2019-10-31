@@ -5,7 +5,7 @@ title: Data Model Code
 Below is the solution for the exercise.
 
 ```java
-static void exercise(AccumuloClient client) {
+static void exercise(AccumuloClient client) throws Exception {
     // create a table called "GothamPD".
     client.tableOperations().create("GothamPD");
 
@@ -29,7 +29,7 @@ static void exercise(AccumuloClient client) {
 
     // Create a BatchWriter to the GothamPD table and add your mutations to it.
     // Once the BatchWriter is closed by the try w/ resources, data will be available to scans.
-    try (BatchWriter writer = client.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
         writer.addMutation(mutation1);
         writer.addMutation(mutation2);
         writer.addMutation(mutation3);
