@@ -6,7 +6,7 @@ go through the tour edit [Main.java] and use the following maven command to run 
 will execute Main.java with all of the correct dependencies on the classpath.
 
 ```commandline
-mvn -q clean compile exec:java
+mvn -q clean compile exec:exec
 ```
 
 The above command will compile the project and run a MiniAccumuloCluster.
@@ -18,10 +18,7 @@ development purposes. Files and logs used by MiniAccumuloCluster can be seen in 
 target/mac########
 ```
 
-The version of Accumulo is defined in pom.xml and the tour should work with the Accumulo versions:
-* 1.8.*
-* 1.9.*
-* 2.0.*
+This tour is designed for Accumulo version 2.*
 
 Running _mvn clean_ will remove any files created by previous runs.
 

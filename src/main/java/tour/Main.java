@@ -3,12 +3,16 @@ package tour;
 // Classes you will use along the tour
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Function;
+
+import org.apache.accumulo.core.client.Accumulo;
+import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.client.BatchWriter;
 import org.apache.accumulo.core.client.BatchWriterConfig;
 import org.apache.accumulo.core.client.Connector;
@@ -42,14 +46,18 @@ public class Main {
         System.out.println("Running the Accumulo tour. Having fun yet?");
 
         Path tempDir = Files.createTempDirectory(Paths.get("target"), "mac");
-        MiniAccumuloCluster mac = new MiniAccumuloCluster(tempDir.toFile(), "tourguide");
+        MiniAccumuloCluster mac = new MiniAccumuloCluster(tempDir.toFile(), "tourpass");
+        Properties properties = mac.getClientProperties();
 
         mac.start();
-        exercise(mac);
+
+        try (AccumuloClient client = Accumulo.newClient().from(properties).build()) {
+            exercise(client);
+        }
         mac.stop();
     }
 
-    static void exercise(MiniAccumuloCluster mac) throws Exception{
+    static void exercise(AccumuloClient client) throws Exception{
         // start writing your code here
 
     }
