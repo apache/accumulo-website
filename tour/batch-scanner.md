@@ -6,13 +6,12 @@ will retrieve multiple Ranges of data using multiple threads.  A BatchScanner ca
 
 For this exercise, we need to generate a bunch of data to test BatchScanner.  Copy the code below into your `exercise` method.
 ```java
-static void exercise(MiniAccumuloCluster mac) throws Exception {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
+static void exercise(AccumuloClient client) throws Exception {
+    // create a table called "GothamPD".
+    client.tableOperations().create("GothamPD");
 
     // Generate 10,000 rows of henchman data, each with a different number yearsOfService
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
         for (int i = 0; i < 10_000; i++) {
             Mutation m = new Mutation(String.format("id%04d", i));
             m.put("villain", "alias", "henchman" + i);

@@ -11,16 +11,12 @@ skiph1fortitle: true
 
 Welcome to the Accumulo tour! The tour offers a hands on introduction to the [Accumulo Java API](/api), broken down into
 independent steps and exercises. The exercises give you a chance to apply what you have learned by writing code on your
-own. The answers to an exercise are typically provided in the next step.  The tour starts with a 
-[{{ first_page.title }}]({{ first_url }}) page that will help you get set up.
+own. The answers to an exercise are typically provided in the next step.  The tour begins at the
+[{{ first_page.title }}]({{ first_url }}) page.
 
 When on a tour page, the left and right keys on the keyboard can be used to navigate. If you have any questions
 or suggestions while going through the tour, please send an email to our [mailing list][mlist]
 or [create an issue][issue].
-
-Tour excercises are run using MiniAccumulo which does not work with Java 11.
-This problem will be fixed when 1.9.3 and 2.0.0 are released.  See {% ghi 942
-%}.
 
 {% for p in tour_pages %}
   {% assign doc_url = p | prepend: '/tour/' | append: '/' %}

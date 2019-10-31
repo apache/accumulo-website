@@ -5,10 +5,9 @@ title: Data Model Code
 Below is the solution for the exercise.
 
 ```java
-static void exercise(MiniAccumuloCluster mac) {
-    // Connect to Mini Accumulo as the root user and create a table called "GothamPD".
-    Connector conn = mac.getConnector("root", "tourguide");
-    conn.tableOperations().create("GothamPD");
+static void exercise(AccumuloClient client) throws Exception {
+    // create a table called "GothamPD".
+    client.tableOperations().create("GothamPD");
 
     // Create a row for Batman
     Mutation mutation1 = new Mutation("id0001");
@@ -30,14 +29,14 @@ static void exercise(MiniAccumuloCluster mac) {
 
     // Create a BatchWriter to the GothamPD table and add your mutations to it.
     // Once the BatchWriter is closed by the try w/ resources, data will be available to scans.
-    try (BatchWriter writer = conn.createBatchWriter("GothamPD", new BatchWriterConfig())) {
+    try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
         writer.addMutation(mutation1);
         writer.addMutation(mutation2);
         writer.addMutation(mutation3);
     }
 
     // Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.
-    try (Scanner scan = conn.createScanner("GothamPD", Authorizations.EMPTY)) {
+    try (Scanner scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
         System.out.println("Gotham Police Department Persons of Interest:");
         // A Scanner is an extension of java.lang.Iterable so behaves just like one.
         for (Map.Entry<Key, Value> entry : scan) {
