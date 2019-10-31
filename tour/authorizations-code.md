@@ -41,8 +41,8 @@ static void exercise(AccumuloClient client) throws Exception {
         writer.addMutation(mutation3);
     }
 
-    // Create a second client for the commissioner to read and print all rows of the
-    // commissioner can see. Make sure to pass Scanner the proper authorizations
+    // Create a second client for the commissioner. Then print all the rows visibile to the
+    // commissioner. Make sure to pass the proper authorizations to the Scanner
     try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties())
             .as("commissioner", "gordonrocks").build();
         Scanner scan = commishClient.createScanner("GothamPD", auths)) {
