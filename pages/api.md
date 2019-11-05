@@ -41,5 +41,8 @@ for public API were relocated, and also altered to include the new MapReduce mod
 import\s+org\.apache\.accumulo\.(?!(core\.(client|data|security)|minicluster|hadoop)\.).*
 ```
 
+See the [blog post][post] about using the checkstyle plugin for more explicit non-API detection.
+
 [semver]: http://semver.org/spec/v2.0.0
 [RegexpSingleline]: http://checkstyle.sourceforge.net/config_regexp.html
+[post]: {{ site.baseurl }}/blog/2019/11/04/checkstyle-import-control.html
