@@ -4,8 +4,8 @@ title: "Checking API use"
 
 Accumulo follows [SemVer] across versions with the declaration of a public API.  Code not in the public API should be
 considered unstable, at risk of changing between versions.  The packages included in the public API are [listed on the website][api]
-but may not always be considered when developing using Accumulo code.  This blog post explains how to setup a Maven project
-to automatically detect when Accumulo 2.0 code used in the project is outside of the public API.
+but may not be considered when an Accumulo user writes code.  This blog post explains how to make Maven
+automatically detect usage of Accumulo 2.0 code outside the public API.
 
 ## Checkstyle Plugin
 
