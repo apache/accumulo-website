@@ -3,9 +3,11 @@ title: "Checking API use"
 ---
 
 Accumulo follows [SemVer] across versions with the declaration of a public API.  Code not in the public API should be
-considered unstable, at risk of changing between versions.  The packages included in the public API are [listed on the website][api]
+considered unstable, at risk of changing between versions.  The public API packages are [listed on the website][api]
 but may not be considered when an Accumulo user writes code.  This blog post explains how to make Maven
-automatically detect usage of Accumulo 2.0 code outside the public API.
+automatically detect usage of Accumulo code outside the public API.
+
+The techniques described in this blog post only work for Accumulo 2.0 and later.  Do not use with 1.X versions.
 
 ## Checkstyle Plugin
 
@@ -20,13 +22,6 @@ First add the checkstyle Maven plugin to your pom.
     <configuration>
       <configLocation>checkstyle.xml</configLocation>
     </configuration>
-    <dependencies>
-      <dependency>
-        <groupId>com.puppycrawl.tools</groupId>
-        <artifactId>checkstyle</artifactId>
-        <version>8.23</version>
-      </dependency>
-    </dependencies>
     <executions>
       <execution>
         <id>check-style</id>
@@ -61,16 +56,17 @@ This file sets up the ImportControl module.
 
 ## Import Control Configuration
 
-Create the second file specified above, ```import-control.xml``` and copy the configuration below:
+Create the second file specified above, ```import-control.xml``` and copy the configuration below.  Make sure to replace
+"<insert-your-package-name>" with the package name of your project.
 ```xml
 <!DOCTYPE import-control PUBLIC
     "-//Checkstyle//DTD ImportControl Configuration 1.4//EN"
     "https://checkstyle.org/dtds/import_control_1_4.dtd">
 
 <!-- This checkstyle rule is configured to ensure only use of Accumulo API -->
-<import-control pkg="org.apache.accumulo.testing" strategyOnMismatch="allowed">
+<import-control pkg="<insert-your-package-name>" strategyOnMismatch="allowed">
     <!-- allow this package -->
-    <allow pkg="org.apache.accumulo.testing"/>
+    <allow pkg="<insert-your-package-name>"/>
     <!-- API packages -->
     <allow pkg="org.apache.accumulo.core.client"/>
     <allow pkg="org.apache.accumulo.core.data"/>
@@ -78,9 +74,6 @@ Create the second file specified above, ```import-control.xml``` and copy the co
     <allow pkg="org.apache.accumulo.core.iterators"/>
     <allow pkg="org.apache.accumulo.minicluster"/>
     <allow pkg="org.apache.accumulo.hadoop.mapreduce"/>
-
-    <!-- SPI package -->
-    <allow pkg="org.apache.accumulo.core.spi"/>
 
     <!-- disallow everything else coming from accumulo -->
     <disallow pkg="org.apache.accumulo"/>
