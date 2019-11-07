@@ -57,16 +57,14 @@ This file sets up the ImportControl module.
 ## Import Control Configuration
 
 Create the second file specified above, ```import-control.xml``` and copy the configuration below.  Make sure to replace
-"<insert-your-package-name>" with the package name of your project.
+"insert-your-package-name" with the package name of your project.
 ```xml
 <!DOCTYPE import-control PUBLIC
     "-//Checkstyle//DTD ImportControl Configuration 1.4//EN"
     "https://checkstyle.org/dtds/import_control_1_4.dtd">
 
 <!-- This checkstyle rule is configured to ensure only use of Accumulo API -->
-<import-control pkg="<insert-your-package-name>" strategyOnMismatch="allowed">
-    <!-- allow this package -->
-    <allow pkg="<insert-your-package-name>"/>
+<import-control pkg="insert-your-package-name" strategyOnMismatch="allowed">
     <!-- API packages -->
     <allow pkg="org.apache.accumulo.core.client"/>
     <allow pkg="org.apache.accumulo.core.data"/>
@@ -80,6 +78,15 @@ Create the second file specified above, ```import-control.xml``` and copy the co
 </import-control>
 ```
 This file configures the ImportControl module to only allow packages that are declared public API.
+
+## Hold the line
+
+Adding this to an existing project may expose usage of non public Accumulo API's. It may take more time than is available
+to fix those at first, but do not let this discourage adding this plugin. One possible way to proceed is to allow the
+currently used non-public APIs in a commented section of import-control.xml noting these are temporarily allowed until
+they can be removed. This strategy prevents new usages of non-public APIs while allowing time to work on fixing the current
+ usages of non public APIs.  Also, if you don't want your project failing to build because of this, you can add ```<failOnViolation>false</failOnViolation>```
+to the maven-checkstyle-plugin configuration.
 
 [SemVer]:  https://semver.org/
 [api]: {{ site.baseurl }}/api/
