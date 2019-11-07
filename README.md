@@ -6,7 +6,7 @@ go through the tour edit [Main.java] and use the following maven command to run 
 will execute Main.java with all of the correct dependencies on the classpath.
 
 ```commandline
-mvn -q clean compile exec:exec
+mvn -q clean verify exec:exec
 ```
 
 The above command will compile the project and run a MiniAccumuloCluster.
