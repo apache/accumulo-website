@@ -19,15 +19,15 @@ First add the checkstyle Maven plugin to your pom.
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-checkstyle-plugin</artifactId>
     <version>3.1.0</version>
-    <configuration>
-      <configLocation>checkstyle.xml</configLocation>
-    </configuration>
     <executions>
       <execution>
         <id>check-style</id>
         <goals>
           <goal>check</goal>
         </goals>
+        <configuration>
+          <configLocation>checkstyle.xml</configLocation>
+        </configuration>
       </execution>
     </executions>
   </plugin>
