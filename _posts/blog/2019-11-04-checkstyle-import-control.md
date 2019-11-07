@@ -15,7 +15,7 @@ First add the checkstyle Maven plugin to your pom.
 
 ```xml
 <plugin>
-    <!-- This was added to ensure project only uses public API -->
+    <!-- This was added to ensure project only uses Accumulo's public API -->
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-checkstyle-plugin</artifactId>
     <version>3.1.0</version>
