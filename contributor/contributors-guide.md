@@ -19,17 +19,6 @@ Eventually, JIRA will be transitioned to a read-only state for reference.  For
 finding issues to work, there may still be 
 [open issues labeled for newbies][newbie-issues] in JIRA.
 
-## GitHub Labels
-
-Labels, such as `bug`, `enhancement`, and `duplicate`, are used to
-descriptively organize issues and pull requests. Issues labeled with `blocker`
-indicate that the developers have determined that the issue must be fixed prior
-to a release (to be used in conjunction with a version-specific project board;
-see the next section for information on project boards).
-
-Currently, only Accumulo committers can set labels.  If you think a label should
-be set, comment on the issue and someone will help.
-
 ## GitHub Project Boards (Projects)
 
 Project boards (also "projects") are used to track the status of issues and
@@ -57,6 +46,34 @@ The docs below are for committers but may be of interest to contributors as well
 - [Verifying a Release][verifying]
 - [Testing a Release][testing]
 
+## Code Editors
+
+Feel free to use any editor when contributing Accumulo. If you are looking for a recommendation, many Accumulo
+developers use [IntelliJ] or [Eclipse]. Below are some basic instructions to help you get started.
+
+### IntelliJ
+
+1. Download and install [IntelliJ]
+1. Clone the Accumulo repository that you want to work on.
+   ```shell
+   git clone https://github.com/apache/accumulo.git
+   ```
+1. [Import][intellij-import] the repository as a Maven project into IntelliJ
+1. (Optional) Download and import `Eclipse-Accumulo-Codestyle.xml` from Accumulo's [contrib][accumulo-contrib] directory
+  * Import via `File` > `Settings` > `Code Style` and clicking on cog wheel
+
+### Eclipse
+
+1. Download and install [Eclipse].
+1. Clone the Accumulo repository that you want to work on.
+   ```shell
+   git clone https://github.com/apache/accumulo.git
+   ```
+1. [Import][eclipse-import] the repository as a Maven project into Eclipse
+1. (Optional) Download and import Eclipse formatting and style guides from Accumulo's [contrib][accumulo-contrib] directory
+  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step.
+  * Import Template: `Preferences` > `Java` > `Code Style` > `Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
+
 ## Project Governance
 
 For details about governance policies for the Accumulo project view the following links.
@@ -67,18 +84,19 @@ For details about governance policies for the Accumulo project view the followin
 - [Voting][voting]
 
 [How to Contribute]: /how-to-contribute/
-[manual]: {{ site.docs_baseurl }}
-[get-involved]: {{ site.baseurl }}/get_involved
-[mirror]: https://github.com/apache/accumulo
-[repo]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=summary
-[website-repo]: https://github.com/apache/accumulo-website
-[website-readme]: https://github.com/apache/accumulo-website/blob/master/README.md
+[newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
+[JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
 [building]: {{ site.baseurl }}/contributor/building
 [advanced]: {{ site.baseurl }}/contributor/advanced-contributor
 [release]: {{ site.baseurl }}/contributor/release-management
 [making]: {{ site.baseurl }}/contributor/making-release
 [verifying]: /contributor/verifying-release
 [testing]: /contributor/testing-release
+[Eclipse]: https://www.eclipse.org/
+[eclipse-import]: https://stackoverflow.com/questions/2061094/importing-maven-project-into-eclipse
+[Intellij]: https://www.jetbrains.com/idea/
+[intellij-import]: https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start
+[accumulo-contrib]: https://github.com/apache/accumulo/tree/master/contrib
 [bylaws]: {{ site.baseurl }}/contributor/bylaws
 [consensus]: {{ site.baseurl }}/contributor/consensusBuilding
 [lazy]: {{ site.baseurl }}/contributor/lazyConsensus

@@ -7,41 +7,29 @@ redirect_from: /contributor/
 Contributions are welcome to all Apache Accumulo repositories. While most contributions are code,
 there are other ways to contribute to Accumulo:
 
-* answer questions on [mailing lists](/contact-us/#mailing-lists)
+* communicate on one of the [mailing lists](/contact-us/#mailing-lists)
 * review [pull requests](https://github.com/apache/accumulo/pulls)
 * verify and test new [releases](/release/)
 * update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
 
-Developers interested in making code changes for the first time should start with an issue labeled [good first issue][good-first-issue].
+First time developers should start with an issue labeled [good first issue][good-first-issue].
 
-Contributions are reviewed (via GitHub pull requests) by the community before being merged by a committer.
-This page provides basic instructions for contributing to Accumulo.  If you are looking for more information, check out the more comprehensive [contributor guide](/contributors-guide/).
-Any questions don't hesitate to [contact us][contact].
+Any questions/ideas don't hesitate to [contact us][contact].
 
-## GitHub Issues
+## Accumulo Repositories
 
-Accumulo uses GitHub issues to track bugs and features.  Each repository listed below
-has its own issues.  GitHub pull requests are issues, so creating an
-issue before a pull request is optional. If unsure whether to start with an
-issue or pull request, then create an issue.  Developers new to the project
-can comment on any issue if they want to work on it.
+| Repository         | Links                          | Description
+| -------------------| ------------------------------ | -----------
+| [Accumulo][a]      | [Contribute][ac] [Issues][ai]  | Core Project
+| [Website][w]       | [Contribute][wc] [Issues][wi]  | Source for this website
+| [Examples][e]      | [Contribute][ec] [Issues][ei]  | Example code
+| [Testing][t]       | [Contribute][tc] [Issues][ti]  | Test suites such as continuous ingest and random walk
+| [Docker][d]        | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
+| [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data
+| [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages
+| [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo
 
-## Repositories
-
-Contributions can be made to the following repositories. While the general contribution workflow is
-described below, repositories have special instructions in their `CONTRIBUTING.md` file which can be
-viewed by clicking on `contribute` in the Links column below.
-
-| Repository                      | Links                         | Description
-| ------------------------------- | ----------------------------- | -----------
-| [Accumulo][a]                   | [Contribute][ac] [Issues][ai]  | Core Project
-| [Accumulo Website][w]           | [Contribute][wc] [Issues][wi]  | Source for this website
-| [Accumulo Examples][e]          | [Contribute][ec] [Issues][ei]  | Accumulo example code
-| [Accumulo Testing][t]           | [Contribute][tc] [Issues][ti]  | Accumulo test suites such as continuous ingest and random walk
-| [Accumulo Docker][d]            | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
-| [Accumulo Wikisearch][s]        | [Contribute][sc] [Issues][si]  | Accumulo example application that indexes and queries Wikipedia data
-
-## Contribution workflow
+## Example Contribution workflow
 
 1. Create a [GitHub account][github-join] for issues and pull requests.
 1. Find an [issue][good-first-issue] to work on or optionally create one that describes the work that you want to do.
@@ -65,51 +53,17 @@ viewed by clicking on `contribute` in the Links column below.
 
 ## Coding Guidelines
 
-* If a change needs to go into multiple branches of Accumulo, it should be merged into earlier branches then later branches.
 * Accumulo follows [semver] for its [public API](/api/).
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
-* Remove all trailing whitespaces. Eclipse users can use Source&rarr;Cleanup option to accomplish this.
-* Use 2 space indents and never use tabs!
-* Use 100-column line width for Java code and Javadoc.
-* Use a new line with single statement if/else blocks.
 * Do not use Author Tags. The code is developed and owned by the community.
-
-## Code Editors
-
-Feel free to use any editor when contributing Accumulo. If you are looking for a recommendation, many Accumulo
-developers use [IntelliJ][intellij] or [Eclipse][eclipse]. Below are some basic instructions to help you get started.
-
-### IntelliJ
-
-1. Download and install [IntelliJ][intellij]
-1. Clone the Accumulo repository that you want to work on.
-   ```shell
-   git clone https://github.com/apache/accumulo.git
-   ```
-1. [Import][intellij-import] the repository as a Maven project into IntelliJ
-1. (Optional) Download and import `Eclipse-Accumulo-Codestyle.xml` from Accumulo's [contrib][accumulo-contrib] directory
-  * Import via `File` > `Settings` > `Code Style` and clicking on cog wheel
-
-### Eclipse
-
-1. Download and install [Eclipse][eclipse].
-1. Clone the Accumulo repository that you want to work on.
-   ```shell
-   git clone https://github.com/apache/accumulo.git
-   ```
-1. [Import][eclipse-import] the repository as a Maven project into Eclipse
-1. (Optional) Download and import Eclipse formatting and style guides from Accumulo's [contrib][accumulo-contrib] directory
-  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step.
-  * Import Template: `Preferences` > `Java` > `Code Style` > `Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
 
 ## Helpful Links
 
 * **Build resources** - [TravisCI] & [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
 
-For more details, see the [contributor guide](/contributors-guide/).
+For more information, see the [contributor guide](/contributors-guide/).
 
-[newbie-issues]: https://s.apache.org/newbie_accumulo_tickets
 [good-first-issue]: https://github.com/apache/accumulo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
@@ -130,10 +84,11 @@ For more details, see the [contributor guide](/contributors-guide/).
 [s]: https://github.com/apache/accumulo-wikisearch
 [sc]: https://github.com/apache/accumulo-wikisearch/blob/master/CONTRIBUTING.md
 [si]: https://github.com/apache/accumulo-wikisearch/issues
-[jira-signup]: https://issues.apache.org/jira/secure/Signup!default.jspa
+[p]: https://github.com/apache/accumulo-proxy
+[pi]: https://github.com/apache/accumulo-proxy/issues
+[m]: https://github.com/apache/accumulo-maven-plugin
+[mi]: https://github.com/apache/accumulo-maven-plugin/issues
 [github-join]: https://github.com/join
-[manual]: {{ site.docs_baseurl }}
-[JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
 [TravisCI]: https://travis-ci.org/apache/accumulo
@@ -145,14 +100,7 @@ For more details, see the [contributor guide](/contributors-guide/).
 [Push]: https://help.github.com/articles/pushing-to-a-remote/
 [clone]: https://help.github.com/articles/cloning-a-repository/
 [srcheaders]: https://www.apache.org/legal/src-headers
-[styles]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=tree;f=contrib;hb=HEAD
-[accumulo-readme]: https://github.com/apache/accumulo/blob/master/README.md#api
 [semver]: http://semver.org/spec/v2.0.0.html
-[eclipse]: https://www.eclipse.org/
-[eclipse-import]: https://stackoverflow.com/questions/2061094/importing-maven-project-into-eclipse
-[intellij]: https://www.jetbrains.com/idea/
-[intellij-import]: https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start
-[accumulo-contrib]: https://github.com/apache/accumulo/tree/master/contrib
 [messages]: https://chris.beams.io/posts/git-commit/
 [squash-tutorial]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
 [squash-stack]: https://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git
