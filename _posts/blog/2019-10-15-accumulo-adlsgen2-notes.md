@@ -76,8 +76,20 @@ CLASSPATH="${CLASSPATH}:${HADOOP_HOME}/share/hadoop/common/lib/jackson-mapper-as
 export CLASSPATH
 ```
 
-Tried adding `-Dorg.wildfly.openssl.path` to `JAVA_OPTS` in `accumulo-env.sh`, but it 
-did not appear to work, this needs further investigation.
+Include `-Dorg.wildfly.openssl.path` to `JAVA_OPTS` in `accumulo-env.sh` as shown below. This
+java property is an optional performance enhancement for TLS.
+
+```bash
+JAVA_OPTS=("${ACCUMULO_JAVA_OPTS[@]}"
+  '-XX:+UseConcMarkSweepGC'
+  '-XX:CMSInitiatingOccupancyFraction=75'
+  '-XX:+CMSClassUnloadingEnabled'
+  '-XX:OnOutOfMemoryError=kill -9 %p'
+  '-XX:-OmitStackTraceInFastThrow'
+  '-Djava.net.preferIPv4Stack=true'
+  '-Dorg.wildfly.openssl.path=/usr/lib64'
+  "-Daccumulo.native.lib.path=${lib}/native")
+```
 
 Set the following in `accumulo.properties` and then run `accumulo init`, but don't start Accumulo.
 
