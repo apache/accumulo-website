@@ -11,6 +11,7 @@ there are other ways to contribute to Accumulo:
 * review [pull requests](https://github.com/apache/accumulo/pulls)
 * verify and test new [releases](/release/)
 * update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
+* report bugs or triage issues
 
 First time developers should start with an issue labeled [good first issue][good-first-issue].
 

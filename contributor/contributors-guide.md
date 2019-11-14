@@ -51,29 +51,6 @@ The docs below are for committers but may be of interest to contributors as well
 Feel free to use any editor when contributing Accumulo. If you are looking for a recommendation, many Accumulo
 developers use [IntelliJ] or [Eclipse]. Below are some basic instructions to help you get started.
 
-### IntelliJ
-
-1. Download and install [IntelliJ]
-1. Clone the Accumulo repository that you want to work on.
-   ```shell
-   git clone https://github.com/apache/accumulo.git
-   ```
-1. [Import][intellij-import] the repository as a Maven project into IntelliJ
-1. (Optional) Download and import `Eclipse-Accumulo-Codestyle.xml` from Accumulo's [contrib][accumulo-contrib] directory
-  * Import via `File` > `Settings` > `Code Style` and clicking on cog wheel
-
-### Eclipse
-
-1. Download and install [Eclipse].
-1. Clone the Accumulo repository that you want to work on.
-   ```shell
-   git clone https://github.com/apache/accumulo.git
-   ```
-1. [Import][eclipse-import] the repository as a Maven project into Eclipse
-1. (Optional) Download and import Eclipse formatting and style guides from Accumulo's [contrib][accumulo-contrib] directory
-  * Import Formatter: `Preferences` > `Java` > `Code Style` > `Formatter` and import the `Eclipse-Accumulo-Codestyle.xml` downloaded in the previous step.
-  * Import Template: `Preferences` > `Java` > `Code Style` > `Code Templates` and import the `Eclipse-Accumulo-Template.xml`. Make sure to check the "Automatically add comments" box. This template adds the ASF header and so on for new code.
-
 ## Project Governance
 
 For details about governance policies for the Accumulo project view the following links.
@@ -92,11 +69,6 @@ For details about governance policies for the Accumulo project view the followin
 [making]: {{ site.baseurl }}/contributor/making-release
 [verifying]: /contributor/verifying-release
 [testing]: /contributor/testing-release
-[Eclipse]: https://www.eclipse.org/
-[eclipse-import]: https://stackoverflow.com/questions/2061094/importing-maven-project-into-eclipse
-[Intellij]: https://www.jetbrains.com/idea/
-[intellij-import]: https://www.jetbrains.com/help/idea/maven.html#maven_import_project_start
-[accumulo-contrib]: https://github.com/apache/accumulo/tree/master/contrib
 [bylaws]: {{ site.baseurl }}/contributor/bylaws
 [consensus]: {{ site.baseurl }}/contributor/consensusBuilding
 [lazy]: {{ site.baseurl }}/contributor/lazyConsensus
