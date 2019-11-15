@@ -85,7 +85,7 @@ date range.
 Since Keys in Accumulo are sorted lexicographically by default, it's often useful to encode
 common data types into a byte format in which their sort order corresponds to the sort order
 in their native form. An example of this is encoding dates and numerical data so that they can
-be better seeked or searched in ranges.
+be better sought or searched in ranges.
 
 The lexicoders are a standard and extensible way of encoding Java types. Here's an example
 of a lexicoder that encodes a java Date object so that it sorts lexicographically:
