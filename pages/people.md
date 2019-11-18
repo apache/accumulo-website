@@ -54,6 +54,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | name                | organization                                                      | timezone              |
 |---------------------|-------------------------------------------------------------------|-----------------------|
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
+| Aishwarya Thangappa | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Arvind Shyamsundar  | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
