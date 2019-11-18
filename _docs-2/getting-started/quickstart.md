@@ -40,6 +40,16 @@ For convenience, consider adding `accumulo-{{ page.latest_release }}/bin/` to yo
 Accumulo requires running [Zookeeper] and [HDFS] instances which should be set up
 before configuring Accumulo.
 
+**Important note:** As of version 3.0.0, HDFS supports [Erasure Coding] (EC) in addition to
+traditional replication. Accumulo on erasure coded directories should be considered
+experimental at this time.  If you wish to try erasure coding in your environment,
+be aware that the current EC implementation does not support `hsync()` and `hflush()`,
+making it unsuited for storing the Accumulo write-ahead logs.  **Dataloss may occur
+if EC is used for the write-ahead logs.** If EC is in use, ensure that
+at least the WAL directories (by default in `/accumulo/wal`) use HDFS replication. It is 
+also advisable that tables in the `accumulo` namespace utilize replication as well.
+For more information, see the [Erasure Coding guide][ec-guide].
+
 The primary configuration files for Accumulo are [accumulo.properties], [accumulo-env.sh],
 and [accumulo-client.properties] which are located in the `conf/` directory.
 
@@ -216,3 +226,5 @@ When finished, use the following commands to stop Accumulo:
 [tracers]: {% durl configuration/files#tracers %}
 [Uno]: https://github.com/apache/fluo-uno
 [Muchos]: https://github.com/apache/fluo-muchos
+[Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html
+[ec-guide]: {% durl administration/erasure-coding %}
