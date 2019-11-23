@@ -23,12 +23,26 @@ with support for Intel's ISA-L library. Instructions for doing this can be found
 ### Important Warning
 As noted 
 [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations),
-the current EC implementation does not support hflush() and hsync().  These 
+the current EC implementation does not support `hflush()` and `hsync()`.  These 
 functions are no-ops, which means that EC coded files are not guaranteed to
 be written to disk after a sync or flush.  For this reason, **EC should never
 be used for the Accumulo write-ahead logs.  Data loss may, and most likely will,
 occur.** It is also recommended that tables in the `accumulo` namespace (`root` and
 `metadata` for example) continue to use replication.
+
+### EC and Threads
+Due to the striped nature of an EC encoded file, an EC enabled HDFS client is threaded.
+This becomes an issue when an Accumulo client or service is configured to use multiple
+threads to read or write to HDFS, and becomes especially problematic when doing bulk
+imports. By default, Accumulo will use eight times the number of cores on the client 
+machine to scan the files to be imported and map them to tablet files. Each thread 
+created to scan the input files will create on the order of *k* threads to perform
+parallel I/O. RS-10-4 on a 16 core machine, for instance, will spawn over a thousand
+threads to perform this operation. If sufficient memory is not available, this operation
+will fail without providing a meaningful error message to the user.  This particular
+problem can be ameliorated by setting the `bulk.threads` client property to `1C` (i.e.
+one thread per core), down from the default of `8C`.  Similar care should be taken
+when setting other thread limits.
 
 ### HDFS ec Command
 Encoding policy in HDFS is set at the directory level, with children inheriting
