@@ -55,34 +55,38 @@ This is done via the `-listPolicies` command.  The following listing shows that 
 are 5 configured policies, of which only 3 (RS-10-4-1024k, RS-6-3-1024k, and RS-6-3-64k)
 are enabled for use.
 
-<pre>$ hdfs ec -listPolicies
+```
+$ hdfs ec -listPolicies
 Erasure Coding Policies:
 ErasureCodingPolicy=[Name=RS-10-4-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=10, numParityUnits=4]], CellSize=1048576, Id=5], State=ENABLED
 ErasureCodingPolicy=[Name=RS-6-3-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=1], State=ENABLED
 ErasureCodingPolicy=[Name=RS-6-3-64k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3, options=]], CellSize=65536, Id=65], State=ENABLED
 ErasureCodingPolicy=[Name=RS-LEGACY-6-3-1024k, Schema=[ECSchema=[Codec=rs-legacy, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=3], State=DISABLED
 ErasureCodingPolicy=[Name=XOR-2-1-1024k, Schema=[ECSchema=[Codec=xor, numDataUnits=2, numParityUnits=1]], CellSize=1048576, Id=4], State=DISABLED
-</pre>
+```
 
 To set the encoding policy for a directory, use the `-setPolicy` command.
 
-<pre>$ hadoop fs -mkdir foo
+```
+$ hadoop fs -mkdir foo
 $ hdfs ec -setPolicy -policy RS-6-3-64k -path foo
 Set RS-6-3-64k erasure coding policy on foo
-</pre>
+```
 
 To get the encoding policy for a directory, use the `-getPolicy` command.
 
-<pre>$ hdfs ec -getPolicy -path foo
+```
+$ hdfs ec -getPolicy -path foo
 RS-6-3-64k
-</pre>
+```
 
 New directories created under `foo` will inherit the EC policy.
 
-<pre>$ hadoop fs -mkdir foo/bar
+```
+$ hadoop fs -mkdir foo/bar
 $ hdfs ec -getPolicy -path foo/bar
 RS-6-3-64k
-</pre>
+```
 
 And changing the policy for a parent will also change its children.  The `-setPolicy`
 command here issues a warning that existing files will not be converted.  To 
@@ -91,14 +95,15 @@ a copy, for instance).  For Accumulo, if you change the encoding policy for
 a table's directories, you would then have to perform a major compaction on
 the table to convert the table's RFiles to the desired encoding.
 
-<pre>$ hdfs ec -setPolicy -policy RS-6-3-1024k -path foo
+```
+$ hdfs ec -setPolicy -policy RS-6-3-1024k -path foo
 Set RS-6-3-1024k erasure coding policy on foo
 Warning: setting erasure coding policy on a non-empty directory will not automatically convert existing files to RS-6-3-1024k erasure coding policy
 $ hdfs ec -getPolicy -path foo
 RS-6-3-1024k
 $ hdfs ec -getPolicy -path foo/bar
 RS-6-3-1024k
-</pre>
+```
 
 ### Configuring EC for a New Instance
 If you wish to create a new instance with a single encoding policy for all tables,
@@ -109,7 +114,8 @@ keep the tables in the `accumulo` namespace using replication, you
 would then need to manually change them back to using replication.  Assuming
 Accumulo is configured to use `/accumulo` as its root, you would do the following:
 
-<pre>$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables
+```
+$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables
 Set RS-6-3-64k erasure coding policy on /accumulo/tables
 $ hdfs ec -setPolicy -replicate -path /accumulo/tables/\!0
 Set replication erasure coding policy on /accumulo/tables/!0
@@ -117,15 +123,16 @@ $ hdfs ec -setPolicy -replicate -path /accumulo/tables/+r
 Set replication erasure coding policy on /accumulo/tables/+r
 $ hdfs ec -setPolicy -replicate -path /accumulo/tables/+rep
 Set replication erasure coding policy on /accumulo/tables/+rep
-</pre>
+```
 
 Check that the policies are set correctly:
 
-<pre>$ hdfs ec -getPolicy -path /accumulo/tables
+```
+$ hdfs ec -getPolicy -path /accumulo/tables
 RS-6-3-64k
 $ hdfs ec -getPolicy -path /accumulo/tables/\!0
 The erasure coding policy of /accumulo/tables/!0 is unspecified
-</pre>
+```
 
 Any directories subsequently created under `/accumulo/tables` will
 be erasure coded.
@@ -139,7 +146,8 @@ convert `test.table1` to RS-6-3-64k, you would first find the table ID
 via the accumulo shell, use `hdfs ec` to change the encoding for the
 directory `/accumulo/tables/<tableID>`, and then compact the table.
 
-<pre>$ accumulo shell
+```
+$ accumulo shell
 user@instance> tables -l
 accumulo.metadata    =>        !0
 accumulo.replication =>      +rep
@@ -153,7 +161,7 @@ $ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables/3
 Set RS-6-3-64k erasure coding policy on /accumulo/tables/3
 $ accumulo shell
 user@instance> compact -t test.table1
-</pre>
+```
 
 ### Defining Custom EC Policies
 Hadoop by default will enable only a single EC policy, which is
@@ -190,15 +198,17 @@ data blocks and *m*=3 parity blocks.  This schema is then used to define
 a policy that uses RS-6-3 encoding with a stripe size of 64k.  To add
 this policy:
 
-<pre>$ hdfs ec -addPolicies -policyFile /hadoop/etc/hadoop/user_ec_policies.xml
+```
+$ hdfs ec -addPolicies -policyFile /hadoop/etc/hadoop/user_ec_policies.xml
 2019-11-19 15:35:23,703 INFO util.ECPolicyLoader: Loading EC policy file /hadoop/etc/hadoop/user_ec_policies.xml
 Add ErasureCodingPolicy RS-6-3-64k succeed.
-</pre>
+```
 
 To enable the policy:
 
-<pre>$ hdfs ec -enablePolicy -policy RS-6-3-64k
+```
+$ hdfs ec -enablePolicy -policy RS-6-3-64k
 Erasure coding policy RS-6-3-64k is enabled
-</pre>
+```
 
 [Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html
