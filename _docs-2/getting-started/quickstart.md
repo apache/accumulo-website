@@ -40,6 +40,9 @@ For convenience, consider adding `accumulo-{{ page.latest_release }}/bin/` to yo
 Accumulo requires running [Zookeeper] and [HDFS] instances which should be set up
 before configuring Accumulo.
 
+**Important note:** If using [Erasure Coding] (EC), data loss will occur unless it is configured
+properly for Accumulo. Please see the [Erasure Coding guide][ec-guide] for more information.
+
 The primary configuration files for Accumulo are [accumulo.properties], [accumulo-env.sh],
 and [accumulo-client.properties] which are located in the `conf/` directory.
 
@@ -216,3 +219,5 @@ When finished, use the following commands to stop Accumulo:
 [tracers]: {% durl configuration/files#tracers %}
 [Uno]: https://github.com/apache/fluo-uno
 [Muchos]: https://github.com/apache/fluo-muchos
+[Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html
+[ec-guide]: {% durl administration/erasure-coding %}
