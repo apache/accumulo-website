@@ -35,7 +35,7 @@ Accumulo Proxy 2.0.0-SNAPSHOT is running
     * view logs at /path/to/fluo-uno/install/logs/accumulo-proxy/
 ```
 
-Next, follow the instructions below to create a Python client that creates an Accumulo table
+Next, follow the instructions below to create a Python 2.7 client that creates an Accumulo table
 named `pythontest` and writes data to it:
 
 ```
