@@ -1,5 +1,5 @@
 ---
-title: Accumulo clients in other languages
+title: Accumulo Clients in Other Programming Languages
 ---
 
 Apache Accumulo has an [Accumulo Proxy] that allows communication with Accumulo using clients written
