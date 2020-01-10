@@ -44,10 +44,10 @@ cd accumulo-client/
 pipenv --python 2.7
 pipenv install thrift
 pipenv install -e /path/to/accumulo-proxy/src/main/python
-cp /path/to/accumulo-proxy/src/main/python/example.py .
+cp /path/to/accumulo-proxy/src/main/python/basic_client.py .
 # Edit credentials if needed
-vim example.py
-pipenv run python2 example.py
+vim basic_client.py
+pipenv run python2 basic_client.py
 ```
 
 Verify that the table was created or data was written using `uno ashell` or the Accumulo monitor.
