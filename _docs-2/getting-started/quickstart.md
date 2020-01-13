@@ -46,7 +46,7 @@ properly for Accumulo. Please see the [Erasure Coding guide][ec-guide] for more 
 The primary configuration files for Accumulo are [accumulo.properties], [accumulo-env.sh],
 and [accumulo-client.properties] which are located in the `conf/` directory.
 
-The [accumulo.properties] file configures Accumulo server processes (i.e tablet server, master,
+The [accumulo.properties] file configures Accumulo server processes (i.e. tablet server, master,
 monitor, etc). Follow these steps to set it up:
 
 1. Run `accumulo-util build-native` to build native code.  If this command fails, disable
@@ -65,7 +65,7 @@ The [accumulo-env.sh] file sets up environment variables needed by Accumulo:
 
 1. Set `HADOOP_HOME` and `ZOOKEEPER_HOME` to the location of your Hadoop and Zookeeper
    installations. Accumulo will use these locations to find Hadoop and Zookeeper jars and add
-   them to your `CLASSPATH` variable. If you you are running a vendor-specific release of
+   them to your `CLASSPATH` variable. If you are running a vendor-specific release of
    Hadoop or Zookeeper, you may need to modify how the `CLASSPATH` variable is built in
    [accumulo-env.sh]. If Accumulo has problems loading classes when you start it, run 
    `accumulo classpath` to print Accumulo's classpath.
@@ -104,7 +104,7 @@ and HDFS.  The following command will do this.
 The initialization command will prompt for the following information.
 
  * **Instance name** : This is the name of the Accumulo instance and its
-   Accumulo clients need to know it inorder to connect.
+   Accumulo clients need to know it in order to connect.
  * **Root password** : Initialization sets up an initial Accumulo root user and
    prompts for its password.  This information will be needed to later connect
    to Accumulo.
@@ -118,7 +118,7 @@ There are several methods for running Accumulo:
 
 2. Run Accumulo processes as services using `accumulo-service` which uses `accumulo`
    command but backgrounds processes, redirects stderr/stdout and manages pid files.
-   Useful if you are using a cluster management tool (i.e Ansible, Salt, etc).
+   Useful if you are using a cluster management tool (i.e. Ansible, Salt, etc).
 
 2. Run an Accumulo cluster on one or more nodes using `accumulo-cluster` (which
    uses `accumulo-service` to run services). Useful for local development and
@@ -150,7 +150,7 @@ to be created. Use the command below to create them:
 This creates five files ([masters], [gc], [monitor], [tservers], & [tracers])
 in the `conf/` directory that contain the node names where Accumulo services
 are run on your cluster. By default, all files are configured to `localhost`. If
-you are running a single-node Accumulo cluster, theses files do not need to be
+you are running a single-node Accumulo cluster, these files do not need to be
 changed and the next section should be skipped.
 
 #### Multi-node configuration
