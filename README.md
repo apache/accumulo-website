@@ -46,8 +46,7 @@ export GEM_HOME=$HOME/.gem/ruby
 ```
 
 With Ruby installed on your machine, you can install [Bundler] using the
-command below (not necessary if using Ruby 2.6 or later, since it is a default
-gem since 2.6):
+command below:
 
 ```bash
 # not necessary in Ruby >2.6, since it is a default gem since 2.6
@@ -55,7 +54,9 @@ gem install bundler
 ```
 
 Next, use [Bundler] to install [Jekyll] and other dependencies needed to run
-the website.
+the website (this command assumes your current working directory is your clone
+of this repository with the `master` branch checked out, because that's where
+the Gemfile dependency list exists).
 
 ```bash
 bundle install
@@ -211,9 +212,9 @@ git push upstream asf-site:asf-site
 
 Note that Step 3 should always be a fast-forward merge. That is, there should
 never be any reason to force-push it if everything is done correctly. If extra
-commits are ever added to asf-site that are not present in asf-staging, then
-those branches will need to be sync'd back up in order to continue avoiding
-force pushes.
+commits are ever added to `asf-site` that are not present in `asf-staging`,
+then those branches will need to be sync'd back up in order to continue
+avoiding force pushes.
 
 The final site can be viewed [here][production].
 
