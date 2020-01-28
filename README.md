@@ -1,47 +1,20 @@
 # Apache Accumulo Website
 
-Apache Accumulo uses [Jekyll] to build their website. It is recommended that you
-use [Bundler] to install the necessary dependencies to run and build the website.
+Apache Accumulo's website is generated from Markdown source (specifically,
+[kramdown] style) with [Jekyll], using [Bundler] to manage its gem
+dependencies.
 
-## Install Bundler and dependencies
+## Development
 
-Ruby is required to use Bundler so first make sure you have Ruby on your machine.  If you are using
-an OS packaged version of Ruby, you will have to also install the ruby-dev (Ubuntu) or
-ruby-devel (Fedora) package as well. Depending on your OS, you may also need other packages, such as
-ruby-full, make, gcc, nodejs, build-essentials, or patch.
+### Custom Liquid Tags
 
-With Ruby installed on your machine, you can install [Bundler] using the command below:
+Jekyll uses [Liquid] to process files before interpreting their Markdown
+contents. We have extended Jekyll using its plugin mechanism to create custom
+Liquid tags that make it easier to link to javadocs, properties, and documents.
 
-    gem install bundler
+The source for these tags is at [\_plugins/links.rb](_plugins/links.rb).
 
-Next, use [Bundler] to install [Jekyll] and other dependencies needed to run the website.
-
-    git clone https://github.com/apache/accumulo-website
-    cd accumulo-website
-    bundle install
-
-## Run the website locally
-
-Run the following command to run the website locally using Jekyll's embedded webserver:
-
-    cd accumulo-website
-    bundle exec jekyll serve -w
-
-The website can viewed at [http://0.0.0.0:4000/](http://0.0.0.0:4000/)
-
-## Build website static HTML files
-
-You can just build static HTML files which are viewable in `_config.yml`:
-
-    cd accumulo-website
-    bundle exec jekyll build
-
-## Custom liquid tags
-
-Custom liquid tags are used to make linking to javadocs, properties, and documents easier.
-The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
-
-| Tag   | Description            | Options                                                                         | Examples                                             | 
+| Tag   | Description            | Options                                                                         | Examples                                             |
 | ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}`  `{% jlink -f org.apache.accumulo.core.client %}` |
 | jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
@@ -53,54 +26,139 @@ The source for these tags is at [_plugins/links.rb](_plugins/links.rb).
 | ghc   | GitHub code link          | Branch defaults to `gh_branch` setting in `_config.yml`. Override using `-b` | `{% ghc server/tserver/src/main/java/org/apache/accumulo/tserver/TabletServer.java %}` `{% ghc -b 1.9 README.md %}` |
 | jira   | Jira issue link          | None  | `{% jira ACCUMULO-1000 %}` |
 
-## Updating property documentation
+### Updating Property Documentation for Releases
 
-Building Accumulo  generates `server-properties.md` and `client-properties.md`.  To
-regenerate these, do the following.
+Building Accumulo  generates `server-properties.md` and `client-properties.md`.
+To regenerate these, do the following.
 
-```
-cd <accumulo source dir>
+```bash
+ACCUMULO_SITE_CLONE=<accumulo website clone location, with master branch checked out>
+ACCUMULO_CLONE=<accumulo clone location>
+cd "$ACCUMULO_CLONE"
 mvn package -DskipTests
-cp ./core/target/generated-docs/server-properties.md <accumulo website source>/_docs-2/configuration
-cp ./core/target/generated-docs/client-properties.md <accumulo website source>/_docs-2/configuration
+cp ./core/target/generated-docs/server-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
+cp ./core/target/generated-docs/client-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
 ```
 
-## Update the production website
+## Local Builds for Testing
 
-For Apache Accumulo committers, the `asf-site` branch needs to be updated with the generated
-HTML.  Changes to this branch are automagically mirrored to the website.
+### Setting up Your Jekyll/Bundler Environment
 
-This can be done easily by invoking the post-commit hook (either by hand, or automatically via configuring
-Git to invoke the post-commit hook).  The commands below are a guide for committers who wish to publish
-the web site.
+Ruby and RubyGems are required to use Jekyll and Bundler, so first make sure
+you have those on your machine.
+
+If you are using an OS packaged version of Ruby, you may also need to install
+the ruby-dev (Ubuntu) or ruby-devel (Fedora) package as well to build any
+native code for gems that are installed later. Installing these will also
+ensure your system's RubyGems package is installed. Depending on your OS, you
+may also need other packages to install/build gems, such as ruby-full, make,
+gcc, nodejs, build-essentials, or patch.
+
+Once Ruby, RubyGems, and any necessary native tools are installed, you are
+ready to install [Bundler] to manage the remaining RubyGem dependencies.
+Bundler is included in Ruby 2.6 and later as a default gem, so installing it
+may not be needed.
+
+Because we use [Bundler] to install specific versions of gems, it is not
+recommended to use an OS packaged version of gems other than what comes
+built-in. If you are using an OS packaged version of Ruby, it is __strongly__
+recommended to avoid `sudo` when installing additional gems, in order to avoid
+conflicting with your system's package-managed installation. Instead, you can
+specify a `GEM_HOME` directory for installing gems locally in your home
+directory. You can do this in your `$HOME/.bashrc` file or other appropriate
+place for your environment:
 
 ```bash
-# ensure local asf-site branch is up to date
-git checkout asf-site
-git pull upstream asf-site
+# in .bashrc
+export GEM_HOME=$HOME/.gem/ruby
+```
 
-# switch to master branch, update it, and build new site
+With Ruby installed on your machine, you can install [Bundler] using the
+command below:
+
+```bash
+# not necessary in Ruby >2.6, since it is a default gem since 2.6
+gem install bundler
+```
+
+Next, use [Bundler] to install [Jekyll] and other dependencies needed to run
+the website (this command assumes your current working directory is your clone
+of this repository with the `master` branch checked out, because that's where
+the Gemfile dependency list exists).
+
+```bash
+bundle install
+```
+
+### Testing with the Built-in Jekyll Webserver
+
+The command to serve the site contents using Jekyll's built-in webserver is as
+follows (this webserver may behave differently than apache.org's servers).
+
+```bash
+bundle exec jekyll serve -w
+```
+
+You do __NOT__ need to execute a `bundle exec jekyll build` command first, as
+the `serve` command is sufficient to both build the site and serve its
+contents. By default, it will also try to re-build any pages you change while
+running the webserver, which can be quite useful if trying to get some CSS or
+HTML styled "just right".
+
+Jekyll will print a local URL where the site can be viewed (usually,
+[http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
+
+## Publishing
+
+### Automatic Staging
+
+Changes pushed to our `master` branch will automatically trigger Jekyll to
+build our site from that branch and push the result to our `asf-staging`
+branch, where they will be served on [our default staging site][staging].
+
+### Publishing Staging to Production
+
+First, add our repository as a remote in your local clone, if you haven't
+already done so (these commands assume the name of that remote is 'upstream').
+
+Example:
+
+```bash
+git clone https://github.com/<yourusername>/accumulo-website
+cd accumulo-website
+git remote add upstream https://github.com/apache/accumulo-website
+```
+
+Next, publish the staging site to production by updating the `asf-site` branch
+to match the contents in the `asf-staging` branch:
+
+```bash
+# Step 0: stay in master branch; you never need to switch
 git checkout master
-git pull upstream master
-./_devtools/git-hooks/post-commit
 
-# switch to asf-site, look at the commit created by post-commit script, and push it if ok
-git checkout asf-site
-git log -p
-git push upstream asf-site
-```
-In the commands above `upstream` is :
+# Step 1: update your upstream remote
+git remote update upstream
 
-```bash
-$ git remote -v | grep upstream
-upstream	https://gitbox.apache.org/repos/asf/accumulo-website/ (fetch)
-upstream	https://gitbox.apache.org/repos/asf/accumulo-website/ (push)
+# Step 2: create/update your local asf-site branch from the upstream staging branch
+git branch --track --force asf-site upstream/asf-staging
+
+# Step 3: push it
+# run next command with --dry-run first to see what it will do without making changes
+git push upstream asf-site:asf-site
 ```
 
-To automatically run this post-commit hook in your local repository, copy
-the given file into your `.git/hook` directory:
+Note that Step 3 should always be a fast-forward merge. That is, there should
+never be any reason to force-push it if everything is done correctly. If extra
+commits are ever added to `asf-site` that are not present in `asf-staging`,
+then those branches will need to be sync'd back up in order to continue
+avoiding force pushes.
 
-    cp ./_devtools/git-hooks/post-commit .git/hooks/
+The final site can be viewed [here][production].
 
-[Jekyll]: https://jekyllrb.com/
+
 [Bundler]: https://bundler.io/
+[Jekyll]: https://jekyllrb.com/
+[Liquid]: https://jekyllrb.com/docs/liquid/
+[kramdown]: https://kramdown.gettalong.org/
+[production]: https://accumulo.apache.org
+[staging]: https://accumulo.staged.apache.org
