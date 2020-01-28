@@ -1,7 +1,8 @@
 # Apache Accumulo Website
 
 Apache Accumulo uses [Jekyll] to build its website and [Bundler] to manage its
-gem dependencies.
+gem dependencies. While some pages are raw HTML, many are written in Markdown
+syntax (specifically, kramdown).
 
 Most commands on this page assume you have cloned your fork of the site
 repository on GitHub and changed your working directory to that clone. They
@@ -14,7 +15,82 @@ cd accumulo-website
 git remote add upstream https://github.com/apache/accumulo-website
 ```
 
-## Install Ruby, RubyGems, Bundler, and other Dependencies
+## Publishing
+
+### Automatic Staging
+
+Changes to the `master` branch will automatically be staged in the
+`asf-staging` branch by ASF's Jekyll building infrastructure, and be published
+to [our staging site][staging].
+
+### Publishing Staging to Production
+
+To publish the staging site to the production site, you will need to update
+the `asf-site` branch to match the contents in the `asf-staging` branch:
+
+```bash
+# Step 0: stay in master branch; you never need to switch
+git checkout master
+
+# Step 1: update your upstream remote
+git remote update upstream
+
+# Step 2: create/update your local asf-site branch from the upstream staging branch
+git branch --track --force asf-site upstream/asf-staging
+
+# Step 3: push it
+# run next command with --dry-run first to see what it will do without making changes
+git push upstream asf-site:asf-site
+```
+
+Note that Step 3 should always be a fast-forward merge. That is, there should
+never be any reason to force-push it if everything is done correctly. If extra
+commits are ever added to `asf-site` that are not present in `asf-staging`,
+then those branches will need to be sync'd back up in order to continue
+avoiding force pushes.
+
+The final site can be viewed [here][production].
+
+## Development
+
+### Custom Liquid Tags
+
+Jekyll uses [Liquid] to process files before interpreting their Markdown
+contents. We have extended Jekyll using its plugin mechanism to create custom
+Liquid tags that make it easier to link to javadocs, properties, and documents.
+
+The source for these tags is at [\_plugins/links.rb](_plugins/links.rb).
+
+| Tag   | Description            | Options                                                                         | Examples                                             |
+| ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}`  `{% jlink -f org.apache.accumulo.core.client %}` |
+| jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
+| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.\*`)       | `{% plink -c instance.name %}`                             |
+| purl  | Creates Property URL   | Default is server property. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.\*`)               | `{% purl instance.volumes %}`                             |
+| dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
+| durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
+| ghi   | GitHub issue link          | None  | `{% ghi 100 %}` |
+| ghc   | GitHub code link          | Branch defaults to `gh_branch` setting in `_config.yml`. Override using `-b` | `{% ghc server/tserver/src/main/java/org/apache/accumulo/tserver/TabletServer.java %}` `{% ghc -b 1.9 README.md %}` |
+| jira   | Jira issue link          | None  | `{% jira ACCUMULO-1000 %}` |
+
+### Updating Property Documentation for Releases
+
+Building Accumulo  generates `server-properties.md` and `client-properties.md`.
+To regenerate these, do the following.
+
+```bash
+ACCUMULO_SITE_CLONE=<accumulo website clone location, with master branch checked out>
+ACCUMULO_CLONE=<accumulo clone location>
+cd "$ACCUMULO_CLONE"
+mvn package -DskipTests
+cp ./core/target/generated-docs/server-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
+cp ./core/target/generated-docs/client-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
+```
+
+
+## Local/Manual Builds
+
+### Setting up Your Ruby/Bundler Environment
 
 Ruby and RubyGems are required to use Jekyll and Bundler, so first make sure
 you have those on your machine.
@@ -62,8 +138,7 @@ the Gemfile dependency list exists).
 bundle install
 ```
 
-
-## Basic Jekyll Build
+### Basic Jekyll Build
 
 The basic command to build the static site contents using Jekyll is:
 
@@ -74,149 +149,23 @@ bundle exec jekyll build
 The files generated by this command will be placed in `_site/`.
 
 
-## Running Locally for Testing/Development
+### Running Locally for Testing/Development
 
-Rather than merely build the site contents, you can run a local webserver to
-view the contents in your browser. Jekyll provides a simple way to build and
-view the site contents with its own built-in webserver.
-
-Serving the site content this way may result in a view that is slightly
-different than a production site, because Jekyll's embedded webserver may have
-slightly different behavior than the webserver at apache.org, but it should be
-similar enough for testing most things.
-
-To run locally, simply do:
+The command to serve the site contents using Jekyll's built-in webserver is as
+follows (this webserver may behave differently than apache.org's servers).
 
 ```bash
 bundle exec jekyll serve -w
 ```
 
 You do __NOT__ need to execute a `bundle exec jekyll build` command first, as
-this command is sufficient to both build the site and serve its contents. By
-default, it will also try to re-build any pages you change while running the
-webserver, which can be quite useful if trying to get some CSS or HTML styled
-"just right".
+the `serve` command is sufficient to both build the site and serve its
+contents. By default, it will also try to re-build any pages you change while
+running the webserver, which can be quite useful if trying to get some CSS or
+HTML styled "just right".
 
 Jekyll will print a local URL where the site can be viewed (usually,
 [http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
-
-
-## Custom Liquid Tags
-
-Jekyll uses [Liquid] to process files before interpreting their Markdown
-contents. We have extended Jekyll using its plugin mechanism to create custom
-Liquid tags that make it easier to link to javadocs, properties, and documents.
-
-The source for these tags is at [\_plugins/links.rb](_plugins/links.rb).
-
-| Tag   | Description            | Options                                                                         | Examples                                             |
-| ----- | ---------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| jlink | Creates Javadoc link   | Link text will be class name by default. Use `-f` for full package + class name | `{% jlink -f org.apache.accumulo.core.client.Connector %}`  `{% jlink -f org.apache.accumulo.core.client %}` |
-| jurl  | Creates Javadoc URL    | None                                                                            | `{% jurl org.apache.accumulo.core.client.Connector %}`     |
-| plink | Creates Property link  | Assumes server property by default. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.\*`)       | `{% plink -c instance.name %}`                             |
-| purl  | Creates Property URL   | Default is server property. Use `-c` to link to client properties. Accepts server property prefixes (i.e `table.\*`)               | `{% purl instance.volumes %}`                             |
-| dlink | Creates Documentation link | None                                                                            | `{% dlink getting-stared/clients %}`                   |
-| durl  | Creates Documentation URL  | None                                                                            | `{% durl troubleshooting/performance %}`                   |
-| ghi   | GitHub issue link          | None  | `{% ghi 100 %}` |
-| ghc   | GitHub code link          | Branch defaults to `gh_branch` setting in `_config.yml`. Override using `-b` | `{% ghc server/tserver/src/main/java/org/apache/accumulo/tserver/TabletServer.java %}` `{% ghc -b 1.9 README.md %}` |
-| jira   | Jira issue link          | None  | `{% jira ACCUMULO-1000 %}` |
-
-
-## Updating Property Documentation
-
-Building Accumulo  generates `server-properties.md` and `client-properties.md`.
-To regenerate these, do the following.
-
-```bash
-ACCUMULO_SITE_CLONE=<accumulo website clone location, with master branch checked out>
-ACCUMULO_CLONE=<accumulo clone location>
-cd "$ACCUMULO_CLONE"
-mvn package -DskipTests
-cp ./core/target/generated-docs/server-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
-cp ./core/target/generated-docs/client-properties.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration
-```
-
-## Staging the Generated Site
-
-For Apache Accumulo committers, the `asf-staging` branch needs to be updated
-with the generated HTML. Changes to this branch are automagically mirrored to
-the [staging website][staging].
-
-This can be done easily by invoking the post-commit hook (either by hand, or
-automatically via configuring Git to invoke the post-commit hook).  The
-commands below are a guide for committers who wish to stage the web site.
-
-```bash
-# Step 0: stay in master branch; you never need to switch
-git checkout master
-
-# Step 1: update your upstream remote
-git remote update upstream
-
-# Step 2: ensure your local master branch is up-to-date
-# Note: this will destroy any local changes; create a branch first if you want to keep any of that
-git reset --hard upstream/master
-
-# Step 3: create/update your local asf-staging branch
-git branch --track --force asf-staging upstream/asf-staging
-
-# Step 4: generate the site and update the asf-staging branch
-# execute only once; otherwise, start over from Step 3 to create only one new commit in asf-staging
-./_devtools/git-hooks/post-commit
-
-# Step 5: verify commits in asf-staging
-# add options like --color-words or -U0, if desired, for a more concise view
-git log -p upstream/asf-staging..asf-staging
-
-# Step 6: push asf-staging branch upstream
-# run next command with --dry-run first to see what it will do without making changes
-git push upstream asf-staging:asf-staging
-```
-
-You should stay in the `master` branch the entire time. None of the above
-commands will switch you into any other branch. If you switch to another branch
-by not following the above steps exactly, you will need to switch back to the
-`master` branch to continue (but you should really just start over instead).
-
-To automatically run this post-commit hook in your local repository every time
-you make a commit on your local `master` branch, create a symlink to it in your
-`.git/hooks/` directory (if you copy it, you'll need to manually keep it
-up-to-date yourself).
-
-To create the symlink:
-
-```bash
-ln -sf ../../_devtools/git-hooks/post-commit .git/hooks/post-commit
-```
-
-
-## Publishing the Production Site
-
-To publish the production site from the staging site, you will need to update
-the `asf-site` branch to match the contents in the `asf-staging` branch:
-
-```bash
-# Step 0: stay in master branch; you never need to switch
-git checkout master
-
-# Step 1: update your upstream remote
-git remote update upstream
-
-# Step 2: create/update your local asf-site branch from the upstream staging branch
-git branch --track --force asf-site upstream/asf-staging
-
-# Step 3: push it
-# run next command with --dry-run first to see what it will do without making changes
-git push upstream asf-site:asf-site
-```
-
-Note that Step 3 should always be a fast-forward merge. That is, there should
-never be any reason to force-push it if everything is done correctly. If extra
-commits are ever added to `asf-site` that are not present in `asf-staging`,
-then those branches will need to be sync'd back up in order to continue
-avoiding force pushes.
-
-The final site can be viewed [here][production].
 
 
 [Bundler]: https://bundler.io/
