@@ -42,7 +42,7 @@ cp ./core/target/generated-docs/client-properties.md "$ACCUMULO_SITE_CLONE"/_doc
 
 ## Local Builds for Testing
 
-### Setting up Your Ruby/Bundler Environment
+### Setting up Your Jekyll/Bundler Environment
 
 Ruby and RubyGems are required to use Jekyll and Bundler, so first make sure
 you have those on your machine.
