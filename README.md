@@ -2,12 +2,22 @@
 
 Apache Accumulo uses [Jekyll] to build its website and [Bundler] to manage its
 gem dependencies. While some pages are raw HTML, many are written in Markdown
-syntax (specifically, kramdown).
+syntax (specifically, [kramdown]).
 
-Most commands on this page assume you have cloned your fork of the site
-repository on GitHub and changed your working directory to that clone. They
-also assume you have a remote named 'upstream' added to your clone that points
-to the one at ASF's GitHub.
+## Publishing
+
+### Automatic Staging
+
+Changes merged to our `master` branch will automatically be staged in the
+`asf-staging` branch by ASF's Jekyll building infrastructure, and be published
+to [our staging site][staging].
+
+### Publishing Staging to Production
+
+First, ensure you have added our repository as a remote to your clone of this
+repository (these commands assume the name of that remote is 'upstream').
+
+Example:
 
 ```bash
 git clone https://github.com/<yourusername>/accumulo-website
@@ -15,18 +25,8 @@ cd accumulo-website
 git remote add upstream https://github.com/apache/accumulo-website
 ```
 
-## Publishing
-
-### Automatic Staging
-
-Changes to the `master` branch will automatically be staged in the
-`asf-staging` branch by ASF's Jekyll building infrastructure, and be published
-to [our staging site][staging].
-
-### Publishing Staging to Production
-
-To publish the staging site to the production site, you will need to update
-the `asf-site` branch to match the contents in the `asf-staging` branch:
+Next, to publish the staging site to the production site, you will need to
+update the `asf-site` branch to match the contents in the `asf-staging` branch:
 
 ```bash
 # Step 0: stay in master branch; you never need to switch
@@ -171,5 +171,6 @@ Jekyll will print a local URL where the site can be viewed (usually,
 [Bundler]: https://bundler.io/
 [Jekyll]: https://jekyllrb.com/
 [Liquid]: https://jekyllrb.com/docs/liquid/
+[kramdown]: https://kramdown.gettalong.org/
 [production]: https://accumulo.apache.org
 [staging]: https://accumulo.staged.apache.org
