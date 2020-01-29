@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Durability Performance Implications</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Durability Performance Implications</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Keith Turner<br>
+<b>Date: </b>&nbsp;&nbsp;02 Nov 2016<br>
+<b>Reviewer(s) </b> &nbsp;&nbsp;Josh Elser, Dave Marion, Christopher Tubbs<br>
+</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>Accumulo stores recently written data in a sorted in memory map.  Before data is
+added to this map, it’s written to an unsorted write ahead log(WAL).  In the
+case when a tablet server dies, the recently written data is recovered from the
+WAL.</p>
+
+<p>When data is written to Accumulo the following happens :</p>
+
+<ul>
+  <li>Client sends a batch of mutations to a tablet server</li>
+  <li>Tablet server does the following :
+    <ul>
+      <li>Writes mutation to tablet servers’ WAL</li>
+      <li>Sync or flush tablet servers’ WAL</li>
+      <li>Adds mutations to sorted in memory map of each tablet.</li>
+      <li>Reports success back to client.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The sync/flush step above moves data written to the WAL from memory to disk.
+Write ahead logs are stored in HDFS. HDFS supports two ways of forcing data to
+disk for an open file : <code class="highlighter-rouge">hsync</code> and <code class="highlighter-rouge">hflush</code>.</p>
+
+<h2 id="hdfs-syncflush-details">HDFS Sync/Flush Details</h2>
+
+<p>When <code class="highlighter-rouge">hflush</code> is called on a WAL, it does not guarantee data is on disk.  It
+only guarantees that data is in OS buffers on each datanode and on its way to disk.
+As a result calls to <code class="highlighter-rouge">hflush</code> are very fast.  If a WAL is replicated to 3 data
+nodes then data may be lost if all three machines reboot or die.  If the datanode
+process dies, then data loss will not happen because the data was in OS buffers
+waiting to be written to disk.  The machines have to reboot or die for data loss to
+occur.</p>
+
+<p>In order to avoid data loss in the event of reboot, <code class="highlighter-rouge">hsync</code> can be called.  This
+will ensure data is written to disk on all datanodes before returning.  When
+using <code class="highlighter-rouge">hsync</code> for the WAL, if Accumulo reports success to a user it means the
+data is on disk.  However <code class="highlighter-rouge">hsync</code> is much slower than <code class="highlighter-rouge">hflush</code> and the way it’s
+implemented exacerbates the problem.  For example <code class="highlighter-rouge">hflush</code> make take 1ms and
+<code class="highlighter-rouge">hsync</code> may take 50ms.  This difference will impact writes to Accumulo and can
+be mitigated in some situations with larger buffers in Accumulo.</p>
+
+<p>HDFS keeps checksum data internally by default.  Datanodes store checksum data
+in a separate file in the local filesystem.  This means when <code class="highlighter-rouge">hsync</code> is called
+on a WAL, two files must be synced on each datanode.  Syncing two files doubles
+the time. To make matters even worse, when the two files are synced the local
+filesystem metadata is also synced.  Depending on the local filesystem and its
+configuration, syncing the metadata may or may not take time.  In the worst
+case, we need to wait for four sync operations at the local filesystem level on
+each datanode. One thing I am not sure about, is if these sync operations occur
+in parallel on the replicas on different datanodes.  If anyone can answer this
+question, please let us know on the <a href="/mailing_list">dev list</a>. The following pointers show
+where sync occurs in the datanode code.</p>
+
+<ul>
+  <li><a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L358">BlockReceiver.flushOrSync()</a> calls <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L78">ReplicaOutputStreams.syncDataOut()</a> and <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L87">ReplicaOutputStreams.syncChecksumOut()</a> when <code class="highlighter-rouge">isSync</code> is true.</li>
+  <li>The methods in ReplicaOutputStreams call <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html#force-boolean-">FileChannel.force(true)</a> which
+synchronously flushes data and filesystem metadata.</li>
+</ul>
+
+<p>If files were preallocated (this would avoid syncing local filesystem metadata)
+and checksums were stored in-line, then 1 sync could be done instead of 4.</p>
+
+<h2 id="configuring-wal-flushsync-in-accumulo-16">Configuring WAL flush/sync in Accumulo 1.6</h2>
+
+<p>Accumulo 1.6.0 only supported <code class="highlighter-rouge">hsync</code> and this caused <a href="/release/accumulo-1.6.0#slower-writes-than-previous-accumulo-versions">performance
+problems</a>.  In order to offer better performance, the option to
+configure <code class="highlighter-rouge">hflush</code> was <a href="/release/accumulo-1.6.1#write-ahead-log-sync-implementation">added in 1.6.1</a>.  The
+<a href="/1.6/accumulo_user_manual#_tserver_wal_sync_method">tserver.wal.sync.method</a> configuration option was added to support
+this feature.  This was a tablet server wide option that applied to everything
+written to any table.</p>
+
+<h2 id="group-commit">Group Commit</h2>
+
+<p>Each Accumulo tablet server has a single WAL.  When multiple clients send
+mutations to a tablet server at around the same time, the tablet sever may group
+all of this into a single WAL operation.  It will do this instead of writing and
+syncing or flushing each client’s mutations to the WAL separately.  Doing this
+increase throughput and lowers average latency for clients.</p>
+
+<h2 id="configuring-wal-flushsync-in-accumulo-17">Configuring WAL flush/sync in Accumulo 1.7+</h2>
+
+<p>Accumulo 1.7.0 introduced <a href="/1.7/accumulo_user_manual#_table_durability">table.durability</a>, a new per table property
+for configuring durability.  It also stopped using the <code class="highlighter-rouge">tserver.wal.sync.method</code>
+property.  The <code class="highlighter-rouge">table.durability</code> property has the following four legal values.
+This property defaults to the most durable option which is <code class="highlighter-rouge">sync</code>.</p>
+
+<ul>
+  <li><strong>none</strong> : Do not write to WAL</li>
+  <li><strong>log</strong>  : Write to WAL, but do not sync</li>
+  <li><strong>flush</strong> : Write to WAL and call <code class="highlighter-rouge">hflush</code></li>
+  <li><strong>sync</strong> : Write to WAL and call <code class="highlighter-rouge">hsync</code></li>
+</ul>
+
+<p>If multiple writes arrive at around the same time with different durability
+settings, then the group commit code will choose the most durable.  This can
+cause one tables settings to slow down writes to another table.  Basically, one
+table that is set to <code class="highlighter-rouge">sync</code> can impact the entire system.</p>
+
+<p>In Accumulo 1.6, it was easy to make all writes use <code class="highlighter-rouge">hflush</code> because there was
+only one tserver setting.  Getting everything to use <code class="highlighter-rouge">flush</code> in 1.7 and later
+can be a little tricky because by default the Accumulo metadata table is set to
+use <code class="highlighter-rouge">sync</code>.  The following shell commands show this. The first command sets
+<code class="highlighter-rouge">table.durability=flush</code> as a system wide default for all tables.  However, the
+metadata table is still set to <code class="highlighter-rouge">sync</code>, because it has a per table override for
+that setting.  This override is set when Accumulo is initialized.  To get this
+table to use <code class="highlighter-rouge">flush</code>, the per table override must be deleted.  After deleting
+those properties, the metadata tables will inherit the system wide setting.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; config -s table.durability=flush
+root@uno&gt; createtable foo
+root@uno foo&gt; config -t foo -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+-----------+---------------------+----------------------------------------------
+root@uno&gt; config -t accumulo.metadata -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+table      |    @override ...... | sync
+-----------+---------------------+----------------------------------------------
+root@uno&gt; config -t accumulo.metadata -d table.durability
+root@uno&gt; config -t accumulo.metadata -f table.durability
+-----------+---------------------+----------------------------------------------
+SCOPE      | NAME                | VALUE
+-----------+---------------------+----------------------------------------------
+default    | table.durability .. | sync
+system     |    @override ...... | flush
+-----------+---------------------+----------------------------------------------
+</code></pre></div></div>
+
+<p>In short, executing the following commands will make all writes use <code class="highlighter-rouge">flush</code>
+(assuming no other tables or namespaces have been specifically set to <code class="highlighter-rouge">sync</code>).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s table.durability=flush
+config -t accumulo.metadata -d table.durability
+config -t accumulo.root -d table.durability
+</code></pre></div></div>
+
+<p>Even with these settings adjusted, minor compactions could still force <code class="highlighter-rouge">hsync</code>
+to be called in 1.7.0 and 1.7.1.  This was fixed in 1.7.2 and 1.8.0.  See the
+<a href="/release/accumulo-1.7.2#minor-performance-improvements">1.7.2 release notes</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4112">ACCUMULO-4112</a> for more details.</p>
+
+<p>In addition to the per table durability setting, a per batch writer durability
+setting was also added in 1.7.0.  See
+<a href="/1.8/apidocs/org/apache/accumulo/core/client/BatchWriterConfig.html#setDurability(org.apache.accumulo.core.client.Durability)">BatchWriterConfig.setDurability(…)</a>.  This means any client could
+potentially cause a <code class="highlighter-rouge">hsync</code> operation to occur, even if the system is
+configured to use <code class="highlighter-rouge">hflush</code>.</p>
+
+<h2 id="improving-the-situation">Improving the situation</h2>
+
+<p>The more granular durability settings introduced in 1.7.0 can cause some
+unexpected problems.  <a href="https://issues.apache.org/jira/browse/ACCUMULO-4146">ACCUMULO-4146</a> suggests one possible way to solve these
+problems with Per-durability write ahead logs.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

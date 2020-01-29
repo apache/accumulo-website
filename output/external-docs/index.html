@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>External Documentation</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">External Documentation</h1>
+          
+          <p>This page contains links to external documentation that may be useful to Accumulo users.</p>
+
+<h2 id="papers-and-presentations">Papers and Presentations</h2>
+
+<table id="citationtable" class="table table-bordered table-striped" style="width:100%;">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Links</th>
+      <th>Category</th>
+      <th>Venue</th>
+      <th>Peer-Reviewed</th>
+      <th>Awards</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Prout, Andrew, et al. “Enabling On-Demand Database Computing with MIT SuperCloud Database Management System.” IEEE HPEC 2015.</td>
+      <td><a href="https://arxiv.org/abs/1506.08506">paper</a></td>
+      <td>Architecture</td>
+      <td>IEEE HPEC 2015</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Hubbell, Matthew, et al. “Big Data Strategies for Data Center Infrastructure Management Using a 3D Gaming Platform.” IEEE HPEC 2015.</td>
+      <td><a href="https://arxiv.org/abs/1506.08505">paper</a></td>
+      <td>Use Cases</td>
+      <td>IEEE HPEC 2015</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Gadepally, Vijay, et al. “Computing on Masked Data to improve the Security of Big Data.” IEEE HST 2015.</td>
+      <td><a href="https://arxiv.org/abs/1504.01287">paper</a></td>
+      <td>Use Cases</td>
+      <td>IEEE HST 2015</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Kepner, Jeremy, et al. “Associative Arrays: Unified Mathematics for Spreadsheets, Databases, Matrices, and Graphs.” New England Database Summit 2015.</td>
+      <td><a href="https://arxiv.org/abs/1501.05709">paper</a></td>
+      <td>Use Cases</td>
+      <td>New England Database Summit 2015</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Achieving 100,000,000 database inserts per second using Accumulo and D4M - Kepner et al IEEE HPEC 2014</td>
+      <td><a href="https://arxiv.org/abs/1406.4923">paper</a></td>
+      <td>Performance</td>
+      <td>IEEE HPEC 2014</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Evaluating Accumulo Performance for a Scalable Cyber Data Processing Pipeline - Sawyer et al IEEE HPEC 2014</td>
+      <td><a href="https://arxiv.org/abs/1407.5661">paper</a></td>
+      <td>Performance</td>
+      <td>IEEE HPEC 2014</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Understanding Query Performance in Accumulo - Sawyer et al IEEE HPEC 2013</td>
+      <td><a href="http://ieee-hpec.org/2013/index_htm_files/28-2868615.pdf">paper</a></td>
+      <td>Performance</td>
+      <td>IEEE HPEC 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Benchmarking Apache Accumulo BigData Distributed Table Store Using Its Continuous Test Suite - Sen et al 2013 IEEE International Congress on Big Data.</td>
+      <td><a href="https://sqrrl.com/media/Accumulo-Benchmark-10312013-1.pdf">paper</a></td>
+      <td>Performance</td>
+      <td>IEEE International Congress on Big Data 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Benchmarking the Apache Accumulo Distributed Key-Value Store - Sen et al 2014 Updated version of the IEEE paper, including edits for clarity and additional results from benchmarking on Amazon EC2.</td>
+      <td><a href="accumulo-benchmarking-2.1.pdf">paper</a></td>
+      <td>Performance</td>
+      <td>Online</td>
+      <td>No</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Computing on Masked Data: a High Performance Method for Improving Big Data Veracity - Kepner et al IEEE HPEC 2014</td>
+      <td><a href="https://arxiv.org/abs/1406.5751">paper</a></td>
+      <td>Security</td>
+      <td>IEEE HPEC 2014</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>D4M 2.0 Schema: A General Purpose High Performance Schema for the Accumulo Database - Kepner et al IEEE HPEC 2013</td>
+      <td><a href="http://ieee-hpec.org/2013/index_htm_files/11-Kepner-D4Mschema-IEEE-HPEC.pdf">paper</a> <a href="http://ieee-hpec.org/2013/index_htm_files/11_130716-D4Mschema.pdf">slides</a></td>
+      <td>Architecture</td>
+      <td>IEEE HPEC 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Genetic Sequence Matching Using D4M Big Data Approaches - Dodson et al IEEE HPEC 2014</td>
+      <td> </td>
+      <td>Use Cases</td>
+      <td>IEEE HPEC 2014</td>
+      <td>Yes</td>
+      <td>Best Paper Finalist</td>
+    </tr>
+    <tr>
+      <td>Big Data Dimensional Analysis - Gadepally et al IEEE HPEC 2014</td>
+      <td> </td>
+      <td>Use Cases</td>
+      <td>IEEE HPEC 2014</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>LLSuperCloud: Sharing HPC systems for diverse rapid prototyping - Reuther et al IEEE HPEC 2013</td>
+      <td><a href="http://ieee-hpec.org/2013/index_htm_files/26-HPEC13_LLSuperCloud_Reuther_final.pdf">paper</a> <a href="http://ieee-hpec.org/2013/index_htm_files/HPEC+2013+Reuther+SuperCloud+final.pdf">slides</a></td>
+      <td>Architecture</td>
+      <td>IEEE HPEC 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Spatio-temporal indexing in non-relational distributed databases - Fox et al 2013 IEEE International Congress on Big Data</td>
+      <td><a href="http://geomesa.github.io/assets/outreach/SpatioTemporalIndexing_IEEEcopyright.pdf">paper</a></td>
+      <td>Use Cases</td>
+      <td>IEEE International Congress on Big Data 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Typograph: Multiscale spatial exploration of text documents - Endert, Alex, et al 2013 IEEE International Congress on Big Data</td>
+      <td><a href="https://people.cs.vt.edu/aendert/Alex_Endert/Research_files/Typograph.pdf">paper</a></td>
+      <td>Use Cases</td>
+      <td>IEEE International Congress on Big Data 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>UxV Data to the Cloud via Widgets - Charles et al 18th International Command &amp; Control Research &amp; Technology Symposium 2013</td>
+      <td><a href="http://www.dodccrp.org/events/18th_iccrts_2013/post_conference/papers/051.pdf">paper</a></td>
+      <td>Use Cases</td>
+      <td>Command &amp; Control Research &amp; Technology Symposium 2013</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Driving Big Data With Big Compute - Byun et al IEEE HPEC 2012</td>
+      <td><a href="http://www.mit.edu/~kepner/pubs/ByunKepner_2012_BigData_Paper.pdf">paper</a> <a href="http://ieee-hpec.org/2012/index_htm_files/42_ID18.pptx">slides</a></td>
+      <td>Architecture</td>
+      <td>IEEE HPEC 2012</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Large Scale Network Situational Awareness Via 3D Gaming Technology - Hubbell et al IEEE HPEC 2012</td>
+      <td><a href="http://ieee-hpec.org/2012/index_htm_files/HPEC12_Hubbell.pdf">paper</a> <a href="http://ieee-hpec.org/2012/index_htm_files/31_ID20.pptx">slides</a></td>
+      <td>Use Cases</td>
+      <td>IEEE HPEC 2012</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Rya: a scalable RDF triple store for the clouds - Punnoose et al 1st International Workshop on Cloud Intelligence, ACM, 2012</td>
+      <td><a href="https://sqrrl.com/media/Rya_CloudI20121.pdf">paper</a></td>
+      <td>Architecture</td>
+      <td>ACM International Workshop on Cloud Intelligence 2012</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Dynamic distributed dimensional data model (D4M) database and computation system - Kepner et al ICASSP 2012</td>
+      <td><a href="http://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Paper.pdf">paper</a> <a href="http://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Slides.pdf">slides</a></td>
+      <td>Architecture</td>
+      <td>ICASSP 2012</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>An NSA Big Graph experiment (Technical Report NSA-RD-2013-056002v1)</td>
+      <td><a href="http://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf">slides</a></td>
+      <td>Performance</td>
+      <td>Technical Report</td>
+      <td>No</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Patil, Swapnil, et al. “YCSB++: benchmarking and performance debugging advanced features in scalable table stores.” Proceedings of the 2nd ACM Symposium on Cloud Computing. ACM, 2011.</td>
+      <td><a href="http://www.pdl.cmu.edu/PDL-FTP/Storage/socc2011.pdf">paper</a> <a href="http://www.cercs.gatech.edu/opencirrus/OCsummit11/presentations/patil.pdf">slides</a></td>
+      <td>Performance</td>
+      <td>ACM Symposium on Cloud Computing 2011</td>
+      <td>Yes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Turner, Keith “Apache Accumulo 1.4 &amp; 1.5 Features.” February, 2012</td>
+      <td><a href="https://home.apache.org/~kturner/accumulo14_15.pdf">slides</a></td>
+      <td>Architecture</td>
+      <td>Meetup</td>
+      <td>No</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Fuchs, Adam “Accumulo: Extensions to Google’s Bigtable Design.” March, 2012</td>
+      <td><a href="https://home.apache.org/~afuchs/slides/morgan_state_talk.pdf">slides</a></td>
+      <td>Architecture</td>
+      <td>Meetup</td>
+      <td>No</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Miner, Donald “An Introduction to Apache Accumulo - how it works, why it exists, and how it is used.” August, 2014</td>
+      <td><a href="https://www.slideshare.net/DonaldMiner/an-introduction-to-accumulo">slides</a></td>
+      <td>Architecture</td>
+      <td>Online</td>
+      <td>No</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+$(function() {
+$("#citationtable").dataTable();
+});
+</script>
+
+<h2 id="slides-from-conferences-and-meetups">Slides from Conferences and Meetups</h2>
+
+<ul>
+  <li><a href="https://www.slideshare.net/AccumuloSummit">Accumulo Summit Slides</a></li>
+  <li>Strata + Hadoop World Meetup 24 Oct 2012
+    <ul>
+      <li><a href="https://aws.amazon.com/amis/accumulo-standalone-20121019">Accumulo standalone AMI</a></li>
+      <li><a href="https://www.slideshare.net/jasontrost/accumulo-at-endgame">Large-scale web analytics with Accumulo (and Nutch/Gora, Pig, and Storm)</a></li>
+      <li><a href="https://www.slideshare.net/hortonworks/compaction-and-splitting-in-apache-accumulo">Compaction and Splitting in Accumulo</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="blog-posts-and-writeups">Blog Posts and Writeups</h2>
+
+<ul>
+  <li><a href="http://affy.blogspot.com/search?q=accumulo&amp;by-date=true">Codebits Blogs</a>
+    <ul>
+      <li><a href="http://affy.blogspot.com/2012/04/implement-word-count-in-accumulo.html">Implement Word Count in Accumulo</a></li>
+      <li><a href="http://affy.blogspot.com/2012/04/using-accumulo-to-calculate-seven-day.html">Using Accumulo To Calculate Seven Day Rolling Average</a></li>
+    </ul>
+  </li>
+  <li><a href="http://www.covert.io/">covert.io blogs</a>
+    <ul>
+      <li><a href="http://www.covert.io/post/18414889381/accumulo-nutch-and-gora">Accumulo, Nutch, and Gora</a></li>
+      <li><a href="http://www.covert.io/post/18605091231/accumulo-and-pig">Accumulo and Pig</a></li>
+    </ul>
+  </li>
+  <li><a href="https://gist.github.com/1535657">Accumulo on Ubuntu VirtualBox</a></li>
+  <li><a href="http://www.accumulodata.com/ec2.html">Accumulo on EC2</a></li>
+</ul>
+
+<h2 id="books">Books</h2>
+
+<ul>
+  <li><a href="https://www.packtpub.com/apache-accumulo-for-developers/book">Apache Accumulo for Developers (Packt Publishing)</a></li>
+  <li><a href="https://shop.oreilly.com/product/0636920032304.do">Accumulo: Application Development, Table Design, and Best Practices (O’Reilly Media)</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+
+<ul>
+  <li><a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&amp;rep=rep1&amp;type=pdf">Log-Structured Merge Tree</a></li>
+  <li><a href="https://research.google.com/archive/bigtable.html">BigTable</a></li>
+  <li><a href="https://research.google.com/archive/gfs.html">GFS</a></li>
+  <li><a href="https://research.google.com/archive/chubby.html">Chubby</a></li>
+  <li><a href="https://research.google.com/pubs/pub36356.html">Dapper</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Bloom_filter">Bloom Filter</a></li>
+</ul>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

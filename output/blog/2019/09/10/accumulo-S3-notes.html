@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Using S3 as a data store for Accumulo</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Using S3 as a data store for Accumulo</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Keith Turner<br>
+<b>Date: </b>&nbsp;&nbsp;10 Sep 2019<br>
+
+</p>
+
+<p>Accumulo can store its files in S3, however S3 does not support the needs of
+write ahead logs and the Accumulo metadata table. One way to solve this problem
+is to store the metadata table and write ahead logs in HDFS and everything else
+in S3.  This post shows how to do that using Accumulo 2.0 and Hadoop 3.2.0.
+Running on S3 requires a new feature in Accumulo 2.0, that volume choosers are
+aware of write ahead logs.</p>
+
+<h2 id="hadoop-setup">Hadoop setup</h2>
+
+<p>At least the following settings should be added to Hadoop’s <code class="highlighter-rouge">core-site.xml</code> file on each node in the cluster.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.s3a.access.key<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>KEY<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.s3a.secret.key<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>SECRET<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="c">&lt;!-- without this setting Accumulo tservers would have problems when trying to open lots of files --&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.s3a.connection.maximum<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>128<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre></div></div>
+
+<p>See <a href="https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html#S3A">S3A docs</a>
+for more S3A settings.  To get hadoop command to work with s3 set <code class="highlighter-rouge">export
+HADOOP_OPTIONAL_TOOLS="hadoop-aws"</code> in <code class="highlighter-rouge">hadoop-env.sh</code>.</p>
+
+<p>When trying to use Accumulo with Hadoop’s AWS jar <a href="https://issues.apache.org/jira/browse/HADOOP-16080">HADOOP-16080</a> was
+encountered.  The following instructions build a relocated hadoop-aws jar as a
+work around.  After building the jar copy it to all nodes in the cluster.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> /tmp/haws-reloc
+<span class="nb">cd</span> /tmp/haws-reloc
+<span class="c"># get the Maven pom file that builds a relocated jar</span>
+wget https://gist.githubusercontent.com/keith-turner/f6dcbd33342732e42695d66509239983/raw/714cb801eb49084e0ceef5c6eb4027334fd51f87/pom.xml
+mvn package <span class="nt">-Dhadoop</span>.version<span class="o">=</span>&lt;your hadoop version&gt;
+<span class="c"># the new jar will be in target</span>
+<span class="nb">ls </span>target/
+</code></pre></div></div>
+
+<h2 id="accumulo-setup">Accumulo setup</h2>
+
+<p>For each node in the cluster, modify <code class="highlighter-rouge">accumulo-env.sh</code> to add S3 jars to the
+classpath.  Your versions may differ depending on your Hadoop version,
+following versions were included with Hadoop 3.2.0.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">conf</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">lib</span><span class="k">}</span><span class="s2">/*:</span><span class="k">${</span><span class="nv">HADOOP_CONF_DIR</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">ZOOKEEPER_HOME</span><span class="k">}</span><span class="s2">/*:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/client/*"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:/somedir/hadoop-aws-relocated.3.2.0.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/tools/lib/aws-java-sdk-bundle-1.11.375.jar"</span>
+<span class="c"># The following are dependencies needed by by the previous jars and are subject to change</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jaxb-api-2.2.11.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/commons-lang3-3.7jar"</span>
+<span class="nb">export </span>CLASSPATH
+</code></pre></div></div>
+
+<p>Set the following in <code class="highlighter-rouge">accumulo.properties</code> and then run <code class="highlighter-rouge">accumulo init</code>, but don’t start Accumulo.</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;name node&gt;/accumulo</span>
+</code></pre></div></div>
+
+<p>After running Accumulo init we need to configure storing write ahead logs in
+HDFS.  Set the following in <code class="highlighter-rouge">accumulo.properties</code>.</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;name node&gt;/accumulo,s3a://&lt;bucket&gt;/accumulo</span>
+<span class="py">general.volume.chooser</span><span class="p">=</span><span class="s">org.apache.accumulo.server.fs.PreferredVolumeChooser</span>
+<span class="py">general.custom.volume.preferred.default</span><span class="p">=</span><span class="s">s3a://&lt;bucket&gt;/accumulo</span>
+<span class="py">general.custom.volume.preferred.logger</span><span class="p">=</span><span class="s">hdfs://&lt;namenode&gt;/accumulo</span>
+
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> to initialize the S3 volume.  Doing this
+in two steps avoids putting any Accumulo metadata files in S3 during init.
+Copy <code class="highlighter-rouge">accumulo.properties</code> to all nodes and start Accumulo.</p>
+
+<p>Individual tables can be configured to store their files in HDFS by setting the
+table property <code class="highlighter-rouge">table.custom.volume.preferred</code>.  This should be set for the
+metadata table in case it splits using the following Accumulo shell command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&lt;namenode&gt;/accumulo
+</code></pre></div></div>
+
+<h2 id="accumulo-example">Accumulo example</h2>
+
+<p>The following Accumulo shell session shows an example of writing data to S3 and
+reading it back.  It also shows scanning the metadata table to verify the data
+is stored in S3.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@muchos&gt; createtable s3test
+root@muchos s3test&gt; insert r1 f1 q1 v1
+root@muchos s3test&gt; insert r1 f1 q2 v2
+root@muchos s3test&gt; flush -w
+2019-09-10 19:39:04,695 [shell.Shell] INFO : Flush of table s3test  completed.
+root@muchos s3test&gt; scan 
+r1 f1:q1 []    v1
+r1 f1:q2 []    v2
+root@muchos s3test&gt; scan -t accumulo.metadata -c file
+2&lt; file:s3a://&lt;bucket&gt;/accumulo/tables/2/default_tablet/F000007b.rf []    234,2
+</code></pre></div></div>
+
+<p>These instructions were only tested a few times and may not result in a stable
+system. I have <a href="https://gist.github.com/keith-turner/149f35f218d10e13227461714012d7bf">run</a> a 24hr test with Accumulo and S3.</p>
+
+<h2 id="is-s3guard-needed">Is S3Guard needed?</h2>
+
+<p>I am not completely certain about this, but I don’t think S3Guard is needed for
+regular Accumulo tables.  There are two reasons I think this is so.  First each
+Accumulo user tablet stores its list of files in the metadata table using
+absolute URIs.  This allows a tablet to have files on multiple DFS instances.
+Therefore Accumulo never does a DFS list operation to get a tablets files, it
+always uses whats in the metadata table.  Second, Accumulo gives each file a
+unique name using a counter stored in Zookeeper and file names are never
+reused.</p>
+
+<p>Things are sligthly different for Accumulo’s metadata.  User tablets store
+their file list in the metadata table.  Metadata tablets store their file list
+in the root table.  The root table stores its file list in DFS.  Therefore it
+would be dangerous to place the root tablet in S3 w/o using S3Guard.  That is
+why these instructions place Accumulo metadata in HDFS. <strong>Hopefully</strong> this
+configuration allows the system to be consistent w/o using S3Guard.</p>
+
+<p>When Accumulo 2.1.0 is released with the changes made by <a href="https://github.com/apache/accumulo/issues/1313">#1313 </a> for issue
+<a href="https://github.com/apache/accumulo/issues/936">#936 </a>, it may be possible to store the metadata table in S3 w/o
+S3Gaurd.  If this is the case then only the write ahead logs would need to be
+stored in HDFS.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

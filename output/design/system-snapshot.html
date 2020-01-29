@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo System Snapshot Design</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Accumulo System Snapshot Design</h1>
+          
+          <h2 id="disclaimer">Disclaimer</h2>
+
+<p>This is a work in progress design document for a feature that may never be
+implemented.  It represents one possible design for <a href="https://github.com/apache/accumulo/issues/1044">#1044 </a>, but does
+not have to be the only one.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>Being able to take snapshots of an entire Accumulo system and roll back to
+snapshot would support many administrative use cases(outlined in
+<a href="https://github.com/apache/accumulo/issues/1044">#1044 </a>).  This design outlines one possible way to implement snapshots.</p>
+
+<p>The goal behavior is that a snapshot contains all data that was flushed or bulk
+imported before the snapshot operation started.  A snapshot may contain
+information written to a table while the snapshot operation is in progress.</p>
+
+<p>Each snapshot would be an composed of an tree of immutable files in DFS.  This
+tree would have the following three levels.</p>
+
+<ul>
+  <li><strong>Root Node</strong>: A snapshot of all ZK metadata. This would be accomplished by
+ copying all data in ZK into a file in DFS. This must be done correctly
+ with concurrent operations. If <a href="https://github.com/apache/accumulo/issues/936">#936</a> is implemented, then a
+ snapshot of Zookeeper is a snapshot of everything needed.</li>
+  <li><strong>Internal nodes</strong>: The root node would point a version of the root tablet in
+ DFS. The root tablet snapshot would point to a version of the metadata
+ tablets in DFS.</li>
+  <li><strong>Leaf nodes</strong>:  The metadata nodes would point user table data in HDFS.
+ This would form a snapshot of the data in each table.</li>
+</ul>
+
+<p>The root snapshot node would also store info like per table config that is
+stored in zookeeper, in addition to pointing to other files.</p>
+
+<p>Snapshots would be stored as files in a <code class="highlighter-rouge">/accumulo/snapshots/</code> directory with a
+copy on every volume.</p>
+
+<p>The Accumulo GC would read all snapshots when deciding what files to delete. GC
+would need to read blip markers in snapshot.</p>
+
+<p>Storing all Accumulo snapshot data in DFS would work nicely with DFS snapshots.
+Taking an Accumulo snapshot followed by a DFS snapshot could avoid certain
+catastrophic administrative errors.  However, since Accumulo can work across
+multiple DFS instances there is no requirement to use DFS snapshots.</p>
+
+<h2 id="user-operations">User operations</h2>
+
+<p>Users would be able to do the following operations.</p>
+
+<ul>
+  <li>Create a named snapshot.  The name must be unique.</li>
+  <li>Interrogate snapshot information.
+    <ul>
+      <li>List all snapshots.</li>
+      <li>List the files used by snapshot.</li>
+      <li>Print snapshot details (data version, accumulo version that created
+snapshot, tables, table config, system config, fate ops, etc). Should
+print this in such a way that it can be diffed using a text diff tool.</li>
+      <li>Analyze the space used by snapshots.  Could output a table that shows exclusive and shared space.</li>
+    </ul>
+  </li>
+  <li>Restore Accumulo back to the state of a previous snapshot.</li>
+  <li>Delete a snapshot</li>
+</ul>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="creating-a-snapshot">Creating a snapshot</h3>
+
+<p>A user API and related shell command would create snapshots.  The
+implementation behind this API would create a FATE operation to do the
+snapshot. The FATE op would do the following :</p>
+
+<ol>
+  <li>get snapshot lock in ZK (prevents concurrent snapshot operations)</li>
+  <li>ensure snapshot name is not in use</li>
+  <li>pause changing props in ZK</li>
+  <li>pause non-snapshot FATE ops (let running fate ops keep running, but pause
+any changes to the fate data store in ZK).</li>
+  <li>pause Accumulo GC</li>
+  <li>flush metadata table</li>
+  <li>flush root table (probably need to to fix <a href="https://github.com/apache/accumulo/issues/798">#798 </a>)</li>
+  <li>TODO should the root and metadata table be checked for consistency?
+Ongoing split and FATE ops that may cause inconsistency should resolve after
+the snapshot is restored, so this seems uneeded.</li>
+  <li>Create snapshot copying ZK to DFS (this is the snapshot assuming 
+<a href="https://github.com/apache/accumulo/issues/936">#936 </a> is done)</li>
+  <li>Unpause everything. When the GC is unpaused, it should start fresh reading
+all snapshots available.</li>
+  <li>release snapshot lock</li>
+</ol>
+
+<p>A user could optionally flush some or all tables before taking a snapshot.</p>
+
+<p>More thought needs to be given to write ahead logs.  This design ignores them
+and only concerns itself with flushed data.</p>
+
+<p>The reason behind pausing FATE ops is to get a consistent view of FATE and the
+root+metadata tables.  FATE ops are composed of a series of steps persisted in
+zookeeper.  Each FATE step may mutate ZK, Accumulo metadata table, and/or HDFS.
+Each FATE step is supposed to be idempotent meaning that in the case of failure
+its safe to run it again.  Once a FATE step successfully completes, it expects
+that any changes it made to other data stores (ZK, metadata table, etc) are
+persisted.  The problem this design needs to solve is ensuring that data
+related to completed FATE steps is present in the snapshot.  This guarantee
+needs to be made in the face of concurrency.</p>
+
+<p>Pausing changes to the FATE data store in Zookeeper before flushing the
+metadata table is one way to solve this problem.  If a currently running FATE
+step completes while a snapshot is running, then it will not be able to push
+the next step in ZK. Pushing the next step in ZK would mark the current step as
+complete/successful. This means that when a snapshot is restored it will force
+any FATE steps that were running when the snapshot operation started to rerun.
+When the step reruns it should redo any needed changes to the metadata table
+and/or ZK.</p>
+
+<p>All of the Pause operations could be started concurrently, waiting for all to
+finish before proceeding.  Alternatively GC could be paused first and FATE last
+in sequential order with the goal of minimizing latency for user operations.</p>
+
+<h3 id="listing-snapshots">Listing snapshots</h3>
+
+<p>A user API and related shell command would list snapshots.  The implementation
+would contact a random server which would read snapshot info from DFS.</p>
+
+<h3 id="restoring-a-snapshot">Restoring a snapshot.</h3>
+
+<p>A user API and related shell command would restore snapshots.  The
+implementation would require that Accumulo be stopped.  It would check for this
+in Zookeeper and place something in Zookeeper that keeps Accumulo from
+starting.  One Accumulo is confirmed down and prevented from starting, it would
+update everything needed in Zookeeper.   Updating some things in Zookeeper may
+require special handling, like the unique name allocator data could possibly be
+preserved.</p>
+
+<h3 id="deleting-a-snapshot">Deleting a snapshot.</h3>
+
+<p>A user API and related shell command would delete snapshots.  The
+implementation could simply delete the related files <code class="highlighter-rouge">/accumulo/snapshots/</code>.
+The GC would need to be tolerant of file being deleted while its reading them.
+This could be a FATE op that get the snapshot lock.  That would handle the
+case of deleting a snapshot that is in the process of being created more
+gracefully.</p>
+
+<h3 id="accumulo-gc-changes">Accumulo GC changes</h3>
+
+<p>The Accumulo GC would need to support pausing.  This means it would finish its
+current collection operation and not start another until unpaused.</p>
+
+<p>The Accumulo GC reads a list of delete markers into memory.  Then it scans the
+metadata table looking for delete markers that are in use.  When it finds a
+delete maker is in use, it drops it from memory.  Any delete markers left in
+memory result in deleting files.</p>
+
+<p>For snapshots, Accumulo GC would need to read all of the files referenced by
+each snapshot and use these to defeat delete markers.  This would be done in
+addition to scanning the metadata table.  Since the files for snapshot are
+immutable, the list of files for a snapshot could be computed once and stored.
+This would make GC more efficient by avoiding random accesses to read the
+metadata table snapshot.  The precomputed list of files could also contain size
+info, which would be useful for analyzing space usage quickly.</p>
+
+<h3 id="upgrade-and-downgrade-considerations">Upgrade and downgrade considerations.</h3>
+
+<p>For upgrade purposes the entire snapshot data schema should be designed with
+upgrades and downgrades in mind. Suppose a user has the following snapshots</p>
+
+<ul>
+  <li>Snapshot S1 created by Accumulo 2.1</li>
+  <li>Snapshot S2 created by Accumulo 2.2</li>
+</ul>
+
+<p>Suppose a user wants to run Accumulo 2.1 and restore snapshot S2.   This
+implies that Accumulo 2.1 needs to be able to reliably read data from later
+versions for GC purposes.  One possible way to solve this is to store garbage
+collection information in its own versioned schema.  As long as 2.1 can read
+the version of that schema, then the restoration can happen.</p>
+
+<p>If a user is running Accumulo 2.2 they should be able to restore snapshots S2,
+and S1 with some caveats.  The caveats are that S1 must have no FATE ops in
+progress and the restorations should cause upgrade to run.  The reason upgrade
+should run is because Zookeeper and Accumulo metadata may need to be updated.
+The reason there can be no FATE ops is because upgrade disallows this.</p>
+
+<p>The Accumuo upgrade process should check for snapshots and ensure it can
+use/understand them.  If not, then the upgrade should fail.  For example if
+Accumulo 2.6 can no longer read snapshot data from 2.1 then this should cause
+upgrade to fail.</p>
+
+<p>Below is a very incomplete example schema for the snapshot data file. It is
+here to illustrate some of the points above, but is not well thought out.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"snapshot_schema_version"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="nl">"accumulo_version"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">2.1</span><span class="err">.</span><span class="mi">2</span><span class="w">
+  </span><span class="nl">"zookeeper_data"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"serialized zookeeper snapshot"</span><span class="w">
+  </span><span class="nl">"garbage_collection_data"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"schema_version"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+     </span><span class="nl">"referenced_dirs"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+     </span><span class="nl">"referenced_files"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="possible-problems">Possible problems</h2>
+
+<p>There are some possible problems aread this design does not explore in depth
+that need more attention.</p>
+
+<ul>
+  <li>Evolution of volumes over time.  If snapshots have different volumes than
+each other and the current system, what are the implications of this for
+garbage collection?  Does the snapshot need to serialize the volume config?</li>
+  <li>Unique file names.  Accumulo gives each file it creates a globally unique
+file name.  If the system is rolled back to an older snapshot, with files
+from new snapshots still present, there is a potential for name collisions.
+What are the implications of this?</li>
+  <li>What else?</li>
+</ul>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

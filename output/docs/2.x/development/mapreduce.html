@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - MapReduce</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/quickstart">Quick Start </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/design">Design </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/features">Features </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/clients">Accumulo Clients </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/shell">Accumulo Shell </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_design">Table Design </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_configuration">Table Configuration </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/glossary">Glossary </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="true" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/iterators">Iterators </a></div>
+                
+                <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/development/mapreduce">MapReduce </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/spark">Spark </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/development_tools">Development Tools </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/sampling">Sampling </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/summaries">Summary Statistics </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/proxy">Proxy </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </a>
+              </h4>
+            </div>
+            <div id="collapsesecurity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/wire-encryption">Wire Encryption </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/kerberos">Kerberos </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseconfiguration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/overview">Configuration Overview </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/files">Configuration Files </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/client-properties">Client Properties </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties">Server Properties </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/fate">FATE </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/multivolume">Multi-Volume Installations </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/replication">Replication </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/erasure-coding">Erasure Coding </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/basic">Basic Troubleshooting </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/advanced">Advanced Troubleshooting </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tools">Troubleshooting Tools </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/system-metadata-tables">System Metadata Tables </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Development &nbsp;&gt;&gt;&nbsp; MapReduce</p>
+    
+
+    <div class="row">
+      <div class="col-md-10"><h1>MapReduce</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/development/mapreduce.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>
+
+    <p>Accumulo tables can be used as the source and destination of MapReduce jobs.</p>
+
+<h2 id="general-mapreduce-configuration">General MapReduce configuration</h2>
+
+<h3 id="add-accumulos-mapreduce-api-to-your-dependencies">Add Accumulo’s MapReduce API to your dependencies</h3>
+
+<p>If you are using Maven, add the following dependency to your <code class="highlighter-rouge">pom.xml</code> to use Accumulo’s MapReduce API:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-hadoop-mapreduce<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>The MapReduce API consists of the following classes:</p>
+
+<ul>
+  <li>If using Hadoop’s <strong>mapreduce</strong> API:
+    <ul>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat</a></li>
+    </ul>
+  </li>
+  <li>If using Hadoop’s <strong>mapred</strong> API:
+    <ul>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapred/AccumuloInputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloInputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapred/AccumuloOutputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloOutputFormat</a></li>
+      <li><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapred/AccumuloFileOutputFormat.html">org.apache.accumulo.hadoop.mapred.AccumuloFileOutputFormat</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Before 2.0, the MapReduce API resided in the <code class="highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="highlighter-rouge">accumulo-core</code> jar.
+While this old API still exists and can be used, it has been deprecated and will be removed eventually.</p>
+
+<h3 id="configure-dependencies-for-your-mapreduce-job">Configure dependencies for your MapReduce job</h3>
+
+<p>Before 2.0, Accumulo used the same versions for dependencies (such as Guava) as Hadoop. This allowed
+MapReduce jobs to run with both Accumulo’s &amp; Hadoop’s dependencies on the classpath.</p>
+
+<p>Since 2.0, Accumulo no longer has the same versions for dependencies as Hadoop. While this allows
+Accumulo to update its dependencies more frequently, it can cause problems if both Accumulo’s &amp;
+Hadoop’s dependencies are on the classpath of the MapReduce job. When launching a MapReduce job that
+use Accumulo, you should build a <a href="https://maven.apache.org/plugins/maven-shade-plugin/index.html">shaded jar</a> with all of your dependencies and complete the following
+steps so YARN only includes Hadoop code (and not all of Hadoop’s dependencies) when running your MapReduce job:</p>
+
+<ol>
+  <li>
+    <p>Set <code class="highlighter-rouge">export HADOOP_USE_CLIENT_CLASSLOADER=true</code> in your environment before submitting
+your job with <code class="highlighter-rouge">yarn</code> command.</p>
+  </li>
+  <li>
+    <p>Set the following in your Job configuration.</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">job</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"mapreduce.job.classloader"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="read-input-from-an-accumulo-table">Read input from an Accumulo table</h2>
+
+<p>Follow the steps below to create a MapReduce job that reads from an Accumulo table:</p>
+
+<ol>
+  <li>
+    <p>Create a Mapper with the following class parameterization.</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="nc">Mapper</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">,</span><span class="nc">WritableComparable</span><span class="o">,</span><span class="nc">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="nc">Key</span> <span class="n">k</span><span class="o">,</span> <span class="nc">Value</span> <span class="n">v</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+         <span class="c1">// transform key and value data here</span>
+     <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a>.</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="nc">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+ <span class="n">job</span><span class="o">.</span><span class="na">setInputFormatClass</span><span class="o">(</span><span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="nc">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                         <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">table</span><span class="o">(</span><span class="n">table</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+    <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a> has optional settings.</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Range</span><span class="o">&gt;</span> <span class="n">ranges</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Range</span><span class="o">&gt;();</span>
+ <span class="nc">Collection</span><span class="o">&lt;</span><span class="nc">IteratorSetting</span><span class="o">.</span><span class="na">Column</span><span class="o">&gt;</span> <span class="n">columns</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">IteratorSetting</span><span class="o">.</span><span class="na">Column</span><span class="o">&gt;();</span>
+ <span class="c1">// populate ranges &amp; columns</span>
+ <span class="nc">IteratorSetting</span> <span class="n">is</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IteratorSetting</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="nc">RexExFilter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="nc">RegExFilter</span><span class="o">.</span><span class="na">setRegexs</span><span class="o">(</span><span class="n">is</span><span class="o">,</span> <span class="s">".*suffix"</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+ <span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">table</span><span class="o">(</span><span class="n">table</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">auths</span><span class="o">(</span><span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">)</span> <span class="c1">// optional: default to user's auths if not set</span>
+     <span class="o">.</span><span class="na">ranges</span><span class="o">(</span><span class="n">ranges</span><span class="o">)</span>              <span class="c1">// optional: only read specified ranges</span>
+     <span class="o">.</span><span class="na">fetchColumns</span><span class="o">(</span><span class="n">columns</span><span class="o">)</span>       <span class="c1">// optional: only read specified columns</span>
+     <span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="n">is</span><span class="o">)</span>             <span class="c1">// optional: add iterator that matches row IDs</span>
+     <span class="o">.</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+    <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloInputFormat.html">AccumuloInputFormat</a> can also be configured to read from multiple Accumulo tables.</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="nc">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+ <span class="n">job</span><span class="o">.</span><span class="na">setInputFormatClass</span><span class="o">(</span><span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="nc">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                         <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="nc">AccumuloInputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">table</span><span class="o">(</span><span class="s">"table1"</span><span class="o">).</span><span class="na">auths</span><span class="o">(</span><span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">).</span><span class="na">ranges</span><span class="o">(</span><span class="n">tableOneRanges</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">table</span><span class="o">(</span><span class="s">"table2"</span><span class="o">).</span><span class="na">auths</span><span class="o">(</span><span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">).</span><span class="na">ranges</span><span class="o">(</span><span class="n">tableTwoRanges</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+    <p>If reading from multiple tables, the table name can be retrieved from the input split:</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">class</span> <span class="nc">MyMapper</span> <span class="kd">extends</span> <span class="nc">Mapper</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">,</span><span class="nc">WritableComparable</span><span class="o">,</span><span class="nc">Writable</span><span class="o">&gt;</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="nc">Key</span> <span class="n">k</span><span class="o">,</span> <span class="nc">Value</span> <span class="n">v</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+         <span class="nc">RangeInputSplit</span> <span class="n">split</span> <span class="o">=</span> <span class="o">(</span><span class="nc">RangeInputSplit</span><span class="o">)</span><span class="n">c</span><span class="o">.</span><span class="na">getInputSplit</span><span class="o">();</span>
+         <span class="nc">String</span> <span class="n">tableName</span> <span class="o">=</span> <span class="n">split</span><span class="o">.</span><span class="na">getTableName</span><span class="o">();</span>
+         <span class="c1">// do something with table name</span>
+     <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="write-output-to-an-accumulo-table">Write output to an Accumulo table</h2>
+
+<p>Follow the steps below to write to an Accumulo table from a MapReduce job.</p>
+
+<ol>
+  <li>Create a Reducer with the following class parameterization. The key emitted from
+ the Reducer identifies the table to which the mutation is sent. This allows a single
+ Reducer to write to more than one table if desired. A default table can be configured
+ using the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">AccumuloOutputFormat</a>, in which case the output table name does not have to
+ be passed to the Context object within the Reducer.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">class</span> <span class="nc">MyReducer</span> <span class="kd">extends</span> <span class="nc">Reducer</span><span class="o">&lt;</span><span class="nc">WritableComparable</span><span class="o">,</span> <span class="nc">Writable</span><span class="o">,</span> <span class="nc">Text</span><span class="o">,</span> <span class="nc">Mutation</span><span class="o">&gt;</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="nc">WritableComparable</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Iterable</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">values</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+         <span class="nc">Mutation</span> <span class="n">m</span><span class="o">;</span>
+         <span class="c1">// create the mutation based on input key and value</span>
+         <span class="n">c</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"output-table"</span><span class="o">),</span> <span class="n">m</span><span class="o">);</span>
+     <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div>    </div>
+    <p>The Text object passed as the output should contain the name of the table to which
+ this mutation should be applied. The Text can be null in which case the mutation
+ will be applied to the default table name specified in the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">AccumuloOutputFormat</a>
+ options.</p>
+  </li>
+  <li>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloOutputFormat.html">AccumuloOutputFormat</a>.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="nc">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+ <span class="n">job</span><span class="o">.</span><span class="na">setOutputFormatClass</span><span class="o">(</span><span class="nc">AccumuloOutputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="nc">Properties</span> <span class="n">props</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClientProperties</span><span class="o">().</span><span class="na">to</span><span class="o">(</span><span class="s">"myinstance"</span><span class="o">,</span><span class="s">"zoo1,zoo2"</span><span class="o">)</span>
+                         <span class="o">.</span><span class="na">as</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"passwd"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+ <span class="nc">AccumuloOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">defaultTable</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="write-output-to-rfiles-in-hdfs">Write output to RFiles in HDFS</h2>
+
+<p>Follow the step below to have a MapReduce job output to RFiles in HDFS. These files
+can then be bulk imported into Accumulo:</p>
+
+<ol>
+  <li>Create a Mapper or Reducer with <code class="highlighter-rouge">Key</code> &amp; <code class="highlighter-rouge">Value</code> as output parameters.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">class</span> <span class="nc">MyReducer</span> <span class="kd">extends</span> <span class="nc">Reducer</span><span class="o">&lt;</span><span class="nc">WritableComparable</span><span class="o">,</span> <span class="nc">Writable</span><span class="o">,</span> <span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="o">{</span>
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="nc">WritableComparable</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Iterable</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">values</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+         <span class="nc">Key</span> <span class="n">key</span><span class="o">;</span>
+         <span class="nc">Value</span> <span class="n">value</span><span class="o">;</span>
+         <span class="c1">// create Key &amp; Value based on input</span>
+         <span class="n">c</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+     <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Configure your MapReduce job to use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-hadoop-mapreduce/2.0.0/org/apache/accumulo/hadoop/mapreduce/AccumuloFileOutputFormat.html">AccumuloFileOutputFormat</a>.
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="nc">Job</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+ <span class="n">job</span><span class="o">.</span><span class="na">setOutputFormatClass</span><span class="o">(</span><span class="nc">AccumuloFileOutputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+ <span class="nc">AccumuloFileOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">()</span>
+     <span class="o">.</span><span class="na">outputPath</span><span class="o">(</span><span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="s">"hdfs://localhost:8020/myoutput/"</span><span class="o">)).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="example-code">Example Code</h2>
+
+<p>The <a href="https://github.com/apache/accumulo-examples/">Accumulo Examples repo</a> has several MapReduce examples:</p>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo-examples/blob/master/docs/wordcount.md">wordcount</a> - Uses MapReduce and Accumulo to do a word count on text files</li>
+  <li><a href="https://github.com/apache/accumulo-examples/blob/master/docs/regex.md">regex</a> - Uses MapReduce and Accumulo to find data using regular expressions</li>
+  <li><a href="https://github.com/apache/accumulo-examples/blob/master/docs/rowhash.md">rowhash</a> - Uses MapReduce to read a table and write to a new column in the same table</li>
+  <li><a href="https://github.com/apache/accumulo-examples/blob/master/docs/tablettofile.md">tablettofile</a> - Uses MapReduce to read a table and write one of its columns to a file in HDFS</li>
+  <li><a href="https://github.com/apache/accumulo-examples/blob/master/docs/uniquecols.md">uniquecols</a> - Uses MapReduce to count unique columns in Accumulo</li>
+</ul>
+
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/development/mapreduce.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.7.1</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.7.1</h1>
+          
+          <p>26 Feb 2016</p>
+
+
+
+
+<div class="alert alert-warning" style="margin-bottom: 0px;" role="alert">
+  <p>This version of Accumulo has been superceded by a newer version.</p>
+  <p>Please check <a class="alert-link" href="/release/">our release archive</a> for a newer version.</p>
+</div>
+
+
+
+
+<p>Apache Accumulo 1.7.1 is a maintenance release on the 1.7 version branch. This
+release contains changes from more than 150 issues, comprised of bug-fixes,
+performance improvements, build quality improvements, and more. See
+<a href="https://issues.apache.org/jira/browse/ACCUMULO/fixforversion/12329940">JIRA</a> for a complete list.</p>
+
+<p>Below are resources for this release:</p>
+
+<ul>
+  <li><a href="/1.7/accumulo_user_manual.html">User Manual</a></li>
+  <li><a href="/1.7/apidocs">Javadocs</a></li>
+  <li><a href="/1.7/examples">Examples</a></li>
+</ul>
+
+<p>Users of any previous 1.7.x release are strongly encouraged to update as soon
+as possible to benefit from the improvements with very little concern in change
+of underlying functionality. Users of 1.6 or earlier that are seeking to
+upgrade to 1.7 should consider 1.7.1 as a starting point.</p>
+
+<h2 id="highlights">Highlights</h2>
+
+<h3 id="silent-data-loss-via-bulk-imported-files">Silent data-loss via bulk imported files</h3>
+
+<p>A user recently reported that a simple bulk-import application would
+occasionally lose some records. Through investigation, it was found that when
+bulk imports into a table failed the initial assignment, the logic that
+automatically retries the imports was incorrectly choosing the tablets to
+import the files into. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3967">ACCUMULO-3967</a> contains more information
+on the cause and identification of the bug. The data-loss condition would only
+affect entire files. If records from a file exist in Accumulo, it is still
+guaranteed that all records within that imported file were successful.</p>
+
+<p>As such, users who have bulk import applications using previous versions of
+Accumulo should verify that all of their data was correctly ingested into
+Accumulo and immediately update to Accumulo 1.7.1 (This is the same bug that
+was fixed in 1.6.4, so you won’t be affected if you’re running 1.6.4 or newer).</p>
+
+<h3 id="queued-compactions-not-running">Queued Compactions Not Running</h3>
+
+<p>Found and fixed a bug (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4016">ACCUMULO-4016</a>) in which some queued
+compactions would never run if the number of files changed while the tablet was
+queued.</p>
+
+<h3 id="kerberos-ticket-renewals">Kerberos Ticket Renewals</h3>
+
+<p>A bug was fixed which caused Accumulo clients and services to fail to check and
+(if necessary) renew their Kerberos credentials. This would eventually lead to
+these components failing to properly authenticate until they were restarted.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4069">ACCUMULO-4069</a>)</p>
+
+<h3 id="updated-commons-collection">Updated commons-collection</h3>
+
+<p>The bundled commons-collection library was updated from version 3.2.1 to 3.2.2
+because of a reported vulnerability in that library.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4056">ACCUMULO-4056</a>)</p>
+
+<h3 id="faster-processing-of-conditional-mutations">Faster Processing of Conditional Mutations</h3>
+
+<p>Improved ConditionalMutation processing time by a factor of 3.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4066">ACCUMULO-4066</a>)</p>
+
+<h3 id="slow-gc-while-bulk-importing">Slow GC While Bulk Importing</h3>
+
+<p>Found and worked around an issue where lots of bulk imports creating many new
+files would significantly impair the Accumulo GC service, and possibly prevent
+it from running to completion entirely. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4021">ACCUMULO-4021</a>)</p>
+
+<h3 id="unnoticed-per-table-configuration-updates">Unnoticed Per-table Configuration Updates</h3>
+
+<p>Fixed a bug which caused tablet servers to not notice changes to the per-table
+constraints, under some circumstances. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-3859">ACCUMULO-3859</a>)</p>
+
+<h3 id="tabletservers-kill-themselves-on-centos7">TabletServers kill themselves on CentOS7</h3>
+
+<p>Reduced the aggressiveness with which Accumulo Tablet Servers preemptively
+killed themselves when a local filesystem switched to read-only (indicating a
+possible failure). To reduce false positives, such as those which can occur
+with systemd’s extra cgroup mounts in CentOS7, an additional check was added to
+ensure that tablet servers would only kill themselves if an ext- or
+xfs-formatted disk switched to read-only. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4080">ACCUMULO-4080</a>)</p>
+
+<h3 id="improvements-in-locating-client-configuration-file">Improvements in Locating Client Configuration File</h3>
+
+<p>Fixed some unexpected error messages related to setting
+ACCUMULO_CLIENT_CONF_PATH, and improved the detection of the client.conf file if
+ACCUMULO_CLIENT_CONF_PATH was set to a directory containing client.conf.
+(<a href="https://issues.apache.org/jira/browse/ACCUMULO-4026">ACCUMULO-4026</a>,<a href="https://issues.apache.org/jira/browse/ACCUMULO-4027">ACCUMULO-4027</a>)</p>
+
+<h3 id="transient-zookeeper-disconnect-causes-fate-threads-to-exit">Transient ZooKeeper disconnect causes FATE threads to exit</h3>
+
+<p>ZooKeeper clients are expected to handle the situation where they become
+disconnected from the ZooKeeper server and must wait to be reconnected
+before continuing ZooKeeper operations.</p>
+
+<p>The dedicated threads running inside the Accumulo Master process for FATE
+actions had the potential unexpectedly exit in this disconnected state.
+This caused a scenario where all future FATE-based operations would
+be blocked until the Accumulo Master process was restarted. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4060">ACCUMULO-4060</a>)</p>
+
+<h3 id="incorrect-management-of-certain-apache-thrift-rpcs">Incorrect management of certain Apache Thrift RPCs</h3>
+
+<p>Accumulo relies on Apache Thrift to implement remote procedure calls between
+Accumulo services. Accumulo’s use of Thrift uncovered an unfortunate situation
+where a special RPC (a “oneway” call) would leave unwanted data on the underlying
+Thrift connection. After this extra data was left on connection, all subsequent RPCs
+re-using that connection would fail with “out of sequence response” error messages.
+Accumulo would be left in a bad state until the mishandled connections were released
+or Accumulo services were restarted. (<a href="https://issues.apache.org/jira/browse/ACCUMULO-4065">ACCUMULO-4065</a>)</p>
+
+<h2 id="other-notable-changes">Other Notable Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3509">ACCUMULO-3509</a> Fixed some lock contention in TabletServer, preventing resource cleanup</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-3734">ACCUMULO-3734</a> Fixed quote-escaping bug in VisibilityConstraint</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4025">ACCUMULO-4025</a> Fixed cleanup of bulk load fate transactions</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4098">ACCUMULO-4098</a>,<a href="https://issues.apache.org/jira/browse/ACCUMULO-4113">ACCUMULO-4113</a> Fixed widespread misuse of ByteBuffer</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk
+and Continuous Ingest tests run on any number of nodes. <em>Agitation</em> refers to
+randomly restarting Accumulo processes and Hadoop Datanode processes, and, in
+HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS/Environment</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CentOS 7.1 w/Oracle JDK8 on EC2 (1 m3.xlarge, 8 d2.xlarge)</td>
+      <td>2.6.3</td>
+      <td>9</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>Random walk (All.xml) 24-hour run, saw <a href="https://issues.apache.org/jira/browse/ACCUMULO-3794">ACCUMULO-3794</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4151">ACCUMULO-4151</a>.</td>
+    </tr>
+    <tr>
+      <td>CentOS 7.1 w/Oracle JDK8 on EC2 (1 m3.xlarge, 8 d2.xlarge)</td>
+      <td>2.6.3</td>
+      <td>9</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>21 hr run of CI w/ agitation, 23.1B entries verified.</td>
+    </tr>
+    <tr>
+      <td>CentOS 7.1 w/Oracle JDK8 on EC2 (1 m3.xlarge, 8 d2.xlarge)</td>
+      <td>2.6.3</td>
+      <td>9</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>24 hr run of CI w/o agitation, 23.0B entries verified; saw performance issues outlined in comment on <a href="https://issues.apache.org/jira/browse/ACCUMULO-4146">ACCUMULO-4146</a>.</td>
+    </tr>
+    <tr>
+      <td>CentOS 6.7 (OpenJDK 7), Fedora 23 (OpenJDK 8), and CentOS 7.2 (OpenJDK 7)</td>
+      <td>2.6.1</td>
+      <td>1</td>
+      <td>3.4.6</td>
+      <td>No</td>
+      <td>All unit tests and ITs pass with -Dhadoop.version=2.6.1; Kerberos ITs had a problem with earlier versions of Hadoop</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

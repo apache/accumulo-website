@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo Regex Group Balancer Example</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo Regex Group Balancer Example</h1>
+          
+          <p>For some data access patterns, its important to spread groups of tablets within
+a table out evenly.  Accumulo has a balancer that can do this using a regular
+expression to group tablets. This example shows how this balancer spreads 4
+groups of tablets within a table evenly across 17 tablet servers.</p>
+
+<p>Below shows creating a table and adding splits.  For this example we would like
+all of the tablets where the split point has the same two digits to be on
+different tservers.  This gives us four groups of tablets: 01, 02, 03, and 04.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo&gt; createtable testRGB
+root@accumulo testRGB&gt; addsplits -t testRGB 01b 01m 01r 01z  02b 02m 02r 02z 03b 03m 03r 03z 04a 04b 04c 04d 04e 04f 04g 04h 04i 04j 04k 04l 04m 04n 04o 04p
+root@accumulo testRGB&gt; tables -l
+accumulo.metadata    =&gt;        !0
+accumulo.replication =&gt;      +rep
+accumulo.root        =&gt;        +r
+testRGB              =&gt;         2
+trace                =&gt;         1
+</code></pre></div></div>
+
+<p>After adding the splits we look at the locations in the metadata table.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
+2;01b loc:34a5f6e086b000c []    ip-10-1-2-25:9997
+2;01m loc:34a5f6e086b000c []    ip-10-1-2-25:9997
+2;01r loc:14a5f6e079d0011 []    ip-10-1-2-15:9997
+2;01z loc:14a5f6e079d000f []    ip-10-1-2-13:9997
+2;02b loc:34a5f6e086b000b []    ip-10-1-2-26:9997
+2;02m loc:14a5f6e079d000c []    ip-10-1-2-28:9997
+2;02r loc:14a5f6e079d0012 []    ip-10-1-2-27:9997
+2;02z loc:14a5f6e079d0012 []    ip-10-1-2-27:9997
+2;03b loc:14a5f6e079d000d []    ip-10-1-2-21:9997
+2;03m loc:14a5f6e079d000e []    ip-10-1-2-20:9997
+2;03r loc:14a5f6e079d000d []    ip-10-1-2-21:9997
+2;03z loc:14a5f6e079d000e []    ip-10-1-2-20:9997
+2;04a loc:34a5f6e086b000b []    ip-10-1-2-26:9997
+2;04b loc:14a5f6e079d0010 []    ip-10-1-2-17:9997
+2;04c loc:14a5f6e079d0010 []    ip-10-1-2-17:9997
+2;04d loc:24a5f6e07d3000c []    ip-10-1-2-16:9997
+2;04e loc:24a5f6e07d3000d []    ip-10-1-2-29:9997
+2;04f loc:24a5f6e07d3000c []    ip-10-1-2-16:9997
+2;04g loc:24a5f6e07d3000a []    ip-10-1-2-14:9997
+2;04h loc:14a5f6e079d000c []    ip-10-1-2-28:9997
+2;04i loc:34a5f6e086b000d []    ip-10-1-2-19:9997
+2;04j loc:34a5f6e086b000d []    ip-10-1-2-19:9997
+2;04k loc:24a5f6e07d30009 []    ip-10-1-2-23:9997
+2;04l loc:24a5f6e07d3000b []    ip-10-1-2-22:9997
+2;04m loc:24a5f6e07d30009 []    ip-10-1-2-23:9997
+2;04n loc:24a5f6e07d3000b []    ip-10-1-2-22:9997
+2;04o loc:34a5f6e086b000a []    ip-10-1-2-18:9997
+2;04p loc:24a5f6e07d30008 []    ip-10-1-2-24:9997
+2&lt; loc:24a5f6e07d30008 []    ip-10-1-2-24:9997
+</code></pre></div></div>
+
+<p>Below the information above was massaged to show which tablet groups are on
+each tserver.  The four tablets in group 03 are on two tservers, ideally those
+tablets would be spread across 4 tservers.  Note the default tablet (2&lt;) was
+categorized as group 04 below.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01
+ip-10-1-2-14:9997 04
+ip-10-1-2-15:9997 01
+ip-10-1-2-16:9997 04 04
+ip-10-1-2-17:9997 04 04
+ip-10-1-2-18:9997 04
+ip-10-1-2-19:9997 04 04
+ip-10-1-2-20:9997 03 03
+ip-10-1-2-21:9997 03 03
+ip-10-1-2-22:9997 04 04
+ip-10-1-2-23:9997 04 04
+ip-10-1-2-24:9997 04 04
+ip-10-1-2-25:9997 01 01
+ip-10-1-2-26:9997 02 04
+ip-10-1-2-27:9997 02 02
+ip-10-1-2-28:9997 02 04
+ip-10-1-2-29:9997 04
+</code></pre></div></div>
+
+<p>To remedy this situation, the RegexGroupBalancer is configured with the
+commands below.  The configured regular expression selects the first two digits
+from a tablets end row as the group id.  Tablets that don’t match and the
+default tablet are configured to be in group 04.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; config -t testRGB -s table.custom.balancer.group.regex.pattern=(\\d\\d).*
+root@accumulo testRGB&gt; config -t testRGB -s table.custom.balancer.group.regex.default=04
+root@accumulo testRGB&gt; config -t testRGB -s table.balancer=org.apache.accumulo.server.master.balancer.RegexGroupBalancer
+</code></pre></div></div>
+
+<p>After waiting a little bit, look at the tablet locations again and all is good.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
+2;01b loc:34a5f6e086b000a []    ip-10-1-2-18:9997
+2;01m loc:34a5f6e086b000c []    ip-10-1-2-25:9997
+2;01r loc:14a5f6e079d0011 []    ip-10-1-2-15:9997
+2;01z loc:14a5f6e079d000f []    ip-10-1-2-13:9997
+2;02b loc:34a5f6e086b000b []    ip-10-1-2-26:9997
+2;02m loc:14a5f6e079d000c []    ip-10-1-2-28:9997
+2;02r loc:34a5f6e086b000d []    ip-10-1-2-19:9997
+2;02z loc:14a5f6e079d0012 []    ip-10-1-2-27:9997
+2;03b loc:24a5f6e07d3000d []    ip-10-1-2-29:9997
+2;03m loc:24a5f6e07d30009 []    ip-10-1-2-23:9997
+2;03r loc:14a5f6e079d000d []    ip-10-1-2-21:9997
+2;03z loc:14a5f6e079d000e []    ip-10-1-2-20:9997
+2;04a loc:34a5f6e086b000b []    ip-10-1-2-26:9997
+2;04b loc:34a5f6e086b000c []    ip-10-1-2-25:9997
+2;04c loc:14a5f6e079d0010 []    ip-10-1-2-17:9997
+2;04d loc:14a5f6e079d000e []    ip-10-1-2-20:9997
+2;04e loc:24a5f6e07d3000d []    ip-10-1-2-29:9997
+2;04f loc:24a5f6e07d3000c []    ip-10-1-2-16:9997
+2;04g loc:24a5f6e07d3000a []    ip-10-1-2-14:9997
+2;04h loc:14a5f6e079d000c []    ip-10-1-2-28:9997
+2;04i loc:14a5f6e079d0011 []    ip-10-1-2-15:9997
+2;04j loc:34a5f6e086b000d []    ip-10-1-2-19:9997
+2;04k loc:14a5f6e079d0012 []    ip-10-1-2-27:9997
+2;04l loc:14a5f6e079d000f []    ip-10-1-2-13:9997
+2;04m loc:24a5f6e07d30009 []    ip-10-1-2-23:9997
+2;04n loc:24a5f6e07d3000b []    ip-10-1-2-22:9997
+2;04o loc:34a5f6e086b000a []    ip-10-1-2-18:9997
+2;04p loc:14a5f6e079d000d []    ip-10-1-2-21:9997
+2&lt; loc:24a5f6e07d30008 []    ip-10-1-2-24:9997
+</code></pre></div></div>
+
+<p>Once again, the data above is transformed to make it easier to see which groups
+are on tservers.  The transformed data below shows that all groups are now
+evenly spread.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01 04
+ip-10-1-2-14:9997    04
+ip-10-1-2-15:9997 01 04
+ip-10-1-2-16:9997    04
+ip-10-1-2-17:9997    04
+ip-10-1-2-18:9997 01 04
+ip-10-1-2-19:9997 02 04
+ip-10-1-2-20:9997 03 04
+ip-10-1-2-21:9997 03 04
+ip-10-1-2-22:9997    04
+ip-10-1-2-23:9997 03 04
+ip-10-1-2-24:9997    04
+ip-10-1-2-25:9997 01 04
+ip-10-1-2-26:9997 02 04
+ip-10-1-2-27:9997 02 04
+ip-10-1-2-28:9997 02 04
+ip-10-1-2-29:9997 03 04
+</code></pre></div></div>
+
+<p>If you need this functionality, but a regular expression does not meet your
+needs then extend GroupBalancer.  This allows you to specify a partitioning
+function in Java.  Use the RegexGroupBalancer source as an example.</p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

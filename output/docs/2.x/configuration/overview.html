@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Accumulo Documentation - Configuration Overview</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="row">
+  <div class="col-md-3">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
+      <div class="panel panel-default">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </a>
+              </h4>
+            </div>
+            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/quickstart">Quick Start </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/design">Design </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/features">Features </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/clients">Accumulo Clients </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/shell">Accumulo Shell </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_design">Table Design </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_configuration">Table Configuration </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/glossary">Glossary </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </a>
+              </h4>
+            </div>
+            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/iterators">Iterators </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/mapreduce">MapReduce </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/spark">Spark </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/development_tools">Development Tools </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/sampling">Sampling </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/summaries">Summary Statistics </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/proxy">Proxy </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </a>
+              </h4>
+            </div>
+            <div id="collapsesecurity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/wire-encryption">Wire Encryption </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/kerberos">Kerberos </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseconfiguration" aria-expanded="true" aria-controls="collapseconfiguration">
+                  Configuration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseconfiguration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/configuration/overview">Configuration Overview </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/files">Configuration Files </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/client-properties">Client Properties </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties">Server Properties </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </a>
+              </h4>
+            </div>
+            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/fate">FATE </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/multivolume">Multi-Volume Installations </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/replication">Replication </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/erasure-coding">Erasure Coding </a></div>
+                
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </a>
+              </h4>
+            </div>
+            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/basic">Basic Troubleshooting </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/advanced">Advanced Troubleshooting </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tools">Troubleshooting Tools </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/system-metadata-tables">System Metadata Tables </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
+                
+              </div>
+            </div>
+          
+        
+      
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Configuration &nbsp;&gt;&gt;&nbsp; Configuration Overview</p>
+    
+
+    <div class="row">
+      <div class="col-md-10"><h1>Configuration Overview</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/configuration/overview.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>
+
+    <p>Configuration is managed differently for Accumulo clients and servers.</p>
+
+<h2 id="client-configuration">Client Configuration</h2>
+
+<p><a href="/docs/2.x/getting-started/clients#creating-an-accumulo-client">Accumulo clients</a> are created using Java builder methods, a Java properties object or an
+<a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> file containing <a href="/docs/2.x/configuration/client-properties">client properties</a>.</p>
+
+<h2 id="server-configuration">Server Configuration</h2>
+
+<p>Accumulo processes (i.e master, tablet server, monitor, etc) are configured by <a href="/docs/2.x/configuration/server-properties">server properties</a> whose values can be
+set in the following configuration locations (with increasing precedence) that are described in detail below:</p>
+
+<ol>
+  <li><a href="#default">Default</a> - All properties have a default value</li>
+  <li><a href="#site">Site</a> - Properties set in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a></li>
+  <li><a href="#system">System</a> - Properties set using shell or Java API that apply to entire Accumulo instance</li>
+  <li><a href="#namespace">Namespace</a> - Table properties set using shell or Java API that apply to a table namespace</li>
+  <li><a href="#table">Table</a> - Table properties set using shell or Java API that apply to a table.</li>
+</ol>
+
+<p>If a property is set in multiple locations, the value in the location with the highest precedence is used.</p>
+
+<p>These configuration locations are described in detail below:</p>
+
+<h3 id="default">Default</h3>
+
+<p>All <a href="/docs/2.x/configuration/server-properties">server properties</a> have a default value. Default values are set in the source code and can be viewed for each property on the <a href="/docs/2.x/configuration/server-properties">server properties</a> page.
+While default values have the lowest precedence, they are usually optimal.  However, there are cases where a change can increase query and ingest performance.</p>
+
+<h3 id="site">Site</h3>
+
+<p>Site configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file which can be found in the <code class="highlighter-rouge">conf/</code> directory. Site configuration will override the default value
+of a property. If you are running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their
+local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have <strong>zk mutable: no</strong>
+in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.</p>
+
+<p>Site configuration can be overriden when starting an Accumulo process on the command line (by using the <code class="highlighter-rouge">-o</code> option):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
+</code></pre></div></div>
+<p>Overriding properties is useful if you can’t change <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. It’s done when <a href="https://github.com/apache/accumulo-docker">running Accumulo using Docker</a>.</p>
+
+<h3 id="system">System</h3>
+
+<p>System configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set for the entire Accumulo instance/cluster. These settings are stored in ZooKeeper and can identified by <strong>zk mutable: yes</strong>
+in their description on the <a href="/docs/2.x/configuration/server-properties">server properties</a> page. System configuration will override any site configuration set in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. While most system configuration
+settings take effect immediately, some require a restart of the process which is indicated in the <strong>zk mutable</strong> section of their description. System configuration can be set using
+the following shell command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s PROPERTY=VALUE
+</code></pre></div></div>
+
+<p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/InstanceOperations.html">InstanceOperations</a> in the Java API:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"flush"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="namespace">Namespace</h3>
+
+<p>Namespace configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
+will override System configuration and can be set using the following shell command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
+</code></pre></div></div>
+
+<p>It can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/NamespaceOperations.html">NamespaceOperations</a> in the Java API:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">namespaceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mynamespace"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"sync"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="table">Table</h3>
+
+<p>Table configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
+</code></pre></div></div>
+
+<p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/TableOperations.html">TableOperations</a> in the Java API:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="zookeeper-considerations">Zookeeper Considerations</h3>
+
+<p>Any <a href="/docs/2.x/configuration/server-properties">server properties</a> that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
+number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
+are two areas in which there aren’t any fail safes built into the API that can prevent the user from making this mistake.</p>
+
+<p>While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
+into these warnings should be reconsidered.</p>
+
+<h2 id="viewing-server-configuration">Viewing Server Configuration</h2>
+
+<p>Accumulo’s current configuration can be viewed in the shell using the <code class="highlighter-rouge">config</code> command.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">config</code> - view configuration for the entire system</li>
+  <li><code class="highlighter-rouge">config -ns &lt;NAMESPACE&gt;</code> - view configuration for a specific namespace</li>
+  <li><code class="highlighter-rouge">config -t &lt;TABLE&gt;</code> - view configuration for a specific table</li>
+</ul>
+
+<p>Below is example shell output from viewing configuration for the table <code class="highlighter-rouge">foo</code>. Please note how <code class="highlighter-rouge">table.compaction.major.ratio</code>
+is set in multiple locations but the value <code class="highlighter-rouge">1.6</code> set in the <code class="highlighter-rouge">table</code> scope is used as it has the highest precedence.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo-instance&gt; config -t foo
+---------+---------------------------------------------+-----------------------
+SCOPE    | NAME                                        | VALUE
+---------+---------------------------------------------+-----------------------
+default  | table.bloom.enabled ....................... | false
+default  | table.bloom.error.rate .................... | 0.5%
+default  | table.bloom.hash.type ..................... | murmur
+default  | table.bloom.load.threshold ................ | 1
+default  | table.bloom.size .......................... | 1048576
+default  | table.cache.block.enable .................. | false
+default  | table.cache.index.enable .................. | false
+default  | table.compaction.major.everything.at ...... | 19700101000000GMT
+default  | table.compaction.major.everything.idle .... | 1h
+default  | table.compaction.major.ratio .............. | 1.3
+site     |    @override .............................. | 1.4
+system   |    @override .............................. | 1.5
+table    |    @override .............................. | 1.6
+default  | table.compaction.minor.idle ............... | 5m
+default  | table.compaction.minor.logs.threshold ..... | 3
+default  | table.failures.ignore ..................... | false
+</code></pre></div></div>
+
+
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/configuration/overview.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    </div>  
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

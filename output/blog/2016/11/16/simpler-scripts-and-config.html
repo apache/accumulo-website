@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Simpler scripts and configuration coming in Accumulo 2.0.0</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Simpler scripts and configuration coming in Accumulo 2.0.0</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Mike Walch<br>
+<b>Date: </b>&nbsp;&nbsp;16 Nov 2016<br>
+
+</p>
+
+<p>For the upcoming 2.0.0 release, Accumulo’s scripts and configuration <a href="https://issues.apache.org/jira/browse/ACCUMULO-4490">were refactored</a>
+to make Accumulo easier to use. While Accumulo’s documentation (i.e. the user
+manual and <a href="https://github.com/apache/accumulo/blob/master/INSTALL.md">INSTALL.md</a>) were updated with any changes that were made, this blog post provides
+a summary of the changes.</p>
+
+<h3 id="fewer-scripts">Fewer scripts</h3>
+
+<p>Before 2.0.0, the <code class="highlighter-rouge">bin/</code> directory of Accumulo’s binary tarball contained about 20 scripts:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls </span>accumulo-1.8.0/bin/
+accumulo             build_native_library.sh  generate_monitor_certificate.sh  start-here.sh    stop-server.sh
+accumulo_watcher.sh  check-slaves             LogForwarder.sh                  start-server.sh  tdown.sh
+bootstrap_config.sh  config-server.sh         start-all.sh                     stop-all.sh      tool.sh
+bootstrap_hdfs.sh    config.sh                start-daemon.sh                  stop-here.sh     tup.sh
+</code></pre></div></div>
+
+<p>The number of scripts made it difficult to know which scripts to use.  If you added the <code class="highlighter-rouge">bin/</code> directory to your 
+<code class="highlighter-rouge">PATH</code>, it could add unnecessary commands to your PATH or cause commands to be overridden due generic names
+(like ‘start-all.sh’). The number of scripts were reduced by removing scripts that are no longer used and combining
+scripts with similar functionality.</p>
+
+<p>Starting with 2.0.0, Accumulo will only have 4 scripts in its <code class="highlighter-rouge">bin/</code> directory:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls </span>accumulo-2.0.0/bin/
+accumulo  accumulo-cluster  accumulo-service  accumulo-util
+</code></pre></div></div>
+
+<p>Below are some notes on this change:</p>
+
+<ul>
+  <li>The ‘accumulo’ script was mostly left alone except for improved usage.</li>
+  <li>The ‘accumulo-service’ script was created to manage Accumulo processes as services</li>
+  <li>The ‘accumulo-cluster’ command was created to manage Accumulo on cluster and replaces ‘start-all.sh’ and ‘stop-all.sh’.</li>
+  <li>The ‘accumulo-util’ command combines many utility scripts such as ‘build_native_library.sh’, ‘tool.sh’, etc into one script.</li>
+</ul>
+
+<h3 id="less-configuration">Less configuration</h3>
+
+<p>Before 2.0.0, Accumulo’s <code class="highlighter-rouge">conf/</code> directory looked like the following (after creating initial config files
+using ‘bootstrap_config.sh’):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls </span>accumulo-1.8.0/conf/
+accumulo-env.sh          auditLog.xml  generic_logger.properties            masters                    slaves
+accumulo-metrics.xml     client.conf   generic_logger.xml                   monitor                    templates
+accumulo.policy.example  examples      hadoop-metrics2-accumulo.properties  monitor_logger.properties  tracers
+accumulo-site.xml        gc            log4j.properties                     monitor_logger.xml
+</code></pre></div></div>
+
+<p>While all of these files have a purpose, many are only used in rare situations. For Accumulo 2.0, the ‘conf/’
+directory now only contains a minimum set of configuration files needed to run Accumulo.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls </span>accumulo-2.0.0/conf/
+accumulo-env.sh  accumulo-site.xml  client.conf  log4j-monitor.properties  log4j.properties  log4j-service.properties  templates
+</code></pre></div></div>
+
+<p>The Accumulo tarball does contain host files (i.e ‘tservers’, ‘monitor’, etc) by default as these files are only required by
+the ‘accumulo-cluster’ command. However, the script has a command to generate them.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./bin/accumulo-cluster create-config
+</code></pre></div></div>
+
+<p>Any less common configuration files can still be found in <code class="highlighter-rouge">conf/templates</code>.</p>
+
+<h3 id="better-usage">Better usage</h3>
+
+<p>Before 2.0.0, the ‘accumulo’ command had a limited usage:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./accumulo-1.8.0/bin/accumulo
+accumulo admin | check-server-config | classpath | create-token | gc | help | info | init | jar &lt;jar&gt; [&lt;main class&gt;] args |
+  login-info | master | minicluster | monitor | proxy | rfile-info | shell | tracer | tserver | version | zookeeper | &lt;accumulo class&gt; args
+</code></pre></div></div>
+
+<p>For 2.0.0, all ‘accumulo’ commands were given a short description and organized into the groups.  Below is
+the full usage. It should be noted that usage is limited until the ‘accumulo-env.sh’ configuration file is
+created in <code class="highlighter-rouge">conf/</code> by the <code class="highlighter-rouge">accumulo create-config</code> command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./accumulo-2.0.0/bin/accumulo help
+
+Usage: accumulo &lt;command&gt; [-h] (&lt;argument&gt; ...)
+
+  -h   Prints usage for specified command
+
+Core Commands:
+  init                           Initializes Accumulo
+  shell                          Runs Accumulo shell
+  classpath                      Prints Accumulo classpath
+  version                        Prints Accumulo version
+  admin                          Executes administrative commands
+  info                           Prints Accumulo cluster info
+  help                           Prints usage
+  &lt;main class&gt; args              Runs Java &lt;main class&gt; located on Accumulo classpath
+
+Process Commands:
+  gc                             Starts Accumulo garbage collector
+  master                         Starts Accumulo master
+  monitor                        Starts Accumulo monitor
+  minicluster                    Starts Accumulo minicluster
+  proxy                          Starts Accumulo proxy
+  tserver                        Starts Accumulo tablet server
+  tracer                         Starts Accumulo tracer
+  zookeeper                      Starts Apache Zookeeper instance
+
+Advanced Commands:
+  check-server-config            Checks server config
+  create-token                   Creates authentication token
+  login-info                     Prints Accumulo login info
+  rfile-info                     Prints rfile info
+</code></pre></div></div>
+
+<p>The new ‘accumulo-service’ and ‘accumulo-cluster’ commands also have informative usage.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./accumulo-2.0.0/bin/accumulo-service 
+
+Usage: accumulo-service &lt;service&gt; &lt;command&gt;
+
+Services:
+  gc          Accumulo garbage collector
+  monitor     Accumulo monitor
+  master      Accumulo master
+  tserver     Accumulo tserver
+  tracer      Accumulo tracer
+
+Commands:
+  start       Starts service
+  stop        Stops service
+  kill        Kills service
+
+$ ./accumulo-2.0.0/bin/accumulo-cluster 
+
+Usage: accumulo-cluster &lt;command&gt; (&lt;argument&gt; ...)
+
+Commands:
+  create-config       Creates cluster config
+  start               Starts Accumulo cluster
+  stop                Stops Accumulo cluster
+  start-non-tservers  Starts all services except tservers
+  start-tservers      Starts all tservers on cluster
+  stop-tservers       Stops all tservers on cluster
+  start-here          Starts all services on this node
+  stop-here           Stops all services on this node
+</code></pre></div></div>
+
+<p><em>This post was updated on March 24, 2017 to reflect changes to Accumulo 2.0</em></p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Using Azure Data Lake Gen2 storage as a data store for Accumulo</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Using Azure Data Lake Gen2 storage as a data store for Accumulo</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Karthick Narendran<br>
+<b>Date: </b>&nbsp;&nbsp;15 Oct 2019<br>
+
+</p>
+
+<p>Accumulo can store its files in <a href="https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction">Azure Data Lake Storage Gen2</a>
+using the <a href="https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver">ABFS (Azure Blob File System)</a> driver.
+Similar to <a href="https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html">S3 blog</a>, 
+the write ahead logs &amp; Accumulo metadata can be stored in HDFS and everything else on Gen2 storage
+using the volume chooser feature introduced in Accumulo 2.0. The configurations referred on this blog
+are specific to Accumulo 2.0 and Hadoop 3.2.0.</p>
+
+<h2 id="hadoop-setup">Hadoop setup</h2>
+
+<p>For ABFS client to talk to Gen2 storage, it requires one of the Authentication mechanism listed <a href="https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html#Authentication">here</a>
+This post covers <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">Azure Managed Identity</a>
+formerly known as Managed Service Identity or MSI. This feature provides Azure services with an 
+automatically managed identity in <a href="https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis">Azure AD</a>
+and it avoids the need for credentials or other sensitive information from being stored in code 
+or configs/JCEKS. Plus, it comes free with Azure AD.</p>
+
+<p>At least the following should be added to Hadoop’s <code class="highlighter-rouge">core-site.xml</code> on each node.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.azure.account.auth.type<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>OAuth<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.azure.account.oauth.provider.type<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>org.apache.hadoop.fs.azurebfs.oauth2.MsiTokenProvider<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.azure.account.oauth2.msi.tenant<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>TenantID<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.azure.account.oauth2.client.id<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>ClientID<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre></div></div>
+
+<p>See <a href="https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html">ABFS doc</a>
+for more information on Hadoop Azure support.</p>
+
+<p>To get hadoop command to work with ADLS Gen2 set the 
+following entries in <code class="highlighter-rouge">hadoop-env.sh</code>. As Gen2 storage is TLS enabled by default, 
+it is important we use the native OpenSSL implementation of TLS.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">HADOOP_OPTIONAL_TOOLS</span><span class="o">=</span><span class="s2">"hadoop-azure"</span>
+<span class="nb">export </span><span class="nv">HADOOP_OPTS</span><span class="o">=</span><span class="s2">"-Dorg.wildfly.openssl.path=&lt;path/to/OpenSSL/libraries&gt; </span><span class="k">${</span><span class="nv">HADOOP_OPTS</span><span class="k">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>To verify the location of the OpenSSL libraries, run <code class="highlighter-rouge">whereis libssl</code> command 
+on the host</p>
+
+<h2 id="accumulo-setup">Accumulo setup</h2>
+
+<p>For each node in the cluster, modify <code class="highlighter-rouge">accumulo-env.sh</code> to add Azure storage jars to the
+classpath.  Your versions may differ depending on your Hadoop version,
+following versions were included with Hadoop 3.2.0.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">conf</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">lib</span><span class="k">}</span><span class="s2">/*:</span><span class="k">${</span><span class="nv">HADOOP_CONF_DIR</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">ZOOKEEPER_HOME</span><span class="k">}</span><span class="s2">/*:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/client/*"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/tools/lib/azure-data-lake-store-sdk-2.2.9.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/tools/lib/azure-keyvault-core-1.0.0.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/tools/lib/hadoop-azure-3.2.0.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/tools/lib/wildfly-openssl-1.0.4.Final.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jaxb-api-2.2.11.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/commons-lang3-3.7.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/httpclient-4.5.2.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jackson-core-asl-1.9.13.jar"</span>
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CLASSPATH</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">HADOOP_HOME</span><span class="k">}</span><span class="s2">/share/hadoop/common/lib/jackson-mapper-asl-1.9.13.jar"</span>
+<span class="nb">export </span>CLASSPATH
+</code></pre></div></div>
+
+<p>Include <code class="highlighter-rouge">-Dorg.wildfly.openssl.path</code> to <code class="highlighter-rouge">JAVA_OPTS</code> in <code class="highlighter-rouge">accumulo-env.sh</code> as shown below. This
+java property is an optional performance enhancement for TLS.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">JAVA_OPTS</span><span class="o">=(</span><span class="s2">"</span><span class="k">${</span><span class="nv">ACCUMULO_JAVA_OPTS</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span>
+  <span class="s1">'-XX:+UseConcMarkSweepGC'</span>
+  <span class="s1">'-XX:CMSInitiatingOccupancyFraction=75'</span>
+  <span class="s1">'-XX:+CMSClassUnloadingEnabled'</span>
+  <span class="s1">'-XX:OnOutOfMemoryError=kill -9 %p'</span>
+  <span class="s1">'-XX:-OmitStackTraceInFastThrow'</span>
+  <span class="s1">'-Djava.net.preferIPv4Stack=true'</span>
+  <span class="s1">'-Dorg.wildfly.openssl.path=/usr/lib64'</span>
+  <span class="s2">"-Daccumulo.native.lib.path=</span><span class="k">${</span><span class="nv">lib</span><span class="k">}</span><span class="s2">/native"</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Set the following in <code class="highlighter-rouge">accumulo.properties</code> and then run <code class="highlighter-rouge">accumulo init</code>, but don’t start Accumulo.</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;name node&gt;/accumulo</span>
+</code></pre></div></div>
+
+<p>After running Accumulo init we need to configure storing write ahead logs in
+HDFS.  Set the following in <code class="highlighter-rouge">accumulo.properties</code>.</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;namenode&gt;/accumulo,abfss://&lt;file_system&gt;@&lt;storage_account_name&gt;.dfs.core.windows.net/accumulo</span>
+<span class="py">general.volume.chooser</span><span class="p">=</span><span class="s">org.apache.accumulo.server.fs.PreferredVolumeChooser</span>
+<span class="py">general.custom.volume.preferred.default</span><span class="p">=</span><span class="s">abfss://&lt;file_system&gt;@&lt;storage_account_name&gt;.dfs.core.windows.net/accumulo</span>
+<span class="py">general.custom.volume.preferred.logger</span><span class="p">=</span><span class="s">hdfs://&lt;namenode&gt;/accumulo</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> to initialize the Azure DLS Gen2 volume.  Doing this
+in two steps avoids putting any Accumulo metadata files in Gen2  during init.
+Copy <code class="highlighter-rouge">accumulo.properties</code> to all nodes and start Accumulo.</p>
+
+<p>Individual tables can be configured to store their files in HDFS by setting the
+table property <code class="highlighter-rouge">table.custom.volume.preferred</code>.  This should be set for the
+metadata table in case it splits using the following Accumulo shell command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&lt;namenode&gt;/accumulo
+</code></pre></div></div>
+
+<h2 id="accumulo-example">Accumulo example</h2>
+
+<p>The following Accumulo shell session shows an example of writing data to Gen2 and
+reading it back.  It also shows scanning the metadata table to verify the data
+is stored in Gen2.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@muchos&gt; createtable gen2test
+root@muchos gen2test&gt; insert r1 f1 q1 v1
+root@muchos gen2test&gt; insert r1 f1 q2 v2
+root@muchos gen2test&gt; flush -w
+2019-10-16 08:01:00,564 [shell.Shell] INFO : Flush of table gen2test  completed.
+root@muchos gen2test&gt; scan
+r1 f1:q1 []    v1
+r1 f1:q2 []    v2
+root@muchos gen2test&gt; scan -t accumulo.metadata -c file
+4&lt; file:abfss://&lt;file_system&gt;@&lt;storage_account_name&gt;.dfs.core.windows.net/accumulo/tables/4/default_tablet/F00000gj.rf []    234,2
+</code></pre></div></div>
+
+<p>These instructions will help to configure Accumulo to use Azure’s Data Lake Gen2 Storage along with HDFS. With this setup, 
+we are able to successfully run the continuos ingest test. Going forward, we’ll experiment more on this space 
+with ADLS Gen2 and add/update blog as we come along.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

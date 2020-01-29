@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo Visibility, Authorizations, and Permissions Example</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo Visibility, Authorizations, and Permissions Example</h1>
+          
+          <h2 id="creating-a-new-user">Creating a new user</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@instance&gt; createuser username
+Enter new password for 'username': ********
+Please confirm new password for 'username': ********
+root@instance&gt; user username
+Enter password for user username: ********
+username@instance&gt; createtable vistest
+06 10:48:47,931 [shell.Shell] ERROR: org.apache.accumulo.core.client.AccumuloSecurityException: Error PERMISSION_DENIED - User does not have permission to perform this action
+username@instance&gt; userpermissions
+System permissions:
+
+Table permissions (accumulo.metadata): Table.READ
+username@instance&gt;
+</code></pre></div></div>
+
+<p>A user does not by default have permission to create a table.</p>
+
+<h2 id="granting-permissions-to-a-user">Granting permissions to a user</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; user root
+Enter password for user root: ********
+root@instance&gt; grant -s System.CREATE_TABLE -u username
+root@instance&gt; user username
+Enter password for user username: ********
+username@instance&gt; createtable vistest
+username@instance&gt; userpermissions
+System permissions: System.CREATE_TABLE
+
+Table permissions (accumulo.metadata): Table.READ
+Table permissions (vistest): Table.READ, Table.WRITE, Table.BULK_IMPORT, Table.ALTER_TABLE, Table.GRANT, Table.DROP_TABLE
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<h2 id="inserting-data-with-visibilities">Inserting data with visibilities</h2>
+
+<p>Visibilities are boolean AND (&amp;) and OR (|) combinations of authorization
+tokens. Authorization tokens are arbitrary strings taken from a restricted
+ASCII character set. Parentheses are required to specify order of operations
+in visibilities.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; insert row f1 q1 v1 -l A
+username@instance vistest&gt; insert row f2 q2 v2 -l A&amp;B
+username@instance vistest&gt; insert row f3 q3 v3 -l apple&amp;carrot|broccoli|spinach
+06 11:19:01,432 [shell.Shell] ERROR: org.apache.accumulo.core.util.BadArgumentException: cannot mix | and &amp; near index 12
+apple&amp;carrot|broccoli|spinach
+            ^
+username@instance vistest&gt; insert row f3 q3 v3 -l (apple&amp;carrot)|broccoli|spinach
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<h2 id="scanning-with-authorizations">Scanning with authorizations</h2>
+
+<p>Authorizations are sets of authorization tokens. Each Accumulo user has
+authorizations and each Accumulo scan has authorizations. Scan authorizations
+are only allowed to be a subset of the user’s authorizations. By default, a
+user’s authorizations set is empty.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; scan
+username@instance vistest&gt; scan -s A
+06 11:43:14,951 [shell.Shell] ERROR: java.lang.RuntimeException: org.apache.accumulo.core.client.AccumuloSecurityException: Error BAD_AUTHORIZATIONS - The user does not have the specified authorizations assigned
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<h2 id="setting-authorizations-for-a-user">Setting authorizations for a user</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; setauths -s A
+06 11:53:42,056 [shell.Shell] ERROR: org.apache.accumulo.core.client.AccumuloSecurityException: Error PERMISSION_DENIED - User does not have permission to perform this action
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<p>A user cannot set authorizations unless the user has the System.ALTER_USER permission.
+The root user has this permission.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ********
+root@instance vistest&gt; setauths -s A -u username
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; scan -s A
+row f1:q1 [A]    v1
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<p>The default authorizations for a scan are the user’s entire set of authorizations.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ********
+root@instance vistest&gt; setauths -s A,B,broccoli -u username
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+row f2:q2 [A&amp;B]    v2
+row f3:q3 [(apple&amp;carrot)|broccoli|spinach]    v3
+username@instance vistest&gt; scan -s B
+username@instance vistest&gt;
+</code></pre></div></div>
+
+<p>If you want, you can limit a user to only be able to insert data which they can read themselves.
+It can be set with the following constraint.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance vistest&gt; user root
+Enter password for user root: ******
+root@instance vistest&gt; config -t vistest -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
+root@instance vistest&gt; user username
+Enter password for user username: ********
+username@instance vistest&gt; insert row f4 q4 v4 -l spinach
+    Constraint Failures:
+        ConstraintViolationSummary(constrainClass:org.apache.accumulo.core.security.VisibilityConstraint, violationCode:2, violationDescription:User does not have authorization on column visibility, numberOfViolatingMutations:1)
+username@instance vistest&gt; insert row f4 q4 v4 -l spinach|broccoli
+username@instance vistest&gt; scan
+row f1:q1 [A]    v1
+row f2:q2 [A&amp;B]    v2
+row f3:q3 [(apple&amp;carrot)|broccoli|spinach]    v3
+row f4:q4 [spinach|broccoli]    v4
+username@instance vistest&gt;
+</code></pre></div></div>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

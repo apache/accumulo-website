@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.7.3</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.7.3</h1>
+          
+          <p>06 Apr 2017</p>
+
+
+
+
+<div class="alert alert-warning" style="margin-bottom: 0px;" role="alert">
+  <p>This version of Accumulo has been superceded by a newer version.</p>
+  <p>Please check <a class="alert-link" href="/release/">our release archive</a> for a newer version.</p>
+</div>
+
+
+
+
+<p>Apache Accumulo 1.7.3 is a maintenance release on the 1.7 version branch. This release contains changes from 79 issues, comprised of bug-fixes, 
+performance improvements, build quality improvements, and more. See<br />
+<a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12312121&amp;version=12335841">JIRA</a> for a complete list.</p>
+
+<p>Below are resources for this release:</p>
+
+<ul>
+  <li><a href="https://accumulo.apache.org/1.7/accumulo_user_manual.html">User Manual</a> : In-depth developer and administrator documentation.</li>
+  <li><a href="https://accumulo.apache.org/1.7/apidocs/">Javadocs</a>  : Accumulo 1.7.3 API</li>
+  <li><a href="https://accumulo.apache.org/1.7/examples/">Examples</a> : Code with corresponding readme files that give step by step instructions for running example code.</li>
+</ul>
+
+<p>Accumulo follows <a href="http://semver.org/">Semantic Versioning</a> <a href="https://github.com/apache/accumulo/blob/rel/1.7.3/README.md#api">guidelines</a>.  This release is a 
+“<a href="http://semver.org/#spec-item-6">patch version</a>”, which  means that only backwards compatible bug fixes are introduced in this version. A bug fix is defined as 
+an internal change that fixes incorrect behavior. Users of any previous 1.7.x release are strongly encouraged to update as soon as possible to benefit from the 
+bug fixes with very little concern in change of underlying functionality.  As always, the Accumulo developers take API compatibility very seriously 
+and have invested much time to ensure that we meet the promises set forth to our users. Users of 1.6 or earlier that are seeking to upgrade to 1.7 should 
+consider 1.7.3 as a starting point.</p>
+
+<h2 id="major-changes">Major Changes</h2>
+
+<h3 id="tablet-server-performance-improvement">Tablet Server Performance Improvement</h3>
+
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-4458">ACCUMULO-4458</a> mitigated some contention on the Hadoop configuration instance backing the XML configs 
+read for SiteConfiguration. This should improve overall Tablet Server performance.</p>
+
+<h3 id="synchronization-issue-with-deep-copies-of-sources">Synchronization issue with deep copies of sources</h3>
+
+<p>Deep copies of iterator sources were not thread safe and threw exceptions, mostly down in the ZlibDecompressor library. The real bug was in the 
+BoundedRangeFileInputStream. The read() method synchronizes on the underlying FSDataInputStream, however the available() method did not. 
+See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4391">ACCUMULO-4391</a>.</p>
+
+<h3 id="system-permission-bug-in-thrift-proxy">System permission bug in Thrift Proxy</h3>
+
+<p>The Accumulo Proxy lacked support for the following system permissions:</p>
+
+<ul>
+  <li>System.CREATE_NAMESPACE</li>
+  <li>System.DROP_NAMESPACE</li>
+  <li>System.ALTER_NAMESPACE</li>
+  <li>System.OBTAIN_DELEGATION_TOKEN</li>
+</ul>
+
+<p>Without these permissions, proxy users would get an AccumuloException if attempting
+any of those operations.  Fixed in ticket <a href="https://issues.apache.org/jira/browse/ACCUMULO-4519">ACCUMULO-4519</a>.</p>
+
+<h3 id="hostregextableloadbalancer-used-stale-information">HostRegexTableLoadBalancer used stale information</h3>
+
+<p>The HostRegexTableLoadBalancer maintains an internal mapping of tablet server pools and tablet server status. It was updated at a configurable interval 
+initially as an optimization. Unfortunately it had the negative side effect of providing the assignment and balance operations with stale information. 
+This lead to a constant shuffling of tablets. The configuration property was removed so that assign/balance methods get updated information every time. 
+See <a href="https://issues.apache.org/jira/browse/ACCUMULO-4576">ACCUMULO-4576</a>.</p>
+
+<h3 id="modify-tableoperations-online-to-check-for-table-state">Modify TableOperations online to check for table state</h3>
+
+<p>The table operations online operation executes as a fate operation. If a transaction lock for the table is currently held, this operation will block even 
+if no action is needed. <a href="https://issues.apache.org/jira/browse/ACCUMULO-4574">ACCUMULO-4574</a> changes the behavior of the online operation to a NOOP if the 
+table is already in the requested state. This returns immediately without queuing a fate operation.</p>
+
+<h2 id="other-notable-changes">Other Notable Changes</h2>
+
+<ul>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4600">ACCUMULO-4600</a> Shell does not fall back to accumulo-site.xml when on classpath</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4597">ACCUMULO-4597</a> NPE from RFile PrintInfo when RF has more than 1,000 column families.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4488">ACCUMULO-4488</a> Fix gap in user manual on Kerberos for clients</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-2724">ACCUMULO-2724</a> CollectTabletStats had multiple -t parameter</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4431">ACCUMULO-4431</a> Log what random is chosen for a tserver.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4549">ACCUMULO-4549</a> Remove duplicate init functions in TabletBalancer</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4467">ACCUMULO-4467</a> Random Walk broken because of unmet dependency on commons-math</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4578">ACCUMULO-4578</a> Cancel compaction FATE operation does not release namespace lock</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4505">ACCUMULO-4505</a> Shell still reads accumulo-site.xml when using Zookeeper CLI options</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4535">ACCUMULO-4535</a> HostRegexTableLoadBalancer fails with NullPointerException</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4575">ACCUMULO-4575</a> Concurrent table delete operations leave orphan fate transaction locks</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>The recommended way to upgrade from a prior 1.7.x release is to stop Accumulo, upgrade to 1.7.3 and then start 1.7.3.</p>
+
+<p>When upgrading, there is a known issue if the upgrade fails due to outstanding <a href="https://accumulo.apache.org/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate">FATE</a>
+operations, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4496">ACCUMULO-4496</a> The work around if this situation is encountered:</p>
+
+<ul>
+  <li>Start tservers</li>
+  <li>Start shell</li>
+  <li>Run <code class="highlighter-rouge">fate print</code> to list all</li>
+  <li>If completed, just delete with <code class="highlighter-rouge">fate delete</code></li>
+  <li>Start masters once there are no more fate operations</li>
+</ul>
+
+<p>If any of the FATE operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version. 
+When performing an upgrade between major versions, the upgrade is one-way, therefore it is important that you do not have any outstanding 
+FATE operations before starting the upgrade.</p>
+
+<h3 id="from-16-to-17">From 1.6 to 1.7</h3>
+
+<p>Upgrades from 1.6 to 1.7 are be possible with little effort as no changes were made at the data layer and RPC changes
+were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.6, perform the Accumulo upgrade to
+1.7, and then start 1.7. Like previous versions, after 1.7.0 is started on a 1.6 instance, a one-time upgrade will
+happen by the Master which will prevent a downgrade back to 1.6. Upgrades are still one way. Upgrades from versions
+prior to 1.6 to 1.7 should follow the below path to 1.6 and then perform the upgrade to 1.7 – direct upgrades to 1.7
+for versions other than 1.6 are untested.</p>
+
+<p>After upgrading to 1.7.0, users will notice the addition of a <code class="highlighter-rouge">replication</code> table in the <code class="highlighter-rouge">accumulo</code> namespace. This
+table is created and put offline to avoid any additional maintenance if the data-center replication feature is not
+in use.</p>
+
+<p>Existing configuration files from 1.6 should be compared against the examples provided in 1.7. The 1.6 configuration
+files should all function with 1.7 code, but you will likely want to include a new file (hadoop-metrics2-accumulo.properties)
+to enable the new metrics subsystem. Read the section on Hadoop Metrics2 in the Administration chapter of the Accumulo User Manual.</p>
+
+<p>For each of the other new features, new configuration properties exist to support the feature. Refer to the added
+sections in the User Manual for the feature for information on how to properly configure and use the new functionality.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run on any number of nodes. Agitation refers to randomly restarting Accumulo processes and Hadoop Datanode processes, and, in HDFS High-Availability instances, forcing NameNode failover.</p>
+
+<table id="release_notes_testing" class="table">
+  <thead>
+    <tr>
+      <th>OS/Environment</th>
+      <th>Hadoop</th>
+      <th>Nodes</th>
+      <th>ZooKeeper</th>
+      <th>HDFS HA</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CentOS 7, openJDK 1.8 from CentOS yum repo, EC2; 1 leader m3.xlarge, 8 workers d2.xlarge</td>
+      <td>2.7.3</td>
+      <td>9</td>
+      <td>3.4.9</td>
+      <td>No</td>
+      <td>24 HR Continuous Ingest without Agitation</td>
+    </tr>
+    <tr>
+      <td>CentOS 7, openJDK 1.8 from CentOS yum repo, EC2; 1 leader m3.xlarge, 8 workers d2.xlarge</td>
+      <td>2.7.3</td>
+      <td>9</td>
+      <td>3.4.9</td>
+      <td>No</td>
+      <td>24 HR Continuous Ingest Agitation</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

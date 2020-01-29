@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 1.9.3</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 1.9.3</h1>
+          
+          <p>10 Apr 2019</p>
+
+
+
+
+
+
+
+<p>Apache Accumulo 1.9.3 contains bug fixes for Write Ahead Logs and compaction.
+Users of 1.9.2 are encouraged to upgrade.</p>
+
+<ul>
+  <li><a href="/1.9/accumulo_user_manual.html">User Manual</a> - In-depth developer and administrator documentation</li>
+  <li><a href="/1.9/apidocs/">Javadocs</a> - Accumulo 1.9 API</li>
+  <li><a href="/1.9/examples/">Examples</a> - Code with corresponding readme files that give step by
+step instructions for running example code</li>
+</ul>
+
+<h2 id="notable-changes">Notable Changes</h2>
+
+<h3 id="multiple-fixes-for-write-ahead-logs">Multiple Fixes for Write Ahead Logs</h3>
+
+<p>This release fixes Write Ahead Logs issues that slow or prevent recovery
+and in some cases lead to data loss. The fixes reduce the number of WALS
+referenced by a tserver, improve error handing, and improve clean up.</p>
+
+<ul>
+  <li>
+    <p>Eliminates a race condition that could result in data loss during recovery.
+If the GC deletes unreferenced WALs from ZK while the master is reading
+recovery WALs from ZK, the master may skip WALs it should not, resulting in
+data loss.  Fixed in <a href="https://github.com/apache/accumulo/issues/866">#866</a>.</p>
+  </li>
+  <li>
+    <p>Opening a new WAL in DFS may fail, but still be advertised in ZK. This could
+result in a missing WAL during recovery, preventing tablets from loading.
+There is no data loss in this case, just WAL references that should not exists.
+Reported in <a href="https://github.com/apache/accumulo/issues/949">#949</a> and fixed in <a href="https://github.com/apache/accumulo/issues/1057">#1005</a>.</p>
+  </li>
+  <li>
+    <p>tserver failures could result in many empty WALs that unnecessarily slow recovery.
+This was fixed in <a href="https://github.com/apache/accumulo/issues/845">#823</a>.</p>
+  </li>
+  <li>
+    <p>Some write patterns caused tservers to unnecessarily reference a lot of WALs,
+which could slow any recovery.  In <a href="https://github.com/apache/accumulo/issues/860">#854</a> the max WALs referenced was
+limited regardless of the write pattern, avoiding long recovery times.</p>
+  </li>
+  <li>
+    <p>During tablet recovery, filter out logs that do not define the tablet. <a href="https://github.com/apache/accumulo/issues/881">#881</a></p>
+  </li>
+  <li>
+    <p>If a tserver fails sorting, a marker file is written to the recovery directory.
+This marker prevents any subsequent recovery attempts from succeeding.
+Fixed by modifying the WAL RecoveryLogReader to handle failed file markers in <a href="https://github.com/apache/accumulo/issues/1048">#961</a>.</p>
+  </li>
+  <li>
+    <p>Improve performance of serializing mutations to a WAL by avoiding frequent synchronization. <a href="https://github.com/apache/accumulo/issues/669">#669</a></p>
+  </li>
+</ul>
+
+<h3 id="multiple-fixes-for-compaction-issues">Multiple Fixes for Compaction Issues</h3>
+
+<ul>
+  <li>
+    <p>Stop locking during compaction.  Compactions acquired the tablet lock between each
+key value. This created unnecessary contention with other operations like scan and
+bulk imports.  The synchronization was removed <a href="https://github.com/apache/accumulo/issues/1032">#1031</a>.</p>
+  </li>
+  <li>
+    <p>Only re-queue compaction when there is activity. <a href="https://github.com/apache/accumulo/issues/759">#759</a></p>
+  </li>
+</ul>
+
+<h3 id="fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions">Fix ArrayOutOfBounds error when new files are created (affects all previous versions)</h3>
+
+<p>If the 7 digit base 36 number used to name files attempted to go to 8 digits,
+then compactions would fail.  This was fixed in <a href="https://github.com/apache/accumulo/issues/562">#562</a>.</p>
+
+<h3 id="updated-master-metrics-to-include-fate-metrics">Updated Master Metrics to include FATE metrics.</h3>
+
+<p>Added master metrics to provide a snapshot of current FATE operations.  The metrics added:</p>
+<ul>
+  <li>the number of current FATE transactions in progress,</li>
+  <li>the count of child operations that have occurred on the zookeeper FATE node</li>
+  <li>a count of zookeeper connection errors when the snapshot is taken.</li>
+</ul>
+
+<p>The number of child operations provides a light-weight surrogate for FATE transaction
+progression between snapshots. The metrics are controlled with the following properties:</p>
+
+<ul>
+  <li>master.fate.metrics.enabled - default to <em>false</em> preserve current metric reporting</li>
+  <li>master.fate.metrics.min.update.interval - default to <em>60s</em> - there is a hard limit of 10s.</li>
+</ul>
+
+<p>When enabled, the metrics are published to JMX and can optionally be configured using standard
+hadoop metrics2 configuration files.</p>
+
+<h3 id="fixed-issues-with-native-maps-with-libstdc-82-and-higher">Fixed issues with Native Maps with libstdc++ 8.2 and higher</h3>
+
+<p>Versions of libstdc++ 8.2 and higher triggered errors within within the native map code.
+This release fixes issues <a href="https://github.com/apache/accumulo/issues/767">#767</a>, <a href="https://github.com/apache/accumulo/issues/769">#769</a>, <a href="https://github.com/apache/accumulo/issues/1064">#1064 </a>, and <a href="https://github.com/apache/accumulo/issues/1070">#1070 </a>.</p>
+
+<h3 id="fixed-splitting-tablets-with-files-and-no-data">Fixed splitting tablets with files and no data</h3>
+
+<p>The split code assumed that if a tablet had files that it had data in
+those files.  There are some edge case where this is not true.  Updated
+the split code to handle this <a href="https://github.com/apache/accumulo/issues/999">#998</a>.</p>
+
+<h3 id="log-when-a-scan-waits-a-long-time-for-files">Log when a scan waits a long time for files.</h3>
+
+<p>Accumulo has a configurable limit on the max number of files open in a
+tserver for all scans.  When too many files are open, scans must wait.
+In <a href="https://github.com/apache/accumulo/issues/978">#978</a> and <a href="https://github.com/apache/accumulo/issues/981">#981</a> scans that wait too long for files now log a message.</p>
+
+<h3 id="fixed-race-condition-in-table-existence-check">Fixed race condition in table existence check.</h3>
+
+<p>The Accumulo client code that checks if tables exists had a race
+condition.  The race was fixed in <a href="https://github.com/apache/accumulo/issues/768">#768</a> and <a href="https://github.com/apache/accumulo/issues/973">#973</a></p>
+
+<h3 id="support-running-mini-accumulo-using-java-11">Support running Mini Accumulo using Java 11</h3>
+
+<p>Mini Accumulo made some assumptions about classloaders that were no
+longer true in Java 11.  This caused Mini to fail in Java 11.  In
+<a href="https://github.com/apache/accumulo/issues/924">#924</a> Mini was updated to work with Java 11, while still working
+with Java 7 and 8.</p>
+
+<h3 id="fixed-issue-with-improperly-configured-snappy">Fixed issue with improperly configured Snappy</h3>
+
+<p>If snappy was configured and the snappy libraries were not available then minor
+compactions could hang forever.  In <a href="https://github.com/apache/accumulo/issues/920">#920</a> and <a href="https://github.com/apache/accumulo/issues/925">#925</a> this was fixed and minor
+compactions will proceed when a different compression is configured.</p>
+
+<h3 id="handle-bad-locality-group-config">Handle bad locality group config.</h3>
+
+<p>Improperly configured locality groups could cause a tablet to become
+inoperative.  This was fixed in <a href="https://github.com/apache/accumulo/issues/819">#819</a> and <a href="https://github.com/apache/accumulo/issues/840">#840</a>.</p>
+
+<h3 id="fixed-bulk-import-race-condition">Fixed bulk import race condition.</h3>
+
+<p>There was a race condition in bulk import that could result in files
+being imported after a bulk import transaction had completed.  In the
+worst case these files were already compacted and garbage collected.
+This would cause a tablet to have a reference to a file that did not
+exists.  No data would have been lost, but it would cause scans to fail.
+The race was fixed in <a href="https://github.com/apache/accumulo/issues/800">#800</a> and <a href="https://github.com/apache/accumulo/issues/837">#837</a></p>
+
+<h3 id="fixed-issue-with-hostregextableloadbalancer">Fixed issue with HostRegexTableLoadBalancer</h3>
+
+<p>This addresses an issue when using the HostRegexTableLoadBalancer
+when the default pool is empty. The load balancer will not assign the tablets at all.
+Here, we select a random pool to assign the tablets to. This behavior is on by
+default in the HostRegexTableLoadBalancer but can be disabled via
+HostRegexTableLoadBalancer configuration setting
+ <em>table.custom.balancer.host.regex.HostTableLoadBalancer.ALL</em>
+ Fixed in <a href="https://github.com/apache/accumulo/issues/691">#691</a> - backported to 1.9 in <a href="https://github.com/apache/accumulo/issues/710">#710</a></p>
+
+<h3 id="update-to-libthrift-version">Update to libthrift version</h3>
+
+<p>The packaged, binary  tarball contains updated version of libthrift to version 0.9.3-1 to
+address thrift CVE. Issue <a href="https://github.com/apache/accumulo/issues/1029">#1029</a></p>
+
+<h2 id="useful-links">Useful links</h2>
+
+<ul>
+  <li><a href="https://lists.apache.org/thread.html/62a490ee3005ef2ec1f3865f6a9539efc082abc49c90892b49005eed@%3Cdev.accumulo.apache.org%3E">Release VOTE email thread</a></li>
+  <li><a href="https://github.com/apache/accumulo/compare/rel/1.9.2...apache:rel/1.9.3">All Changes since 1.9.2</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F7">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+  <li><a href="/release/accumulo-1.9.2/">1.9.2 release notes</a> - Release notes showing changes in the previous release</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Scaling Accumulo with Multi-Volume Support</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Scaling Accumulo with Multi-Volume Support</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Dave Marion & Eric Newton<br>
+<b>Date: </b>&nbsp;&nbsp;25 Jun 2014<br>
+
+</p>
+
+<p>Originally posted at <a href="https://blogs.apache.org/accumulo/entry/scaling_accumulo_with_multi_volume">https://blogs.apache.org/accumulo/entry/scaling_accumulo_with_multi_volume</a></p>
+
+<p>MapReduce is a commonly used approach to querying or analyzing large amounts of data. Typically MapReduce jobs are created using using some set of files in HDFS to produce a result. When new files come in, they get added to the set, and the job gets run again. A common Accumulo approach to this scenario is to load all of the data into a single instance of Accumulo.</p>
+
+<p>A single instance of Accumulo can scale quite largely(<a href="http://ieeexplore.ieee.org/zpl/login.jsp?arnumber=6597155">1</a>, <a href="http://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf">2</a>) to accommodate high levels of ingest and query. The manner in which ingest is performed typically depends on latency requirements. When the desired latency is small, inserts are performed directly into Accumulo. When the desired latency is allowed to be large, then a <a href="http://accumulo.apache.org/1.6/examples/bulkIngest.html">bulk style of ingest</a> can be used. There are other factors to consider as well, but they are outside the scope of this article.</p>
+
+<p>On large clusters using the bulk style of ingest input files are typically batched into MapReduce jobs to create a set of output RFiles for import into Accumulo. The number of files per job is typically determined by the required latency and the number of MapReduce tasks that the cluster can complete in the given time-frame. The resulting RFiles, when imported into Accumulo, are added to the list of files for their associated tablets. Depending on the configuration this will cause Accumulo to major compact these tablets. If the configuration is tweaked to allow more files per tablet, to reduce the major compactions, then more files need to be opened at query time when performing scans on the tablet. Note that no single node is burdened by the file management; but, the number of file operations in aggregate is very large. If each server has several hundred tablets, and there are a thousand tablet servers, and each tablet compacts some files every few imports, we easily have 50,000 file operations (create, allocate a block, rename and delete) every ingest cycle.</p>
+
+<p>In addition to the NameNode operations caused by bulk ingest, other Accumulo processes (e.g. master, gc) require interaction with the NameNode. Single processes, like the garbage collector, can be starved of responses from the NameNode as the NameNode is limited on the number of concurrent operations. It is not unusual for an operator’s request for “hadoop fs -ls /accumulo” to take a minute before returning results during the peak file-management periods. In particular, the file garbage collector can fall behind, not finishing a cycle of unreferenced file removal before the next ingest cycle creates a new batch of files to be deleted.</p>
+
+<p>The Hadoop community addressed the NameNode bottleneck issue with <a href="https://issues.apache.org/jira/browse/HDFS-1052">HDFS federation</a> which allows a datanode to serve up blocks for multiple namenodes. Additionally, ViewFS allows clients to communicate with multiple namenodes through the use of a client-side mount table. This functionality was insufficient for Accumulo in the 1.6.0 release as ViewFS works at a directory level; as an example, /dirA is mapped to one NameNode and /dirB is mapped to another, and Accumulo uses a single HDFS directory for its storage.</p>
+
+<p>Multi-Volume support (MVS), included in 1.6.0, includes the changes that allow Accumulo to work across multiple HDFS clusters (called volumes in Accumulo) while continuing to use a single HDFS directory. A new property, instance.volumes, can be configured with multiple HDFS nameservices and Accumulo will use them all to balance out NameNode operations. The nameservices configured in instance.volumes may optionally use the High Availability NameNode feature as it is transparent to Accumulo. With MVS you have two options to horizontally scale your Accumulo instance. You can use an HDFS cluster with Federation and multiple NameNodes or you can use separate HDFS clusters.</p>
+
+<p>By default Accumulo will perform round-robin file allocation for each tablet, spreading the files across the different volumes. The file balancer is pluggable, allowing for custom implementations. For example, if you don’t use Federation and use multiple HDFS clusters, you may want to allocate all files for a particular table to one volume.</p>
+
+<p>Comments in the <a href="https://issues.apache.org/jira/browse/ACCUMULO-118">JIRA</a> regarding backups could lead to follow-on work. With the inclusion of snapshots in HDFS, you could easily envision an application that quiesces the database or some set of tables, flushes their entries from memory, and snapshots their directories. These snapshots could then be copied to another HDFS instance either for an on-disk backup, or bulk-imported into another instance of Accumulo for testing or some other use.</p>
+
+<p>The example configuration below shows how to set up Accumulo with HA NameNodes and Federation, as it is likely the most complex. We had to reference several web sites, one of the HDFS mailing lists, and the source code to find all of the configuration parameters that were needed. The configuration below includes two sets of HA namenodes, each set servicing an HDFS nameservice in a single HDFS cluster. In the example below, nameserviceA is serviced by name nodes 1 and 2, and nameserviceB is serviced by name nodes 3 and 4.</p>
+
+<h3 id="core-sitexml">core-site.xml</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.defaultFS<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>viewfs:///<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.viewfs.mounttable.default.link./nameserviceA<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://nameserviceA<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.viewfs.mounttable.default.link./nameserviceB<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://nameserviceB<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>fs.viewfs.mounttable.default.link./nameserviceA/accumulo/instance_id<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://nameserviceA/accumulo/instance_id<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;description&gt;</span>Workaround for ACCUMULO-2719<span class="nt">&lt;/description&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.ha.fencing.methods<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>sshfence(hdfs:22)      
+         shell(/bin/true)<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>   
+  <span class="nt">&lt;name&gt;</span>dfs.ha.fencing.ssh.private-key-files<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;&lt;PRIVATE_KEY_LOCATION&gt;&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.ha.fencing.ssh.connect-timeout<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>30000<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>ha.zookeeper.quorum<span class="nt">&lt;/name&gt;</span>   
+  <span class="nt">&lt;value&gt;</span>zkHost1:2181,zkHost2:2181,zkHost3:2181<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre></div></div>
+
+<h3 id="hdfs-sitexml">hdfs-site.xml</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.nameservices<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>nameserviceA,nameserviceB<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.ha.namenodes.nameserviceA<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>nn1,nn2<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span> 
+  <span class="nt">&lt;name&gt;</span>dfs.ha.namenodes.nameserviceB<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>nn3,nn4<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.rpc-address.nameserviceA.nn1<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host1:8020<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.rpc-address.nameserviceA.nn2<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host2:8020<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.http-address.nameserviceA.nn1<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host1:50070<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.http-address.nameserviceA.nn2<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host2:50070<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.rpc-address.nameserviceB.nn3<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host3:8020<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.rpc-address.nameserviceB.nn4<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host4:8020<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span> 
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.http-address.nameserviceB.nn3<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host3:50070<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.http-address.nameserviceB.nn4<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>host4:50070<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span> 
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.shared.edits.dir.nameserviceA.nn1<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceA<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.shared.edits.dir.nameserviceA.nn2<span class="nt">&lt;/name&gt;</span>   
+  <span class="nt">&lt;value&gt;</span>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceA<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.shared.edits.dir.nameserviceB.nn3<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceB<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.namenode.shared.edits.dir.nameserviceB.nn4<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceB<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.client.failover.proxy.provider.nameserviceA<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span> 
+  <span class="nt">&lt;name&gt;</span>dfs.client.failover.proxy.provider.nameserviceB<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.ha.automatic-failover.enabled.nameserviceA<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>dfs.ha.automatic-failover.enabled.nameserviceB<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre></div></div>
+
+<h3 id="accumulo-sitexml">accumulo-site.xml</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+  <span class="nt">&lt;name&gt;</span>instance.volumes<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;value&gt;</span>hdfs://nameserviceA/accumulo,hdfs://nameserviceB/accumulo<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre></div></div>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

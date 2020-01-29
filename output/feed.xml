@@ -1,0 +1,1351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Apache Accumulo™</title>
+    <description>The Apache Accumulo™ sorted, distributed key/value store is a robust, scalable, high performance data storage and retrieval system.
+</description>
+    <link>https://accumulo.apache.org/</link>
+    <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 29 Jan 2020 05:22:43 +0000</pubDate>
+    <lastBuildDate>Wed, 29 Jan 2020 05:22:43 +0000</lastBuildDate>
+    <generator>Jekyll v4.0.0</generator>
+    
+    
+      <item>
+        <title>Accumulo Clients in Other Programming Languages</title>
+        <description>&lt;p&gt;Apache Accumulo has an &lt;a href=&quot;https://github.com/apache/accumulo-proxy&quot;&gt;Accumulo Proxy&lt;/a&gt; that allows communication with Accumulo using clients written
+in languages other than Java. This blog post shows how to run the Accumulo Proxy process using &lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt;
+and communicate with Accumulo using a Python client.&lt;/p&gt;
+
+&lt;p&gt;First, clone the &lt;a href=&quot;https://github.com/apache/accumulo-proxy&quot;&gt;Accumulo Proxy&lt;/a&gt; repository.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/apache/accumulo-proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Assuming you have &lt;a href=&quot;https://github.com/apache/fluo-uno&quot;&gt;Uno&lt;/a&gt; set up on your machine, configure &lt;code class=&quot;highlighter-rouge&quot;&gt;uno.conf&lt;/code&gt; to start the &lt;a href=&quot;https://github.com/apache/accumulo-proxy&quot;&gt;Accumulo Proxy&lt;/a&gt;
+by setting the configuration below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export POST_RUN_PLUGINS=&quot;accumulo-proxy&quot;
+export PROXY_REPO=/path/to/accumulo-proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Run the following command to set up Accumulo again. The Proxy will be started after Accumulo runs.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;uno setup accumulo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After Accumulo is set up, you should see the following output from uno:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Executing post run plugin: accumulo-proxy
+Installing Accumulo Proxy at /path/to/fluo-uno/install/accumulo-proxy-2.0.0-SNAPSHOT
+Accumulo Proxy 2.0.0-SNAPSHOT is running
+    * view logs at /path/to/fluo-uno/install/logs/accumulo-proxy/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, follow the instructions below to create a Python 2.7 client that creates an Accumulo table
+named &lt;code class=&quot;highlighter-rouge&quot;&gt;pythontest&lt;/code&gt; and writes data to it:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir accumulo-client/
+cd accumulo-client/
+pipenv --python 2.7
+pipenv install thrift
+pipenv install -e /path/to/accumulo-proxy/src/main/python
+cp /path/to/accumulo-proxy/src/main/python/basic_client.py .
+# Edit credentials if needed
+vim basic_client.py
+pipenv run python2 basic_client.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Verify that the table was created or data was written using &lt;code class=&quot;highlighter-rouge&quot;&gt;uno ashell&lt;/code&gt; or the Accumulo monitor.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 16 Dec 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/12/16/accumulo-proxy.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/12/16/accumulo-proxy.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Checking API use</title>
+        <description>&lt;p&gt;Accumulo follows &lt;a href=&quot;https://semver.org/&quot;&gt;SemVer&lt;/a&gt; across versions with the declaration of a public API.  Code not in the public API should be
+considered unstable, at risk of changing between versions.  The public API packages are &lt;a href=&quot;/api/&quot;&gt;listed on the website&lt;/a&gt;
+but may not be considered when an Accumulo user writes code.  This blog post explains how to make Maven
+automatically detect usage of Accumulo code outside the public API.&lt;/p&gt;
+
+&lt;p&gt;The techniques described in this blog post only work for Accumulo 2.0 and later.  Do not use with 1.X versions.&lt;/p&gt;
+
+&lt;h2 id=&quot;checkstyle-plugin&quot;&gt;Checkstyle Plugin&lt;/h2&gt;
+
+&lt;p&gt;First add the checkstyle Maven plugin to your pom.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- This was added to ensure project only uses Accumulo's public API --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-checkstyle-plugin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;check-style&lt;span class=&quot;nt&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;goals&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;nt&quot;&gt;&amp;lt;goal&amp;gt;&lt;/span&gt;check&lt;span class=&quot;nt&quot;&gt;&amp;lt;/goal&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/goals&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;nt&quot;&gt;&amp;lt;configLocation&amp;gt;&lt;/span&gt;checkstyle.xml&lt;span class=&quot;nt&quot;&gt;&amp;lt;/configLocation&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The plugin version is the latest at the time of this post.  For more information see the website for
+the &lt;a href=&quot;https://maven.apache.org/plugins/maven-checkstyle-plugin/&quot;&gt;Apache Maven Checkstyle Plugin&lt;/a&gt;.  The configuration above adds the plugin to &lt;code class=&quot;highlighter-rouge&quot;&gt;check&lt;/code&gt; execution goal
+so it will always run with your build.&lt;/p&gt;
+
+&lt;p&gt;Create the configuration file specified above: &lt;code class=&quot;highlighter-rouge&quot;&gt;checkstyle.xml&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;checkstylexml&quot;&gt;checkstyle.xml&lt;/h3&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE module PUBLIC &quot;-//Puppy Crawl//DTD Check Configuration 1.3//EN&quot; &quot;http://www.puppycrawl.com/dtds/configuration_1_3.dtd&quot;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;module&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Checker&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;charset&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;UTF-8&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;module&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;TreeWalker&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!--check that only Accumulo public APIs are imported--&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;module&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ImportControl&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;file&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;import-control.xml&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This file sets up the ImportControl module.&lt;/p&gt;
+
+&lt;h2 id=&quot;import-control-configuration&quot;&gt;Import Control Configuration&lt;/h2&gt;
+
+&lt;p&gt;Create the second file specified above, &lt;code class=&quot;highlighter-rouge&quot;&gt;import-control.xml&lt;/code&gt; and copy the configuration below.  Make sure to replace
+“insert-your-package-name” with the package name of your project.&lt;/p&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE import-control PUBLIC
+    &quot;-//Checkstyle//DTD ImportControl Configuration 1.4//EN&quot;
+    &quot;https://checkstyle.org/dtds/import_control_1_4.dtd&quot;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- This checkstyle rule is configured to ensure only use of Accumulo API --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;import-control&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;insert-your-package-name&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;strategyOnMismatch=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;allowed&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- API packages --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.core.client&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.core.data&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.core.security&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.core.iterators&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.minicluster&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;allow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo.hadoop.mapreduce&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- disallow everything else coming from accumulo --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;disallow&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pkg=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.apache.accumulo&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/import-control&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This file configures the ImportControl module to only allow packages that are declared public API.&lt;/p&gt;
+
+&lt;h2 id=&quot;hold-the-line&quot;&gt;Hold the line&lt;/h2&gt;
+
+&lt;p&gt;Adding this to an existing project may expose usage of non public Accumulo API’s. It may take more time than is available
+to fix those at first, but do not let this discourage adding this plugin. One possible way to proceed is to allow the
+currently used non-public APIs in a commented section of import-control.xml noting these are temporarily allowed until
+they can be removed. This strategy prevents new usages of non-public APIs while allowing time to work on fixing the current
+ usages of non public APIs.  Also, if you don’t want your project failing to build because of this, you can add &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;failOnViolation&amp;gt;false&amp;lt;/failOnViolation&amp;gt;&lt;/code&gt;
+to the maven-checkstyle-plugin configuration.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/11/04/checkstyle-import-control.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/11/04/checkstyle-import-control.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Using Azure Data Lake Gen2 storage as a data store for Accumulo</title>
+        <description>&lt;p&gt;Accumulo can store its files in &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction&quot;&gt;Azure Data Lake Storage Gen2&lt;/a&gt;
+using the &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver&quot;&gt;ABFS (Azure Blob File System)&lt;/a&gt; driver.
+Similar to &lt;a href=&quot;https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html&quot;&gt;S3 blog&lt;/a&gt;, 
+the write ahead logs &amp;amp; Accumulo metadata can be stored in HDFS and everything else on Gen2 storage
+using the volume chooser feature introduced in Accumulo 2.0. The configurations referred on this blog
+are specific to Accumulo 2.0 and Hadoop 3.2.0.&lt;/p&gt;
+
+&lt;h2 id=&quot;hadoop-setup&quot;&gt;Hadoop setup&lt;/h2&gt;
+
+&lt;p&gt;For ABFS client to talk to Gen2 storage, it requires one of the Authentication mechanism listed &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html#Authentication&quot;&gt;here&lt;/a&gt;
+This post covers &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview&quot;&gt;Azure Managed Identity&lt;/a&gt;
+formerly known as Managed Service Identity or MSI. This feature provides Azure services with an 
+automatically managed identity in &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis&quot;&gt;Azure AD&lt;/a&gt;
+and it avoids the need for credentials or other sensitive information from being stored in code 
+or configs/JCEKS. Plus, it comes free with Azure AD.&lt;/p&gt;
+
+&lt;p&gt;At least the following should be added to Hadoop’s &lt;code class=&quot;highlighter-rouge&quot;&gt;core-site.xml&lt;/code&gt; on each node.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.auth.type&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;OAuth&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth.provider.type&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.hadoop.fs.azurebfs.oauth2.MsiTokenProvider&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth2.msi.tenant&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;TenantID&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth2.client.id&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;ClientID&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html&quot;&gt;ABFS doc&lt;/a&gt;
+for more information on Hadoop Azure support.&lt;/p&gt;
+
+&lt;p&gt;To get hadoop command to work with ADLS Gen2 set the 
+following entries in &lt;code class=&quot;highlighter-rouge&quot;&gt;hadoop-env.sh&lt;/code&gt;. As Gen2 storage is TLS enabled by default, 
+it is important we use the native OpenSSL implementation of TLS.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTIONAL_TOOLS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hadoop-azure&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-Dorg.wildfly.openssl.path=&amp;lt;path/to/OpenSSL/libraries&amp;gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTS&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To verify the location of the OpenSSL libraries, run &lt;code class=&quot;highlighter-rouge&quot;&gt;whereis libssl&lt;/code&gt; command 
+on the host&lt;/p&gt;
+
+&lt;h2 id=&quot;accumulo-setup&quot;&gt;Accumulo setup&lt;/h2&gt;
+
+&lt;p&gt;For each node in the cluster, modify &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; to add Azure storage jars to the
+classpath.  Your versions may differ depending on your Hadoop version,
+following versions were included with Hadoop 3.2.0.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_CONF_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ZOOKEEPER_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/client/*&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/azure-data-lake-store-sdk-2.2.9.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/azure-keyvault-core-1.0.0.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/hadoop-azure-3.2.0.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/wildfly-openssl-1.0.4.Final.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-api-2.2.11.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/commons-lang3-3.7.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/httpclient-4.5.2.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jackson-core-asl-1.9.13.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jackson-mapper-asl-1.9.13.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;CLASSPATH
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Include &lt;code class=&quot;highlighter-rouge&quot;&gt;-Dorg.wildfly.openssl.path&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;JAVA_OPTS&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; as shown below. This
+java property is an optional performance enhancement for TLS.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ACCUMULO_JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-XX:+UseConcMarkSweepGC'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-XX:CMSInitiatingOccupancyFraction=75'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-XX:+CMSClassUnloadingEnabled'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-XX:OnOutOfMemoryError=kill -9 %p'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-XX:-OmitStackTraceInFastThrow'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-Djava.net.preferIPv4Stack=true'&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'-Dorg.wildfly.openssl.path=/usr/lib64'&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;-Daccumulo.native.lib.path=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/native&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Set the following in &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; and then run &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt;, but don’t start Accumulo.&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After running Accumulo init we need to configure storing write ahead logs in
+HDFS.  Set the following in &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo,abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.volume.chooser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;org.apache.accumulo.server.fs.PreferredVolumeChooser&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init --add-volumes&lt;/code&gt; to initialize the Azure DLS Gen2 volume.  Doing this
+in two steps avoids putting any Accumulo metadata files in Gen2  during init.
+Copy &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; to all nodes and start Accumulo.&lt;/p&gt;
+
+&lt;p&gt;Individual tables can be configured to store their files in HDFS by setting the
+table property &lt;code class=&quot;highlighter-rouge&quot;&gt;table.custom.volume.preferred&lt;/code&gt;.  This should be set for the
+metadata table in case it splits using the following Accumulo shell command.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&amp;lt;namenode&amp;gt;/accumulo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;accumulo-example&quot;&gt;Accumulo example&lt;/h2&gt;
+
+&lt;p&gt;The following Accumulo shell session shows an example of writing data to Gen2 and
+reading it back.  It also shows scanning the metadata table to verify the data
+is stored in Gen2.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@muchos&amp;gt; createtable gen2test
+root@muchos gen2test&amp;gt; insert r1 f1 q1 v1
+root@muchos gen2test&amp;gt; insert r1 f1 q2 v2
+root@muchos gen2test&amp;gt; flush -w
+2019-10-16 08:01:00,564 [shell.Shell] INFO : Flush of table gen2test  completed.
+root@muchos gen2test&amp;gt; scan
+r1 f1:q1 []    v1
+r1 f1:q2 []    v2
+root@muchos gen2test&amp;gt; scan -t accumulo.metadata -c file
+4&amp;lt; file:abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo/tables/4/default_tablet/F00000gj.rf []    234,2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;These instructions will help to configure Accumulo to use Azure’s Data Lake Gen2 Storage along with HDFS. With this setup, 
+we are able to successfully run the continuos ingest test. Going forward, we’ll experiment more on this space 
+with ADLS Gen2 and add/update blog as we come along.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/10/15/accumulo-adlsgen2-notes.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/10/15/accumulo-adlsgen2-notes.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Using HDFS Erasure Coding with Accumulo</title>
+        <description>&lt;p&gt;HDFS normally stores multiple copies of each file for both performance and durability reasons. 
+The number of copies is controlled via HDFS replication settings, and by default is set to 3. Hadoop 3, 
+introduced the use of erasure coding (EC), which improves durability while decreasing overhead.
+Since Accumulo 2.0 now supports Hadoop 3, it’s time to take a look at whether using
+EC with Accumulo makes sense.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#ec-intro&quot;&gt;EC Intro&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ec-performance&quot;&gt;EC Performance&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#accumulo-performance-with-ec&quot;&gt;Accumulo Performance with EC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ec-intro&quot;&gt;EC Intro&lt;/h3&gt;
+
+&lt;p&gt;By default HDFS achieves durability via block replication.  Usually
+the replication count is 3, resulting in a storage overhead of 200%. Hadoop 3 
+introduced EC as a better way to achieve durability.  More info can be
+found &lt;a href=&quot;https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html&quot;&gt;here&lt;/a&gt;.
+EC behaves much like RAID 5 or 6…for &lt;em&gt;k&lt;/em&gt; blocks of data, &lt;em&gt;m&lt;/em&gt; blocks of
+parity data are generated, from which the original data can be recovered in the
+event of disk or node failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3, where
+6 data blocks produce 3 parity blocks, an overhead of only 50%.  In addition
+to doubling the available disk space, RS-6-3 is also more fault
+tolerant…a loss of 3 data blocks can be tolerated, where triple replication
+can only lose two blocks.&lt;/p&gt;
+
+&lt;p&gt;More storage, better resiliency, so what’s the catch?  One concern is
+the time spent calculating the parity blocks.  Unlike replication
+, where a client writes a block, and then the DataNodes replicate
+the data, an EC HDFS client is responsible for computing the parity and sending that
+to the DataNodes.  This increases the CPU and network load on the client.  The CPU
+hit can be mitigated by using Intels ISA-L library, but only on CPUs
+that support AVX or AVX2 instructions.  (See &lt;a href=&quot;https://www.slideshare.net/HadoopSummit/debunking-the-myths-of-hdfs-erasure-coding-performance&quot;&gt;EC Myths&lt;/a&gt; and &lt;a href=&quot;https://blog.cloudera.com/introduction-to-hdfs-erasure-coding-in-apache-hadoop/&quot;&gt;EC Introduction&lt;/a&gt;
+for some interesting claims). In addition, unlike the serial replication I/O path,
+the EC I/O path is parallel providing greater throughput. In our testing, sequential writes to 
+an EC directory were as much as 3 times faster than a replication directory 
+, and reads were up to 2 times faster.&lt;/p&gt;
+
+&lt;p&gt;Another side effect of EC is loss of data locality.  For performance reasons, EC
+data blocks are striped, so multiple DataNodes must be contacted to read a single
+block of data.  For large sequential reads this is not a
+problem, but it can be an issue for small random lookups.  For the latter case,
+using RS 6-3 with 64KB stripes mitigates some of the random lookup pain
+without compromising sequential read/write performance.&lt;/p&gt;
+
+&lt;h4 id=&quot;important-warning&quot;&gt;Important Warning&lt;/h4&gt;
+
+&lt;p&gt;Before continuing, an important caveat;  the current implementation of EC on Hadoop supports neither hsync
+nor hflush.  Both of these operations are silent no-ops (EC &lt;a href=&quot;https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations&quot;&gt;limitations&lt;/a&gt;).  We discovered this the hard
+way when a data center power loss resulted in write-ahead log corruption, which were
+stored in an EC directory.  To avoid this problem ensure all 
+WAL directories use replication.  It’s probably a good idea to keep the
+accumulo namespace replicated as well, but we have no evidence to back up that assertion.  As with all
+things, don’t test on production data.&lt;/p&gt;
+
+&lt;h3 id=&quot;ec-performance&quot;&gt;EC Performance&lt;/h3&gt;
+
+&lt;p&gt;To test EC performance, we created a series of clusters on AWS.  Our Accumulo stack consisted of
+Hadoop 3.1.1 built with the Intel ISA-L library enabled, Zookeeper 3.4.13, and Accumulo 1.9.3 configured
+to work with Hadoop 3 (we did our testing before the official release of Accumulo 2.0). The encoding
+policy is set per-directory using the &lt;a href=&quot;https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Administrative_commands&quot;&gt;hdfs&lt;/a&gt; command-line tool. To set the encoding policy
+for an Accumulo table, first find the table ID (for instance using the Accumulo shell’s
+“table -l” command), and then from the command line set the policy for the corresponding directory
+under /accumulo/tables.  Note that changing the policy on a directory will set the policy for
+child directories, but will not change any files contained within.  To change the policy on an existing
+Accumulo table, you must first set the encoding policy, and then run a major compaction to rewrite
+the RFiles for the table.&lt;/p&gt;
+
+&lt;p&gt;Our first tests were of sequential read and write performance straight to HDFS.  For this test we had
+a cluster of 32 HDFS nodes (c5.4xlarge &lt;a href=&quot;https://aws.amazon.com/ec2/instance-types/&quot;&gt;AWS&lt;/a&gt; instances), 16 Spark nodes (r5.4xlarge),
+3 zookeepers (r5.xlarge), and 1 master (r5.2xlarge).&lt;/p&gt;
+
+&lt;p&gt;The first table below shows the results for writing a 1TB file.  The results are the average of three runs
+for each of the directory encodings Reed-Solomon (RS) 6-3 with 64KB stripes, RS 6-3 with 1MB stripes,
+RS 10-4 with 1MB stripes, and the default triple replication.  We also varied the number of concurrent
+Spark executors, performing tests with 16 executors that did not stress the cluster in any area, and with
+128 executors which exhausted our network bandwidth allotment of 5 Gbps. As can be seen, in the 16 executor
+environment, we saw greater than a 3X bump in throughput using RS 10-4 with 1MB stripes over triple replication.
+At saturation, the speed up was still over 2X, which is in line with the results from &lt;a href=&quot;https://www.slideshare.net/HadoopSummit/debunking-the-myths-of-hdfs-erasure-coding-performance&quot;&gt;EC Myths&lt;/a&gt;. Also of note,
+using RS 6-3 with 64KB stripes performed better than the same with 1MB stripes, which is a nice result for Accumulo, 
+as we’ll show later.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Encoding&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;16 executors&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;128 executors&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Replication&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;2.19 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;4.13 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 64KB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.33 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;8.11 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.22 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;7.93 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 10-4 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;7.09 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;8.34 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Our read tests are not as dramatic as those in &lt;a href=&quot;https://www.slideshare.net/HadoopSummit/debunking-the-myths-of-hdfs-erasure-coding-performance&quot;&gt;EC Myths&lt;/a&gt;, but still looking good for EC.  Here we show the
+results for reading back the 1TB file created in the write test using 16 Spark executors.  In addition to
+the straight read tests, we also performed tests with 2 DataNodes disabled to simulate the performance hit
+of failures which require data repair in the foreground.  Finally, we tested the read performance
+after a background rebuild of the filesystem.  We did this to see if the foreground rebuild or
+the loss of 2 DataNodes was the major contributor to any performance degradation.  As can be seen,
+EC read performance is close to 2X faster than replication, even in the face of failures.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Encoding&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;32 nodes&lt;br /&gt;no failures&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;30 nodes&lt;br /&gt;with failures&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;30 nodes&lt;br /&gt;no failures&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Replication&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;3.95 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;3.99 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;3.89 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 64KB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;7.36 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;7.27 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;7.16 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.59 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.47 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.53 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 10-4 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.21 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.08 GB/s&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;6.21 GB/s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;accumulo-performance-with-ec&quot;&gt;Accumulo Performance with EC&lt;/h3&gt;
+
+&lt;p&gt;While the above results are impressive, they are not representative of how Accumulo uses HDFS.  For starters,
+Accumulo sequential I/O is doing far more than just reading or writing files; compression and serialization,
+for example, place quite a load upon the tablet server CPUs.  An example to illustrate this is shown below.
+The time in minutes to bulk-write 400 million rows to RFiles with 40 Spark executors is listed for both EC
+using RS 6-3 with 1MB stripes and triple replication.  The choice of compressor has a much more profound
+effect on the write times than the choice of underlying encoding for the directory being written to 
+(although without compression EC is much faster than replication).&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Compressor&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;RS 6-3 1MB&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Replication&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;File size (GB)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;gz&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;2.7&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;2.7&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;21.3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;none&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;2.0&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;3.0&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;158.5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;snappy&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1.6&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1.6&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;38.4&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Of much more importance to Accumulo performance is read latency. A frequent use case for our group is to obtain a
+number of row IDs from an index and then use a BatchScanner to read those individual rows.
+In this use case, the time to access a single row is far more important than the raw I/O performance.  To test
+Accumulo’s performance with EC for this use case, we did a series of tests against a 10 billion row table,
+with each row consisting of 10 columns.  16 Spark executors each performed 10000 queries, where each query
+sought 10 random rows.  Thus 16 million individual rows were returned in batches of 10.  For each batch of
+10, the time in milliseconds was captured, and theses times were collected in a histogram of 50ms buckets, with
+a catch-all bucket for queries that took over 1 second.  For this test we reconfigured our cluster to make use
+of c5n.4xlarge nodes featuring must faster networking speeds (15 Gbps sustained vs 5 Gbps for 
+c5.4xlarge). Because these nodes are in short supply, we ran with only 16 HDFS nodes (c5n.4xlarge), 
+but still had 16 Spark nodes (also c5n.4xlarge).  Zookeeper and master nodes remained the same.&lt;/p&gt;
+
+&lt;p&gt;In the table below, we show the min, max, and average times in milliseconds for each batch of 10 across
+four different encoding policies.  The clear winner here is replication, and the clear loser RS 10-4 with 
+1MB stripes, but RS 6-3 with 64KB stripes is not looking too bad.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Encoding&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Min&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Avg&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 10-4 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;40&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;105&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;2148&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;30&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;68&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1297&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 64KB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;23&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;43&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1064&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Replication&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;11&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;23&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;731&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The above results also hold in the event of errors.  The next table shows the same test, but with 2 DataNodes
+disabled to simulate failures that require foreground rebuilds.  Again, replication wins, and RS 10-4 1MB
+loses, but RS 6-3 64KB remains a viable option.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Encoding&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Min&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Avg&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;Max&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 10-4 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;53&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;143&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;3221&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 1MB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;34&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;113&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1662&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RS 6-3 64KB&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;24&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;61&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;1402&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Replication&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;12&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;26&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;304&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The images below show a plots of the histograms.  The third plot was generated with 14 HDFS DataNodes, but after
+all missing data had been repaired.  Again, this was done to see how much of the performance degradation could be
+attributed to missing data, and how much to simply having less computing power available.&lt;/p&gt;
+
+&lt;center&gt;
+&lt;img src=&quot;/images/blog/201909_ec/ec-latency-16.png&quot; width=&quot;75%&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+
+&lt;img src=&quot;/images/blog/201909_ec/ec-latency-14e.png&quot; width=&quot;75%&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+
+&lt;img src=&quot;/images/blog/201909_ec/ec-latency-14.png&quot; width=&quot;75%&quot; /&gt;
+&lt;/center&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;HDFS with erasure coding has the potential to double your available Accumulo storage, at the cost of a hit in
+random seek times, but a potential increase in sequential scan performance. We will be proposing some changes
+to Accumulo to make working with EC a bit easier. Our initial thoughts are collected in this 
+Accumulo dev list &lt;a href=&quot;https://lists.apache.org/thread.html/4ac5b0f664e15fa120e748892612f1e417b7dee3e1539669d179900c@%3Cdev.accumulo.apache.org%3E&quot;&gt;post&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/09/17/erasure-coding.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/09/17/erasure-coding.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Using S3 as a data store for Accumulo</title>
+        <description>&lt;p&gt;Accumulo can store its files in S3, however S3 does not support the needs of
+write ahead logs and the Accumulo metadata table. One way to solve this problem
+is to store the metadata table and write ahead logs in HDFS and everything else
+in S3.  This post shows how to do that using Accumulo 2.0 and Hadoop 3.2.0.
+Running on S3 requires a new feature in Accumulo 2.0, that volume choosers are
+aware of write ahead logs.&lt;/p&gt;
+
+&lt;h2 id=&quot;hadoop-setup&quot;&gt;Hadoop setup&lt;/h2&gt;
+
+&lt;p&gt;At least the following settings should be added to Hadoop’s &lt;code class=&quot;highlighter-rouge&quot;&gt;core-site.xml&lt;/code&gt; file on each node in the cluster.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.access.key&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;KEY&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.secret.key&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;SECRET&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- without this setting Accumulo tservers would have problems when trying to open lots of files --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.connection.maximum&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;128&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html#S3A&quot;&gt;S3A docs&lt;/a&gt;
+for more S3A settings.  To get hadoop command to work with s3 set &lt;code class=&quot;highlighter-rouge&quot;&gt;export
+HADOOP_OPTIONAL_TOOLS=&quot;hadoop-aws&quot;&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;hadoop-env.sh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;When trying to use Accumulo with Hadoop’s AWS jar &lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-16080&quot;&gt;HADOOP-16080&lt;/a&gt; was
+encountered.  The following instructions build a relocated hadoop-aws jar as a
+work around.  After building the jar copy it to all nodes in the cluster.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; /tmp/haws-reloc
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp/haws-reloc
+&lt;span class=&quot;c&quot;&gt;# get the Maven pom file that builds a relocated jar&lt;/span&gt;
+wget https://gist.githubusercontent.com/keith-turner/f6dcbd33342732e42695d66509239983/raw/714cb801eb49084e0ceef5c6eb4027334fd51f87/pom.xml
+mvn package &lt;span class=&quot;nt&quot;&gt;-Dhadoop&lt;/span&gt;.version&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;your hadoop version&amp;gt;
+&lt;span class=&quot;c&quot;&gt;# the new jar will be in target&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;target/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;accumulo-setup&quot;&gt;Accumulo setup&lt;/h2&gt;
+
+&lt;p&gt;For each node in the cluster, modify &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; to add S3 jars to the
+classpath.  Your versions may differ depending on your Hadoop version,
+following versions were included with Hadoop 3.2.0.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_CONF_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ZOOKEEPER_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/client/*&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:/somedir/hadoop-aws-relocated.3.2.0.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/aws-java-sdk-bundle-1.11.375.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# The following are dependencies needed by by the previous jars and are subject to change&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-api-2.2.11.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/commons-lang3-3.7jar&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;CLASSPATH
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Set the following in &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; and then run &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt;, but don’t start Accumulo.&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After running Accumulo init we need to configure storing write ahead logs in
+HDFS.  Set the following in &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo,s3a://&amp;lt;bucket&amp;gt;/accumulo&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.volume.chooser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;org.apache.accumulo.server.fs.PreferredVolumeChooser&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;s3a://&amp;lt;bucket&amp;gt;/accumulo&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init --add-volumes&lt;/code&gt; to initialize the S3 volume.  Doing this
+in two steps avoids putting any Accumulo metadata files in S3 during init.
+Copy &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; to all nodes and start Accumulo.&lt;/p&gt;
+
+&lt;p&gt;Individual tables can be configured to store their files in HDFS by setting the
+table property &lt;code class=&quot;highlighter-rouge&quot;&gt;table.custom.volume.preferred&lt;/code&gt;.  This should be set for the
+metadata table in case it splits using the following Accumulo shell command.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&amp;lt;namenode&amp;gt;/accumulo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;accumulo-example&quot;&gt;Accumulo example&lt;/h2&gt;
+
+&lt;p&gt;The following Accumulo shell session shows an example of writing data to S3 and
+reading it back.  It also shows scanning the metadata table to verify the data
+is stored in S3.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@muchos&amp;gt; createtable s3test
+root@muchos s3test&amp;gt; insert r1 f1 q1 v1
+root@muchos s3test&amp;gt; insert r1 f1 q2 v2
+root@muchos s3test&amp;gt; flush -w
+2019-09-10 19:39:04,695 [shell.Shell] INFO : Flush of table s3test  completed.
+root@muchos s3test&amp;gt; scan 
+r1 f1:q1 []    v1
+r1 f1:q2 []    v2
+root@muchos s3test&amp;gt; scan -t accumulo.metadata -c file
+2&amp;lt; file:s3a://&amp;lt;bucket&amp;gt;/accumulo/tables/2/default_tablet/F000007b.rf []    234,2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;These instructions were only tested a few times and may not result in a stable
+system. I have &lt;a href=&quot;https://gist.github.com/keith-turner/149f35f218d10e13227461714012d7bf&quot;&gt;run&lt;/a&gt; a 24hr test with Accumulo and S3.&lt;/p&gt;
+
+&lt;h2 id=&quot;is-s3guard-needed&quot;&gt;Is S3Guard needed?&lt;/h2&gt;
+
+&lt;p&gt;I am not completely certain about this, but I don’t think S3Guard is needed for
+regular Accumulo tables.  There are two reasons I think this is so.  First each
+Accumulo user tablet stores its list of files in the metadata table using
+absolute URIs.  This allows a tablet to have files on multiple DFS instances.
+Therefore Accumulo never does a DFS list operation to get a tablets files, it
+always uses whats in the metadata table.  Second, Accumulo gives each file a
+unique name using a counter stored in Zookeeper and file names are never
+reused.&lt;/p&gt;
+
+&lt;p&gt;Things are sligthly different for Accumulo’s metadata.  User tablets store
+their file list in the metadata table.  Metadata tablets store their file list
+in the root table.  The root table stores its file list in DFS.  Therefore it
+would be dangerous to place the root tablet in S3 w/o using S3Guard.  That is
+why these instructions place Accumulo metadata in HDFS. &lt;strong&gt;Hopefully&lt;/strong&gt; this
+configuration allows the system to be consistent w/o using S3Guard.&lt;/p&gt;
+
+&lt;p&gt;When Accumulo 2.1.0 is released with the changes made by &lt;a href=&quot;https://github.com/apache/accumulo/issues/1313&quot;&gt;#1313 &lt;/a&gt; for issue
+&lt;a href=&quot;https://github.com/apache/accumulo/issues/936&quot;&gt;#936 &lt;/a&gt;, it may be possible to store the metadata table in S3 w/o
+S3Gaurd.  If this is the case then only the write ahead logs would need to be
+stored in HDFS.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 10 Sep 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Top 10 Reasons to Upgrade</title>
+        <description>&lt;p&gt;Accumulo 2.0 has been in development for quite some time now and is packed with new features, bug
+fixes, performance improvements and redesigned components.  All of these changes bring challenges
+when upgrading your production cluster so you may be wondering… why should I upgrade?&lt;/p&gt;
+
+&lt;p&gt;My top 10 reasons to upgrade. For all changes see the &lt;a href=&quot;https://accumulo.apache.org/release/accumulo-2.0.0/&quot;&gt;release notes&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#summaries&quot;&gt;Summaries&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#new-bulk-import&quot;&gt;New Bulk Import&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#simplified-scripts-and-config&quot;&gt;Simplified Scripts and Config&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#new-monitor&quot;&gt;New Monitor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#new-apis&quot;&gt;New APIs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#offline-creation&quot;&gt;Offline creation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#search-documentation&quot;&gt;Search Documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#new-crypto&quot;&gt;On disk encryption&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#zstandard-compression&quot;&gt;ZStandard Compression&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#new-scan-executors&quot;&gt;New Scan Executors&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;summaries&quot;&gt;Summaries&lt;/h3&gt;
+
+&lt;p&gt;This feature allows detailed stats about Tables to be written directly into Accumulo files (R-Files). 
+Summaries can be used to make precise decisions about your data. Once configured, summaries become a 
+part of your Tables, so they won’t impact ingest or query performance of your cluster.&lt;/p&gt;
+
+&lt;p&gt;Here are some example use cases:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A compaction could automatically run if deletes compose more than 25% of the data&lt;/li&gt;
+  &lt;li&gt;An admin could optimize compactions by configuring specific age off of data&lt;/li&gt;
+  &lt;li&gt;An admin could analyze R-File summaries for better performance tuning of a cluster&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more info check out the &lt;a href=&quot;/docs/2.x//development/summaries&quot;&gt;summary docs for 2.0&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;new-bulk-import&quot;&gt;New Bulk Import&lt;/h3&gt;
+
+&lt;p&gt;Bulk Ingest was completely redone for 2.0.  Previously, Bulk Ingest relied on expensive inspections of 
+R-Files across multiple Tablet Servers. With enough data, an old Bulk Ingest operation could easily 
+hold up simpler Table operations and critical compactions of files.&lt;/p&gt;
+
+&lt;p&gt;The new Bulk Ingest gives the user control over the R-File inspection, allows for offline bulk
+ingesting and provides performance &lt;a href=&quot;https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api&quot;&gt;improvements&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;simplified-scripts-and-config&quot;&gt;Simplified Scripts and Config&lt;/h2&gt;
+
+&lt;p&gt;Many improvements were done to the scripts and configuration. See Mike’s description of the &lt;a href=&quot;https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html&quot;&gt;improvements.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;new-monitor&quot;&gt;New Monitor&lt;/h2&gt;
+
+&lt;p&gt;The Monitor has been re-written using REST, Javascript and more modern Web Tech.  It is faster, 
+cleaner and more maintainable than the previous version. Here is a screen shot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/accumulo-monitor-1.png&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;new-apis&quot;&gt;New APIs&lt;/h2&gt;
+
+&lt;p&gt;Connecting to Accumulo is now easier with a single point of entry for clients. It can now be done with 
+a fluent API, 2 imports and using minimal code:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.accumulo.core.client.Accumulo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.accumulo.core.client.AccumuloClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;AccumuloClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Accumulo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;instance&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;zk&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;pass&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// use the client&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;tableOperations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;newTable&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see the client is also closable, which gives developers more control over resources.
+See the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Accumulo.html&quot;&gt;Accumulo entry point javadoc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Key and Mutation have new fluent APIs, which now allow mixing of &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;byte[]&lt;/code&gt; types.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;Key&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;foo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bar&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;row0017&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;001&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;qualifier&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;v99&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;002&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;qualifier&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;More examples for &lt;a href=&quot;https://github.com/apache/accumulo/blob/master/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java&quot;&gt;Key&lt;/a&gt; and &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()&quot;&gt;Mutation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;table-creation-options&quot;&gt;Table creation options&lt;/h2&gt;
+
+&lt;p&gt;Tables can now be created with splits, which is much faster than creating a
+table and then adding splits.  Tables can also be created in an offline state
+now.  The new bulk import API supports offline tables.  This enables the
+following method of getting a lot of data into a new table very quickly.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create offline table with splits&lt;/li&gt;
+  &lt;li&gt;Bulk import into new offline table&lt;/li&gt;
+  &lt;li&gt;Bring table online&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See the javadoc for &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/NewTableConfiguration.html&quot;&gt;NewTableConfiguration&lt;/a&gt; and search for methods introduced in 2.0.0 for more information.&lt;/p&gt;
+
+&lt;h2 id=&quot;search-documentation&quot;&gt;Search Documentation&lt;/h2&gt;
+
+&lt;p&gt;New ability to quickly search documentation on the website. The user manual was completely redone 
+for 2.0. Check it out &lt;a href=&quot;/docs/2.x//getting-started/quickstart&quot;&gt;here&lt;/a&gt;. Users can now quickly &lt;a href=&quot;https://accumulo.apache.org/search/&quot;&gt;search&lt;/a&gt; the website across all 2.x documentation.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-crypto&quot;&gt;New Crypto&lt;/h2&gt;
+
+&lt;p&gt;On disk encryption was redone to be more secure and flexible. For an in depth description of how Accumulo 
+does on disk encryption, see the &lt;a href=&quot;/docs/2.x//security/on-disk-encryption&quot;&gt;user manual&lt;/a&gt;.  NOTE: This is currently an experimental feature.
+An experimental feature is considered a work in progress or incomplete and could change.&lt;/p&gt;
+
+&lt;h2 id=&quot;zstandard-compression&quot;&gt;Zstandard compression&lt;/h2&gt;
+
+&lt;p&gt;Support for Zstandard compression was added in 2.0.  It has been measured to perform better than 
+gzip (better compression ratio and speed) and snappy (better compression ratio). Checkout Facebook’s &lt;a href=&quot;https://facebook.github.io/zstd/&quot;&gt;github&lt;/a&gt; for Zstandard and
+the &lt;a href=&quot;/docs/2.x//configuration/server-properties&quot;&gt;table.file.compress.type&lt;/a&gt; property for configuring Accumulo.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-scan-executors&quot;&gt;New Scan Executors&lt;/h2&gt;
+
+&lt;p&gt;Users now have more control over scans with the new scan executors.  Tables can be configured to utilize these 
+powerful new mechanisms using just a few properties, giving user control over things like scan prioritization and 
+better cluster resource utilization.&lt;/p&gt;
+
+&lt;p&gt;For example, a cluster has a bunch of long running scans and one really fast scan.  The long running scans will eat up 
+a majority of the server resources causing the one really fast scan to be delayed.  Scan executors allow an admin 
+to configure the cluster in a way that allows the one fast scan to be prioritized and not have to wait.&lt;/p&gt;
+
+&lt;p&gt;Checkout some examples in the &lt;a href=&quot;/docs/2.x//administration/scan-executors&quot;&gt;user guide&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/08/12/why-upgrade.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/08/12/why-upgrade.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Apache Accumulo 2.0.0</title>
+        <description>&lt;p&gt;Apache Accumulo 2.0.0 contains significant changes from 1.9 and earlier
+versions. It is the first major release since adopting &lt;a href=&quot;https://semver.org/spec/v2.0.0.html&quot;&gt;semver&lt;/a&gt; and is the
+culmination of more than 3 years worth of work by more than 40 contributors
+from the Accumulo community. The following release notes highlight some of the
+changes. If anything is missing from this list, please &lt;a href=&quot;/contact-us&quot;&gt;contact&lt;/a&gt; the developers
+to have it included.&lt;/p&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;new-api-for-creating-connections-to-accumulo&quot;&gt;New API for creating connections to Accumulo&lt;/h3&gt;
+
+&lt;p&gt;A fluent API for creating Accumulo clients was introduced in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4784&quot;&gt;ACCUMULO-4784&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/634&quot;&gt;#634&lt;/a&gt;.
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;Connector&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ZooKeeperInstance&lt;/code&gt; objects have been deprecated and replaced by
+&lt;code class=&quot;highlighter-rouge&quot;&gt;AccumuloClient&lt;/code&gt; which is created from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Accumulo&lt;/code&gt; entry point. The new API also deprecates
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ClientConfiguration&lt;/code&gt; and introduces its own properties file called &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt;
+that ships with the Accumulo tarball. The new API has the following benefits over the old API:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;All connection information can be specifed in properties file to create the client. This was not
+possible with old API.&lt;/li&gt;
+  &lt;li&gt;The new API does not require &lt;code class=&quot;highlighter-rouge&quot;&gt;ZooKeeperInstance&lt;/code&gt; to be created first before creating a client.&lt;/li&gt;
+  &lt;li&gt;The new client is closeable and does not rely on shared static resource management&lt;/li&gt;
+  &lt;li&gt;Clients can be created using a new Java builder, &lt;code class=&quot;highlighter-rouge&quot;&gt;Properties&lt;/code&gt; object, or &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Clients can now be created with default settings for &lt;code class=&quot;highlighter-rouge&quot;&gt;BatchWriter&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Scanner&lt;/code&gt;, etc.&lt;/li&gt;
+  &lt;li&gt;Create scanners with default authorizations. &lt;a href=&quot;https://github.com/apache/accumulo/issues/744&quot;&gt;#744 &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See the &lt;a href=&quot;/docs/2.x/getting-started/clients&quot;&gt;client documentation&lt;/a&gt; for more information on how to use the new API.&lt;/p&gt;
+
+&lt;h3 id=&quot;hadoop-3-java-8--11&quot;&gt;Hadoop 3 Java 8 &amp;amp; 11.&lt;/h3&gt;
+
+&lt;p&gt;Accumulo 2.x expects at least Java 8 and Hadoop 3.  It is built against Java 8
+and Hadoop 3 and the binary tarball is targeted to work with a Java 8 and
+Hadoop 3 system.  See &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4826&quot;&gt;ACCUMULO-4826 &lt;/a&gt;,  &lt;a href=&quot;https://github.com/apache/accumulo/issues/531&quot;&gt;#531 &lt;/a&gt;, and &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4299&quot;&gt;ACCUMULO-4299 &lt;/a&gt;.  Running with Java 11 is also supported, but Java 11 is not
+required.&lt;/p&gt;
+
+&lt;h3 id=&quot;simplified-accumulo-scripts-and-configuration-files&quot;&gt;Simplified Accumulo scripts and configuration files&lt;/h3&gt;
+
+&lt;p&gt;Accumulo’s scripts and configuration were refactored in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4490&quot;&gt;ACCUMULO-4490&lt;/a&gt; to make Accumulo
+easier to use. The number of scripts in the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; directory of the Accumulo release tarball
+has been reduced from 20 scripts to the four scripts below:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; - mostly left alone except for improved usage&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-service&lt;/code&gt; - manage Accumulo processes as services&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-cluster&lt;/code&gt; - manage Accumulo on cluster. Replaces &lt;code class=&quot;highlighter-rouge&quot;&gt;start-all.sh&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;stop-all.sh&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo-util&lt;/code&gt; - combines many utility scripts into one script.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Read &lt;a href=&quot;/blog/2016/11/16/simpler-scripts-and-config.html&quot;&gt;this blog post&lt;/a&gt; for more information on this change.&lt;/p&gt;
+
+&lt;h3 id=&quot;new-bulk-import-api&quot;&gt;New Bulk Import API&lt;/h3&gt;
+
+&lt;p&gt;A new bulk import API was added in 2.0 that has very different implementation.  This new API supports the following new functionality.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bulk import to an offline table.&lt;/li&gt;
+  &lt;li&gt;Load plans that specify where files go in a table which avoids opening the
+files for inspection.&lt;/li&gt;
+  &lt;li&gt;Inspection of file on the client side. Inspection of all files is done
+before the FATE operation starts.  This results in less namenode operations
+and fail-fast for bad files (no longer need a fail directory).&lt;/li&gt;
+  &lt;li&gt;A new improved algorithm to load files into tablets.  This new algorithm
+scans the metadata table and makes asynchronous load calls to all tablets.
+This queues load operations on all tablets at around the same time.  The
+async RPC calls and beforehand inspection make the bulk load FATE operation
+much shorter.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The shell command for doing bulk load supports the old and new API.  To use the
+new API from the shell simply omit the failure directory argument.
+For the API, use the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/TableOperations.html#importDirectory(java.lang.String)&quot;&gt;new fluent API&lt;/a&gt;.
+See &lt;a href=&quot;https://github.com/apache/accumulo/issues/436&quot;&gt;#436 &lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/472&quot;&gt;#472 &lt;/a&gt;, and &lt;a href=&quot;https://github.com/apache/accumulo/issues/570&quot;&gt;#570 &lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;summaries&quot;&gt;Summaries&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/docs/2.x/development/summaries&quot;&gt;Summaries&lt;/a&gt; enables continually generating
+statistics about a table with user defined functions.  This feature can inform
+a user about what is in their table and be used by compaction strategies to
+make decisions.  For example, using this feature it would be possible to
+compact all tablets where deletes are more than 25% of the data. Another
+example use case is optimizing filtering compactions by enabling smart
+selection of files with pertinent data. Examples of filtering compactions are
+age off and removal of non-compliant data.&lt;/p&gt;
+
+&lt;h3 id=&quot;scan-executors&quot;&gt;Scan Executors&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/docs/2.x/administration/scan-executors&quot;&gt;Scan executors&lt;/a&gt; support prioritizing
+and dedicating scan resources. Each executor has a configurable number of
+threads and an optional custom prioritizer.  Tables can be configured in a
+flexible way to dispatch scans to different executors.&lt;/p&gt;
+
+&lt;h3 id=&quot;spi-package&quot;&gt;SPI package&lt;/h3&gt;
+
+&lt;p&gt;All new pluggable components introduced in 2.0 were placed under a new SPI
+package.  The SPI package is analyzed by &lt;a href=&quot;https://code.revelc.net/apilyzer-maven-plugin/&quot;&gt;Apilyzer&lt;/a&gt; at build time to ensure
+plugins only use SPI and API types.  This prevents plugins from using internal
+Accumulo types that are inherently unstable over time.  Plugins created before
+2.0 do use internal types and are less stable.  The new pluggable interfaces
+should be much more stable.&lt;/p&gt;
+
+&lt;h3 id=&quot;official-accumulo-docker-image-was-created&quot;&gt;Official Accumulo docker image was created&lt;/h3&gt;
+
+&lt;p&gt;An &lt;a href=&quot;https://github.com/apache/accumulo-docker&quot;&gt;official Accumulo docker images&lt;/a&gt; was created in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4706&quot;&gt;ACCUMULO-4706&lt;/a&gt; to make
+it easier for users to run Accumulo in Docker. To support running in Docker, a few changes were
+made to Accumulo:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;--upload-accumulo-site&lt;/code&gt; option was added to &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt; to set properties in accumulo-site.xml
+to Zookeeper during initialization.&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;-o &amp;lt;key&amp;gt;=&amp;lt;value&amp;gt;&lt;/code&gt; option was added to the &lt;code class=&quot;highlighter-rouge&quot;&gt;accumulo&lt;/code&gt; command to override configuration that could
+not be set in Zookeeper.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;updated-and-improved-accumulo-documentation&quot;&gt;Updated and improved Accumulo documentation&lt;/h3&gt;
+
+&lt;p&gt;Accumulo’s documentation has been refactored with the following improvements:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Documentation source now lives in &lt;a href=&quot;https://github.com/apache/accumulo-website&quot;&gt;accumulo-website repo&lt;/a&gt; so changes
+are now immediately viewable.&lt;/li&gt;
+  &lt;li&gt;Improved navigation using a new sidebar&lt;/li&gt;
+  &lt;li&gt;Better linking to Javadocs, between documentation pages, and to configuration properties.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Accumulo’s documentation was also reviewed and changes were made to improve accuracy and remove
+out of date documentation.&lt;/p&gt;
+
+&lt;h3 id=&quot;moved-accumulo-examples-to-its-own-repo&quot;&gt;Moved Accumulo Examples to its own repo&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo examples were moved out the accumulo repo to the &lt;a href=&quot;https://github.com/apache/accumulo-examples&quot;&gt;accumulo-examples repo&lt;/a&gt;
+which has the following benefits:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Accumulo examples are no longer released with Accumulo and can be continuously improved.&lt;/li&gt;
+  &lt;li&gt;The Accumulo API version used by the examples can be updated right before Accumulo is released
+to test for any changes to the API that break semver.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;simplified-accumulo-logging-configuration&quot;&gt;Simplified Accumulo logging configuration&lt;/h3&gt;
+
+&lt;p&gt;The log4j configuration of Accumulo services was improved in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4588&quot;&gt;ACCUMULO-4588&lt;/a&gt; with the following changes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Logging is now configured using standard log4j JVM property ‘log4j.configuration’ in accumulo-env.sh.&lt;/li&gt;
+  &lt;li&gt;Tarball ships with fewer log4j config files (3 rather than 6) which are all log4j properties files.&lt;/li&gt;
+  &lt;li&gt;Log4j XML can still be used by editing accumulo-env.sh&lt;/li&gt;
+  &lt;li&gt;Removed auditLog.xml and added audit log configuration to log4j-service properties files&lt;/li&gt;
+  &lt;li&gt;Accumulo conf/ directory no longer has an examples/ directory. Configuration files ship in conf/ and are
+used by default.&lt;/li&gt;
+  &lt;li&gt;Accumulo monitor by default will bind to 0.0.0.0 but will advertise hostname looked up in Java for log
+forwarding&lt;/li&gt;
+  &lt;li&gt;Switched to use full hostnames rather than short hostnames for logging&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;removed-comparison-of-value-with-byte-in-valueequals&quot;&gt;Removed comparison of Value with byte[] in Value.equals()&lt;/h3&gt;
+
+&lt;p&gt;Replaced the ability to use &lt;code class=&quot;highlighter-rouge&quot;&gt;Value.equals(byte[])&lt;/code&gt; to check if the contents of a
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; object was equal to a given byte array in &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4726&quot;&gt;ACCUMULO-4726&lt;/a&gt;. To perform
+that check, you must now use the newly added &lt;code class=&quot;highlighter-rouge&quot;&gt;Value.contentEquals(byte[])&lt;/code&gt;
+method. This corrects the behavior of the &lt;code class=&quot;highlighter-rouge&quot;&gt;equals&lt;/code&gt; method so that it conforms
+to the API contract documented in the javadoc inherited from its superclass.
+However, it will break any code that was relying on the undocumented and broken
+behavior to compare &lt;code class=&quot;highlighter-rouge&quot;&gt;Value&lt;/code&gt; objects with byte arrays. Such comparisons will now
+always return &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;, even if the contents are equal.&lt;/p&gt;
+
+&lt;h3 id=&quot;other-notable-changes&quot;&gt;Other Notable Changes&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-3652&quot;&gt;ACCUMULO-3652&lt;/a&gt; - Replaced string concatenation in log statements with slf4j
+where applicable. Removed tserver TLevel logging class.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4449&quot;&gt;ACCUMULO-4449&lt;/a&gt; - Removed ‘slave’ terminology and replaced with ‘tserver’ in
+most cases. The former ‘slaves’ config file is now named ‘tservers’. Added checks to
+scripts to fail if ‘slaves’ file is present.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4808&quot;&gt;ACCUMULO-4808 &lt;/a&gt; - Can now create table with splits and offline.  Specifying splits
+at table creation time can be much faster than adding splits after creation.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4463&quot;&gt;ACCUMULO-4463 &lt;/a&gt; - Caching is now pluggable.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4177&quot;&gt;ACCUMULO-4177 &lt;/a&gt; - New built in cache implementation based on TinyLFU.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4376&quot;&gt;ACCUMULO-4376 &lt;/a&gt; &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4746&quot;&gt;ACCUMULO-4746 &lt;/a&gt; - Mutation and Key Fluent APIs allow easy mixing of types.  For example a family of type &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; and qualifier of type &lt;code class=&quot;highlighter-rouge&quot;&gt;byte[]&lt;/code&gt; is much easier to write using this new API.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4771&quot;&gt;ACCUMULO-4771 &lt;/a&gt; - The Accumulo monitor was completely rewritten.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4732&quot;&gt;ACCUMULO-4732 &lt;/a&gt; - Specify iterators and locality groups at table creation time.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-4612&quot;&gt;ACCUMULO-4612 &lt;/a&gt; - Use percentages for memory related configuration.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-1787&quot;&gt;ACCUMULO-1787 &lt;/a&gt; - Two tier compaction strategy.  Support compacting small files with snappy and large files with gzip.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/560&quot;&gt;#560 &lt;/a&gt; - Provide new Crypto interface &amp;amp; impl&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/536&quot;&gt;#536 &lt;/a&gt; - Removed mock Accumulo.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/438&quot;&gt;#438 &lt;/a&gt; - Added support for ZStandard compression&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/404&quot;&gt;#404 &lt;/a&gt; - Added basic Grafana dashboard example.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1102&quot;&gt;#1102 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1100&quot;&gt;#1100 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1037&quot;&gt;#1037 &lt;/a&gt; - Removed lock contention in different areas.  These locks caused threads working unrelated task to impede each other.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1033&quot;&gt;#1033 &lt;/a&gt; - Optimized the default compaction strategy.  In some cases the Accumulo would rewrite data O(N^2) times over repeated compactions.  With this change the amount of rewriting is always logarithmic.&lt;/li&gt;
+  &lt;li&gt;Many performance improvements mentioned in the 1.9.X release notes are also available in 2.0.&lt;/li&gt;
+  &lt;li&gt;Scanners close server side sessions on close &lt;a href=&quot;https://github.com/apache/accumulo/issues/813&quot;&gt;#813 &lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/905&quot;&gt;#905 &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-2.0.0/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-2.0.0/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
+    
+      <item>
+        <title>Using Apache Spark with Accumulo</title>
+        <description>&lt;p&gt;&lt;a href=&quot;https://spark.apache.org/&quot;&gt;Apache Spark&lt;/a&gt; applications can read from and write to Accumulo tables.  To
+get started using Spark with Accumulo, checkout the &lt;a href=&quot;/docs/2.x/development/spark&quot;&gt;Spark documentation&lt;/a&gt; in
+the 2.0 Accumulo user manual. The &lt;a href=&quot;https://github.com/apache/accumulo-examples/tree/master/spark&quot;&gt;Spark example&lt;/a&gt; application is a good starting point
+for using Spark with Accumulo.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/04/24/using-spark-with-accumulo.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/04/24/using-spark-with-accumulo.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Apache Accumulo 1.9.3</title>
+        <description>&lt;p&gt;Apache Accumulo 1.9.3 contains bug fixes for Write Ahead Logs and compaction.
+Users of 1.9.2 are encouraged to upgrade.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.9 API&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by
+step instructions for running example code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-write-ahead-logs&quot;&gt;Multiple Fixes for Write Ahead Logs&lt;/h3&gt;
+
+&lt;p&gt;This release fixes Write Ahead Logs issues that slow or prevent recovery
+and in some cases lead to data loss. The fixes reduce the number of WALS
+referenced by a tserver, improve error handing, and improve clean up.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Eliminates a race condition that could result in data loss during recovery.
+If the GC deletes unreferenced WALs from ZK while the master is reading
+recovery WALs from ZK, the master may skip WALs it should not, resulting in
+data loss.  Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/866&quot;&gt;#866&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Opening a new WAL in DFS may fail, but still be advertised in ZK. This could
+result in a missing WAL during recovery, preventing tablets from loading.
+There is no data loss in this case, just WAL references that should not exists.
+Reported in &lt;a href=&quot;https://github.com/apache/accumulo/issues/949&quot;&gt;#949&lt;/a&gt; and fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1057&quot;&gt;#1005&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;tserver failures could result in many empty WALs that unnecessarily slow recovery.
+This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/845&quot;&gt;#823&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Some write patterns caused tservers to unnecessarily reference a lot of WALs,
+which could slow any recovery.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/860&quot;&gt;#854&lt;/a&gt; the max WALs referenced was
+limited regardless of the write pattern, avoiding long recovery times.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;During tablet recovery, filter out logs that do not define the tablet. &lt;a href=&quot;https://github.com/apache/accumulo/issues/881&quot;&gt;#881&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If a tserver fails sorting, a marker file is written to the recovery directory.
+This marker prevents any subsequent recovery attempts from succeeding.
+Fixed by modifying the WAL RecoveryLogReader to handle failed file markers in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1048&quot;&gt;#961&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Improve performance of serializing mutations to a WAL by avoiding frequent synchronization. &lt;a href=&quot;https://github.com/apache/accumulo/issues/669&quot;&gt;#669&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-compaction-issues&quot;&gt;Multiple Fixes for Compaction Issues&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Stop locking during compaction.  Compactions acquired the tablet lock between each
+key value. This created unnecessary contention with other operations like scan and
+bulk imports.  The synchronization was removed &lt;a href=&quot;https://github.com/apache/accumulo/issues/1032&quot;&gt;#1031&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Only re-queue compaction when there is activity. &lt;a href=&quot;https://github.com/apache/accumulo/issues/759&quot;&gt;#759&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions&quot;&gt;Fix ArrayOutOfBounds error when new files are created (affects all previous versions)&lt;/h3&gt;
+
+&lt;p&gt;If the 7 digit base 36 number used to name files attempted to go to 8 digits,
+then compactions would fail.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/562&quot;&gt;#562&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-master-metrics-to-include-fate-metrics&quot;&gt;Updated Master Metrics to include FATE metrics.&lt;/h3&gt;
+
+&lt;p&gt;Added master metrics to provide a snapshot of current FATE operations.  The metrics added:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the number of current FATE transactions in progress,&lt;/li&gt;
+  &lt;li&gt;the count of child operations that have occurred on the zookeeper FATE node&lt;/li&gt;
+  &lt;li&gt;a count of zookeeper connection errors when the snapshot is taken.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The number of child operations provides a light-weight surrogate for FATE transaction
+progression between snapshots. The metrics are controlled with the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;master.fate.metrics.enabled - default to &lt;em&gt;false&lt;/em&gt; preserve current metric reporting&lt;/li&gt;
+  &lt;li&gt;master.fate.metrics.min.update.interval - default to &lt;em&gt;60s&lt;/em&gt; - there is a hard limit of 10s.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When enabled, the metrics are published to JMX and can optionally be configured using standard
+hadoop metrics2 configuration files.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issues-with-native-maps-with-libstdc-82-and-higher&quot;&gt;Fixed issues with Native Maps with libstdc++ 8.2 and higher&lt;/h3&gt;
+
+&lt;p&gt;Versions of libstdc++ 8.2 and higher triggered errors within within the native map code.
+This release fixes issues &lt;a href=&quot;https://github.com/apache/accumulo/issues/767&quot;&gt;#767&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/769&quot;&gt;#769&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/1064&quot;&gt;#1064 &lt;/a&gt;, and &lt;a href=&quot;https://github.com/apache/accumulo/issues/1070&quot;&gt;#1070 &lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-splitting-tablets-with-files-and-no-data&quot;&gt;Fixed splitting tablets with files and no data&lt;/h3&gt;
+
+&lt;p&gt;The split code assumed that if a tablet had files that it had data in
+those files.  There are some edge case where this is not true.  Updated
+the split code to handle this &lt;a href=&quot;https://github.com/apache/accumulo/issues/999&quot;&gt;#998&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;log-when-a-scan-waits-a-long-time-for-files&quot;&gt;Log when a scan waits a long time for files.&lt;/h3&gt;
+
+&lt;p&gt;Accumulo has a configurable limit on the max number of files open in a
+tserver for all scans.  When too many files are open, scans must wait.
+In &lt;a href=&quot;https://github.com/apache/accumulo/issues/978&quot;&gt;#978&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/981&quot;&gt;#981&lt;/a&gt; scans that wait too long for files now log a message.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-race-condition-in-table-existence-check&quot;&gt;Fixed race condition in table existence check.&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo client code that checks if tables exists had a race
+condition.  The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/768&quot;&gt;#768&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/973&quot;&gt;#973&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;support-running-mini-accumulo-using-java-11&quot;&gt;Support running Mini Accumulo using Java 11&lt;/h3&gt;
+
+&lt;p&gt;Mini Accumulo made some assumptions about classloaders that were no
+longer true in Java 11.  This caused Mini to fail in Java 11.  In
+&lt;a href=&quot;https://github.com/apache/accumulo/issues/924&quot;&gt;#924&lt;/a&gt; Mini was updated to work with Java 11, while still working
+with Java 7 and 8.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-improperly-configured-snappy&quot;&gt;Fixed issue with improperly configured Snappy&lt;/h3&gt;
+
+&lt;p&gt;If snappy was configured and the snappy libraries were not available then minor
+compactions could hang forever.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/920&quot;&gt;#920&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/925&quot;&gt;#925&lt;/a&gt; this was fixed and minor
+compactions will proceed when a different compression is configured.&lt;/p&gt;
+
+&lt;h3 id=&quot;handle-bad-locality-group-config&quot;&gt;Handle bad locality group config.&lt;/h3&gt;
+
+&lt;p&gt;Improperly configured locality groups could cause a tablet to become
+inoperative.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/819&quot;&gt;#819&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/840&quot;&gt;#840&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-bulk-import-race-condition&quot;&gt;Fixed bulk import race condition.&lt;/h3&gt;
+
+&lt;p&gt;There was a race condition in bulk import that could result in files
+being imported after a bulk import transaction had completed.  In the
+worst case these files were already compacted and garbage collected.
+This would cause a tablet to have a reference to a file that did not
+exists.  No data would have been lost, but it would cause scans to fail.
+The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/800&quot;&gt;#800&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/837&quot;&gt;#837&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-hostregextableloadbalancer&quot;&gt;Fixed issue with HostRegexTableLoadBalancer&lt;/h3&gt;
+
+&lt;p&gt;This addresses an issue when using the HostRegexTableLoadBalancer
+when the default pool is empty. The load balancer will not assign the tablets at all.
+Here, we select a random pool to assign the tablets to. This behavior is on by
+default in the HostRegexTableLoadBalancer but can be disabled via
+HostRegexTableLoadBalancer configuration setting
+ &lt;em&gt;table.custom.balancer.host.regex.HostTableLoadBalancer.ALL&lt;/em&gt;
+ Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/691&quot;&gt;#691&lt;/a&gt; - backported to 1.9 in &lt;a href=&quot;https://github.com/apache/accumulo/issues/710&quot;&gt;#710&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;update-to-libthrift-version&quot;&gt;Update to libthrift version&lt;/h3&gt;
+
+&lt;p&gt;The packaged, binary  tarball contains updated version of libthrift to version 0.9.3-1 to
+address thrift CVE. Issue &lt;a href=&quot;https://github.com/apache/accumulo/issues/1029&quot;&gt;#1029&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;useful-links&quot;&gt;Useful links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://lists.apache.org/thread.html/62a490ee3005ef2ec1f3865f6a9539efc082abc49c90892b49005eed@%3Cdev.accumulo.apache.org%3E&quot;&gt;Release VOTE email thread&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/compare/rel/1.9.2...apache:rel/1.9.3&quot;&gt;All Changes since 1.9.2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F7&quot;&gt;GitHub&lt;/a&gt; - List of issues tracked on GitHub corresponding to this release&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/release/accumulo-1.9.2/&quot;&gt;1.9.2 release notes&lt;/a&gt; - Release notes showing changes in the previous release&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.9.3/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.3/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
+    
+      <item>
+        <title>NoSQL Day 2019</title>
+        <description>&lt;p&gt;On May 21st in Washington, DC, there will be a one-day community event for Apache Accumulo,
+HBase, and Phoenix called &lt;a href=&quot;https://dataworkssummit.com/nosql-day-2019/&quot;&gt;NoSQL Day&lt;/a&gt;. We hope that these three Apache communities can come together to share
+stories from the field and learn from one another. This event is being offered by the
+DataWorks Summit organization, prior to their DataWorks Summit event May 20th through 23rd.&lt;/p&gt;
+
+&lt;p&gt;At this time, we are looking for speakers, attendees, and sponsors for the event. For
+speakers, we hope to see a wide breadth of subjects and focus, anything from performance,
+scaling, real-life applications, dev-ops, or best-practices. All speakers are welcome!
+Abstracts can be submitted &lt;a href=&quot;https://dataworkssummit.com/abstracts/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For attendees, we want to get the best and brightest from each of the respective communities
+because the organizers believe we have much to learn from from each other. We’ve tried to
+keep costs down to make this approachable for all.&lt;/p&gt;
+
+&lt;p&gt;Finally, sponsors are the major enabler to provide events like these at low-costs
+to attendees. If you are interested in a corporate sponsorship, please feel free to contact
+&lt;a href=&quot;mailto:elserj@apache.org&quot;&gt;Josh Elser&lt;/a&gt; for more information.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2019/02/28/nosql-day.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/02/28/nosql-day.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Verifying a Release</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Verifying a Release</h1>
+          
+          <p>This is a guide for the verification of a release candidate of Apache Accumulo. These steps are meant to encapsulate
+the requirements of the PMC set forth by the Foundation itself.</p>
+
+<p>The information here is meant to be an application of Foundation policy. When in doubt or conflict, any Foundation-level
+trumps anything written here.</p>
+
+<h2 id="versioning">Versioning</h2>
+
+<p>Accumulo has adopted <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a> and follows their rules and guidelines.</p>
+
+<h2 id="testing-basics">Testing basics</h2>
+
+<p>Each release of Accumulo should be tested by the community to verify correctness.</p>
+
+<p>Below are some suggested tests that can be run (feel free to run your own custom tests too):</p>
+
+<ul>
+  <li>
+    <p>Run Accumulo’s unit and integration tests using the following command:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  $ mvn verify
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Build the <a href="https://github.com/apache/accumulo-examples">Accumulo Examples</a> repo using the release candidate by updating the <code class="highlighter-rouge">accumulo.version</code>
+property in the <code class="highlighter-rouge">pom.xml</code> and using the staging repo. Also, run the unit/integration tests using <code class="highlighter-rouge">mvn verify</code>.</p>
+  </li>
+  <li>
+    <p>Run Accumulo’s distributed tests (i.e. random walk, continuous ingest). These tests are intended to be run for days
+on end while injecting faults into the system. These are the tests that truly verify the correctness of Accumulo on
+real systems. Starting with 2.0, these tests are run using the <a href="https://github.com/apache/accumulo-testing">Accumulo Testing repo</a>. See the <a href="https://github.com/apache/accumulo-testing/blob/master/README.md">README.md</a>
+for more information.  Before 2.0, these tests are found in Accumulo tarball at <code class="highlighter-rouge">test/system/randomwalk</code> and
+<code class="highlighter-rouge">test/system/continuous</code> which include instructions on how to run the tests.</p>
+  </li>
+</ul>
+
+<h2 id="project-testing-goals">Project testing goals</h2>
+
+<p>While contributors do not need perform all tests, there should a minimum amount of testing done by the project as whole before a release is made.</p>
+
+<p>Testing for an Accumulo release includes a few steps that a developer may take without a Hadoop cluster and several that require a working cluster. For minor releases, 
+the tests which run on a Hadoop cluster are recommended to be completed but are not required. Running even a reduced set of tests against real hardware is always encouraged
+even if the full test suite (in breadth of nodes or duration) is not executed. If PMC members do not believe adequate testing was performed for the sake of making the proposed
+release, the release should be vetoed via the normal voting process. New major releases are expected to run a full test suite.</p>
+
+<h3 id="stand-alone">Stand alone</h3>
+
+<p>The following steps can be taken without having an underlying cluster. They SHOULD be handled with each Hadoop profile available for a given release version. To activate an alternative profile specify e.g. “-Dhadoop.profile=2” for the Hadoop 2 profile on the Maven commandline. Some older versions of Accumulo referred to Hadoop profiles differently; see the README that came with said versions for details on building against different Hadoop versions.</p>
+
+<ol>
+  <li>All JUnit tests must pass.  This should be a requirement of any patch so it should never be an issue of the codebase.
+    - Use “mvn package” to run against the default profile of a particular release
+    - Use “mvn -Dhadoop.profile=2 package” to test against the Hadoop 2 profile on e.g. 1.4 or 1.5
+    - Use “mvn -Dhadoop.profile=1 package” to test against the Hadoop 1 profile on e.g. 1.6 or later
+    <ul>
+      <li>Analyze output of static analysis tools like Findbugs and PMD.</li>
+      <li>For versions 1.6 and later, all functional tests must pass via the Maven failsafe plugin.
+        <ul>
+          <li>Use “mvn verify” to run against the default profile of a particular release</li>
+          <li>Use “mvn -Dhadoop.profile=1 verify” to run the functional tests against the Hadoop 1 profile</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="cluster-based">Cluster based</h3>
+
+<p>The following tests require a Hadoop cluster running a minimum of HDFS, MapReduce, and ZooKeeper. The cluster MAY have any number of worker nodes; it can even be a single node in pseudo-distributed mode. A cluster with multiple tablet servers SHOULD be used so that more of the code base will be exercised. For the purposes of release testing, you should note the number of nodes and versions used. See the Releasing section for more details.</p>
+
+<ol>
+  <li>For versions prior to 1.6, all functional tests must complete successfully.
+    - See $ACCUMULO_HOME/test/system/auto/README for details on running the functional tests.
+    <ul>
+      <li>Two 24-hour periods of the LongClean module of the RandomWalk test need to be run successfully. One of them must use agitation and the other should not.
+        <ul>
+          <li>See $ACCUMULO_HOME/test/system/randomwalk/README for details on running the LongClean module.</li>
+        </ul>
+      </li>
+      <li>Two 24-hour periods of the continuous ingest test must be validated successfully. One test period must use agitation and the other should not.
+        <ul>
+          <li>See $ACCUMULO_HOME/test/system/continuous/README for details on running and verifying the continuous ingest test.</li>
+        </ul>
+      </li>
+      <li>Two 72-hour periods of continuous ingest must run. One test period must use agitation and the other should not. No validation is necessary but the cluster should be checked to ensure it is still functional.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="foundation-level-requirements">Foundation Level Requirements</h2>
+
+<p>The ASF requires that all artifacts in a release are cryptographically signed and distributed with hashes.</p>
+
+<p>OpenPGP is an asymmetric encryption scheme which lends itself well to the globally distributed nature of Apache.
+Verification of a release artifact can be done using the signature and the release-maker’s public key. Hashes
+can be verified using the appropriate command (e.g. <code class="highlighter-rouge">sha1sum</code>, <code class="highlighter-rouge">md5sum</code>).</p>
+
+<p>An Apache release must contain a source-only artifact. This is the official release artifact. While a release of
+an Apache project can contain other artifacts that do contain binary files. These non-source artifacts are for
+user convenience only, but still must adhere to the same licensing rules.</p>
+
+<p>PMC members should take steps to verify that the source-only artifact does not contain any binary files. There is
+some leeway in this rule. For example, test-only binary artifacts (such as test files or jars) are acceptable as long
+as they are only used for testing the software and not running it.</p>
+
+<p>The following are the aforementioned Foundation-level documents provided for reference:</p>
+
+<ul>
+  <li><a href="https://www.apache.org/dev/apply-license">Applying the Apache Software License</a></li>
+  <li><a href="https://www.apache.org/legal/src-headers">Legal’s license application guidelines</a></li>
+  <li><a href="https://www.apache.org/legal/resolved">Common legal-discuss mailing list questions/resolutions</a></li>
+  <li><a href="https://www.apache.org/legal">ASF Legal Affairs Page</a></li>
+</ul>
+
+<h2 id="apache-software-license-application">Apache Software License Application</h2>
+
+<p>Application of the Apache Software License v2 consists of the following steps on each artifact in a release. It’s
+important to remember that for artifacts that contain other artifacts (e.g. a tarball that contains JAR files or
+an RPM which contains JAR files), both the tarball, RPM and JAR files are subject to the following roles.</p>
+
+<p>The difficulty in verifying each artifact is that, often times, each artifact requires a different LICENSE and NOTICE
+file. For example, the Accumulo binary tarball must contain appropriate LICENSE and NOTICE files considering the bundled
+jar files in <code class="highlighter-rouge">lib/</code>. The Accumulo source tarball would not contain these same contents in the LICENSE and NOTICE files
+as it does not contain those same JARs.</p>
+
+<h3 id="license-file">LICENSE file</h3>
+
+<p>The LICENSE file should be present at the top-level of the artifact. This file should be explicitly named <code class="highlighter-rouge">LICENSE</code>,
+however <code class="highlighter-rouge">LICENSE.txt</code> is acceptable but not preferred. This file contains the text of the Apache Software License 
+at the top of the file. At the bottom of the file, all other open source licenses <em>contained in the given
+artifact</em> must be listed at the bottom of the LICENSE file. Contained components that are licensed with the ASL themselves
+do not need to be included in this file. It is common to see inclusions in file such as the MIT License of 3-clause
+BSD License.</p>
+
+<h3 id="notice-file">NOTICE file</h3>
+
+<p>The NOTICE file should be present at the top-level of the artifact beside the LICENSE file. This file should be explicitly
+name <code class="highlighter-rouge">NOTICE</code>, while <code class="highlighter-rouge">NOTICE.txt</code> is also acceptable but not preferred. This file contains the copyright notice for
+the artifact being released. As a reminder, the copyright is held by the Apache Software Foundation, not the individual
+project.</p>
+
+<p>The second purpose this file serves is to distribute third-party notices from dependent software. Specifically, other code
+which is licensed with the ASLv2 may also contain a NOTICE file. If such an artifact which contains a NOTICE file is
+contained in artifact being verified for releases, the contents of the contained artifact’s NOTICE file should be appended
+to this artifact’s NOTICE file. For example, Accumulo bundles the Apache Thrift libthrift JAR file which also have its
+own NOTICE file. The contents of the Apache Thrift NOTICE file should be included within Accumulo’s NOTICE file.</p>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

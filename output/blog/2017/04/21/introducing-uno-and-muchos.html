@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Introducing Uno and Muchos</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Introducing Uno and Muchos</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Mike Walch<br>
+<b>Date: </b>&nbsp;&nbsp;21 Apr 2017<br>
+
+</p>
+
+<p>While <a href="https://github.com/apache/accumulo/blob/master/INSTALL.md">Accumulo’s installation instructions</a> are simple, it can be time consuming to install Accumulo
+given its requirement on <a href="https://hadoop.apache.org/">Hadoop</a> and <a href="https://zookeeper.apache.org/">Zookeeper</a> being installed and running. For a one-time production
+installation, this set up time (which can take up to an hour) is not much of an inconvenience. However, it can become a burden
+for developers who need to frequently set up Accumulo to test code changes, switch between different
+versions, or start a fresh instance on a laptop.</p>
+
+<p><a href="https://github.com/apache/fluo-uno">Uno</a> and <a href="https://github.com/apache/fluo-muchos">Muchos</a> are tools that ease the burden on developers of installing Accumulo and its dependencies.
+The names of Uno and Muchos indicate their use case. Uno is designed for running Accumulo on a single node
+while Muchos is designed for running Accumulo on a cluster. While Uno and Muchos will install by default the most
+recent stable release of Accumulo, Hadoop, and Zookeeper, it is easy to configure different versions to
+match a production cluster.</p>
+
+<p>The sections below show how to use these tools. For more complete documentation, view their respective GitHub
+pages.</p>
+
+<h2 id="uno">Uno</h2>
+
+<p><a href="https://github.com/apache/fluo-uno">Uno</a> is a command line tool that sets up Accumulo on a single machine. It can be installed by cloning the
+Uno git repo.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/apache/fluo-uno.git
+<span class="nb">cd </span>fluo-uno
+</code></pre></div></div>
+
+<p>Uno works out of the box but it can be customized by modifying <code class="highlighter-rouge">conf/uno.conf</code>.</p>
+
+<p>First, download the Accumulo, Hadoop, and Zookeeper tarballs from Apache by using the command below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/uno fetch accumulo
+</code></pre></div></div>
+
+<p>The fetch command places all tarballs in the <code class="highlighter-rouge">downloads/</code> directory. Uno can be configured (in <code class="highlighter-rouge">conf/uno.conf</code>)
+to build an Accumulo tarball from a local git repo when <code class="highlighter-rouge">fetch</code> is called.</p>
+
+<p>After downloading tarballs, the command below sets up Accumulo, Hadoop &amp; Zookeeper in the <code class="highlighter-rouge">install/</code> directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/uno setup accumulo
+</code></pre></div></div>
+
+<p>Accumulo, Hadoop, &amp; Zookeeper are now ready to use. You can view the Accumulo monitor at
+<a href="http://localhost:9995">http://localhost:9995</a>. You can configure your shell using the command below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>./bin/uno <span class="nb">env</span><span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">uno stop accumulo</code> to cleanly stop your cluster and <code class="highlighter-rouge">uno start accumulo</code> to start it again.</p>
+
+<p>If you need a fresh cluster, you can run <code class="highlighter-rouge">uno setup accumulo</code> again. To kill your cluster, run <code class="highlighter-rouge">uno kill</code>.</p>
+
+<h2 id="muchos">Muchos</h2>
+
+<p><a href="https://github.com/apache/fluo-muchos">Muchos</a> is a command line tool that launches an AWS EC2 cluster with Accumulo set up on it. It is installed by
+cloning its git repo.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/apache/fluo-muchos.git
+<span class="nb">cd </span>fluo-muchos
+</code></pre></div></div>
+
+<p>Before using Muchos, create <code class="highlighter-rouge">muchos.props</code> in <code class="highlighter-rouge">conf/</code> and edit it for your AWS environment.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp </span>conf/muchos.props.example conf/muchos.props
+vim conf/muchos.props
+</code></pre></div></div>
+
+<p>Next, run the command below to launch a cluster in AWS.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>muchos launch <span class="nt">-c</span> mycluster
+</code></pre></div></div>
+
+<p>After launching the cluster, set up Accumulo on it using the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>muchos setup
+</code></pre></div></div>
+
+<p>Use <code class="highlighter-rouge">muchos ssh</code> to ssh to the cluster and <code class="highlighter-rouge">muchos terminate</code> to terminate all EC2 nodes when you are finished.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Uno and Muchos automate installing Accumulo for development and testing. While not recommended for production
+use at this time, Muchos is a great reference for running Accumulo in production. System administrators can
+reference the <a href="https://www.ansible.com/">Ansible</a> code in Muchos to automate management of their own clusters.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Balancing Groups of Tablets</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Balancing Groups of Tablets</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Keith Turner<br>
+<b>Date: </b>&nbsp;&nbsp;20 Mar 2015<br>
+
+</p>
+
+<p>Originally posted at <a href="https://blogs.apache.org/accumulo/entry/balancing_groups_of_tablets">https://blogs.apache.org/accumulo/entry/balancing_groups_of_tablets</a></p>
+
+<p>Accumulo has a pluggable tablet balancer that decides where tablets should be placed. Accumulo’s default configuration spreads each tables tablets evenly and randomly across the tablet servers. Each table can configure a custom balancer that does something different.</p>
+
+<p>For some applications to perform optimally, sub-ranges of a table need to be spread evenly across the cluster. Over the years I have run into multiple use cases for this situation. The latest use case was <a href="https://github.com/fluo-io/fluo/issues/361">bad performance</a> on the <a href="http://fluo.io/">Fluo</a> <a href="https://github.com/fluo-io/fluo-stress">Stress Test</a>. This test stores a tree in an Accumulo table and creates multiple tablets for each level in the tree. In parallel, the test reads data from one level and writes it up to the next level. Figure 1 below shows an example of tablet servers hosting tablets for different levels of the tree. Under this scenario if many threads are reading data from level 2 and writing up to level 1, only Tserver 1 and Tserver 2 will be utilized. So in this scenario 50% of the tablet servers are idle.</p>
+
+<p><img src="/images/blog/201503_balancer/figure1.png" alt="figure1" />
+<em>Figure 1</em></p>
+
+<p>[ACCUMULO-3439][accumulo-3949] remedied this situation with the introduction of the <a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/GroupBalancer.java;hb=b0815affade66ab04ca27b6fc3abaac400097469">GroupBalancer</a> and <a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/RegexGroupBalancer.java;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c">RegexGroupBalancer</a> which will be available in Accumulo 1.7.0. These balancers allow a user to arbitrarily group tablets. Each group defined by the user will be evenly spread across the tablet servers. Also, the total number of groups on each tablet server is minimized. As tablets are added or removed from the table, the balancer will migrate tablets to satisfy these goals.  Much of the complexity in the GroupBalancer code comes from trying to minimize the number of migrations needed to reach a good state.</p>
+
+<p>A GroupBalancer could be configured for the table in figure 1 in such a way that it grouped tablets by level. If this were done, the result may look like Figure 2 below. With this tablet to tablet server mapping, many threads reading from level 2 and writing data up to level 1 would utilize all of the tablet servers yielding better performance.</p>
+
+<p><img src="/images/blog/201503_balancer/figure2.png" alt="figure2" />
+<em>Figure 2</em></p>
+
+<p><a href="https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=docs/src/main/resources/examples/README.rgbalancer;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c">README.rgbalancer</a> provides a good example of configuring and using the RegexGroupBalancer. If a regular expression can not accomplish the needed grouping, then a grouping function can be written in Java. Extend GroupBalancer to write a grouping function in java. RegexGroupBalancer provides a good example of how to do this.</p>
+
+<p>When using a GroupBalancer, how Accumulo automatically splits tablets must be kept in mind. When Accumulo decides to split a tablet, it chooses the shortest possible row prefix from the tablet data that yields a good split point. Therefore its possible that a split point that is shorter than what is expected by a GroupBalancer could be chosen. The best way to avoid this situation is to pre-split the table such that it precludes this possibility.</p>
+
+<p>The Fluo Stress test is a very abstract use case. A more concrete use case for the group balancer would be using it to ensure tablets storing geographic data were spread out evenly. For example consider <a href="https://ngageoint.github.io/geowave/">GeoWave’s</a> Accumulo <a href="http://ngageoint.github.io/geowave/documentation.html#architecture-accumulo">Persistence Model</a>. Tablets could be balanced such that bins related to different regions are spread out evenly. For example tablets related to each continent could be assigned a group ensuring data related to each continent is evenly spread across the cluster. Alternatively, each Tier could spread evenly across the cluster.</p>
+
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

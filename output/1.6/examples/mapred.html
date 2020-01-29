@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>MapReduce Example</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">MapReduce Example</h1>
+          
+          <p>This example uses mapreduce and accumulo to compute word counts for a set of
+documents. This is accomplished using a map-only mapreduce job and a
+accumulo table with combiners.</p>
+
+<p>To run this example you will need a directory in HDFS containing text files.
+The accumulo readme will be used to show how to run this example.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -copyFromLocal $ACCUMULO_HOME/README /user/username/wc/Accumulo.README
+$ hadoop fs -ls /user/username/wc
+Found 1 items
+-rw-r--r--   2 username supergroup       9359 2009-07-15 17:54 /user/username/wc/Accumulo.README
+</code></pre></div></div>
+
+<p>The first part of running this example is to create a table with a combiner
+for the column family count.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> ./bin/accumulo shell -u username -p password
+<span class="p">Shell - Apache Accumulo Interactive Shell
+</span><span class="gd">- version: 1.6.0
+- instance name: instance
+- instance id: 00000000-0000-0000-0000-000000000000
+-
+- type 'help' for a list of available commands
+-
+</span><span class="p">username@instance&gt; createtable wordCount
+username@instance wordCount&gt; setiter -class org.apache.accumulo.core.iterators.user.SummingCombiner -p 10 -t wordCount -majc -minc -scan
+SummingCombiner interprets Values as Longs and adds them together. A variety of encodings (variable length, fixed length, or string) are available
+</span><span class="gd">----------&gt; set SummingCombiner parameter all, set to true to apply Combiner to every column, otherwise leave blank. if true, columns option will be ignored.: false
+----------&gt; set SummingCombiner parameter columns, &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} escape non-alphanum chars using %&lt;hex&gt;.: count
+----------&gt; set SummingCombiner parameter lossy, if true, failed decodes are ignored. Otherwise combiner will error on failed decodes (default false): &lt;TRUE|FALSE&gt;: false
+----------&gt; set SummingCombiner parameter type, &lt;VARLEN|FIXEDLEN|STRING|fullClassName&gt;: STRING
+</span><span class="p">username@instance wordCount&gt; quit
+</span></code></pre></div></div>
+
+<p>After creating the table, run the word count map reduce job.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.WordCount -i instance -z zookeepers  --input /user/username/wc -t wordCount -u username -p password
+
+11/02/07 18:20:11 INFO input.FileInputFormat: Total input paths to process : 1
+11/02/07 18:20:12 INFO mapred.JobClient: Running job: job_201102071740_0003
+11/02/07 18:20:13 INFO mapred.JobClient:  map 0% reduce 0%
+11/02/07 18:20:20 INFO mapred.JobClient:  map 100% reduce 0%
+11/02/07 18:20:22 INFO mapred.JobClient: Job complete: job_201102071740_0003
+11/02/07 18:20:22 INFO mapred.JobClient: Counters: 6
+11/02/07 18:20:22 INFO mapred.JobClient:   Job Counters
+11/02/07 18:20:22 INFO mapred.JobClient:     Launched map tasks=1
+11/02/07 18:20:22 INFO mapred.JobClient:     Data-local map tasks=1
+11/02/07 18:20:22 INFO mapred.JobClient:   FileSystemCounters
+11/02/07 18:20:22 INFO mapred.JobClient:     HDFS_BYTES_READ=10487
+11/02/07 18:20:22 INFO mapred.JobClient:   Map-Reduce Framework
+11/02/07 18:20:22 INFO mapred.JobClient:     Map input records=255
+11/02/07 18:20:22 INFO mapred.JobClient:     Spilled Records=0
+11/02/07 18:20:22 INFO mapred.JobClient:     Map output records=1452
+</code></pre></div></div>
+
+<p>After the map reduce job completes, query the accumulo table to see word
+counts.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+username@instance&gt; table wordCount
+username@instance wordCount&gt; scan -b the
+the count:20080906 []    75
+their count:20080906 []    2
+them count:20080906 []    1
+then count:20080906 []    1
+there count:20080906 []    1
+these count:20080906 []    3
+this count:20080906 []    6
+through count:20080906 []    1
+time count:20080906 []    3
+time. count:20080906 []    1
+to count:20080906 []    27
+total count:20080906 []    1
+tserver, count:20080906 []    1
+tserver.compaction.major.concurrent.max count:20080906 []    1
+...
+</code></pre></div></div>
+
+<p>Another example to look at is
+org.apache.accumulo.examples.simple.mapreduce.UniqueColumns. This example
+computes the unique set of columns in a table and shows how a map reduce job
+can directly read a tables files from HDFS.</p>
+
+<p>One more example available is
+org.apache.accumulo.examples.simple.mapreduce.TokenFileWordCount.
+The TokenFileWordCount example works exactly the same as the WordCount example
+explained above except that it uses a token file rather than giving the
+password directly to the map-reduce job (this avoids having the password
+displayed in the job’s configuration which is world-readable).</p>
+
+<p>To create a token file, use the create-token utility</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo create-token
+</code></pre></div></div>
+
+<p>It defaults to creating a PasswordToken, but you can specify the token class
+with -tc (requires the fully qualified class name). Based on the token class,
+it will prompt you for each property required to create the token.</p>
+
+<p>The last value it prompts for is a local filename to save to. If this file
+exists, it will append the new token to the end. Multiple tokens can exist in
+a file, but only the first one for each user will be recognized.</p>
+
+<p>Rather than waiting for the prompts, you can specify some options when calling
+create-token, for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo create-token -u root -p secret -f root.pw
+</code></pre></div></div>
+
+<p>would create a token file containing a PasswordToken for
+user ‘root’ with password ‘secret’ and saved to ‘root.pw’</p>
+
+<p>This local file needs to be uploaded to hdfs to be used with the
+map-reduce job. For example, if the file were ‘root.pw’ in the local directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -put root.pw root.pw
+</code></pre></div></div>
+
+<p>This would put ‘root.pw’ in the user’s home directory in hdfs.</p>
+
+<p>Because the basic WordCount example uses Opts to parse its arguments
+(which extends ClientOnRequiredTable), you can use a token file with
+the basic WordCount example by calling the same command as explained above
+except replacing the password with the token file (rather than -p, use -tf).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.WordCount -i instance -z zookeepers  --input /user/username/wc -t wordCount -u username -tf tokenfile
+</code></pre></div></div>
+
+<p>In the above examples, username was ‘root’ and tokenfile was ‘root.pw’</p>
+
+<p>However, if you don’t want to use the Opts class to parse arguments,
+the TokenFileWordCount is an example of using the token file manually.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/tool.sh lib/accumulo-examples-simple.jar org.apache.accumulo.examples.simple.mapreduce.TokenFileWordCount instance zookeepers username tokenfile /user/username/wc wordCount
+</code></pre></div></div>
+
+<p>The results should be the same as the WordCount example except that the
+authentication token was not stored in the configuration. It was instead
+stored in a file that the map-reduce job pulled into the distributed cache.
+(If you ran either of these on the same table right after the
+WordCount example, then the resulting counts should just double.)</p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

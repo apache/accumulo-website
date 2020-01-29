@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Release Management</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Release Management</h1>
+          
+          <p>Releases, although not a day to day task, have their own unique steps which are to be followed. Releases can be categorized in to minor and major releases</p>
+
+<h3 id="a-minor-release">A minor release</h3>
+
+<p>A minor release is some set of changes <code class="highlighter-rouge">z'</code> on top of a version <code class="highlighter-rouge">x.y.z</code>.
+Typically, <code class="highlighter-rouge">z'</code> is simply <code class="highlighter-rouge">z + 1</code>, e.g. given a release named ‘1.6.0’, and the
+next minor release is ‘1.6.1’. These changes for <code class="highlighter-rouge">z'</code> should not break any
+client code which works against <code class="highlighter-rouge">z</code> and should absolutely not change the public
+API.</p>
+
+<p>By convention, the branch containing the changes <code class="highlighter-rouge">z'</code> should be named
+<code class="highlighter-rouge">x.y</code> (where the changes for <code class="highlighter-rouge">z'</code> are commits since <code class="highlighter-rouge">x.y.z</code>. The steps to take are as follows:</p>
+
+<ol>
+  <li><a href="/contributor/making-release">Make a release candidate</a></li>
+  <li>Create a branch for the release candidate from the <code class="highlighter-rouge">x.y</code> branch,
+named something like <code class="highlighter-rouge">x.y.z'-RCN</code>.</li>
+  <li>Test and Vote</li>
+  <li>Create a GPG-signed tag with the correct final name: <code class="highlighter-rouge">x.y.z'</code></li>
+  <li>Push a delete of the remote branch <code class="highlighter-rouge">x.y.z'-RCN</code></li>
+</ol>
+
+<p>This process is not firm and should not be viewed as requirements for making a release.
+The release manager is encouraged to make use branches/tags in whichever way is best.</p>
+
+<h3 id="a-major-release">A major release</h3>
+
+<p>A major release is a release in which multiple new features are introduced
+and/or the public API are modified. The major release <code class="highlighter-rouge">y'</code>, even when the
+client API is not modified, will typically contain many new features and
+functionality above the last release series <code class="highlighter-rouge">y</code>. A major release also resets
+the <code class="highlighter-rouge">z</code> value back to <code class="highlighter-rouge">0</code>.</p>
+
+<p>The steps to create a new major release are very similar to a minor release:</p>
+
+<ol>
+  <li><a href="/contributor/making-release">Make a release candidate</a></li>
+  <li>Create a tag of the release candidate from the <code class="highlighter-rouge">x.y</code> branch,
+named something like <code class="highlighter-rouge">x.y.0-RCN</code>.</li>
+  <li>Test and Vote</li>
+  <li>Create a GPG-signed tag with the correct final name: <code class="highlighter-rouge">x.y.0</code></li>
+  <li>Push a delete of the remote branch <code class="highlighter-rouge">x.y.0-RCN</code></li>
+</ol>
+
+<h1 id="the-infrastructure">The infrastructure</h1>
+
+<p>This section deals with the changes that must be requested through INFRA. As
+with any substantial INFRA request, the VOTE and result from the mailing should
+be referenced so INFRA knows that the request has been acknowledged. Likely, a
+PMC member should be the one to submit the request.</p>
+
+<h2 id="repositories">Repositories</h2>
+
+<p>I believe that we will need multiple repositories to best align ourselves with
+how we currently track “Accumulo” projects. The repositories follow:</p>
+
+<ol>
+  <li>
+    <p>The main source tree. This will track the standard trunk, branches, tags
+structure from Subversion for Apache Accumulo.</p>
+  </li>
+  <li>
+    <p>One repository for every project in
+<a href="https://svn.apache.org/repos/asf/accumulo/contrib">contrib</a>: Accumulo-BSP,
+Instamo Archetype, and the Wikisearch project. Each of these
+are considered disjoint from one another, and the main source tree, so they
+each deserve their own repository.</p>
+  </li>
+</ol>
+
+<p>Given the list of repositories that currently exist on the <a href="https://git-wip-us.apache.org/repos/asf">ASF
+site</a> and a brief search over INFRA
+tickets, multiple repositories for a single Apache project is not an issue.
+Having this list when making the initial ticket will likely reduce the amount
+of work necessary in opening multiple INFRA tickets.</p>
+
+<h2 id="mirroring">Mirroring</h2>
+
+<p>It should be noted in the INFRA request that each repository will also need to
+be configured to properly mirror to the <a href="https://github.com/apache">ASF Github</a>
+account to provide the same functionality with current have via the git+svn
+mirror. Same change needs to be applied for the <a href="https://git.apache.org">Apache hosted</a> 
+mirror’ing.</p>
+
+<h2 id="mailing-lists">Mailing lists</h2>
+
+<p>It should be noted in the INFRA request that commit messages should be sent to
+<a href="mailto:commits@accumulo.apache.org">commits@accumulo.apache.org</a>. The subject
+can be decided on using the <a href="https://git-wip-us.apache.org/docs/switching-to-git#contents">provided
+variables</a>.</p>
+
+<h1 id="examples">Examples</h1>
+
+<p>For the sake of clarity, some examples of common situations are included below.</p>
+
+<h2 id="releasing-160">Releasing 1.6.0</h2>
+
+<ol>
+  <li>
+    <p>Branch from <code class="highlighter-rouge">master</code> to <code class="highlighter-rouge">1.6</code></p>
+
+    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git branch 1.6</code></p>
+  </li>
+  <li>
+    <p>Tag <code class="highlighter-rouge">1.6.0-RC1</code> from the just created <code class="highlighter-rouge">1.6</code> branch</p>
+
+    <p><code class="highlighter-rouge">git tag 1.6.0-RC1 1.6</code></p>
+  </li>
+  <li>
+    <p>Test, vote, etc. and tag from 1.6.0-RC1</p>
+
+    <p><code class="highlighter-rouge">git -s tag 1.6.0 1.6.0-RC1</code></p>
+  </li>
+  <li>
+    <p>Delete the RC tag, if desired.</p>
+
+    <p><code class="highlighter-rouge">git tag -d 1.6.0-RC1 &amp;&amp; git push --delete origin 1.6.0-RC1</code></p>
+  </li>
+  <li>
+    <p>Ensure <code class="highlighter-rouge">master</code> contains all features and fixes from <code class="highlighter-rouge">1.6.0</code></p>
+
+    <p><code class="highlighter-rouge">git checkout master &amp;&amp; git merge 1.6</code></p>
+  </li>
+  <li>
+    <p>Update the project version in <code class="highlighter-rouge">master</code> to 1.7.0-SNAPSHOT</p>
+  </li>
+</ol>
+
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
