@@ -68,6 +68,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Chris McCubbin      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Chris McTague       | [Peterson Technologies][PETERSON]                                 | [ET][ET]              |
 | Christian Rohling   | [Endgame][ENDGAME]                                                | [ET][ET]              |
+| Craig Scheiderer    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Damon Brown         | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Dave Wang           | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | David M. Lyle       |                                                                   |                       |
