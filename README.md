@@ -139,12 +139,9 @@ git checkout master
 # Step 1: update your upstream remote
 git remote update upstream
 
-# Step 2: create/update your local asf-site branch from the upstream staging branch
-git branch --track --force asf-site upstream/asf-staging
-
-# Step 3: push it
+# Step 2: push upstream/asf-staging to upstream/asf-site
 # run next command with --dry-run first to see what it will do without making changes
-git push upstream asf-site:asf-site
+git push upstream upstream/asf-staging:asf-site
 ```
 
 Note that Step 3 should always be a fast-forward merge. That is, there should
