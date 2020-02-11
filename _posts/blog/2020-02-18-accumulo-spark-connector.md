@@ -4,6 +4,27 @@
 <Define target audience / problem / use-cases>
 MASC integrates Apache Spark and Apache Accumulo to leverage the rich Spark Machine Learning eco-system with scalable and secure data storage capabilities of Accumulo. This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Spark with Apache Accumulo](https://github.com/microsoft/masc). 
 
+### Use-cases
+
+Scenario | Base | Improvements
+
+#### Scenario 1
+- Inference on large amount of data in Accumulo
+- Transfer data to large Spark cluster and run inference on Spark
+- Push model to Accumulo using smaller Spark cluster and inference on Accumulo (23.5h vs 9h)
+
+
+#### Scenario 2
+- Model training on large amount of data in Accumulo
+- Pull data into large Spark cluster, restructure format for ML
+- Stream DataFrame to Spark reducing time for training model and cluster size requirements
+
+#### Scenario 3
+- Ad hoc analysis on data stored in Accumulo
+- Pull all data from Accumulo table into large Spark cluster and perform analysis
+- Prune columns and rows using connector expression language to reduce data transfer
+
+
 ## Architecture
 <Show picture of architeure(s) colocated - remote>
 
@@ -22,9 +43,6 @@ JARs available on Maven Central Repository:
 
 - [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
 
-
-TODO: describe all options
-
 ```python
 # Read from Accumulo
 df = (spark
@@ -41,6 +59,8 @@ df = (spark
  .save())
 ```
 
+Full demo [Notebook link](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb)
+
 ## Major Features
 - Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
 - Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format
@@ -50,8 +70,55 @@ df = (spark
 - Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo
 - Server side inference: this allows the Accumulo nodes to be used to run ML model inference using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo.
 
-## Performance
+## Computational Performance of AI Scenario
 <Define benchmarking experiments and results>
+
+### Setup
+
+1,000-node Accumulo Cluster (16,000 cores)
+Version 2.0.0
+256-node Spark cluster (4,096 cores)
+Version 2.4.3
+
+Machines: D16s_v3 (16 cores)
+
+
+Use Twitter Sentiment 140 dataset (1.6 million tweets)
+Text, sentiment, id, user, date
+
+TODO: Include sample text?
+
+In all experiments we use the same base dataset which is a collection of Twitter user tweets with labeled sentiment value. This dataset is known as the Sentiment140 dataset (Go, Bhayani, & Huang, 2009). The training data consist of 1.6M samples of tweets, where each tweet has columns indicating the sentiment label, user, timestamp, query term, and text. The text is limited to 140 characters and the overall uncompressed size of the training dataset is 227MB.
+
+
+Prefix row ids with split keys
+Upload prefixed data to Accumulo using MASC writer
+Duplicate data using custom Accumulo iterator
+
+Validate data partitioning
+Accumulo monitor (port 9995)
+Row count includes replicas (not always the same!)
+
+
+### Results
+
+Description
+
+Training a sentiment model using SparkML
+Regex Tokenizer
+Hashing Transformer
+Logistic Regression
+
+Accumulo server-side inference using MLeap
+Filtering results for 30% data transfer
+Filtering results for 0% data transfer
+
+Baseline
+Plain count
+Inference on Spark
+
+TODO: insert graphs here
+
 
 Feedback, questions, and contributions are welcome!
 
