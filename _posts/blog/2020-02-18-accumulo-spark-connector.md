@@ -18,8 +18,28 @@ PySpark based example is here: Accumulo-Spark Connector Demo Notebook.
 [Connector documentation](https://github.com/microsoft/masc/blob/master/connector/README.md)
 
 JARs available on Maven Central Repository:
-- [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
-- [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
+- [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource) [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
+
+- [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
+
+
+TODO: describe all options
+
+```python
+# Read from Accumulo
+df = (spark
+      .read
+      .format("com.microsoft.accumulo")
+      .options(**options)  # define Accumulo properties
+      .schema(schema))  # define schema for data retrieval
+
+# Write to Accumulo
+(df
+ .write
+ .format("org.apache.accumulo")
+ .options(**options)
+ .save())
+```
 
 ## Major Features
 - Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
