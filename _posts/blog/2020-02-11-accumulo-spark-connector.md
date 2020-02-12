@@ -15,13 +15,13 @@ MASC provides an Apache Spark native connector for Apache Accumulo to integrate 
 - Server side inference: this allows the Accumulo nodes to be used to run ML model inference using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo.
 
 ## Use-cases
-There are many scenarios where use of this connector provides advantages, below we list a few common use-cases.
+There are many scenarios where use of this connector provides advantages, below we list a couple common use-cases.
 
 **Scenario 1**: A data analyst needs to execute model inference on large amount of data in Accumulo.  
 **Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the model can be exported and pushed down using the connector to run on the Accumulo cluster. This can reduce the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
 
 **Scenario 2**: A data scientist needs to train a Spark model on a large amount of data in Accumulo.  
-**Benefit**:Insted of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
+**Benefit**:Insted of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for row and column data to be pruned using complex expression via pushdown filtering. The data can then be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
 
 # Architecture
 The Accumulo-Spark connector is composed of two components:
@@ -80,7 +80,7 @@ properties['table'] = 'output_table'
 
 (df
  .write
- .format("org.apache.accumulo")
+ .format("org.microsoft.accumulo")
  .options(**options)
  .save())
 ```
@@ -103,12 +103,12 @@ To evaluate different table sizes and the impact of splitting the following proc
 
 - Prefix id with split keys (e.g. 0000, 0001, ..., 1024)
 - Create Accumulo table and configure splits
-- Upload prefixed data to Accumulo using Spark MASC writer
+- Upload prefixed data to Accumulo using Spark and the MASC writer 
 - Duplicate data using custom Accumulo server-side iterator
 - Validate data partitioning
 
-Machine learning scenarios were evaluated using a sentiment model trained using [SparkML](https://spark.apache.org/docs/latest/ml-guide.html). 
-To train the classification model, we need to generate feature vectors from the text of tweets (text column). We start with a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consists of 
+A common machine learning scenario was evaluated using a sentiment model trained using [SparkML](https://spark.apache.org/docs/latest/ml-guide.html). 
+To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of 
 
 - Regex Tokenizer
 - Hashing Transformer
@@ -116,7 +116,7 @@ To train the classification model, we need to generate feature vectors from the 
 
 
 ## Results
-The first set of experiment evaluated data transfer efficiency and ML model inference performance. The chart below shows
+The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows
 
 - Accumulo table split size (1GB, 8GB, 32GB, 64GB)
 - Total table size (1TB, 10TB, 100TB, 1PB)
@@ -134,10 +134,10 @@ The second set of experiments highlights the computational performance improveme
 
 ## Learnings
 - Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement
-- Using multi-threading to address multiple Accumulo servers
-- Useful if less Spark cores available or heavy on Accumulo
+- Multi-threading in Spark jobs can be used to fully utilize Accumulo servers
+  - Useful if less Spark cluster has less cores than Accumulo
   - e.g. 8 threads * 2,048 Spark executor = 16,384 Accumulo threads
-- Unbalanced Accumulo splits can skew results
+- Unbalanced Accumulo table splits can introduce performance bottlenecks
 
 # Useful links
 - [Complete Jupyter demo notebook](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for usage of the Accumulo-Spark connector
@@ -154,7 +154,7 @@ This work is publicly available under the Apache License 2.0 on GitHub under [Mi
 # Contributions 
 Feedback, questions, and contributions are welcome!
 
-Thanks to contributions from members on the Azure Government Customer Engineering and Azure Government teams.
+Thanks to contributions from members on the Azure Global Customer Engineering and Azure Government teams.
 [Markus Cozowicz](https://github.com/eisber),
 [Scott Graham](https://github.com/gramhagen),
 [Jun-Ki Min](https://github.com/loomlike),
