@@ -1,48 +1,50 @@
-# Microsoft MASC, an Apache Spark connector for Apache Accumulo
+---
+title: "Microsoft MASC, an Apache Spark connector for Apache Accumulo"
+---
 
 ## Overview
-<Define target audience / problem / use-cases>
-MASC integrates Apache Spark and Apache Accumulo to leverage the rich Spark Machine Learning eco-system with scalable and secure data storage capabilities of Accumulo. This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Spark with Apache Accumulo](https://github.com/microsoft/masc). 
+MASC provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo. 
 
-### Use-cases
+## Major Features
+- Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
+- Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format
+- Scala and Python support without overhead for moving between languages
+- Process streaming data from Accumulo without loading it all into Spark memory
+- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): this allows the user to use logical operators and comparisons to reduce the amount of data returned from Accumulo 
+- Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo
+- Server side inference: this allows the Accumulo nodes to be used to run ML model inference using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo.
 
-Scenario | Base | Improvements
+## Use-Cases
+There are many scenarios where use of this connector provides advantages, below we list a few common use-cases.
 
-#### Scenario 1
-- Inference on large amount of data in Accumulo
-- Transfer data to large Spark cluster and run inference on Spark
-- Push model to Accumulo using smaller Spark cluster and inference on Accumulo (23.5h vs 9h)
+<b>Scenario 1</b>: A data analyst needs to execute model inference on large amount of data in Accumulo.
+<b>Benefit</b>: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the model can be exported and pushed down using the connector to run on the Accumulo cluster. This can reduce the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
 
+<b>Scenario 2</b>: A data scientist needs to train a Spark model on a large amount of data in Accumulo.
+</b>Benefit</b>:Insted of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
 
-#### Scenario 2
-- Model training on large amount of data in Accumulo
-- Pull data into large Spark cluster, restructure format for ML
-- Stream DataFrame to Spark reducing time for training model and cluster size requirements
-
-#### Scenario 3
-- Ad hoc analysis on data stored in Accumulo
-- Pull all data from Accumulo table into large Spark cluster and perform analysis
-- Prune columns and rows using connector expression language to reduce data transfer
-
+<b>Scenario 3</b>: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.
+<b>Benefit</b>: Instead of pulling all the data into a large Spark cluster, the connector allows for both rows and columns to be pruned using pushdown filtering with a flexible expression language.
 
 ## Architecture
-<Show picture of architeure(s) colocated - remote>
-
-## Dependencies
-- Java 8
-- Spark 2.4.3+
-- Accumulo 2.0.0+
+<img src='/images/blog/202002_masc/architecture.png'>
 
 ## Usage
 
-PySpark based example is here: Accumulo-Spark Connector Demo Notebook.
+More detailed documentation on installation and use is available in the 
 [Connector documentation](https://github.com/microsoft/masc/blob/master/connector/README.md)
+
+### Dependencies
+- Java 8
+- Spark 2.4.3+
+- Accumulo 2.0.0+
 
 JARs available on Maven Central Repository:
 - [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource) [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
 
 - [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
 
+### Example use
 ```python
 # Read from Accumulo
 df = (spark
@@ -54,21 +56,13 @@ df = (spark
 # Write to Accumulo
 (df
  .write
- .format("org.apache.accumulo")
+ .format("com.microsoft.accumulo")
  .options(**options)
  .save())
 ```
 
-Full demo [Notebook link](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb)
+See the [demo notebook](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for more examples.
 
-## Major Features
-- Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
-- Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format
-- Scala and Python support without overhead for moving between languages
-- Process streaming data from Accumulo without loading it all into Spark memory
-- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): this allows the user to use logical operators and comparisons to reduce the amount of data returned from Accumulo 
-- Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo
-- Server side inference: this allows the Accumulo nodes to be used to run ML model inference using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo.
 
 ## Computational Performance of AI Scenario
 <Define benchmarking experiments and results>
@@ -120,7 +114,10 @@ Inference on Spark
 TODO: insert graphs here
 
 
-Feedback, questions, and contributions are welcome!
+## License
+
+This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Apache Spark with Apache Accumulo](https://github.com/microsoft/masc). 
+
 
 ## Contributions 
 
