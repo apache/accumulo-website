@@ -163,6 +163,7 @@ Thanks to contributions from members on the Azure Government Customer Engineerin
 [Chenhui Hu](https://github.com/chenhuims),
 [Arvind Shyamsundar](https://github.com/arvindshmicrosoft),
 [Marc Parisi](https://github.com/phrocker),
+[Robert Alexander](https://github.com/roalexan),
 [Billie Rinaldi](https://github.com/billierinaldi),
 [Anupam Sharma](https://github.com/AnupamMicrosoft),
 [Tao Wu](https://github.com/wutaomsft)
