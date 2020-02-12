@@ -182,5 +182,4 @@ Thanks to contributions from members on the Azure Global Customer Engineering an
 - [Scott Graham](https://github.com/gramhagen)
 - [Tao Wu](https://github.com/wutaomsft)
 
-
 Special thanks to [Anca Sarb](https://github.com/ancasarb) for promptly assisting with [MLeap performance issues](https://github.com/combust/mleap/issues/633).
