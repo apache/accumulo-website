@@ -88,8 +88,6 @@ properties['table'] = 'output_table'
 See the [demo notebook](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for more examples.
 
 # Computational Performance of AI Scenario
-TODO: Define benchmarking experiments and results
-
 ## Setup
 The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used [Azure D16s_v3](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) (16 cores) virtual machines.
 
@@ -143,10 +141,10 @@ The second set of experiments highlights the computational performance improveme
 
 # Useful links
 - [Complete Jupyter demo notebook](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for usage of the Accumulo-Spark connector
-- [GitHub Repository Microsoft's contributions for Spark with Apache Accumulo](https://github.com/microsoft/masc)
-- [MLeap](https://github.com/combust/mleap)
-- [SparkML](https://spark.apache.org/docs/latest/ml-guide.html)
-- Maven artifacts
+- GitHub Repository [Microsoft's contributions for Spark with Apache Accumulo](https://github.com/microsoft/masc)
+- [MLeap](https://github.com/combust/mleap) - Scala/Java stand-alone model inference for SparkML-based models
+- [SparkML](https://spark.apache.org/docs/latest/ml-guide.html) - Spark machine learning library
+- MASC Maven artifacts
   - [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
   - [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
 
