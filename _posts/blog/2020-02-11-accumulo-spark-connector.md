@@ -1,5 +1,6 @@
 ---
 title: Microsoft MASC, an Apache Spark connector for Apache Accumulo
+author: Markus Cozowicz, Scott Graham
 ---
 
 # Overview
@@ -33,7 +34,7 @@ The Accumulo-Spark connector is composed of two components:
   - row assembly using [Apache AVRO](https://avro.apache.org/)
 - Spark DataSource V2 
   - determines the number of Spark tasks based on available Accumulo table splits
-  - translates Spark filter conditions into a [JUEL](http://juel.sourceforge.net/)  expression
+  - translates Spark filter conditions into a [JUEL](http://juel.sourceforge.net/) expression
   - configures the Accumulo iterator
   - deserializes the AVRO payload
 
@@ -56,6 +57,7 @@ JARs available on Maven Central Repository:
 ## Example use
 ```python
 from configparser import ConfigParser
+from pyspark.sql import types as T
 
 def get_properties(properties_file):
     """Read Accumulo client properties file"""
@@ -67,6 +69,15 @@ def get_properties(properties_file):
 properties = get_properties('/opt/muchos/install/accumulo-2.0.0/conf/accumulo-client.properties')
 properties['table'] = 'demo_table' # Define Accumulo table where data will be written
 properties['rowkey'] = 'id'        # Identify column to use as the key for Accumulo rows
+
+# define the schema
+schema = T.StructType([
+  T.StructField("sentiment", T.IntegerType(), True),
+  T.StructField("date", T.StringType(), True),
+  T.StructField("query_string", T.StringType(), True),
+  T.StructField("user", T.StringType(), True),
+  T.StructField("text", T.StringType(), True)
+])
 
 # Read from Accumulo
 df = (spark
@@ -114,7 +125,6 @@ To train the classification model, we generated feature vectors from the text of
 - Hashing Transformer
 - Logistic Regression
 
-
 ## Results
 The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows
 
@@ -124,7 +134,11 @@ The first set of experiments evaluated data transfer efficiency and ML model inf
   - Count: plain count of the data
   - Inference: Accumulo server-side inference using MLeap and filtering results for 0% data transfer
   - Inference + Xfer: Accumulo server-side inference using MLeap and filtering results for 30% data transfer
-- Time is reported in minutes (note the log-scale)
+- Time is reported in minutes
+
+Remarks
+- Time is log-scale
+- Inference was run with and without data transfer to isolate server-side performance.
 
 <img class="blog-img-center" src="/images/blog/202002_masc/runtime.png">
 
@@ -132,7 +146,7 @@ The second set of experiments highlights the computational performance improveme
 
 <img class="blog-img-center" src="/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png"> 
 
-## Learnings
+# Learnings
 - Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement
 - Multi-threading in Spark jobs can be used to fully utilize Accumulo servers
   - Useful if less Spark cluster has less cores than Accumulo
@@ -148,23 +162,25 @@ The second set of experiments highlights the computational performance improveme
   - [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
   - [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
 
-## License
+# License
 This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Apache Spark with Apache Accumulo](https://github.com/microsoft/masc). 
 
 # Contributions 
 Feedback, questions, and contributions are welcome!
 
 Thanks to contributions from members on the Azure Global Customer Engineering and Azure Government teams.
-[Markus Cozowicz](https://github.com/eisber),
-[Scott Graham](https://github.com/gramhagen),
-[Jun-Ki Min](https://github.com/loomlike),
-[Chenhui Hu](https://github.com/chenhuims),
-[Arvind Shyamsundar](https://github.com/arvindshmicrosoft),
-[Marc Parisi](https://github.com/phrocker),
-[Robert Alexander](https://github.com/roalexan),
-[Billie Rinaldi](https://github.com/billierinaldi),
-[Anupam Sharma](https://github.com/AnupamMicrosoft),
-[Tao Wu](https://github.com/wutaomsft)
-and Pavandeep Kalra.
+
+- [Anupam Sharma](https://github.com/AnupamMicrosoft)
+- [Arvind Shyamsundar](https://github.com/arvindshmicrosoft)
+- [Billie Rinaldi](https://github.com/billierinaldi)
+- [Chenhui Hu](https://github.com/chenhuims)
+- [Jun-Ki Min](https://github.com/loomlike)
+- [Marc Parisi](https://github.com/phrocker)
+- [Markus Cozowicz](https://github.com/eisber)
+- Pavandeep Kalra
+- [Robert Alexander](https://github.com/roalexan)
+- [Scott Graham](https://github.com/gramhagen)
+- [Tao Wu](https://github.com/wutaomsft)
+
 
 Special thanks to [Anca Sarb](https://github.com/ancasarb) for promptly assisting with [MLeap performance issues](https://github.com/combust/mleap/issues/633).
