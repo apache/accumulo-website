@@ -11,18 +11,21 @@ MASC provides an Apache Spark native connector for Apache Accumulo to integrate 
 - Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format
 - Scala and Python support without overhead for moving between languages
 - Process streaming data from Accumulo without loading it all into Spark memory
-- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): this allows the user to use logical operators and comparisons to reduce the amount of data returned from Accumulo 
+- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): user can define logical operators and comparisons to reduce the amount of data returned from Accumulo 
 - Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo
-- Server side inference: this allows the Accumulo nodes to be used to run ML model inference using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo.
+- Server side inference: ML model inference can run on the Accumulo nodes using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo
 
 ## Use-cases
-There are many scenarios where use of this connector provides advantages, below we list a couple common use-cases.
+There are many scenarios where use of this connector provides advantages, below we list a few common use-cases.
 
-**Scenario 1**: A data analyst needs to execute model inference on large amount of data in Accumulo.  
+**Scenario 1**: A data analyst needs to execute model inference on large amount of data in Accumulo.<br>
 **Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the model can be exported and pushed down using the connector to run on the Accumulo cluster. This can reduce the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
 
-**Scenario 2**: A data scientist needs to train a Spark model on a large amount of data in Accumulo.  
-**Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for row and column data to be pruned using complex expression via pushdown filtering. The data can then be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
+**Scenario 2**: A data scientist needs to train a Spark model on a large amount of data in Accumulo.<br>
+**Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
+
+**Scenario 3**: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.<br>
+**Benefit**: Instead of pulling all the data into a large Spark cluster, the connector allows for both rows and columns to be pruned using pushdown filtering with a flexible expression language.
 
 # Architecture
 The Accumulo-Spark connector is composed of two components:
@@ -142,7 +145,7 @@ Remarks
 
 <img class="blog-img-center" src="/images/blog/202002_masc/runtime.png">
 
-The second set of experiments highlights the computational performance improvement of using the server-side inference approach compared to run inference on the Spark cluster.
+The second set of experiments highlights the computational performance improvement of using the server-side inference approach compared to running inference on the Spark cluster.
 
 <img class="blog-img-center" src="/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png"> 
 
