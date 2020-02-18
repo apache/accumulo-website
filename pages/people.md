@@ -31,7 +31,7 @@ permalink: /people/
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
 | ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
-| kturner       | [Keith Turner](https://github.com/keith-turner)   | [Peterson Technologies][PETERSON]      | [ET][ET] |
+| kturner       | [Keith Turner](https://github.com/keith-turner)   | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | medined       | David Medinets                                    |                                        |          |
