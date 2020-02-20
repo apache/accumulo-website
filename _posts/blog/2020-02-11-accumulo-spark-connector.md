@@ -128,6 +128,8 @@ To train the classification model, we generated feature vectors from the text of
 - Hashing Transformer
 - Logistic Regression
 
+See the [benchmark notebook (Scala)](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb) for more details.
+
 ## Results
 The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows
 
@@ -157,7 +159,8 @@ The second set of experiments highlights the computational performance improveme
 - Unbalanced Accumulo table splits can introduce performance bottlenecks
 
 # Useful links
-- [Complete Jupyter demo notebook](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for usage of the Accumulo-Spark connector
+- [Complete Jupyter demo notebook (PySpark)](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb) for usage of the Accumulo-Spark connector
+- [Complete Jupyter benchmark notebook (Scala)](https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb) for usage of the Accumulo-Spark connector
 - GitHub Repository [Microsoft's contributions for Spark with Apache Accumulo](https://github.com/microsoft/masc)
 - [MLeap](https://github.com/combust/mleap) - Scala/Java stand-alone model inference for SparkML-based models
 - [SparkML](https://spark.apache.org/docs/latest/ml-guide.html) - Spark machine learning library
