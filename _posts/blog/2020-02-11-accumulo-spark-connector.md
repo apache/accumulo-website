@@ -137,13 +137,14 @@ The first set of experiments evaluated data transfer efficiency and ML model inf
 - Total table size (1TB, 10TB, 100TB, 1PB)
 - Operations
   - Count: plain count of the data
-  - Inference: Accumulo server-side inference using MLeap and filtering results for 0% data transfer
-  - Inference + Xfer: Accumulo server-side inference using MLeap and filtering results for 30% data transfer
+  - Inference: Accumulo server-side inference using MLeap
+  - Transfer: Filtering results for 30% data transfer
 - Time is reported in minutes
 
 Remarks
 - Time is log-scale
 - Inference was run with and without data transfer to isolate server-side performance.
+- The smaller each Accumulo table split is, the more splits we have and thus higher parallelization.
 
 <img class="blog-img-center" src="/images/blog/202002_masc/runtime.png">
 
