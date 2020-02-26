@@ -41,7 +41,7 @@ The Accumulo-Spark connector is composed of two components:
   - configures the Accumulo iterator
   - deserializes the AVRO payload
 
-<img class="blog-img-center" src="/images/blog/202002_masc/architecture.svg">
+![MASC Architecture Diagram](/images/blog/blog/202002_masc/architecture.svg)!
 
 # Usage
 More detailed documentation on installation and use is available in the 
@@ -53,9 +53,9 @@ More detailed documentation on installation and use is available in the
 - Accumulo 2.0.0+
 
 JARs available on Maven Central Repository:
-- [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-datasource) [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
+- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-datasource.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-datasource%22) [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
 
-- [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.microsoft.masc/microsoft-accumulo-spark-iterator) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
+- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-iterator.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-iterator%22) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
 
 ## Example use
 ```python
