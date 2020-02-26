@@ -41,7 +41,7 @@ The Accumulo-Spark connector is composed of two components:
   - configures the Accumulo iterator
   - deserializes the AVRO payload
 
-![MASC Architecture Diagram](/images/blog/blog/202002_masc/architecture.svg)
+![Architecture](/images/blog/202002_masc/architecture.svg "MASC Architecture Diagram")
 
 # Usage
 More detailed documentation on installation and use is available in the 
@@ -146,11 +146,11 @@ Remarks
 - Inference was run with and without data transfer to isolate server-side performance.
 - The smaller each Accumulo table split is, the more splits we have and thus higher parallelization.
 
-<img class="blog-img-center" src="/images/blog/202002_masc/runtime.png">
+![Runtime](/images/blog/202002_masc/runtime.png "Runtime Performance"){:.blog-img-center}
 
 The second set of experiments highlights the computational performance improvement of using the server-side inference approach compared to running inference on the Spark cluster.
 
-<img class="blog-img-center" src="/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png"> 
+![Mleap](/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png "Spark ML vs MLeap Performance"){:.blog-img-center}
 
 # Learnings
 - Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement
