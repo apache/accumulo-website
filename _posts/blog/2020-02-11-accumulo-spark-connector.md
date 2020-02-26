@@ -19,7 +19,7 @@ author: Markus Cozowicz, Scott Graham
 There are many scenarios where use of this connector provides advantages, below we list a few common use-cases.
 
 **Scenario 1**: A data analyst needs to execute model inference on large amount of data in Accumulo.<br>
-**Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the model can be exported and pushed down using the connector to run on the Accumulo cluster. This can reduce the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
+**Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the connector exports and runs the model on the Accumulo cluster. This reduces the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
 
 **Scenario 2**: A data scientist needs to train a Spark model on a large amount of data in Accumulo.<br>
 **Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
