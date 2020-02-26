@@ -25,7 +25,7 @@ There are many scenarios where use of this connector provides advantages, below 
 **Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
 
 **Scenario 3**: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.<br>
-**Benefit**: Instead of pulling all the data into a large Spark cluster, the connector allows for both rows and columns to be pruned using pushdown filtering with a flexible expression language.
+**Benefit**: Instead of pulling all the data into a large Spark cluster, the connector prunes rows and columns using pushdown filtering with a flexible expression language.
 
 # Architecture
 The Accumulo-Spark connector is composed of two components:
