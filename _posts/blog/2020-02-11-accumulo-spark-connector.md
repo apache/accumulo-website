@@ -103,7 +103,7 @@ See the [demo notebook](https://github.com/microsoft/masc/blob/master/connector/
 
 # Computational Performance of AI Scenario
 ## Setup
-The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used [Azure D16s_v3](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) (16 cores) virtual machines.
+The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used [Azure D16s_v3](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) (16 cores) virtual machines. [Fluo-muchos](https://github.com/apache/fluo-muchos) was used to handle Accumulo and Spark cluster deployments and configuration. 
 
 In all experiments we use the same base dataset which is a collection of Twitter user tweets with labeled sentiment value. This dataset is known as the Sentiment140 dataset ([Go, Bhayani, & Huang, 2009](http://www-nlp.stanford.edu/courses/cs224n/2009/fp/3.pdf)). The training data consist of 1.6M samples of tweets, where each tweet has columns indicating the sentiment label, user, timestamp, query term, and text. The text is limited to 140 characters and the overall uncompressed size of the training dataset is 227MB.
 
