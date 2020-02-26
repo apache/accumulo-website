@@ -4,7 +4,7 @@ author: Markus Cozowicz, Scott Graham
 ---
 
 # Overview
-MASC provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo. 
+[MASC](https://github.com/microsoft/masc) provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo. 
 
 ## Major Features
 - Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
