@@ -16,7 +16,7 @@ author: Markus Cozowicz, Scott Graham
 - Server side inference: ML model inference can run on the Accumulo nodes using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo
 
 ## Use-cases
-There are many scenarios where use of this connector provides advantages, below we list a few common use-cases.
+MASC is advantageous in many use-cases, below we list a few.
 
 **Scenario 1**: A data analyst needs to execute model inference on large amount of data in Accumulo.<br>
 **Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the connector exports and runs the model on the Accumulo cluster. This reduces the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
