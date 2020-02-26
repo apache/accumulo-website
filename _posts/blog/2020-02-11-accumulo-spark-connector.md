@@ -53,9 +53,9 @@ More detailed documentation on installation and use is available in the
 - Accumulo 2.0.0+
 
 JARs available on Maven Central Repository:
-- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-datasource.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-datasource%22) [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
+- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-datasource.svg?label=Maven%20Central) Spark DataSource](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-datasource%22)
 
-- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-iterator.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-iterator%22) [Accumulo Iterator - Backend for Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator)
+- [![Maven Central](https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-iterator.svg?label=Maven%20Central) Accumulo Iterator](https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-iterator%22) - Backend for Spark DataSource
 
 ## Example use
 ```python
