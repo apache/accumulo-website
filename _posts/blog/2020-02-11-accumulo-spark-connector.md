@@ -22,7 +22,7 @@ MASC is advantageous in many use-cases, below we list a few.
 **Benefit**: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the connector exports and runs the model on the Accumulo cluster. This reduces the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (>2x speedups observed).
 
 **Scenario 2**: A data scientist needs to train a Spark model on a large amount of data in Accumulo.<br>
-**Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector allows for data to be streamed into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
+**Benefit**: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector streams data into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.
 
 **Scenario 3**: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.<br>
 **Benefit**: Instead of pulling all the data into a large Spark cluster, the connector prunes rows and columns using pushdown filtering with a flexible expression language.
