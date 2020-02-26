@@ -94,7 +94,7 @@ properties['table'] = 'output_table'
 
 (df
  .write
- .format("org.microsoft.accumulo")
+ .format("com.microsoft.accumulo")
  .options(**options)
  .save())
 ```
@@ -133,7 +133,7 @@ See the [benchmark notebook (Scala)](https://github.com/microsoft/masc/blob/mast
 ## Results
 The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows
 
-- Accumulo table split size (1GB, 8GB, 32GB, 64GB)
+- Accumulo table split size (1GB, 8GB, 32GB, 64GB) 
 - Total table size (1TB, 10TB, 100TB, 1PB)
 - Operations
   - Count: plain count of the data
