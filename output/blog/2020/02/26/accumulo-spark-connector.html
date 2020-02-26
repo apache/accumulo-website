@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Microsoft MASC, an Apache Spark connector for Apache Accumulo</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
+            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Microsoft MASC, an Apache Spark connector for Apache Accumulo</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Markus Cozowicz, Scott Graham<br>
+<b>Date: </b>&nbsp;&nbsp;26 Feb 2020<br>
+
+</p>
+
+<h1 id="overview">Overview</h1>
+<p><a href="https://github.com/microsoft/masc">MASC</a> provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo.</p>
+
+<h2 id="major-features">Major Features</h2>
+<ul>
+  <li>Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API</li>
+  <li>Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format</li>
+  <li>Scala and Python support without overhead for moving between languages</li>
+  <li>Process streaming data from Accumulo without loading it all into Spark memory</li>
+  <li>Push down filtering with a flexible expression language (<a href="http://juel.sourceforge.net/">JUEL</a>): user can define logical operators and comparisons to reduce the amount of data returned from Accumulo</li>
+  <li>Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo</li>
+  <li>Server side inference: ML model inference can run on the Accumulo nodes using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo</li>
+</ul>
+
+<h2 id="use-cases">Use-cases</h2>
+<p>MASC is advantageous in many use-cases, below we list a few.</p>
+
+<p><strong>Scenario 1</strong>: A data analyst needs to execute model inference on large amount of data in Accumulo.<br />
+<strong>Benefit</strong>: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the connector exports and runs the model on the Accumulo cluster. This reduces the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (&gt;2x speedups observed).</p>
+
+<p><strong>Scenario 2</strong>: A data scientist needs to train a Spark model on a large amount of data in Accumulo.<br />
+<strong>Benefit</strong>: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector streams data into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.</p>
+
+<p><strong>Scenario 3</strong>: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.<br />
+<strong>Benefit</strong>: Instead of pulling all the data into a large Spark cluster, the connector prunes rows and columns using pushdown filtering with a flexible expression language.</p>
+
+<h1 id="architecture">Architecture</h1>
+<p>The Accumulo-Spark connector is composed of two components:</p>
+
+<ul>
+  <li>Accumulo server-side iterator performs
+    <ul>
+      <li>column pruning</li>
+      <li>row-based filtering</li>
+      <li><a href="https://github.com/combust/mleap">MLeap</a> ML model inference and</li>
+      <li>row assembly using <a href="https://avro.apache.org/">Apache AVRO</a></li>
+    </ul>
+  </li>
+  <li>Spark DataSource V2
+    <ul>
+      <li>determines the number of Spark tasks based on available Accumulo table splits</li>
+      <li>translates Spark filter conditions into a <a href="http://juel.sourceforge.net/">JUEL</a> expression</li>
+      <li>configures the Accumulo iterator</li>
+      <li>deserializes the AVRO payload</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/images/blog/202002_masc/architecture.svg" alt="Architecture" title="MASC Architecture Diagram" /></p>
+
+<h1 id="usage">Usage</h1>
+<p>More detailed documentation on installation and use is available in the 
+<a href="https://github.com/microsoft/masc/blob/master/connector/README.md">Connector documentation</a></p>
+
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+  <li>Java 8</li>
+  <li>Spark 2.4.3+</li>
+  <li>Accumulo 2.0.0+</li>
+</ul>
+
+<p>JARs available on Maven Central Repository:</p>
+<ul>
+  <li>
+    <p><a href="https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-datasource%22"><img src="https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-datasource.svg?label=Maven%20Central" alt="Maven Central" /> Spark DataSource</a></p>
+  </li>
+  <li>
+    <p><a href="https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-iterator%22"><img src="https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-iterator.svg?label=Maven%20Central" alt="Maven Central" /> Accumulo Iterator</a> - Backend for Spark DataSource</p>
+  </li>
+</ul>
+
+<h2 id="example-use">Example use</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">types</span> <span class="k">as</span> <span class="n">T</span>
+
+<span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="n">properties_file</span><span class="p">):</span>
+    <span class="s">"""Read Accumulo client properties file"""</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">properties_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="s">"[top]</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">'top'</span><span class="p">])</span>
+
+<span class="n">properties</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="s">'/opt/muchos/install/accumulo-2.0.0/conf/accumulo-client.properties'</span><span class="p">)</span>
+<span class="n">properties</span><span class="p">[</span><span class="s">'table'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'demo_table'</span> <span class="c1"># Define Accumulo table where data will be written
+</span><span class="n">properties</span><span class="p">[</span><span class="s">'rowkey'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'id'</span>        <span class="c1"># Identify column to use as the key for Accumulo rows
+</span>
+<span class="c1"># define the schema
+</span><span class="n">schema</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">StructType</span><span class="p">([</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"sentiment"</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">IntegerType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"date"</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"query_string"</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"text"</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Read from Accumulo
+</span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span>
+      <span class="o">.</span><span class="n">read</span>
+      <span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="s">"com.microsoft.accumulo"</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>  <span class="c1"># define Accumulo properties
+</span>      <span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">))</span>     <span class="c1"># define schema for data retrieval
+</span>
+<span class="c1"># Write to Accumulo
+</span><span class="n">properties</span><span class="p">[</span><span class="s">'table'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'output_table'</span>
+
+<span class="p">(</span><span class="n">df</span>
+ <span class="o">.</span><span class="n">write</span>
+ <span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="s">"com.microsoft.accumulo"</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">save</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>See the <a href="https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb">demo notebook</a> for more examples.</p>
+
+<h1 id="computational-performance-of-ai-scenario">Computational Performance of AI Scenario</h1>
+<h2 id="setup">Setup</h2>
+<p>The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">Azure D16s_v3</a> (16 cores) virtual machines. <a href="https://github.com/apache/fluo-muchos">Fluo-muchos</a> was used to handle Accumulo and Spark cluster deployments and configuration.</p>
+
+<p>In all experiments we use the same base dataset which is a collection of Twitter user tweets with labeled sentiment value. This dataset is known as the Sentiment140 dataset (<a href="http://www-nlp.stanford.edu/courses/cs224n/2009/fp/3.pdf">Go, Bhayani, &amp; Huang, 2009</a>). The training data consist of 1.6M samples of tweets, where each tweet has columns indicating the sentiment label, user, timestamp, query term, and text. The text is limited to 140 characters and the overall uncompressed size of the training dataset is 227MB.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>sentiment</th>
+      <th>id</th>
+      <th>date</th>
+      <th>query_string</th>
+      <th>user</th>
+      <th>text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1467810369</td>
+      <td>Mon Apr 06 22:19:…</td>
+      <td>NO_QUERY</td>
+      <td><em>TheSpecialOne</em></td>
+      <td>@switchfoot http:…</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>1467810672</td>
+      <td>Mon Apr 06 22:19:…</td>
+      <td>NO_QUERY</td>
+      <td>scotthamilton</td>
+      <td>is upset that he …</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>1467810917</td>
+      <td>Mon Apr 06 22:19:…</td>
+      <td>NO_QUERY</td>
+      <td>mattycus</td>
+      <td>@Kenichan I dived…</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To evaluate different table sizes and the impact of splitting the following procedure was used to generate the Accumulo tables:</p>
+
+<ul>
+  <li>Prefix id with split keys (e.g. 0000, 0001, …, 1024)</li>
+  <li>Create Accumulo table and configure splits</li>
+  <li>Upload prefixed data to Accumulo using Spark and the MASC writer</li>
+  <li>Duplicate data using custom Accumulo server-side iterator</li>
+  <li>Validate data partitioning</li>
+</ul>
+
+<p>A common machine learning scenario was evaluated using a sentiment model trained using <a href="https://spark.apache.org/docs/latest/ml-guide.html">SparkML</a>. 
+To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of</p>
+
+<ul>
+  <li>Regex Tokenizer</li>
+  <li>Hashing Transformer</li>
+  <li>Logistic Regression</li>
+</ul>
+
+<p>See the <a href="https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb">benchmark notebook (Scala)</a> for more details.</p>
+
+<h2 id="results">Results</h2>
+<p>The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows</p>
+
+<ul>
+  <li>Accumulo table split size (1GB, 8GB, 32GB, 64GB)</li>
+  <li>Total table size (1TB, 10TB, 100TB, 1PB)</li>
+  <li>Operations
+    <ul>
+      <li>Count: plain count of the data</li>
+      <li>Inference: Accumulo server-side inference using MLeap</li>
+      <li>Transfer: Filtering results for 30% data transfer</li>
+    </ul>
+  </li>
+  <li>Time is reported in minutes</li>
+</ul>
+
+<p>Remarks</p>
+<ul>
+  <li>Time is log-scale</li>
+  <li>Inference was run with and without data transfer to isolate server-side performance.</li>
+  <li>The smaller each Accumulo table split is, the more splits we have and thus higher parallelization.</li>
+</ul>
+
+<p><img src="/images/blog/202002_masc/runtime.png" alt="Runtime" title="Runtime Performance" class="blog-img-center" /></p>
+
+<p>The second set of experiments highlights the computational performance improvement of using the server-side inference approach compared to running inference on the Spark cluster.</p>
+
+<p><img src="/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png" alt="Mleap" title="Spark ML vs MLeap Performance" class="blog-img-center" /></p>
+
+<h1 id="learnings">Learnings</h1>
+<ul>
+  <li>Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement</li>
+  <li>Multi-threading in Spark jobs can be used to fully utilize Accumulo servers
+    <ul>
+      <li>Useful if less Spark cluster has less cores than Accumulo</li>
+      <li>e.g. 8 threads * 2,048 Spark executor = 16,384 Accumulo threads</li>
+    </ul>
+  </li>
+  <li>Unbalanced Accumulo table splits can introduce performance bottlenecks</li>
+</ul>
+
+<h1 id="useful-links">Useful links</h1>
+<ul>
+  <li><a href="https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb">Complete Jupyter demo notebook (PySpark)</a> for usage of the Accumulo-Spark connector</li>
+  <li><a href="https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb">Complete Jupyter benchmark notebook (Scala)</a> for usage of the Accumulo-Spark connector</li>
+  <li>GitHub Repository <a href="https://github.com/microsoft/masc">Microsoft’s contributions for Spark with Apache Accumulo</a></li>
+  <li><a href="https://github.com/combust/mleap">MLeap</a> - Scala/Java stand-alone model inference for SparkML-based models</li>
+  <li><a href="https://spark.apache.org/docs/latest/ml-guide.html">SparkML</a> - Spark machine learning library</li>
+  <li>MASC Maven artifacts
+    <ul>
+      <li><a href="https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator">Accumulo Iterator - Backend for Spark DataSource</a></li>
+      <li><a href="https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource">Spark DataSource</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="license">License</h1>
+<p>This work is publicly available under the Apache License 2.0 on GitHub under <a href="https://github.com/microsoft/masc">Microsoft’s contributions for Apache Spark with Apache Accumulo</a>.</p>
+
+<h1 id="contributions">Contributions</h1>
+<p>Feedback, questions, and contributions are welcome!</p>
+
+<p>Thanks to contributions from members on the Azure Global Customer Engineering and Azure Government teams.</p>
+
+<ul>
+  <li><a href="https://github.com/AnupamMicrosoft">Anupam Sharma</a></li>
+  <li><a href="https://github.com/arvindshmicrosoft">Arvind Shyamsundar</a></li>
+  <li><a href="https://github.com/billierinaldi">Billie Rinaldi</a></li>
+  <li><a href="https://github.com/chenhuims">Chenhui Hu</a></li>
+  <li><a href="https://github.com/loomlike">Jun-Ki Min</a></li>
+  <li><a href="https://github.com/phrocker">Marc Parisi</a></li>
+  <li><a href="https://github.com/eisber">Markus Cozowicz</a></li>
+  <li>Pavandeep Kalra</li>
+  <li><a href="https://github.com/roalexan">Robert Alexander</a></li>
+  <li><a href="https://github.com/gramhagen">Scott Graham</a></li>
+  <li><a href="https://github.com/wutaomsft">Tao Wu</a></li>
+</ul>
+
+<p>Special thanks to <a href="https://github.com/ancasarb">Anca Sarb</a> for promptly assisting with <a href="https://github.com/combust/mleap/issues/633">MLeap performance issues</a>.</p>
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2020 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
