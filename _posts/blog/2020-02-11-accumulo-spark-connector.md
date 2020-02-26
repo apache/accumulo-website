@@ -41,7 +41,7 @@ The Accumulo-Spark connector is composed of two components:
   - configures the Accumulo iterator
   - deserializes the AVRO payload
 
-![MASC Architecture Diagram](/images/blog/blog/202002_masc/architecture.svg)!
+![MASC Architecture Diagram](/images/blog/blog/202002_masc/architecture.svg)
 
 # Usage
 More detailed documentation on installation and use is available in the 
