@@ -112,6 +112,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Mandar Inamdar      | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
+| Markus Cozowicz     | [Microsoft][MICROSOFT]                                            | [CET][CEST]           |
 | Matt Dailey         |                                                                   |                       |
 | Matthew Boehm       | [Novetta][NOVETTA]                                                | [ET][ET]              |
 | Matthew Dinep       | [Anavation, LLC] [ANAVATION]                                      | [ET][ET]              |
