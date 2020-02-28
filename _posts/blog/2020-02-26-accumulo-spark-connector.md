@@ -155,7 +155,7 @@ The second set of experiments highlights the computational performance improveme
 # Learnings
 - Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement
 - Multi-threading in Spark jobs can be used to fully utilize Accumulo servers
-  - Useful if less Spark cluster has less cores than Accumulo
+  - Useful when Spark cluster has less cores than Accumulo
   - e.g. 8 threads * 2,048 Spark executor = 16,384 Accumulo threads
 - Unbalanced Accumulo table splits can introduce performance bottlenecks
 
