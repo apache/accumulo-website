@@ -91,18 +91,18 @@ Older releases are listed in the [release archive][ARCHIVE_REL] and can be
 downloaded from the [download archive][ARCHIVE_DOWN].
 
 [VERIFY_PROCEDURES]: https://www.apache.org/info/verification "Verify"
-[GPG_KEYS]: https://www.apache.org/dist/accumulo/KEYS "KEYS"
+[GPG_KEYS]: https://downloads.apache.org/accumulo/KEYS "KEYS"
 [ARCHIVE_DOWN]: https://archive.apache.org/dist/accumulo "Download Archive"
 [ARCHIVE_REL]: {{ site.baseurl }}/release/ "Release Archive"
 
-[ASC_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.asc
-[ASC_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.asc
-[SHA_BIN_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.sha512
-[SHA_SRC_20]: https://www.apache.org/dist/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.sha512
-[ASC_BIN_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.asc
-[ASC_SRC_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.asc
-[SHA_BIN_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.sha512
-[SHA_SRC_19]: https://www.apache.org/dist/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.sha512
+[ASC_BIN_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.asc
+[ASC_SRC_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.asc
+[SHA_BIN_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.sha512
+[SHA_SRC_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.sha512
+[ASC_BIN_19]: https://downloads.apache.org/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.asc
+[ASC_SRC_19]: https://downloads.apache.org/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.asc
+[SHA_BIN_19]: https://downloads.apache.org/accumulo/1.9.3/accumulo-1.9.3-bin.tar.gz.sha512
+[SHA_SRC_19]: https://downloads.apache.org/accumulo/1.9.3/accumulo-1.9.3-src.tar.gz.sha512
 
 [BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz
 {: link-suffix="/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz" }
