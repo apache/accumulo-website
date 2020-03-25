@@ -463,8 +463,8 @@ Multiple TabletServers cannot be started using the `accumulo-cluster` or `accumu
 at this time. The `accumulo` command must be used:
 
 ```
-ACCUMULO_SERVICE_INSTANCE=1; ./bin/accumulo tserver &> ./logs/tserver1.out &
-ACCUMULO_SERVICE_INSTANCE=2; ./bin/accumulo tserver &> ./logs/tserver2.out &
+ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &> ./logs/tserver1.out &
+ACCUMULO_SERVICE_INSTANCE=2 ./bin/accumulo tserver &> ./logs/tserver2.out &
 ```
 
 ## Logging
