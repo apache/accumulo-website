@@ -459,13 +459,40 @@ started. Also, set the these properties in [accumulo.properties]:
 * {% plink tserver.port.search %} = `true`
 * {% plink replication.receipt.service.port %} = `0`
 
-Multiple TabletServers cannot be started using the `accumulo-cluster` or `accumulo-service` commands
-at this time. The `accumulo` command must be used:
+In order to start multiple TabletServers on a node, the `accumulo` command must be used:
 
 ```
 ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &> ./logs/tserver1.out &
 ACCUMULO_SERVICE_INSTANCE=2 ./bin/accumulo tserver &> ./logs/tserver2.out &
 ```
+
+#### Running multiple TabletServers per node in Accumulo 2.1.0 and later
+Starting with Accumulo 2.1.0, the `accumulo-cluster` script can be used along with environment
+variable `NUM_TSERVERS` as a convenient alternative to the `accumulo` command to start / stop
+multiple TabletServers per node. For example, the following commands can be used to start / stop
+2 TabletServers on the current node:
+
+```
+NUM_TSERVERS=2 ./bin/accumulo-cluster start-here
+NUM_TSERVERS=2 ./bin/accumulo-cluster stop-here
+```
+
+To start / stop the entire Accumulo cluster with 2 TabletServers per worker node, use:
+
+```
+NUM_TSERVERS=2 ./bin/accumulo-cluster start
+NUM_TSERVERS=2 ./bin/accumulo-cluster stop
+```
+
+Other commands like `accumulo-cluster start-tservers` and `accumulo-cluster stop-tservers` support
+the use of `NUM_TSERVERS` to specify the number of TabletServers per worker node.
+
+When `accumulo-cluster` is used along with `NUM_TSERVERS` greater than 1, the resultant log files
+and redirected stdout / stderr files for each TabletServer running on the node have the instance
+number as part of their respective filenames.
+
+Lastly, starting with Accumulo 2.1.0 the `accumulo-env.sh` script ensures that Accumulo metrics
+are correctly associated with the respective instance number for each TabletServer on a node.
 
 ## Logging
 
