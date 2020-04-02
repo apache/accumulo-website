@@ -86,12 +86,25 @@ client.tableOperations().setProperty("mytable", "table.durability", "log");
 
 ### Zookeeper Considerations
 
+#### Storing Accumulo Server Properties
+
 Any [server properties] that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
 are two areas in which there aren't any fail safes built into the API that can prevent the user from making this mistake.
 
 While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
 into these warnings should be reconsidered.
+
+#### Monitor and Zookeeper Four-Letter-Word command whitelist
+
+Starting with Zookeeper version 3.5.3, the Four Letter Words commands must be enabled with the 
+zookeeper property: 4lw.commands.whitelist.  The monitor uses the stat command to provide zookeeper server(s),
+mode and number of clients.  At a minimum, add the following to your zookeeper configuration (zoo.cfg):
+```
+4lw.commands.whitelist=stat
+```
+See [Zookeeper Administration Documentation] for your zookeeper version for other four-letter-word 
+command whitelist options.
 
 ## Viewing Server Configuration
 
@@ -133,3 +146,4 @@ default  | table.failures.ignore ..................... | false
 [table.* properties]: {% purl table.\* %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [accumulo.properties]: {% durl configuration/files#accumuloproperties %}
+[Zookeeper Administration Documentation]: https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html 
