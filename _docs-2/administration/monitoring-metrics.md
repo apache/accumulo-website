@@ -21,10 +21,9 @@ displaying various metrics over time. These include ingest and scan performance 
 <img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" alt="monitor overview"/>
 </a>
 
-Note: If the Zookeeper information is not available on the Overview, your version of zookeeper may 
-require setting the four-letter-word command whitelist to allow the stat command. 
-See [Configuration - Zookeeper Considerations] for more 
-information.  
+Note: If the ZooKeeper information is not available on the Overview page, you may need to
+enable the `stat` [four-letter-word][zk-4lw] command, because the monitor uses this command
+to retrieve ZooKeeper information.
 
 The Master Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
 Metrics typically include number of entries (key/value pairs), ingest and query rates.
