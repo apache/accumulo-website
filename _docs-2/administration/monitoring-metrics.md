@@ -21,10 +21,6 @@ displaying various metrics over time. These include ingest and scan performance 
 <img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" alt="monitor overview"/>
 </a>
 
-Note: If the ZooKeeper information is not available on the Overview page, you may need to
-enable the `stat` [four-letter-word][zk-4lw] command, because the monitor uses this command
-to retrieve ZooKeeper information.
-
 The Master Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
 Metrics typically include number of entries (key/value pairs), ingest and query rates.
 The number of running scans, major and minor compactions are in the form _number_running_ (_number_queued_).
@@ -116,4 +112,3 @@ Below are additional resources for configuring Metrics2:
 [grafana-post]: {{ site.baseurl }}/blog/2018/03/22/view-metrics-in-grafana.html
 [metrics2-javadoc]: https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html
 [tracing]: {% durl troubleshooting/tracing %}
-[zk-4lw]: https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_4lw
