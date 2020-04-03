@@ -116,4 +116,4 @@ Below are additional resources for configuring Metrics2:
 [grafana-post]: {{ site.baseurl }}/blog/2018/03/22/view-metrics-in-grafana.html
 [metrics2-javadoc]: https://hadoop.apache.org/docs/current/api/org/apache/hadoop/metrics2/package-summary.html
 [tracing]: {% durl troubleshooting/tracing %}
-[Configuration - Zookeeper Considerations]: {% durl configuration/overview#monitor-and-zookeeper-four-letter-word-command-whitelist %}
+[zk-4lw]: https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_4lw
