@@ -59,6 +59,11 @@ The monitor program gathers all the details about the master and the
 tablet servers through the master. It will be mostly blank if the
 master is down. Check for a running master.
 
+**The ZooKeeper information is not available on the Overview page.**
+
+The monitor uses the ZooKeeper `stat` [four-letter-word][zk-4lw] command to retrieve information.
+The ZooKeeper configuration may require explicitly listing the `stat` command in the four-letter-word whitelist.
+
 ## Accumulo Processes
 
 **My tablet server crashed!  The logs say that it lost its zookeeper lock.**
@@ -234,3 +239,4 @@ Check zookeeper status, verify that it has a quorum, and has not exceeded maxCli
 
 [rfile-info]: {% durl troubleshooting/tools#RFileInfo %}
 [native-maps]: {% durl administration/in-depth-install#native-map %}
+[zk-4lw]: https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_4lw
