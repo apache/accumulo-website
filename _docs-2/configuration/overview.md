@@ -85,12 +85,14 @@ client.tableOperations().setProperty("mytable", "table.durability", "log");
 ```
 
 ### Zookeeper Considerations
+
 Any [server properties] that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
 are two areas in which there aren't any fail safes built into the API that can prevent the user from making this mistake.
 
 While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
 into these warnings should be reconsidered.
+
 ## Viewing Server Configuration
 
 Accumulo's current configuration can be viewed in the shell using the `config` command.
@@ -131,4 +133,3 @@ default  | table.failures.ignore ..................... | false
 [table.* properties]: {% purl table.\* %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [accumulo.properties]: {% durl configuration/files#accumuloproperties %}
-[Zookeeper Administration Documentation]: https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html 
