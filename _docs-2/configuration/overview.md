@@ -85,9 +85,6 @@ client.tableOperations().setProperty("mytable", "table.durability", "log");
 ```
 
 ### Zookeeper Considerations
-
-#### Storing Accumulo Server Properties
-
 Any [server properties] that are set in Zookeeper should consider the limitations of Zookeeper itself with respect to the
 number of nodes and the size of the node data. Custom table properties and options for Iterators configured on tables
 are two areas in which there aren't any fail safes built into the API that can prevent the user from making this mistake.
