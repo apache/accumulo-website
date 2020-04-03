@@ -94,18 +94,6 @@ are two areas in which there aren't any fail safes built into the API that can p
 
 While these properties have the ability to add some much needed dynamic configuration tools, use cases which might fall
 into these warnings should be reconsidered.
-
-#### Monitor and Zookeeper Four-Letter-Word command whitelist
-
-Starting with Zookeeper version 3.5.3, the Four Letter Words commands must be enabled with the 
-zookeeper property: 4lw.commands.whitelist.  The monitor uses the stat command to provide zookeeper server(s),
-mode and number of clients.  At a minimum, add the following to your zookeeper configuration (zoo.cfg):
-```
-4lw.commands.whitelist=stat
-```
-See [Zookeeper Administration Documentation] for your zookeeper version for other four-letter-word 
-command whitelist options.
-
 ## Viewing Server Configuration
 
 Accumulo's current configuration can be viewed in the shell using the `config` command.
