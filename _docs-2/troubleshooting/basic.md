@@ -61,8 +61,8 @@ master is down. Check for a running master.
 
 **The ZooKeeper information is not available on the Overview page.**
 
-The monitor uses the ZooKeeper `stat` [four-letter-word][zk-4lw] command to retrieve information.  
-The ZooKeeper configuration may require explicitly listing the `stat` command in the four-letter-word whitelist.  
+The monitor uses the ZooKeeper `stat` [four-letter-word][zk-4lw] command to retrieve information.
+The ZooKeeper configuration may require explicitly listing the `stat` command in the four-letter-word whitelist.
 
 ## Accumulo Processes
 
