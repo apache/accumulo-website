@@ -939,12 +939,37 @@ started. Also, set the these properties in <a href="/docs/2.x/configuration/file
   <li><a href="/docs/2.x/configuration/server-properties#replication_receipt_service_port">replication.receipt.service.port</a> = <code class="highlighter-rouge">0</code></li>
 </ul>
 
-<p>Multiple TabletServers cannot be started using the <code class="highlighter-rouge">accumulo-cluster</code> or <code class="highlighter-rouge">accumulo-service</code> commands
-at this time. The <code class="highlighter-rouge">accumulo</code> command must be used:</p>
+<p>In order to start multiple TabletServers on a node, the <code class="highlighter-rouge">accumulo</code> command must be used:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &amp;&gt; ./logs/tserver1.out &amp;
 ACCUMULO_SERVICE_INSTANCE=2 ./bin/accumulo tserver &amp;&gt; ./logs/tserver2.out &amp;
 </code></pre></div></div>
+
+<h4 id="running-multiple-tabletservers-per-node-in-accumulo-210-and-later">Running multiple TabletServers per node in Accumulo 2.1.0 and later</h4>
+<p>Starting with Accumulo 2.1.0, the <code class="highlighter-rouge">accumulo-cluster</code> script can be used along with environment
+variable <code class="highlighter-rouge">NUM_TSERVERS</code> as a convenient alternative to the <code class="highlighter-rouge">accumulo</code> command to start / stop
+multiple TabletServers per node. For example, the following commands can be used to start / stop
+2 TabletServers on the current node:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start-here
+NUM_TSERVERS=2 ./bin/accumulo-cluster stop-here
+</code></pre></div></div>
+
+<p>To start / stop the entire Accumulo cluster with 2 TabletServers per worker node, use:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start
+NUM_TSERVERS=2 ./bin/accumulo-cluster stop
+</code></pre></div></div>
+
+<p>Other commands like <code class="highlighter-rouge">accumulo-cluster start-tservers</code> and <code class="highlighter-rouge">accumulo-cluster stop-tservers</code> support
+the use of <code class="highlighter-rouge">NUM_TSERVERS</code> to specify the number of TabletServers per worker node.</p>
+
+<p>When <code class="highlighter-rouge">accumulo-cluster</code> is used along with <code class="highlighter-rouge">NUM_TSERVERS</code> greater than 1, the resultant log files
+and redirected stdout / stderr files for each TabletServer running on the node have the instance
+number as part of their respective filenames.</p>
+
+<p>Lastly, starting with Accumulo 2.1.0 the <code class="highlighter-rouge">accumulo-env.sh</code> script ensures that Accumulo metrics
+are correctly associated with the respective instance number for each TabletServer on a node.</p>
 
 <h2 id="logging">Logging</h2>
 
