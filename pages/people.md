@@ -104,6 +104,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
+| Karthick Narendran  | [Microsoft][MICROSOFT]                                            | [BST][BST]            |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
