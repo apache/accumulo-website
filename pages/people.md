@@ -13,6 +13,7 @@ permalink: /people/
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 | alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
+| arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
@@ -57,7 +58,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Aishwarya Thangappa | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
-| Arvind Shyamsundar  | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Benjamin Fach       |                                                                   |                       |
