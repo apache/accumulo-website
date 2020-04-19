@@ -17,7 +17,7 @@ permalink: /people/
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
-| brianloss     | Brian Loss                                        | [Praxis Engineering][PRAXIS]           | [ET][ET] |
+| brianloss     | [Brian Loss](https://github.com/brianloss)        | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | busbey        | Sean Busbey                                       | [Cloudera][CLOUDERA]                   | [CT][CT] |
 | cawaring      | Chris Waring                                      |                                        |          |
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
