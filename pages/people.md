@@ -149,6 +149,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Travis Pinney       |                                                                   |                       |
 | Trent Nadeau        | [Anthem Engineering LLC][ANTHEMENG]                               | [ET][ET]              |
 | Tristen Georgiou    | [PHEMI][PHEMI]                                                    | [PT][PT]              |
+| Tushar Dhadiwal     | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Vicky Kak           |                                                                   |                       |
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
