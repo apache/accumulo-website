@@ -40,7 +40,7 @@ permalink: /people/
 | mmiller       | [Michael Miller](https://github.com/milleruntime) | [Centroid, LLC][CENTROID]              | [ET][ET] |
 | mwalch        | [Mike Walch](https://github.com/mikewalch)        | [Peterson Technologies][PETERSON]      | [ET][ET] |
 | ngf           | [Nick Felts](https://github.com/pircdef)          | [Praxis Engineering][PRAXIS]           | [ET][ET] |
-| phrocker      | Marc Parisi                                       | [Hortonworks][HORTONWORKS]             | [ET][ET] |
+| phrocker      | [Marc Parisi](https://github.com/phrocker/)       | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | rweeks        | Russ Weeks                                        | [PHEMI][PHEMI]                         | [PT][PT] |
 | shickey       | Sean Hickey                                       |                                        | [PT][PT] |
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
