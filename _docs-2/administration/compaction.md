@@ -42,7 +42,7 @@ of this documentation only applies to Accumulo 2.1 and later.
 Below are some Accumulo shell commands that do the following :
 
  * Create a compaction service named `cs1` that has three executors.  The first executor named `small` has 8 threads and runs compactions less than 16M.  The second executor `medium` runs compactions less than 128M with 4 threads.  The last executor `large` runs all other compactions.
- * Create a compaction service named `cs2` that has three executors.  It has similar config to `cs1`, but its executors have less threads.
+ * Create a compaction service named `cs2` that has three executors.  It has similar config to `cs1`, but its executors have less threads. Limits total I/O of all compactions within the service to 40MB/s.
 * Configure table `ci` to use compaction service `cs1` for system compactions and service `cs2` for user compactions.
 
 ```
@@ -50,6 +50,7 @@ config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.
 config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","maxSize":"16M","numThreads":8},{"name":"medium","maxSize":"128M","numThreads":4},{"name":"large","numThreads":2}]'
 config -s tserver.compaction.major.service.cs2.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
 config -s 'tserver.compaction.major.service.cs2.planner.opts.executors=[{"name":"small","maxSize":"16M","numThreads":4},{"name":"medium","maxSize":"128M","numThreads":2},{"name":"large","numThreads":1}]'
+config -s tserver.compaction.major.service.cs2.throughput=40M
 config -t ci -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
 config -t ci -s table.compaction.dispatcher.opts.service=cs1
 config -t ci -s table.compaction.dispatcher.opts.service.user=cs2
