@@ -141,6 +141,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
 | Takahiko Saito      | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
+| Tao Xiao            | [Nara Institute of Science and Technology][NAIST]                 |                       |
 | Ted Malaska         | [Cloudera][CLOUDERA]                                              |                       |
 | Ted Yu              | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 | Tim Halloran        |                                                                   |                       |
@@ -181,6 +182,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [MASTERPEACE]: https://www.masterpeaceltd.com
 [MICROSOFT]: http://www.microsoft.com
 [MINERKASCH]: http://minerkasch.com
+[NAIST]: http://www.naist.jp
 [NOVETTA]: http://www.novetta.com
 [NSA]: http://www.nsa.gov
 [OBJECTIVE]: http://www.objectivesolutions.com
