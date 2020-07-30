@@ -151,7 +151,7 @@
   <p>Running on a single thread, a Scanner will retrieve a single Range of data and return Keys in sorted order. A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> 
 will retrieve multiple Ranges of data using multiple threads.  A BatchScanner can be more efficient but does not guarantee Keys will be returned in sorted order.</p>
 
-<p>For this exercise, we need to generate a bunch of data to test BatchScanner.  Copy the code below into your <code class="highlighter-rouge">exercise</code> method.</p>
+<p>For this exercise, we need to generate a bunch of data to test BatchScanner.  Copy the code below into your <code class="language-plaintext highlighter-rouge">exercise</code> method.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
     <span class="c1">// create a table called "GothamPD".</span>
     <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
@@ -177,11 +177,11 @@ don’t need the returned keys to be sorted. Follow these steps to efficiently s
     <p>After the above code, create a BatchScanner with 5 query threads.  Similar to a Scanner, use the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Connector.html#createBatchScanner-java.lang.String-org.apache.accumulo.core.security.Authorizations-int-">createBatchScanner</a> method.</p>
   </li>
   <li>
-    <p>Create an ArrayList of 2 sample Ranges (<code class="highlighter-rouge">id1000</code> to <code class="highlighter-rouge">id1999</code> and <code class="highlighter-rouge">id9000</code> to <code class="highlighter-rouge">id9999</code>) and set the ranges of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> using <code class="highlighter-rouge">setRanges</code>.</p>
+    <p>Create an ArrayList of 2 sample Ranges (<code class="language-plaintext highlighter-rouge">id1000</code> to <code class="language-plaintext highlighter-rouge">id1999</code> and <code class="language-plaintext highlighter-rouge">id9000</code> to <code class="language-plaintext highlighter-rouge">id9999</code>) and set the ranges of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> using <code class="language-plaintext highlighter-rouge">setRanges</code>.</p>
   </li>
   <li>
-    <p>We can make the scan more efficient by only bringing back the columns we want.  Use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ScannerBase.html#fetchColumn-org.apache.hadoop.io.Text-org.apache.hadoop.io.Text-">fetchColumn</a> to get the <code class="highlighter-rouge">villain</code> family
-and <code class="highlighter-rouge">yearsOfService</code> qualifier.</p>
+    <p>We can make the scan more efficient by only bringing back the columns we want.  Use <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ScannerBase.html#fetchColumn-org.apache.hadoop.io.Text-org.apache.hadoop.io.Text-">fetchColumn</a> to get the <code class="language-plaintext highlighter-rouge">villain</code> family
+and <code class="language-plaintext highlighter-rouge">yearsOfService</code> qualifier.</p>
   </li>
   <li>
     <p>Finally, use the BatchScanner to calculate the average years of service of 2000 villains.</p>

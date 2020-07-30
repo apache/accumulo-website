@@ -430,18 +430,18 @@ for 2.0, making it easier to configure and more secure.  The files that can be e
 <p>To encrypt all tables on disk, encryption must be enabled before an Accumulo instance is initialized.  If on disk 
 encryption is enabled on an existing cluster, only files created after it is enabled will be encrypted 
 (root and metadata tables will not be encrypted in this case) and existing data won’t be encrypted until compaction.  To configure on disk encryption, add the 
-<a href="/docs/2.x/configuration/server-properties#instance_crypto_service">instance.crypto.service</a> property to your <code class="highlighter-rouge">accumulo.properties</code> file.  The value of this property is the
+<a href="/docs/2.x/configuration/server-properties#instance_crypto_service">instance.crypto.service</a> property to your <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file.  The value of this property is the
 class name of the service which will perform crypto on RFiles and WALs.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoService
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoService
 </code></pre></div></div>
-<p>Out of the box, Accumulo provides the <code class="highlighter-rouge">AESCryptoService</code> for basic encryption needs.  This class provides AES encryption 
+<p>Out of the box, Accumulo provides the <code class="language-plaintext highlighter-rouge">AESCryptoService</code> for basic encryption needs.  This class provides AES encryption 
 with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
 below is required by this crypto service to be set using the <a href="/docs/2.x/configuration/server-properties#instance_crypto_opts_prefix">instance.crypto.opts.*</a> prefix.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.opts.key.uri=file:///secure/path/to/crypto-key-file
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.crypto.opts.key.uri=file:///secure/path/to/crypto-key-file
 </code></pre></div></div>
 <p>This property tells the crypto service where to find the file containing the key encryption key. The key file can be 16 or 32 bytes.
 For example, openssl can be used to create a random 32 byte key:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -out /path/to/keyfile 32
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -out /path/to/keyfile 32
 </code></pre></div></div>
 <p>Initializing Accumulo after these instance properties are set, will enable on disk encryption across your entire cluster.</p>
 
@@ -454,16 +454,16 @@ The interface has 3 methods:</p>
   <span class="nc">FileEncrypter</span> <span class="nf">getFileEncrypter</span><span class="o">(</span><span class="nc">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
   <span class="nc">FileDecrypter</span> <span class="nf">getFileDecrypter</span><span class="o">(</span><span class="nc">CryptoEnvironment</span> <span class="n">environment</span><span class="o">);</span>
 </code></pre></div></div>
-<p>The <code class="highlighter-rouge">init</code> method is where you will initialize any resources required for crypto and will get called once per Tablet Server.
-The <code class="highlighter-rouge">getFileEncrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileEncrypter.html">FileEncrypter</a> 
-for encryption and the <code class="highlighter-rouge">getFileDecrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileDecrypter.html">FileDecrypter</a> 
-for decryption. The <code class="highlighter-rouge">CryptoEnvironment</code> passed into these methods will provide the scope of the crypto. 
+<p>The <code class="language-plaintext highlighter-rouge">init</code> method is where you will initialize any resources required for crypto and will get called once per Tablet Server.
+The <code class="language-plaintext highlighter-rouge">getFileEncrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileEncrypter.html">FileEncrypter</a> 
+for encryption and the <code class="language-plaintext highlighter-rouge">getFileDecrypter</code> method requires implementation of a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/crypto/FileDecrypter.html">FileDecrypter</a> 
+for decryption. The <code class="language-plaintext highlighter-rouge">CryptoEnvironment</code> passed into these methods will provide the scope of the crypto. 
 The FileEncrypter has two methods:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">OutputStream</span> <span class="nf">encryptStream</span><span class="o">(</span><span class="nc">OutputStream</span> <span class="n">outputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
   <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getDecryptionParameters</span><span class="o">();</span>
 </code></pre></div></div>
-<p>The <code class="highlighter-rouge">encryptStream</code> method performs the encryption on the provided OutputStream and returns an OutputStream, most likely 
-wrapped in at least one other OutputStream.  The <code class="highlighter-rouge">getDecryptionParameters</code> returns a byte array of anything that will be 
+<p>The <code class="language-plaintext highlighter-rouge">encryptStream</code> method performs the encryption on the provided OutputStream and returns an OutputStream, most likely 
+wrapped in at least one other OutputStream.  The <code class="language-plaintext highlighter-rouge">getDecryptionParameters</code> returns a byte array of anything that will be 
 required to perform decryption. The FileDecrypter only has one method:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">InputStream</span> <span class="nf">decryptStream</span><span class="o">(</span><span class="nc">InputStream</span> <span class="n">inputStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">CryptoService</span><span class="o">.</span><span class="na">CryptoException</span><span class="o">;</span>
 </code></pre></div></div>
@@ -504,7 +504,7 @@ not allow for encryption of RFiles so any data bulk imported through this proces
 
 <p>A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test encrypted and decrypted arrays of size 131072 bytes 1000000 times. The results are as follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Java 9 GCM times:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Java 9 GCM times:
     Time spent encrypting:        209.210s
     Time spent decrypting:        276.800s
 Java 8 GCM times:

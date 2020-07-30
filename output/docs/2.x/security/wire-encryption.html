@@ -443,12 +443,12 @@ of certificate generation with an organization’s policies, Accumulo does not
 provide a method in which to automatically create the necessary SSL components.</p>
 
 <p>Administrators without existing infrastructure built on SSL are encourage to
-use OpenSSL and the <code class="highlighter-rouge">keytool</code> command. An example of these commands are
+use OpenSSL and the <code class="language-plaintext highlighter-rouge">keytool</code> command. An example of these commands are
 included in a section below. Accumulo servers require a certificate and keystore,
 in the form of Java KeyStores, to enable SSL. The following configuration assumes
 these files already exist.</p>
 
-<p>In <code class="highlighter-rouge">accumulo.properties</code>, the following properties are required:</p>
+<p>In <code class="language-plaintext highlighter-rouge">accumulo.properties</code>, the following properties are required:</p>
 
 <ul>
   <li><a href="/docs/2.x/configuration/server-properties#rpc_javax_net_ssl_keyStore">rpc.javax.net.ssl.keyStore</a>  = <em>The path on the local filesystem to the keystore containing the server’s certificate</em></li>
@@ -459,7 +459,7 @@ these files already exist.</p>
 </ul>
 
 <p>Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
-<a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> <code class="highlighter-rouge">true</code> in <code class="highlighter-rouge">accumulo.properties</code>.
+<a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> <code class="language-plaintext highlighter-rouge">true</code> in <code class="language-plaintext highlighter-rouge">accumulo.properties</code>.
 This requires that each client has access to  valid certificate to set up a secure connection
 to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
 their own certificate.</p>
@@ -468,16 +468,16 @@ their own certificate.</p>
 
 <p>To establish a connection to Accumulo servers, each client must also have
 special configuration. This is typically accomplished by <a href="/docs/2.x/getting-started/clients#creating-an-accumulo-client">creating an Accumulo
-client</a> using <code class="highlighter-rouge">accumulo-client.properties</code> and setting the following
+client</a> using <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> and setting the following
 the properties to connect to an Accumulo instance using SSL:</p>
 
 <ul>
-  <li><a href="/docs/2.x/configuration/client-properties#ssl_enabled">ssl.enabled</a> to <code class="highlighter-rouge">true</code></li>
+  <li><a href="/docs/2.x/configuration/client-properties#ssl_enabled">ssl.enabled</a> to <code class="language-plaintext highlighter-rouge">true</code></li>
   <li><a href="/docs/2.x/configuration/client-properties#ssl_truststore_path">ssl.truststore.path</a></li>
   <li><a href="/docs/2.x/configuration/client-properties#ssl_truststore_password">ssl.truststore.password</a></li>
 </ul>
 
-<p>If two-way SSL is enabled for the Accumulo instance (by setting <a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> to <code class="highlighter-rouge">true</code> in <code class="highlighter-rouge">accumulo.properties</code>),
+<p>If two-way SSL is enabled for the Accumulo instance (by setting <a href="/docs/2.x/configuration/server-properties#instance_rpc_ssl_clientAuth">instance.rpc.ssl.clientAuth</a> to <code class="language-plaintext highlighter-rouge">true</code> in <code class="language-plaintext highlighter-rouge">accumulo.properties</code>),
 Accumulo clients must also define their own certificate by setting the following properties:</p>
 
 <ul>
@@ -508,7 +508,7 @@ keytool <span class="nt">-import</span> <span class="nt">-alias</span> root-key 
 <span class="nb">rm </span>root.der
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
+<p>The <code class="language-plaintext highlighter-rouge">truststore.jks</code> file is the Java keystore which contains the certificate authority’s public key.</p>
 
 <h3 id="generate-a-certificatekeystore-per-host">Generate a certificate/keystore per host</h3>
 
@@ -540,7 +540,7 @@ keytool <span class="nt">-importkeystore</span> <span class="nt">-srckeystore</s
 keytool <span class="nt">-import</span> <span class="nt">-trustcacerts</span> <span class="nt">-alias</span> server-crt <span class="nt">-file</span> server.crt <span class="nt">-keystore</span> server.jks
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
+<p>The <code class="language-plaintext highlighter-rouge">server.jks</code> file is the Java keystore containing the certificate for a given host. The above
 methods are equivalent whether the certificate is generate for an Accumulo server or a client.</p>
 
 

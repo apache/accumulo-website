@@ -147,26 +147,26 @@ ones).  Filters implement the org.apache.accumulo.core.iterators.iterators.filte
 contains a method accept(Key k, Value v).  This method returns true if the key, 
 value pair are to be delivered and false if they are to be ignored.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">username@instance&gt; createtable filtertest
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable filtertest
 username@instance filtertest&gt; setiter -t filtertest -scan -p 10 -n myfilter -filter
 FilteringIterator uses Filters to accept or reject key/value pairs
-</span><span class="gd">----------&gt; entering options: &lt;filterPriorityNumber&gt; &lt;ageoff|regex|filterClass&gt;
+----------&gt; entering options: &lt;filterPriorityNumber&gt; &lt;ageoff|regex|filterClass&gt;
 ----------&gt; set org.apache.accumulo.core.iterators.FilteringIterator option (&lt;name&gt; &lt;value&gt;, hit enter to skip): 0 ageoff
 ----------&gt; set org.apache.accumulo.core.iterators.FilteringIterator option (&lt;name&gt; &lt;value&gt;, hit enter to skip): 
-</span><span class="p">AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
-</span><span class="gd">----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day: 
+AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
+----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day: 
 ----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter ttl, time to live (milliseconds): 30000
-</span><span class="p">username@instance filtertest&gt; 
-</span>
+username@instance filtertest&gt; 
+
 username@instance filtertest&gt; scan
-<span class="p">username@instance filtertest&gt; insert foo a b c
+username@instance filtertest&gt; insert foo a b c
 username@instance filtertest&gt; scan
 foo a:b []    c
-</span></code></pre></div></div>
+</code></pre></div></div>
 
 <p>… wait 30 seconds …</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; scan
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; scan
 username@instance filtertest&gt;
 </code></pre></div></div>
 
@@ -181,29 +181,29 @@ on the “minc” and “majc” scopes you can flush and compact your table. Th
 happen automatically as a background operation on any table that is being 
 actively written to, but these are the commands to force compaction:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">username@instance filtertest&gt; setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -filter
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -filter
 FilteringIterator uses Filters to accept or reject key/value pairs
-</span><span class="gd">----------&gt; entering options: &lt;filterPriorityNumber&gt; &lt;ageoff|regex|filterClass&gt;
+----------&gt; entering options: &lt;filterPriorityNumber&gt; &lt;ageoff|regex|filterClass&gt;
 ----------&gt; set org.apache.accumulo.core.iterators.FilteringIterator option (&lt;name&gt; &lt;value&gt;, hit enter to skip): 0 ageoff
 ----------&gt; set org.apache.accumulo.core.iterators.FilteringIterator option (&lt;name&gt; &lt;value&gt;, hit enter to skip): 
-</span><span class="p">AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
-</span><span class="gd">----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day: 
+AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
+----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter currentTime, if set, use the given value as the absolute time in milliseconds as the current time of day: 
 ----------&gt; set org.apache.accumulo.core.iterators.filter.AgeOffFilter parameter ttl, time to live (milliseconds): 30000
-</span><span class="p">username@instance filtertest&gt; 
-</span>
+username@instance filtertest&gt; 
+
 username@instance filtertest&gt; flush -t filtertest
-<span class="p">08 11:13:55,745 [shell.Shell] INFO : Flush of table filtertest initiated...
+08 11:13:55,745 [shell.Shell] INFO : Flush of table filtertest initiated...
 username@instance filtertest&gt; compact -t filtertest
 08 11:14:10,800 [shell.Shell] INFO : Compaction of table filtertest scheduled for 20110208111410EST
 username@instance filtertest&gt; 
-</span></code></pre></div></div>
+</code></pre></div></div>
 
 <p>After the compaction runs, the newly created files will not contain any data that should be aged off, and the
 Accumulo garbage collector will remove the old files.</p>
 
 <p>To see the iterator settings for a table, use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; config -t filtertest -f iterator
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance filtertest&gt; config -t filtertest -f iterator
 ---------+------------------------------------------+----------------------------------------------------------
 SCOPE    | NAME                                     | VALUE
 ---------+------------------------------------------+----------------------------------------------------------

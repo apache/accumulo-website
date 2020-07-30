@@ -147,26 +147,26 @@
 </p>
 
 <p>Apache Accumulo has been available in <a href="https://getfedora.org/">Fedora</a> since F20. Recently, the Fedora
-packages have been updated to Accumulo version <code class="highlighter-rouge">1.6.6</code> and have made some
+packages have been updated to Accumulo version <code class="language-plaintext highlighter-rouge">1.6.6</code> and have made some
 improvements to the default configuration and launch scripts to provide a good
 out-of-box experience. This post will discuss the basic setup procedures for
-running Accumulo in the latest version, <code class="highlighter-rouge">Fedora 25</code>.</p>
+running Accumulo in the latest version, <code class="language-plaintext highlighter-rouge">Fedora 25</code>.</p>
 
 <h2 id="prepare-the-system">Prepare the system</h2>
 
 <p><strong>WARNING</strong>: Before you start, be sure you’ve got plenty of free disk space.
 Otherwise, you could run into this <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1404888">bug</a> or see other problems.</p>
 
-<p>These instructions will assume you’re using Fedora 25, fully up-to-date (<code class="highlighter-rouge">sudo
+<p>These instructions will assume you’re using Fedora 25, fully up-to-date (<code class="language-plaintext highlighter-rouge">sudo
 dnf --refresh upgrade</code>).</p>
 
 <h3 id="install-packages">Install packages</h3>
 
 <p>Fedora provides a meta-package to install Accumulo and all of its dependencies.
-It’s a good idea to install the JDK, so you’ll have access to the <code class="highlighter-rouge">jps</code>
-command, and <code class="highlighter-rouge">tuned</code> for setting system performance tuning parameters from a
+It’s a good idea to install the JDK, so you’ll have access to the <code class="language-plaintext highlighter-rouge">jps</code>
+command, and <code class="language-plaintext highlighter-rouge">tuned</code> for setting system performance tuning parameters from a
 profile. It’s also a good idea to ensure the optional hadoop native libraries
-are installed, and you have a good editor (replace <code class="highlighter-rouge">vim</code> with your preferred
+are installed, and you have a good editor (replace <code class="language-plaintext highlighter-rouge">vim</code> with your preferred
 editor):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf <span class="nb">install </span>accumulo java-1.8.0-openjdk-devel tuned vim hadoop-common-native
@@ -175,12 +175,12 @@ editor):</p>
 <p>It is possible to install only a specific Accumulo service. For the single node
 setup, almost everything is needed. For the multi-node setup, it might make
 more sense to be selective about which you choose to install on each node (for
-example, to only install <code class="highlighter-rouge">accumulo-tserver</code>).</p>
+example, to only install <code class="language-plaintext highlighter-rouge">accumulo-tserver</code>).</p>
 
 <h3 id="set-up-tuned">Set up tuned</h3>
 
-<p>(Optional) <code class="highlighter-rouge">tuned</code> can optimize your server settings, adjusting things like
-your <code class="highlighter-rouge">vm.swappiness</code>. To set up <code class="highlighter-rouge">tuned</code>, do:</p>
+<p>(Optional) <code class="language-plaintext highlighter-rouge">tuned</code> can optimize your server settings, adjusting things like
+your <code class="language-plaintext highlighter-rouge">vm.swappiness</code>. To set up <code class="language-plaintext highlighter-rouge">tuned</code>, do:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start tuned.service     <span class="c"># start service</span>
 <span class="nb">sudo </span>tuned-adm profile network-latency <span class="c"># pick a good profile</span>
@@ -203,28 +203,28 @@ fine):</p>
 <span class="nb">sudo </span>systemctl <span class="nb">enable </span>zookeeper.service
 </code></pre></div></div>
 
-<p>Note that the default port for ZooKeeper is <code class="highlighter-rouge">2181</code>. Remember the hostname of
-the node where ZooKeeper is running, referred to as <code class="highlighter-rouge">&lt;zk-dns-name&gt;</code> later.</p>
+<p>Note that the default port for ZooKeeper is <code class="language-plaintext highlighter-rouge">2181</code>. Remember the hostname of
+the node where ZooKeeper is running, referred to as <code class="language-plaintext highlighter-rouge">&lt;zk-dns-name&gt;</code> later.</p>
 
 <h2 id="running-a-single-node">Running a single node</h2>
 
 <h3 id="configure-accumulo">Configure Accumulo</h3>
 
 <p>To run on a single node, you don’t need to run HDFS. Accumulo can use the local
-filesystem as a volume instead. By default, it uses <code class="highlighter-rouge">/tmp/accumulo</code>. Let’s
+filesystem as a volume instead. By default, it uses <code class="language-plaintext highlighter-rouge">/tmp/accumulo</code>. Let’s
 change that to something which will survive a reboot:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/accumulo/accumulo-site.xml
 </code></pre></div></div>
 
-<p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> property from <code class="highlighter-rouge">file:///tmp/accumulo</code>
-to <code class="highlighter-rouge">file:///var/tmp/accumulo</code> in the configuration file (or another preferred
+<p>Change the value of the <code class="language-plaintext highlighter-rouge">instance.volumes</code> property from <code class="language-plaintext highlighter-rouge">file:///tmp/accumulo</code>
+to <code class="language-plaintext highlighter-rouge">file:///var/tmp/accumulo</code> in the configuration file (or another preferred
 location).</p>
 
 <p>While you are editing the Accumulo configuration file, you should also change
-the default <code class="highlighter-rouge">instance.secret</code> from <code class="highlighter-rouge">DEFAULT</code> to something else. You can also
-change the credentials used by the <code class="highlighter-rouge">tracer</code> service now, too. If you use the
-<code class="highlighter-rouge">root</code> user, you’ll have to set its password to the same one you’ll use later
+the default <code class="language-plaintext highlighter-rouge">instance.secret</code> from <code class="language-plaintext highlighter-rouge">DEFAULT</code> to something else. You can also
+change the credentials used by the <code class="language-plaintext highlighter-rouge">tracer</code> service now, too. If you use the
+<code class="language-plaintext highlighter-rouge">root</code> user, you’ll have to set its password to the same one you’ll use later
 when you initialize Accumulo. If you use another user name, you’ll have to
 create that user later.</p>
 
@@ -232,7 +232,7 @@ create that user later.</p>
 
 <p>Hadoop’s default local filesystem handler isn’t very good at ensuring files are
 written to disk when services are stopped. So, let’s use a better filesystem
-implementation for <code class="highlighter-rouge">file://</code> locations. This implementation may not be as
+implementation for <code class="language-plaintext highlighter-rouge">file://</code> locations. This implementation may not be as
 robust as a full HDFS instance, but it’s more reliable than the default. Even
 though you’re not going to be running HDFS, the Hadoop client code used in
 Accumulo can still be configured by modifying Hadoop’s configuration file:</p>
@@ -250,18 +250,18 @@ Accumulo can still be configured by modifying Hadoop’s configuration file:</p>
 
 <h3 id="initialize-accumulo">Initialize Accumulo</h3>
 
-<p>Now, initialize Accumulo. You’ll need to do this as the <code class="highlighter-rouge">accumulo</code> user,
-because the Accumulo services run as the <code class="highlighter-rouge">accumulo</code> user. This user is created
+<p>Now, initialize Accumulo. You’ll need to do this as the <code class="language-plaintext highlighter-rouge">accumulo</code> user,
+because the Accumulo services run as the <code class="language-plaintext highlighter-rouge">accumulo</code> user. This user is created
 automatically by the RPMs if it doesn’t exist when the RPMs are installed. If
 you already have a user and/or group by this name, it will probably not be a
 problem, but be aware that this user will have permissions for the server
-configuration files. To initialize Accumulo as a specific user, use <code class="highlighter-rouge">sudo -u</code>:</p>
+configuration files. To initialize Accumulo as a specific user, use <code class="language-plaintext highlighter-rouge">sudo -u</code>:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> accumulo accumulo init
 </code></pre></div></div>
 
 <p>As expected, this command will fail if ZooKeeper is not running, or if the
-destination volume (<code class="highlighter-rouge">file:///var/tmp/accumulo</code>) already exists.</p>
+destination volume (<code class="language-plaintext highlighter-rouge">file:///var/tmp/accumulo</code>) already exists.</p>
 
 <h3 id="start-accumulo-services">Start Accumulo services</h3>
 
@@ -283,13 +283,13 @@ destination volume (<code class="highlighter-rouge">file:///var/tmp/accumulo</co
 Cloud AMI on Amazon EC2 with the following characteristics:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">us-east-1</code> availability zone</li>
-  <li><code class="highlighter-rouge">ami-e5757bf2</code> (latest in <code class="highlighter-rouge">us-east-1</code> at time of writing)</li>
-  <li><code class="highlighter-rouge">HVM</code> virtualization type</li>
-  <li><code class="highlighter-rouge">gp2</code> disk type</li>
-  <li><code class="highlighter-rouge">64GB EBS</code> root volume (no additional storage)</li>
-  <li><code class="highlighter-rouge">m4.large</code> and <code class="highlighter-rouge">m4.xlarge</code> instance types (tested on both)</li>
-  <li><code class="highlighter-rouge">3</code> nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">us-east-1</code> availability zone</li>
+  <li><code class="language-plaintext highlighter-rouge">ami-e5757bf2</code> (latest in <code class="language-plaintext highlighter-rouge">us-east-1</code> at time of writing)</li>
+  <li><code class="language-plaintext highlighter-rouge">HVM</code> virtualization type</li>
+  <li><code class="language-plaintext highlighter-rouge">gp2</code> disk type</li>
+  <li><code class="language-plaintext highlighter-rouge">64GB EBS</code> root volume (no additional storage)</li>
+  <li><code class="language-plaintext highlighter-rouge">m4.large</code> and <code class="language-plaintext highlighter-rouge">m4.xlarge</code> instance types (tested on both)</li>
+  <li><code class="language-plaintext highlighter-rouge">3</code> nodes</li>
 </ul>
 
 <p>For this setup, you should have a name service configured properly. For
@@ -297,10 +297,10 @@ convenience, we used the EC2 provided internal DNS, with internal IP addresses.
 Make sure the nodes can communicate with each other using these names. If
 you’re using EC2, this means making sure they are in the same security group,
 and the security group has an inbound rule for “All traffic” with the source
-set to itself (<code class="highlighter-rouge">sg-xxxxxxxx</code>).</p>
+set to itself (<code class="language-plaintext highlighter-rouge">sg-xxxxxxxx</code>).</p>
 
-<p>The default user is <code class="highlighter-rouge">fedora</code> for the Fedora Cloud AMIs. For the best
-experience, don’t forget to make sure they are fully up-to-date (<code class="highlighter-rouge">sudo dnf
+<p>The default user is <code class="language-plaintext highlighter-rouge">fedora</code> for the Fedora Cloud AMIs. For the best
+experience, don’t forget to make sure they are fully up-to-date (<code class="language-plaintext highlighter-rouge">sudo dnf
 --refresh upgrade</code>).</p>
 
 <h3 id="configure-and-run-hadoop">Configure and run Hadoop</h3>
@@ -310,18 +310,18 @@ setup. For both Hadoop and Accumulo, you can edit the configuration files on
 one machine, and copy them to the others.</p>
 
 <p>Pick a server to be the NameNode and identify its DNS name,
-(<code class="highlighter-rouge">&lt;namenode-dns-name&gt;</code>). Edit Hadoop’s configuration to set the default
+(<code class="language-plaintext highlighter-rouge">&lt;namenode-dns-name&gt;</code>). Edit Hadoop’s configuration to set the default
 filesystem name to this location:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/hadoop/core-site.xml
 </code></pre></div></div>
 
-<p>Set the value for the property <code class="highlighter-rouge">fs.default.name</code> to
-<code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020</code>.</p>
+<p>Set the value for the property <code class="language-plaintext highlighter-rouge">fs.default.name</code> to
+<code class="language-plaintext highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020</code>.</p>
 
 <p>Distribute copies of the changed configuration files to each node.</p>
 
-<p>Now, format the NameNode. You’ll need to do this as the <code class="highlighter-rouge">hdfs</code> user on the
+<p>Now, format the NameNode. You’ll need to do this as the <code class="language-plaintext highlighter-rouge">hdfs</code> user on the
 NameNode instance:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo</span> <span class="nt">-u</span> hdfs hdfs namenode <span class="nt">-format</span>
@@ -346,12 +346,12 @@ NameNode instance:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vim /etc/accumulo/accumulo-site.xml
 </code></pre></div></div>
 
-<p>Change the value of the <code class="highlighter-rouge">instance.volumes</code> to
-<code class="highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020/accumulo</code> in the configuration file. Don’t
-forget to also change the default <code class="highlighter-rouge">instance.secret</code> and the trace user’s
+<p>Change the value of the <code class="language-plaintext highlighter-rouge">instance.volumes</code> to
+<code class="language-plaintext highlighter-rouge">hdfs://&lt;namenode-dns-name&gt;:8020/accumulo</code> in the configuration file. Don’t
+forget to also change the default <code class="language-plaintext highlighter-rouge">instance.secret</code> and the trace user’s
 credentials, if necessary. Also, since you will have multiple nodes, you cannot
-use <code class="highlighter-rouge">localhost:2181</code> for ZooKeeper, so set <code class="highlighter-rouge">instance.zookeeper.host</code> to
-<code class="highlighter-rouge">&lt;zk-dns-name&gt;:2181</code>.</p>
+use <code class="language-plaintext highlighter-rouge">localhost:2181</code> for ZooKeeper, so set <code class="language-plaintext highlighter-rouge">instance.zookeeper.host</code> to
+<code class="language-plaintext highlighter-rouge">&lt;zk-dns-name&gt;:2181</code>.</p>
 
 <p>Distribute copies of the changed configuration files to each node.</p>
 
@@ -380,7 +380,7 @@ the root of HDFS.</em></p>
 <span class="nb">sudo </span>systemctl <span class="nb">enable </span>accumulo-<span class="o">{</span>master,tserver,gc,tracer,monitor<span class="o">}</span>.service
 </code></pre></div></div>
 
-<p>On each DataNode, start just the <code class="highlighter-rouge">tserver</code> and enable it on reboot:</p>
+<p>On each DataNode, start just the <code class="language-plaintext highlighter-rouge">tserver</code> and enable it on reboot:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start accumulo-tserver.service
 <span class="nb">sudo </span>systemctl <span class="nb">enable </span>accumulo-tserver.service
@@ -406,8 +406,8 @@ public IP address, you can allocate one in EC2 and associate it with this node:<
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-L50070</span>:localhost:50070 <span class="nt">-L50095</span>:localhost:50095 &lt;user&gt;@&lt;host&gt;
 </code></pre></div></div>
 
-<p>Replace <code class="highlighter-rouge">&lt;user&gt;</code> with your username (probably <code class="highlighter-rouge">fedora</code> if using the Fedora
-AMI), and <code class="highlighter-rouge">&lt;host&gt;</code> with the public IP or hostname for your EC2 instance. Now,
+<p>Replace <code class="language-plaintext highlighter-rouge">&lt;user&gt;</code> with your username (probably <code class="language-plaintext highlighter-rouge">fedora</code> if using the Fedora
+AMI), and <code class="language-plaintext highlighter-rouge">&lt;host&gt;</code> with the public IP or hostname for your EC2 instance. Now,
 in your local browser, you should be able to navigate to these addresses in
 your localhost: <a href="http://localhost:50070">Hadoop monitor (http://localhost:50070)</a> and <a href="http://localhost:50095">Accumulo
 monitor (http://localhost:50095)</a>.</p>
@@ -475,8 +475,8 @@ rpm <span class="nt">-q</span> <span class="nt">--whatrequires</span> <span clas
 <h2 id="helping-out">Helping out</h2>
 
 <p>Feel free to get involved with the <a href="https://fedoraproject.org/wiki/Join_the_package_collection_maintainers">Fedora</a> or <a href="https://fedoraproject.org/wiki/EPEL">Fedora EPEL</a>
-(for RHEL/CentOS users) packaging. Contact the Fedora <a href="https://admin.fedoraproject.org/pkgdb/package/rpms/accumulo/">maintainers</a> (user <code class="highlighter-rouge">at</code>
-fedoraproject <code class="highlighter-rouge">dot</code> org) for the Accumulo packages to see how you can help
+(for RHEL/CentOS users) packaging. Contact the Fedora <a href="https://admin.fedoraproject.org/pkgdb/package/rpms/accumulo/">maintainers</a> (user <code class="language-plaintext highlighter-rouge">at</code>
+fedoraproject <code class="language-plaintext highlighter-rouge">dot</code> org) for the Accumulo packages to see how you can help
 patching bugs, adapting the upstream packages to the Fedora packaging
 standards, testing updates, maintaining dependency packages, and more.</p>
 

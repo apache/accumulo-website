@@ -159,7 +159,7 @@
 
 <p>To begin, ingest some data with Ingest.java.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.Ingest -i instance -z zookeepers -u username -p password --vis exampleVis --chunkSize 100000 /local/username/workspace
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.Ingest -i instance -z zookeepers -u username -p password --vis exampleVis --chunkSize 100000 /local/username/workspace
 </code></pre></div></div>
 
 <p>This may take some time if there are large files in the /local/username/workspace directory.  If you use 0 instead of 100000 on the command line, the ingest will run much faster, but it will not put any file data into Accumulo (the dataTable will be empty).
@@ -168,24 +168,24 @@ If you modify a file or add new files in the directory ingested (e.g. /local/use
 
 <p>To browse the data ingested, use Viewer.java.  Be sure to give the “username” user the authorizations to see the data (in this case, run</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u root -e 'setauths -u username -s exampleVis'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u root -e 'setauths -u username -s exampleVis'
 </code></pre></div></div>
 
 <p>then run the Viewer:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.Viewer -i instance -z zookeepers -u username -p password -t dirTable --dataTable dataTable --auths exampleVis --path /local/username/workspace
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.Viewer -i instance -z zookeepers -u username -p password -t dirTable --dataTable dataTable --auths exampleVis --path /local/username/workspace
 </code></pre></div></div>
 
 <p>To list the contents of specific directories, use QueryUtil.java.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t dirTable --auths exampleVis --path /local/username
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t dirTable --auths exampleVis --path /local/username
 $ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t dirTable --auths exampleVis --path /local/username/workspace
 </code></pre></div></div>
 
 <p>To perform searches on file or directory names, also use QueryUtil.java.  Search terms must contain no more than one wild card and cannot contain “/”.
 <em>Note</em> these queries run on the <em>indexTable</em> table instead of the dirTable table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t indexTable --auths exampleVis --path filename --search
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t indexTable --auths exampleVis --path filename --search
 $ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t indexTable --auths exampleVis --path 'filename*' --search
 $ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t indexTable --auths exampleVis --path '*jar' --search
 $ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instance -z zookeepers -u username -p password -t indexTable --auths exampleVis --path 'filename*jar' --search
@@ -195,14 +195,14 @@ $ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.QueryUtil -i instan
 The results are written back to the same table.  FileCount reads from and writes to Accumulo.  This requires scan authorizations for the read and a visibility for the data written.
 In this example, the authorizations and visibility are set to the same value, exampleVis.  See README.visibility for more information on visibility and authorizations.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.FileCount -i instance -z zookeepers -u username -p password -t dirTable --auths exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.dirlist.FileCount -i instance -z zookeepers -u username -p password -t dirTable --auths exampleVis
 </code></pre></div></div>
 
 <h2 id="directory-table">Directory Table</h2>
 
 <p>Here is a illustration of what data looks like in the directory table:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]    value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]    value
 000 dir:exec [exampleVis]    true
 000 dir:hidden [exampleVis]    false
 000 dir:lastmod [exampleVis]    1291996886000
@@ -225,7 +225,7 @@ For directories the column family is “dir”.  For files the column family is 
 
 <p>Here is an illustration of what data looks like in the index table:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]
 fAccumulo.README i:002/local/Accumulo.README [exampleVis]
 flocal i:001/local [exampleVis]
 rEMDAER.olumuccA i:002/local/Accumulo.README [exampleVis]
@@ -238,7 +238,7 @@ rlacol i:001/local [exampleVis]
 
 <p>Here is an illustration of what data looks like in the data table:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]    value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row colf:colq [vis]    value
 274af6419a3c4c4a259260ac7017cbf1 refs:e77276a2b56e5c15b540eaae32b12c69\x00filext [exampleVis]    README
 274af6419a3c4c4a259260ac7017cbf1 refs:e77276a2b56e5c15b540eaae32b12c69\x00name [exampleVis]    /local/Accumulo.README
 274af6419a3c4c4a259260ac7017cbf1 ~chunk:\x00\x0FB@\x00\x00\x00\x00 [exampleVis]    *******************************************************************************\x0A1. Building\x0A\x0AIn the normal tarball or RPM release of accumulo, [truncated]

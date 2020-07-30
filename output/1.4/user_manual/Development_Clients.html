@@ -161,18 +161,18 @@
 
 <p>While normal interaction with the Accumulo client looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new ZooKeeperInstance(...);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new ZooKeeperInstance(...);
 Connector conn = instance.getConnector(user, passwd);
 </code></pre></div></div>
 
 <p>To interact with the MockAccumulo, just replace the ZooKeeperInstance with MockInstance:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new MockInstance();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new MockInstance();
 </code></pre></div></div>
 
 <p>In fact, you can use the “-fake” option to the Accumulo shell and interact with MockAccumulo:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell --fake -u root -p ''
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell --fake -u root -p ''
 
 Shell - Apache Accumulo Interactive Shell
 -
@@ -197,7 +197,7 @@ root@mock-instance test&gt;
 
 <p>When testing Map Reduce jobs, you can also set the Mock Accumulo on the AccumuloInputFormat and AccumuloOutputFormat classes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// ... set up job configuration
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// ... set up job configuration
 AccumuloInputFormat.setMockInstance(job, "mockInstance");
 AccumuloOutputFormat.setMockInstance(job, "mockInstance");
 </code></pre></div></div>
@@ -208,20 +208,20 @@ AccumuloOutputFormat.setMockInstance(job, "mockInstance");
 
 <p>To start it up, you will need to supply an empty directory and a root password as arguments:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File tempDirectory = // JUnit and Guava supply mechanisms for creating temp directories
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File tempDirectory = // JUnit and Guava supply mechanisms for creating temp directories
 MiniAccumuloCluster accumulo = new MiniAccumuloCluster(tempDirectory, "password");
 accumulo.start();
 </code></pre></div></div>
 
 <p>Once we have our mini cluster running, we will want to interact with the Accumulo client API:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new ZooKeeperInstance(accumulo.getInstanceName(), accumulo.getZooKeepers());
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instance instance = new ZooKeeperInstance(accumulo.getInstanceName(), accumulo.getZooKeepers());
 Connector conn = instance.getConnector("root", "password");
 </code></pre></div></div>
 
 <p>Upon completion of our development code, we will want to shutdown our MiniAccumuloCluster:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo.stop()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo.stop()
 // delete your temporary folder
 </code></pre></div></div>
 

@@ -431,7 +431,7 @@ table, such as its location and write-ahead logs, are stored in ZooKeeper.</p>
 
 <p>Let’s create a table and put some data into it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; createtable test
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; createtable test
 
 shell&gt; tables -l
 accumulo.metadata    =&gt;        !0
@@ -446,7 +446,7 @@ shell&gt; flush -w
 
 <p>Now let’s take a look at the metadata for this table:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; table accumulo.metadata
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; table accumulo.metadata
 shell&gt; scan -b 3; -e 3&lt;
 3&lt; file:/default_tablet/F000009y.rf []    186,1
 3&lt; last:13fe86cd27101e5 []    127.0.0.1:9997
@@ -462,47 +462,47 @@ shell&gt; scan -b 3; -e 3&lt;
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">scan -b 3; -e 3&lt;</code> -   Every tablet gets its own row. Every row starts with the table id followed by
-  <code class="highlighter-rouge">;</code> or <code class="highlighter-rouge">&lt;</code>, and followed by the end row split point for that tablet.</p>
+    <p><code class="language-plaintext highlighter-rouge">scan -b 3; -e 3&lt;</code> -   Every tablet gets its own row. Every row starts with the table id followed by
+  <code class="language-plaintext highlighter-rouge">;</code> or <code class="language-plaintext highlighter-rouge">&lt;</code>, and followed by the end row split point for that tablet.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">file:/default_tablet/F000009y.rf [] 186,1</code> -
+    <p><code class="language-plaintext highlighter-rouge">file:/default_tablet/F000009y.rf [] 186,1</code> -
   File entry for this tablet.  This tablet contains a single file reference. The
-  file is <code class="highlighter-rouge">/accumulo/tables/3/default_tablet/F000009y.rf</code>.  It contains 1
+  file is <code class="language-plaintext highlighter-rouge">/accumulo/tables/3/default_tablet/F000009y.rf</code>.  It contains 1
   key/value pair, and is 186 bytes long.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">last:13fe86cd27101e5 []    127.0.0.1:9997</code> -
+    <p><code class="language-plaintext highlighter-rouge">last:13fe86cd27101e5 []    127.0.0.1:9997</code> -
   Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
-  unique tablet server lock data was <code class="highlighter-rouge">13fe86cd27101e5</code>. The default balancer
+  unique tablet server lock data was <code class="language-plaintext highlighter-rouge">13fe86cd27101e5</code>. The default balancer
   will tend to put tablets back on their last location.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">loc:13fe86cd27101e5 []    127.0.0.1:9997</code> -
+    <p><code class="language-plaintext highlighter-rouge">loc:13fe86cd27101e5 []    127.0.0.1:9997</code> -
   The current location of this tablet.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">srv:dir []    /default_tablet</code> -
+    <p><code class="language-plaintext highlighter-rouge">srv:dir []    /default_tablet</code> -
   Files written for this tablet will be placed into
-  <code class="highlighter-rouge">/accumulo/tables/3/default_tablet</code>.</p>
+  <code class="language-plaintext highlighter-rouge">/accumulo/tables/3/default_tablet</code>.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">srv:flush []    1</code> -
-  Flush id.  This table has successfully completed the flush with the id of <code class="highlighter-rouge">1</code>.</p>
+    <p><code class="language-plaintext highlighter-rouge">srv:flush []    1</code> -
+  Flush id.  This table has successfully completed the flush with the id of <code class="language-plaintext highlighter-rouge">1</code>.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5</code> -
+    <p><code class="language-plaintext highlighter-rouge">srv:lock []    tservers/127.0.0.1:9997/zlock-0000000001\$13fe86cd27101e5</code> -
   This is the lock information for the tablet holding the present lock.  This
   information is checked against zookeeper whenever this is updated, which
   prevents a metadata update from a tablet server that no longer holds its
   lock.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">srv:time []    M1373998392323</code> -
-  This indicates the time time type (<code class="highlighter-rouge">M</code> for milliseconds or <code class="highlighter-rouge">L</code> for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server’s system time.</p>
+    <p><code class="language-plaintext highlighter-rouge">srv:time []    M1373998392323</code> -
+  This indicates the time time type (<code class="language-plaintext highlighter-rouge">M</code> for milliseconds or <code class="language-plaintext highlighter-rouge">L</code> for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server’s system time.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">~tab:~pr []    \x00</code> -
+    <p><code class="language-plaintext highlighter-rouge">~tab:~pr []    \x00</code> -
   The end-row marker for the previous tablet (prev-row).  The first byte
   indicates the presence of a prev-row.  This tablet has the range (-inf, `inf),
   so it has no prev-row (or end row).</p>
@@ -513,35 +513,35 @@ shell&gt; scan -b 3; -e 3&lt;
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">rowId future:zooKeeperID location</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId future:zooKeeperID location</code> -
   Tablet has been assigned to a tablet, but not yet loaded.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">~del:filename</code> -
+    <p><code class="language-plaintext highlighter-rouge">~del:filename</code> -
   When a tablet server is done use a file, it will create a delete marker in the appropriate metadata table, unassociated with any tablet.  The garbage collector will remove the marker, and the file, when no other reference to the file exists.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">~blip:txid</code> -
+    <p><code class="language-plaintext highlighter-rouge">~blip:txid</code> -
   Bulk-Load In Progress marker.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">rowId loaded:filename</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId loaded:filename</code> -
   A file has been bulk-loaded into this tablet, however the bulk load has not yet completed on other tablets, so this marker prevents the file from being loaded multiple times.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">rowId !cloned</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId !cloned</code> -
   A marker that indicates that this tablet has been successfully cloned.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">rowId splitRatio:ratio</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId splitRatio:ratio</code> -
   A marker that indicates a split is in progress, and the files are being split at the given ratio.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">rowId chopped</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId chopped</code> -
   A marker that indicates that the files in the tablet do not contain keys outside the range of the tablet.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">rowId scan</code> -
+    <p><code class="language-plaintext highlighter-rouge">rowId scan</code> -
   A marker that prevents a file from being removed while there are still active scans using it.</p>
   </li>
 </ul>

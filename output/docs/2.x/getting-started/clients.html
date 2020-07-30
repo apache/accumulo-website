@@ -434,7 +434,7 @@
 </code></pre></div></div>
 
 <p>When writing code that uses Accumulo, only use the <a href="/api">Accumulo Public API</a>.
-The <code class="highlighter-rouge">accumulo-core</code> artifact includes implementation code that falls outside the
+The <code class="language-plaintext highlighter-rouge">accumulo-core</code> artifact includes implementation code that falls outside the
 Public API and should be avoided.</p>
 
 <h2 id="creating-an-accumulo-client">Creating an Accumulo Client</h2>
@@ -451,7 +451,7 @@ Public API and should be avoided.</p>
 of the following methods:</p>
 
 <ol>
-  <li>Using the <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> file (a template can be found in the <code class="highlighter-rouge">conf/</code> directory
+  <li>Using the <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> file (a template can be found in the <code class="language-plaintext highlighter-rouge">conf/</code> directory
 of the tarball distribution):
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
                            <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
@@ -481,9 +481,9 @@ of the tarball distribution):
 <ul>
   <li><a href="/docs/2.x/configuration/client-properties#instance_name">instance.name</a> - Name of Accumulo instance to connect to</li>
   <li><a href="/docs/2.x/configuration/client-properties#instance_zookeepers">instance.zookeepers</a> - ZooKeeper connection information for this Accumulo instance</li>
-  <li><a href="/docs/2.x/configuration/client-properties#auth_type">auth.type</a> - Authentication method. Possible values are <code class="highlighter-rouge">password</code>, <code class="highlighter-rouge">kerberos</code>, or authentication token class (i.e <code class="highlighter-rouge">PasswordToken</code>, <code class="highlighter-rouge">org.apache.accumulo.core.client.security.tokens.PasswordToken</code>)</li>
+  <li><a href="/docs/2.x/configuration/client-properties#auth_type">auth.type</a> - Authentication method. Possible values are <code class="language-plaintext highlighter-rouge">password</code>, <code class="language-plaintext highlighter-rouge">kerberos</code>, or authentication token class (i.e <code class="language-plaintext highlighter-rouge">PasswordToken</code>, <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client.security.tokens.PasswordToken</code>)</li>
   <li><a href="/docs/2.x/configuration/client-properties#auth_principal">auth.principal</a> - Accumulo principal/username</li>
-  <li><a href="/docs/2.x/configuration/client-properties#auth_token">auth.token</a> - Token associated with <code class="highlighter-rouge">auth.type</code>. See table for mapping below:</li>
+  <li><a href="/docs/2.x/configuration/client-properties#auth_token">auth.token</a> - Token associated with <code class="language-plaintext highlighter-rouge">auth.type</code>. See table for mapping below:</li>
 </ul>
 
 <table>
@@ -513,9 +513,9 @@ of the tarball distribution):
   </tbody>
 </table>
 
-<p>If a token class is used for <code class="highlighter-rouge">auth.type</code>, you can create create a Base64 encoded token using the <code class="highlighter-rouge">accumulo create-token</code> command.</p>
+<p>If a token class is used for <code class="language-plaintext highlighter-rouge">auth.type</code>, you can create create a Base64 encoded token using the <code class="language-plaintext highlighter-rouge">accumulo create-token</code> command.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo create-token
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo create-token
 Username (aka principal): root
 the password for the principal: ******
 auth.type = org.apache.accumulo.core.client.security.tokens.PasswordToken
@@ -623,28 +623,28 @@ replicas, and waiting for a permanent sync to disk can significantly slow down w
 These levels are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">none</code> - no durability guarantees are made, the WAL is not used</li>
-  <li><code class="highlighter-rouge">log</code> - the WAL is used, but not flushed; loss of the server probably means recent writes are lost</li>
-  <li><code class="highlighter-rouge">flush</code> - updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.</li>
-  <li><code class="highlighter-rouge">sync</code> - updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.</li>
+  <li><code class="language-plaintext highlighter-rouge">none</code> - no durability guarantees are made, the WAL is not used</li>
+  <li><code class="language-plaintext highlighter-rouge">log</code> - the WAL is used, but not flushed; loss of the server probably means recent writes are lost</li>
+  <li><code class="language-plaintext highlighter-rouge">flush</code> - updates are written to the WAL, and flushed out to replicas; loss of a single server is unlikely to result in data loss.</li>
+  <li><code class="language-plaintext highlighter-rouge">sync</code> - updates are written to the WAL, and synced to disk on all replicas before the write is acknowledge. Data will not be lost even if the entire cluster suddenly loses power.</li>
 </ul>
 
 <p>Durability can be set in multiple ways:</p>
 
 <ol>
   <li>The default durability of all tables can be set using <a href="/docs/2.x/configuration/server-properties#table_durability">table.durability</a>.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -s table.durability=flush
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -s table.durability=flush
 </code></pre></div>    </div>
   </li>
   <li>The default durability of a table can be overriden by setting <a href="/docs/2.x/configuration/server-properties#table_durability">table.durability</a> for that table.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -t mytable -s table.durability=sync
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno&gt; config -t mytable -s table.durability=sync
 </code></pre></div>    </div>
   </li>
-  <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the default durability can be overridden using <code class="highlighter-rouge">withBatchWriterConfig()</code>
+  <li>When creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>, the default durability can be overridden using <code class="language-plaintext highlighter-rouge">withBatchWriterConfig()</code>
 or by setting <a href="/docs/2.x/configuration/client-properties#batch_writer_durability">batch.writer.durability</a> in <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a>.</li>
   <li>
     <p>When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
-by the <code class="highlighter-rouge">BatchWriterConfig</code> that is passed in.</p>
+by the <code class="language-plaintext highlighter-rouge">BatchWriterConfig</code> that is passed in.</p>
 
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">BatchWriterConfig</span> <span class="n">cfg</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BatchWriterConfig</span><span class="o">();</span>
  <span class="c1">// We don't care about data loss with these writes:</span>
@@ -758,23 +758,23 @@ of the different ways to execute client code.</p>
 
 <ul>
   <li>build and execute an uber jar</li>
-  <li>add <code class="highlighter-rouge">accumulo classpath</code> to your Java classpath</li>
-  <li>use the <code class="highlighter-rouge">accumulo</code> command</li>
+  <li>add <code class="language-plaintext highlighter-rouge">accumulo classpath</code> to your Java classpath</li>
+  <li>use the <code class="language-plaintext highlighter-rouge">accumulo</code> command</li>
 </ul>
 
 <h3 id="build-and-execute-an-uber-jar">Build and execute an uber jar</h3>
 
-<p>If you have included <code class="highlighter-rouge">accumulo-core</code> as dependency in your pom, you can build an uber jar
+<p>If you have included <code class="language-plaintext highlighter-rouge">accumulo-core</code> as dependency in your pom, you can build an uber jar
 using the Maven assembly or shade plugin and use it to run Accumulo client code. When building
 an uber jar, you should set the versions of any Hadoop dependencies in your pom to match the
 version running on your cluster.</p>
 
 <h3 id="add-accumulo-classpath-to-your-java-classpath">Add ‘accumulo classpath’ to your Java classpath</h3>
 
-<p>To run Accumulo client code using the <code class="highlighter-rouge">java</code> command, use the <code class="highlighter-rouge">accumulo classpath</code> command
+<p>To run Accumulo client code using the <code class="language-plaintext highlighter-rouge">java</code> command, use the <code class="language-plaintext highlighter-rouge">accumulo classpath</code> command
 to include all of Accumulo’s dependencies on your classpath:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java -classpath /path/to/my.jar:/path/to/dep.jar:$(accumulo classpath) com.my.Main arg1 arg2
 </code></pre></div></div>
 
 <h3 id="use-the-accumulo-command">Use the accumulo command</h3>
@@ -782,16 +782,16 @@ to include all of Accumulo’s dependencies on your classpath:</p>
 <p>Another option for running your code is to use the Accumulo script which can execute a
 main class (if it exists on its classpath):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo com.foo.Client arg1 arg2
 </code></pre></div></div>
 
 <p>While the Accumulo script will add all of Accumulo’s dependencies to the classpath, you
 will need to add any jars that your create or depend on beyond what Accumulo already
-depends on. This can be accomplished by either adding the jars to the <code class="highlighter-rouge">lib/ext</code> directory
+depends on. This can be accomplished by either adding the jars to the <code class="language-plaintext highlighter-rouge">lib/ext</code> directory
 of your Accumulo installation or by adding jars to the CLASSPATH variable before calling
 the accumulo command.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export CLASSPATH=/path/to/my.jar:/path/to/dep.jar; accumulo com.foo.Client arg1 arg2
 </code></pre></div></div>
 
 <h2 id="additional-documentation">Additional Documentation</h2>

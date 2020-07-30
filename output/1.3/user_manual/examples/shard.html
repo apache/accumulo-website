@@ -152,19 +152,19 @@ document, or “sharded”. This example shows how to use the intersecting itera
 
 <p>To run these example programs, create two tables like below.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable shard
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>username@instance&gt; createtable shard
 username@instance shard&gt; createtable doc2term
 </code></pre></div></div>
 
 <p>After creating the tables, index some files.  The following command indexes all of the java files in the Accumulo source code.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /local/user1/workspace/accumulo/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /local/user1/workspace/accumulo/
 $ find src -name "*.java" | xargs ./bin/accumulo org.apache.accumulo.examples.shard.Index instance zookeepers shard username password 30
 </code></pre></div></div>
 
 <p>The following command queries the index to find all files containing ‘foo’ and ‘bar’.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd $ACCUMULO_HOME
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd $ACCUMULO_HOME
 $ ./bin/accumulo org.apache.accumulo.examples.shard.Query instance zookeepers shard username password foo bar
 /local/user1/workspace/accumulo/src/core/src/test/java/accumulo/core/security/ColumnVisibilityTest.java
 /local/user1/workspace/accumulo/src/core/src/test/java/accumulo/core/client/mock/MockConnectorTest.java
@@ -181,12 +181,12 @@ $ ./bin/accumulo org.apache.accumulo.examples.shard.Query instance zookeepers sh
 
 <p>Inorder to run ContinuousQuery, we need to run Reverse.java to populate doc2term</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.shard.Reverse instance zookeepers shard doc2term username password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.shard.Reverse instance zookeepers shard doc2term username password
 </code></pre></div></div>
 
 <p>Below ContinuousQuery is run using 5 terms.  So it selects 5 random terms from each document, then it continually randomly selects one set of 5 terms and queries.  It prints the number of matching documents and the time in seconds.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.shard.ContinuousQuery instance zookeepers shard doc2term username password 5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.shard.ContinuousQuery instance zookeepers shard doc2term username password 5
 [public, core, class, binarycomparable, b] 2  0.081
 [wordtodelete, unindexdocument, doctablename, putdelete, insert] 1  0.041
 [import, columnvisibilityinterpreterfactory, illegalstateexception, cv, columnvisibility] 1  0.049

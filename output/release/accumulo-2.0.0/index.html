@@ -160,17 +160,17 @@ to have it included.</p>
 <h3 id="new-api-for-creating-connections-to-accumulo">New API for creating connections to Accumulo</h3>
 
 <p>A fluent API for creating Accumulo clients was introduced in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4784">ACCUMULO-4784</a> and <a href="https://github.com/apache/accumulo/issues/634">#634</a>.
-The <code class="highlighter-rouge">Connector</code> and <code class="highlighter-rouge">ZooKeeperInstance</code> objects have been deprecated and replaced by
-<code class="highlighter-rouge">AccumuloClient</code> which is created from the <code class="highlighter-rouge">Accumulo</code> entry point. The new API also deprecates
-<code class="highlighter-rouge">ClientConfiguration</code> and introduces its own properties file called <code class="highlighter-rouge">accumulo-client.properties</code>
+The <code class="language-plaintext highlighter-rouge">Connector</code> and <code class="language-plaintext highlighter-rouge">ZooKeeperInstance</code> objects have been deprecated and replaced by
+<code class="language-plaintext highlighter-rouge">AccumuloClient</code> which is created from the <code class="language-plaintext highlighter-rouge">Accumulo</code> entry point. The new API also deprecates
+<code class="language-plaintext highlighter-rouge">ClientConfiguration</code> and introduces its own properties file called <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code>
 that ships with the Accumulo tarball. The new API has the following benefits over the old API:</p>
 <ul>
   <li>All connection information can be specifed in properties file to create the client. This was not
 possible with old API.</li>
-  <li>The new API does not require <code class="highlighter-rouge">ZooKeeperInstance</code> to be created first before creating a client.</li>
+  <li>The new API does not require <code class="language-plaintext highlighter-rouge">ZooKeeperInstance</code> to be created first before creating a client.</li>
   <li>The new client is closeable and does not rely on shared static resource management</li>
-  <li>Clients can be created using a new Java builder, <code class="highlighter-rouge">Properties</code> object, or <code class="highlighter-rouge">accumulo-client.properties</code></li>
-  <li>Clients can now be created with default settings for <code class="highlighter-rouge">BatchWriter</code>, <code class="highlighter-rouge">Scanner</code>, etc.</li>
+  <li>Clients can be created using a new Java builder, <code class="language-plaintext highlighter-rouge">Properties</code> object, or <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code></li>
+  <li>Clients can now be created with default settings for <code class="language-plaintext highlighter-rouge">BatchWriter</code>, <code class="language-plaintext highlighter-rouge">Scanner</code>, etc.</li>
   <li>Create scanners with default authorizations. <a href="https://github.com/apache/accumulo/issues/744">#744 </a></li>
 </ul>
 
@@ -186,14 +186,14 @@ required.</p>
 <h3 id="simplified-accumulo-scripts-and-configuration-files">Simplified Accumulo scripts and configuration files</h3>
 
 <p>Accumulo’s scripts and configuration were refactored in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4490">ACCUMULO-4490</a> to make Accumulo
-easier to use. The number of scripts in the <code class="highlighter-rouge">bin</code> directory of the Accumulo release tarball
+easier to use. The number of scripts in the <code class="language-plaintext highlighter-rouge">bin</code> directory of the Accumulo release tarball
 has been reduced from 20 scripts to the four scripts below:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">accumulo</code> - mostly left alone except for improved usage</li>
-  <li><code class="highlighter-rouge">accumulo-service</code> - manage Accumulo processes as services</li>
-  <li><code class="highlighter-rouge">accumulo-cluster</code> - manage Accumulo on cluster. Replaces <code class="highlighter-rouge">start-all.sh</code> and <code class="highlighter-rouge">stop-all.sh</code></li>
-  <li><code class="highlighter-rouge">accumulo-util</code> - combines many utility scripts into one script.</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo</code> - mostly left alone except for improved usage</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> - manage Accumulo processes as services</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> - manage Accumulo on cluster. Replaces <code class="language-plaintext highlighter-rouge">start-all.sh</code> and <code class="language-plaintext highlighter-rouge">stop-all.sh</code></li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-util</code> - combines many utility scripts into one script.</li>
 </ul>
 
 <p>Read <a href="/blog/2016/11/16/simpler-scripts-and-config.html">this blog post</a> for more information on this change.</p>
@@ -255,9 +255,9 @@ it easier for users to run Accumulo in Docker. To support running in Docker, a f
 made to Accumulo:</p>
 
 <ul>
-  <li>The <code class="highlighter-rouge">--upload-accumulo-site</code> option was added to <code class="highlighter-rouge">accumulo init</code> to set properties in accumulo-site.xml
+  <li>The <code class="language-plaintext highlighter-rouge">--upload-accumulo-site</code> option was added to <code class="language-plaintext highlighter-rouge">accumulo init</code> to set properties in accumulo-site.xml
 to Zookeeper during initialization.</li>
-  <li>The <code class="highlighter-rouge">-o &lt;key&gt;=&lt;value&gt;</code> option was added to the <code class="highlighter-rouge">accumulo</code> command to override configuration that could
+  <li>The <code class="language-plaintext highlighter-rouge">-o &lt;key&gt;=&lt;value&gt;</code> option was added to the <code class="language-plaintext highlighter-rouge">accumulo</code> command to override configuration that could
 not be set in Zookeeper.</li>
 </ul>
 
@@ -304,14 +304,14 @@ forwarding</li>
 
 <h3 id="removed-comparison-of-value-with-byte-in-valueequals">Removed comparison of Value with byte[] in Value.equals()</h3>
 
-<p>Replaced the ability to use <code class="highlighter-rouge">Value.equals(byte[])</code> to check if the contents of a
-<code class="highlighter-rouge">Value</code> object was equal to a given byte array in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4726">ACCUMULO-4726</a>. To perform
-that check, you must now use the newly added <code class="highlighter-rouge">Value.contentEquals(byte[])</code>
-method. This corrects the behavior of the <code class="highlighter-rouge">equals</code> method so that it conforms
+<p>Replaced the ability to use <code class="language-plaintext highlighter-rouge">Value.equals(byte[])</code> to check if the contents of a
+<code class="language-plaintext highlighter-rouge">Value</code> object was equal to a given byte array in <a href="https://issues.apache.org/jira/browse/ACCUMULO-4726">ACCUMULO-4726</a>. To perform
+that check, you must now use the newly added <code class="language-plaintext highlighter-rouge">Value.contentEquals(byte[])</code>
+method. This corrects the behavior of the <code class="language-plaintext highlighter-rouge">equals</code> method so that it conforms
 to the API contract documented in the javadoc inherited from its superclass.
 However, it will break any code that was relying on the undocumented and broken
-behavior to compare <code class="highlighter-rouge">Value</code> objects with byte arrays. Such comparisons will now
-always return <code class="highlighter-rouge">false</code> instead of <code class="highlighter-rouge">true</code>, even if the contents are equal.</p>
+behavior to compare <code class="language-plaintext highlighter-rouge">Value</code> objects with byte arrays. Such comparisons will now
+always return <code class="language-plaintext highlighter-rouge">false</code> instead of <code class="language-plaintext highlighter-rouge">true</code>, even if the contents are equal.</p>
 
 <h3 id="other-notable-changes">Other Notable Changes</h3>
 
@@ -325,7 +325,7 @@ scripts to fail if ‘slaves’ file is present.</li>
 at table creation time can be much faster than adding splits after creation.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4463">ACCUMULO-4463 </a> - Caching is now pluggable.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4177">ACCUMULO-4177 </a> - New built in cache implementation based on TinyLFU.</li>
-  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4376">ACCUMULO-4376 </a> <a href="https://issues.apache.org/jira/browse/ACCUMULO-4746">ACCUMULO-4746 </a> - Mutation and Key Fluent APIs allow easy mixing of types.  For example a family of type <code class="highlighter-rouge">String</code> and qualifier of type <code class="highlighter-rouge">byte[]</code> is much easier to write using this new API.</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4376">ACCUMULO-4376 </a> <a href="https://issues.apache.org/jira/browse/ACCUMULO-4746">ACCUMULO-4746 </a> - Mutation and Key Fluent APIs allow easy mixing of types.  For example a family of type <code class="language-plaintext highlighter-rouge">String</code> and qualifier of type <code class="language-plaintext highlighter-rouge">byte[]</code> is much easier to write using this new API.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4771">ACCUMULO-4771 </a> - The Accumulo monitor was completely rewritten.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4732">ACCUMULO-4732 </a> - Specify iterators and locality groups at table creation time.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-4612">ACCUMULO-4612 </a> - Use percentages for memory related configuration.</li>

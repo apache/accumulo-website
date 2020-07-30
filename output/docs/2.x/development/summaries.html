@@ -454,11 +454,11 @@ ranges per a file.  However, the ranges are not granular enough to completely
 offset extra data.</p>
 
 <p>Any source of inaccuracies is reported when summary information is requested.
-In the shell examples below this can be seen on the <code class="highlighter-rouge">File Statistics</code> line.
+In the shell examples below this can be seen on the <code class="language-plaintext highlighter-rouge">File Statistics</code> line.
 For files missing summary information, the compact command in the shell has a
-<code class="highlighter-rouge">--sf-no-summary</code> option.  This options compacts files that do not have the
+<code class="language-plaintext highlighter-rouge">--sf-no-summary</code> option.  This options compacts files that do not have the
 summary information configured for the table.  The compact command also has the
-<code class="highlighter-rouge">--sf-extra-summary</code> option which will compact files with extra summary
+<code class="language-plaintext highlighter-rouge">--sf-extra-summary</code> option which will compact files with extra summary
 information.</p>
 
 <h2 id="configuring">Configuring</h2>
@@ -478,12 +478,12 @@ information.</p>
 
 <p>Because summary data may be derived from sensitive data, requesting summary data
 requires a special permission.  User must have the table permission
-<code class="highlighter-rouge">GET_SUMMARIES</code> in order to retrieve summary data.</p>
+<code class="language-plaintext highlighter-rouge">GET_SUMMARIES</code> in order to retrieve summary data.</p>
 
 <h2 id="bulk-import">Bulk import</h2>
 
 <p>When generating RFiles to bulk import into Accumulo, those RFiles can contain
-summary data.  To use this feature, look at the javadoc of <code class="highlighter-rouge">summarizers()</code> in the <code class="highlighter-rouge">configure()</code> method
+summary data.  To use this feature, look at the javadoc of <code class="language-plaintext highlighter-rouge">summarizers()</code> in the <code class="language-plaintext highlighter-rouge">configure()</code> method
 of AccumuloFileOutputFormat.  Also, the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/rfile/RFile.html">RFile</a>
 class has options for creating RFiles with embedded summary data.</p>
 
@@ -492,7 +492,7 @@ class has options for creating RFiles with embedded summary data.</p>
 <p>This example walks through using summarizers in the Accumulo shell.  Below a
 table is created and some data is inserted to summarize.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; createtable summary_test
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; createtable summary_test
 root@uno summary_test&gt; setauths -u root -s PI,GEO,TIME
 root@uno summary_test&gt; insert 3b503bd name last Doe
 root@uno summary_test&gt; insert 3b503bd name first John
@@ -519,16 +519,16 @@ d5d18dd name:last []    Doe
 
 <p>After inserting the data, summaries are requested below.  No summaries are returned.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; summaries
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; summaries
 </code></pre></div></div>
 
 <p>The visibility summarizer is configured below and the table is flushed.
 Flushing the table creates a file creating summary data in the process. The
 summary data returned counts how many times each column visibility occurred.
-The statistics with a <code class="highlighter-rouge">c:</code> prefix are visibilities.  The others are generic
+The statistics with a <code class="language-plaintext highlighter-rouge">c:</code> prefix are visibilities.  The others are generic
 statistics created by the CountingSummarizer that VisibilitySummarizer extends.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
 root@uno summary_test&gt; summaries
 root@uno summary_test&gt; flush -w
 2017-02-24 19:54:46,090 [shell.Shell] INFO : Flush of table summary_test completed.
@@ -546,13 +546,13 @@ Summary Statistics :
    tooMany                                                      = 0
 </code></pre></div></div>
 
-<p>VisibilitySummarizer has an option <code class="highlighter-rouge">maxCounters</code> that determines the max number
+<p>VisibilitySummarizer has an option <code class="language-plaintext highlighter-rouge">maxCounters</code> that determines the max number
 of column visibilities it will track.  Below this option is set and compaction
 is forced to regenerate summary data.  The new summary data only has three
-visibilities and now the <code class="highlighter-rouge">tooMany</code> statistic is 4.  This is the number of
+visibilities and now the <code class="language-plaintext highlighter-rouge">tooMany</code> statistic is 4.  This is the number of
 visibilities that were not counted.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis.opt.maxCounters=3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> root@uno summary_test&gt; config -t summary_test -s table.summarizer.vis.opt.maxCounters=3
  root@uno summary_test&gt; compact -w
  2017-02-24 19:54:46,267 [shell.Shell] INFO : Compacting table ...
  2017-02-24 19:54:47,127 [shell.Shell] INFO : Compaction of table summary_test completed for given range
@@ -571,13 +571,13 @@ visibilities that were not counted.</p>
 
 <p>Another summarizer is configured below that tracks the number of deletes.  Also
 a compaction strategy that uses this summary data is configured.  The
-<code class="highlighter-rouge">TooManyDeletesCompactionStrategy</code> will force a compaction of the tablet when
+<code class="language-plaintext highlighter-rouge">TooManyDeletesCompactionStrategy</code> will force a compaction of the tablet when
 the ratio of deletes to non-deletes is over 25%.  This threshold is
 configurable.  Below a delete is added and its reflected in the statistics.  In
 this case there is 1 delete and 10 non-deletes, not enough to force a
 compaction of the tablet.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.del=org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; config -t summary_test -s table.summarizer.del=org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer
 root@uno summary_test&gt; compact -w
 2017-02-24 19:54:47,282 [shell.Shell] INFO : Compacting table ...
 2017-02-24 19:54:49,236 [shell.Shell] INFO : Compaction of table summary_test completed for given range
@@ -612,7 +612,7 @@ compaction of all files is the only time when delete markers are dropped.  The
 compaction ratio was set to 10 above to show that the number of files did not
 trigger the compaction.   After the compaction there no deletes 6 non-deletes.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; deletemany -r d5d18dd -f
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno summary_test&gt; deletemany -r d5d18dd -f
 [DELETED] d5d18dd contact:address [PI&amp;GEO]
 [DELETED] d5d18dd name:first []
 [DELETED] d5d18dd name:last []

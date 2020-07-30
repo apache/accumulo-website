@@ -155,7 +155,7 @@ aware of write ahead logs.</p>
 
 <h2 id="hadoop-setup">Hadoop setup</h2>
 
-<p>At least the following settings should be added to Hadoop’s <code class="highlighter-rouge">core-site.xml</code> file on each node in the cluster.</p>
+<p>At least the following settings should be added to Hadoop’s <code class="language-plaintext highlighter-rouge">core-site.xml</code> file on each node in the cluster.</p>
 
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>fs.s3a.access.key<span class="nt">&lt;/name&gt;</span>
@@ -173,8 +173,8 @@ aware of write ahead logs.</p>
 </code></pre></div></div>
 
 <p>See <a href="https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html#S3A">S3A docs</a>
-for more S3A settings.  To get hadoop command to work with s3 set <code class="highlighter-rouge">export
-HADOOP_OPTIONAL_TOOLS="hadoop-aws"</code> in <code class="highlighter-rouge">hadoop-env.sh</code>.</p>
+for more S3A settings.  To get hadoop command to work with s3 set <code class="language-plaintext highlighter-rouge">export
+HADOOP_OPTIONAL_TOOLS="hadoop-aws"</code> in <code class="language-plaintext highlighter-rouge">hadoop-env.sh</code>.</p>
 
 <p>When trying to use Accumulo with Hadoop’s AWS jar <a href="https://issues.apache.org/jira/browse/HADOOP-16080">HADOOP-16080</a> was
 encountered.  The following instructions build a relocated hadoop-aws jar as a
@@ -191,7 +191,7 @@ mvn package <span class="nt">-Dhadoop</span>.version<span class="o">=</span>&lt;
 
 <h2 id="accumulo-setup">Accumulo setup</h2>
 
-<p>For each node in the cluster, modify <code class="highlighter-rouge">accumulo-env.sh</code> to add S3 jars to the
+<p>For each node in the cluster, modify <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> to add S3 jars to the
 classpath.  Your versions may differ depending on your Hadoop version,
 following versions were included with Hadoop 3.2.0.</p>
 
@@ -205,13 +205,13 @@ following versions were included with Hadoop 3.2.0.</p>
 <span class="nb">export </span>CLASSPATH
 </code></pre></div></div>
 
-<p>Set the following in <code class="highlighter-rouge">accumulo.properties</code> and then run <code class="highlighter-rouge">accumulo init</code>, but don’t start Accumulo.</p>
+<p>Set the following in <code class="language-plaintext highlighter-rouge">accumulo.properties</code> and then run <code class="language-plaintext highlighter-rouge">accumulo init</code>, but don’t start Accumulo.</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;name node&gt;/accumulo</span>
 </code></pre></div></div>
 
 <p>After running Accumulo init we need to configure storing write ahead logs in
-HDFS.  Set the following in <code class="highlighter-rouge">accumulo.properties</code>.</p>
+HDFS.  Set the following in <code class="language-plaintext highlighter-rouge">accumulo.properties</code>.</p>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">instance.volumes</span><span class="p">=</span><span class="s">hdfs://&lt;name node&gt;/accumulo,s3a://&lt;bucket&gt;/accumulo</span>
 <span class="py">general.volume.chooser</span><span class="p">=</span><span class="s">org.apache.accumulo.server.fs.PreferredVolumeChooser</span>
@@ -220,15 +220,15 @@ HDFS.  Set the following in <code class="highlighter-rouge">accumulo.properties<
 
 </code></pre></div></div>
 
-<p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> to initialize the S3 volume.  Doing this
+<p>Run <code class="language-plaintext highlighter-rouge">accumulo init --add-volumes</code> to initialize the S3 volume.  Doing this
 in two steps avoids putting any Accumulo metadata files in S3 during init.
-Copy <code class="highlighter-rouge">accumulo.properties</code> to all nodes and start Accumulo.</p>
+Copy <code class="language-plaintext highlighter-rouge">accumulo.properties</code> to all nodes and start Accumulo.</p>
 
 <p>Individual tables can be configured to store their files in HDFS by setting the
-table property <code class="highlighter-rouge">table.custom.volume.preferred</code>.  This should be set for the
+table property <code class="language-plaintext highlighter-rouge">table.custom.volume.preferred</code>.  This should be set for the
 metadata table in case it splits using the following Accumulo shell command.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&lt;namenode&gt;/accumulo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&lt;namenode&gt;/accumulo
 </code></pre></div></div>
 
 <h2 id="accumulo-example">Accumulo example</h2>
@@ -237,7 +237,7 @@ metadata table in case it splits using the following Accumulo shell command.</p>
 reading it back.  It also shows scanning the metadata table to verify the data
 is stored in S3.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@muchos&gt; createtable s3test
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@muchos&gt; createtable s3test
 root@muchos s3test&gt; insert r1 f1 q1 v1
 root@muchos s3test&gt; insert r1 f1 q2 v2
 root@muchos s3test&gt; flush -w

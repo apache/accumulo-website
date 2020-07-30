@@ -453,13 +453,13 @@ While default values have the lowest precedence, they are usually optimal.  Howe
 
 <h3 id="site">Site</h3>
 
-<p>Site configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file which can be found in the <code class="highlighter-rouge">conf/</code> directory. Site configuration will override the default value
+<p>Site configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file which can be found in the <code class="language-plaintext highlighter-rouge">conf/</code> directory. Site configuration will override the default value
 of a property. If you are running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their
 local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have <strong>zk mutable: no</strong>
 in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.</p>
 
-<p>Site configuration can be overriden when starting an Accumulo process on the command line (by using the <code class="highlighter-rouge">-o</code> option):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
+<p>Site configuration can be overriden when starting an Accumulo process on the command line (by using the <code class="language-plaintext highlighter-rouge">-o</code> option):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
 </code></pre></div></div>
 <p>Overriding properties is useful if you can’t change <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. It’s done when <a href="https://github.com/apache/accumulo-docker">running Accumulo using Docker</a>.</p>
 
@@ -470,7 +470,7 @@ in their description on the <a href="/docs/2.x/configuration/server-properties">
 settings take effect immediately, some require a restart of the process which is indicated in the <strong>zk mutable</strong> section of their description. System configuration can be set using
 the following shell command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s PROPERTY=VALUE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s PROPERTY=VALUE
 </code></pre></div></div>
 
 <p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/InstanceOperations.html">InstanceOperations</a> in the Java API:</p>
@@ -483,7 +483,7 @@ the following shell command:</p>
 <p>Namespace configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
 will override System configuration and can be set using the following shell command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
 </code></pre></div></div>
 
 <p>It can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/NamespaceOperations.html">NamespaceOperations</a> in the Java API:</p>
@@ -495,7 +495,7 @@ will override System configuration and can be set using the following shell comm
 
 <p>Table configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
 </code></pre></div></div>
 
 <p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/TableOperations.html">TableOperations</a> in the Java API:</p>
@@ -514,18 +514,18 @@ into these warnings should be reconsidered.</p>
 
 <h2 id="viewing-server-configuration">Viewing Server Configuration</h2>
 
-<p>Accumulo’s current configuration can be viewed in the shell using the <code class="highlighter-rouge">config</code> command.</p>
+<p>Accumulo’s current configuration can be viewed in the shell using the <code class="language-plaintext highlighter-rouge">config</code> command.</p>
 
 <ul>
-  <li><code class="highlighter-rouge">config</code> - view configuration for the entire system</li>
-  <li><code class="highlighter-rouge">config -ns &lt;NAMESPACE&gt;</code> - view configuration for a specific namespace</li>
-  <li><code class="highlighter-rouge">config -t &lt;TABLE&gt;</code> - view configuration for a specific table</li>
+  <li><code class="language-plaintext highlighter-rouge">config</code> - view configuration for the entire system</li>
+  <li><code class="language-plaintext highlighter-rouge">config -ns &lt;NAMESPACE&gt;</code> - view configuration for a specific namespace</li>
+  <li><code class="language-plaintext highlighter-rouge">config -t &lt;TABLE&gt;</code> - view configuration for a specific table</li>
 </ul>
 
-<p>Below is example shell output from viewing configuration for the table <code class="highlighter-rouge">foo</code>. Please note how <code class="highlighter-rouge">table.compaction.major.ratio</code>
-is set in multiple locations but the value <code class="highlighter-rouge">1.6</code> set in the <code class="highlighter-rouge">table</code> scope is used as it has the highest precedence.</p>
+<p>Below is example shell output from viewing configuration for the table <code class="language-plaintext highlighter-rouge">foo</code>. Please note how <code class="language-plaintext highlighter-rouge">table.compaction.major.ratio</code>
+is set in multiple locations but the value <code class="language-plaintext highlighter-rouge">1.6</code> set in the <code class="language-plaintext highlighter-rouge">table</code> scope is used as it has the highest precedence.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo-instance&gt; config -t foo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo-instance&gt; config -t foo
 ---------+---------------------------------------------+-----------------------
 SCOPE    | NAME                                        | VALUE
 ---------+---------------------------------------------+-----------------------

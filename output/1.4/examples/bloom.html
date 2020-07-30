@@ -146,7 +146,7 @@ do not exist in a table.</p>
 
 <p>Below table named bloom_test is created and bloom filters are enabled.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
 Shell - Apache Accumulo Interactive Shell
 - version: 1.4.x
 - instance name: instance
@@ -164,12 +164,12 @@ username@instance bloom_test&gt; exit
 generated rows range between 0 and 1 billion.  The random number generator is
 initialized with the seed 7.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchWriter -s 7 instance zookeepers username password bloom_test 1000000 0 1000000000 50 2000000 60000 3 exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchWriter -s 7 instance zookeepers username password bloom_test 1000000 0 1000000000 50 2000000 60000 3 exampleVis
 </code></pre></div></div>
 
 <p>Below the table is flushed:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password -e 'flush -t bloom_test -w'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password -e 'flush -t bloom_test -w'
 05 10:40:06,069 [shell.Shell] INFO : Flush of table bloom_test completed.
 </code></pre></div></div>
 
@@ -177,7 +177,7 @@ initialized with the seed 7.</p>
 same seed is used to generate the queries, therefore everything is found in the
 table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 96.19 lookups/sec   5.20 secs
 num results : 500
@@ -190,7 +190,7 @@ num results : 500
 in nothing being found.  In this case the lookups are much faster because of
 the bloom filters.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 8 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 8 instance zookeepers username password bloom_test 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 2212.39 lookups/sec   0.23 secs
 num results : 0
@@ -231,7 +231,7 @@ million inserts.  If not, then more map files will be created.</p>
 
 <p>The commands for creating the first table without bloom filters are below.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
 Shell - Apache Accumulo Interactive Shell
 - version: 1.4.x
 - instance name: instance
@@ -254,7 +254,7 @@ $ ./bin/accumulo shell -u username -p password -e 'flush -t bloom_test1 -w'
 
 <p>The commands for creating the second table with bloom filers are below.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password
 Shell - Apache Accumulo Interactive Shell
 - version: 1.4.x
 - instance name: instance
@@ -280,7 +280,7 @@ $ ./bin/accumulo shell -u username -p password -e 'flush -t bloom_test2 -w'
 NG seed 7.  Even though only one map file will likely contain entries for this
 seed, all map files will be interrogated.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test1 500 0 1000000000 50 20 exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test1 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 35.09 lookups/sec  14.25 secs
 num results : 500
@@ -293,7 +293,7 @@ num results : 500
 lookups were 2.86 times faster because only one map file was used, even though three
 map files existed.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test2 500 0 1000000000 50 20 exampleVis
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.examples.simple.client.RandomBatchScanner -s 7 instance zookeepers username password bloom_test2 500 0 1000000000 50 20 exampleVis
 Generating 500 random queries...finished
 99.03 lookups/sec   5.05 secs
 num results : 500
@@ -306,7 +306,7 @@ num results : 500
 you will need the table ID, because this is used in HDFS instead of the table
 name.  The following command will show table ids.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password -e 'tables -l'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo shell -u username -p password -e 'tables -l'
 !METADATA       =&gt;         !0
 bloom_test1     =&gt;         o7
 bloom_test2     =&gt;         o8
@@ -316,7 +316,7 @@ trace           =&gt;          1
 <p>So the table id for bloom_test2 is o8.  The command below shows what files this
 table has in HDFS.  This assumes Accumulo is at the default location in HDFS.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -lsr /accumulo/tables/o8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -lsr /accumulo/tables/o8
 drwxr-xr-x   - username supergroup          0 2012-01-10 14:02 /accumulo/tables/o8/default_tablet
 -rw-r--r--   3 username supergroup   52672650 2012-01-10 14:01 /accumulo/tables/o8/default_tablet/F00000dj.rf
 -rw-r--r--   3 username supergroup   52436176 2012-01-10 14:01 /accumulo/tables/o8/default_tablet/F00000dk.rf
@@ -326,7 +326,7 @@ drwxr-xr-x   - username supergroup          0 2012-01-10 14:02 /accumulo/tables/
 <p>Running the PrintInfo command shows that one of the files has a bloom filter
 and its 1.5MB.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/o8/default_tablet/F00000dj.rf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/accumulo org.apache.accumulo.core.file.rfile.PrintInfo /accumulo/tables/o8/default_tablet/F00000dj.rf
 Locality group         : &lt;DEFAULT&gt;
   Start block          : 0
   Num   blocks         : 752

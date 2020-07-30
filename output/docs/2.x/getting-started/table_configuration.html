@@ -436,13 +436,13 @@ scanning over column families that are not requested. After a locality group is 
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> and <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> operations will automatically take advantage of them
 whenever the fetchColumnFamilies() method is used.</p>
 
-<p>By default, tables place all column families into the same <code class="highlighter-rouge">default</code> locality group.
+<p>By default, tables place all column families into the same <code class="language-plaintext highlighter-rouge">default</code> locality group.
 Additional locality groups can be configured at any time via the shell or
 programmatically as follows:</p>
 
 <h3 id="managing-locality-groups-via-the-shell">Managing Locality Groups via the Shell</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}}
     [-?] -t &lt;table&gt;
 
 user@myinstance mytable&gt; setgroups group_one=colf1,colf2 -t mytable
@@ -477,7 +477,7 @@ user@myinstance mytable&gt; getgroups -t mytable
 <p>The assignment of Column Families to Locality Groups can be changed at any time. The
 physical movement of column families into their new locality groups takes place via
 the periodic <a href="#compaction">major compaction</a> process that takes place continuously in the
-background or manually using the <code class="highlighter-rouge">compact</code> command in the shell.</p>
+background or manually using the <code class="language-plaintext highlighter-rouge">compact</code> command in the shell.</p>
 
 <h2 id="constraints">Constraints</h2>
 
@@ -488,7 +488,7 @@ client.</p>
 
 <p>Constraints can be enabled by setting a table property as follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
 
 user@myinstance mytable&gt; constraint -l
 com.test.ExampleConstraint=1
@@ -500,7 +500,7 @@ distribution. New constraints can be created by writing a Java class that implem
 the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a> interface.</p>
 
 <p>To deploy a new constraint, create a jar file containing a class implementing <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a>
-and place it in the <code class="highlighter-rouge">lib/</code> directory of the Accumulo installation. New
+and place it in the <code class="language-plaintext highlighter-rouge">lib/</code> directory of the Accumulo installation. New
 constraint jars can be added to Accumulo and enabled without restarting but any
 change to an existing constraint class requires Accumulo to be restarted.</p>
 
@@ -512,9 +512,9 @@ change to an existing constraint class requires Accumulo to be restarted.</p>
 bloom filters are enabled, Accumulo will create and load a small data structure into
 memory to determine whether a file contains a given key before opening the file.
 This can speed up lookups considerably. Bloom filters can be enabled on a table by
-setting the <a href="/docs/2.x/configuration/server-properties#table_bloom_enabled">table.bloom.enabled</a> property to <code class="highlighter-rouge">true</code> in the shell:</p>
+setting the <a href="/docs/2.x/configuration/server-properties#table_bloom_enabled">table.bloom.enabled</a> property to <code class="language-plaintext highlighter-rouge">true</code> in the shell:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
 </code></pre></div></div>
 
 <p>The <a href="https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md">bloom filter examples</a> contains an extensive example of using Bloom Filters.</p>
@@ -528,7 +528,7 @@ security and column fetching are implemented using Iterators.
 Some useful Iterators are provided with Accumulo and can be found in the
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.
 In each case, any custom Iterators must be included in Accumulo’s classpath,
-typically by including a jar in <code class="highlighter-rouge">lib/</code> or <code class="highlighter-rouge">lib/ext/</code>, although the VFS classloader
+typically by including a jar in <code class="language-plaintext highlighter-rouge">lib/</code> or <code class="language-plaintext highlighter-rouge">lib/ext/</code>, although the VFS classloader
 allows for classpath manipulation using a variety of schemes including URLs and HDFS URIs.</p>
 
 <h3 id="setting-iterators-via-the-shell">Setting Iterators via the Shell</h3>
@@ -538,7 +538,7 @@ compaction scopes. If the Iterator implements the <a href="https://static.javado
 setiter command can be used which will interactively prompt the user to provide
 values for the given necessary options.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex |
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex |
     -reqvis | -vers   [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt;
     [-scan] [-t &lt;table&gt;]
 
@@ -548,7 +548,7 @@ user@myinstance mytable&gt; setiter -t mytable -scan -p 15 -n myiter -class com.
 <p>The config command can always be used to manually configure iterators which is useful
 in cases where the Iterator does not implement the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.majc.myiter=15,com.company.MyIterator
 config -t mytable -s table.iterator.scan.myiter.opt.myoptionname=myoptionvalue
@@ -601,7 +601,7 @@ given date. The default is to return the one most recent version.</p>
 <p>The version policy can be changed by changing the VersioningIterator options for a
 table as follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
 
 user@myinstance mytable&gt; config -t mytable -s table.iterator.minc.vers.opt.maxVersions=3
 
@@ -628,7 +628,7 @@ always move forward and never backwards.</p>
 
 <p>A table can be configured to use logical timestamps at creation time as follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
 </code></pre></div></div>
 
 <h4 id="deletes">Deletes</h4>
@@ -651,7 +651,7 @@ by writing a Java class that extends the <a href="https://static.javadoc.io/org.
 amount of time from the present. The following example sets a table to delete
 everything inserted over 30 seconds ago:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
 
 user@myinstance filtertest&gt; setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -ageoff
 AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
@@ -680,7 +680,7 @@ user@myinstance filtertest&gt;
 
 <p>To see the iterator settings for a table, use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
 ---------+---------------------------------------------+------------------
 SCOPE    | NAME                                        | VALUE
 ---------+---------------------------------------------+------------------
@@ -714,19 +714,19 @@ the values associated with a particular key.</p>
 <p>For example, if a summing combiner were configured on a table and the following
 mutations were inserted:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
 rowID1  colfA  colqA     20100101   1
 rowID1  colfA  colqA     20100102   1
 </code></pre></div></div>
 
 <p>The table would reflect only one aggregate value:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
 </code></pre></div></div>
 
 <p>Combiners can be enabled for a table using the setiter command in the shell. Below is an example.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14 perDayCounts&gt; setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14 perDayCounts&gt; setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
                        -class org.apache.accumulo.core.iterators.user.SummingCombiner
 TypedValueCombiner can interpret Values as a variety of number encodings
   (VLong, Long, or String) before combining
@@ -750,7 +750,7 @@ foo day:20080103 []    1
 the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.</p>
 
 <p>Additional Combiners can be added by creating a Java class that extends
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> and adding a jar containing that class to Accumulo’s <code class="highlighter-rouge">lib/ext</code> directory.</p>
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> and adding a jar containing that class to Accumulo’s <code class="language-plaintext highlighter-rouge">lib/ext</code> directory.</p>
 
 <p>See the <a href="https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md">combiner example</a> for example code.</p>
 
@@ -817,19 +817,19 @@ never need to occur and major compactions will keep up. It is possible to
 configure the file max and compaction ratio such that only merging minor
 compactions occur and major compactions never occur. This should be avoided
 because doing only merging minor compactions causes O(N<sup>2</sup>) work to be done.
-The amount of work done by major compactions is <code class="highlighter-rouge">O(N*log&lt;sub&gt;R&lt;/sub&gt;(N))</code> where
+The amount of work done by major compactions is <code class="language-plaintext highlighter-rouge">O(N*log&lt;sub&gt;R&lt;/sub&gt;(N))</code> where
 R is the compaction ratio.</p>
 
 <p>Compactions can be initiated manually for a table. To initiate a minor
-compaction, use the <code class="highlighter-rouge">flush</code> command in the shell. To initiate a major compaction,
-use the <code class="highlighter-rouge">compact</code> command in the shell:</p>
+compaction, use the <code class="language-plaintext highlighter-rouge">flush</code> command in the shell. To initiate a major compaction,
+use the <code class="language-plaintext highlighter-rouge">compact</code> command in the shell:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
 </code></pre></div></div>
 
-<p>If needed, the compaction can be canceled using <code class="highlighter-rouge">compact --cancel -t mytable</code>.</p>
+<p>If needed, the compaction can be canceled using <code class="language-plaintext highlighter-rouge">compact --cancel -t mytable</code>.</p>
 
-<p>The <code class="highlighter-rouge">compact</code> command will compact all tablets in a table to one file. Even tablets
+<p>The <code class="language-plaintext highlighter-rouge">compact</code> command will compact all tablets in a table to one file. Even tablets
 with one file are compacted. This is useful for the case where a major compaction
 filter is configured for a table. In 1.4, the ability to compact a range of a table
 was added. To use this feature specify start and stop rows for the compact command.
@@ -846,7 +846,7 @@ qualified class name.</p>
 
 <p>Accumulo provides a few classes that can be used as an alternative compaction strategy. These classes are located in the 
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0/org/apache/accumulo/tserver/compaction/package-summary.html">org.apache.accumulo.tserver.compaction</a> package. <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0/org/apache/accumulo/tserver/compaction/EverythingCompactionStrategy.html">EverythingCompactionStrategy</a>
-will simply compact all files. This is the strategy used by the user <code class="highlighter-rouge">compact</code> command.</p>
+will simply compact all files. This is the strategy used by the user <code class="language-plaintext highlighter-rouge">compact</code> command.</p>
 
 <p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.0/org/apache/accumulo/tserver/compaction/strategies/BasicCompactionStrategy.html">BasicCompactionStrategy</a> is
 a compaction strategy that supports a few options based on file size.  It
@@ -859,7 +859,7 @@ enable an increase in throughput w/o using a lot more space.</p>
 <p>The following shell command configures a table to use snappy for small files,
 gzip for files over 100M, and avoid compacting any file larger than 250M.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t myTable -s table.file.compress.type=snappy
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t myTable -s table.file.compress.type=snappy
 config -t myTable -s table.majc.compaction.strategy=org.apache.accumulo.tserver.compaction.strategies.BasicCompactionStrategy
 config -t myTable -s table.majc.compaction.strategy.opts.filter.size=250M
 config -t myTable -s table.majc.compaction.strategy.opts.large.compress.threshold=100M
@@ -876,12 +876,12 @@ is new, or small, you can add split points and generate new tablets.</p>
 
 <p>In the shell:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; createtable newTable
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; createtable newTable
 root@myinstance&gt; addsplits -t newTable g n t
 </code></pre></div></div>
 
 <p>This will create a new table with 4 tablets. The table will be split
-on the letters <code class="highlighter-rouge">g</code>, <code class="highlighter-rouge">n</code>, and <code class="highlighter-rouge">t</code> which will work nicely if the
+on the letters <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">n</code>, and <code class="language-plaintext highlighter-rouge">t</code> which will work nicely if the
 row data start with lower-case alphabetic characters. If your row
 data includes binary information or numeric information, or if the
 distribution of the row information is not flat, then you would pick
@@ -900,9 +900,9 @@ window of current information, tablets for older rows may be empty.</p>
 
 <p>Accumulo supports tablet merging, which can be used to reduce
 the number of split points. The following command will merge all rows
-from <code class="highlighter-rouge">A</code> to <code class="highlighter-rouge">Z</code> into a single tablet:</p>
+from <code class="language-plaintext highlighter-rouge">A</code> to <code class="language-plaintext highlighter-rouge">Z</code> into a single tablet:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
 </code></pre></div></div>
 
 <p>If the result of a merge produces a tablet that is larger than the
@@ -910,21 +910,21 @@ configured split size, the tablet may be split by the tablet server.
 Be sure to increase your tablet size prior to any merges if the goal
 is to have larger tablets:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=2G
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=2G
 </code></pre></div></div>
 
 <p>In order to merge small tablets, you can ask Accumulo to merge
 sections of a table smaller than a given size.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M
 </code></pre></div></div>
 
 <p>By default, small tablets will not be merged into tablets that are
 already larger than the given size. This can leave isolated small
 tablets. To force small tablets to be merged into larger tablets use
-the <code class="highlighter-rouge">--force</code> option:</p>
+the <code class="language-plaintext highlighter-rouge">--force</code> option:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M --force
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M --force
 </code></pre></div></div>
 
 <p>Merging away small tablets works on one section at a time. If your
@@ -932,31 +932,31 @@ table contains many sections of small split points, or you are
 attempting to change the split size of the entire table, it will be
 faster to set the split point and merge the entire table:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=256M
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=256M
 root@myinstance&gt; merge -t myTable
 </code></pre></div></div>
 
 <h2 id="delete-range">Delete Range</h2>
 
 <p>Consider an indexing scheme that uses date information in each row.
-For example <code class="highlighter-rouge">20110823-15:20:25.013</code> might be a row that specifies a
+For example <code class="language-plaintext highlighter-rouge">20110823-15:20:25.013</code> might be a row that specifies a
 date and time. In some cases, we might like to delete rows based on
 this date, say to remove all the data older than the current year.
 Accumulo supports a delete range operation which efficiently
 removes data between two rows. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -s 2010 -e 2011
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -s 2010 -e 2011
 </code></pre></div></div>
 
-<p>This will delete all rows starting with <code class="highlighter-rouge">2010</code> and it will stop at
-any row starting <code class="highlighter-rouge">2011</code>. You can delete any data prior to 2011
+<p>This will delete all rows starting with <code class="language-plaintext highlighter-rouge">2010</code> and it will stop at
+any row starting <code class="language-plaintext highlighter-rouge">2011</code>. You can delete any data prior to 2011
 with:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
 </code></pre></div></div>
 
 <p>The shell will not allow you to delete an unbounded range (no start)
-unless you provide the <code class="highlighter-rouge">--force</code> option.</p>
+unless you provide the <code class="language-plaintext highlighter-rouge">--force</code> option.</p>
 
 <p>Range deletion is implemented using splits at the given start/end
 positions, and will affect the number of splits in the table.</p>
@@ -985,7 +985,7 @@ created, only the user that created the clone can read and write to it.</p>
 <p>In the following example we see that data inserted after the clone operation is
 not visible in the clone.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; createtable people
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; createtable people
 
 root@a14 people&gt; insert 890435 name last Doe
 root@a14 people&gt; insert 890435 name first John
@@ -1018,7 +1018,7 @@ inserted into cic and its flushed, du shows the two tables still share 428M but
 cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
 that each table uses 428M.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; du ci
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; du ci
              428,482,573 [ci]
 
 root@a14&gt; clonetable ci cic
@@ -1055,8 +1055,8 @@ root@a14 cic&gt;
 <p>Accumulo supports exporting tables for the purpose of copying tables to another
 cluster. Exporting and importing tables preserves the tables configuration,
 splits, and logical time. Tables are exported and then copied via the hadoop
-<code class="highlighter-rouge">distcp</code> command. To export a table, it must be offline and stay offline while
-<code class="highlighter-rouge">distcp</code> runs. Staying offline prevents files from being deleted during the process.
+<code class="language-plaintext highlighter-rouge">distcp</code> command. To export a table, it must be offline and stay offline while
+<code class="language-plaintext highlighter-rouge">distcp</code> runs. Staying offline prevents files from being deleted during the process.
 An easy way to take a table offline without interrupting access is to clone it
 and take the clone offline.</p>
 
@@ -1068,7 +1068,7 @@ importing tables.</p>
 <p>The shell session below illustrates creating a table, inserting data, and
 exporting the table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; createtable table1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; createtable table1
 root@test15 table1&gt; insert a cf1 cq1 v1
 root@test15 table1&gt; insert h cf1 cq1 v2
 root@test15 table1&gt; insert z cf1 cq1 v3
@@ -1089,7 +1089,7 @@ root@test15 table1&gt; quit
 <p>After executing the export command, a few files are created in the hdfs dir.
 One of the files is a list of files to distcp as shown below.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -ls /tmp/table1_export
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -ls /tmp/table1_export
 Found 2 items
 -rw-r--r--   3 user supergroup        162 2012-07-25 09:56 /tmp/table1_export/distcp.txt
 -rw-r--r--   3 user supergroup        821 2012-07-25 09:56 /tmp/table1_export/exportMetadata.zip
@@ -1098,17 +1098,17 @@ hdfs://n1.example.com:6093/accumulo/tables/3/default_tablet/F0000000.rf
 hdfs://n1.example.com:6093/tmp/table1_export/exportMetadata.zip
 </code></pre></div></div>
 
-<p>Before the table can be imported, it must be copied using <code class="highlighter-rouge">distcp</code>. After the
-<code class="highlighter-rouge">distcp</code> completes, the cloned table may be deleted.</p>
+<p>Before the table can be imported, it must be copied using <code class="language-plaintext highlighter-rouge">distcp</code>. After the
+<code class="language-plaintext highlighter-rouge">distcp</code> completes, the cloned table may be deleted.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest
 </code></pre></div></div>
 
 <p>The Accumulo shell session below shows importing the table and inspecting it.
 The data, splits, config, and logical time information for the table were
 preserved.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; importtable table1_copy /tmp/table1_export_dest
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; importtable table1_copy /tmp/table1_export_dest
 root@test15&gt; table table1_copy
 root@test15 table1_copy&gt; scan
 a cf1:cq1 []    v1

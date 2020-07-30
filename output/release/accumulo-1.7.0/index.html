@@ -251,13 +251,13 @@ files in a tablet.</p>
 
 <p>In the Java API, this new feature can be accessed in the following way:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connection conn = ...
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connection conn = ...
 CompactionStrategyConfig csConfig = new CompactionStrategyConfig(strategyClassName).setOptions(strategyOpts);
 CompactionConfig compactionConfig = new CompactionConfig().setCompactionStrategy(csConfig);
 connector.tableOperations().compact(tableName, compactionConfig)
 </code></pre></div></div>
 
-<p>In <a href="https://issues.apache.org/jira/browse/ACCUMULO-3134">ACCUMULO-3134</a>, the shell’s <code class="highlighter-rouge">compact</code> command was modified
+<p>In <a href="https://issues.apache.org/jira/browse/ACCUMULO-3134">ACCUMULO-3134</a>, the shell’s <code class="language-plaintext highlighter-rouge">compact</code> command was modified
 to enable selecting which files to compact based on size, name, and path.
 Options were also added to the shell’s compaction command to allow setting
 RFile options for the compaction output. Setting the output options could be
@@ -270,13 +270,13 @@ tablet had a 100MB, 50MB, 7MB, and 5MB file then the 7MB and 5MB files would
 be compacted. If a tablet had a 100MB and 5MB file, then nothing would be done
 because there are not at least two files meeting the selection criteria.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --min-files 2 --sf-lt-esize 10M
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --min-files 2 --sf-lt-esize 10M
 </code></pre></div></div>
 
 <p>The following is an example shell command that compacts all bulk imported
 files in a table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --sf-ename I.*
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compact -t foo --sf-ename I.*
 </code></pre></div></div>
 
 <p>These provided convenience options to select files execute using a specialized
@@ -284,7 +284,7 @@ compaction strategy. Options were also added to the shell to specify an
 arbitrary compaction strategy. The option to specify an arbitrary compaction
 strategy is mutually exclusive with the file selection and file creation
 options, since those options are unique to the specialized compaction strategy
-provided. See <code class="highlighter-rouge">compact --help</code> in the shell for the available options.</p>
+provided. See <code class="language-plaintext highlighter-rouge">compact --help</code> in the shell for the available options.</p>
 
 <h2 id="api-clarification">API Clarification</h2>
 
@@ -300,8 +300,8 @@ members would only use public API types. A tool called <a href="http://code.reve
 was created to find all API members that used non-API types. Many of the
 violations found by this tool were deprecated to clearly communicate that a
 non-API type was used. One example is a public API method that returned a
-class called <code class="highlighter-rouge">KeyExtent</code>. <code class="highlighter-rouge">KeyExtent</code> was never intended to be in the public
-API because it contains code related to Accumulo internals. <code class="highlighter-rouge">KeyExtent</code> and
+class called <code class="language-plaintext highlighter-rouge">KeyExtent</code>. <code class="language-plaintext highlighter-rouge">KeyExtent</code> was never intended to be in the public
+API because it contains code related to Accumulo internals. <code class="language-plaintext highlighter-rouge">KeyExtent</code> and
 the API methods returning it have since been deprecated. These were replaced
 with a new class for identifying tablets that does not expose internals.
 Deprecating a type like this from the API makes the API more stable while also
@@ -337,19 +337,19 @@ release the lock. The idea of group-commit is that multiple writers can queue
 the write for their mutations to the WAL and then wait for a sync that will
 satisfy the durability constraints of their batch of updates. This has a
 drastic improvement on performance, since many threads writing batches
-concurrently can “share” the same <code class="highlighter-rouge">fsync</code>.</p>
+concurrently can “share” the same <code class="language-plaintext highlighter-rouge">fsync</code>.</p>
 
 <p>In previous versions, Accumulo controlled the frequency in which this
 group-commit sync was performed as a factor of the number of clients writing
 to Accumulo. This was both confusing to correctly configure and also
 encouraged sub-par performance with few write threads.
 <a href="https://issues.apache.org/jira/browse/ACCUMULO-1950">ACCUMULO-1950</a> introduced a new configuration property
-<code class="highlighter-rouge">tserver.total.mutation.queue.max</code> which defines the amount of data that is
+<code class="language-plaintext highlighter-rouge">tserver.total.mutation.queue.max</code> which defines the amount of data that is
 queued before a group-commit is performed in such a way that is agnostic of
 the number of writers. This new configuration property is much easier to
-reason about than the previous (now deprecated) <code class="highlighter-rouge">tserver.mutation.queue.max</code>.
-Users who have set <code class="highlighter-rouge">tserver.mutation.queue.max</code> in the past are encouraged
-to start using the new <code class="highlighter-rouge">tserver.total.mutation.queue.max</code> property.</p>
+reason about than the previous (now deprecated) <code class="language-plaintext highlighter-rouge">tserver.mutation.queue.max</code>.
+Users who have set <code class="language-plaintext highlighter-rouge">tserver.mutation.queue.max</code> in the past are encouraged
+to start using the new <code class="language-plaintext highlighter-rouge">tserver.total.mutation.queue.max</code> property.</p>
 
 <h1 id="other-improvements">Other improvements</h1>
 
@@ -367,7 +367,7 @@ users may desire to leverage this feature..</p>
 <p>Accumulo constantly tries to balance durability with performance. Guaranteeing
 durability of every write to Accumulo is very difficult in a
 massively-concurrent environment that requires high throughput. One common
-area of focus is the write-ahead log, since it must eventually call <code class="highlighter-rouge">fsync</code> on
+area of focus is the write-ahead log, since it must eventually call <code class="language-plaintext highlighter-rouge">fsync</code> on
 the local filesystem to guarantee that data written is durable in the face of
 unexpected power failures. In some cases where durability can be sacrificed,
 either due to the nature of the data itself or redundant power supplies,
@@ -375,9 +375,9 @@ ingest performance improvements can be attained.</p>
 
 <p>Prior to 1.7, a user could only configure the level of durability for
 individual tables. With the implementation of <a href="https://issues.apache.org/jira/browse/ACCUMULO-1957">ACCUMULO-1957</a>,
-the durability can be specified by the user when creating a <code class="highlighter-rouge">BatchWriter</code>,
+the durability can be specified by the user when creating a <code class="language-plaintext highlighter-rouge">BatchWriter</code>,
 giving users control over durability at the level of the individual writes.
-Every <code class="highlighter-rouge">Mutation</code> written using that <code class="highlighter-rouge">BatchWriter</code> will be written with the
+Every <code class="language-plaintext highlighter-rouge">Mutation</code> written using that <code class="language-plaintext highlighter-rouge">BatchWriter</code> will be written with the
 provided durability. This can result in substantially faster ingest rates when
 the durability can be relaxed.</p>
 
@@ -394,7 +394,7 @@ many servers and result in high throughput when ingest first starts.</p>
 assignment of those splits was asynchronous. A large number of splits could be
 processed, but it was not guaranteed that they would be evenly distributed
 resulting in the same problem as having an insufficient number of splits.
-<a href="https://issues.apache.org/jira/browse/ACCUMULO-2998">ACCUMULO-2998</a> adds a new method to <code class="highlighter-rouge">InstanceOperations</code> which
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-2998">ACCUMULO-2998</a> adds a new method to <code class="language-plaintext highlighter-rouge">InstanceOperations</code> which
 allows users to wait for all tablets to be balanced. This method lets users
 wait until tablets are appropriately distributed so that ingest can be run at
 full-bore immediately.</p>
@@ -433,19 +433,19 @@ running with at least Apache Hadoop 2.6.0.</p>
 <h2 id="versions-file-present-in-binary-distribution">VERSIONS file present in binary distribution</h2>
 
 <p>In the pre-built binary distribution or distributions built by users from the
-official source release, users will now see a <code class="highlighter-rouge">VERSIONS</code> file present in the
-<code class="highlighter-rouge">lib/</code> directory alongside the Accumulo server-side jars. Because the created
+official source release, users will now see a <code class="language-plaintext highlighter-rouge">VERSIONS</code> file present in the
+<code class="language-plaintext highlighter-rouge">lib/</code> directory alongside the Accumulo server-side jars. Because the created
 tarball strips off versions from the jar file names, it can require extra work
 to actually find what the version of each dependent jar (typically inspecting
 the jar’s manifest).</p>
 
-<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-2863">ACCUMULO-2863</a> adds a <code class="highlighter-rouge">VERSIONS</code> file to the <code class="highlighter-rouge">lib/</code> directory
+<p><a href="https://issues.apache.org/jira/browse/ACCUMULO-2863">ACCUMULO-2863</a> adds a <code class="language-plaintext highlighter-rouge">VERSIONS</code> file to the <code class="language-plaintext highlighter-rouge">lib/</code> directory
 which contains the Maven groupId, artifactId, and verison (GAV) information for
 each jar file included in the distribution.</p>
 
 <h2 id="per-table-volume-chooser">Per-Table Volume Chooser</h2>
 
-<p>The <code class="highlighter-rouge">VolumeChooser</code> interface is a server-side extension point that allows user
+<p>The <code class="language-plaintext highlighter-rouge">VolumeChooser</code> interface is a server-side extension point that allows user
 tables to provide custom logic in choosing where its files are written when
 multiple HDFS instances are available. By default, a randomized volume chooser
 implementation is used to evenly balance files across all HDFS instances.</p>
@@ -454,7 +454,7 @@ implementation is used to evenly balance files across all HDFS instances.</p>
 affect all tables. This is potentially undesirable as it might unintentionally
 impact other users in a multi-tenant system. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3177">ACCUMULO-3177</a>
 introduces a new per-table property which supports configuration of a
-<code class="highlighter-rouge">VolumeChooser</code>. This ensures that the implementation to choose how HDFS
+<code class="language-plaintext highlighter-rouge">VolumeChooser</code>. This ensures that the implementation to choose how HDFS
 utilization happens when multiple are available is limited to the expected
 subset of all tables.</p>
 
@@ -463,7 +463,7 @@ subset of all tables.</p>
 <p>In order to avoid errors caused by mis-typed configuration properties, Accumulo was strict about which configuration properties 
 could be set. However, this prevented users from setting arbitrary properties that could be used by custom balancers, compaction 
 strategies, volume choosers, and iterators. Under <a href="https://issues.apache.org/jira/browse/ACCUMULO-2841">ACCUMULO-2841</a>, the ability to set arbitrary table and 
-namespace properties was added. The properties need to be prefixed with <code class="highlighter-rouge">table.custom.</code>.  The changes made in 
+namespace properties was added. The properties need to be prefixed with <code class="language-plaintext highlighter-rouge">table.custom.</code>.  The changes made in 
 <a href="https://issues.apache.org/jira/browse/ACCUMULO-3177">ACCUMULO-3177</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-3439">ACCUMULO-3439</a> leverage this new feature.</p>
 
 <h1 id="notable-bug-fixes">Notable Bug Fixes</h1>
@@ -521,8 +521,8 @@ HDFS datanodes. The developers investigated these issues as a part of the
 normal release testing procedures, but were unable to find a definitive cause
 of these failures. Users are encouraged to follow
 <a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a> if they wish to follow any future developments.
-One possible workaround is to increase the <code class="highlighter-rouge">general.rpc.timeout</code> in the
-Accumulo configuration from <code class="highlighter-rouge">120s</code> to <code class="highlighter-rouge">240s</code>.</p>
+One possible workaround is to increase the <code class="language-plaintext highlighter-rouge">general.rpc.timeout</code> in the
+Accumulo configuration from <code class="language-plaintext highlighter-rouge">120s</code> to <code class="language-plaintext highlighter-rouge">240s</code>.</p>
 
 <table id="release_notes_testing" class="table">
   <thead>

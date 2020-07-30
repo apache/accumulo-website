@@ -437,9 +437,9 @@
 <p>There are several changes to scripts and configuration in 2.0 so be careful when using configuration or automated setup designed for 1.8/9.
 Below are some changes in 2.0 that you should be aware of:</p>
 <ul>
-  <li><code class="highlighter-rouge">accumulo.properties</code> has replaced <code class="highlighter-rouge">accumulo-site.xml</code>. You can either convert <code class="highlighter-rouge">accumulo-site.xml</code> by hand
+  <li><code class="language-plaintext highlighter-rouge">accumulo.properties</code> has replaced <code class="language-plaintext highlighter-rouge">accumulo-site.xml</code>. You can either convert <code class="language-plaintext highlighter-rouge">accumulo-site.xml</code> by hand
 from XML to properties or use the following Accumulo command.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
 </code></pre></div>    </div>
   </li>
   <li>The following <a href="/docs/2.x/configuration/server-properties">server properties</a> were deprecated for 2.0:
@@ -449,44 +449,44 @@ from XML to properties or use the following Accumulo command.
       <li><a href="/docs/2.x/configuration/server-properties#tserver_readahead_concurrent_max">tserver.readahead.concurrent.max</a></li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">accumulo-client.properties</code> has replaced <code class="highlighter-rouge">client.conf</code>. The <a href="/docs/2.x/configuration/client-properties">client properties</a>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> has replaced <code class="language-plaintext highlighter-rouge">client.conf</code>. The <a href="/docs/2.x/configuration/client-properties">client properties</a>
 in the new file are different so take care when customizing.</li>
-  <li><code class="highlighter-rouge">accumulo-cluster</code> script has replaced the <code class="highlighter-rouge">start-all.sh</code> &amp; <code class="highlighter-rouge">stop-all.sh</code> scripts.
+  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script has replaced the <code class="language-plaintext highlighter-rouge">start-all.sh</code> &amp; <code class="language-plaintext highlighter-rouge">stop-all.sh</code> scripts.
     <ul>
-      <li>Default host files (i.e <code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">monitor</code>, <code class="highlighter-rouge">gc</code>) are no longer in <code class="highlighter-rouge">conf/</code> directory of tarball but can be created using <code class="highlighter-rouge">accumulo-cluster create-config</code></li>
-      <li>Tablet server hosts must be listed in a <code class="highlighter-rouge">tservers</code> file instead of a <code class="highlighter-rouge">slaves</code> file. To minimize confusion, Accumulo will not start if the old <code class="highlighter-rouge">slaves</code> file is present.</li>
+      <li>Default host files (i.e <code class="language-plaintext highlighter-rouge">masters</code>, <code class="language-plaintext highlighter-rouge">monitor</code>, <code class="language-plaintext highlighter-rouge">gc</code>) are no longer in <code class="language-plaintext highlighter-rouge">conf/</code> directory of tarball but can be created using <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code></li>
+      <li>Tablet server hosts must be listed in a <code class="language-plaintext highlighter-rouge">tservers</code> file instead of a <code class="language-plaintext highlighter-rouge">slaves</code> file. To minimize confusion, Accumulo will not start if the old <code class="language-plaintext highlighter-rouge">slaves</code> file is present.</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">accumulo-service</code> script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
+  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
     <ul>
-      <li>Can be used even if Accumulo was started using <code class="highlighter-rouge">accumulo-cluster</code> script.</li>
+      <li>Can be used even if Accumulo was started using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script.</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">accumulo-env.sh</code> constructs environment variables (such as <code class="highlighter-rouge">JAVA_OPTS</code> and <code class="highlighter-rouge">CLASSPATH</code>) used when running Accumulo processes
+  <li><code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> constructs environment variables (such as <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> and <code class="language-plaintext highlighter-rouge">CLASSPATH</code>) used when running Accumulo processes
     <ul>
       <li>This file was used in Accumulo 1.x but has changed signficantly for 2.0</li>
-      <li>Environment variables (such as <code class="highlighter-rouge">$cmd</code>, <code class="highlighter-rouge">$bin</code>, <code class="highlighter-rouge">$conf</code>) are set before <code class="highlighter-rouge">accumulo-env.sh</code> is loaded and can be used to customize environment.</li>
-      <li>The <code class="highlighter-rouge">JAVA_OPTS</code> variable is constructed in <code class="highlighter-rouge">accumulo-env.sh</code> to pass command-line arguments to the <code class="highlighter-rouge">java</code> command that the starts Accumulo processes
-(i.e. <code class="highlighter-rouge">java $JAVA_OPTS main.class.for.$cmd</code>).</li>
-      <li>The <code class="highlighter-rouge">CLASSPATH</code> variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
+      <li>Environment variables (such as <code class="language-plaintext highlighter-rouge">$cmd</code>, <code class="language-plaintext highlighter-rouge">$bin</code>, <code class="language-plaintext highlighter-rouge">$conf</code>) are set before <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> is loaded and can be used to customize environment.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> variable is constructed in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> to pass command-line arguments to the <code class="language-plaintext highlighter-rouge">java</code> command that the starts Accumulo processes
+(i.e. <code class="language-plaintext highlighter-rouge">java $JAVA_OPTS main.class.for.$cmd</code>).</li>
+      <li>The <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
 distributions of Hadoop.</li>
     </ul>
   </li>
-  <li>Logging is configured in <code class="highlighter-rouge">accumulo-env.sh</code> for Accumulo processes. The following log4j configuration files in the <code class="highlighter-rouge">conf/</code> directory will be used if
-<code class="highlighter-rouge">accumulo-env.sh</code> is not modified. These files can be modified to turn on/off logging for Accumulo processes:
+  <li>Logging is configured in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> for Accumulo processes. The following log4j configuration files in the <code class="language-plaintext highlighter-rouge">conf/</code> directory will be used if
+<code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> is not modified. These files can be modified to turn on/off logging for Accumulo processes:
     <ul>
-      <li><code class="highlighter-rouge">log4j-service.properties</code> for all Accumulo services (except monitor)</li>
-      <li><code class="highlighter-rouge">logj4-monitor.properties</code> for Accumulo monitor</li>
-      <li><code class="highlighter-rouge">log4j.properties</code> for Accumulo clients and commands</li>
+      <li><code class="language-plaintext highlighter-rouge">log4j-service.properties</code> for all Accumulo services (except monitor)</li>
+      <li><code class="language-plaintext highlighter-rouge">logj4-monitor.properties</code> for Accumulo monitor</li>
+      <li><code class="language-plaintext highlighter-rouge">log4j.properties</code> for Accumulo clients and commands</li>
     </ul>
   </li>
   <li>MapReduce jobs that read/write from Accumulo <a href="/docs/2.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">must configure their dependencies differently</a>.</li>
-  <li>Run the command <code class="highlighter-rouge">accumulo shell</code> to access the shell using configuration in <code class="highlighter-rouge">conf/accumulo-client.properties</code></li>
+  <li>Run the command <code class="language-plaintext highlighter-rouge">accumulo shell</code> to access the shell using configuration in <code class="language-plaintext highlighter-rouge">conf/accumulo-client.properties</code></li>
 </ul>
 
 <p>When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./accumulo-1.9.3/bin/stop-all.sh
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./accumulo-1.9.3/bin/stop-all.sh
 ./accumulo-2.0.0/bin/accumulo-cluster start
 </code></pre></div></div>
 <p>It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.</p>
@@ -507,9 +507,9 @@ that users start using the new API, the old API will continue to be supported th
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>    </div>
   </li>
-  <li>ClientConfiguration objects can no longer be ceated using <code class="highlighter-rouge">new ClientConfiguration()</code>.
+  <li>ClientConfiguration objects can no longer be ceated using <code class="language-plaintext highlighter-rouge">new ClientConfiguration()</code>.
     <ul>
-      <li>Use <code class="highlighter-rouge">ClientConfiguration.create()</code> instead</li>
+      <li>Use <code class="language-plaintext highlighter-rouge">ClientConfiguration.create()</code> instead</li>
     </ul>
   </li>
   <li>Some API deprecated in 1.x releases was dropped</li>
@@ -527,8 +527,8 @@ that users start using the new API, the old API will continue to be supported th
   </li>
   <li>Accumulo’s <a href="/docs/2.x/development/mapreduce">MapReduce API</a> has changed in 2.0.
     <ul>
-      <li>A new API has been introduced in the <code class="highlighter-rouge">org.apache.accumulo.hadoop</code> package of the <code class="highlighter-rouge">accumulo-hadoop-mapreduce</code> jar.</li>
-      <li>The old API in the <code class="highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="highlighter-rouge">accumulo-core</code> has been deprecated and will
+      <li>A new API has been introduced in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.hadoop</code> package of the <code class="language-plaintext highlighter-rouge">accumulo-hadoop-mapreduce</code> jar.</li>
+      <li>The old API in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="language-plaintext highlighter-rouge">accumulo-core</code> has been deprecated and will
 eventually be removed.</li>
       <li>For both the old and new API, you must <a href="/docs/2.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">configure dependencies differently</a>
 when creating your MapReduce job.</li>
@@ -553,8 +553,8 @@ when creating your MapReduce job.</li>
 <ul>
   <li>Start tservers</li>
   <li>Start shell</li>
-  <li>Run <code class="highlighter-rouge">fate print</code> to list all</li>
-  <li>If completed, just delete with <code class="highlighter-rouge">fate delete</code></li>
+  <li>Run <code class="language-plaintext highlighter-rouge">fate print</code> to list all</li>
+  <li>If completed, just delete with <code class="language-plaintext highlighter-rouge">fate delete</code></li>
   <li>Start masters once there are no more fate operations</li>
 </ul>
 
@@ -590,7 +590,7 @@ either:</p>
   <li>Verify that there are no outstanding FATE operations
     <ul>
       <li>Under 1.5 you can list what’s in FATE by running
-<code class="highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+<code class="language-plaintext highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
       <li>Note that operations in any state will prevent an upgrade. It is safe
 to delete operations with status SUCCESSFUL. For others, you should restart
 your 1.5 cluster and allow them to finish.</li>
@@ -618,7 +618,7 @@ your 1.5 cluster and allow them to finish.</li>
 <ul>
   <li>Verify that there are no outstanding FATE operations
     <ul>
-      <li>Under 1.4 you can list what’s in FATE by running <code class="highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+      <li>Under 1.4 you can list what’s in FATE by running <code class="language-plaintext highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
       <li>Note that operations in any state will prevent an upgrade. It is safe to delete operations with status SUCCESSFUL. For others, 
   you should restart your 1.4 cluster and allow them to finish.</li>
     </ul>
@@ -630,7 +630,7 @@ your 1.5 cluster and allow them to finish.</li>
 
 <p>Prior to starting the 1.6 instance you will need to run the LocalWALRecovery tool on each node that previously ran an instance of the Logger role.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 </code></pre></div></div>
 
 <p>The recovery tool will rewrite the 1.4 write ahead logs into a format that 1.6 can read. After this step has completed on all nodes, start the 1.6 cluster to continue the upgrade.</p>

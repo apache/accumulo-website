@@ -154,17 +154,17 @@ same address at the same time. The following sequence of events shows an example
 of how this can go wrong.</p>
 
 <ol>
-  <li>User 0 sets the key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Drive, Gotham, New York</code></li>
-  <li>User 1 reads <code class="highlighter-rouge">id0001:location:home</code></li>
-  <li>User 2 reads <code class="highlighter-rouge">id0001:location:home</code></li>
-  <li>User 1 replaces <code class="highlighter-rouge">Drive</code> with <code class="highlighter-rouge">Dr</code></li>
-  <li>User 2 replaces <code class="highlighter-rouge">New York</code> with <code class="highlighter-rouge">NY</code></li>
-  <li>User 1 sets key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Dr, Gotham, New York</code></li>
-  <li>User 2 sets key <code class="highlighter-rouge">id0001:location:home</code> to <code class="highlighter-rouge">1007 Mountain Drive, Gotham, NY</code></li>
+  <li>User 0 sets the key <code class="language-plaintext highlighter-rouge">id0001:location:home</code> to <code class="language-plaintext highlighter-rouge">1007 Mountain Drive, Gotham, New York</code></li>
+  <li>User 1 reads <code class="language-plaintext highlighter-rouge">id0001:location:home</code></li>
+  <li>User 2 reads <code class="language-plaintext highlighter-rouge">id0001:location:home</code></li>
+  <li>User 1 replaces <code class="language-plaintext highlighter-rouge">Drive</code> with <code class="language-plaintext highlighter-rouge">Dr</code></li>
+  <li>User 2 replaces <code class="language-plaintext highlighter-rouge">New York</code> with <code class="language-plaintext highlighter-rouge">NY</code></li>
+  <li>User 1 sets key <code class="language-plaintext highlighter-rouge">id0001:location:home</code> to <code class="language-plaintext highlighter-rouge">1007 Mountain Dr, Gotham, New York</code></li>
+  <li>User 2 sets key <code class="language-plaintext highlighter-rouge">id0001:location:home</code> to <code class="language-plaintext highlighter-rouge">1007 Mountain Drive, Gotham, NY</code></li>
 </ol>
 
-<p>In this situation the changes made by User 1 are lost, ending up with <code class="highlighter-rouge">1007
-Mountain Drive, Gotham, NY</code> instead of <code class="highlighter-rouge">1007 Mountain Dr, Gotham, NY</code>.  To
+<p>In this situation the changes made by User 1 are lost, ending up with <code class="language-plaintext highlighter-rouge">1007
+Mountain Drive, Gotham, NY</code> instead of <code class="language-plaintext highlighter-rouge">1007 Mountain Dr, Gotham, NY</code>.  To
 correctly handle this, Accumulo offers the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.  The
 ConditionalWriter atomically checks conditions on a row and only applies a
 mutation when all conditions are satisfied.</p>
@@ -248,24 +248,24 @@ changed since it was read.</p>
 </code></pre></div></div>
 
 <p>The following is one of a few possible outputs.  Notice that only the
-modification of <code class="highlighter-rouge">Drive</code> to <code class="highlighter-rouge">Dr</code> shows up in the final output.  The other
+modification of <code class="language-plaintext highlighter-rouge">Drive</code> to <code class="language-plaintext highlighter-rouge">Dr</code> shows up in the final output.  The other
 modifications were lost.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
 Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
 Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
 Final address : '  1007 Mountain Dr, Gotham, New York  '
 </code></pre></div></div>
 
-<p>To fix this example, make the following changes in <code class="highlighter-rouge">setAddress()</code> to use a
+<p>To fix this example, make the following changes in <code class="language-plaintext highlighter-rouge">setAddress()</code> to use a
 ConditionalWriter.</p>
 
 <ul>
   <li>Call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Connector.html#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig-">createConditionalWriter</a> instead of creating a batch writer</li>
-  <li>Create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Condition.html">Condition</a> for the column ‘location:home’.  If <code class="highlighter-rouge">expectedAddr</code> is not null, then call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Condition.html#setValue-java.lang.CharSequence-">setValue</a> passing <code class="highlighter-rouge">expectedAddr</code>.  If <code class="highlighter-rouge">expectedAddr</code> is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.</li>
+  <li>Create a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Condition.html">Condition</a> for the column ‘location:home’.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is not null, then call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Condition.html#setValue-java.lang.CharSequence-">setValue</a> passing <code class="language-plaintext highlighter-rouge">expectedAddr</code>.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.</li>
   <li>Replace Mutation with a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/ConditionalMutation.html">ConditionalMutation</a> and pass the condition to its constructor.</li>
   <li>Call <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> passing it the conditional mutation.</li>
-  <li>Return <code class="highlighter-rouge">true</code> if <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus--">getStatus</a> from the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Result.html">Result</a> returned by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED">ACCEPTED</a>.</li>
+  <li>Return <code class="language-plaintext highlighter-rouge">true</code> if <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus--">getStatus</a> from the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Result.html">Result</a> returned by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED">ACCEPTED</a>.</li>
 </ul>
 
 

@@ -522,27 +522,27 @@ to any HDFS action (e.g. client to HDFS or TabletServer to HDFS).</p>
 
 <h4 id="generate-principal-and-keytab">Generate Principal and Keytab</h4>
 
-<p>In the <code class="highlighter-rouge">kadmin.local</code> shell or using the <code class="highlighter-rouge">-q</code> option on <code class="highlighter-rouge">kadmin.local</code>, create a
+<p>In the <code class="language-plaintext highlighter-rouge">kadmin.local</code> shell or using the <code class="language-plaintext highlighter-rouge">-q</code> option on <code class="language-plaintext highlighter-rouge">kadmin.local</code>, create a
 principal for Accumulo for all hosts that are running Accumulo processes. A Kerberos
 principal is of the form “primary/instance@REALM”. “accumulo” is commonly the “primary”
 (although not required) and the “instance” is the fully-qualified domain name for
 the host that will be running the Accumulo process – this is required.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc -randkey accumulo/host.domain.com"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc -randkey accumulo/host.domain.com"
 </code></pre></div></div>
 
 <p>Perform the above for each node running Accumulo processes in the instance, modifying
-“host.domain.com” for your network. The <code class="highlighter-rouge">randkey</code> option generates a random password
+“host.domain.com” for your network. The <code class="language-plaintext highlighter-rouge">randkey</code> option generates a random password
 because we will use a keytab for authentication, not a password, since the Accumulo
 server processes don’t have an interactive console to enter a password into.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.hostname.keytab accumulo/host.domain.com"
 </code></pre></div></div>
 
 <p>To simplify deployments, at the cost of security, all Accumulo principals could
 be globbed into a single keytab</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.service.keytab -glob accumulo*"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "xst -k accumulo.service.keytab -glob accumulo*"
 </code></pre></div></div>
 
 <p>To ensure that the SASL handshake can occur from clients to servers and servers to servers,
@@ -552,7 +552,7 @@ all Accumulo servers must share the same instance and realm principal components
 <h4 id="server-configuration">Server Configuration</h4>
 
 <p>A number of properties need to be changed to account to properly configure servers
-in <code class="highlighter-rouge">accumulo.properties</code>.</p>
+in <code class="language-plaintext highlighter-rouge">accumulo.properties</code>.</p>
 
 <table>
   <thead>
@@ -606,12 +606,12 @@ in <code class="highlighter-rouge">accumulo.properties</code>.</p>
     <tr>
       <td><a href="/docs/2.x/configuration/server-properties#trace_user">trace.user</a></td>
       <td>accumulo/_HOST@REALM</td>
-      <td>The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same <code class="highlighter-rouge">_HOST</code> replacement is performed on this value, substituted the FQDN for <code class="highlighter-rouge">_HOST</code>.</td>
+      <td>The tracer process needs valid credentials to serialize traces to Accumulo. While the other server processes are creating a SystemToken from the provided keytab and principal, we can still use a normal <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and the same keytab/principal to serialize traces. Like non-Kerberized instances, the table must be created and permissions granted to the trace.user. The same <code class="language-plaintext highlighter-rouge">_HOST</code> replacement is performed on this value, substituted the FQDN for <code class="language-plaintext highlighter-rouge">_HOST</code>.</td>
     </tr>
     <tr>
       <td>trace.token.property.keytab</td>
       <td> </td>
-      <td>You can optionally specify the path to a keytab file for the principal given in the <code class="highlighter-rouge">trace.user</code> property. If you don’t set this path, it will default to the value given in <code class="highlighter-rouge">general.kerberos.principal</code>.</td>
+      <td>You can optionally specify the path to a keytab file for the principal given in the <code class="language-plaintext highlighter-rouge">trace.user</code> property. If you don’t set this path, it will default to the value given in <code class="language-plaintext highlighter-rouge">general.kerberos.principal</code>.</td>
     </tr>
     <tr>
       <td><a href="/docs/2.x/configuration/server-properties#general_delegation_token_lifetime">general.delegation.token.lifetime</a></td>
@@ -629,14 +629,14 @@ in <code class="highlighter-rouge">accumulo.properties</code>.</p>
 <p>Although it should be a prerequisite, it is ever important that you have DNS properly
 configured for your nodes and that Accumulo is configured to use the FQDN. It
 is extremely important to use the FQDN in each of the “hosts” files for each
-Accumulo process: <code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">monitors</code>, <code class="highlighter-rouge">tservers</code>, <code class="highlighter-rouge">tracers</code>, and <code class="highlighter-rouge">gc</code>.</p>
+Accumulo process: <code class="language-plaintext highlighter-rouge">masters</code>, <code class="language-plaintext highlighter-rouge">monitors</code>, <code class="language-plaintext highlighter-rouge">tservers</code>, <code class="language-plaintext highlighter-rouge">tracers</code>, and <code class="language-plaintext highlighter-rouge">gc</code>.</p>
 
-<p>Normally, no changes are needed in <code class="highlighter-rouge">accumulo-env.sh</code> to enable Kerberos. Typically, the <code class="highlighter-rouge">krb5.conf</code>
-is installed on the local machine in <code class="highlighter-rouge">/etc/</code>, and the Java library implementations will look
+<p>Normally, no changes are needed in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> to enable Kerberos. Typically, the <code class="language-plaintext highlighter-rouge">krb5.conf</code>
+is installed on the local machine in <code class="language-plaintext highlighter-rouge">/etc/</code>, and the Java library implementations will look
 here to find the necessary configuration to communicate with the KDC. Some installations
-may require a different <code class="highlighter-rouge">krb5.conf</code> to be used for Accumulo which can be accomplished 
-by adding the JVM system property <code class="highlighter-rouge">-Djava.security.krb5.conf=/path/to/other/krb5.conf</code> to
-<code class="highlighter-rouge">JAVA_OPTS</code> in <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
+may require a different <code class="language-plaintext highlighter-rouge">krb5.conf</code> to be used for Accumulo which can be accomplished 
+by adding the JVM system property <code class="language-plaintext highlighter-rouge">-Djava.security.krb5.conf=/path/to/other/krb5.conf</code> to
+<code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code>.</p>
 
 <h4 id="kerberosauthenticator">KerberosAuthenticator</h4>
 
@@ -648,8 +648,8 @@ Accumulo, but without any permissions (e.g. cannot create tables or write data).
 ZooKeeper removes the need to change the permission handler and authorizor, so other Accumulo
 functions regarding permissions and cell-level authorizations do not change.</p>
 
-<p>It is extremely important to note that, while user operations like <code class="highlighter-rouge">SecurityOperations.listLocalUsers()</code>,
-<code class="highlighter-rouge">SecurityOperations.dropLocalUser()</code>, and <code class="highlighter-rouge">SecurityOperations.createLocalUser()</code> will not return
+<p>It is extremely important to note that, while user operations like <code class="language-plaintext highlighter-rouge">SecurityOperations.listLocalUsers()</code>,
+<code class="language-plaintext highlighter-rouge">SecurityOperations.dropLocalUser()</code>, and <code class="language-plaintext highlighter-rouge">SecurityOperations.createLocalUser()</code> will not return
 errors, these methods are not equivalent to normal installations, as they will only operate on
 users which have, at one point in time, authenticated with Accumulo using their Kerberos identity.
 The KDC is still the authoritative entity for user management. The previously mentioned methods
@@ -664,25 +664,25 @@ the system. In Kerberos, to authenticate with the system, it’s required that t
 credentials for the principal (user) the client is trying to authenticate as.</p>
 
 <p>Because of this, an administrative user named “root” would be useless in an instance using Kerberos,
-because it is very unlikely to have Kerberos credentials for a principal named <code class="highlighter-rouge">root</code>. When Kerberos is
-enabled, Accumulo will prompt for the name of a user to grant the same permissions as what the <code class="highlighter-rouge">root</code>
+because it is very unlikely to have Kerberos credentials for a principal named <code class="language-plaintext highlighter-rouge">root</code>. When Kerberos is
+enabled, Accumulo will prompt for the name of a user to grant the same permissions as what the <code class="language-plaintext highlighter-rouge">root</code>
 user would normally have. The name of the Accumulo user to grant administrative permissions to can
-also be given by the <code class="highlighter-rouge">-u</code> or <code class="highlighter-rouge">--user</code> options.</p>
+also be given by the <code class="language-plaintext highlighter-rouge">-u</code> or <code class="language-plaintext highlighter-rouge">--user</code> options.</p>
 
 <p>If you are enabling Kerberos on an existing cluster, you will need to reinitialize the security system in
 order to replace the existing “root” user with one that can be used with Kerberos. These steps should be
 completed after you have done the previously described configuration changes and will require access to
-a complete <code class="highlighter-rouge">accumulo.properties</code>, including the instance secret. Note that this process will delete all
+a complete <code class="language-plaintext highlighter-rouge">accumulo.properties</code>, including the instance secret. Note that this process will delete all
 existing users in the system; you will need to reassign user permissions based on Kerberos principals.</p>
 
 <ol>
   <li>Ensure Accumulo is not running.</li>
-  <li>Given the path to a <code class="highlighter-rouge">accumulo.properties</code> with the instance secret, run the security reset tool. If you are
+  <li>Given the path to a <code class="language-plaintext highlighter-rouge">accumulo.properties</code> with the instance secret, run the security reset tool. If you are
 prompted for a password you can just hit return, since it won’t be used.</li>
   <li>Start the Accumulo cluster</li>
 </ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-cluster stop
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-cluster stop
 ...
 $ accumulo init --reset-security
 Running against secured HDFS
@@ -699,7 +699,7 @@ $ accumulo-cluster start
 are actually running (they should exit immediately if login fails) and verify that you see
 something similar to the following in the application log.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-07 11:57:56,826 [security.SecurityUtil] INFO : Attempting to login with keytab as accumulo/hostname@EXAMPLE.COM
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-07 11:57:56,826 [security.SecurityUtil] INFO : Attempting to login with keytab as accumulo/hostname@EXAMPLE.COM
 2015-01-07 11:57:56,830 [security.UserGroupInformation] INFO : Login successful for user accumulo/hostname@EXAMPLE.COM using keytab file /etc/security/keytabs/accumulo.service.keytab
 </code></pre></div></div>
 
@@ -715,27 +715,27 @@ it can only connect to Accumulo as itself. Impersonation, in this context, refer
 of the proxy to authenticate to Accumulo as itself, but act on behalf of an Accumulo user.</p>
 
 <p>Accumulo supports basic impersonation of end-users by a third party via static rules in
-<code class="highlighter-rouge">accumulo.properties</code>. These two properties are semi-colon separated properties which are aligned
+<code class="language-plaintext highlighter-rouge">accumulo.properties</code>. These two properties are semi-colon separated properties which are aligned
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:*
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:*
 instance.rpc.sasl.allowed.host.impersonation=*
 </code></pre></div></div>
 
-<p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate any user from any host.</p>
+<p>Here, <code class="language-plaintext highlighter-rouge">$PROXY_USER</code> can impersonate any user from any host.</p>
 
-<p>The following is an example of specifying a subset of users <code class="highlighter-rouge">$PROXY_USER</code> can impersonate and also
-limiting the hosts from which <code class="highlighter-rouge">$PROXY_USER</code> can initiate requests from.</p>
+<p>The following is an example of specifying a subset of users <code class="language-plaintext highlighter-rouge">$PROXY_USER</code> can impersonate and also
+limiting the hosts from which <code class="language-plaintext highlighter-rouge">$PROXY_USER</code> can initiate requests from.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance.rpc.sasl.allowed.user.impersonation=$PROXY_USER:user1,user2;$PROXY_USER2:user2,user4
 instance.rpc.sasl.allowed.host.impersonation=host1.domain.com,host2.domain.com;*
 </code></pre></div></div>
 
-<p>Here, <code class="highlighter-rouge">$PROXY_USER</code> can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
-<code class="highlighter-rouge">$PROXY_USER2</code> can impersonate user2 and user4 from any host.</p>
+<p>Here, <code class="language-plaintext highlighter-rouge">$PROXY_USER</code> can impersonate user1 and user2 only from host1.domain.com or host2.domain.com.
+<code class="language-plaintext highlighter-rouge">$PROXY_USER2</code> can impersonate user2 and user4 from any host.</p>
 
-<p>In these examples, the value <code class="highlighter-rouge">$PROXY_USER</code> is the Kerberos principal of the server which is acting on behalf of a user.
+<p>In these examples, the value <code class="language-plaintext highlighter-rouge">$PROXY_USER</code> is the Kerberos principal of the server which is acting on behalf of a user.
 Impersonation is enforced by the Kerberos principal and the host from which the RPC originated (from the perspective
 of the Accumulo TabletServers/Masters). An asterisk (*) can be used to specify all users or all hosts (depending on the context).</p>
 
@@ -746,20 +746,20 @@ of a shared secret among all Accumulo tabletservers and the master. The secret k
 of delegation tokens for users and verification of delegation tokens presented by clients. If a server
 process is unaware of the secret key used to create a delegation token, the client cannot be authenticated.
 As ZooKeeper distribution is an asynchronous operation (typically on the order of seconds), the
-value for <code class="highlighter-rouge">general.delegation.token.update.interval</code> should be on the order of hours to days to reduce the
+value for <code class="language-plaintext highlighter-rouge">general.delegation.token.update.interval</code> should be on the order of hours to days to reduce the
 likelihood of servers rejecting valid clients because the server did not yet see a new secret key.</p>
 
 <p>Supporting authentication with both Kerberos credentials and delegation tokens, the SASL thrift
-server accepts connections with either <code class="highlighter-rouge">GSSAPI</code> and <code class="highlighter-rouge">DIGEST-MD5</code> mechanisms set. The <code class="highlighter-rouge">DIGEST-MD5</code> mechanism
-enables authentication as a normal username and password exchange which <code class="highlighter-rouge">DelegationToken</code>s leverages.</p>
+server accepts connections with either <code class="language-plaintext highlighter-rouge">GSSAPI</code> and <code class="language-plaintext highlighter-rouge">DIGEST-MD5</code> mechanisms set. The <code class="language-plaintext highlighter-rouge">DIGEST-MD5</code> mechanism
+enables authentication as a normal username and password exchange which <code class="language-plaintext highlighter-rouge">DelegationToken</code>s leverages.</p>
 
 <p>Since delegation tokens are a weaker form of authentication than Kerberos credentials, user access
-to obtain delegation tokens from Accumulo is protected with the <code class="highlighter-rouge">DELEGATION_TOKEN</code> system permission. Only
+to obtain delegation tokens from Accumulo is protected with the <code class="language-plaintext highlighter-rouge">DELEGATION_TOKEN</code> system permission. Only
 users with the system permission are allowed to obtain delegation tokens. It is also recommended
-to configure confidentiality with SASL, using the <code class="highlighter-rouge">rpc.sasl.qop=auth-conf</code> configuration property, to
-ensure that prying eyes cannot view the <code class="highlighter-rouge">DelegationToken</code> as it passes over the network.</p>
+to configure confidentiality with SASL, using the <code class="language-plaintext highlighter-rouge">rpc.sasl.qop=auth-conf</code> configuration property, to
+ensure that prying eyes cannot view the <code class="language-plaintext highlighter-rouge">DelegationToken</code> as it passes over the network.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Check a user's permissions
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Check a user's permissions
 admin@REALM@accumulo&gt; userpermissions -u user@REALM
 
 # Grant the DELEGATION_TOKEN system permission to a user
@@ -774,15 +774,15 @@ admin@REALM@accumulo&gt; grant System.DELEGATION_TOKEN -s -u user@REALM
 primary difference between a server principal is that principals for users are created
 with a password and also not qualified to a specific instance (host).</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc $user"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kadmin.local -q "addprinc $user"
 </code></pre></div></div>
 
 <p>The above will prompt for a password for that user which will be used to identify that $user.
-The user can verify that they can authenticate with the KDC using the command <code class="highlighter-rouge">kinit $user</code>.
+The user can verify that they can authenticate with the KDC using the command <code class="language-plaintext highlighter-rouge">kinit $user</code>.
 Upon entering the correct password, a local credentials cache will be made which can be used
 to authenticate with Accumulo, access HDFS, etc.</p>
 
-<p>The user can verify the state of their local credentials cache by using the command <code class="highlighter-rouge">klist</code>.</p>
+<p>The user can verify the state of their local credentials cache by using the command <code class="language-plaintext highlighter-rouge">klist</code>.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>klist
 Ticket cache: FILE:/tmp/krb5cc_123
@@ -797,8 +797,8 @@ Valid starting       Expires              Service principal
 
 <p>The second thing clients need to do is to configure kerberos when an Accumulo client is
 created.  This can be done using client builder methods or by setting the properties
-below in <code class="highlighter-rouge">accumulo-client.properties</code> which can be provided to Accumulo utilities using
-the <code class="highlighter-rouge">--config-file</code> command line option.</p>
+below in <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> which can be provided to Accumulo utilities using
+the <code class="language-plaintext highlighter-rouge">--config-file</code> command line option.</p>
 
 <ul>
   <li><a href="/docs/2.x/configuration/client-properties#sasl_enabled">sasl.enabled</a> = true</li>
@@ -815,7 +815,7 @@ required to set up the SASL transport.</p>
 the system. You should verify that the administrative user you chose earlier can successfully
 interact with the system.</p>
 
-<p>While this example logs in via <code class="highlighter-rouge">kinit</code> with a password, any login method that caches Kerberos tickets
+<p>While this example logs in via <code class="language-plaintext highlighter-rouge">kinit</code> with a password, any login method that caches Kerberos tickets
 should work.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kinit accumulo_admin@EXAMPLE.COM
@@ -847,7 +847,7 @@ accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; quit
 <h4 id="delegationtokens-with-mapreduce">DelegationTokens with MapReduce</h4>
 
 <p>To use DelegationTokens in a custom MapReduce job, the user should create an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a>
-using a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and use it to call <code class="highlighter-rouge">SecurityOperations.getDelegationToken</code>. The
+using a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/KerberosToken.html">KerberosToken</a> and use it to call <code class="language-plaintext highlighter-rouge">SecurityOperations.getDelegationToken</code>. The
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/DelegationToken.html">DelegationToken</a> that is created can then be used to create a new client using this
 delegation token.  The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/ClientInfo.html">ClientInfo</a> object from this client can be passed into the MapReduce
 job. It is expected that the user launching the MapReduce job is already logged in via Kerberos
@@ -867,13 +867,13 @@ via a keytab or via a locally-cached Kerberos ticket-granting-ticket (TGT).</p>
 <span class="nc">AccumuloOutputFormat</span><span class="o">.</span><span class="na">configure</span><span class="o">().</span><span class="na">clientProperties</span><span class="o">(</span><span class="n">props</span><span class="o">).</span><span class="na">store</span><span class="o">(</span><span class="n">job</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>Users must have the <code class="highlighter-rouge">DELEGATION_TOKEN</code> system permission to call the <code class="highlighter-rouge">getDelegationToken</code>
+<p>Users must have the <code class="language-plaintext highlighter-rouge">DELEGATION_TOKEN</code> system permission to call the <code class="language-plaintext highlighter-rouge">getDelegationToken</code>
 method. The obtained delegation token is only valid for the requesting user for a period
-of time dependent on Accumulo’s configuration (<code class="highlighter-rouge">general.delegation.token.lifetime</code>).</p>
+of time dependent on Accumulo’s configuration (<code class="language-plaintext highlighter-rouge">general.delegation.token.lifetime</code>).</p>
 
 <p>For the duration of validity of the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/security/tokens/DelegationToken.html">DelegationToken</a>, the user <em>must</em> take the necessary precautions
-to protect the <code class="highlighter-rouge">DelegationToken</code> from prying eyes as it can be used by any user on any host to impersonate
-the user who requested the <code class="highlighter-rouge">DelegationToken</code>. YARN ensures that passing the delegation token from the client
+to protect the <code class="language-plaintext highlighter-rouge">DelegationToken</code> from prying eyes as it can be used by any user on any host to impersonate
+the user who requested the <code class="language-plaintext highlighter-rouge">DelegationToken</code>. YARN ensures that passing the delegation token from the client
 JVM to each YARN task is secure, even in multi-tenant instances.</p>
 
 <h3 id="debugging">Debugging</h3>
@@ -881,14 +881,14 @@ JVM to each YARN task is secure, even in multi-tenant instances.</p>
 <p><strong>Q</strong>: I have valid Kerberos credentials and a correct client configuration file but
 I still get errors like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.io.IOException: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.io.IOException: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]
 </code></pre></div></div>
 
 <p><strong>A</strong>: When you have a valid client configuration and Kerberos TGT, it is possible that the search
 path for your local credentials cache is incorrect. Check the value of the KRB5CCNAME environment
-value, and ensure it matches the value reported by <code class="highlighter-rouge">klist</code>.</p>
+value, and ensure it matches the value reported by <code class="language-plaintext highlighter-rouge">klist</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $KRB5CCNAME
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $KRB5CCNAME
 
 $ klist
 Ticket cache: FILE:/tmp/krb5cc_123
@@ -907,23 +907,23 @@ I don’t know what is actually failing.</p>
 
 <p><strong>A</strong>: Add the following system property to the JVM invocation:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dsun.security.krb5.debug=true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dsun.security.krb5.debug=true
 </code></pre></div></div>
 
 <p>This will enable lots of extra debugging at the JVM level which is often sufficient to
 diagnose some high-level configuration problem. Client applications can add this system property by
-hand to the command line and Accumulo server processes or applications started using the <code class="highlighter-rouge">accumulo</code>
-script by adding the property to <code class="highlighter-rouge">JAVA_OPTS</code> in <code class="highlighter-rouge">accumulo-env.sh</code>.</p>
+hand to the command line and Accumulo server processes or applications started using the <code class="language-plaintext highlighter-rouge">accumulo</code>
+script by adding the property to <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code>.</p>
 
-<p>Additionally, you can increase the log4j levels on <code class="highlighter-rouge">org.apache.hadoop.security</code>, which includes the
-Hadoop <code class="highlighter-rouge">UserGroupInformation</code> class, which will include some high-level debug statements. This
-can be controlled in your client application, or using <code class="highlighter-rouge">log4j-service.properties</code></p>
+<p>Additionally, you can increase the log4j levels on <code class="language-plaintext highlighter-rouge">org.apache.hadoop.security</code>, which includes the
+Hadoop <code class="language-plaintext highlighter-rouge">UserGroupInformation</code> class, which will include some high-level debug statements. This
+can be controlled in your client application, or using <code class="language-plaintext highlighter-rouge">log4j-service.properties</code></p>
 
 <p><strong>Q</strong>: All of my Accumulo processes successfully start and log in with their
 keytab, but they are unable to communicate with each other, showing the
 following errors:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:27,055 [transport.TSaslTransport] ERROR: SASL negotiation failure
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:27,055 [transport.TSaslTransport] ERROR: SASL negotiation failure
 javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Server not found in Kerberos database (7) - LOOKING_UP_SERVER)]
         at com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)
         at org.apache.thrift.transport.TSaslClientTransport.handleSaslStartMessage(TSaslClientTransport.java:94)
@@ -967,7 +967,7 @@ Caused by: KrbException: Identifier doesn't match expected value (906)
 
 <p>or</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:29,440 [server.TThreadPoolServer] ERROR: Error occurred during processing of message.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2015-01-12 14:47:29,440 [server.TThreadPoolServer] ERROR: Error occurred during processing of message.
 java.lang.RuntimeException: org.apache.thrift.transport.TTransportException: Peer indicated failure: GSS initiate failed
         at org.apache.thrift.transport.TSaslServerTransport$Factory.getTransport(TSaslServerTransport.java:219)
         at org.apache.accumulo.core.rpc.UGIAssumingTransportFactory$1.run(UGIAssumingTransportFactory.java:51)
@@ -993,13 +993,13 @@ Caused by: org.apache.thrift.transport.TTransportException: Peer indicated failu
 on, is extremely important when negotiating an SASL connection. This problem commonly arises when the Accumulo
 servers are not configured to listen on the address denoted by their FQDN.</p>
 
-<p>The values in the Accumulo “hosts” files (In <code class="highlighter-rouge">accumulo/conf</code>: <code class="highlighter-rouge">masters</code>, <code class="highlighter-rouge">monitors</code>, <code class="highlighter-rouge">tservers</code>, <code class="highlighter-rouge">tracers</code>,
-and <code class="highlighter-rouge">gc</code>) should match the instance component of the Kerberos server principal (e.g. <code class="highlighter-rouge">host</code> in <code class="highlighter-rouge">accumulo/host@EXAMPLE.COM</code>).</p>
+<p>The values in the Accumulo “hosts” files (In <code class="language-plaintext highlighter-rouge">accumulo/conf</code>: <code class="language-plaintext highlighter-rouge">masters</code>, <code class="language-plaintext highlighter-rouge">monitors</code>, <code class="language-plaintext highlighter-rouge">tservers</code>, <code class="language-plaintext highlighter-rouge">tracers</code>,
+and <code class="language-plaintext highlighter-rouge">gc</code>) should match the instance component of the Kerberos server principal (e.g. <code class="language-plaintext highlighter-rouge">host</code> in <code class="language-plaintext highlighter-rouge">accumulo/host@EXAMPLE.COM</code>).</p>
 
 <p><strong>Q</strong>: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
 when I attempt to use the “Recent Traces” page on the Monitor UI I get a stacktrace similar to:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.lang.AssertionError: AuthenticationToken should not be null
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.lang.AssertionError: AuthenticationToken should not be null
     at org.apache.accumulo.monitor.servlets.trace.Basic.getScanner(Basic.java:139)
     at org.apache.accumulo.monitor.servlets.trace.Summary.pageBody(Summary.java:164)
     at org.apache.accumulo.monitor.servlets.BasicServlet.doGet(BasicServlet.java:63)
@@ -1025,9 +1025,9 @@ when I attempt to use the “Recent Traces” page on the Monitor UI I get a sta
     at java.lang.Thread.run(Thread.java:745)
 </code></pre></div></div>
 
-<p><strong>A</strong>: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the <code class="highlighter-rouge">trace</code> table. Accumulo allows the TraceServer to rely on the property <code class="highlighter-rouge">general.kerberos.keytab</code> as a fallback when logging in the trace user if the <code class="highlighter-rouge">trace.token.property.keytab</code> property isn’t defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor’s use of the trace user. The end result is that if you configure <code class="highlighter-rouge">general.kerberos.keytab</code> and not <code class="highlighter-rouge">trace.token.property.keytab</code> you will end up with a system that properly logs trace information but can’t view it.</p>
+<p><strong>A</strong>: This indicates that the Monitor has not been able to successfully log in a client-side user to read from the <code class="language-plaintext highlighter-rouge">trace</code> table. Accumulo allows the TraceServer to rely on the property <code class="language-plaintext highlighter-rouge">general.kerberos.keytab</code> as a fallback when logging in the trace user if the <code class="language-plaintext highlighter-rouge">trace.token.property.keytab</code> property isn’t defined. Some earlier versions of Accumulo did not do this same fallback for the Monitor’s use of the trace user. The end result is that if you configure <code class="language-plaintext highlighter-rouge">general.kerberos.keytab</code> and not <code class="language-plaintext highlighter-rouge">trace.token.property.keytab</code> you will end up with a system that properly logs trace information but can’t view it.</p>
 
-<p>Ensure you have set <code class="highlighter-rouge">trace.token.property.keytab</code> to point to a keytab for the principal defined in <code class="highlighter-rouge">trace.user</code> in the <code class="highlighter-rouge">accumulo.properties</code> file for the Monitor, since that should work in all versions of Accumulo.</p>
+<p>Ensure you have set <code class="language-plaintext highlighter-rouge">trace.token.property.keytab</code> to point to a keytab for the principal defined in <code class="language-plaintext highlighter-rouge">trace.user</code> in the <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file for the Monitor, since that should work in all versions of Accumulo.</p>
 
 
 

@@ -456,8 +456,8 @@ specify a security label for each value by passing a [ColumnVisibilty] to the <a
 
 <p>Security labels consist of a set of user-defined tokens that are required to read the
 value the label is associated with. The set of tokens required can be specified using
-syntax that supports logical AND <code class="highlighter-rouge">&amp;</code> and OR <code class="highlighter-rouge">|</code> combinations of terms, as
-well as nesting groups <code class="highlighter-rouge">()</code> of terms together.</p>
+syntax that supports logical AND <code class="language-plaintext highlighter-rouge">&amp;</code> and OR <code class="language-plaintext highlighter-rouge">|</code> combinations of terms, as
+well as nesting groups <code class="language-plaintext highlighter-rouge">()</code> of terms together.</p>
 
 <p>Each term is comprised of one to many alpha-numeric characters, hyphens, underscores or
 periods. Optionally, each term may be wrapped in quotation marks
@@ -468,14 +468,14 @@ with a backslash.</p>
 <p>For example, suppose within our organization we want to label our data values with
 security labels defined in terms of user roles. We might have tokens such as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin
 audit
 system
 </code></pre></div></div>
 
 <p>These can be specified alone or combined using logical operators:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Users must have admin privileges
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Users must have admin privileges
 admin
 
 // Users must have admin and audit privileges
@@ -488,7 +488,7 @@ admin|audit
 (admin|system)&amp;audit
 </code></pre></div></div>
 
-<p>When both <code class="highlighter-rouge">|</code> and <code class="highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify
+<p>When both <code class="language-plaintext highlighter-rouge">|</code> and <code class="language-plaintext highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify
 precedence of the operators.</p>
 
 <h2 id="authorizations">Authorizations</h2>
@@ -510,8 +510,8 @@ results sent back to the client.</p>
 <h3 id="user-authorizations">User Authorizations</h3>
 
 <p>Each Accumulo user has a set of associated security labels. To manipulate these in
-the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>, use the <code class="highlighter-rouge">setuaths</code> and <code class="highlighter-rouge">getauths</code> commands. They can be
-retrieved and modified in Java using <code class="highlighter-rouge">getUserAuthorizations</code> and <code class="highlighter-rouge">changeUserAuthorizations</code>
+the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>, use the <code class="language-plaintext highlighter-rouge">setuaths</code> and <code class="language-plaintext highlighter-rouge">getauths</code> commands. They can be
+retrieved and modified in Java using <code class="language-plaintext highlighter-rouge">getUserAuthorizations</code> and <code class="language-plaintext highlighter-rouge">changeUserAuthorizations</code>
 methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>.</p>
 
 <p>When a user creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> a set of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> is passed.
@@ -519,12 +519,12 @@ If the Authorizations passed to the scanner are not a subset of the user’s Aut
 then an exception will be thrown.</p>
 
 <p>To prevent users from writing data they can not read, add the visibility
-constraint to a table. Use the -evc option in the <code class="highlighter-rouge">createtable</code> shell command to
-enable this constraint. For existing tables, use the <code class="highlighter-rouge">config</code> command to
+constraint to a table. Use the -evc option in the <code class="language-plaintext highlighter-rouge">createtable</code> shell command to
+enable this constraint. For existing tables, use the <code class="language-plaintext highlighter-rouge">config</code> command to
 enable the visibility constraint. Ensure the constraint number does not
 conflict with any existing constraints.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
 </code></pre></div></div>
 
 <p>Any user with the alter table permission can add or remove this constraint.

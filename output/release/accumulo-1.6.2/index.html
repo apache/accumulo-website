@@ -177,7 +177,7 @@ information about improvements since Accumulo 1.5, see the <a href="/release_not
 
 <h3 id="only-first-zookeeper-server-is-used">Only first ZooKeeper server is used</h3>
 
-<p>In constructing a <code class="highlighter-rouge">ZooKeeperInstance</code>, the user provides a comma-separated list of addresses for ZooKeeper
+<p>In constructing a <code class="language-plaintext highlighter-rouge">ZooKeeperInstance</code>, the user provides a comma-separated list of addresses for ZooKeeper
 servers. 1.6.0 and 1.6.1 incorrectly truncated the provided list of ZooKeeper servers used to the first. This
 would cause clients to fail when the first ZooKeeper server in the list became unavailable and not properly
 load balance requests to all available servers in the quorum. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3218">ACCUMULO-3218</a> fixes the parsing of
@@ -188,30 +188,30 @@ the ZooKeeper quorum list to use all servers, not just the first.</p>
 <p>Use of ZooKeeper’s API requires very careful exception handling as some thrown exceptions from the ZooKeeper
 API are considered “normal” and must be retried by the client. In 1.6.1, Accumulo improved its handling of
 these “expected failures” to better insulate calls to ZooKeeper; however, the wrapper which sets data to a ZNode
-incorrectly handled all cases. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3448">ACCUMULO-3448</a> fixed the implementation of <code class="highlighter-rouge">ZooUtil.putData(...)</code> to handle
+incorrectly handled all cases. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3448">ACCUMULO-3448</a> fixed the implementation of <code class="language-plaintext highlighter-rouge">ZooUtil.putData(...)</code> to handle
 the expected error conditions correctly.</p>
 
-<h3 id="scanid-is-not-set-in-activescan"><code class="highlighter-rouge">scanId</code> is not set in <code class="highlighter-rouge">ActiveScan</code></h3>
+<h3 id="scanid-is-not-set-in-activescan"><code class="language-plaintext highlighter-rouge">scanId</code> is not set in <code class="language-plaintext highlighter-rouge">ActiveScan</code></h3>
 
-<p>The <code class="highlighter-rouge">ActiveScan</code> class is the returned object by <code class="highlighter-rouge">InstanceOperations.listScans</code>. This class represents a
-“scan” running on Accumulo servers, either from a <code class="highlighter-rouge">Scanner</code> or <code class="highlighter-rouge">BatchScanner</code>. The <code class="highlighter-rouge">ActiveScan</code> class 
+<p>The <code class="language-plaintext highlighter-rouge">ActiveScan</code> class is the returned object by <code class="language-plaintext highlighter-rouge">InstanceOperations.listScans</code>. This class represents a
+“scan” running on Accumulo servers, either from a <code class="language-plaintext highlighter-rouge">Scanner</code> or <code class="language-plaintext highlighter-rouge">BatchScanner</code>. The <code class="language-plaintext highlighter-rouge">ActiveScan</code> class 
 is meant to represent all of the information that represents the scan and can be useful to administrators
 or DevOps-types to observe and act on scans which are running for excessive periods of time. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2641">ACCUMULO-2641</a>
-fixes <code class="highlighter-rouge">ActiveScan</code> to ensure that the internal identifier <code class="highlighter-rouge">scanId</code> is properly set.</p>
+fixes <code class="language-plaintext highlighter-rouge">ActiveScan</code> to ensure that the internal identifier <code class="language-plaintext highlighter-rouge">scanId</code> is properly set.</p>
 
 <h3 id="table-state-change-doesnt-wait-when-requested">Table state change doesn’t wait when requested</h3>
 
-<p>An Accumulo table has two states: <code class="highlighter-rouge">ONLINE</code> and <code class="highlighter-rouge">OFFLINE</code>. An offline table in Accumulo consumes no TabletServer
+<p>An Accumulo table has two states: <code class="language-plaintext highlighter-rouge">ONLINE</code> and <code class="language-plaintext highlighter-rouge">OFFLINE</code>. An offline table in Accumulo consumes no TabletServer
 resources, only HDFS resources, which makes it useful to save infrequently used data. The Accumulo methods provided
-to transition a state from <code class="highlighter-rouge">ONLINE</code> to <code class="highlighter-rouge">OFFLINE</code> and vice versa did not respect the <code class="highlighter-rouge">wait=true</code> parameter
-when set. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3301">ACCUMULO-3301</a> fixes the underlying implementation to ensure that when <code class="highlighter-rouge">wait=true</code> is provided,
+to transition a state from <code class="language-plaintext highlighter-rouge">ONLINE</code> to <code class="language-plaintext highlighter-rouge">OFFLINE</code> and vice versa did not respect the <code class="language-plaintext highlighter-rouge">wait=true</code> parameter
+when set. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3301">ACCUMULO-3301</a> fixes the underlying implementation to ensure that when <code class="language-plaintext highlighter-rouge">wait=true</code> is provided,
 the method will not return until the table’s state transition has fully completed.</p>
 
-<h3 id="keyvalue-doesnt-implement-hashcode-or-equals">KeyValue doesn’t implement <code class="highlighter-rouge">hashCode()</code> or <code class="highlighter-rouge">equals()</code></h3>
+<h3 id="keyvalue-doesnt-implement-hashcode-or-equals">KeyValue doesn’t implement <code class="language-plaintext highlighter-rouge">hashCode()</code> or <code class="language-plaintext highlighter-rouge">equals()</code></h3>
 
-<p>The <code class="highlighter-rouge">KeyValue</code> class is an implementation of <code class="highlighter-rouge">Entry&lt;Key,Value&gt;</code> which is returned by the classes like
-<code class="highlighter-rouge">Scanner</code> and <code class="highlighter-rouge">BatchScanner</code>. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3217">ACCUMULO-3217</a> adds these methods which ensure that the returned <code class="highlighter-rouge">Entry&lt;Key,Value&gt;</code>
-operates as expected with <code class="highlighter-rouge">HashMaps</code> and <code class="highlighter-rouge">HashSets</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">KeyValue</code> class is an implementation of <code class="language-plaintext highlighter-rouge">Entry&lt;Key,Value&gt;</code> which is returned by the classes like
+<code class="language-plaintext highlighter-rouge">Scanner</code> and <code class="language-plaintext highlighter-rouge">BatchScanner</code>. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3217">ACCUMULO-3217</a> adds these methods which ensure that the returned <code class="language-plaintext highlighter-rouge">Entry&lt;Key,Value&gt;</code>
+operates as expected with <code class="language-plaintext highlighter-rouge">HashMaps</code> and <code class="language-plaintext highlighter-rouge">HashSets</code>.</p>
 
 <h3 id="potential-deadlock-in-tabletserver">Potential deadlock in TabletServer</h3>
 
@@ -221,14 +221,14 @@ have concurrent requests to a TabletServer to deadlock. <a href="https://issues.
 bulk imports of RFiles into Accumulo. Additional synchronization was added server-side to prevent this deadlock
 from happening in the future.</p>
 
-<h3 id="the-datelexicoder-incorrectly-serialized-dates-prior-1970">The <code class="highlighter-rouge">DateLexicoder</code> incorrectly serialized <code class="highlighter-rouge">Dates</code> prior 1970</h3>
+<h3 id="the-datelexicoder-incorrectly-serialized-dates-prior-1970">The <code class="language-plaintext highlighter-rouge">DateLexicoder</code> incorrectly serialized <code class="language-plaintext highlighter-rouge">Dates</code> prior 1970</h3>
 
-<p>The <code class="highlighter-rouge">DateLexicode</code>, a part of the <code class="highlighter-rouge">Lexicoders</code> classes which implement methods to convert common type primitives
-into lexicographically sorting Strings/bytes, incorrectly converted <code class="highlighter-rouge">Date</code> objects for dates prior to 1970.
-<a href="https://issues.apache.org/jira/browse/ACCUMULO-3385">ACCUMULO-3385</a> fixed the <code class="highlighter-rouge">DateLexicoder</code> to correctly (de)serialize data <code class="highlighter-rouge">Date</code> objects. For users with
+<p>The <code class="language-plaintext highlighter-rouge">DateLexicode</code>, a part of the <code class="language-plaintext highlighter-rouge">Lexicoders</code> classes which implement methods to convert common type primitives
+into lexicographically sorting Strings/bytes, incorrectly converted <code class="language-plaintext highlighter-rouge">Date</code> objects for dates prior to 1970.
+<a href="https://issues.apache.org/jira/browse/ACCUMULO-3385">ACCUMULO-3385</a> fixed the <code class="language-plaintext highlighter-rouge">DateLexicoder</code> to correctly (de)serialize data <code class="language-plaintext highlighter-rouge">Date</code> objects. For users with
 data stored in Accumulo using the broken implementation, the following can be performed to read the old data.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Lexicoder lex = new ULongLexicoder();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Lexicoder lex = new ULongLexicoder();
   for (Entry&lt;Key, Value&gt; e : scanner) {
     Date d = new Date(lex.decode(TextUtil.getBytes(e.getKey().getRow())));
     // ...
@@ -237,10 +237,10 @@ data stored in Accumulo using the broken implementation, the following can be pe
 
 <h3 id="reduce-miniaccumulocluster-failures-due-to-random-port-allocations">Reduce MiniAccumuloCluster failures due to random port allocations</h3>
 
-<p><code class="highlighter-rouge">MiniAccumuloCluster</code> has had issues where it fails to properly start due to the way it attempts to choose
+<p><code class="language-plaintext highlighter-rouge">MiniAccumuloCluster</code> has had issues where it fails to properly start due to the way it attempts to choose
 a random, unbound port on the local machine to start the ZooKeeper and Accumulo processes. Improvements have
 been made, including retry logic, to withstand a few failed port choices. The changes made by <a href="https://issues.apache.org/jira/browse/ACCUMULO-3233">ACCUMULO-3233</a>
-and the related issues should eliminate sporadic failures users of <code class="highlighter-rouge">MiniAccumuloCluster</code> might have observed.</p>
+and the related issues should eliminate sporadic failures users of <code class="language-plaintext highlighter-rouge">MiniAccumuloCluster</code> might have observed.</p>
 
 <h3 id="tracer-doesnt-handle-trace-table-state-transition">Tracer doesn’t handle trace table state transition</h3>
 
@@ -259,7 +259,7 @@ server-side which would prevent this from happening in the future.</p>
 <h3 id="yarn-job-submission-fails-with-hadoop-260">YARN job submission fails with Hadoop-2.6.0</h3>
 
 <p>Hadoop 2.6.0 introduced a new component, the TimelineServer, which is a centralized metrics service designed
-for other Hadoop components to leverage. MapReduce jobs submitted via <code class="highlighter-rouge">accumulo</code> and <code class="highlighter-rouge">tool.sh</code> failed to
+for other Hadoop components to leverage. MapReduce jobs submitted via <code class="language-plaintext highlighter-rouge">accumulo</code> and <code class="language-plaintext highlighter-rouge">tool.sh</code> failed to
 run the job because it attempted to contact the TimelineServer and Accumulo was missing a dependency on 
 the classpath to communicate with the TimelineServer. <a href="https://issues.apache.org/jira/browse/ACCUMULO-3230">ACCUMULO-3230</a> updates the classpath in the example
 configuration files to include the necessary dependencies for the TimelineServer to ensure that YARN job

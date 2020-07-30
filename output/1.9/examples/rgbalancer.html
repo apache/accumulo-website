@@ -149,7 +149,7 @@ groups of tablets within a table evenly across 17 tablet servers.</p>
 all of the tablets where the split point has the same two digits to be on
 different tservers.  This gives us four groups of tablets: 01, 02, 03, and 04.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo&gt; createtable testRGB
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo&gt; createtable testRGB
 root@accumulo testRGB&gt; addsplits -t testRGB 01b 01m 01r 01z  02b 02m 02r 02z 03b 03m 03r 03z 04a 04b 04c 04d 04e 04f 04g 04h 04i 04j 04k 04l 04m 04n 04o 04p
 root@accumulo testRGB&gt; tables -l
 accumulo.metadata    =&gt;        !0
@@ -161,7 +161,7 @@ trace                =&gt;         1
 
 <p>After adding the splits we look at the locations in the metadata table.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
 2;01b loc:34a5f6e086b000c []    ip-10-1-2-25:9997
 2;01m loc:34a5f6e086b000c []    ip-10-1-2-25:9997
 2;01r loc:14a5f6e079d0011 []    ip-10-1-2-15:9997
@@ -198,7 +198,7 @@ each tserver.  The four tablets in group 03 are on two tservers, ideally those
 tablets would be spread across 4 tservers.  Note the default tablet (2&lt;) was
 categorized as group 04 below.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01
 ip-10-1-2-14:9997 04
 ip-10-1-2-15:9997 01
 ip-10-1-2-16:9997 04 04
@@ -222,14 +222,14 @@ commands below.  The configured regular expression selects the first two digits
 from a tablets end row as the group id.  Tablets that don’t match and the
 default tablet are configured to be in group 04.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; config -t testRGB -s table.custom.balancer.group.regex.pattern=(\\d\\d).*
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; config -t testRGB -s table.custom.balancer.group.regex.pattern=(\\d\\d).*
 root@accumulo testRGB&gt; config -t testRGB -s table.custom.balancer.group.regex.default=04
 root@accumulo testRGB&gt; config -t testRGB -s table.balancer=org.apache.accumulo.server.master.balancer.RegexGroupBalancer
 </code></pre></div></div>
 
 <p>After waiting a little bit, look at the tablet locations again and all is good.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@accumulo testRGB&gt; scan -t accumulo.metadata -b 2; -e 2&lt; -c loc
 2;01b loc:34a5f6e086b000a []    ip-10-1-2-18:9997
 2;01m loc:34a5f6e086b000c []    ip-10-1-2-25:9997
 2;01r loc:14a5f6e079d0011 []    ip-10-1-2-15:9997
@@ -265,7 +265,7 @@ root@accumulo testRGB&gt; config -t testRGB -s table.balancer=org.apache.accumul
 are on tservers.  The transformed data below shows that all groups are now
 evenly spread.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01 04
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ip-10-1-2-13:9997 01 04
 ip-10-1-2-14:9997    04
 ip-10-1-2-15:9997 01 04
 ip-10-1-2-16:9997    04

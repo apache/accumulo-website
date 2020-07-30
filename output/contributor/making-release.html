@@ -155,7 +155,7 @@
 <p>There are number of things that are required before attempting to build a release.</p>
 
 <ol>
-  <li>Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn’t require re-authentication mid-build, as it will cause things to fail. For example, you can add <code class="highlighter-rouge">default-cache-ttl 6000</code> to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough <a href="https://www.apache.org/dev/release-signing">ASF release signing documentation</a>.</li>
+  <li>Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn’t require re-authentication mid-build, as it will cause things to fail. For example, you can add <code class="language-plaintext highlighter-rouge">default-cache-ttl 6000</code> to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough <a href="https://www.apache.org/dev/release-signing">ASF release signing documentation</a>.</li>
   <li>Ensure that you’re using the correct major release of Java (check javadoc too).</li>
   <li>Ensure that you’re building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
 the maven-release-plugin and staging the release candidate).</li>
@@ -173,16 +173,16 @@ the maven-release-plugin and staging the release candidate).</li>
 <p><strong>TL;DR</strong></p>
 
 <ul>
-  <li><code class="highlighter-rouge">./assemble/build.sh --create-release-candidate</code> to make the release candidate</li>
-  <li><code class="highlighter-rouge">git tag $version $version-rcN</code> to create an RC tag from the actual tag</li>
-  <li><code class="highlighter-rouge">git tag -d $version</code> make sure you don’t accidentally push a “release” tag</li>
-  <li><code class="highlighter-rouge">git push origin $version-rcN</code> push the RC tag</li>
-  <li><code class="highlighter-rouge">git checkout -b $version-rcN-branch</code> save off the branch from the Maven release plugin</li>
+  <li><code class="language-plaintext highlighter-rouge">./assemble/build.sh --create-release-candidate</code> to make the release candidate</li>
+  <li><code class="language-plaintext highlighter-rouge">git tag $version $version-rcN</code> to create an RC tag from the actual tag</li>
+  <li><code class="language-plaintext highlighter-rouge">git tag -d $version</code> make sure you don’t accidentally push a “release” tag</li>
+  <li><code class="language-plaintext highlighter-rouge">git push origin $version-rcN</code> push the RC tag</li>
+  <li><code class="language-plaintext highlighter-rouge">git checkout -b $version-rcN-branch</code> save off the branch from the Maven release plugin</li>
   <li><strong>VOTE</strong></li>
   <li><em>If vote fails</em>, fix the original branch and start over.</li>
-  <li><em>If vote passes</em>, <code class="highlighter-rouge">git merge $version-rcN-branch</code> back into the original branch you released from.</li>
-  <li><code class="highlighter-rouge">git tag -s $version-rcN $version</code> make a GPG-signed tag</li>
-  <li><code class="highlighter-rouge">git push origin $version</code> push the signed tag.</li>
+  <li><em>If vote passes</em>, <code class="language-plaintext highlighter-rouge">git merge $version-rcN-branch</code> back into the original branch you released from.</li>
+  <li><code class="language-plaintext highlighter-rouge">git tag -s $version-rcN $version</code> make a GPG-signed tag</li>
+  <li><code class="language-plaintext highlighter-rouge">git push origin $version</code> push the signed tag.</li>
 </ul>
 
 <p><strong>Long-winded explanation</strong></p>
@@ -271,13 +271,13 @@ automatically.</p>
 
 <ul>
   <li>Update downloads page</li>
-  <li>Create a post in <code class="highlighter-rouge">_posts/release/</code> containing release notes</li>
+  <li>Create a post in <code class="language-plaintext highlighter-rouge">_posts/release/</code> containing release notes</li>
   <li>Remove previous bug-fix release (if applicable)</li>
   <li>Update doap/accumulo.rdf</li>
   <li>Complete release notes</li>
   <li>Update previous release notes (as archived or archived-critical)</li>
-  <li>Update <code class="highlighter-rouge">_config.yml</code></li>
-  <li>Update <code class="highlighter-rouge">_includes/nav.html</code></li>
+  <li>Update <code class="language-plaintext highlighter-rouge">_config.yml</code></li>
+  <li>Update <code class="language-plaintext highlighter-rouge">_includes/nav.html</code></li>
 </ul>
 
 <h2 id="update-documentation">Update Documentation</h2>
@@ -287,9 +287,9 @@ for two markdown files that should be changed in the Accumulo repo and copied/mi
 
 <ol>
   <li>
-    <p><code class="highlighter-rouge">server-properties.md</code> and <code class="highlighter-rouge">client-properties.md</code> should be copied after it is generated by the Accumulo build.</p>
+    <p><code class="language-plaintext highlighter-rouge">server-properties.md</code> and <code class="language-plaintext highlighter-rouge">client-properties.md</code> should be copied after it is generated by the Accumulo build.</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp /path/to/accumulo/core/target/generated-docs/*-properties.md /path/to/accumulo-website/_docs-2-x/configuration/
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp /path/to/accumulo/core/target/generated-docs/*-properties.md /path/to/accumulo-website/_docs-2-x/configuration/
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -298,33 +298,33 @@ for two markdown files that should be changed in the Accumulo repo and copied/mi
 
 <ol>
   <li>
-    <p>Create a new documentation collection for the new major release (i.e <code class="highlighter-rouge">3.x</code>) using the collection of the last release. Avoid using a dot <code class="highlighter-rouge">.</code> in
+    <p>Create a new documentation collection for the new major release (i.e <code class="language-plaintext highlighter-rouge">3.x</code>) using the collection of the last release. Avoid using a dot <code class="language-plaintext highlighter-rouge">.</code> in
 the directory name:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp -r _docs-2 _docs-3
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp -r _docs-2 _docs-3
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Create a new doc layout using the previous layout. Update the reference to <code class="highlighter-rouge">site.docs-2</code> to <code class="highlighter-rouge">site.docs-3</code> (if creating 3.x docs):</p>
+    <p>Create a new doc layout using the previous layout. Update the reference to <code class="language-plaintext highlighter-rouge">site.docs-2</code> to <code class="language-plaintext highlighter-rouge">site.docs-3</code> (if creating 3.x docs):</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp _layouts/docs-3.html _layouts/docs-3.html
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> cp _layouts/docs-3.html _layouts/docs-3.html
  vim _layouts/docs-3.html
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Point Jekyll to the new documentation collection by modifying <code class="highlighter-rouge">collections</code> and <code class="highlighter-rouge">defaults</code> in <code class="highlighter-rouge">_config.yml</code>. Follow what was done for previous
+    <p>Point Jekyll to the new documentation collection by modifying <code class="language-plaintext highlighter-rouge">collections</code> and <code class="language-plaintext highlighter-rouge">defaults</code> in <code class="language-plaintext highlighter-rouge">_config.yml</code>. Follow what was done for previous
 releases.</p>
   </li>
   <li>
-    <p>Copy <code class="highlighter-rouge">server-properties.md</code> and <code class="highlighter-rouge">client-properties.md</code>, and mirror <code class="highlighter-rouge">INSTALL.md</code>.</p>
+    <p>Copy <code class="language-plaintext highlighter-rouge">server-properties.md</code> and <code class="language-plaintext highlighter-rouge">client-properties.md</code>, and mirror <code class="language-plaintext highlighter-rouge">INSTALL.md</code>.</p>
   </li>
 </ol>
 
 <p>Once a collection is created for a major release, developers can make documentation updates like normal website updates.</p>
 
-<p><strong>For 2.x minor &amp; bugfix releases,</strong> copy <code class="highlighter-rouge">server-properties.md</code> and <code class="highlighter-rouge">client-properties.md</code>, and mirror <code class="highlighter-rouge">INSTALL.md</code>.</p>
+<p><strong>For 2.x minor &amp; bugfix releases,</strong> copy <code class="language-plaintext highlighter-rouge">server-properties.md</code> and <code class="language-plaintext highlighter-rouge">client-properties.md</code>, and mirror <code class="language-plaintext highlighter-rouge">INSTALL.md</code>.</p>
 
-<p><strong>For 1.x minor &amp; bugfix releases,</strong> copy <code class="highlighter-rouge">accumulo_user_manual.html</code> generated for release to the <code class="highlighter-rouge">1.x/</code> directory in the <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a>.</p>
+<p><strong>For 1.x minor &amp; bugfix releases,</strong> copy <code class="language-plaintext highlighter-rouge">accumulo_user_manual.html</code> generated for release to the <code class="language-plaintext highlighter-rouge">1.x/</code> directory in the <a href="https://github.com/apache/accumulo-website">accumulo-website repo</a>.</p>
 
 <h2 id="update-javadocs">Update Javadocs</h2>
 
@@ -332,15 +332,15 @@ releases.</p>
 
 <ol>
   <li>Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release</li>
-  <li>Build the javadocs with <code class="highlighter-rouge">mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs</code></li>
-  <li>Take note that the javadocs you will need to copy are the entire contents of <code class="highlighter-rouge">./target/site/apidocs/</code></li>
-  <li>In a different directory, checkout the <code class="highlighter-rouge">master</code> branch of the accumulo-website repo</li>
+  <li>Build the javadocs with <code class="language-plaintext highlighter-rouge">mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs</code></li>
+  <li>Take note that the javadocs you will need to copy are the entire contents of <code class="language-plaintext highlighter-rouge">./target/site/apidocs/</code></li>
+  <li>In a different directory, checkout the <code class="language-plaintext highlighter-rouge">master</code> branch of the accumulo-website repo</li>
   <li>Remove any existing apidocs from the appropriate version folder (e.g. 1.6/apidocs for a 1.6.x release)</li>
   <li>Copy the entire contents of the new apidocs directory (identified in step 3) to the destination in the website branch (e.g. to 1.6/apidocs)</li>
   <li>Continue updating the site content, as needed</li>
   <li>Commit the changes</li>
-  <li>Update the site using jekyll with <code class="highlighter-rouge">./_devtools/git-hooks/post-commit</code> (if you don’t have the commit hook already configured)</li>
-  <li>Don’t forget to push both the <code class="highlighter-rouge">master</code> and <code class="highlighter-rouge">asf-site</code> branches back to the accumulo-website repo</li>
+  <li>Update the site using jekyll with <code class="language-plaintext highlighter-rouge">./_devtools/git-hooks/post-commit</code> (if you don’t have the commit hook already configured)</li>
+  <li>Don’t forget to push both the <code class="language-plaintext highlighter-rouge">master</code> and <code class="language-plaintext highlighter-rouge">asf-site</code> branches back to the accumulo-website repo</li>
   <li>Verify that javadocs have been updated on the production site (e.g. https://accumulo.apache.org/1.6/apidocs/)</li>
 </ol>
 
@@ -350,8 +350,8 @@ releases.</p>
 if this is the latest release of Accumulo.</p>
 
 <ul>
-  <li>Update the <code class="highlighter-rouge">accumulo.version</code> property in <code class="highlighter-rouge">pom.xml</code> of accumulo-examples</li>
-  <li>Run <code class="highlighter-rouge">mvn clean verify</code> to confirm that nothing breaks</li>
+  <li>Update the <code class="language-plaintext highlighter-rouge">accumulo.version</code> property in <code class="language-plaintext highlighter-rouge">pom.xml</code> of accumulo-examples</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">mvn clean verify</code> to confirm that nothing breaks</li>
   <li>Run one of the examples for additional testing.</li>
 </ul>
 

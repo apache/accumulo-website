@@ -155,11 +155,11 @@ visible to the user.</p>
 
 <p>For example:</p>
 <ul>
-  <li>Bob has authorizations <code class="highlighter-rouge">product, sales</code></li>
-  <li>Tina has authorizations <code class="highlighter-rouge">sales, employee</code></li>
-  <li>The key <code class="highlighter-rouge">row1:family1:qualifier1</code> has visibility <code class="highlighter-rouge">sales &amp;&amp; employee</code></li>
-  <li>When Bob scans with all of his authorizations, he will <strong>not</strong> see <code class="highlighter-rouge">row1:family1:qualifier1</code></li>
-  <li>When Tina scans with all of her authorizations, she will see <code class="highlighter-rouge">row1:family1:qualifier1</code></li>
+  <li>Bob has authorizations <code class="language-plaintext highlighter-rouge">product, sales</code></li>
+  <li>Tina has authorizations <code class="language-plaintext highlighter-rouge">sales, employee</code></li>
+  <li>The key <code class="language-plaintext highlighter-rouge">row1:family1:qualifier1</code> has visibility <code class="language-plaintext highlighter-rouge">sales &amp;&amp; employee</code></li>
+  <li>When Bob scans with all of his authorizations, he will <strong>not</strong> see <code class="language-plaintext highlighter-rouge">row1:family1:qualifier1</code></li>
+  <li>When Tina scans with all of her authorizations, she will see <code class="language-plaintext highlighter-rouge">row1:family1:qualifier1</code></li>
 </ul>
 
 <p>We now want to secure our secret identities of the heroes so that only users with the proper authorizations can read their names.</p>
@@ -178,14 +178,14 @@ visible to the user.</p>
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html">Mutation</a> API allows you to set the <code class="highlighter-rouge">secretId</code> visibility on a column. Find the proper method for setting a column visibility in
-the Mutation API and modify the code so the <code class="highlighter-rouge">colVis</code> variable created above secures the “name” columns.</p>
+    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html">Mutation</a> API allows you to set the <code class="language-plaintext highlighter-rouge">secretId</code> visibility on a column. Find the proper method for setting a column visibility in
+the Mutation API and modify the code so the <code class="language-plaintext highlighter-rouge">colVis</code> variable created above secures the “name” columns.</p>
   </li>
   <li>Build and run.  What data do you see?
     <ul>
       <li>You should see all of the data except the secret identities of Batman and Robin. This is because the Scanner was created
- from the root user which doesn’t have the <code class="highlighter-rouge">secretId</code> authorization.</li>
-      <li>Replace the <code class="highlighter-rouge">Authorizations.EMPTY</code> in the Scanner with the <code class="highlighter-rouge">auths</code> variable created above and run it again.</li>
+ from the root user which doesn’t have the <code class="language-plaintext highlighter-rouge">secretId</code> authorization.</li>
+      <li>Replace the <code class="language-plaintext highlighter-rouge">Authorizations.EMPTY</code> in the Scanner with the <code class="language-plaintext highlighter-rouge">auths</code> variable created above and run it again.</li>
       <li>This should result in an error since the root user doesn’t have the authorizations we tried to pass to the Scanner.</li>
     </ul>
   </li>

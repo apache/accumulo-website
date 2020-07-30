@@ -203,7 +203,7 @@
 
 <p>Accumulo only sorts data lexicographically.  Getting something like a pair of (<em>String</em>,<em>Integer</em>) to sort correctly in Accumulo is tricky.  It’s tricky because you only want to compare the integers if the strings are equal.  It’s possible to make this sort properly in Accumulo if the data is encoded properly, but can be difficult.  To make this easier <a href="https://issues.apache.org/jira/browse/ACCUMULO-1336" title="Add lexicoders from Typo to Accumulo">ACCUMULO-1336</a> added Lexicoders to the Accumulo API.  Lexicoders provide an easy way to serialize data so that it sorts properly lexicographically.  Below is a simple example.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   PairLexicoder plex = new PairLexicoder(new StringLexicoder(), new IntegerLexicoder());
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   PairLexicoder plex = new PairLexicoder(new StringLexicoder(), new IntegerLexicoder());
    byte[] ba1 = plex.encode(new ComparablePair&lt;String, Integer&gt;("b",1));
    byte[] ba2 = plex.encode(new ComparablePair&lt;String, Integer&gt;("aa",1));
    byte[] ba3 = plex.encode(new ComparablePair&lt;String, Integer&gt;("a",2));
@@ -234,7 +234,7 @@ ticket that contains numerous fixes to enable this support.</p>
 
 <p>This version of Accumulo is accompanied by a new maven plugin for testing client apps (<a href="https://issues.apache.org/jira/browse/ACCUMULO-1030" title="Create a Maven plugin to run MiniAccumuloCluster for integration testing">ACCUMULO-1030</a>). You can execute the accumulo-maven-plugin inside your project by adding the following to your pom.xml’s build plugins section:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;plugin&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;plugin&gt;
     &lt;groupId&gt;org.apache.accumulo&lt;/groupId&gt;
     &lt;artifactId&gt;accumulo-maven-plugin&lt;/artifactId&gt;
     &lt;version&gt;1.6.0&lt;/version&gt;
@@ -256,7 +256,7 @@ ticket that contains numerous fixes to enable this support.</p>
 
 <p>This plugin is designed to work in conjunction with the maven-failsafe-plugin. A small test instance of Accumulo will run during the pre-integration-test phase of the Maven build lifecycle, and will be stopped in the post-integration-test phase. Your integration tests, executed by maven-failsafe-plugin can access this instance with a MiniAccumuloInstance connector (the plugin uses MiniAccumuloInstance, internally), as in the following example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  private static Connector conn;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  private static Connector conn;
   
   @BeforeClass
   public static void setUp() throws Exception {
@@ -276,15 +276,15 @@ issues such as JVM garbage collection pauses. In earlier releases, a pre-built c
 
 <p>It is recommended that users invoke the provided build_native_library.sh before running Accumulo:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   $ACCUMULO_HOME/bin/build_native_library.sh
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   $ACCUMULO_HOME/bin/build_native_library.sh
 </code></pre></div></div>
 
 <p>Be aware that you will need a C++ compiler/toolchain installed to build this library. Check your GNU/Linux distribution documentation for the package manager command.</p>
 
 <h3 id="size-based-constraint-on-new-tables">Size-Based Constraint on New Tables</h3>
 
-<p>A Constraint is an interface that can determine if a Mutation should be applied or rejected server-side. After <a href="https://issues.apache.org/jira/browse/ACCUMULO-466">ACCUMULO-466</a>, new tables that are created in 1.6.0 will automatically have the <code class="highlighter-rouge">DefaultKeySizeConstraint</code> set.
-As performance can suffer when large Keys are inserted into a table, this Constraint will reject any Key that is larger than 1MB. If this constraint is undesired, it can be removed using the <code class="highlighter-rouge">constraint</code> shell
+<p>A Constraint is an interface that can determine if a Mutation should be applied or rejected server-side. After <a href="https://issues.apache.org/jira/browse/ACCUMULO-466">ACCUMULO-466</a>, new tables that are created in 1.6.0 will automatically have the <code class="language-plaintext highlighter-rouge">DefaultKeySizeConstraint</code> set.
+As performance can suffer when large Keys are inserted into a table, this Constraint will reject any Key that is larger than 1MB. If this constraint is undesired, it can be removed using the <code class="language-plaintext highlighter-rouge">constraint</code> shell
 command. See the help message on the command for more information.</p>
 
 <h3 id="other-notable-changes">Other notable changes</h3>
@@ -297,7 +297,7 @@ command. See the help message on the command for more information.</p>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1481" title="Root tablet in its own table">ACCUMULO-1481</a> The root tablet is now the root table.</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1537" title="convert auto tests to integration tests, where possible for continuous integration">ACCUMULO-1537</a> Python functional test were converted to maven Integration test that use MAC</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1566" title="Add ability for client to start Scanner readahead immediately">ACCUMULO-1566</a> When read-ahead starts in the scanner is now configurable.</li>
-  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1650" title="Make it easier to find and run admin commands">ACCUMULO-1650</a> Made common admin commands easier to run, try <code class="highlighter-rouge">bin/accumulo admin --help</code></li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1650" title="Make it easier to find and run admin commands">ACCUMULO-1650</a> Made common admin commands easier to run, try <code class="language-plaintext highlighter-rouge">bin/accumulo admin --help</code></li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1667" title="Allow On/Offline Command To Execute Synchronously">ACCUMULO-1667</a> Added a synchronous version of online and offline table</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1706" title="Admin Utilities Should Respect EPIPE">ACCUMULO-1706</a> Admin utilities now respect EPIPE</li>
   <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1833" title="MultiTableBatchWriterImpl.getBatchWriter() is not performant for multiple threads">ACCUMULO-1833</a> Multitable batch writer is faster now when used by multiple threads</li>
@@ -355,10 +355,10 @@ write ahead logs in HDFS and default to using three datanodes.</p>
 
 <h3 id="batchwriter-hold-time-error">BatchWriter hold time error</h3>
 
-<p>If a <code class="highlighter-rouge">BatchWriter</code> fails with <code class="highlighter-rouge">MutationsRejectedException</code> and the  message contains
-<code class="highlighter-rouge">"# server errors 1"</code> then it may be <a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a>.  To confirm this look in the tablet server logs 
-for <code class="highlighter-rouge">org.apache.accumulo.tserver.HoldTimeoutException</code> around the time the <code class="highlighter-rouge">BatchWriter</code> failed.
-If this is happening often a possible work around is to set <code class="highlighter-rouge">general.rpc.timeout</code> to <code class="highlighter-rouge">240s</code>.</p>
+<p>If a <code class="language-plaintext highlighter-rouge">BatchWriter</code> fails with <code class="language-plaintext highlighter-rouge">MutationsRejectedException</code> and the  message contains
+<code class="language-plaintext highlighter-rouge">"# server errors 1"</code> then it may be <a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a>.  To confirm this look in the tablet server logs 
+for <code class="language-plaintext highlighter-rouge">org.apache.accumulo.tserver.HoldTimeoutException</code> around the time the <code class="language-plaintext highlighter-rouge">BatchWriter</code> failed.
+If this is happening often a possible work around is to set <code class="language-plaintext highlighter-rouge">general.rpc.timeout</code> to <code class="language-plaintext highlighter-rouge">240s</code>.</p>
 
 <h3 id="other-known-issues">Other known issues</h3>
 
@@ -392,12 +392,12 @@ If this is happening often a possible work around is to set <code class="highlig
 
 <ul>
   <li>Many map reduce methods deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-769">ACCUMULO-769</a> were removed</li>
-  <li><code class="highlighter-rouge">SecurityErrorCode o.a.a.core.client.AccumuloSecurityException.getErrorCode()</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-970">ACCUMULO-970</a></em></li>
-  <li><code class="highlighter-rouge">Connector o.a.a.core.client.Instance.getConnector(AuthInfo)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1024">ACCUMULO-1024</a></em></li>
-  <li><code class="highlighter-rouge">Connector o.a.a.core.client.ZooKeeperInstance.getConnector(AuthInfo)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1024">ACCUMULO-1024</a></em></li>
-  <li><code class="highlighter-rouge">static String o.a.a.core.client.ZooKeeperInstance.getInstanceIDFromHdfs(Path)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1">ACCUMULO-1</a></em></li>
-  <li><code class="highlighter-rouge">static String ZooKeeperInstance.lookupInstanceName (ZooCache,UUID)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-765">ACCUMULO-765</a></em></li>
-  <li><code class="highlighter-rouge">void o.a.a.core.client.ColumnUpdate.setSystemTimestamp(long)</code>  <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-786">ACCUMULO-786</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">SecurityErrorCode o.a.a.core.client.AccumuloSecurityException.getErrorCode()</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-970">ACCUMULO-970</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">Connector o.a.a.core.client.Instance.getConnector(AuthInfo)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1024">ACCUMULO-1024</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">Connector o.a.a.core.client.ZooKeeperInstance.getConnector(AuthInfo)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1024">ACCUMULO-1024</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">static String o.a.a.core.client.ZooKeeperInstance.getInstanceIDFromHdfs(Path)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-1">ACCUMULO-1</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">static String ZooKeeperInstance.lookupInstanceName (ZooCache,UUID)</code> <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-765">ACCUMULO-765</a></em></li>
+  <li><code class="language-plaintext highlighter-rouge">void o.a.a.core.client.ColumnUpdate.setSystemTimestamp(long)</code>  <em>deprecated in <a href="https://issues.apache.org/jira/browse/ACCUMULO-786">ACCUMULO-786</a></em></li>
 </ul>
 
 <h2 id="testing">Testing</h2>
@@ -422,7 +422,7 @@ and, in HDFS High-Availability instances, forcing NameNode failover.</p>
 <ul>
   <li>CI : Continuous Ingest</li>
   <li>HA : High-Availability</li>
-  <li>IT : Integration test, run w/ <code class="highlighter-rouge">mvn verify</code></li>
+  <li>IT : Integration test, run w/ <code class="language-plaintext highlighter-rouge">mvn verify</code></li>
   <li>RW : Random Walk</li>
 </ul>
 
@@ -478,7 +478,7 @@ and, in HDFS High-Availability instances, forcing NameNode failover.</p>
       <td>Apache 3.3.6</td>
       <td>No</td>
       <td>1.6.0 RC5</td>
-      <td>All unit and ITs w/  <code class="highlighter-rouge">-Dhadoop.profile=2</code> and <code class="highlighter-rouge">-Dhadoop.profile=1</code></td>
+      <td>All unit and ITs w/  <code class="language-plaintext highlighter-rouge">-Dhadoop.profile=2</code> and <code class="language-plaintext highlighter-rouge">-Dhadoop.profile=1</code></td>
     </tr>
     <tr>
       <td>Gentoo</td>

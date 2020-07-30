@@ -514,11 +514,11 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
   </tbody>
 </table>
 
-<p>In addition, the user can provide <code class="highlighter-rouge">0</code> and an ephemeral port will be chosen instead. This
+<p>In addition, the user can provide <code class="language-plaintext highlighter-rouge">0</code> and an ephemeral port will be chosen instead. This
 ephemeral port is likely to be unique and not already bound. Thus, configuring ports to
-use <code class="highlighter-rouge">0</code> instead of an explicit value, should, in most cases, work around any issues of
+use <code class="language-plaintext highlighter-rouge">0</code> instead of an explicit value, should, in most cases, work around any issues of
 running multiple distinct Accumulo instances (or any other process which tries to use the
-same default ports) on the same hardware. Finally, the <code class="highlighter-rouge">*.port.client</code> properties will work
+same default ports) on the same hardware. Finally, the <code class="language-plaintext highlighter-rouge">*.port.client</code> properties will work
 with the port range syntax (M-N) allowing the user to specify a range of ports for the
 service to attempt to bind. The ports in the range will be tried in a 1-up manner starting
 at the low end of the range to, and including, the high end of the range.</p>
@@ -528,21 +528,21 @@ at the low end of the range to, and including, the high end of the range.</p>
 <p>Download a binary distribution of Accumulo and install it to a directory on a disk with
 sufficient space:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd &lt;install directory&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd &lt;install directory&gt;
 tar xzf accumulo-2.0.0-bin.tar.gz
 cd accumulo-2.0.0
 </code></pre></div></div>
 
-<p>Repeat this step on each machine in your cluster. Typically, the same <code class="highlighter-rouge">&lt;install directory&gt;</code>
+<p>Repeat this step on each machine in your cluster. Typically, the same <code class="language-plaintext highlighter-rouge">&lt;install directory&gt;</code>
 is chosen for all machines in the cluster.</p>
 
-<p>There are four scripts in the <code class="highlighter-rouge">bin/</code> directory that are used to manage Accumulo:</p>
+<p>There are four scripts in the <code class="language-plaintext highlighter-rouge">bin/</code> directory that are used to manage Accumulo:</p>
 
 <ol>
-  <li><code class="highlighter-rouge">accumulo</code> - Runs Accumulo command-line tools and starts Accumulo processes</li>
-  <li><code class="highlighter-rouge">accumulo-service</code> - Runs Accumulo processes as services</li>
-  <li><code class="highlighter-rouge">accumulo-cluster</code> - Manages Accumulo cluster on a single node or several nodes</li>
-  <li><code class="highlighter-rouge">accumulo-util</code> - Accumulo utilities for creating configuration, native libraries, etc.</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo</code> - Runs Accumulo command-line tools and starts Accumulo processes</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> - Runs Accumulo processes as services</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> - Manages Accumulo cluster on a single node or several nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-util</code> - Accumulo utilities for creating configuration, native libraries, etc.</li>
 </ol>
 
 <p>These scripts will be used in the remaining instructions to configure and run Accumulo.</p>
@@ -557,21 +557,21 @@ sync, which can cause problems with automatically timestamped data.</p>
 
 <h2 id="configuration">Configuration</h2>
 
-<p>The Accumulo tarball contains a <code class="highlighter-rouge">conf/</code> directory where Accumulo looks for configuration. If you
-installed Accumulo using downstream packaging, the <code class="highlighter-rouge">conf/</code> could be something else like
-<code class="highlighter-rouge">/etc/accumulo/</code>.</p>
+<p>The Accumulo tarball contains a <code class="language-plaintext highlighter-rouge">conf/</code> directory where Accumulo looks for configuration. If you
+installed Accumulo using downstream packaging, the <code class="language-plaintext highlighter-rouge">conf/</code> could be something else like
+<code class="language-plaintext highlighter-rouge">/etc/accumulo/</code>.</p>
 
 <p>Before starting Accumulo, the configuration files <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> must
-exist in <code class="highlighter-rouge">conf/</code> and be properly configured. If you are using <code class="highlighter-rouge">accumulo-cluster</code> to launch a
-cluster, the <code class="highlighter-rouge">conf/</code> directory must also contain host files for Accumulo services (i.e <a href="/docs/2.x/configuration/files#gc">gc</a>,
+exist in <code class="language-plaintext highlighter-rouge">conf/</code> and be properly configured. If you are using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> to launch a
+cluster, the <code class="language-plaintext highlighter-rouge">conf/</code> directory must also contain host files for Accumulo services (i.e <a href="/docs/2.x/configuration/files#gc">gc</a>,
 <a href="/docs/2.x/configuration/files#masters">masters</a>, <a href="/docs/2.x/configuration/files#monitor">monitor</a>, <a href="/docs/2.x/configuration/files#tservers">tservers</a>, <a href="/docs/2.x/configuration/files#tracers">tracers</a>). You can either create these files
-manually or run <code class="highlighter-rouge">accumulo-cluster create-config</code>.</p>
+manually or run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>.</p>
 
-<p>Logging is configured in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> to use three log4j configuration files in <code class="highlighter-rouge">conf/</code>. The
+<p>Logging is configured in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> to use three log4j configuration files in <code class="language-plaintext highlighter-rouge">conf/</code>. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
 (i.e Master, TabletServer, Garbage Collector) is configured by <a href="/docs/2.x/configuration/files#log4j-serviceproperties">log4j-service.properties</a> except for
-the Monitor which is configured by <a href="/docs/2.x/configuration/files#log4j-monitorproperties">log4j-monitor.properties</a>. All Accumulo commands (i.e <code class="highlighter-rouge">init</code>,
-<code class="highlighter-rouge">shell</code>, etc) are configured by <a href="/docs/2.x/configuration/files#log4jproperties">log4j.properties</a>.</p>
+the Monitor which is configured by <a href="/docs/2.x/configuration/files#log4j-monitorproperties">log4j-monitor.properties</a>. All Accumulo commands (i.e <code class="language-plaintext highlighter-rouge">init</code>,
+<code class="language-plaintext highlighter-rouge">shell</code>, etc) are configured by <a href="/docs/2.x/configuration/files#log4jproperties">log4j.properties</a>.</p>
 
 <h3 id="configure-accumulo-envsh">Configure accumulo-env.sh</h3>
 
@@ -579,19 +579,19 @@ the Monitor which is configured by <a href="/docs/2.x/configuration/files#log4j-
 and specify the following:</p>
 
 <ol>
-  <li>Enter the location of Hadoop for <code class="highlighter-rouge">$HADOOP_HOME</code></li>
-  <li>Enter the location of ZooKeeper for <code class="highlighter-rouge">$ZOOKEEPER_HOME</code></li>
-  <li>Optionally, choose a different location for Accumulo logs using <code class="highlighter-rouge">$ACCUMULO_LOG_DIR</code></li>
+  <li>Enter the location of Hadoop for <code class="language-plaintext highlighter-rouge">$HADOOP_HOME</code></li>
+  <li>Enter the location of ZooKeeper for <code class="language-plaintext highlighter-rouge">$ZOOKEEPER_HOME</code></li>
+  <li>Optionally, choose a different location for Accumulo logs using <code class="language-plaintext highlighter-rouge">$ACCUMULO_LOG_DIR</code></li>
 </ol>
 
-<p>Accumulo uses <code class="highlighter-rouge">HADOOP_HOME</code> and <code class="highlighter-rouge">ZOOKEEPER_HOME</code> to locate Hadoop and Zookeeper jars
-and add them the <code class="highlighter-rouge">CLASSPATH</code> variable. If you are running a vendor-specific release of Hadoop
-or Zookeeper, you may need to change how your <code class="highlighter-rouge">CLASSPATH</code> is built in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. If
-Accumulo has problems later on finding jars, run <code class="highlighter-rouge">accumulo classpath</code> to print Accumulo’s
+<p>Accumulo uses <code class="language-plaintext highlighter-rouge">HADOOP_HOME</code> and <code class="language-plaintext highlighter-rouge">ZOOKEEPER_HOME</code> to locate Hadoop and Zookeeper jars
+and add them the <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable. If you are running a vendor-specific release of Hadoop
+or Zookeeper, you may need to change how your <code class="language-plaintext highlighter-rouge">CLASSPATH</code> is built in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. If
+Accumulo has problems later on finding jars, run <code class="language-plaintext highlighter-rouge">accumulo classpath</code> to print Accumulo’s
 classpath.</p>
 
 <p>You may want to change the default memory settings for Accumulo’s TabletServer which are
-by set in the <code class="highlighter-rouge">JAVA_OPTS</code> settings for ‘tservers’ in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. Note the
+by set in the <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> settings for ‘tservers’ in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. Note the
 syntax is that of the Java JVM command line options. This value should be less than the
 physical memory of the machines running TabletServers.</p>
 
@@ -622,27 +622,27 @@ in the JVM by causing it to pause much less frequently.</p>
 <h4 id="building">Building</h4>
 
 <p>32-bit and 64-bit Linux and Mac OS X versions of the native map can be built by executing
-<code class="highlighter-rouge">accumulo-util build-native</code>. If your system’s default compiler options are insufficient,
+<code class="language-plaintext highlighter-rouge">accumulo-util build-native</code>. If your system’s default compiler options are insufficient,
 you can add additional compiler options to the command line, such as options for the
-architecture. These will be passed to the Makefile in the environment variable <code class="highlighter-rouge">USERFLAGS</code>.</p>
+architecture. These will be passed to the Makefile in the environment variable <code class="language-plaintext highlighter-rouge">USERFLAGS</code>.</p>
 
 <p>Examples:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-util build-native
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-util build-native
 accumulo-util build-native -m32
 </code></pre></div></div>
 
 <p>After building the native map from the source, you will find the artifact in
-<code class="highlighter-rouge">lib/native</code>. Upon starting up, the tablet server will look
+<code class="language-plaintext highlighter-rouge">lib/native</code>. Upon starting up, the tablet server will look
 in this directory for the map library. If the file is renamed or moved from its
 target directory, the tablet server may not be able to find it. The system can
-also locate the native maps shared library by setting <code class="highlighter-rouge">LD_LIBRARY_PATH</code>
-(or <code class="highlighter-rouge">DYLD_LIBRARY_PATH</code> on Mac OS X) in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>.</p>
+also locate the native maps shared library by setting <code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>
+(or <code class="language-plaintext highlighter-rouge">DYLD_LIBRARY_PATH</code> on Mac OS X) in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>.</p>
 
 <h4 id="native-maps-configuration">Native Maps Configuration</h4>
 
 <p>As mentioned, Accumulo will use the native libraries if they are found in the expected
-location and <a href="/docs/2.x/configuration/server-properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a> is set to <code class="highlighter-rouge">true</code> (which is the default).
+location and <a href="/docs/2.x/configuration/server-properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a> is set to <code class="language-plaintext highlighter-rouge">true</code> (which is the default).
 Using the native maps over JVM Maps nets a noticeable improvement in ingest rates; however,
 certain configuration variables are important to modify when increasing the size of the
 native map.</p>
@@ -659,7 +659,7 @@ can reference before they will be automatically minor compacted</li>
 <p>The maximum size of the native maps for a server should be less than the product of the write-ahead
 log maximum size and minor compaction threshold for log files:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$table.compaction.minor.logs.threshold * $tserver.walog.max.size &gt;= $tserver.memory.maps.max
 </code></pre></div></div>
 
 <p>This formula ensures that minor compactions won’t be automatically triggered before the native
@@ -674,14 +674,14 @@ performance to the write-ahead log file which will slow ingest.</p>
 
 <h3 id="cluster-specification">Cluster Specification</h3>
 
-<p>If you are using <code class="highlighter-rouge">accumulo-cluster</code> to start a cluster, configure the following on the
+<p>If you are using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> to start a cluster, configure the following on the
 machine that will serve as the Accumulo master:</p>
 
 <ol>
-  <li>Run <code class="highlighter-rouge">accumulo-cluster create-config</code> to create the <a href="/docs/2.x/configuration/files#masters">masters</a> and <a href="/docs/2.x/configuration/files#tservers">tservers</a> files.</li>
-  <li>Write the IP address or domain name of the Accumulo Master to the <a href="/docs/2.x/configuration/files#masters">masters</a> file in <code class="highlighter-rouge">conf/</code>.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code> to create the <a href="/docs/2.x/configuration/files#masters">masters</a> and <a href="/docs/2.x/configuration/files#tservers">tservers</a> files.</li>
+  <li>Write the IP address or domain name of the Accumulo Master to the <a href="/docs/2.x/configuration/files#masters">masters</a> file in <code class="language-plaintext highlighter-rouge">conf/</code>.</li>
   <li>Write the IP addresses or domain name of the machines that will be TabletServers to the
-<a href="/docs/2.x/configuration/files#tservers">tservers</a> file in <code class="highlighter-rouge">conf/</code>, one per line.</li>
+<a href="/docs/2.x/configuration/files#tservers">tservers</a> file in <code class="language-plaintext highlighter-rouge">conf/</code>, one per line.</li>
 </ol>
 
 <p>Note that if using domain names rather than IP addresses, DNS must be configured
@@ -722,24 +722,24 @@ Master coordinates moving the input files to Bulk Ingest to an Accumulo-managed 
 Accumulo cannot safely move files across different Hadoop FileSystems. This is problematic because
 Accumulo also cannot make reliable assertions across what is the same FileSystem which is specified
 with different names. Naively, while 127.0.0.1:8020 might be a valid identifier for an HDFS
-instance, Accumulo identifies <code class="highlighter-rouge">localhost:8020</code> as a different HDFS instance than <code class="highlighter-rouge">127.0.0.1:8020</code>.</p>
+instance, Accumulo identifies <code class="language-plaintext highlighter-rouge">localhost:8020</code> as a different HDFS instance than <code class="language-plaintext highlighter-rouge">127.0.0.1:8020</code>.</p>
 
 <h3 id="deploy-configuration">Deploy Configuration</h3>
 
-<p>Copy <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> from the <code class="highlighter-rouge">conf/</code> directory on the master to all
-Accumulo tablet servers. The “host” configuration files files <code class="highlighter-rouge">accumulo-cluster</code> only need to be on
+<p>Copy <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> from the <code class="language-plaintext highlighter-rouge">conf/</code> directory on the master to all
+Accumulo tablet servers. The “host” configuration files files <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> only need to be on
 servers where that command is run.</p>
 
 <h3 id="sensitive-configuration-values">Sensitive Configuration Values</h3>
 
 <p>Accumulo has a number of properties that can be specified via the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>
-file which are sensitive in nature, <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a> and <code class="highlighter-rouge">trace.token.property.password</code>
+file which are sensitive in nature, <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a> and <code class="language-plaintext highlighter-rouge">trace.token.property.password</code>
 are two common examples. Both of these properties, if compromised, have the ability
 to result in data being leaked to users who should not have access to that data.</p>
 
 <p>In Hadoop-2.6.0, a new CredentialProvider class was introduced which serves as a common
 implementation to abstract away the storage and retrieval of passwords from plaintext
-storage in configuration files. Any Property marked with the <code class="highlighter-rouge">Sensitive</code> annotation
+storage in configuration files. Any Property marked with the <code class="language-plaintext highlighter-rouge">Sensitive</code> annotation
 is a candidate for use with these CredentialProviders. For version of Hadoop which lack
 these classes, the feature will just be unavailable for use.</p>
 
@@ -753,17 +753,17 @@ when the Configuration object for <a href="/docs/2.x/configuration/files#accumul
 Each entry in the KeyStore is the Accumulo Property key name. For example, to store the
 <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a>, the following command can be used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  hadoop credential create instance.secret --provider jceks://file/etc/accumulo/conf/accumulo.jceks
 </code></pre></div></div>
 
 <p>The command will then prompt you to enter the secret to use and create a keystore in:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  /path/to/accumulo/conf/accumulo.jceks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  /path/to/accumulo/conf/accumulo.jceks
 </code></pre></div></div>
 
 <p>Then, <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> must be configured to use this KeyStore as a CredentialProvider:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/accumulo.jceks
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/accumulo.jceks
 </code></pre></div></div>
 
 <p>This configuration will then transparently extract the <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a> from
@@ -797,7 +797,7 @@ consideration. There is no enforcement of these warnings via the API.</p>
 <h3 id="configuring-the-classloader">Configuring the ClassLoader</h3>
 
 <p>Accumulo builds its Java classpath in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. This classpath can be viewed by running
-<code class="highlighter-rouge">accumulo classpath</code>.</p>
+<code class="language-plaintext highlighter-rouge">accumulo classpath</code>.</p>
 
 <p>After an Accumulo application has started, it will load classes from the locations specified in the
 deprecated <a href="/docs/2.x/configuration/server-properties#general_classpaths">general.classpaths</a> property. Additionally, Accumulo will load classes from the
@@ -816,10 +816,10 @@ alternate configuration will also monitor the vfs locations for changes and relo
 
 <p>With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A
 context is identified by a name and references a set of locations from which to load classes and can
-be specified in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file or added using the <code class="highlighter-rouge">config</code> command in the shell.
+be specified in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file or added using the <code class="language-plaintext highlighter-rouge">config</code> command in the shell.
 Below is an example for specify the app1 context in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Application A classpath, loads jars from HDFS and local file system
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Application A classpath, loads jars from HDFS and local file system
 general.vfs.context.classpath.app1=hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar
 </code></pre></div></div>
 
@@ -827,11 +827,11 @@ general.vfs.context.classpath.app1=hdfs://localhost:8020/applicationA/classpath/
 loaded from the parent classloader first. You can override this behavior by delegating to the parent
 classloader after looking in this classloader first. An example of this configuration is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.vfs.context.classpath.app1.delegation=post
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.vfs.context.classpath.app1.delegation=post
 </code></pre></div></div>
 
 <p>To use contexts in your application you can set the <a href="/docs/2.x/configuration/server-properties#table_classpath_context">table.classpath.context</a> on your
-tables or use the <code class="highlighter-rouge">setClassLoaderContext()</code> method on Scanner and BatchScanner passing in the name
+tables or use the <code class="language-plaintext highlighter-rouge">setClassLoaderContext()</code> method on Scanner and BatchScanner passing in the name
 of the context, app1 in the example above. Setting the property on the table allows your minc, majc,
 and scan iterators to load classes from the locations defined by the context. Passing the context
 name to the scanners allows you to override the table setting to load only scan time iterators from
@@ -843,7 +843,7 @@ a different location.</p>
 data across the cluster. HDFS is required to be configured and running before
 Accumulo can be initialized.</p>
 
-<p>Once HDFS is started, initialization can be performed by executing <code class="highlighter-rouge">accumulo init</code>. This script will
+<p>Once HDFS is started, initialization can be performed by executing <code class="language-plaintext highlighter-rouge">accumulo init</code>. This script will
 prompt for a name for this instance of Accumulo. The instance name is used to identify a set of
 tables and instance-specific settings. The script will then write some information into HDFS so
 Accumulo can start properly.</p>
@@ -857,24 +857,24 @@ can be started.</p>
 
 <p>Make sure Hadoop is configured on all of the machines in the cluster, including access to a shared
 HDFS instance. Make sure HDFS and ZooKeeper are running. Make sure ZooKeeper is configured and
-running on at least one machine in the cluster. Start Accumulo using <code class="highlighter-rouge">accumulo-cluster start</code>.</p>
+running on at least one machine in the cluster. Start Accumulo using <code class="language-plaintext highlighter-rouge">accumulo-cluster start</code>.</p>
 
 <p>To verify that Accumulo is running, check the <a href="/docs/2.x/administration/monitoring-metrics#monitor">Accumulo monitor</a>. In addition, the Shell
 can provide some information about the status of tables via reading the metadata tables.</p>
 
 <h3 id="stopping-accumulo">Stopping Accumulo</h3>
 
-<p>To shutdown cleanly, run <code class="highlighter-rouge">accumulo-cluster stop</code> and the master will orchestrate the
+<p>To shutdown cleanly, run <code class="language-plaintext highlighter-rouge">accumulo-cluster stop</code> and the master will orchestrate the
 shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may
 take some time for particular configurations.</p>
 
 <h3 id="adding-a-tablet-server">Adding a Tablet Server</h3>
 
-<p>Update your <code class="highlighter-rouge">conf/tservers</code> file to account for the addition.</p>
+<p>Update your <code class="language-plaintext highlighter-rouge">conf/tservers</code> file to account for the addition.</p>
 
 <p>Next, ssh to each of the hosts you want to add and run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
 </code></pre></div></div>
 
 <p>Make sure the host in question has the new configuration, or else the tablet
@@ -886,27 +886,27 @@ but in practice it’s good to ensure consistent configuration across all nodes.
 <p>If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
 </code></pre></div></div>
 
 <p>Alternatively, you can ssh to each of the hosts you want to remove and run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver stop
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver stop
 </code></pre></div></div>
 
-<p>Be sure to update your <code class="highlighter-rouge">conf/tservers</code> file to account for the removal of these hosts. Bear in mind
+<p>Be sure to update your <code class="language-plaintext highlighter-rouge">conf/tservers</code> file to account for the removal of these hosts. Bear in mind
 that the monitor will not re-read the tservers file automatically, so it will report the
 decommissioned servers as down; it’s recommended that you restart the monitor so that the node list
 is up to date.</p>
 
 <p>The steps described to decommission a node can also be used (without removal of the host from the
-<code class="highlighter-rouge">conf/tservers</code> file) to gracefully stop a node. This will ensure that the tabletserver is cleanly
+<code class="language-plaintext highlighter-rouge">conf/tservers</code> file) to gracefully stop a node. This will ensure that the tabletserver is cleanly
 stopped and recovery will not need to be performed when the tablets are re-hosted.</p>
 
 <h3 id="restarting-process-on-a-node">Restarting process on a node</h3>
 
 <p>Occasionally, it might be necessary to restart the processes on a specific node. In addition
-to the <code class="highlighter-rouge">accumulo-cluster</code> script, Accumulo has a <code class="highlighter-rouge">accumulo-service</code> script that
+to the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script, Accumulo has a <code class="language-plaintext highlighter-rouge">accumulo-service</code> script that
 can be use to start/stop processes on a node.</p>
 
 <h4 id="a-note-on-rolling-restarts">A note on rolling restarts</h4>
@@ -915,7 +915,7 @@ can be use to start/stop processes on a node.</p>
 can place significant load on the Master server. If slightly lower availability is acceptable, this
 load can be reduced by globally setting <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> to a positive value.</p>
 
-<p>With <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> set to, say, <code class="highlighter-rouge">5m</code>, Accumulo will wait for 5 minutes for any dead
+<p>With <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> set to, say, <code class="language-plaintext highlighter-rouge">5m</code>, Accumulo will wait for 5 minutes for any dead
 TabletServer to return before reassigning that TabletServer’s responsibilities to other
 TabletServers. If the TabletServer returns to the cluster before the specified timeout has elapsed,
 Accumulo will assign the TabletServer its original responsibilities.</p>
@@ -931,56 +931,56 @@ to be able to scale to using 10’s of GB of RAM and 10’s of CPU cores.</p>
 
 <p>Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment
-variable <code class="highlighter-rouge">ACCUMULO_SERVICE_INSTANCE</code> to an instance number (i.e 1, 2) for each instance that is
+variable <code class="language-plaintext highlighter-rouge">ACCUMULO_SERVICE_INSTANCE</code> to an instance number (i.e 1, 2) for each instance that is
 started. Also, set the these properties in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>:</p>
 
 <ul>
-  <li><a href="/docs/2.x/configuration/server-properties#tserver_port_search">tserver.port.search</a> = <code class="highlighter-rouge">true</code></li>
-  <li><a href="/docs/2.x/configuration/server-properties#replication_receipt_service_port">replication.receipt.service.port</a> = <code class="highlighter-rouge">0</code></li>
+  <li><a href="/docs/2.x/configuration/server-properties#tserver_port_search">tserver.port.search</a> = <code class="language-plaintext highlighter-rouge">true</code></li>
+  <li><a href="/docs/2.x/configuration/server-properties#replication_receipt_service_port">replication.receipt.service.port</a> = <code class="language-plaintext highlighter-rouge">0</code></li>
 </ul>
 
-<p>In order to start multiple TabletServers on a node, the <code class="highlighter-rouge">accumulo</code> command must be used:</p>
+<p>In order to start multiple TabletServers on a node, the <code class="language-plaintext highlighter-rouge">accumulo</code> command must be used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &amp;&gt; ./logs/tserver1.out &amp;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &amp;&gt; ./logs/tserver1.out &amp;
 ACCUMULO_SERVICE_INSTANCE=2 ./bin/accumulo tserver &amp;&gt; ./logs/tserver2.out &amp;
 </code></pre></div></div>
 
 <h4 id="running-multiple-tabletservers-per-node-in-accumulo-210-and-later">Running multiple TabletServers per node in Accumulo 2.1.0 and later</h4>
-<p>Starting with Accumulo 2.1.0, the <code class="highlighter-rouge">accumulo-cluster</code> script can be used along with environment
-variable <code class="highlighter-rouge">NUM_TSERVERS</code> as a convenient alternative to the <code class="highlighter-rouge">accumulo</code> command to start / stop
+<p>Starting with Accumulo 2.1.0, the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script can be used along with environment
+variable <code class="language-plaintext highlighter-rouge">NUM_TSERVERS</code> as a convenient alternative to the <code class="language-plaintext highlighter-rouge">accumulo</code> command to start / stop
 multiple TabletServers per node. For example, the following commands can be used to start / stop
 2 TabletServers on the current node:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start-here
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start-here
 NUM_TSERVERS=2 ./bin/accumulo-cluster stop-here
 </code></pre></div></div>
 
 <p>To start / stop the entire Accumulo cluster with 2 TabletServers per worker node, use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NUM_TSERVERS=2 ./bin/accumulo-cluster start
 NUM_TSERVERS=2 ./bin/accumulo-cluster stop
 </code></pre></div></div>
 
-<p>Other commands like <code class="highlighter-rouge">accumulo-cluster start-tservers</code> and <code class="highlighter-rouge">accumulo-cluster stop-tservers</code> support
-the use of <code class="highlighter-rouge">NUM_TSERVERS</code> to specify the number of TabletServers per worker node.</p>
+<p>Other commands like <code class="language-plaintext highlighter-rouge">accumulo-cluster start-tservers</code> and <code class="language-plaintext highlighter-rouge">accumulo-cluster stop-tservers</code> support
+the use of <code class="language-plaintext highlighter-rouge">NUM_TSERVERS</code> to specify the number of TabletServers per worker node.</p>
 
-<p>When <code class="highlighter-rouge">accumulo-cluster</code> is used along with <code class="highlighter-rouge">NUM_TSERVERS</code> greater than 1, the resultant log files
+<p>When <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> is used along with <code class="language-plaintext highlighter-rouge">NUM_TSERVERS</code> greater than 1, the resultant log files
 and redirected stdout / stderr files for each TabletServer running on the node have the instance
 number as part of their respective filenames.</p>
 
-<p>Lastly, starting with Accumulo 2.1.0 the <code class="highlighter-rouge">accumulo-env.sh</code> script ensures that Accumulo metrics
+<p>Lastly, starting with Accumulo 2.1.0 the <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> script ensures that Accumulo metrics
 are correctly associated with the respective instance number for each TabletServer on a node.</p>
 
 <h2 id="logging">Logging</h2>
 
 <p>Accumulo processes each write to a set of log files. By default, these logs are found at directory
-set by <code class="highlighter-rouge">ACCUMULO_LOG_DIR</code> in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>.</p>
+set by <code class="language-plaintext highlighter-rouge">ACCUMULO_LOG_DIR</code> in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>.</p>
 
 <h3 id="audit-logging">Audit Logging</h3>
 
 <p>Accumulo logs many user-initiated actions, and whether they succeeded or failed, to an slf4j logger
-named <code class="highlighter-rouge">org.apache.accumulo.audit</code>. This logger can be configured in the user’s logging framework
-(such as log4j or logback). In the tarball, the configuration file <code class="highlighter-rouge">conf/log4j-service.properties</code>
+named <code class="language-plaintext highlighter-rouge">org.apache.accumulo.audit</code>. This logger can be configured in the user’s logging framework
+(such as log4j or logback). In the tarball, the configuration file <code class="language-plaintext highlighter-rouge">conf/log4j-service.properties</code>
 demonstrates basic audit logging with example configuration options for log4j.</p>
 
 <h2 id="recovery">Recovery</h2>
@@ -994,7 +994,7 @@ failure during shutdown).</p>
 
 <p>Recovery is performed by asking a tablet server to sort the logs so that tablets can easily find
 their missing updates. The sort status of each file is displayed on Accumulo monitor status page.
-Once the recovery is complete any tablets involved should return to an <code class="highlighter-rouge">online</code> state. Until then
+Once the recovery is complete any tablets involved should return to an <code class="language-plaintext highlighter-rouge">online</code> state. Until then
 those tablets will be unavailable to clients.</p>
 
 <p>The Accumulo client library is configured to retry failed mutations and in many
@@ -1004,12 +1004,12 @@ throwing an exception.</p>
 <h2 id="migrating-accumulo-from-non-ha-namenode-to-ha-namenode">Migrating Accumulo from non-HA Namenode to HA Namenode</h2>
 
 <p>The following steps will allow a non-HA instance to be migrated to an HA instance. Consider an HDFS
-URL <code class="highlighter-rouge">hdfs://namenode.example.com:8020</code> which is going to be moved to <code class="highlighter-rouge">hdfs://nameservice1</code>.</p>
+URL <code class="language-plaintext highlighter-rouge">hdfs://namenode.example.com:8020</code> which is going to be moved to <code class="language-plaintext highlighter-rouge">hdfs://nameservice1</code>.</p>
 
-<p>Before moving HDFS over to the HA namenode, use <code class="highlighter-rouge">accumulo admin volumes</code> to confirm
+<p>Before moving HDFS over to the HA namenode, use <code class="language-plaintext highlighter-rouge">accumulo admin volumes</code> to confirm
 that the only volume displayed is the volume from the current namenode’s HDFS URL.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
         Volume : hdfs://namenode.example.com:8020/accumulo
 
 Listing volumes referenced in accumulo.root tablets section
@@ -1027,18 +1027,18 @@ nameservice.</p>
 
 <p>Edit <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> to notify accumulo that a volume is being replaced. First, add the new
 nameservice volume to the <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> property. Next, add the <a href="/docs/2.x/configuration/server-properties#instance_volumes_replacements">instance.volumes.replacements</a>
-property in the form of <code class="highlighter-rouge">old new</code>. It’s important to not include the volume that’s being replaced in
+property in the form of <code class="language-plaintext highlighter-rouge">old new</code>. It’s important to not include the volume that’s being replaced in
 <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a>, otherwise it’s possible accumulo could continue to write to the volume.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># instance.dfs.uri and instance.dfs.dir should not be set
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># instance.dfs.uri and instance.dfs.dir should not be set
 instance.volumes=hdfs://nameservice1/accumulo
 instance.volumes.replacements=hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo
 </code></pre></div></div>
 
-<p>Run <code class="highlighter-rouge">accumulo init --add-volumes</code> and start up the accumulo cluster. Verify that the
-new nameservice volume shows up with <code class="highlighter-rouge">accumulo admin volumes</code>.</p>
+<p>Run <code class="language-plaintext highlighter-rouge">accumulo init --add-volumes</code> and start up the accumulo cluster. Verify that the
+new nameservice volume shows up with <code class="language-plaintext highlighter-rouge">accumulo admin volumes</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
         Volume : hdfs://namenode.example.com:8020/accumulo
         Volume : hdfs://nameservice1/accumulo
 
@@ -1115,7 +1115,7 @@ includes the following:</p>
 
 <ul>
   <li>“Permanent Space”, where the JVM stores Classes, Methods, and other code elements. This can be
-limited by a JVM flag such as <code class="highlighter-rouge">-XX:MaxPermSize:100m</code>, and is typically tens of megabytes.</li>
+limited by a JVM flag such as <code class="language-plaintext highlighter-rouge">-XX:MaxPermSize:100m</code>, and is typically tens of megabytes.</li>
   <li>Code generation space, where the JVM stores just-in-time compiled code. This is typically small
 enough to ignore</li>
   <li>Socket buffers, where the JVM stores send and receive buffers for each socket.</li>
@@ -1130,7 +1130,7 @@ the memory.maps.max parameter in accumulo.properties.</li>
 Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
 simple calculation for physical memory requirements follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Physical memory needed
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Physical memory needed
     = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
     = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process)
         + (total applications memory, provisioning memory, etc.) + (1G)

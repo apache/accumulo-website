@@ -160,12 +160,12 @@
 
 <p>Since Accumulo tables are sorted by row ID, each table can be thought of as being indexed by the row ID. Lookups performed row ID can be executed quickly, by doing a binary search, first across the tablets, and then within a tablet. Clients should choose a row ID carefully in order to support their desired application. A simple rule is to select a unique identifier as the row ID for each entity to be stored and assign all the other attributes to be tracked to be columns under this row ID. For example, if we have the following data in a comma-separated file:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    userid,age,address,account-balance
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    userid,age,address,account-balance
 </code></pre></div></div>
 
 <p>We might choose to store this data using the userid as the rowID and the rest of the data in column families:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mutation m = new Mutation(new Text(userid));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mutation m = new Mutation(new Text(userid));
 m.put(new Text("age"), age);
 m.put(new Text("address"), address);
 m.put(new Text("balance"), account_balance);
@@ -175,7 +175,7 @@ writer.add(m);
 
 <p>We could then retrieve any of the columns for a specific userid by specifying the userid as the range of a scanner and fetching specific columns:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Range r = new Range(userid, userid); // single row
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Range r = new Range(userid, userid); // single row
 Scanner s = conn.createScanner("userdata", auths);
 s.setRange(r);
 s.fetchColumnFamily(new Text("age"));
@@ -188,7 +188,7 @@ for(Entry&lt;Key,Value&gt; entry : s)
 
 <p>Often it is necessary to transform the rowID in order to have rows ordered in a way that is optimal for anticipated access patterns. A good example of this is reversing the order of components of internet domain names in order to group rows of the same parent domain together:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code
 com.google.labs
 com.google.mail
 com.yahoo.mail
@@ -197,7 +197,7 @@ com.yahoo.research
 
 <p>Some data may result in the creation of very large rows - rows with many columns. In this case the table designer may wish to split up these rows for better load balancing while keeping them sorted together for scanning purposes. This can be done by appending a random substring at the end of the row:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_00
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_00
 com.google.code_01
 com.google.code_02
 com.google.labs_00
@@ -207,7 +207,7 @@ com.google.mail_01
 
 <p>It could also be done by adding a string representation of some period of time such as date to the week or month:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_201003
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>com.google.code_201003
 com.google.code_201004
 com.google.code_201005
 com.google.labs_201003
@@ -229,7 +229,7 @@ com.google.mail_201004
 
 <p>To support efficient lookups of multiple rowIDs from the same table, the Accumulo client library provides a BatchScanner. Users specify a set of Ranges to the BatchScanner, which performs the lookups in multiple threads to multiple servers and returns an Iterator over all the rows retrieved. The rows returned are NOT in sorted order, as is the case with the basic Scanner interface.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// first we scan the index for IDs of rows matching our query
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// first we scan the index for IDs of rows matching our query
 
 Text term = new Text("mySearchTerm");
 
@@ -272,7 +272,7 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <h2 id="-document-partitioned-indexing"><a id="Document-Partitioned_Indexing"></a> Document-Partitioned Indexing</h2>
 
-<p>Using a simple index as described above works well when looking for records that match one of a set of given criteria. When looking for records that match more than one criterion simultaneously, such as when looking for documents that contain all of the words <code class="highlighter-rouge">the' and </code>white’ and `house’, there are several issues.</p>
+<p>Using a simple index as described above works well when looking for records that match one of a set of given criteria. When looking for records that match more than one criterion simultaneously, such as when looking for documents that contain all of the words <code class="language-plaintext highlighter-rouge">the' and </code>white’ and `house’, there are several issues.</p>
 
 <p>First is that the set of all records matching any one of the search terms must be sent to the client, which incurs a lot of network traffic. The second problem is that the client is responsible for performing set intersection on the sets of records returned to eliminate all but the records matching all search terms. The memory of the client may easily be overwhelmed during this operation.</p>
 
@@ -286,7 +286,7 @@ for(Entry&lt;Key,Value&gt; entry : scan)
 
 <p>Finally, we perform set intersection operations on the TabletServer via a special iterator called the Intersecting Iterator. Since documents are partitioned into many bins, a search of all documents must search every bin. We can use the BatchScanner to scan all bins in parallel. The Intersecting Iterator should be enabled on a BatchScanner within user query code as follows:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text[] terms = {new Text("the"), new Text("white"), new Text("house")};
 
 BatchScanner bs = conn.createBatchScanner(table, auths, 20);
 IteratorSetting iter = new IteratorSetting(20, "ii", IntersectingIterator.class);

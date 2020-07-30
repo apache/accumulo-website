@@ -171,7 +171,7 @@ and make them viewable in <a href="http://grafana.org/">Grafana</a>, a visualiza
 
 <p><a href="https://github.com/apache/fluo-uno">Uno</a> can setup and configure InfluxDB/Grafana when it sets up Accumulo using the following command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uno setup accumulo --with-metrics
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uno setup accumulo --with-metrics
 </code></pre></div></div>
 
 <p>Metrics from Accumulo will be immediately viewable in Grafana at <a href="http://localhost:3000/">http://localhost:3000/</a>.</p>
@@ -184,7 +184,7 @@ the instructions below were written using InfluxDB v0.9.4.2 and Grafana v2.5.0.<
   <li>Add the following to your InfluxDB configuration to configure it accept metrics in Graphite
 format from Accumulo. The configuration below contains templates that transform the Graphite
 metrics into a format that is usable in InfluxDB.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[graphite]]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[graphite]]
   bind-address = ":2003"
   enabled = true
   database = "accumulo_metrics"
@@ -201,22 +201,22 @@ metrics into a format that is usable in InfluxDB.
   ]
 </code></pre></div>    </div>
   </li>
-  <li>Configure the Accumulo configuration file <code class="highlighter-rouge">hadoop-metrics2-accumulo.properties</code> to send Graphite
-metrics to InfluxDB. Below is example configuration. Remember to replace <code class="highlighter-rouge">&lt;INFLUXDB_HOST&gt;</code> with
+  <li>Configure the Accumulo configuration file <code class="language-plaintext highlighter-rouge">hadoop-metrics2-accumulo.properties</code> to send Graphite
+metrics to InfluxDB. Below is example configuration. Remember to replace <code class="language-plaintext highlighter-rouge">&lt;INFLUXDB_HOST&gt;</code> with
 the actual host.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> *.period=30
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> *.period=30
  accumulo.sink.graphite.class=org.apache.hadoop.metrics2.sink.GraphiteSink
  accumulo.sink.graphite.server_host=&lt;INFLUXDB_HOST&gt;
  accumulo.sink.graphite.server_port=2003
  accumulo.sink.graphite.metrics_prefix=accumulo
 </code></pre></div>    </div>
-    <p>Make sure the reporting frequency is set to 30 sec (i.e <code class="highlighter-rouge">*.period=30</code>). This is required if you are
+    <p>Make sure the reporting frequency is set to 30 sec (i.e <code class="language-plaintext highlighter-rouge">*.period=30</code>). This is required if you are
 using the provided Grafana dashboards that is configured in the next step.</p>
   </li>
   <li>Grafana needs to be configured to load dashboard JSON templates from a directory. Before restarting
-Grafana, you should copy <a href="https://raw.githubusercontent.com/apache/fluo-uno/master/conf/grafana/accumulo-dashboard.json">this Accumulo dashboard template</a> to the <code class="highlighter-rouge">dashboards/</code> directory
+Grafana, you should copy <a href="https://raw.githubusercontent.com/apache/fluo-uno/master/conf/grafana/accumulo-dashboard.json">this Accumulo dashboard template</a> to the <code class="language-plaintext highlighter-rouge">dashboards/</code> directory
 configured below.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [dashboards.json]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [dashboards.json]
  enabled = true
  path = &lt;GRAFANA_HOME&gt;/dashboards
 </code></pre></div>    </div>

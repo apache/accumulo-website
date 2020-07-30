@@ -422,13 +422,13 @@
       <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/master/_docs-2/troubleshooting/tools.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
 
-    <p>The <code class="highlighter-rouge">accumulo</code> command can be used to run various tools and classes from the command line.</p>
+    <p>The <code class="language-plaintext highlighter-rouge">accumulo</code> command can be used to run various tools and classes from the command line.</p>
 
 <h2 id="rfileinfo">RFileInfo</h2>
 
-<p>The <code class="highlighter-rouge">rfile-info</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
+<p>The <code class="language-plaintext highlighter-rouge">rfile-info</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
 2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
 Locality group         : &lt;DEFAULT&gt;
         Start block          : 0
@@ -454,9 +454,9 @@ Meta block     : RFile.index
       Compression type     : gz
 </code></pre></div></div>
 
-<p>When trying to diagnose problems related to key size, the <code class="highlighter-rouge">rfile-info</code> tool can provide a histogram of the individual key sizes:</p>
+<p>When trying to diagnose problems related to key size, the <code class="language-plaintext highlighter-rouge">rfile-info</code> tool can provide a histogram of the individual key sizes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
 ...
 Up to size      count      %-age
          10 :        222  28.23%
@@ -471,27 +471,27 @@ Up to size      count      %-age
 10000000000 :          0   0.00%
 </code></pre></div></div>
 
-<p>Likewise, <code class="highlighter-rouge">rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
+<p>Likewise, <code class="language-plaintext highlighter-rouge">rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
 row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
 ...
 </code></pre></div></div>
 
 <h2 id="getmasterstats">GetMasterStats</h2>
 
-<p>The <code class="highlighter-rouge">GetMasterStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
+<p>The <code class="language-plaintext highlighter-rouge">GetMasterStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
  OS Load Average: 0.27
 </code></pre></div></div>
 
 <h2 id="findofflinetablets">FindOfflineTablets</h2>
 
-<p>If the Accumulo monitor shows an offline tablet, use <code class="highlighter-rouge">FindOfflineTablets</code> to find out which
+<p>If the Accumulo monitor shows an offline tablet, use <code class="language-plaintext highlighter-rouge">FindOfflineTablets</code> to find out which
 tablet it is.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.FindOfflineTablets
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.FindOfflineTablets
 2&lt;&lt;@(null,null,localhost:9997) is UNASSIGNED  #walogs:2
 </code></pre></div></div>
 
@@ -499,20 +499,20 @@ tablet it is.</p>
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">2&lt;&lt;</code> -
+    <p><code class="language-plaintext highlighter-rouge">2&lt;&lt;</code> -
   This is the tablet from (-inf, pass:[+]inf) for the
-  table with id 2.  The command <code class="highlighter-rouge">tables -l</code> in the shell will show table ids for
+  table with id 2.  The command <code class="language-plaintext highlighter-rouge">tables -l</code> in the shell will show table ids for
   tables.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">@(null, null, localhost:9997)</code> -
+    <p><code class="language-plaintext highlighter-rouge">@(null, null, localhost:9997)</code> -
   Location information.  The
-  format is <code class="highlighter-rouge">@(assigned, hosted, last)</code>.  In this case, the
+  format is <code class="language-plaintext highlighter-rouge">@(assigned, hosted, last)</code>.  In this case, the
   tablet has not been assigned, is not hosted anywhere, and was once
   hosted on localhost.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">#walogs:2</code> -
+    <p><code class="language-plaintext highlighter-rouge">#walogs:2</code> -
    The number of write-ahead logs that this tablet requires for recovery.</p>
   </li>
 </ul>
@@ -522,11 +522,11 @@ logs to be sorted for efficient recovery.</p>
 
 <h2 id="checkformetadataproblems">CheckForMetadataProblems</h2>
 
-<p>The <code class="highlighter-rouge">CheckForMetadataProblems</code> tool can be used to make sure metadata
+<p>The <code class="language-plaintext highlighter-rouge">CheckForMetadataProblems</code> tool can be used to make sure metadata
 tables are up and consistent. It will verify the start/end of
 every tablet matches, and the start and stop for the table is empty:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
 Enter the connection password:
 All is well for table !0
 All is well for table 1
@@ -535,10 +535,10 @@ All is well for table 1
 <h2 id="removeentriesformissingfiles">RemoveEntriesForMissingFiles</h2>
 
 <p>If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove the
-the file reference using <code class="highlighter-rouge">RemoveEntriesForMissingFiles</code>. It will check every file reference
+the file reference using <code class="language-plaintext highlighter-rouge">RemoveEntriesForMissingFiles</code>. It will check every file reference
 and ensure that the file exists in HDFS.  Optionally, it will remove the reference:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RemoveEntriesForMissingFiles -u root --password
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RemoveEntriesForMissingFiles -u root --password
 Enter the connection password:
 2013-07-16 13:10:57,293 [util.RemoveEntriesForMissingFiles] INFO : File /accumulo/tables/2/default_tablet/F0000005.rf
  is missing
@@ -549,36 +549,36 @@ Enter the connection password:
 
 <p>If you have entries in zookeeper for old instances that you no longer need, remove them using CleanZookeeper:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CleanZookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CleanZookeeper
 </code></pre></div></div>
 
-<p>This command will not delete the instance pointed to by the local <code class="highlighter-rouge">accumulo.properties</code> file.</p>
+<p>This command will not delete the instance pointed to by the local <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file.</p>
 
 <h2 id="accumulo-util-dump-zoo">accumulo-util dump-zoo</h2>
 
 <p>To view the contents of ZooKeeper, run the following command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo
 </code></pre></div></div>
 
-<p>It can also be run using the <code class="highlighter-rouge">accumulo</code> command and full class name.</p>
+<p>It can also be run using the <code class="language-plaintext highlighter-rouge">accumulo</code> command and full class name.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper
 </code></pre></div></div>
 
 <p>If you would like to backup ZooKeeper, run the following command to write its contents as XML to file.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo --xml --root /accumulo &gt;dump.xml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo --xml --root /accumulo &gt;dump.xml
 </code></pre></div></div>
 
 <h1 id="restorezookeeper">RestoreZookeeper</h1>
 
 <p>An XML dump file can be later used to restore ZooKeeper.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
 </code></pre></div></div>
 
-<p>This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using <code class="highlighter-rouge">accumulo-util</code>.</p>
+<p>This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using <code class="language-plaintext highlighter-rouge">accumulo-util</code>.</p>
 
 
     <div class="row" style="margin-top: 20px;">

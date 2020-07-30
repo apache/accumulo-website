@@ -156,40 +156,40 @@ need to install or modify the Thrift definitions as a part of developing against
 
 <p>To build from source (for example, to deploy):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn package -Passemble
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn package -Passemble
 </code></pre></div></div>
 
-<p>This will create a file <code class="highlighter-rouge">accumulo-*-SNAPSHOT-dist.tar.gz</code> in the assemble/target directory. Optionally, append <code class="highlighter-rouge">-DskipTests</code> if you want to skip the build tests.</p>
+<p>This will create a file <code class="language-plaintext highlighter-rouge">accumulo-*-SNAPSHOT-dist.tar.gz</code> in the assemble/target directory. Optionally, append <code class="language-plaintext highlighter-rouge">-DskipTests</code> if you want to skip the build tests.</p>
 
-<p>To build your branch before submitting a pull request, you’ll probably want to run some basic “sunny-day” integration tests to ensure you haven’t made any grave errors, as well as <code class="highlighter-rouge">checkstyle</code> and <code class="highlighter-rouge">findbugs</code>:</p>
+<p>To build your branch before submitting a pull request, you’ll probably want to run some basic “sunny-day” integration tests to ensure you haven’t made any grave errors, as well as <code class="language-plaintext highlighter-rouge">checkstyle</code> and <code class="language-plaintext highlighter-rouge">findbugs</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn verify -Psunny
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn verify -Psunny
 </code></pre></div></div>
 
 <p>To run specific unit tests, you can run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn package -Dtest=MyTest -DfailIfNoTests=false
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn package -Dtest=MyTest -DfailIfNoTests=false
 </code></pre></div></div>
 
 <p>Or to run the specific integration tests MyIT and YourIT (and skip all unit tests), you can run:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn verify -Dtest=NoSuchTestExists -Dit.test=MyIT,YourIT -DfailIfNoTests=false
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn verify -Dtest=NoSuchTestExists -Dit.test=MyIT,YourIT -DfailIfNoTests=false
 </code></pre></div></div>
 
-<p>There are plenty of other options. For example, you can skip findbugs with <code class="highlighter-rouge">mvn verify -Dfindbugs.skip</code> or checkstyle <code class="highlighter-rouge">-Dcheckstyle.skip</code>, or control the number of forks to use while executing tests, <code class="highlighter-rouge">-DforkCount=4</code>, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.</p>
+<p>There are plenty of other options. For example, you can skip findbugs with <code class="language-plaintext highlighter-rouge">mvn verify -Dfindbugs.skip</code> or checkstyle <code class="language-plaintext highlighter-rouge">-Dcheckstyle.skip</code>, or control the number of forks to use while executing tests, <code class="language-plaintext highlighter-rouge">-DforkCount=4</code>, etc. You should check with specific plugins to see which command-line options are available to control their behavior. Note that not all options will result in a stable build, and options may change over time.</p>
 
 <p>If you regularly switch between major development branches, you may receive errors about improperly licensed files from the <a href="https://creadur.apache.org/rat/apache-rat-plugin">RAT plugin</a>. This is caused by modules that exist in one branch and not the other leaving Maven build files that the RAT plugin no longer understands how to ignore.</p>
 
 <p>The easiest fix is to ensure all of your current changes are stored in git and then cleaning your workspace.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$&gt; git add path/to/file/that/has/changed
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$&gt; git add path/to/file/that/has/changed
 $&gt; git add path/to/other/file
 $&gt; git clean -df
 </code></pre></div></div>
 
-<p>Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the “untracked files” section in a <code class="highlighter-rouge">git status</code> command.</p>
+<p>Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the “untracked files” section in a <code class="language-plaintext highlighter-rouge">git status</code> command.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$&gt; git status
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$&gt; git status
 # On branch master
 nothing to commit (working directory clean)
 $&gt; mvn package

@@ -436,20 +436,20 @@ prioritizer can reorder queued work.</p>
 
 <h3 id="configuring-and-using-scan-executors">Configuring and using Scan Executors</h3>
 
-<p>By default, Accumulo sets <code class="highlighter-rouge">tserver.scan.executors.default.threads=16</code> which
+<p>By default, Accumulo sets <code class="language-plaintext highlighter-rouge">tserver.scan.executors.default.threads=16</code> which
 creates the default scan executor.  To configure additional scan executors,
 chose a unique name and configure <a href="/docs/2.x/configuration/server-properties#tserver_scan_executors_prefix">tserver.scan.executors.*</a>.  Setting
 the following causes each tablet server to create a scan executor with the
 specified threads.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.&lt;name&gt;.threads=&lt;number&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.&lt;name&gt;.threads=&lt;number&gt;
 </code></pre></div></div>
 
-<p>Optionally, some of the following can be set.  The <code class="highlighter-rouge">priority</code> setting
-determines thread priority.  The <code class="highlighter-rouge">prioritizer</code> settings specifies a class that
+<p>Optionally, some of the following can be set.  The <code class="language-plaintext highlighter-rouge">priority</code> setting
+determines thread priority.  The <code class="language-plaintext highlighter-rouge">prioritizer</code> settings specifies a class that
 orders pending work.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.&lt;name&gt;.priority=&lt;number 1 to 10&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.&lt;name&gt;.priority=&lt;number 1 to 10&gt;
 tserver.scan.executors.&lt;name&gt;.prioritizer=&lt;class name&gt;
 tserver.scan.executors.&lt;name&gt;.prioritizer.opts.&lt;key&gt;=&lt;value&gt;
 </code></pre></div></div>
@@ -459,18 +459,18 @@ dispatcher is Java subclass of <a href="https://static.javadoc.io/org.apache.acc
 that decides which scan executor should service a table.  Set the following table
 property to configure a dispatcher.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher=&lt;class name&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher=&lt;class name&gt;
 </code></pre></div></div>
 
 <p>Scan dispatcher options can be set with properties like the following.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher.opts.&lt;key&gt;=&lt;value&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>table.scan.dispatcher.opts.&lt;key&gt;=&lt;value&gt;
 </code></pre></div></div>
 
-<p>The default value for <code class="highlighter-rouge">table.scan.dispatcher</code> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">SimpleScanDispatcher</a>.
-SimpleScanDispatcher supports an <code class="highlighter-rouge">executor</code> option for choosing a scan
+<p>The default value for <code class="language-plaintext highlighter-rouge">table.scan.dispatcher</code> is <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">SimpleScanDispatcher</a>.
+SimpleScanDispatcher supports an <code class="language-plaintext highlighter-rouge">executor</code> option for choosing a scan
 executor.  If this option is not set, then SimpleScanDispatcher will dispatch
-to the scan executor named <code class="highlighter-rouge">default</code>.</p>
+to the scan executor named <code class="language-plaintext highlighter-rouge">default</code>.</p>
 
 <p>To to tie everything together, consider the following use case.</p>
 
@@ -483,7 +483,7 @@ to the scan executor named <code class="highlighter-rouge">default</code>.</p>
 
 <p>The following shell commands implement this use case.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createtable LOW1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createtable LOW1
 createtable LOW2
 createtable HIGH
 createtable NORM1
@@ -495,7 +495,7 @@ config -s tserver.scan.executors.high.threads=8
 
 <p>Tablet servers should be restarted after configuring scan executors, then tables can be configured.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW1 -s table.scan.dispatcher.opts.executor=low
 config -t LOW2 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
 config -t LOW2 -s table.scan.dispatcher.opts.executor=low
@@ -504,9 +504,9 @@ config -t HIGH -s table.scan.dispatcher.opts.executor=high
 </code></pre></div></div>
 
 <p>While not necessary because its the default, it is safer to also set
-<code class="highlighter-rouge">table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</code>
+<code class="language-plaintext highlighter-rouge">table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</code>
 for each table.  This ensures things work as expected in the case where
-<code class="highlighter-rouge">table.scan.dispatcher</code> was set at the system or namespace level.</p>
+<code class="language-plaintext highlighter-rouge">table.scan.dispatcher</code> was set at the system or namespace level.</p>
 
 <h3 id="configuring-and-using-scan-prioritizers">Configuring and using Scan Prioritizers.</h3>
 
@@ -516,10 +516,10 @@ reorder the queue.  Accumulo ships with the <a href="https://static.javadoc.io/o
 orders the queue by the ratio of run time to idle time.  For example, a scan
 with a run time of 50ms and an idle time of 200ms would have a ratio of .25.
 If .25 were the lowest ratio on the queue, then it would be the next in line.
-The following configures the IdleRatioScanPrioritizer for the <code class="highlighter-rouge">default</code> scan
+The following configures the IdleRatioScanPrioritizer for the <code class="language-plaintext highlighter-rouge">default</code> scan
 executor.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.default.prioritizer=org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tserver.scan.executors.default.prioritizer=org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer
 </code></pre></div></div>
 
 <p>Using the IdleRatioScanPrioritizer in a test with 50 long running scans and 5
@@ -533,9 +533,9 @@ In this test the average lookup time for the 5 threads went from 250ms to 5 ms.<
 hints depends on what is configured for the table and system.  Accumulo’s
 default configuration ignores hints. The following shell commands make it
 possible to choose an executor and set priorities from a scanner for the
-table <code class="highlighter-rouge">tex</code>.</p>
+table <code class="language-plaintext highlighter-rouge">tex</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.scan.executors.special.threads=8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.scan.executors.special.threads=8
 config -s tserver.scan.executors.special.prioritizer=org.apache.accumulo.core.spi.scan.HintScanPrioritizer
 config -s tserver.scan.executors.special.prioritizer.opts.priority.alpha=1
 config -s tserver.scan.executors.special.prioritizer.opts.priority.gamma=3
@@ -546,27 +546,27 @@ config -t tex -s table.scan.dispatcher.opts.executor.gamma=special
 </code></pre></div></div>
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/spi/scan/HintScanPrioritizer.html">HintScanPrioritizer</a> honors
-hints of the form <code class="highlighter-rouge">priority=&lt;integer&gt;</code> or <code class="highlighter-rouge">scan_type=&lt;type&gt;</code> to prioritize
+hints of the form <code class="language-plaintext highlighter-rouge">priority=&lt;integer&gt;</code> or <code class="language-plaintext highlighter-rouge">scan_type=&lt;type&gt;</code> to prioritize
 scans, with lower integers resulting in a higher priority.  When a hint
 specifies a scan type it is mapped to a priority based on the prioritizer
 configuration.</p>
 
-<p>The <code class="highlighter-rouge">SimpleScanDispatcher</code>, which is the default dispatcher, supports
-<code class="highlighter-rouge">executor.&lt;type&gt;=&lt;executor&gt;</code> options. When a scanner sets a hint of the form
-<code class="highlighter-rouge">scan_type=&lt;type&gt;</code> it will use the executor configured for that type.</p>
+<p>The <code class="language-plaintext highlighter-rouge">SimpleScanDispatcher</code>, which is the default dispatcher, supports
+<code class="language-plaintext highlighter-rouge">executor.&lt;type&gt;=&lt;executor&gt;</code> options. When a scanner sets a hint of the form
+<code class="language-plaintext highlighter-rouge">scan_type=&lt;type&gt;</code> it will use the executor configured for that type.</p>
 
 <p>After restarting tservers, the following command will start a scan that uses
-the executor <code class="highlighter-rouge">special</code> with a priority of 3.  The scan dispatcher maps the scan
-type <code class="highlighter-rouge">gamma</code> to the executor <code class="highlighter-rouge">special</code>.  The prioritizer maps the scan type
-<code class="highlighter-rouge">gamma</code> to a priority of 3.</p>
+the executor <code class="language-plaintext highlighter-rouge">special</code> with a priority of 3.  The scan dispatcher maps the scan
+type <code class="language-plaintext highlighter-rouge">gamma</code> to the executor <code class="language-plaintext highlighter-rouge">special</code>.  The prioritizer maps the scan type
+<code class="language-plaintext highlighter-rouge">gamma</code> to a priority of 3.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=gamma
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=gamma
 </code></pre></div></div>
 
-<p>The following command will start a scan that uses the executor <code class="highlighter-rouge">special</code> with a
+<p>The following command will start a scan that uses the executor <code class="language-plaintext highlighter-rouge">special</code> with a
 priority of 1.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=alpha
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=alpha
 </code></pre></div></div>
 
 

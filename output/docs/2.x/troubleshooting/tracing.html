@@ -434,17 +434,17 @@ enabled follows all the requests made on behalf of the user throughout
 the distributed infrastructure of accumulo, and across all threads of
 execution.</p>
 
-<p>These time spans will be inserted into the <code class="highlighter-rouge">trace</code> table in
+<p>These time spans will be inserted into the <code class="language-plaintext highlighter-rouge">trace</code> table in
 Accumulo. You can browse recent traces from the Accumulo monitor
-page. You can also read the <code class="highlighter-rouge">trace</code> table directly like any
+page. You can also read the <code class="language-plaintext highlighter-rouge">trace</code> table directly like any
 other table.</p>
 
 <p>The design of Accumulo’s distributed tracing follows that of <a href="http://research.google.com/pubs/pub36356.html">Google’s Dapper</a>.</p>
 
 <h2 id="tracers">Tracers</h2>
 
-<p>To collect traces, Accumulo needs at least one tracer server running. If you are using <code class="highlighter-rouge">accumulo-cluster</code> to start your cluster,
-configure your server in <code class="highlighter-rouge">conf/tracers</code>. The server collects traces from clients and writes them to the <code class="highlighter-rouge">trace</code> table. The Accumulo
+<p>To collect traces, Accumulo needs at least one tracer server running. If you are using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> to start your cluster,
+configure your server in <code class="language-plaintext highlighter-rouge">conf/tracers</code>. The server collects traces from clients and writes them to the <code class="language-plaintext highlighter-rouge">trace</code> table. The Accumulo
 user that the tracer connects to Accumulo with can be configured with the following properties (see the <a href="/docs/2.x/configuration/overview">configuration overview</a> 
 page for setting Accumulo server properties)</p>
 
@@ -482,7 +482,7 @@ three properties are populated from other Accumulo properties,
 while the remaining ones should be prefixed with
 trace.span.receiver. when set in the Accumulo configuration.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracer.zookeeper.host - populated from instance.zookeepers
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracer.zookeeper.host - populated from instance.zookeepers
 tracer.zookeeper.timeout - populated from instance.zookeeper.timeout
 tracer.zookeeper.path - populated from trace.zookeeper.path
 tracer.send.timer.millis - timer for flushing send queue (in ms, default 1000)
@@ -491,8 +491,8 @@ tracer.span.min.ms - minimum span length to store (in ms, default 1)
 </code></pre></div></div>
 
 <p>To configure an Accumulo client for tracing, set <a href="/docs/2.x/configuration/client-properties#trace_span_receivers">trace.span.receivers</a> and <a href="/docs/2.x/configuration/client-properties#trace_zookeeper_path">trace.zookeeper.path</a>
-in <code class="highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.x/configuration/server-properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="highlighter-rouge">accumulo.properties</code> should be set in
-<code class="highlighter-rouge">accumulo-client.properties</code>.</p>
+in <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code>. Also, any <a href="/docs/2.x/configuration/server-properties#trace_span_receiver_prefix">trace.span.receiver.*</a> properties set in <code class="language-plaintext highlighter-rouge">accumulo.properties</code> should be set in
+<code class="language-plaintext highlighter-rouge">accumulo-client.properties</code>.</p>
 
 <p>Hadoop can also be configured to send traces to Accumulo, as of
 Hadoop 2.6.0, by setting properties in Hadoop’s core-site.xml
@@ -529,21 +529,21 @@ jars must also be placed on Hadoop’s classpath.</p>
 
 <p><a href="https://github.com/openzipkin/zipkin">Zipkin</a> has a SpanReceiver supported by HTrace and popularized by Twitter
 that users looking for a more graphical trace display may opt to use.
-The following steps configure Accumulo to use <code class="highlighter-rouge">org.apache.htrace.impl.ZipkinSpanReceiver</code>
+The following steps configure Accumulo to use <code class="language-plaintext highlighter-rouge">org.apache.htrace.impl.ZipkinSpanReceiver</code>
 in addition to the Accumulo’s default ZooTraceClient, and they serve as a template
 for adding any SpanReceiver to Accumulo:</p>
 
 <ol>
   <li>
     <p>Add the Jar containing the ZipkinSpanReceiver class file to the
-<code class="highlighter-rouge">lib/</code> directory.  It is critical that the Jar is placed in
-<code class="highlighter-rouge">lib/</code> and NOT in <code class="highlighter-rouge">lib/ext/</code> so that the new SpanReceiver class
+<code class="language-plaintext highlighter-rouge">lib/</code> directory.  It is critical that the Jar is placed in
+<code class="language-plaintext highlighter-rouge">lib/</code> and NOT in <code class="language-plaintext highlighter-rouge">lib/ext/</code> so that the new SpanReceiver class
 is visible to the same class loader of htrace-core.</p>
   </li>
   <li>
-    <p>Add the following to <code class="highlighter-rouge">accumulo.properties</code>:</p>
+    <p>Add the following to <code class="language-plaintext highlighter-rouge">accumulo.properties</code>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 </code></pre></div>    </div>
   </li>
   <li>
@@ -558,7 +558,7 @@ is visible to the same class loader of htrace-core.</p>
     <p>Ensure your client can see the ZipkinSpanReceiver class at runtime. For Maven projects,
 this is easily done by adding to your client’s pom.xml (taking care to specify a good version)</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;dependency&gt;
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;dependency&gt;
    &lt;groupId&gt;org.apache.htrace&lt;/groupId&gt;
    &lt;artifactId&gt;htrace-zipkin&lt;/artifactId&gt;
    &lt;version&gt;3.1.0-incubating&lt;/version&gt;
@@ -567,9 +567,9 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Add the following to your <code class="highlighter-rouge">accumulo-client.properties</code>.</p>
+    <p>Add the following to your <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code>.</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> trace.span.receivers=org.apache.accumulo.tracer.ZooTraceClient,org.apache.htrace.impl.ZipkinSpanReceiver
 </code></pre></div>    </div>
   </li>
   <li>
@@ -578,10 +578,10 @@ this is easily done by adding to your client’s pom.xml (taking care to specify
 </ol>
 
 <p>Your SpanReceiver may require additional properties, and if so these should likewise
-be placed in <code class="highlighter-rouge">accumulo-client.properties</code> (if applicable) and Accumulo’s <code class="highlighter-rouge">accumulo.properties</code>.
+be placed in <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> (if applicable) and Accumulo’s <code class="language-plaintext highlighter-rouge">accumulo.properties</code>.
 Two such properties for ZipkinSpanReceiver, listed with their default values, are</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trace.span.receiver.zipkin.collector-hostname=localhost
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trace.span.receiver.zipkin.collector-hostname=localhost
 trace.span.receiver.zipkin.collector-port=9410
 </code></pre></div></div>
 
@@ -615,7 +615,7 @@ your application call</p>
 
 <p>The user can create additional Spans within a Trace.</p>
 
-<p>The sampler (such as <code class="highlighter-rouge">Sampler.ALWAYS</code>) for the trace should only be specified with a top-level span,
+<p>The sampler (such as <code class="language-plaintext highlighter-rouge">Sampler.ALWAYS</code>) for the trace should only be specified with a top-level span,
 and subsequent spans will be collected depending on whether that first span was sampled.
 Don’t forget to specify a Sampler at the top-level span
 because the default Sampler only samples when part of a pre-existing trace,
@@ -677,7 +677,7 @@ help enable tracing for 1-in-1000 operations</p>
 
 <p>To view collected traces, use the “Recent Traces” link on the Monitor
 UI. You can also programmatically access and print traces using the
-<code class="highlighter-rouge">TraceDump</code> class.</p>
+<code class="language-plaintext highlighter-rouge">TraceDump</code> class.</p>
 
 <h3 id="trace-table-format">Trace Table Format</h3>
 
@@ -697,12 +697,12 @@ In the description, a token in quotes is a String literal,
 whereas other other tokens are span variables.
 Parentheses group parts together, to distinguish colon characters inside the
 column family or qualifier from the colon that separates column family and qualifier.
-We use the format <code class="highlighter-rouge">row columnFamily:columnQualifier columnVisibility    value</code>
+We use the format <code class="language-plaintext highlighter-rouge">row columnFamily:columnQualifier columnVisibility    value</code>
 (omitting timestamp which records the time an entry is written to the trace table).</p>
 
 <p>Span entries take the following form:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>traceId        "span":(parentSpanId:spanId)            []    spanBinaryEncoding
 63b318de80de96d1 span:4b8f66077df89de1:3778c6739afe4e1 []    %18;%09;...
 </code></pre></div></div>
 
@@ -710,7 +710,7 @@ We use the format <code class="highlighter-rouge">row columnFamily:columnQualifi
 The spanBinaryEncoding is a compact Apache Thrift encoding of the original Span object.
 This allows clients (and the Accumulo monitor) to recover all the details of the original Span
 at a later time, by scanning the trace table and decoding the value of span entries
-via <code class="highlighter-rouge">TraceFormatter.getRemoteSpan(entry)</code>.</p>
+via <code class="language-plaintext highlighter-rouge">TraceFormatter.getRemoteSpan(entry)</code>.</p>
 
 <p>The trace table has a formatter class by default (org.apache.accumulo.tracer.TraceFormatter)
 that changes how span entries appear from the Accumulo shell.
@@ -719,12 +719,12 @@ it exists only to make span entries easier to view inside the Accumulo shell.</p
 
 <p>Index entries take the following form:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"idx":service:startTime description:sender  []    traceId:elapsedTime
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"idx":service:startTime description:sender  []    traceId:elapsedTime
 idx:tserver:14f3828f58b startScan:localhost []    63b318de80de96d1:1
 </code></pre></div></div>
 
 <p>The service and sender are set by the first call of each Accumulo process
-(and instrumented client processes) to <code class="highlighter-rouge">DistributedTrace.enable(...)</code>
+(and instrumented client processes) to <code class="language-plaintext highlighter-rouge">DistributedTrace.enable(...)</code>
 (the sender is autodetected if not specified).
 The description is specified in each span.
 Start time and the elapsed time (start - stop, 1 millisecond in the example above)
@@ -732,22 +732,22 @@ are recorded in milliseconds as long values serialized to a string in hex.</p>
 
 <p>Start time entries take the following form:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"start":startTime "id":traceId        []    spanBinaryEncoding
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"start":startTime "id":traceId        []    spanBinaryEncoding
 start:14f3828a351 id:63b318de80de96d1 []    %18;%09;...
 </code></pre></div></div>
 
 <p>The following classes may be run while Accumulo is running to provide insight into trace statistics. These require
-accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (<code class="highlighter-rouge">lib/ext</code> is fine).</p>
+accumulo-trace-VERSION.jar to be provided on the Accumulo classpath (<code class="language-plaintext highlighter-rouge">lib/ext</code> is fine).</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.tracer.TraceTableStats -u username -p password -i instancename
 $ accumulo org.apache.accumulo.tracer.TraceDump -u username -p password -i instancename -r
 </code></pre></div></div>
 
 <h3 id="tracing-from-the-shell">Tracing from the Shell</h3>
 <p>You can enable tracing for operations run from the shell by using the
-<code class="highlighter-rouge">trace on</code> and <code class="highlighter-rouge">trace off</code> commands.</p>
+<code class="language-plaintext highlighter-rouge">trace on</code> and <code class="language-plaintext highlighter-rouge">trace off</code> commands.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test test&gt; trace on
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test test&gt; trace on
 
 root@test test&gt; scan
 a b:c []    d

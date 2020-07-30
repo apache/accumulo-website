@@ -169,28 +169,28 @@ WAL.</p>
 
 <p>The sync/flush step above moves data written to the WAL from memory to disk.
 Write ahead logs are stored in HDFS. HDFS supports two ways of forcing data to
-disk for an open file : <code class="highlighter-rouge">hsync</code> and <code class="highlighter-rouge">hflush</code>.</p>
+disk for an open file : <code class="language-plaintext highlighter-rouge">hsync</code> and <code class="language-plaintext highlighter-rouge">hflush</code>.</p>
 
 <h2 id="hdfs-syncflush-details">HDFS Sync/Flush Details</h2>
 
-<p>When <code class="highlighter-rouge">hflush</code> is called on a WAL, it does not guarantee data is on disk.  It
+<p>When <code class="language-plaintext highlighter-rouge">hflush</code> is called on a WAL, it does not guarantee data is on disk.  It
 only guarantees that data is in OS buffers on each datanode and on its way to disk.
-As a result calls to <code class="highlighter-rouge">hflush</code> are very fast.  If a WAL is replicated to 3 data
+As a result calls to <code class="language-plaintext highlighter-rouge">hflush</code> are very fast.  If a WAL is replicated to 3 data
 nodes then data may be lost if all three machines reboot or die.  If the datanode
 process dies, then data loss will not happen because the data was in OS buffers
 waiting to be written to disk.  The machines have to reboot or die for data loss to
 occur.</p>
 
-<p>In order to avoid data loss in the event of reboot, <code class="highlighter-rouge">hsync</code> can be called.  This
+<p>In order to avoid data loss in the event of reboot, <code class="language-plaintext highlighter-rouge">hsync</code> can be called.  This
 will ensure data is written to disk on all datanodes before returning.  When
-using <code class="highlighter-rouge">hsync</code> for the WAL, if Accumulo reports success to a user it means the
-data is on disk.  However <code class="highlighter-rouge">hsync</code> is much slower than <code class="highlighter-rouge">hflush</code> and the way it’s
-implemented exacerbates the problem.  For example <code class="highlighter-rouge">hflush</code> make take 1ms and
-<code class="highlighter-rouge">hsync</code> may take 50ms.  This difference will impact writes to Accumulo and can
+using <code class="language-plaintext highlighter-rouge">hsync</code> for the WAL, if Accumulo reports success to a user it means the
+data is on disk.  However <code class="language-plaintext highlighter-rouge">hsync</code> is much slower than <code class="language-plaintext highlighter-rouge">hflush</code> and the way it’s
+implemented exacerbates the problem.  For example <code class="language-plaintext highlighter-rouge">hflush</code> make take 1ms and
+<code class="language-plaintext highlighter-rouge">hsync</code> may take 50ms.  This difference will impact writes to Accumulo and can
 be mitigated in some situations with larger buffers in Accumulo.</p>
 
 <p>HDFS keeps checksum data internally by default.  Datanodes store checksum data
-in a separate file in the local filesystem.  This means when <code class="highlighter-rouge">hsync</code> is called
+in a separate file in the local filesystem.  This means when <code class="language-plaintext highlighter-rouge">hsync</code> is called
 on a WAL, two files must be synced on each datanode.  Syncing two files doubles
 the time. To make matters even worse, when the two files are synced the local
 filesystem metadata is also synced.  Depending on the local filesystem and its
@@ -202,7 +202,7 @@ question, please let us know on the <a href="/mailing_list">dev list</a>. The fo
 where sync occurs in the datanode code.</p>
 
 <ul>
-  <li><a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L358">BlockReceiver.flushOrSync()</a> calls <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L78">ReplicaOutputStreams.syncDataOut()</a> and <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L87">ReplicaOutputStreams.syncChecksumOut()</a> when <code class="highlighter-rouge">isSync</code> is true.</li>
+  <li><a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/BlockReceiver.java#L358">BlockReceiver.flushOrSync()</a> calls <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L78">ReplicaOutputStreams.syncDataOut()</a> and <a href="https://github.com/apache/hadoop/blob/release-2.7.1/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/fsdataset/ReplicaOutputStreams.java#L87">ReplicaOutputStreams.syncChecksumOut()</a> when <code class="language-plaintext highlighter-rouge">isSync</code> is true.</li>
   <li>The methods in ReplicaOutputStreams call <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html#force-boolean-">FileChannel.force(true)</a> which
 synchronously flushes data and filesystem metadata.</li>
 </ul>
@@ -212,9 +212,9 @@ and checksums were stored in-line, then 1 sync could be done instead of 4.</p>
 
 <h2 id="configuring-wal-flushsync-in-accumulo-16">Configuring WAL flush/sync in Accumulo 1.6</h2>
 
-<p>Accumulo 1.6.0 only supported <code class="highlighter-rouge">hsync</code> and this caused <a href="/release/accumulo-1.6.0#slower-writes-than-previous-accumulo-versions">performance
+<p>Accumulo 1.6.0 only supported <code class="language-plaintext highlighter-rouge">hsync</code> and this caused <a href="/release/accumulo-1.6.0#slower-writes-than-previous-accumulo-versions">performance
 problems</a>.  In order to offer better performance, the option to
-configure <code class="highlighter-rouge">hflush</code> was <a href="/release/accumulo-1.6.1#write-ahead-log-sync-implementation">added in 1.6.1</a>.  The
+configure <code class="language-plaintext highlighter-rouge">hflush</code> was <a href="/release/accumulo-1.6.1#write-ahead-log-sync-implementation">added in 1.6.1</a>.  The
 <a href="/1.6/accumulo_user_manual#_tserver_wal_sync_method">tserver.wal.sync.method</a> configuration option was added to support
 this feature.  This was a tablet server wide option that applied to everything
 written to any table.</p>
@@ -230,33 +230,33 @@ increase throughput and lowers average latency for clients.</p>
 <h2 id="configuring-wal-flushsync-in-accumulo-17">Configuring WAL flush/sync in Accumulo 1.7+</h2>
 
 <p>Accumulo 1.7.0 introduced <a href="/1.7/accumulo_user_manual#_table_durability">table.durability</a>, a new per table property
-for configuring durability.  It also stopped using the <code class="highlighter-rouge">tserver.wal.sync.method</code>
-property.  The <code class="highlighter-rouge">table.durability</code> property has the following four legal values.
-This property defaults to the most durable option which is <code class="highlighter-rouge">sync</code>.</p>
+for configuring durability.  It also stopped using the <code class="language-plaintext highlighter-rouge">tserver.wal.sync.method</code>
+property.  The <code class="language-plaintext highlighter-rouge">table.durability</code> property has the following four legal values.
+This property defaults to the most durable option which is <code class="language-plaintext highlighter-rouge">sync</code>.</p>
 
 <ul>
   <li><strong>none</strong> : Do not write to WAL</li>
   <li><strong>log</strong>  : Write to WAL, but do not sync</li>
-  <li><strong>flush</strong> : Write to WAL and call <code class="highlighter-rouge">hflush</code></li>
-  <li><strong>sync</strong> : Write to WAL and call <code class="highlighter-rouge">hsync</code></li>
+  <li><strong>flush</strong> : Write to WAL and call <code class="language-plaintext highlighter-rouge">hflush</code></li>
+  <li><strong>sync</strong> : Write to WAL and call <code class="language-plaintext highlighter-rouge">hsync</code></li>
 </ul>
 
 <p>If multiple writes arrive at around the same time with different durability
 settings, then the group commit code will choose the most durable.  This can
 cause one tables settings to slow down writes to another table.  Basically, one
-table that is set to <code class="highlighter-rouge">sync</code> can impact the entire system.</p>
+table that is set to <code class="language-plaintext highlighter-rouge">sync</code> can impact the entire system.</p>
 
-<p>In Accumulo 1.6, it was easy to make all writes use <code class="highlighter-rouge">hflush</code> because there was
-only one tserver setting.  Getting everything to use <code class="highlighter-rouge">flush</code> in 1.7 and later
+<p>In Accumulo 1.6, it was easy to make all writes use <code class="language-plaintext highlighter-rouge">hflush</code> because there was
+only one tserver setting.  Getting everything to use <code class="language-plaintext highlighter-rouge">flush</code> in 1.7 and later
 can be a little tricky because by default the Accumulo metadata table is set to
-use <code class="highlighter-rouge">sync</code>.  The following shell commands show this. The first command sets
-<code class="highlighter-rouge">table.durability=flush</code> as a system wide default for all tables.  However, the
-metadata table is still set to <code class="highlighter-rouge">sync</code>, because it has a per table override for
+use <code class="language-plaintext highlighter-rouge">sync</code>.  The following shell commands show this. The first command sets
+<code class="language-plaintext highlighter-rouge">table.durability=flush</code> as a system wide default for all tables.  However, the
+metadata table is still set to <code class="language-plaintext highlighter-rouge">sync</code>, because it has a per table override for
 that setting.  This override is set when Accumulo is initialized.  To get this
-table to use <code class="highlighter-rouge">flush</code>, the per table override must be deleted.  After deleting
+table to use <code class="language-plaintext highlighter-rouge">flush</code>, the per table override must be deleted.  After deleting
 those properties, the metadata tables will inherit the system wide setting.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; config -s table.durability=flush
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; config -s table.durability=flush
 root@uno&gt; createtable foo
 root@uno foo&gt; config -t foo -f table.durability
 -----------+---------------------+----------------------------------------------
@@ -283,23 +283,23 @@ system     |    @override ...... | flush
 -----------+---------------------+----------------------------------------------
 </code></pre></div></div>
 
-<p>In short, executing the following commands will make all writes use <code class="highlighter-rouge">flush</code>
-(assuming no other tables or namespaces have been specifically set to <code class="highlighter-rouge">sync</code>).</p>
+<p>In short, executing the following commands will make all writes use <code class="language-plaintext highlighter-rouge">flush</code>
+(assuming no other tables or namespaces have been specifically set to <code class="language-plaintext highlighter-rouge">sync</code>).</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s table.durability=flush
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s table.durability=flush
 config -t accumulo.metadata -d table.durability
 config -t accumulo.root -d table.durability
 </code></pre></div></div>
 
-<p>Even with these settings adjusted, minor compactions could still force <code class="highlighter-rouge">hsync</code>
+<p>Even with these settings adjusted, minor compactions could still force <code class="language-plaintext highlighter-rouge">hsync</code>
 to be called in 1.7.0 and 1.7.1.  This was fixed in 1.7.2 and 1.8.0.  See the
 <a href="/release/accumulo-1.7.2#minor-performance-improvements">1.7.2 release notes</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-4112">ACCUMULO-4112</a> for more details.</p>
 
 <p>In addition to the per table durability setting, a per batch writer durability
 setting was also added in 1.7.0.  See
 <a href="/1.8/apidocs/org/apache/accumulo/core/client/BatchWriterConfig.html#setDurability(org.apache.accumulo.core.client.Durability)">BatchWriterConfig.setDurability(…)</a>.  This means any client could
-potentially cause a <code class="highlighter-rouge">hsync</code> operation to occur, even if the system is
-configured to use <code class="highlighter-rouge">hflush</code>.</p>
+potentially cause a <code class="language-plaintext highlighter-rouge">hsync</code> operation to occur, even if the system is
+configured to use <code class="language-plaintext highlighter-rouge">hflush</code>.</p>
 
 <h2 id="improving-the-situation">Improving the situation</h2>
 
