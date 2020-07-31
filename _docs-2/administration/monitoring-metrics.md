@@ -74,14 +74,7 @@ An Accumulo user name and password must be entered for access to the shell.
 
 ## Metrics
 
-Accumulo can expose metrics through a legacy metrics library and using the Hadoop Metrics2 library.
-
-### Legacy Metrics
-
-Accumulo has a legacy metrics library that can be exposes metrics using JMX endpoints or file-based logging. These metrics can
-be enabled by setting {% plink general.legacy.metrics %} to `true` in `accumulo.properties` and placing the `accumulo-metrics.xml`
-configuration file on the classpath (which is typically done by placing the file in the `conf/` directory). A template for
-`accumulo-metrics.xml` can be found in `conf/templates` of the Accumulo tarball.
+Accumulo can expose metrics using the Hadoop Metrics2 library.
 
 ### Hadoop Metrics2
 
