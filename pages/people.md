@@ -61,6 +61,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Benjamin Fach       |                                                                   |                       |
+| Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST] |
 | Ben Manes           |                                                                   | [PT][PT]              |
 | Bob Thorman         | [AT&amp;T][ATT]                                                   |                       |
 | Charles Williams    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
@@ -201,6 +202,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [UW]: https://www.washington.edu/
 [WAVE]: http://www.wavestrike.com/
 [BST]: http://www.timeanddate.com/time/zones/bst
+[IST]: http://www.timeanddate.com/time/zones/ist-ireland
 [CT]: http://www.timeanddate.com/time/zones/ct
 [ET]: http://www.timeanddate.com/time/zones/et
 [GMT]: http://www.timeanddate.com/time/zones/gmt
