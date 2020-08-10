@@ -101,9 +101,9 @@ try (AccumuloClient client = Accumulo.newClient().from(props).build()) {
 
 [Apache Spark]: https://spark.apache.org/
 [MapReduce]: {% durl development/mapreduce %}
-[pom.xml]: https://github.com/apache/accumulo-examples/blob/master/pom.xml
-[Spark example]: https://github.com/apache/accumulo-examples/tree/master/spark
+[pom.xml]: https://github.com/apache/accumulo-examples/blob/main/pom.xml
+[Spark example]: https://github.com/apache/accumulo-examples/tree/main/spark
 [shaded jar]: https://maven.apache.org/plugins/maven-shade-plugin/index.html
 [AccumuloInputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
-[AccumuloRangePartitioner]: https://github.com/apache/accumulo-examples/blob/master/spark/src/main/java/org/apache/accumulo/spark/CopyPlus5K.java#L44
+[AccumuloRangePartitioner]: https://github.com/apache/accumulo-examples/blob/main/spark/src/main/java/org/apache/accumulo/spark/CopyPlus5K.java#L44

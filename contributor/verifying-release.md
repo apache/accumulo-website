@@ -129,4 +129,4 @@ own NOTICE file. The contents of the Apache Thrift NOTICE file should be include
 [examples]: https://github.com/apache/accumulo-examples
 [semver]: http://semver.org/spec/v2.0.0.html
 [at]: https://github.com/apache/accumulo-testing
-[at-readme]: https://github.com/apache/accumulo-testing/blob/master/README.md
+[at-readme]: https://github.com/apache/accumulo-testing/blob/main/README.md

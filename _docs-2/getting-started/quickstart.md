@@ -202,7 +202,7 @@ When finished, use the following commands to stop Accumulo:
 
 [in-depth]: {% durl administration/in-depth-install %}
 [download]: https://accumulo.apache.org/downloads/
-[build]: https://github.com/apache/accumulo/blob/master/README.md#building
+[build]: https://github.com/apache/accumulo/blob/main/README.md#building
 [Zookeeper]: https://zookeeper.apache.org/
 [HDFS]: https://hadoop.apache.org/
 [pdcp]: https://code.google.com/p/pdsh/
@@ -212,7 +212,6 @@ When finished, use the following commands to stop Accumulo:
 [accumulo.properties]: {% durl configuration/files#accumuloproperties %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
-[master]: {% durl configuration/files#gc %}
 [monitor]: {% durl configuration/files#monitor %}
 [masters]: {% durl configuration/files#masters %}
 [tservers]: {% durl configuration/files#tservers %}

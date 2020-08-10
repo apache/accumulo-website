@@ -374,9 +374,9 @@ This page covers Accumulo client basics.  Below are links to additional document
 [Iterators]: {% durl development/iterators %}
 [Proxy]: {% durl development/proxy %}
 [MapReduce]: {% durl development/mapreduce %}
-[batch]: https://github.com/apache/accumulo-examples/blob/master/docs/batch.md
-[reservations]: https://github.com/apache/accumulo-examples/blob/master/docs/reservations.md
-[isolation]: https://github.com/apache/accumulo-examples/blob/master/docs/isolation.md
+[batch]: https://github.com/apache/accumulo-examples/blob/main/docs/batch.md
+[reservations]: https://github.com/apache/accumulo-examples/blob/main/docs/reservations.md
+[isolation]: https://github.com/apache/accumulo-examples/blob/main/docs/isolation.md
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [table.durability]: {% purl table.durability %}
 [Authorizations]: {% jurl org.apache.accumulo.core.security.Authorizations %}

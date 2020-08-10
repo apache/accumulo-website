@@ -70,7 +70,7 @@ When generating rfiles to bulk import into Accumulo, those rfiles can contain
 sample data.  To use this feature, look at the javadoc of `sampler()` in the `configure()`
 method of [AccumuloFileOutputFormat].
 
-[example]: https://github.com/apache/accumulo-examples/blob/master/docs/sample.md
+[example]: https://github.com/apache/accumulo-examples/blob/main/docs/sample.md
 [Sampler]: {% jurl org.apache.accumulo.core.client.sample.Sampler %}
 [sample-package]: {% jurl org.apache.accumulo.core.client.sample %}
 [skv-iterator]: {% jurl org.apache.accumulo.core.iterators.SortedKeyValueIterator %}

@@ -110,7 +110,7 @@ MapReduce job. Typically, a MapReduce job will process data that lives in HDFS
 and write mutations to Accumulo using [AccumuloOutputFormat]. For more information
 on how use to use MapReduce with Accumulo, see the [MapReduce documentation][mapred-docs].
 
-[bulk-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bulkIngest.md
+[bulk-example]: https://github.com/apache/accumulo-examples/blob/main/docs/bulkIngest.md
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
 [mapred-docs]: {% durl development/mapreduce %}

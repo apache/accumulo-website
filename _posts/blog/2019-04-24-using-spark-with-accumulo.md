@@ -9,4 +9,4 @@ for using Spark with Accumulo.
 
 [Apache Spark]: https://spark.apache.org/
 [docs]: /docs/2.x/development/spark
-[Spark example]: https://github.com/apache/accumulo-examples/tree/master/spark
+[Spark example]: https://github.com/apache/accumulo-examples/tree/main/spark

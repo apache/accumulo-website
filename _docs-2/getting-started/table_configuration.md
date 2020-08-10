@@ -706,13 +706,13 @@ preserved.
     5;r srv:time []    M1343224500467
     5< srv:time []    M1343224500467
 
-[bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/master/docs/bloom.md
+[bloom-filter-example]: https://github.com/apache/accumulo-examples/blob/main/docs/bloom.md
 [constraint]: {% jurl org.apache.accumulo.core.constraints.Constraint %}
-[constraints-example]: https://github.com/apache/accumulo-examples/blob/master/docs/constraints.md
+[constraints-example]: https://github.com/apache/accumulo-examples/blob/main/docs/constraints.md
 [iterators-user]: {% jurl org.apache.accumulo.core.iterators.user %}
 [option-describer]: {% jurl org.apache.accumulo.core.iterators.OptionDescriber %}
 [combiner]: {% jurl org.apache.accumulo.core.iterators.Combiner %}
-[combiner-example]: https://github.com/apache/accumulo-examples/blob/master/docs/combiner.md
+[combiner-example]: https://github.com/apache/accumulo-examples/blob/main/docs/combiner.md
 [filter]: {% jurl org.apache.accumulo.core.iterators.Filter %}
 [table.majc.compaction.strategy]: {% purl table.majc.compaction.strategy %}
 [server properties]: {% durl configuration/server-properties %}

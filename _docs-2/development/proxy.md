@@ -55,12 +55,12 @@ Users may want to write a [Java client] to the proxy to restrict access to the c
 
 [Accumulo Proxy]: https://github.com/apache/accumulo-proxy/
 [Uno]: https://github.com/apache/fluo-uno/
-[README.md]: https://github.com/apache/accumulo-proxy/blob/master/README.md
+[README.md]: https://github.com/apache/accumulo-proxy/blob/main/README.md
 [Java client]: https://github.com/apache/accumulo-proxy/docs/java_client.md
 [ruby client]: https://github.com/apache/accumulo-proxy/src/main/ruby/client.rb
 [pythoninstruct]: https://github.com/apache/accumulo-proxy/#create-an-accumulo-client-using-python
 [rubyinstruct]: https://github.com/apache/accumulo-proxy/#create-an-accumulo-client-using-ruby
-[basic client]: https://github.com/apache/accumulo-proxy/blob/master/src/main/python/basic_client.py
-[namespace client]: https://github.com/apache/accumulo-proxy/blob/master/src/main/python/namespace_client.py
+[basic client]: https://github.com/apache/accumulo-proxy/blob/main/src/main/python/basic_client.py
+[namespace client]: https://github.com/apache/accumulo-proxy/blob/main/src/main/python/namespace_client.py
 [AccumuloClient]: {% jurl org.apache.accumulo.core.client.AccumuloClient %}
 [tutorial]: https://thrift.apache.org/tutorial/

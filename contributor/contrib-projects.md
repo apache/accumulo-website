@@ -74,7 +74,7 @@ codebase][examples-simple] and the related published documentation for versions
 [instamo-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-instamo-archetype.git;a=summary
 [instamo-checkout]: https://gitbox.apache.org/repos/asf/accumulo-instamo-archetype.git
 [maven-proj]: https://maven.apache.org
-[wiki-readme]: https://github.com/apache/accumulo-wikisearch/blob/master/README.md
+[wiki-readme]: https://github.com/apache/accumulo-wikisearch/blob/main/README.md
 [wikisearch-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-wikisearch.git;a=summary
 [wikisearch-checkout]: https://gitbox.apache.org/repos/asf/accumulo-wikisearch.git
 [bsp-alg]: https://hama.apache.org/hama_bsp_tutorial

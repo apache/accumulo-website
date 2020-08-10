@@ -186,8 +186,8 @@ The [Accumulo Examples repo][examples-repo] has several MapReduce examples:
 [AccumuloOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat %}
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}
 [examples-repo]: https://github.com/apache/accumulo-examples/
-[wordcount]: https://github.com/apache/accumulo-examples/blob/master/docs/wordcount.md
-[regex]: https://github.com/apache/accumulo-examples/blob/master/docs/regex.md
-[rowhash]: https://github.com/apache/accumulo-examples/blob/master/docs/rowhash.md
-[tablettofile]: https://github.com/apache/accumulo-examples/blob/master/docs/tablettofile.md
-[uniquecols]: https://github.com/apache/accumulo-examples/blob/master/docs/uniquecols.md
+[wordcount]: https://github.com/apache/accumulo-examples/blob/main/docs/wordcount.md
+[regex]: https://github.com/apache/accumulo-examples/blob/main/docs/regex.md
+[rowhash]: https://github.com/apache/accumulo-examples/blob/main/docs/rowhash.md
+[tablettofile]: https://github.com/apache/accumulo-examples/blob/main/docs/tablettofile.md
+[uniquecols]: https://github.com/apache/accumulo-examples/blob/main/docs/uniquecols.md

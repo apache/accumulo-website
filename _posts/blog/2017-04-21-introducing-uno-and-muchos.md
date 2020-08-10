@@ -3,7 +3,7 @@ title: "Introducing Uno and Muchos"
 author: Mike Walch
 ---
 
-While [Accumulo's installation instructions][install] are simple, it can be time consuming to install Accumulo
+While Accumulo's installation instructions are simple, it can be time consuming to install Accumulo
 given its requirement on [Hadoop] and [Zookeeper] being installed and running. For a one-time production
 installation, this set up time (which can take up to an hour) is not much of an inconvenience. However, it can become a burden
 for developers who need to frequently set up Accumulo to test code changes, switch between different
@@ -93,7 +93,6 @@ Uno and Muchos automate installing Accumulo for development and testing. While n
 use at this time, Muchos is a great reference for running Accumulo in production. System administrators can
 reference the [Ansible] code in Muchos to automate management of their own clusters.
 
-[install]: https://github.com/apache/accumulo/blob/master/INSTALL.md
 [Hadoop]: https://hadoop.apache.org/
 [Zookeeper]: https://zookeeper.apache.org/
 [Uno]: https://github.com/apache/fluo-uno

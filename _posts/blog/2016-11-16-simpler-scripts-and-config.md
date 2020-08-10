@@ -5,7 +5,7 @@ author: Mike Walch
 
 For the upcoming 2.0.0 release, Accumulo's scripts and configuration [were refactored][ACCUMULO-4490]
 to make Accumulo easier to use. While Accumulo's documentation (i.e. the user
-manual and [INSTALL.md]) were updated with any changes that were made, this blog post provides
+manual and INSTALL.md) were updated with any changes that were made, this blog post provides
 a summary of the changes.
 
 ### Fewer scripts
@@ -154,4 +154,3 @@ Commands:
 *This post was updated on March 24, 2017 to reflect changes to Accumulo 2.0*
 
 [ACCUMULO-4490]: https://issues.apache.org/jira/browse/ACCUMULO-4490
-[INSTALL.md]: https://github.com/apache/accumulo/blob/master/INSTALL.md

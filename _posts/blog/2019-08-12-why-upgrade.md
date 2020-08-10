@@ -134,7 +134,7 @@ Checkout some examples in the [user guide][scans].
 [scripts]: https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html
 [summary]: {% durl /development/summaries %}
 [client]: {% jurl org.apache.accumulo.core.client.Accumulo %}
-[Key]: https://github.com/apache/accumulo/blob/master/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java
+[Key]: https://github.com/apache/accumulo/blob/main/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java
 [Mutation]: https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()
 [manual]: {% durl /getting-started/quickstart %}
 [search]: https://accumulo.apache.org/search/
