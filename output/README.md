@@ -32,7 +32,7 @@ Building Accumulo  generates `server-properties.md` and `client-properties.md`.
 To regenerate these, do the following.
 
 ```bash
-ACCUMULO_SITE_CLONE=<accumulo website clone location, with master branch checked out>
+ACCUMULO_SITE_CLONE=<accumulo website clone location, with main branch checked out>
 ACCUMULO_CLONE=<accumulo clone location>
 cd "$ACCUMULO_CLONE"
 mvn package -DskipTests
@@ -83,7 +83,7 @@ gem install bundler
 
 Next, use [Bundler] to install [Jekyll] and other dependencies needed to run
 the website (this command assumes your current working directory is your clone
-of this repository with the `master` branch checked out, because that's where
+of this repository with the `main` branch checked out, because that's where
 the Gemfile dependency list exists).
 
 ```bash
@@ -112,7 +112,7 @@ Jekyll will print a local URL where the site can be viewed (usually,
 
 ### Automatic Staging
 
-Changes pushed to our `master` branch will automatically trigger Jekyll to
+Changes pushed to our `main` branch will automatically trigger Jekyll to
 build our site from that branch and push the result to our `asf-staging`
 branch, where they will be served on [our default staging site][staging].
 
@@ -133,8 +133,8 @@ Next, publish the staging site to production by updating the `asf-site` branch
 to match the contents in the `asf-staging` branch:
 
 ```bash
-# Step 0: stay in master branch; you never need to switch
-git checkout master
+# Step 0: stay in main branch; you never need to switch
+git checkout main
 
 # Step 1: update your upstream remote
 git remote update upstream
