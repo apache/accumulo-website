@@ -178,7 +178,7 @@ The [Accumulo Examples repo][examples-repo] has several MapReduce examples:
 * [wordcount] - Uses MapReduce and Accumulo to do a word count on text files
 * [regex] - Uses MapReduce and Accumulo to find data using regular expressions
 * [rowhash] - Uses MapReduce to read a table and write to a new column in the same table
-* [tablettofile] - Uses MapReduce to read a table and write one of its columns to a file in HDFS
+* [tabletofile] - Uses MapReduce to read a table and write one of its columns to a file in HDFS
 * [uniquecols] - Uses MapReduce to count unique columns in Accumulo
 
 [shaded jar]: https://maven.apache.org/plugins/maven-shade-plugin/index.html
@@ -189,5 +189,5 @@ The [Accumulo Examples repo][examples-repo] has several MapReduce examples:
 [wordcount]: https://github.com/apache/accumulo-examples/blob/main/docs/wordcount.md
 [regex]: https://github.com/apache/accumulo-examples/blob/main/docs/regex.md
 [rowhash]: https://github.com/apache/accumulo-examples/blob/main/docs/rowhash.md
-[tablettofile]: https://github.com/apache/accumulo-examples/blob/main/docs/tablettofile.md
+[tabletofile]: https://github.com/apache/accumulo-examples/blob/main/docs/tabletofile.md
 [uniquecols]: https://github.com/apache/accumulo-examples/blob/main/docs/uniquecols.md

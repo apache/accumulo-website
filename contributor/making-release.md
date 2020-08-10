@@ -176,13 +176,13 @@ Javadocs are easy to update. Using the latest JDK8 or later, follow these steps:
 1. Unpack the source release tarball and change to its root directory, or checkout the SCM tag for the release
 2. Build the javadocs with `mvn clean package javadoc:aggregate -DskipTests -Paggregate-javadocs`
 3. Take note that the javadocs you will need to copy are the entire contents of `./target/site/apidocs/`
-4. In a different directory, checkout the `master` branch of the accumulo-website repo
+4. In a different directory, checkout the `main` branch of the accumulo-website repo
 5. Remove any existing apidocs from the appropriate version folder (e.g. 1.6/apidocs for a 1.6.x release)
 6. Copy the entire contents of the new apidocs directory (identified in step 3) to the destination in the website branch (e.g. to 1.6/apidocs)
 7. Continue updating the site content, as needed
 8. Commit the changes
 9. Update the site using jekyll with `./_devtools/git-hooks/post-commit` (if you don't have the commit hook already configured)
-10. Don't forget to push both the `master` and `asf-site` branches back to the accumulo-website repo
+10. Don't forget to push both the `main` and `asf-site` branches back to the accumulo-website repo
 11. Verify that javadocs have been updated on the production site (e.g. https://accumulo.apache.org/1.6/apidocs/)
 
 ## Update Accumulo Examples

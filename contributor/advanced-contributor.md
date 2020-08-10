@@ -29,7 +29,7 @@ contributors:
 
 6. Merge where appropriate:
 
-    `git checkout master && git merge 1.9`
+    `git checkout main && git merge 1.9`
 
 ## Merging change to multiple versions
 

@@ -47,7 +47,7 @@ The easiest fix is to ensure all of your current changes are stored in git and t
 Note that this git clean command will delete any files unknown to git in a way that is irreversible. You should check that no important files will be included by first looking at the "untracked files" section in a ```git status``` command.
 
     $> git status
-    # On branch master
+    # On branch main
     nothing to commit (working directory clean)
     $> mvn package
     { maven output elided }

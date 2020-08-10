@@ -92,9 +92,9 @@ For the sake of clarity, some examples of common situations are included below.
 
 ## Releasing 1.6.0
 
-1. Branch from `master` to `1.6`
+1. Branch from `main` to `1.6`
 
-    `git checkout master && git branch 1.6`
+    `git checkout main && git branch 1.6`
 
 2. Tag `1.6.0-RC1` from the just created `1.6` branch
 
@@ -108,11 +108,11 @@ For the sake of clarity, some examples of common situations are included below.
 
     `git tag -d 1.6.0-RC1 && git push --delete origin 1.6.0-RC1`
 
-5. Ensure `master` contains all features and fixes from `1.6.0`
+5. Ensure `main` contains all features and fixes from `1.6.0`
 
-    `git checkout master && git merge 1.6`
+    `git checkout main && git merge 1.6`
 
-6. Update the project version in `master` to 1.7.0-SNAPSHOT
+6. Update the project version in `main` to 1.7.0-SNAPSHOT
 
 
 [1]: https://cwiki.apache.org/confluence/display/KAFKA/Patch+submission+and+review#Patchsubmissionandreview-Simplecontributorworkflow

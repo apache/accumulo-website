@@ -749,7 +749,6 @@ mailing lists at https://accumulo.apache.org for more info.
 [accumulo.properties]: {% durl configuration/files#accumuloproperties %}
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
-[master]: {% durl configuration/files#gc %}
 [monitor-host]: {% durl configuration/files#monitor %}
 [masters]: {% durl configuration/files#masters %}
 [tservers]: {% durl configuration/files#tservers %}
