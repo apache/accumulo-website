@@ -23,7 +23,7 @@ permalink: /people/
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
 | ctubbsii      | [Christopher Tubbs](https://github.com/ctubbsii)  | [NSA][NSA]                             | [ET][ET] |
 | dhutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
-| dlmarion      | Dave Marion                                       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
+| dlmarion      | Dave Marion                                       | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | elserj        | Josh Elser                                        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
@@ -201,6 +201,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [TIBER]: http://www.tibertechnologies.com
 [UW]: https://www.washington.edu/
 [WAVE]: http://www.wavestrike.com/
+[WRENCH]: https://wrench.io/
 [BST]: http://www.timeanddate.com/time/zones/bst
 [IST]: http://www.timeanddate.com/time/zones/ist-ireland
 [CT]: http://www.timeanddate.com/time/zones/ct
