@@ -60,7 +60,7 @@ Any questions/ideas don't hesitate to [contact us][contact].
 
 ## Helpful Links
 
-* **Build resources** - [TravisCI] & [Jenkins][jenkins]
+* **Build resources** - [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
 
 For more information, see the [contributor guide](/contributors-guide/).
@@ -92,7 +92,6 @@ For more information, see the [contributor guide](/contributors-guide/).
 [github-join]: https://github.com/join
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
-[TravisCI]: https://travis-ci.org/apache/accumulo
 [making]: {{ "/contributor/making-release" | relative_url }}
 [verifying]: {{ "/contributor/verifying-release" | relative_url }}
 [Fork]: https://help.github.com/articles/fork-a-repo/
