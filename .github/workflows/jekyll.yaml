@@ -27,7 +27,7 @@ on:
 
 jobs:
   jekyll:
-    timeout-minutes: 5
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -35,10 +35,17 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6
+    - name: Cache gems
+      uses: actions/cache@v2
+      with:
+        path: ~/vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: ${{ runner.os }}-gem
     - name: Test site build
       run: |
         ruby --version
         gem install bundler
+        bundle config path ~/vendor/bundle
         bundler install --jobs 4 --retry 3
         bundle exec jekyll build
     - name: Upload site
