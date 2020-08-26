@@ -6,327 +6,10 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 26 Aug 2020 14:30:10 +0000</pubDate>
-    <lastBuildDate>Wed, 26 Aug 2020 14:30:10 +0000</lastBuildDate>
+    <pubDate>Wed, 26 Aug 2020 15:04:42 +0000</pubDate>
+    <lastBuildDate>Wed, 26 Aug 2020 15:04:42 +0000</lastBuildDate>
     <generator>Jekyll v4.1.1</generator>
     
-    
-      <item>
-        <title>Accumulo 1.10.0 (Draft)</title>
-        <description>&lt;p&gt;28 August 2020&lt;/p&gt;
-
-&lt;p&gt;Apache Accumulo 1.10 is a maintenance release of the 1.9.3 version with additional internal 
-improvements.  This release raises the Java language level for the source code 
-from 1.7 to 8 and requires a Java runtime environment of Java 8 or later.  The source code level 
-change aligns the Accumulo code base Java language version requirements with the 2.0 branches and 
-allows Java language enhancements such as lambda expressions and improved interface features to be 
-used in all active branches of the Accumulo code base.&lt;/p&gt;
-
-&lt;p&gt;With the adoption of &lt;a href=&quot;https://semver.org/spec/v2.0.0.html&quot;&gt;semver&lt;/a&gt;, the minor number version change
-(from 1.9 to 1.10) signals this release does not modify the Accumulo public API, but that the 
-release contains internal improvements beyond changes that are permitted by semver in a patch 
-release. This release contains contributions from more than 13 contributors from the Apace Accumulo
-community in over 80 commits and 16 months of work since the 1.9.3 release. The following release 
-notes highlight some of the changes. If anything is missing from this list, please
-&lt;a href=&quot;https://accumulo.apache.org/contact-us&quot;&gt;contact&lt;/a&gt; the developers to have it included.&lt;/p&gt;
-
-&lt;h2 id=&quot;long-term-support-lts&quot;&gt;Long Term Support (LTS)&lt;/h2&gt;
-
-&lt;p&gt;The Apache Accumulo community has adopted a formal Long Term Support (LTS) release policy.  Accumulo 
-version 1.10 is the first LTS version and is expected to be the last major / minor release of the 
-1.x line. With the LTS designation, 1.10.0 will receive critical bug and security fixes for the 
-defined support period.  No new features will be added to the 1.10 line and all new feature 
-development will occur on the 2.x line.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Version&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Release Date&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Maintenance Period&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;1.10.x&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;31 Aug 2020&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;2 years&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;2.1.x&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;4th Quarter 2020&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;2 years&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Users of 1.9.3 or earlier are urged to upgrade to 1.10.0 and to consider the starting the migration 
-to prepare for the Accumulo 2.1.0 release.  If you would like to start preparing for 2.1.0 now, one way to do this is to start building and testing the next version of your software against Accumulo 2.0.0.&lt;/p&gt;
-
-&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
-
-&lt;h3 id=&quot;bug-fixes&quot;&gt;Bug Fixes&lt;/h3&gt;
-
-&lt;h4 id=&quot;addressed-multiple-possible-concurrency-issues&quot;&gt;Addressed multiple possible concurrency issues&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Prevent multiple threads from working on same bulk file. (Issue #1153)&lt;/li&gt;
-  &lt;li&gt;Avoid multiple threads loading same cache block (Issue #990)&lt;/li&gt;
-  &lt;li&gt;Eliminate task creation leak caused by the addition of a new, additional timed-task for every GC 
-run by creating on time-tasked instance in the GC (Issue #1314)  (PR #1318)&lt;/li&gt;
-  &lt;li&gt;Fix ConcurrentModificationException in HostRegexTableLoadBalancer (#1107)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;improve-metadata-and-root-table-processing-to-prevent-corruption-during-gc&quot;&gt;Improve metadata and root table processing to prevent corruption during GC.&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Prevent cloning of the metadata table.  Cloning the metadata table could result in losing 
-files for either the clone, or the original metadata table during GC processing (Issue #1309)&lt;/li&gt;
-  &lt;li&gt;Improve GC handling of  WALs used by root tablet.  If the root tablet had WALs, the GC did 
-not consider them during collection.  (PR #1310)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;fix-issue-with-minor-compactions&quot;&gt;Fix issue with minor compactions&lt;/h4&gt;
-&lt;p&gt;Added retry to minor compaction thread(s) to prevent transient iterator issues blocking 
-forever (#1644).&lt;/p&gt;
-
-&lt;h4 id=&quot;strengthened-checks-for-fate-rpc-arguments&quot;&gt;Strengthened checks for FATE RPC arguments&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Accumulo 2.0 allows extra arguments at table creation. This fix strengths checks for FATE RPC 
-arguments so that unexpected, extra arguments throw an exception instead of being silently being 
-ignored if run against pre 2.0 code  (Issue #1141)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;address-recovery-performance-issues&quot;&gt;Address recovery performance issues&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Fix WAL recovery performance issue by adding a temporarily cache for the existence of recovery 
-wals For the case where a lot of tablet servers died, the master was frequently checking 
-for the existence of a recovery log for each tablet. It is very likely that many tablets point to 
-the same recovery logs so the existence checks are redundant.  This patch caches the result of 
-existence checks for a short period. (#1462)&lt;/li&gt;
-  &lt;li&gt;Decrease recovery cache time - reduces NN exists calls (#1526)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;fix-handling-of-client-options&quot;&gt;Fix handling of client options&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Validate ClientOpts instance name and Zookeeper paths to fix issue where default client 
-configuration was not being used. This change allows either the default configuration, or the 
-command line set the instance name. (#1478)&lt;/li&gt;
-  &lt;li&gt;Ensures correct use of ZooKeeper getAcl (#1185)&lt;/li&gt;
-  &lt;li&gt;Expanded InputConfigurator permissions checks to include Namespace.READ (#1371)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;fix-monitor-trace-display&quot;&gt;Fix monitor trace display&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Fix regression where trace information could not be displayed in the accumulo monitor.(Issue #1401)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;improvements&quot;&gt;Improvements&lt;/h3&gt;
-
-&lt;h4 id=&quot;improve-tablet-logging-for-hot-spot-detection&quot;&gt;Improve tablet logging for hot-spot detection&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Improve Logging of busy tablets. The deltas of tablets ingest and query counts are used for 
-computing  the busiest N tablets. The previous code used the absolute counts.&lt;/li&gt;
-  &lt;li&gt;Fixed prioQ that was not properly tracking the top N tablets.(PR #1291)&lt;/li&gt;
-  &lt;li&gt;Improve busy tracker handling of reloaded tablets (PR #1296)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;tserver-start-up-and-shutdown-protections&quot;&gt;tserver start-up and shutdown protections:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Add option to check for a threshold number of servers to be registered and available on start-up 
-before the master begins tablet assignments when master acquires lock on start-up.  The options 
-allow for threshold number of servers and an optional max wait period.&lt;br /&gt;
-See &lt;a href=&quot;#Property Change Summary&quot;&gt;Property Changes&lt;/a&gt; for property additions. (#1158)&lt;/li&gt;
-  &lt;li&gt;Add throttle for the number of shutdown requests sent by the master to tservers (Issue #1456)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;optional-gc-metadata-operations&quot;&gt;Optional GC metadata operations.&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Added a property - gc.use.full.compaction At the completion of a GC cycle, the GC compacted the 
-metadata table to ensure that GC changes were flushed and persisted.  The property allows for the 
-action to be specified as compaction, flush or none. (#1352)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;zookeeper-35-version-support&quot;&gt;Zookeeper 3.5 version support&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Support ZooKeeper 3.4 and 3.5 - Update for ZK 3.5 jar location changes (#1503)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;update-log-statements&quot;&gt;Update log statements:&lt;/h4&gt;
-&lt;p&gt;Compacting a table without user iterators was logging like it was an abnormal condition (#1347)
-Reduce verbose logging of merge operations in Master log (#1338)
-Improve logging for session expired events. When a tserver looses lock, the Session expired message
-is a log statement for every watcher - reduce current message to trace and add summary (#1108)&lt;/p&gt;
-
-&lt;h4 id=&quot;improve-shel-commands-command&quot;&gt;Improve shel commands command&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Add optional -t tablename to importdirectory shell command. (#1299)&lt;/li&gt;
-  &lt;li&gt;Fix idempotency bug in importtable (#1555)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;add-gc-hadoop2-metrics&quot;&gt;Add GC hadoop2 metrics.&lt;/h4&gt;
-&lt;p&gt;Add GC cycle metrics (file and wal collection) to be reported via the hadoop2 metrics. This exposes
-the gc cycle metrics available in the monitor to external metrics systems and includes run time
-for the gc post operation (compact, flush). (#1352)&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;AccGcStarted - timestamp of GC cycle start&lt;/li&gt;
-  &lt;li&gt;AccGcFinished - timestamps of GC cycle finished&lt;/li&gt;
-  &lt;li&gt;AccGcCandidates - Number of candidates for GC&lt;/li&gt;
-  &lt;li&gt;AccGcInUse - Number of candidates still in use&lt;/li&gt;
-  &lt;li&gt;AccGcDeleted - Number of candidates deleted&lt;/li&gt;
-  &lt;li&gt;AccGcErrors - Number of  deletion errors&lt;/li&gt;
-  &lt;li&gt;AccGcWalStarted - timestamp of WAL collection start&lt;/li&gt;
-  &lt;li&gt;AccGcWalFinished - timestamp of WAL collection completion&lt;/li&gt;
-  &lt;li&gt;AccGcWalCandidates - number of WAL candidates for collection&lt;/li&gt;
-  &lt;li&gt;AccGcWalInUse  - number of WALs in use&lt;/li&gt;
-  &lt;li&gt;AccGcWalDeleted - number of WALs deleted&lt;/li&gt;
-  &lt;li&gt;AccGcWalErrors- number of errors during WAL deletion&lt;/li&gt;
-  &lt;li&gt;AccGcPostOpDuration - duration of compact / flush&lt;/li&gt;
-  &lt;li&gt;AccGcRunCycleCount - 1-up cycle count&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;add-option-allow-clone-table-to-keep-the-clone-offline&quot;&gt;Add option allow clone table to keep the clone offline.&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Option to leave cloned tables offline (#1475)&lt;/li&gt;
-  &lt;li&gt;Updated the shell clone command with a -o option&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;improved-metadata-table-consistency-checking-and-testing-during-gc&quot;&gt;Improved metadata table consistency checking and testing during GC&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;During GC scans, an error will be thrown if the GC fails consistency checks (#1379)&lt;/li&gt;
-  &lt;li&gt;Added a check to ensure the last tablet was seen.  This should cause an error to be thrown if 
-the scanner stops returning data for any reason.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;java-language-level-changes&quot;&gt;Java Language Level Changes&lt;/h3&gt;
-&lt;p&gt;This lists some of the code changes made to update the Java language level to Java 8.  They are
-listed here to aid migration of client code that may have similar issues migrating to the updated
-language level (#1467).&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Update to maven compiler source and target to Java 1.8&lt;/li&gt;
-  &lt;li&gt;Add optional dependency to pom for modernizer annotations&lt;/li&gt;
-  &lt;li&gt;Add SuppressModernizer annotation to uses of Guava Predicate in AccumuloConfiguration and its 
-subclasses, Optional in VolumeChooser, and Function in GroupBalancer&lt;/li&gt;
-  &lt;li&gt;Replace Guava Function, Predicate, Preconditions, Optional and Iterators where able with java.util equivalents&lt;/li&gt;
-  &lt;li&gt;Replace core.util.Base64 class with java.util equivalent&lt;/li&gt;
-  &lt;li&gt;Fix warnings introduced by Java 1.8&lt;/li&gt;
-  &lt;li&gt;Drop method in MockConfiguration causing compiler warning and made PropertyFilter in 
-AccumuloConfiguration extend guava Predicate&lt;/li&gt;
-  &lt;li&gt;Rename execute methods in MasterClient and ServerClient, like the 2.0 changes to fix the 
-overload warnings&lt;/li&gt;
-  &lt;li&gt;Add colVis file to ContinuousInputFormat. Fixes #1368 (#1369)&lt;/li&gt;
-  &lt;li&gt;Fix unused var and generics warning&lt;/li&gt;
-  &lt;li&gt;Limit UnsynchronizedBuffer maximum size to Integer.MAX_VALUE - 8 (#1523)&lt;/li&gt;
-  &lt;li&gt;Remove need for ANT on classpath (#1532)&lt;/li&gt;
-  &lt;li&gt;Update spotbugs and maven enforcer plugin versions&lt;/li&gt;
-  &lt;li&gt;Rename yield method - future restricted identifier&lt;/li&gt;
-  &lt;li&gt;Fix javadoc html header elements for newer JDKs&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;other-changes&quot;&gt;Other Changes&lt;/h3&gt;
-
-&lt;h4 id=&quot;build-improvements--changes&quot;&gt;Build Improvements / Changes&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Switch to GitHub Actions and improve CI workflow (#1671)&lt;/li&gt;
-  &lt;li&gt;Switch POM project xml attrs from HTTP to HTTPS&lt;/li&gt;
-  &lt;li&gt;Add patch file for Java 11 generated apidocs&lt;/li&gt;
-  &lt;li&gt;Update native map makefile to work with Java 11.&lt;/li&gt;
-  &lt;li&gt;The makefile was modified to check if javac exists - previously it checked to see if javah exists
-inorder to determine if java is a JDK or JRE.  In Java 11, javah no longer exists - changed to 
-look for javac compiler command that exists in Java 8 and 11.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;test-improvements&quot;&gt;Test Improvements&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Make ITs override defaultTimeoutSeconds (#1483)&lt;/li&gt;
-  &lt;li&gt;Increase timeouts on some slow ITs (#1482)&lt;/li&gt;
-  &lt;li&gt;Stabilize ChaoticBalancerIT (#1491)&lt;/li&gt;
-  &lt;li&gt;Increase timeout for GarbageCollectWALIT to allow recovery&lt;/li&gt;
-  &lt;li&gt;Improve importDirectory tests from #1299&lt;/li&gt;
-  &lt;li&gt;Limit log size in Travis CI builds&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;new-properties&quot;&gt;New Properties&lt;/h1&gt;
-
-&lt;p&gt;Set server count threshold and maximum wait time on start-up before master begins tablet assignments:&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Property&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Description&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;master.startup.tserver.avail.min.count&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;the number of required tservers&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;master.startup.tserver.avail.max.wait&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;the max time willing to wait before assigning tablets if threshold count has not been reached.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Enable improved tserver logging for hot-spot detection:&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Property&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Description&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;tserver.log.busy.tablets.count&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;the number of busiest tablets to log. Logged at interval controlled by  tserver.log.busy.tablets.interval. If &amp;lt;= 0, logging of busy tablets is disabled.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;tserver.log.busy.tablets.interval&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Time interval between logging out busy tablets information.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;GC changes:&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Property&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Description&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;gc.post.metadata.action&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Allowed values: compact - default, current behavior, the metadata table is flushed and compacted on each GC run. flush - only flush the metadata table, compactions will occur according to number of files compaction rules. none - take no action.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;gc.metrics.enabled&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Enable detailed gc metrics reporting with hadoop metrics.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h1 id=&quot;useful-links&quot;&gt;Useful links&lt;/h1&gt;
-
-&lt;p&gt;(TODO - make actual links)&lt;/p&gt;
-
-&lt;p&gt;Release VOTE email thread
-All changes since 1.9.3
-GitHub - List of issues tracked on GitHub corresponding to this release
-1.9.3 release notes - Release notes showing changes in the previous release&lt;/p&gt;
-</description>
-        <pubDate>Sat, 29 Feb 2020 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/release/accumulo-1.10.0/</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.10.0/</guid>
-        
-        
-        <category>release</category>
-        
-      </item>
     
       <item>
         <title>Microsoft MASC, an Apache Spark connector for Apache Accumulo</title>
@@ -1722,6 +1405,186 @@ for using Spark with Accumulo.&lt;/p&gt;
         
         
         <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Apache Accumulo 1.9.3</title>
+        <description>&lt;p&gt;Apache Accumulo 1.9.3 contains bug fixes for Write Ahead Logs and compaction.
+Users of 1.9.2 are encouraged to upgrade.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/accumulo_user_manual.html&quot;&gt;User Manual&lt;/a&gt; - In-depth developer and administrator documentation&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/apidocs/&quot;&gt;Javadocs&lt;/a&gt; - Accumulo 1.9 API&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/1.9/examples/&quot;&gt;Examples&lt;/a&gt; - Code with corresponding readme files that give step by
+step instructions for running example code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-write-ahead-logs&quot;&gt;Multiple Fixes for Write Ahead Logs&lt;/h3&gt;
+
+&lt;p&gt;This release fixes Write Ahead Logs issues that slow or prevent recovery
+and in some cases lead to data loss. The fixes reduce the number of WALS
+referenced by a tserver, improve error handing, and improve clean up.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Eliminates a race condition that could result in data loss during recovery.
+If the GC deletes unreferenced WALs from ZK while the master is reading
+recovery WALs from ZK, the master may skip WALs it should not, resulting in
+data loss.  Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/866&quot;&gt;#866&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Opening a new WAL in DFS may fail, but still be advertised in ZK. This could
+result in a missing WAL during recovery, preventing tablets from loading.
+There is no data loss in this case, just WAL references that should not exists.
+Reported in &lt;a href=&quot;https://github.com/apache/accumulo/issues/949&quot;&gt;#949&lt;/a&gt; and fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1057&quot;&gt;#1005&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;tserver failures could result in many empty WALs that unnecessarily slow recovery.
+This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/845&quot;&gt;#823&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Some write patterns caused tservers to unnecessarily reference a lot of WALs,
+which could slow any recovery.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/860&quot;&gt;#854&lt;/a&gt; the max WALs referenced was
+limited regardless of the write pattern, avoiding long recovery times.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;During tablet recovery, filter out logs that do not define the tablet. &lt;a href=&quot;https://github.com/apache/accumulo/issues/881&quot;&gt;#881&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;If a tserver fails sorting, a marker file is written to the recovery directory.
+This marker prevents any subsequent recovery attempts from succeeding.
+Fixed by modifying the WAL RecoveryLogReader to handle failed file markers in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1048&quot;&gt;#961&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Improve performance of serializing mutations to a WAL by avoiding frequent synchronization. &lt;a href=&quot;https://github.com/apache/accumulo/issues/669&quot;&gt;#669&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;multiple-fixes-for-compaction-issues&quot;&gt;Multiple Fixes for Compaction Issues&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Stop locking during compaction.  Compactions acquired the tablet lock between each
+key value. This created unnecessary contention with other operations like scan and
+bulk imports.  The synchronization was removed &lt;a href=&quot;https://github.com/apache/accumulo/issues/1032&quot;&gt;#1031&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Only re-queue compaction when there is activity. &lt;a href=&quot;https://github.com/apache/accumulo/issues/759&quot;&gt;#759&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fix-arrayoutofbounds-error-when-new-files-are-created-affects-all-previous-versions&quot;&gt;Fix ArrayOutOfBounds error when new files are created (affects all previous versions)&lt;/h3&gt;
+
+&lt;p&gt;If the 7 digit base 36 number used to name files attempted to go to 8 digits,
+then compactions would fail.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/562&quot;&gt;#562&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;updated-master-metrics-to-include-fate-metrics&quot;&gt;Updated Master Metrics to include FATE metrics.&lt;/h3&gt;
+
+&lt;p&gt;Added master metrics to provide a snapshot of current FATE operations.  The metrics added:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the number of current FATE transactions in progress,&lt;/li&gt;
+  &lt;li&gt;the count of child operations that have occurred on the zookeeper FATE node&lt;/li&gt;
+  &lt;li&gt;a count of zookeeper connection errors when the snapshot is taken.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The number of child operations provides a light-weight surrogate for FATE transaction
+progression between snapshots. The metrics are controlled with the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;master.fate.metrics.enabled - default to &lt;em&gt;false&lt;/em&gt; preserve current metric reporting&lt;/li&gt;
+  &lt;li&gt;master.fate.metrics.min.update.interval - default to &lt;em&gt;60s&lt;/em&gt; - there is a hard limit of 10s.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When enabled, the metrics are published to JMX and can optionally be configured using standard
+hadoop metrics2 configuration files.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issues-with-native-maps-with-libstdc-82-and-higher&quot;&gt;Fixed issues with Native Maps with libstdc++ 8.2 and higher&lt;/h3&gt;
+
+&lt;p&gt;Versions of libstdc++ 8.2 and higher triggered errors within within the native map code.
+This release fixes issues &lt;a href=&quot;https://github.com/apache/accumulo/issues/767&quot;&gt;#767&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/769&quot;&gt;#769&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/1064&quot;&gt;#1064 &lt;/a&gt;, and &lt;a href=&quot;https://github.com/apache/accumulo/issues/1070&quot;&gt;#1070 &lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-splitting-tablets-with-files-and-no-data&quot;&gt;Fixed splitting tablets with files and no data&lt;/h3&gt;
+
+&lt;p&gt;The split code assumed that if a tablet had files that it had data in
+those files.  There are some edge case where this is not true.  Updated
+the split code to handle this &lt;a href=&quot;https://github.com/apache/accumulo/issues/999&quot;&gt;#998&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;log-when-a-scan-waits-a-long-time-for-files&quot;&gt;Log when a scan waits a long time for files.&lt;/h3&gt;
+
+&lt;p&gt;Accumulo has a configurable limit on the max number of files open in a
+tserver for all scans.  When too many files are open, scans must wait.
+In &lt;a href=&quot;https://github.com/apache/accumulo/issues/978&quot;&gt;#978&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/981&quot;&gt;#981&lt;/a&gt; scans that wait too long for files now log a message.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-race-condition-in-table-existence-check&quot;&gt;Fixed race condition in table existence check.&lt;/h3&gt;
+
+&lt;p&gt;The Accumulo client code that checks if tables exists had a race
+condition.  The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/768&quot;&gt;#768&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/973&quot;&gt;#973&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;support-running-mini-accumulo-using-java-11&quot;&gt;Support running Mini Accumulo using Java 11&lt;/h3&gt;
+
+&lt;p&gt;Mini Accumulo made some assumptions about classloaders that were no
+longer true in Java 11.  This caused Mini to fail in Java 11.  In
+&lt;a href=&quot;https://github.com/apache/accumulo/issues/924&quot;&gt;#924&lt;/a&gt; Mini was updated to work with Java 11, while still working
+with Java 7 and 8.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-improperly-configured-snappy&quot;&gt;Fixed issue with improperly configured Snappy&lt;/h3&gt;
+
+&lt;p&gt;If snappy was configured and the snappy libraries were not available then minor
+compactions could hang forever.  In &lt;a href=&quot;https://github.com/apache/accumulo/issues/920&quot;&gt;#920&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/925&quot;&gt;#925&lt;/a&gt; this was fixed and minor
+compactions will proceed when a different compression is configured.&lt;/p&gt;
+
+&lt;h3 id=&quot;handle-bad-locality-group-config&quot;&gt;Handle bad locality group config.&lt;/h3&gt;
+
+&lt;p&gt;Improperly configured locality groups could cause a tablet to become
+inoperative.  This was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/819&quot;&gt;#819&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/840&quot;&gt;#840&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-bulk-import-race-condition&quot;&gt;Fixed bulk import race condition.&lt;/h3&gt;
+
+&lt;p&gt;There was a race condition in bulk import that could result in files
+being imported after a bulk import transaction had completed.  In the
+worst case these files were already compacted and garbage collected.
+This would cause a tablet to have a reference to a file that did not
+exists.  No data would have been lost, but it would cause scans to fail.
+The race was fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/800&quot;&gt;#800&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/837&quot;&gt;#837&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;fixed-issue-with-hostregextableloadbalancer&quot;&gt;Fixed issue with HostRegexTableLoadBalancer&lt;/h3&gt;
+
+&lt;p&gt;This addresses an issue when using the HostRegexTableLoadBalancer
+when the default pool is empty. The load balancer will not assign the tablets at all.
+Here, we select a random pool to assign the tablets to. This behavior is on by
+default in the HostRegexTableLoadBalancer but can be disabled via
+HostRegexTableLoadBalancer configuration setting
+ &lt;em&gt;table.custom.balancer.host.regex.HostTableLoadBalancer.ALL&lt;/em&gt;
+ Fixed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/691&quot;&gt;#691&lt;/a&gt; - backported to 1.9 in &lt;a href=&quot;https://github.com/apache/accumulo/issues/710&quot;&gt;#710&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;update-to-libthrift-version&quot;&gt;Update to libthrift version&lt;/h3&gt;
+
+&lt;p&gt;The packaged, binary  tarball contains updated version of libthrift to version 0.9.3-1 to
+address thrift CVE. Issue &lt;a href=&quot;https://github.com/apache/accumulo/issues/1029&quot;&gt;#1029&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;useful-links&quot;&gt;Useful links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://lists.apache.org/thread.html/62a490ee3005ef2ec1f3865f6a9539efc082abc49c90892b49005eed@%3Cdev.accumulo.apache.org%3E&quot;&gt;Release VOTE email thread&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/compare/rel/1.9.2...apache:rel/1.9.3&quot;&gt;All Changes since 1.9.2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F7&quot;&gt;GitHub&lt;/a&gt; - List of issues tracked on GitHub corresponding to this release&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/release/accumulo-1.9.2/&quot;&gt;1.9.2 release notes&lt;/a&gt; - Release notes showing changes in the previous release&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-1.9.3/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.9.3/</guid>
+        
+        
+        <category>release</category>
         
       </item>
     
