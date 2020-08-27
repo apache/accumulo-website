@@ -19,11 +19,13 @@ Follow these steps to make a release of Apache Accumulo.
 
 There are number of things that are required before attempting to build a release.
 
-1. Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn't require re-authentication mid-build, as it will cause things to fail. For example, you can add `default-cache-ttl 6000` to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough [ASF release signing documentation][1].
+1. Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn't require re-authentication mid-build, as it will cause things to fail. For example, you can add `default-cache-ttl 6000` to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough [ASF release signing documentation][1].  Once you are able to sign a release, add your gpg key to the [KEYS file][keys-file] (instructions are at the top of the file).
 2. Ensure that you're using the correct major release of Java (check javadoc too).
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
-   the maven-release-plugin and staging the release candidate).
+   the maven-release-plugin and staging the release candidate).  Your Apache ID and password should be in a <server> section of ~/.m2/settings.xml as shown [here][apache-mvn].
+   To encrypt the password follow these [instructions][maven-enc].
 4. Have a clean workspace before starting.
+5. The build will require having the same version of [Thrift binary][thrift] installed on your machine. 
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
@@ -35,7 +37,7 @@ Before creating a release candidate, all open issues with a fix version of the r
 
 **TL;DR**
 
-* `./assemble/build.sh --create-release-candidate` to make the release candidate
+* `./assemble/build.sh --create-release-candidate -DskipTests -Dspotbugs.skip` to make the release candidate
 * `git tag $version $version-rcN` to create an RC tag from the actual tag
 * `git tag -d $version` make sure you don't accidentally push a "release" tag
 * `git push origin $version-rcN` push the RC tag
@@ -50,8 +52,7 @@ Before creating a release candidate, all open issues with a fix version of the r
 
 You should use the provided script assemble/build.sh to create the release candidate. This script is
 desirable as it activates all necessary maven profiles in addition to verifying that certain preconditions
-are met, like RPM signing availability and the ability to sign files using GPG. The --test option can
-be used as a dry run for creating a release candidate. The --create-release-candidate option should be 
+are met, like RPM signing availability and the ability to sign files using GPG. The --create-release-candidate option is 
 used to create the actual release candidate.
 
 When invoking build.sh with the --create-release-candidate option, the majority of the work will be performed
@@ -79,7 +80,8 @@ will make it publicly available for other members to inspect.
 
 At this point, you should have a closed repository that's ready to vote on. Send a message to [the dev
 list](mailto:dev@accumulo.apache.org) and get the ball rolling. Developers should test and verify the
-release candidate on their own. Accumulo has a guide for [verifying releases][verify].
+release candidate on their own. Accumulo has a guide for [verifying releases][verify].  The provided 
+script assemble/build.sh can be used to generate a release VOTE email using the --
 
 Lazy consensus is not sufficient for a release; at least 3 +1 votes from PMC members are required. All
 checksums and signatures need to be verified before any voter can +1 it. Voting shall last 72 hours. Voters
@@ -102,7 +104,7 @@ announcement.
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
 a process to get the release out to all of the mirrors.
 In Nexus:
-* Release the 1.9.3-rc3 staging repository to Maven Central
+* For example, rc3 passes. Release the X.Y.Z-rc3 staging repository to Maven Central
 * Drop old (rc1,rc2) staging repos
 
 ## Create the final Git tag
@@ -199,15 +201,18 @@ if this is the latest release of Accumulo.
 Some good references that explain a few things:
 
 - [Christopher talks about making releases][3]
-- [Publishing Maven Artifacts][4]
-- [Publishing Releases][5]
+- [Publishing Maven Artifacts][apache-mvn]
+- [Publishing Releases][apache-release]
 
-[1]: https://www.apache.org/dev/release-signing
+[1]: https://infra.apache.org/release-signing
 [2]: https://repository.apache.org
 [3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
-[4]: https://www.apache.org/dev/publishing-maven-artifacts
-[5]: https://www.apache.org/dev/release-publishing
+[apache-release]: https://infra.apache.org/release-publishing
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
 [verify]: {{ "/contributor/verifying-release" | relative_url }}
 [examples]: https://github.com/apache/accumulo-examples
 [website-repo]: https://github.com/apache/accumulo-website
+[keys-file]: https://downloads.apache.org/accumulo/KEYS
+[apache-mvn]: https://infra.apache.org/publishing-maven-artifacts.html
+[maven-enc]: https://maven.apache.org/guides/mini/guide-encryption.html
+[thrift]: http://archive.apache.org/dist/thrift/
