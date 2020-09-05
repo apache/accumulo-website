@@ -28,7 +28,7 @@ The following regex matches imports that are *not* Accumulo public API. This
 regex can be used with [RegexpSingleline] to automatically find suspicious
 imports in a project using Accumulo.
 
-For 1.9 and earlier:
+For 1.x:
 
 ```regex
 import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!(core\.(client|data|security)|minicluster)\.).*)

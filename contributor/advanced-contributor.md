@@ -9,7 +9,7 @@ contributors:
 
 1. Checkout the branch for the major version which the patch is intended:
 
-    `git checkout 1.9`
+    `git checkout 1.10`
 
 2. Verify the changes introduced by the patch:
 
@@ -25,11 +25,11 @@ contributors:
 
 5. When finished, push the changes:
 
-    `git push origin 1.9`
+    `git push origin 1.10`
 
 6. Merge where appropriate:
 
-    `git checkout main && git merge 1.9`
+    `git checkout main && git merge 1.10`
 
 ## Merging change to multiple versions
 

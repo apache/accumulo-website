@@ -118,6 +118,15 @@ def render_prop(context, text, link)
   return url
 end
 
+def render_prop_onex(context, text, version)
+  args = text.split(' ')
+  prop = args[0]
+  base = context.registers[:site].config['baseurl']
+  prop_enc = prop.gsub('.\\*', '.*').gsub('.', '_').gsub('_*', '_prefix')
+  url = "#{base}/1.#{version}/accumulo_user_manual#_#{prop_enc}"
+  return "[#{prop}](#{url})"
+end
+
 class PropertyUrlTag < Liquid::Tag
   def initialize(tag_name, text, tokens)
     super
@@ -126,6 +135,17 @@ class PropertyUrlTag < Liquid::Tag
 
   def render(context)
     return render_prop(context, @text, false)
+  end
+end
+
+class PropertyLinkTag1x < Liquid::Tag
+  def initialize(tag_name, text, tokens)
+    super
+    @text = text
+  end
+
+  def render(context)
+    return render_prop_onex(context, @text, '10')
   end
 end
 
@@ -185,7 +205,7 @@ class GitHubIssueTag < Liquid::Tag
     # TODO sanity check text
     # TODO support optional pound char like #123
     url = "https://github.com/apache/accumulo/issues/#{@text}"
-    return "[##{@text}](#{url})"
+    return "[##{@text.strip}](#{url})"
   end
 end
 
@@ -199,7 +219,7 @@ class JiraTag < Liquid::Tag
     # TODO sanity check text
     # TODO accept number without ACCUMULO- prefix
     url = "https://issues.apache.org/jira/browse/#{@text}"
-    return "[#{@text}](#{url})"
+    return "[#{@text.strip}](#{url})"
   end
 end
 
@@ -226,6 +246,7 @@ class GitHubCodeTag < Liquid::Tag
   end
 end
 
+Liquid::Template.register_tag('plink1x', PropertyLinkTag1x)
 Liquid::Template.register_tag('jlink', JavadocLinkTag)
 Liquid::Template.register_tag('jurl', JavadocUrlTag)
 Liquid::Template.register_tag('plink', PropertyLinkTag)

@@ -3,6 +3,12 @@ title: Accumulo Documentation Archive
 permalink: /docs-archive/
 ---
 
+#### Apache Accumulo 1.10
+
+* [User Manual](/1.10/accumulo_user_manual.html)
+* [Javadocs](/1.10/apidocs)
+* [Examples](/1.10/examples)
+
 #### Apache Accumulo 1.9
 
 * [User Manual](/1.9/accumulo_user_manual.html)

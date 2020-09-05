@@ -6,7 +6,7 @@ title: Testing a release
 
 1. Set the release version, ID for staging repo, and alias to configure Maven with temporary settings:
    ```shell
-   export RC_VERSION=1.9.0
+   export RC_VERSION=1.10.0
    export RC_STAGING=1070
    ```
 1. Create temporary Maven settings

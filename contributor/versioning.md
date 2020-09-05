@@ -3,13 +3,45 @@ title: Versioning
 redirect_from: /versioning
 ---
 
+## Long Term Maintenance (LTM)
+{: #LTM }
+
+The Apache Accumulo PMC has adopted a Long Term Maintenance (LTM) release strategy.
+
+This strategy entails an intent to:
+
+1. Periodically release a new LTM `major.minor.0` version (approximately every 2 years),
+2. Maintain the LTM releases with `major.minor.(patch++)` releases until 1 year after the next LTM,
+3. Release intermediate non-LTM `major.minor.0` versions that are not expected to receive patch/bugfix releases,
+4. Roll patches/bugfixes targeting non-LTM versions into the next `major.minor.0` release, and
+5. Support upgrades from both the immediately preceding LTM and non-LTM versions.
+
+This strategy implies that no more than one or two LTM releases will be
+actively maintained at any given time, with a one year overlap.
+
+The motivation for this is to streamline the work of maintaining multiple
+versions of Accumulo while not inhibiting development on newer versions, to
+provide greater confidence for risk-averse users to upgrade to versions that
+are expected to be stable and receive updates (with a one year window to do
+so), and help reduce the amount of work done by limiting upgrade paths.
+
+Note: the above strategy is a declaration of **intent** only. We use the term
+"Long Term Maintenance" rather than the more familiar "Long Term Support" or
+"Long Term Stable" terms to avoid possible confusion that may arise over
+implication of warrantees from the use of the words "support" or "stable". See
+the project LICENSE for a full disclaimer of warranties. If you have questions,
+about this, please [contact] us.
+
+## SemVer 2.0.0
+{: semver }
+
 The Apache Accumulo PMC closed a vote on 2014/12/12 which adopted [Semantic Versioning 2.0.0][1] as
 the reference document on the meaning and requirements of the versions of Apache Accumulo. Semantic
 versioning requires a definition of a public API: this definition is unchanged over previous releases and
 can be found in section 9 of the [README][2]. A copy of the specification is included here, licensed under
 [Creative Commons - CC BY 3.0][3]:
 
-## Specification
+### Semantic Versioning Specification (SemVer)
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
 in this document are to be interpreted as described in RFC 2119.
@@ -68,3 +100,4 @@ preceding identifiers are equal. Example: 1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-al
 [1]: http://semver.org/spec/v2.0.0
 [2]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=README.md;hb=refs/heads/main
 [3]: https://creativecommons.org/licenses/by/3.0
+[contact]: {{ site.baseurl }}/contact-us

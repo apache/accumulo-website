@@ -23,7 +23,7 @@ finding issues to work, there may still be
 
 Project boards (also "projects") are used to track the status of issues and
 pull requests for a specific milestone. Projects with names such as `2.1.0`,
-and `1.9.2` are used for tracking issues associated with a particular release
+and `1.10.1` are used for tracking issues associated with a particular release
 and release planning. These are set up as basic Kanban boards with automation,
 with `To do`, `In progress`, and `Done` statuses. These projects are marked as
 "closed" when the version indicated is released. Other projects may exist for
@@ -41,7 +41,6 @@ The docs below provide additional information for contributors.
 
 The docs below are for committers but may be of interest to contributors as well.
 
-- [Release Management][release]
 - [Making a Release][making]
 - [Verifying a Release][verifying]
 - [Testing a Release][testing]
@@ -65,7 +64,6 @@ For details about governance policies for the Accumulo project view the followin
 [JIRA]: https://issues.apache.org/jira/browse/ACCUMULO
 [building]: {{ site.baseurl }}/contributor/building
 [advanced]: {{ site.baseurl }}/contributor/advanced-contributor
-[release]: {{ site.baseurl }}/contributor/release-management
 [making]: {{ site.baseurl }}/contributor/making-release
 [verifying]: /contributor/verifying-release
 [testing]: /contributor/testing-release
