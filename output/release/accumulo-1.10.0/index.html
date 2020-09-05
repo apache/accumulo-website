@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo 1.10.0 (Draft)</title>
+<title>Apache Accumulo 1.10.0</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -82,7 +82,7 @@
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/accumulo-1.10.0/">1.10.0</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
@@ -93,8 +93,8 @@
             <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
-            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
-            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
             <li><a href="/external-docs">External Docs</a></li>
             <li><a href="/docs-archive/">Archive</a></li>
           </ul>
@@ -138,327 +138,254 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Accumulo 1.10.0 (Draft)</h1>
+          <h1 class="title">Apache Accumulo 1.10.0</h1>
           
-          <p>26 Aug 2020</p>
+          
+
+<p>03 Sep 2020</p>
+<nav aria-label="Navigate Release Notes"><ul class="pager">
+      
+        <li class="previous"><a href="https://accumulo.apache.org/release/accumulo-1.9.3/">&laquo;&nbsp;Apache Accumulo 1.9.3</a></li>
+      
+    
+      
+        <li class="next"><a href="https://accumulo.apache.org/release/accumulo-2.0.0-alpha-1/">Apache Accumulo 2.0.0-alpha-1&nbsp;&raquo;</a></li>
+      
+    </ul></nav>
 
 
-<div class="alert alert-info" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.0.0/">the latest release notes</a>.</p>
+
+
+<div class="alert alert-success" role="alert">
+  <p>This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.</p>
 </div>
 
 
+<h2 id="about">About</h2>
 
+<p>Apache Accumulo 1.10.0 is a continuation of the 1.x release line, and is
+essentially the next maintenance release of 1.8/1.9, following the 1.9.3
+version with some small additional internal improvements. Earlier 1.x versions
+are now superseded by this maintenance release, and will no longer be
+maintained.</p>
 
+<p>The <a href="https://semver.org/spec/v2.0.0.html">semver</a> minor version number increase (1.9 to 1.10) signals that this
+release is backwards compatible with previous minor releases (1.8 and 1.9).
+Rather than API additions, the primary reason for this minor version increase
+is due to the decision to make Java 8 the minimum supported Java version (see
+below for more).</p>
 
+<p>This release contains contributions from more than 13 contributors from the
+Apace Accumulo community in over 80 commits and 16 months of work since the
+1.9.3 release. These release notes are highlights of those changes. The full
+detailed changes can be seen in the git history. If anything is missing from
+this list, please <a href="/contact-us">contact</a> us to have it included.</p>
 
-<p>Apache Accumulo 1.10 is a maintenance release of the 1.9.3 version with additional internal 
-improvements.  This release raises the Java language level for the source code 
-from 1.7 to 8 and requires a Java runtime environment of Java 8 or later.  The source code level 
-change aligns the Accumulo code base Java language version requirements with the 2.0 branches and 
-allows Java language enhancements such as lambda expressions and improved interface features to be 
-used in all active branches of the Accumulo code base.</p>
+<p>According to the <a href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a> strategy, the intent is to
+maintain the 1.10 release line with critical bug and security fixes until one
+year after the next LTM version is released. However, this is anticipated to be
+the final 1.x legacy release, so it is not expected to receive any new features
+or significant non-critical updates, so users wanting new features should plan
+to upgrade to a 2.x release, where new feature development is still being done.</p>
 
-<p>With the adoption of <a href="https://semver.org/spec/v2.0.0.html">semver</a>, the minor number version change
-(from 1.9 to 1.10) signals this release does not modify the Accumulo public API, but that the 
-release contains internal improvements beyond changes that are permitted by semver in a patch 
-release. This release contains contributions from more than 13 contributors from the Apace Accumulo
-community in over 80 commits and 16 months of work since the 1.9.3 release. The following release 
-notes highlight some of the changes. If anything is missing from this list, please
-<a href="https://accumulo.apache.org/contact-us">contact</a> the developers to have it included.</p>
+<p>Users of 1.9.3 or earlier are urged to upgrade to 1.10.0 as soon as it is
+available, as this is a continuation of the 1.9 maintenance line. and to
+consider migrating to a 2.x version when a suitable one becomes available.
+Accumulo 2.0.0 is currently available, and 2.1.0 is anticipated to be the next
+LTM release. If you would like to start preparing for 2.1.0 now, one way to do
+this is to start building and testing the next version of your software against
+Accumulo 2.0.0 because all 2.x releases should be backwards compatible with
+2.0.0, following <a href="https://semver.org/spec/v2.0.0.html">semantic versioning</a>.</p>
 
-<h2 id="long-term-support-lts">Long Term Support (LTS)</h2>
+<h2 id="minimum-requirements">Minimum Requirements</h2>
 
-<p>The Apache Accumulo community has adopted a formal Long Term Support (LTS) release policy.  Accumulo 
-version 1.10 is the first LTS version and is expected to be the last major / minor release of the 
-1.x line. With the LTS designation, 1.10.0 will receive critical bug and security fixes for the 
-defined support period.  No new features will be added to the 1.10 line and all new feature 
-development will occur on the 2.x line.</p>
+<p>The versions mentioned here are a guide only. It is not expected that our
+convenience binary tarball will work out-of-the-box with your particular
+environment, and some responsibility is placed on users to properly configure
+Accumulo, or even patch and rebuild it from source, for their particular
+environment.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Version</th>
-      <th style="text-align: left">Release Date</th>
-      <th style="text-align: left">Maintenance Period</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">1.10.x</td>
-      <td style="text-align: left">31 Aug 2020</td>
-      <td style="text-align: left">2 years</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">2.1.x</td>
-      <td style="text-align: left">4th Quarter 2020</td>
-      <td style="text-align: left">2 years</td>
-    </tr>
-  </tbody>
-</table>
+<p>Please <a href="/contact-us">contact</a> us or file a <a href="https://github.com/apache/accumulo/issues">bug report</a> if you have trouble with a
+specific version or wish to seek tips. Be prepared to provide details of the
+problems you encounter, as well as perform some troubleshooting steps of your
+own, in order to get the best response.</p>
 
-<p>Users of 1.9.3 or earlier are urged to upgrade to 1.10.0 and to consider the starting the migration 
-to prepare for the Accumulo 2.1.0 release.  If you would like to start preparing for 2.1.0 now, one way to do this is to start building and testing the next version of your software against Accumulo 2.0.0.</p>
+<h3 id="java-8">Java 8</h3>
 
-<h2 id="notable-changes">Notable Changes</h2>
+<p>Java 8 is now the minimum supported Java version, and it is designed to work on
+Java 11, as well. To build the project from source, Java 11 or later is
+required. Please <a href="/contact-us">contact</a> us if you find any bugs on any Java version.</p>
 
-<h3 id="bug-fixes">Bug Fixes</h3>
+<h3 id="hadoop-2-or-3">Hadoop 2 or 3</h3>
 
-<h4 id="addressed-multiple-possible-concurrency-issues">Addressed multiple possible concurrency issues</h4>
-<ul>
-  <li>Prevent multiple threads from working on same bulk file. (Issue #1153)</li>
-  <li>Avoid multiple threads loading same cache block (Issue #990)</li>
-  <li>Eliminate task creation leak caused by the addition of a new, additional timed-task for every GC 
-run by creating on time-tasked instance in the GC (Issue #1314)  (PR #1318)</li>
-  <li>Fix ConcurrentModificationException in HostRegexTableLoadBalancer (#1107)</li>
-</ul>
+<p>This release has been built using Hadoop 2.6.5, and is expected to work with
+any Hadoop version 2.6.5 or later. It has also been tested with 3.0.3, and is
+expected to work with Hadoop 3.0 versions as well. Hadoop 3.1.3, 3.2.1, and
+3.3.0 have also been tested with this version, and are known to work (with at
+least basic functionality) with some class path modifications (specifically,
+using Guava 27.0-jre instead of the provided 14.0 version).</p>
 
-<h4 id="improve-metadata-and-root-table-processing-to-prevent-corruption-during-gc">Improve metadata and root table processing to prevent corruption during GC.</h4>
-<ul>
-  <li>Prevent cloning of the metadata table.  Cloning the metadata table could result in losing 
-files for either the clone, or the original metadata table during GC processing (Issue #1309)</li>
-  <li>Improve GC handling of  WALs used by root tablet.  If the root tablet had WALs, the GC did 
-not consider them during collection.  (PR #1310)</li>
-</ul>
+<p>Particular class path pain points are known to be guava, commons-io,
+commons-vfs2, and possibly other commons libraries.</p>
 
-<h4 id="fix-issue-with-minor-compactions">Fix issue with minor compactions</h4>
-<p>Added retry to minor compaction thread(s) to prevent transient iterator issues blocking 
-forever (#1644).</p>
+<h3 id="zookeeper">ZooKeeper</h3>
 
-<h4 id="strengthened-checks-for-fate-rpc-arguments">Strengthened checks for FATE RPC arguments</h4>
-<ul>
-  <li>Accumulo 2.0 allows extra arguments at table creation. This fix strengths checks for FATE RPC 
-arguments so that unexpected, extra arguments throw an exception instead of being silently being 
-ignored if run against pre 2.0 code  (Issue #1141)</li>
-</ul>
+<p>This release has been built agains ZooKeeper 3.4.14, the latest 3.4 release. It
+is known to work against 3.5 and 3.6 versions as well, when configured
+properly.</p>
 
-<h4 id="address-recovery-performance-issues">Address recovery performance issues</h4>
-<ul>
-  <li>Fix WAL recovery performance issue by adding a temporarily cache for the existence of recovery 
-wals For the case where a lot of tablet servers died, the master was frequently checking 
-for the existence of a recovery log for each tablet. It is very likely that many tablets point to 
-the same recovery logs so the existence checks are redundant.  This patch caches the result of 
-existence checks for a short period. (#1462)</li>
-  <li>Decrease recovery cache time - reduces NN exists calls (#1526)</li>
-</ul>
+<h2 id="major-bug-fixes">Major Bug Fixes</h2>
 
-<h4 id="fix-handling-of-client-options">Fix handling of client options</h4>
-<ul>
-  <li>Validate ClientOpts instance name and Zookeeper paths to fix issue where default client 
-configuration was not being used. This change allows either the default configuration, or the 
-command line set the instance name. (#1478)</li>
-  <li>Ensures correct use of ZooKeeper getAcl (#1185)</li>
-  <li>Expanded InputConfigurator permissions checks to include Namespace.READ (#1371)</li>
-</ul>
-
-<h4 id="fix-monitor-trace-display">Fix monitor trace display</h4>
-<ul>
-  <li>Fix regression where trace information could not be displayed in the accumulo monitor.(Issue #1401)</li>
-</ul>
-
-<h3 id="improvements">Improvements</h3>
-
-<h4 id="improve-tablet-logging-for-hot-spot-detection">Improve tablet logging for hot-spot detection</h4>
-<ul>
-  <li>Improve Logging of busy tablets. The deltas of tablets ingest and query counts are used for 
-computing  the busiest N tablets. The previous code used the absolute counts.</li>
-  <li>Fixed prioQ that was not properly tracking the top N tablets.(PR #1291)</li>
-  <li>Improve busy tracker handling of reloaded tablets (PR #1296)</li>
-</ul>
-
-<h4 id="tserver-start-up-and-shutdown-protections">tserver start-up and shutdown protections:</h4>
-<ul>
-  <li>Add option to check for a threshold number of servers to be registered and available on start-up 
-before the master begins tablet assignments when master acquires lock on start-up.  The options 
-allow for threshold number of servers and an optional max wait period.<br />
-See <a href="#Property Change Summary">Property Changes</a> for property additions. (#1158)</li>
-  <li>Add throttle for the number of shutdown requests sent by the master to tservers (Issue #1456)</li>
-</ul>
-
-<h4 id="optional-gc-metadata-operations">Optional GC metadata operations.</h4>
-<ul>
-  <li>Added a property - gc.use.full.compaction At the completion of a GC cycle, the GC compacted the 
-metadata table to ensure that GC changes were flushed and persisted.  The property allows for the 
-action to be specified as compaction, flush or none. (#1352)</li>
-</ul>
-
-<h4 id="zookeeper-35-version-support">Zookeeper 3.5 version support</h4>
-<ul>
-  <li>Support ZooKeeper 3.4 and 3.5 - Update for ZK 3.5 jar location changes (#1503)</li>
-</ul>
-
-<h4 id="update-log-statements">Update log statements:</h4>
-<p>Compacting a table without user iterators was logging like it was an abnormal condition (#1347)
-Reduce verbose logging of merge operations in Master log (#1338)
-Improve logging for session expired events. When a tserver looses lock, the Session expired message
-is a log statement for every watcher - reduce current message to trace and add summary (#1108)</p>
-
-<h4 id="improve-shel-commands-command">Improve shel commands command</h4>
-<ul>
-  <li>Add optional -t tablename to importdirectory shell command. (#1299)</li>
-  <li>Fix idempotency bug in importtable (#1555)</li>
-</ul>
-
-<h4 id="add-gc-hadoop2-metrics">Add GC hadoop2 metrics.</h4>
-<p>Add GC cycle metrics (file and wal collection) to be reported via the hadoop2 metrics. This exposes
-the gc cycle metrics available in the monitor to external metrics systems and includes run time
-for the gc post operation (compact, flush). (#1352)</p>
-<ul>
-  <li>AccGcStarted - timestamp of GC cycle start</li>
-  <li>AccGcFinished - timestamps of GC cycle finished</li>
-  <li>AccGcCandidates - Number of candidates for GC</li>
-  <li>AccGcInUse - Number of candidates still in use</li>
-  <li>AccGcDeleted - Number of candidates deleted</li>
-  <li>AccGcErrors - Number of  deletion errors</li>
-  <li>AccGcWalStarted - timestamp of WAL collection start</li>
-  <li>AccGcWalFinished - timestamp of WAL collection completion</li>
-  <li>AccGcWalCandidates - number of WAL candidates for collection</li>
-  <li>AccGcWalInUse  - number of WALs in use</li>
-  <li>AccGcWalDeleted - number of WALs deleted</li>
-  <li>AccGcWalErrors- number of errors during WAL deletion</li>
-  <li>AccGcPostOpDuration - duration of compact / flush</li>
-  <li>AccGcRunCycleCount - 1-up cycle count</li>
-</ul>
-
-<h4 id="add-option-allow-clone-table-to-keep-the-clone-offline">Add option allow clone table to keep the clone offline.</h4>
-<ul>
-  <li>Option to leave cloned tables offline (#1475)</li>
-  <li>Updated the shell clone command with a -o option</li>
-</ul>
-
-<h4 id="improved-metadata-table-consistency-checking-and-testing-during-gc">Improved metadata table consistency checking and testing during GC</h4>
+<h3 id="accumulo-gc-bug">Accumulo GC Bug</h3>
 
 <ul>
-  <li>During GC scans, an error will be thrown if the GC fails consistency checks (#1379)</li>
-  <li>Added a check to ensure the last tablet was seen.  This should cause an error to be thrown if 
-the scanner stops returning data for any reason.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1314">#1314</a>, <a href="https://github.com/apache/accumulo/issues/1318">#1318</a> Eliminate task creation leak caused by the an
+additional timed-task created for each <code class="language-plaintext highlighter-rouge">accumulo-gc</code> cycle</li>
 </ul>
 
-<h3 id="java-language-level-changes">Java Language Level Changes</h3>
-<p>This lists some of the code changes made to update the Java language level to Java 8.  They are
-listed here to aid migration of client code that may have similar issues migrating to the updated
-language level (#1467).</p>
+<h3 id="bulk-import-concurrency-bug">Bulk Import Concurrency Bug</h3>
+
 <ul>
-  <li>Update to maven compiler source and target to Java 1.8</li>
-  <li>Add optional dependency to pom for modernizer annotations</li>
-  <li>Add SuppressModernizer annotation to uses of Guava Predicate in AccumuloConfiguration and its 
-subclasses, Optional in VolumeChooser, and Function in GroupBalancer</li>
-  <li>Replace Guava Function, Predicate, Preconditions, Optional and Iterators where able with java.util equivalents</li>
-  <li>Replace core.util.Base64 class with java.util equivalent</li>
-  <li>Fix warnings introduced by Java 1.8</li>
-  <li>Drop method in MockConfiguration causing compiler warning and made PropertyFilter in 
-AccumuloConfiguration extend guava Predicate</li>
-  <li>Rename execute methods in MasterClient and ServerClient, like the 2.0 changes to fix the 
-overload warnings</li>
-  <li>Add colVis file to ContinuousInputFormat. Fixes #1368 (#1369)</li>
-  <li>Fix unused var and generics warning</li>
-  <li>Limit UnsynchronizedBuffer maximum size to Integer.MAX_VALUE - 8 (#1523)</li>
-  <li>Remove need for ANT on classpath (#1532)</li>
-  <li>Update spotbugs and maven enforcer plugin versions</li>
-  <li>Rename yield method - future restricted identifier</li>
-  <li>Fix javadoc html header elements for newer JDKs</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1153">#1153</a> Prevent multiple threads from working on same bulk file</li>
 </ul>
 
-<h3 id="other-changes">Other Changes</h3>
+<h3 id="prevent-metadata-corruption">Prevent Metadata Corruption</h3>
 
-<h4 id="build-improvements--changes">Build Improvements / Changes</h4>
 <ul>
-  <li>Switch to GitHub Actions and improve CI workflow (#1671)</li>
-  <li>Switch POM project xml attrs from HTTP to HTTPS</li>
-  <li>Add patch file for Java 11 generated apidocs</li>
-  <li>Update native map makefile to work with Java 11.</li>
-  <li>The makefile was modified to check if javac exists - previously it checked to see if javah exists
-inorder to determine if java is a JDK or JRE.  In Java 11, javah no longer exists - changed to 
-look for javac compiler command that exists in Java 8 and 11.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1309">#1309</a> Prevent cloning of the metadata table, which could lead to
+data loss during <code class="language-plaintext highlighter-rouge">accumulo-gc</code> for either the clone or the original
+<code class="language-plaintext highlighter-rouge">accumulo.metadata</code> table</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1310">#1310</a> Improve GC handling of WALs used by root tablet. If the root
+tablet had WALs, the GC did not consider them during collection</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1379">#1379</a> During GC scans, an error will be thrown if the GC fails
+consistency checks; added a check to ensure the last tablet was seen</li>
 </ul>
 
-<h4 id="test-improvements">Test Improvements</h4>
+<h2 id="other-miscellaneous-bug-fixes">Other Miscellaneous Bug Fixes</h2>
+
 <ul>
-  <li>Make ITs override defaultTimeoutSeconds (#1483)</li>
-  <li>Increase timeouts on some slow ITs (#1482)</li>
-  <li>Stabilize ChaoticBalancerIT (#1491)</li>
-  <li>Increase timeout for GarbageCollectWALIT to allow recovery</li>
-  <li>Improve importDirectory tests from #1299</li>
-  <li>Limit log size in Travis CI builds</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1107">#1107</a> Fix <code class="language-plaintext highlighter-rouge">ConcurrentModificationException</code> in
+<code class="language-plaintext highlighter-rouge">HostRegexTableLoadBalancer</code></li>
+  <li><a href="https://github.com/apache/accumulo/issues/1185">#1185</a> Fixed a bug where we were using an unauthenticated ZooKeeper
+client to try to read data with an ACL configured; this was previously
+permitted until ZooKeeper fixed a security bug in their own code, which
+revealed our incorrect ZooKeeper client code</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1371">#1371</a> Fix a bug in our MapReduce code that prevented some users from
+reading tables they had valid permissions to read</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1401">#1401</a> Display trace information correctly in <code class="language-plaintext highlighter-rouge">accumulo-monitor</code></li>
+  <li><a href="https://github.com/apache/accumulo/issues/1478">#1478</a> Don’t ignore the instance and zookeepers parameters on the
+command-line when running certain utilities</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1532">#1532</a> Remove need for ANT on classpath</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1555">#1555</a> Fix idempotency bug in importtable</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1644">#1644</a> Retry minor compactions to prevent transient iterator issues
+blocking forever</li>
 </ul>
 
-<h1 id="new-properties">New Properties</h1>
+<h2 id="major-improvements">Major Improvements</h2>
 
-<p>Set server count threshold and maximum wait time on start-up before master begins tablet assignments:</p>
+<h3 id="performance-enhancements">Performance Enhancements</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Property</th>
-      <th style="text-align: left">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">master.startup.tserver.avail.min.count</td>
-      <td style="text-align: left">the number of required tservers</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">master.startup.tserver.avail.max.wait</td>
-      <td style="text-align: left">the max time willing to wait before assigning tablets if threshold count has not been reached.</td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/990">#990</a> Avoid multiple threads loading same cache block</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1352">#1352</a> Add an option to configure the metadata action after an
+<code class="language-plaintext highlighter-rouge">accumulo-gc</code> cycle using a new property instead of a hard-coded compaction
+    <ul>
+      <li><a href="/1.10/accumulo_user_manual#_gc_post_metadata_action">gc.post.metadata.action</a></li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/apache/accumulo/issues/1462">#1462</a>, <a href="https://github.com/apache/accumulo/issues/1526">#1526</a> Temporarily cache the existence check for
+recovery WALs, so multiple tablets pointing to the same WAL to avoid
+expensive redundant checks</li>
+</ul>
 
-<p>Enable improved tserver logging for hot-spot detection:</p>
+<h3 id="identifying-busy-tablets">Identifying Busy Tablets</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Property</th>
-      <th style="text-align: left">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">tserver.log.busy.tablets.count</td>
-      <td style="text-align: left">the number of busiest tablets to log. Logged at interval controlled by  tserver.log.busy.tablets.interval. If &lt;= 0, logging of busy tablets is disabled.</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">tserver.log.busy.tablets.interval</td>
-      <td style="text-align: left">Time interval between logging out busy tablets information.</td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/1291">#1291</a>, <a href="https://github.com/apache/accumulo/issues/1296">#1296</a> Log busy tablets by ingest and query at
+configurable intervals for better hot-spot detection using new properties
+    <ul>
+      <li><a href="/1.10/accumulo_user_manual#_tserver_log_busy_tablets_count">tserver.log.busy.tablets.count</a> and</li>
+      <li><a href="/1.10/accumulo_user_manual#_tserver_log_busy_tablets_interval">tserver.log.busy.tablets.interval</a></li>
+    </ul>
+  </li>
+</ul>
 
-<p>GC changes:</p>
+<h3 id="tserver-startup-and-shutdown-protections">TServer Startup and Shutdown Protections</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Property</th>
-      <th style="text-align: left">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">gc.post.metadata.action</td>
-      <td style="text-align: left">Allowed values: compact - default, current behavior, the metadata table is flushed and compacted on each GC run. flush - only flush the metadata table, compactions will occur according to number of files compaction rules. none - take no action.</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">gc.metrics.enabled</td>
-      <td style="text-align: left">Enable detailed gc metrics reporting with hadoop metrics.</td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/1158">#1158</a> Require a configurable number of servers to be online, up to a
+max wait time, before assignments begin on startup
+    <ul>
+      <li><a href="/1.10/accumulo_user_manual#_master_startup_tserver_avail_min_count">master.startup.tserver.avail.min.count</a></li>
+      <li><a href="/1.10/accumulo_user_manual#_master_startup_tserver_avail_max_wait">master.startup.tserver.avail.max.wait</a></li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/apache/accumulo/issues/1456">#1456</a> Throttle the number of shutdown requests sent to tservers to
+prevent cluster self-destruction and give time for triage</li>
+</ul>
 
-<h1 id="useful-links">Useful links</h1>
+<h3 id="new-metrics">New Metrics</h3>
 
-<p>(TODO - make actual links)</p>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/1406">#1406</a> Add GC cycle metrics (file and wal collection) to be reported
+via the hadoop2 metrics. This exposes the gc cycle metrics available in the
+monitor to external metrics systems and includes run time for the new gc post
+operation (compact, flush)
+    <ul>
+      <li>Enable with new property, <a href="/1.10/accumulo_user_manual#_gc_metrics_enabled">gc.metrics.enabled</a>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">AccGcCandidates</code> - number of candidates for GC</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcDeleted</code> - number of candidates deleted</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcErrors</code> - number of deletion errors</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcFinished</code> - timestamp of GC cycle finished</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcInUse</code> - number of candidates still in use</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcPostOpDuration</code> - duration of compact / flush</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcRunCycleCount</code> - 1-up cycle count</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcStarted</code> - timestamp of GC cycle start</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalCandidates</code> - number of WAL candidates for collection</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalDeleted</code> - number of WALs deleted</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalErrors</code> - number of errors during WAL deletion</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalFinished</code> - timestamp of WAL collection completion</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalInUse</code> - number of WALs in use</li>
+          <li><code class="language-plaintext highlighter-rouge">AccGcWalStarted</code> - timestamp of WAL collection start</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
-<p>Release VOTE email thread
-All changes since 1.9.3
-GitHub - List of issues tracked on GitHub corresponding to this release
-1.9.3 release notes - Release notes showing changes in the previous release</p>
+<h2 id="other-miscellaneous-improvements">Other Miscellaneous Improvements</h2>
 
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/1108">#1108</a> Improve logging when ZooKeeper session expires</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1299">#1299</a> Add optional <code class="language-plaintext highlighter-rouge">-t</code> tablename to importdirectory shell command</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1338">#1338</a> Reduce verbose logging of merge operations in Master log</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1475">#1475</a> Option to leave cloned tables offline on creation</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1503">#1503</a> Support ZooKeeper 3.5 (and later), in addition to 3.4</li>
+</ul>
+
+<h2 id="useful-links">Useful Links</h2>
+
+<ul>
+  <li><a href="https://lists.apache.org/thread.html/rd4731d4fd87c30958ad82a8b0be9375f2562ab0a9531ea037e646f3c%40%3Cdev.accumulo.apache.org%3E">Release VOTE email thread</a></li>
+  <li><a href="https://github.com/apache/accumulo/compare/rel/1.9.3...apache:rel/1.10.0">All Changes since 1.9.3</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F8">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+</ul>
+
+
+
+<hr>
 
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+<nav aria-label="Navigate Release Notes"><ul class="pager">
+      
+        <li class="previous"><a href="https://accumulo.apache.org/release/accumulo-1.9.3/">&laquo;&nbsp;Apache Accumulo 1.9.3</a></li>
+      
+    
+      
+        <li class="next"><a href="https://accumulo.apache.org/release/accumulo-2.0.0-alpha-1/">Apache Accumulo 2.0.0-alpha-1&nbsp;&raquo;</a></li>
+      
+    </ul></nav>
 
         </div>
 

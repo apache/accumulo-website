@@ -82,7 +82,7 @@
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
-            <li><a href="/release/accumulo-1.9.3/">1.9.3</a></li>
+            <li><a href="/release/accumulo-1.10.0/">1.10.0</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
         </li>
@@ -93,8 +93,8 @@
             <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
             <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
             <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
-            <li><a href="/1.9/accumulo_user_manual.html">User Manual (1.9)</a></li>
-            <li><a href="/1.9/apidocs">Javadocs (1.9)</a></li>
+            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
             <li><a href="/external-docs">External Docs</a></li>
             <li><a href="/docs-archive/">Archive</a></li>
           </ul>
@@ -143,14 +143,14 @@
           <h2 id="disclaimer">Disclaimer</h2>
 
 <p>This is a work in progress design document for a feature that may never be
-implemented.  It represents one possible design for <a href="https://github.com/apache/accumulo/issues/1044">#1044 </a>, but does
+implemented.  It represents one possible design for <a href="https://github.com/apache/accumulo/issues/1044">#1044</a>, but does
 not have to be the only one.</p>
 
 <h2 id="overview">Overview</h2>
 
 <p>Being able to take snapshots of an entire Accumulo system and roll back to
 snapshot would support many administrative use cases(outlined in
-<a href="https://github.com/apache/accumulo/issues/1044">#1044 </a>).  This design outlines one possible way to implement snapshots.</p>
+<a href="https://github.com/apache/accumulo/issues/1044">#1044</a>).  This design outlines one possible way to implement snapshots.</p>
 
 <p>The goal behavior is that a snapshot contains all data that was flushed or bulk
 imported before the snapshot operation started.  A snapshot may contain
@@ -221,12 +221,12 @@ snapshot. The FATE op would do the following :</p>
 any changes to the fate data store in ZK).</li>
   <li>pause Accumulo GC</li>
   <li>flush metadata table</li>
-  <li>flush root table (probably need to to fix <a href="https://github.com/apache/accumulo/issues/798">#798 </a>)</li>
+  <li>flush root table (probably need to to fix <a href="https://github.com/apache/accumulo/issues/798">#798</a>)</li>
   <li>TODO should the root and metadata table be checked for consistency?
 Ongoing split and FATE ops that may cause inconsistency should resolve after
 the snapshot is restored, so this seems uneeded.</li>
   <li>Create snapshot copying ZK to DFS (this is the snapshot assuming 
-<a href="https://github.com/apache/accumulo/issues/936">#936 </a> is done)</li>
+<a href="https://github.com/apache/accumulo/issues/936">#936</a> is done)</li>
   <li>Unpause everything. When the GC is unpaused, it should start fresh reading
 all snapshots available.</li>
   <li>release snapshot lock</li>
