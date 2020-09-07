@@ -44,7 +44,7 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### Geomesa
 
-[Geomesa](http://www.geomesa.org/) is an open-source, distributed, spatio-temporal database built on a number of distributed cloud data storage systems, including Accumulo, HBase, Cassandra, and Kafka.
+[Geomesa](https://www.geomesa.org/) is an open-source, distributed, spatio-temporal database built on a number of distributed cloud data storage systems, including Accumulo, HBase, Cassandra, and Kafka.
 
 #### Geowave
 

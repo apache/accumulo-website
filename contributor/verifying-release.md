@@ -127,6 +127,6 @@ own NOTICE file. The contents of the Apache Thrift NOTICE file should be include
 [4]: https://www.apache.org/legal/resolved
 [5]: https://www.apache.org/legal
 [examples]: https://github.com/apache/accumulo-examples
-[semver]: http://semver.org/spec/v2.0.0.html
+[semver]: https://semver.org/spec/v2.0.0.html
 [at]: https://github.com/apache/accumulo-testing
 [at-readme]: https://github.com/apache/accumulo-testing/blob/main/README.md

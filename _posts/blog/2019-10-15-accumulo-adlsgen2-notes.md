@@ -5,7 +5,7 @@ author: Karthick Narendran
 
 Accumulo can store its files in [Azure Data Lake Storage Gen2](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction)
 using the [ABFS (Azure Blob File System)](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver) driver.
-Similar to [S3 blog](https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html), 
+Similar to [S3 blog]({{ site.baseurl }}/blog/2019/09/10/accumulo-S3-notes.html),
 the write ahead logs & Accumulo metadata can be stored in HDFS and everything else on Gen2 storage
 using the volume chooser feature introduced in Accumulo 2.0. The configurations referred on this blog
 are specific to Accumulo 2.0 and Hadoop 3.2.0.

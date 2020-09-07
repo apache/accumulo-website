@@ -100,7 +100,7 @@ For more information, see the [contributor guide](/contributors-guide/).
 [Push]: https://help.github.com/articles/pushing-to-a-remote/
 [clone]: https://help.github.com/articles/cloning-a-repository/
 [srcheaders]: https://www.apache.org/legal/src-headers
-[semver]: http://semver.org/spec/v2.0.0.html
+[semver]: https://semver.org/spec/v2.0.0.html
 [messages]: https://chris.beams.io/posts/git-commit/
 [squash-tutorial]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
 [squash-stack]: https://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git

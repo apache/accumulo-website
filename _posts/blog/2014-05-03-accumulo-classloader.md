@@ -70,5 +70,5 @@ Please email the [dev](mailto:dev@accumulo.apache.org) list for comments and que
 [ACCUMULO-599]: https://issues.apache.org/jira/browse/ACCUMULO-599
 [ACCUMULO-2761]: https://issues.apache.org/jira/browse/ACCUMULO-2761
 [VFS-487]: https://issues.apache.org/jira/browse/VFS-487
-[commonsvfs]: http://commons.apache.org/proper/commons-vfs/
-[URLClassLoader]: http://docs.oracle.com/javase/6/docs/api/java/net/URLClassLoader.html
+[commonsvfs]: https://commons.apache.org/proper/commons-vfs/
+[URLClassLoader]: https://docs.oracle.com/javase/6/docs/api/java/net/URLClassLoader.html

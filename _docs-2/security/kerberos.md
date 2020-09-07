@@ -28,8 +28,8 @@ one of which is GSSAPI. Thus, SASL provides the transport which authenticates
 using GSSAPI that Kerberos implements.
 
 Kerberos is a very complicated software application and is deserving of much
-more description than can be provided here. An [explain like I`m 5](http://www.roguelynn.com/words/explain-like-im-5-kerberos/)
-blog post is very good at distilling the basics, while [MIT Kerberos's project page](http://web.mit.edu/kerberos/)
+more description than can be provided here. An [explain like I`m 5](https://www.roguelynn.com/words/explain-like-im-5-kerberos/)
+blog post is very good at distilling the basics, while [MIT Kerberos's project page](https://web.mit.edu/kerberos/)
 contains lots of documentation for users or administrators. Various Hadoop "vendors"
 also provide free documentation that includes step-by-step instructions for
 configuring Hadoop and ZooKeeper (which will be henceforth considered as prerequisites).

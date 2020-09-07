@@ -54,9 +54,9 @@ $("#citationtable").dataTable();
 
 ## Blog Posts and Writeups
 
- - [Codebits Blogs](http://affy.blogspot.com/search?q=accumulo&by-date=true)
-    - [Implement Word Count in Accumulo](http://affy.blogspot.com/2012/04/implement-word-count-in-accumulo.html)
-    - [Using Accumulo To Calculate Seven Day Rolling Average](http://affy.blogspot.com/2012/04/using-accumulo-to-calculate-seven-day.html)
+ - [Codebits Blogs](https://affy.blogspot.com/search?q=accumulo&by-date=true)
+    - [Implement Word Count in Accumulo](https://affy.blogspot.com/2012/04/implement-word-count-in-accumulo.html)
+    - [Using Accumulo To Calculate Seven Day Rolling Average](https://affy.blogspot.com/2012/04/using-accumulo-to-calculate-seven-day.html)
  - [covert.io blogs](http://www.covert.io/)
     - [Accumulo, Nutch, and Gora](http://www.covert.io/post/18414889381/accumulo-nutch-and-gora)
     - [Accumulo and Pig](http://www.covert.io/post/18605091231/accumulo-and-pig)
@@ -91,19 +91,19 @@ $("#citationtable").dataTable();
 [s11]: http://ieee-hpec.org/2013/index_htm_files/11_130716-D4Mschema.pdf
 [p12]: http://ieee-hpec.org/2013/index_htm_files/26-HPEC13_LLSuperCloud_Reuther_final.pdf
 [s12]: http://ieee-hpec.org/2013/index_htm_files/HPEC+2013+Reuther+SuperCloud+final.pdf
-[p13]: http://geomesa.github.io/assets/outreach/SpatioTemporalIndexing_IEEEcopyright.pdf
+[p13]: https://geomesa.github.io/assets/outreach/SpatioTemporalIndexing_IEEEcopyright.pdf
 [p14]: https://people.cs.vt.edu/aendert/Alex_Endert/Research_files/Typograph.pdf
 [p15]: http://www.dodccrp.org/events/18th_iccrts_2013/post_conference/papers/051.pdf
-[p16]: http://www.mit.edu/~kepner/pubs/ByunKepner_2012_BigData_Paper.pdf
+[p16]: https://www.mit.edu/~kepner/pubs/ByunKepner_2012_BigData_Paper.pdf
 [s16]: http://ieee-hpec.org/2012/index_htm_files/42_ID18.pptx
 [p17]: http://ieee-hpec.org/2012/index_htm_files/HPEC12_Hubbell.pdf
 [s17]: http://ieee-hpec.org/2012/index_htm_files/31_ID20.pptx
 [p18]: https://sqrrl.com/media/Rya_CloudI20121.pdf
-[p19]: http://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Paper.pdf
-[s19]: http://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Slides.pdf
-[s20]: http://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf
-[p21]: http://www.pdl.cmu.edu/PDL-FTP/Storage/socc2011.pdf
-[s21]: http://www.cercs.gatech.edu/opencirrus/OCsummit11/presentations/patil.pdf
+[p19]: https://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Paper.pdf
+[s19]: https://www.mit.edu/~kepner/pubs/Kepner_2012_D4M_Slides.pdf
+[s20]: https://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf
+[p21]: https://www.pdl.cmu.edu/PDL-FTP/Storage/socc2011.pdf
+[s21]: http://www.cercs.gatech.edu/www.cercs.gatech.edu/opencirrus/OCsummit11/presentations/patil.pdf
 [s22]: https://home.apache.org/~kturner/accumulo14_15.pdf
 [s23]: https://home.apache.org/~afuchs/slides/morgan_state_talk.pdf
 [s24]: https://www.slideshare.net/DonaldMiner/an-introduction-to-accumulo

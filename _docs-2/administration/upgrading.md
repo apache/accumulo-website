@@ -189,7 +189,7 @@ This happens automatically the first time Accumulo 1.5 is started.
 - Copy other 1.4 configuration options as needed.
 - Start Accumulo 1.5.
 
-[FATE]: https://accumulo.apache.org/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate
+[FATE]: {{ site.baseurl }}/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate
 [ACCUMULO-4496]: https://issues.apache.org/jira/browse/ACCUMULO-4496
 [ZooKeeeperInstance]: {% jurl org.apache.accumulo.core.client.ZooKeeperInstance %}
 [Connector]: {% jurl org.apache.accumulo.core.client.Connector %}

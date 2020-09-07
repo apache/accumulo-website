@@ -46,5 +46,5 @@ This will prompt you to name your Accumulo instance and set the Accumulo root us
 
     $ACCUMULO_HOME/bin/start-all.sh
 
-[downloads]: http://accumulo.apache.org/downloads/
-[bigtable]: http://research.google.com/archive/bigtable.html
+[downloads]: {{ site.baseurl }}/downloads
+[bigtable]: https://research.google.com/archive/bigtable.html

@@ -21,7 +21,7 @@ Accumulo. You can browse recent traces from the Accumulo monitor
 page. You can also read the `trace` table directly like any
 other table.
 
-The design of Accumulo's distributed tracing follows that of [Google's Dapper](http://research.google.com/pubs/pub36356.html).
+The design of Accumulo's distributed tracing follows that of [Google's Dapper](https://research.google.com/pubs/pub36356.html).
 
 ## Tracers
 

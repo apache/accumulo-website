@@ -88,7 +88,7 @@ Accumulo stores a lot of metadata about the cluster in Zookeeper.  Keep in mind 
 
 ## GCM performance
 
-The AESCryptoService uses GCM mode for RFiles. [Java 9 introduced GHASH hardware support used by GCM.](http://openjdk.java.net/jeps/246)
+The AESCryptoService uses GCM mode for RFiles. [Java 9 introduced GHASH hardware support used by GCM.](https://openjdk.java.net/jeps/246)
 
 A test was performed on a VM with 4 2.3GHz processors and 16GB of RAM. The test encrypted and decrypted arrays of size 131072 bytes 1000000 times. The results are as follows:
 

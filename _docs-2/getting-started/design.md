@@ -14,7 +14,7 @@ Accumulo provides a richer data model than simple key-value stores, but is not a
 fully relational database. Data is represented as key-value pairs, where the key and
 value are comprised of the following elements:
 
-![key value pair]({{ site.url }}/images/docs/key_value.png)
+![key value pair]({{ site.baseurl }}/images/docs/key_value.png)
 
 All elements of the Key and the Value are represented as byte arrays except for
 Timestamp, which is a Long. Accumulo sorts keys by element and lexicographically
@@ -104,7 +104,7 @@ clients insert and query data, and as machines are added and removed from the
 cluster, the Master migrates tablets to ensure they remain available and that the
 ingest and query load is balanced across the cluster.
 
-![data distribution]({{ site.url }}/images/docs/data_distribution.png)
+![data distribution]({{ site.baseurl }}/images/docs/data_distribution.png)
 
 ## Tablet Server
 
@@ -122,7 +122,7 @@ are returned to the client in order from the MemTable and data blocks of RFiles 
 a sorted merge as they are read. If [caching] is enabled for the table, any index or data
 block is stored in the block cache to speed up future scans.
 
-![tablet server diagram]({{ site.url }}/images/docs/tablet_server.png)
+![tablet server diagram]({{ site.baseurl }}/images/docs/tablet_server.png)
 <!-- Source at https://docs.google.com/presentation/d/1yEBNM044FxrzksVfxU35WDbxcVWUYUMy3tgRP75dzus/edit?usp=sharing -->
 
 ## RFile
@@ -134,7 +134,7 @@ index blocks (which are used to find data block), and meta blocks (which contain
 metadata for bloom filters and summary statistics). Data in an RFile is separated by
 locality group. The diagram below shows the logical view and HDFS file view of an RFile.
 
-![rfile diagram]({{ site.url }}/images/docs/rfile_diagram.png)
+![rfile diagram]({{ site.baseurl }}/images/docs/rfile_diagram.png)
 <!-- Source at https://docs.google.com/presentation/d/1w9BgfgUtZ-3M14K-lIgv0UmvnOhVg10Zof6AUi-7pcc/edit?usp=sharing -->
 
 ## Compactions
@@ -179,7 +179,7 @@ that are destined for the tablets they have now been assigned.
 TabletServer failures are noted on the Master's monitor page, accessible via
 `http://master-address:9995/monitor`.
 
-![failure handling]({{ site.url }}/images/docs/failure_handling.png)
+![failure handling]({{ site.baseurl }}/images/docs/failure_handling.png)
 
 [BigTable paper]: https://research.google.com/archive/bigtable.html
 [monitor]: {% durl administration/monitoring-metrics#monitoring %}

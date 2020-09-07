@@ -43,6 +43,6 @@ import\s+org\.apache\.accumulo\.(?!(core\.(client|data|security)|minicluster|had
 
 See the [blog post][post] about using the checkstyle plugin for more explicit non-API detection.
 
-[semver]: http://semver.org/spec/v2.0.0
-[RegexpSingleline]: http://checkstyle.sourceforge.net/config_regexp.html
+[semver]: https://semver.org/spec/v2.0.0
+[RegexpSingleline]: https://checkstyle.sourceforge.io/config_regexp.html
 [post]: {{ site.baseurl }}/blog/2019/11/04/checkstyle-import-control.html

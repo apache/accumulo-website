@@ -110,6 +110,6 @@ rpc.javax.net.ssl.trustStorePassword  truststore-password
 ```
 When creating a ZooKeeperInstance, the implementation will automatically look for this file and set up a connection with the methods defined in this configuration file. The ClientConfiguration class also contains methods that can be used instead of a configuration file on the filesystem. Again, the paths to the keystore and truststore are on the local filesystem, not HDFS.
 
-[thrift]: http://thrift.apache.org/
+[thrift]: https://thrift.apache.org/
 [accumulo-2464]: https://issues.apache.org/jira/browse/ACCUMULO-2464
-[props]: http://en.wikipedia.org/wiki/.properties
+[props]: https://en.wikipedia.org/wiki/.properties

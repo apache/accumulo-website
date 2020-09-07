@@ -97,7 +97,7 @@ preceding identifiers are equal. Example: 1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-al
 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0.
 
 
-[1]: http://semver.org/spec/v2.0.0
+[1]: https://semver.org/spec/v2.0.0
 [2]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=README.md;hb=refs/heads/main
 [3]: https://creativecommons.org/licenses/by/3.0
 [contact]: {{ site.baseurl }}/contact-us

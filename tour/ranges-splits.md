@@ -21,7 +21,7 @@ By default, a table will get split into Tablets on row boundaries, guaranteeing 
 tell Accumulo where to split tables by setting split points. This is done using `addSplits` in the [TableOperations] API.  The image below 
 demonstrates how Accumulo splits data.  
 
-![data distribution]({{ site.url }}/images/docs/data_distribution.png)
+![data distribution]({{ site.baseurl }}/images/docs/data_distribution.png)
 
 Take a minute to learn these Accumulo terms:
 * **Tablet** - A partition of a table.

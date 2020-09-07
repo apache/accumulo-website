@@ -154,8 +154,8 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
 ```
 
 
-[1]: http://ieeexplore.ieee.org/zpl/login.jsp?arnumber=6597155
-[2]: http://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf
-[3]: http://accumulo.apache.org/1.6/examples/bulkIngest.html
+[1]: https://ieeexplore.ieee.org/document/6597155
+[2]: https://www.pdl.cmu.edu/SDI/2013/slides/big_graph_nsa_rd_2013_56002v1.pdf
+[3]: {{ site.baseurl }}/1.10/examples/bulkIngest
 [4]: https://issues.apache.org/jira/browse/HDFS-1052
 [5]: https://issues.apache.org/jira/browse/ACCUMULO-118

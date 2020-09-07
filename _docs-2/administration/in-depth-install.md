@@ -716,8 +716,9 @@ prone to compatibility changes between versions and you must use the
 same version your Accumulo is built with.
 
 Please check the release notes for your Accumulo version or use the
-mailing lists at https://accumulo.apache.org for more info.
+[mailing lists][contact] for more info.
 
+[contact]: {{ site.baseurl }}/contact-us
 [quick start]: {% durl getting-started/quickstart %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
 [config-mgmt]: {% durl configuration/overview %}

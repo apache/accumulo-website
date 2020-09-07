@@ -70,7 +70,7 @@ several of these demonstrative applications in the [simple example
 codebase][examples-simple] and the related published documentation for versions
 [1.7][17EXAMPLES] and [1.6][16EXAMPLES].
 
-[gitbook]: http://git-scm.com
+[gitbook]: https://git-scm.com
 [instamo-browse]: https://gitbox.apache.org/repos/asf?p=accumulo-instamo-archetype.git;a=summary
 [instamo-checkout]: https://gitbox.apache.org/repos/asf/accumulo-instamo-archetype.git
 [maven-proj]: https://maven.apache.org

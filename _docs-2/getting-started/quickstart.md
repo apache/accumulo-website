@@ -201,7 +201,7 @@ When finished, use the following commands to stop Accumulo:
 * Stop Accumulo cluster: `accumulo-cluster stop`
 
 [in-depth]: {% durl administration/in-depth-install %}
-[download]: https://accumulo.apache.org/downloads/
+[download]: {{ site.baseurl }}/downloads
 [build]: https://github.com/apache/accumulo/blob/main/README.md#building
 [Zookeeper]: https://zookeeper.apache.org/
 [HDFS]: https://hadoop.apache.org/

@@ -130,16 +130,16 @@ to configure the cluster in a way that allows the one fast scan to be prioritize
 Checkout some examples in the [user guide][scans].
 
 [FATE]: {% durl /administration/fate %}
-[new-bulk]: https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api
-[scripts]: https://accumulo.apache.org/blog/2016/11/16/simpler-scripts-and-config.html
+[new-bulk]: {{ site.baseurl }}/release/accumulo-2.0.0/#new-bulk-import-api
+[scripts]: {{ site.baseurl }}/blog/2016/11/16/simpler-scripts-and-config.html
 [summary]: {% durl /development/summaries %}
 [client]: {% jurl org.apache.accumulo.core.client.Accumulo %}
 [Key]: https://github.com/apache/accumulo/blob/main/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java
 [Mutation]: https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()
 [manual]: {% durl /getting-started/quickstart %}
-[search]: https://accumulo.apache.org/search/
+[search]: {{ site.baseurl }}/search/
 [crypto]: {% durl /security/on-disk-encryption %}
-[rel]: https://accumulo.apache.org/release/accumulo-2.0.0/
+[rel]: {{ site.baseurl }}/release/accumulo-2.0.0/
 [zstd]: https://facebook.github.io/zstd/
 [z-config]: {% durl /configuration/server-properties %}
 [scans]: {% durl /administration/scan-executors %}

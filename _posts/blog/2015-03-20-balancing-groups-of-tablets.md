@@ -27,11 +27,11 @@ When using a GroupBalancer, how Accumulo automatically splits tablets must be ke
 The Fluo Stress test is a very abstract use case. A more concrete use case for the group balancer would be using it to ensure tablets storing geographic data were spread out evenly. For example consider [GeoWave's][geowave] Accumulo [Persistence Model][persis-model]. Tablets could be balanced such that bins related to different regions are spread out evenly. For example tablets related to each continent could be assigned a group ensuring data related to each continent is evenly spread across the cluster. Alternatively, each Tier could spread evenly across the cluster.
 
 [bad-perf]: https://github.com/fluo-io/fluo/issues/361
-[fluo]: http://fluo.io/
-[stress-test]: https://github.com/fluo-io/fluo-stress
+[fluo]: https://fluo.apache.org/
+[stress-test]: https://github.com/apache/fluo-examples/tree/main/stresso
 [accumulo-3439]: https://issues.apache.org/jira/browse/ACCUMULO-3439
 [rgbalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=docs/src/main/resources/examples/README.rgbalancer;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
 [RegexGroupBalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/RegexGroupBalancer.java;hb=51fbfaf0a52dc89e8294c86c30164fb94c9f644c
 [GroupBalancer]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=server/base/src/main/java/org/apache/accumulo/server/master/balancer/GroupBalancer.java;hb=b0815affade66ab04ca27b6fc3abaac400097469
-[geowave]: https://ngageoint.github.io/geowave/
-[persis-model]: http://ngageoint.github.io/geowave/documentation.html#architecture-accumulo
+[geowave]: https://locationtech.github.io/geowave/
+[persis-model]: https://locationtech.github.io/geowave/previous-versions/0.9.1/documentation.html#architecture-accumulo
