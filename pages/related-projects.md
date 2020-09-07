@@ -48,7 +48,7 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### Geowave
 
-[Geowave](https://ngageoint.github.io/geowave/) is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore.
+[Geowave](https://locationtech.github.io/geowave/) is a library for storage, index, and search of multi-dimensional data on top of a sorted key-value datastore.
 
 #### Graphulo
 
