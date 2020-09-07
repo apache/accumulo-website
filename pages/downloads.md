@@ -51,87 +51,86 @@ $(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirr
 
 <div id="mirror_selection"></div>
 
-**LTM**{: .label .label-success} / **non-LTM**{: .label .label-warning} indicates a [Long Term Maintenance][LTM] release or not  
-**Latest**{: .label .label-primary} / **Legacy**{: .label .label-default} indicates the latest or previous generation
+Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEYS].
 
-Be sure to verify your downloads by these [procedures][VERIFY_PROCEDURES] using these [KEYS][GPG_KEYS].
+{% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
+{% assign downloadsLink = 'https://downloads.apache.org' %}
+{% assign glyphSave = '&nbsp;<span class="glyphicon glyphicon-cloud-download"></span>' %}
+{% assign glyphLock = '&nbsp;<span class="glyphicon glyphicon-lock"></span>' %}
+{% assign srcbinArray = 'src bin' | split: ' ' %}
+{% assign btnStyleDefault = 'class="btn btn-default" style="text-transform: none; font-family: monospace"' %}
+{% assign btnStylePrimary = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
 
 ## Current Releases
 
----
-
-### 2.0.0 **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
+{% assign linkVers = '2.0.0' %}
+### {{linkVers}} **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
 {: #latest }
 
-The 2.0.0 release of Apache Accumulo&reg; is the latest release, containing
-the newest features, bug fixes, performance enhancements, and more.
-See the [release notes][REL_NOTES_20] for more details about this release.
+The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
+current generation, containing the newest features, bug fixes, performance
+enhancements, and more.
 
-{: .table }
-| **Binary** | [accumulo-2.0.0-bin.tar.gz][BIN_20] | [ASC][ASC_BIN_20] | [SHA][SHA_BIN_20] |
-| **Source** | [accumulo-2.0.0-src.tar.gz][SRC_20] | [ASC][ASC_SRC_20] | [SHA][SHA_SRC_20] |
+<div class="row btn-group" style="padding-left: 75px">
+{% for srcbin in srcbinArray %}
+{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
+  <a {{btnStylePrimary}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  <br>
+{% endfor %}
+</div>
+<div class="row btn-group-sm" style="padding: 25px; padding-left: 50px">
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+</div>
 
-#### 2.0 Documentation
-* [README][README_20]
-* [Online Documentation][MANUAL_20]
-* [Java API][JAVADOC_20]
 
-### 1.10.0 **Legacy**{: .label .label-default} **LTM**{: .label .label-success}
+{% assign linkVers = '1.10.0' %}
+### {{linkVers}} **Legacy**{: .label .label-default} **LTM**{: .label .label-success}
 {: #legacy }
 
-The most recent legacy (1.x) release of Apache Accumulo&reg; is version 1.10.0.
-See the [release notes][REL_NOTES_1x] for more details about this release.
+The most recent legacy (1.x) release of Apache Accumulo&reg; is version
+{{linkVers}}.
 
-{: .table }
-| **Binary** | [accumulo-1.10.0-bin.tar.gz][BIN_1x] | [ASC][ASC_BIN_1x] | [SHA][SHA_BIN_1x] |
-| **Source** | [accumulo-1.10.0-src.tar.gz][SRC_1x] | [ASC][ASC_SRC_1x] | [SHA][SHA_SRC_1x] |
+<div class="row btn-group" style="padding-left: 75px">
+{% for srcbin in srcbinArray %}
+{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
+  <a {{btnStylePrimary}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  <br>
+{% endfor %}
+</div>
+<div class="row btn-group-sm" style="padding: 25px; padding-left: 50px">
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/examples">Examples</a>
+  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
+</div>
 
-#### 1.10 Documentation
-* [README][README_1x]
-* [User Manual][MANUAL_1x]
-* [Examples][EXAMPLES_1x]
-* [Java API][JAVADOC_1x]
+
+## <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></small> Legend
+{: #legend }
+
+**LTM**{: .label .label-success} / **non-LTM**{: .label .label-warning} indicates a [Long Term Maintenance][LTM] release or not  
+**Latest**{: .label .label-primary} / **Legacy**{: .label .label-default} indicates the latest or previous generation
+
 
 ## Older releases
 
 Older releases are listed in the [release archive][ARCHIVE_REL] and can be
 downloaded from the [download archive][ARCHIVE_DOWN].
 
+
 [VERIFY_PROCEDURES]: https://www.apache.org/info/verification "Verify"
 [GPG_KEYS]: https://downloads.apache.org/accumulo/KEYS "KEYS"
 [ARCHIVE_DOWN]: https://archive.apache.org/dist/accumulo "Download Archive"
-[ARCHIVE_REL]: {{ site.baseurl }}/release/ "Release Archive"
-
-[ASC_BIN_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.asc
-[ASC_SRC_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.asc
-[SHA_BIN_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz.sha512
-[SHA_SRC_20]: https://downloads.apache.org/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz.sha512
-[ASC_BIN_1x]: https://downloads.apache.org/accumulo/1.10.0/accumulo-1.10.0-bin.tar.gz.asc
-[ASC_SRC_1x]: https://downloads.apache.org/accumulo/1.10.0/accumulo-1.10.0-src.tar.gz.asc
-[SHA_BIN_1x]: https://downloads.apache.org/accumulo/1.10.0/accumulo-1.10.0-bin.tar.gz.sha512
-[SHA_SRC_1x]: https://downloads.apache.org/accumulo/1.10.0/accumulo-1.10.0-src.tar.gz.sha512
-
-[BIN_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz
-{: link-suffix="/accumulo/2.0.0/accumulo-2.0.0-bin.tar.gz" }
-[SRC_20]: https://www.apache.org/dyn/closer.lua/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz
-{: link-suffix="/accumulo/2.0.0/accumulo-2.0.0-src.tar.gz" }
-[BIN_1x]: https://www.apache.org/dyn/closer.lua/accumulo/1.10.0/accumulo-1.10.0-bin.tar.gz
-{: link-suffix="/accumulo/1.10.0/accumulo-1.10.0-bin.tar.gz" }
-[SRC_1x]: https://www.apache.org/dyn/closer.lua/accumulo/1.10.0/accumulo-1.10.0-src.tar.gz
-{: link-suffix="/accumulo/1.10.0/accumulo-1.10.0-src.tar.gz" }
-
-[README_20]: https://github.com/apache/accumulo/blob/rel/2.0.0/README.md
-[README_1x]: https://github.com/apache/accumulo/blob/rel/1.10.0/README.md
-
-[JAVADOC_20]: {{ site.baseurl }}/docs/2.x/apidocs/
-[JAVADOC_1x]: {{ site.baseurl }}/1.10/apidocs/
-
-[MANUAL_20]: {{ site.baseurl }}/docs/2.x "2.x online manual"
-[MANUAL_1x]: {{ site.baseurl }}/1.10/accumulo_user_manual "1.10 user manual"
-
-[EXAMPLES_1x]: {{ site.baseurl }}/1.10/examples "1.10 examples"
-
-[REL_NOTES_20]: {{ site.baseurl }}/release/accumulo-2.0.0/ "2.0.0 Release Notes"
-[REL_NOTES_1x]: {{ site.baseurl }}/release/accumulo-1.10.0/ "1.10.0 Release Notes"
-
-[LTM]: {{ site.baseurl }}/contributor/versioning.html#LTM "LTM Explained"
+[ARCHIVE_REL]: {{site.baseurl}}/release/ "Release Archive"
+[LTM]: {{site.baseurl}}/contributor/versioning.html#LTM "LTM Explained"
