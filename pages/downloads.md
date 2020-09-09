@@ -58,8 +58,10 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 {% assign glyphSave = '&nbsp;<span class="glyphicon glyphicon-cloud-download"></span>' %}
 {% assign glyphLock = '&nbsp;<span class="glyphicon glyphicon-lock"></span>' %}
 {% assign srcbinArray = 'src bin' | split: ' ' %}
-{% assign btnStyleDefault = 'class="btn btn-default" style="text-transform: none; font-family: monospace"' %}
-{% assign btnStylePrimary = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
+{% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
+{% assign btnSigStyle = 'class="btn btn-default" style="font-family: monospace"' %}
+{% assign btnHashStyle = 'class="btn btn-default" style="font-family: monospace"' %}
+{% assign btnDocStyle = 'class="btn btn-default" style="text-transform: none; font-family: monospace"' %}
 
 ## Current Releases
 
@@ -71,22 +73,24 @@ The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
 current generation, containing the newest features, bug fixes, performance
 enhancements, and more.
 
-<div class="row btn-group" style="padding-left: 75px">
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-  <a {{btnStylePrimary}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
-  <br>
-{% endfor %}
+<div class="row btn-group" style="margin-left: 70px">
+  <div class="col btn-group">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div><div class="col btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
 </div>
-<div class="row btn-group-sm" style="padding: 25px; padding-left: 50px">
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
-  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+{% endfor %}
+<div class="row btn-group-sm" style="margin: 25px; margin-left: 50px">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
 </div>
 
 
@@ -97,22 +101,24 @@ enhancements, and more.
 The most recent legacy (1.x) release of Apache Accumulo&reg; is version
 {{linkVers}}.
 
-<div class="row btn-group" style="padding-left: 75px">
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-  <a {{btnStylePrimary}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-  <a {{btnStyleDefault}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
-  <br>
-{% endfor %}
+<div class="row btn-group" style="margin-left: 70px">
+  <div class="col btn-group">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div><div class="col btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
 </div>
-<div class="row btn-group-sm" style="padding: 25px; padding-left: 50px">
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnStyleDefault}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/examples">Examples</a>
-  <a {{btnStyleDefault}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
+{% endfor %}
+<div class="row btn-group-sm" style="margin: 25px; margin-left: 50px">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
 </div>
 
 
