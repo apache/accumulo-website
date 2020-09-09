@@ -144,7 +144,11 @@ git remote update upstream
 git push upstream upstream/asf-staging:asf-site
 ```
 
-Note that Step 3 should always be a fast-forward merge. That is, there should
+A convenience script can be found that performs these steps for you, after
+asking which remote you want to use. It is located in the `main` branch at
+`_devtools/publish.sh`
+
+Note that Step 2 should always be a fast-forward merge. That is, there should
 never be any reason to force-push it if everything is done correctly. If extra
 commits are ever added to `asf-site` that are not present in `asf-staging`,
 then those branches will need to be sync'd back up in order to continue
