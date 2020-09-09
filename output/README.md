@@ -146,7 +146,7 @@ git push upstream upstream/asf-staging:asf-site
 
 A convenience script can be found that performs these steps for you, after
 asking which remote you want to use. It is located in the `main` branch at
-`_devtools/publish.sh`
+`_scripts/publish.sh`
 
 Note that Step 2 should always be a fast-forward merge. That is, there should
 never be any reason to force-push it if everything is done correctly. If extra
