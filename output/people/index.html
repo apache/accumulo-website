@@ -138,9 +138,21 @@
         </div>
         <div id="content">
           
-          <h2 id="pmc-and-committers">PMC and Committers</h2>
+          <script type="text/javascript">
 
-<table class="table table-striped">
+// convert Apache IDs for PMC members into links to their Apache profile on people.apache.org
+$(function() {
+  $('table#pmc tbody tr td:first-child').each(function(i, obj) {
+    var apacheid = $(obj).text();
+    $(obj).html('<a href="https://people.apache.org/phonebook.html?uid=' + apacheid + '">' + apacheid + '</a>');
+  });
+});
+
+</script>
+
+<h2 id="pmc-and-committers">PMC and Committers</h2>
+
+<table class="table table-striped" id="pmc">
   <thead>
     <tr>
       <th>apache id</th>
@@ -379,7 +391,7 @@
 
 <p>GitHub also has a <a href="https://github.com/apache/accumulo/graphs/contributors">contributor list</a> based on commits.</p>
 
-<table class="table table-striped">
+<table class="table table-striped" id="contributors">
   <thead>
     <tr>
       <th>name</th>
