@@ -22,16 +22,15 @@ permalink: /people/
 | cawaring      | Chris Waring                                      |                                        |          |
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
 | ctubbsii      | [Christopher Tubbs](https://github.com/ctubbsii)  | [NSA][NSA]                             | [ET][ET] |
-| dhutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
 | dlmarion      | Dave Marion                                       | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
+| edcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
 | elserj        | Josh Elser                                        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
-| etcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
 | hkeebler      | Holly Keebler                                     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
+| ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
-| ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
@@ -43,6 +42,7 @@ permalink: /people/
 | phrocker      | [Marc Parisi](https://github.com/phrocker/)       | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | rweeks        | Russ Weeks                                        | [PHEMI][PHEMI]                         | [PT][PT] |
 | shickey       | Sean Hickey                                       |                                        | [PT][PT] |
+| shutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
@@ -60,9 +60,9 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
-| Benjamin Fach       |                                                                   |                       |
 | Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST] |
 | Ben Manes           |                                                                   | [PT][PT]              |
+| Benjamin Fach       |                                                                   |                       |
 | Bob Thorman         | [AT&amp;T][ATT]                                                   |                       |
 | Charles Williams    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
 | Chris Bennight      |                                                                   |                       |
