@@ -4,9 +4,21 @@ skiph1fortitle: true
 permalink: /people/
 ---
 
+<script type="text/javascript">
+
+// convert Apache IDs for PMC members into links to their Apache profile on people.apache.org
+$(function() {
+  $('table#pmc tbody tr td:first-child').each(function(i, obj) {
+    var apacheid = $(obj).text();
+    $(obj).html('<a href="https://people.apache.org/phonebook.html?uid=' + apacheid + '">' + apacheid + '</a>');
+  });
+});
+
+</script>
+
 ## PMC and Committers
 
-{: .table .table-striped}
+{: .table .table-striped #pmc}
 | apache id     | name                                              | organization                           | timezone |
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
@@ -51,7 +63,7 @@ permalink: /people/
 
 GitHub also has a [contributor list][github-contributors] based on commits.
 
-{: .table .table-striped}
+{: .table .table-striped #contributors}
 | name                | organization                                                      | timezone              |
 |---------------------|-------------------------------------------------------------------|-----------------------|
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
