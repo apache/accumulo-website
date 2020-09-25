@@ -44,10 +44,10 @@ Before creating a release candidate, all open issues with a fix version of the r
 * `git push upstream x.y.z-rc#-next` push new branches to the upstream git repo. (script pushes to _origin_)
 * Remove any _Expected fingerprints_ generated in the email that do not match your gpg fingerprint.
 * Verify email links are valid and email _dev@accumulo.apache.org_ starting the VOTE.
-* **[VOTE](#Voting)**
+* **[VOTE](#vote)**
 * *If vote fails*, fix the original branch and start over.
 * *If vote passes*, `git merge x.y.z-rc#-next` back into the original branch you released from.
-* Go to the [Post release tasks](#Post release Tasks)
+* Go to the [Post release tasks](#post-release-tasks)
 
 **Explanation of build script**
 
@@ -74,7 +74,7 @@ you. At this point, you should inspect the artifacts that were staged to ensure 
 them to be. When you're ready to present those artifacts for voting, you need to close that repository which
 will make it publicly available for other members to inspect.
 
-## Voting
+## Vote
 
 At this point, you should have a closed repository that's ready to vote on. Send a message to [the dev
 list](mailto:dev@accumulo.apache.org) and get the ball rolling. Developers should test and verify the
@@ -86,7 +86,7 @@ SHOULD include with their vote details on the tests from the testing section the
 If given, said details for each test MUST include: the number of worker nodes in the cluster, the operating system
 and version, the Hadoop version, and the Zookeeper version.  For testing done on a version other than the release
 candidate that is deemed relevant, include the commit hash. All such gathered testing information will be included
-in the release notes. 
+in the release notes.
 
 If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
 until the release ultimately passes if you choose), and fix what needs fixing.
@@ -202,15 +202,11 @@ if this is the latest release of Accumulo.
 
 ## References
 
-Some good references that explain a few things:
-
-- [Christopher talks about making releases][3]
 - [Publishing Maven Artifacts][apache-mvn]
 - [Publishing Releases][apache-release]
 
 [1]: https://infra.apache.org/release-signing
 [2]: https://repository.apache.org/#stagingRepositories
-[3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
 [apache-release]: https://infra.apache.org/release-publishing
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
 [verify]: {{ "/contributor/verifying-release" | relative_url }}
