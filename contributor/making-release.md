@@ -20,10 +20,12 @@ Follow these steps to make a release of Apache Accumulo.
 There are number of things that are required before attempting to build a release.
 
 1. Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn't require re-authentication mid-build, as it will cause things to fail. For example, you can add `default-cache-ttl 6000` to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough [ASF release signing documentation][1].
-2. Ensure that you're using the correct major release of Java (check javadoc too).
+2. Once you are able to sign a release, add your gpg key to the [KEYS file][keys-file] (instructions are at the top of the file).  This will require updating the SVN repository (more below).
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
-   the maven-release-plugin and staging the release candidate).
+   the maven-release-plugin and staging the release candidate).  Your Apache ID and password should be in a <server> section of ~/.m2/settings.xml as shown [here][apache-mvn].
+   To encrypt the password follow these [instructions][maven-enc].
 4. Have a clean workspace before starting.
+5. The build will require having the same version of [Thrift binary][thrift] installed on your machine. 
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
@@ -35,24 +37,23 @@ Before creating a release candidate, all open issues with a fix version of the r
 
 **TL;DR**
 
-* `./assemble/build.sh --create-release-candidate` to make the release candidate
-* `git tag $version $version-rcN` to create an RC tag from the actual tag
-* `git tag -d $version` make sure you don't accidentally push a "release" tag
-* `git push origin $version-rcN` push the RC tag
-* `git checkout -b $version-rcN-branch` save off the branch from the Maven release plugin
-* **VOTE**
+* `./assemble/build.sh --create-release-candidate` to make the release candidate.
+* Verify the artifacts in [ASF Nexus][2] and if valid, close the staging repo.
+* Enter the #### of the staging repo when the script prompts to generate the VOTE email.
+* `git push upstream x.y.z-rc#` if your git _upstream_ is different from _origin_
+* `git push upstream x.y.z-rc#-next` push new branches to the upstream git repo. (script pushes to _origin_)
+* Remove any _Expected fingerprints_ generated in the email that do not match your gpg fingerprint.
+* Verify email links are valid and email _dev@accumulo.apache.org_ starting the VOTE.
+* **[VOTE](#vote)**
 * *If vote fails*, fix the original branch and start over.
-* *If vote passes*, `git merge $version-rcN-branch` back into the original branch you released from.
-* `git tag -s $version-rcN $version` make a GPG-signed tag
-* `git push origin $version` push the signed tag.
+* *If vote passes*, `git merge x.y.z-rc#-next` back into the original branch you released from.
+* Go to the [Post release tasks](#post-release-tasks)
 
-**Long-winded explanation**
+**Explanation of build script**
 
-You should use the provided script assemble/build.sh to create the release candidate. This script is
+You should run `assemble/build.sh --create-release-candidate` to create the release candidate. This script is
 desirable as it activates all necessary maven profiles in addition to verifying that certain preconditions
-are met, like RPM signing availability and the ability to sign files using GPG. The --test option can
-be used as a dry run for creating a release candidate. The --create-release-candidate option should be 
-used to create the actual release candidate.
+are met. If successful, it will also generate a release VOTE email.
 
 When invoking build.sh with the --create-release-candidate option, the majority of the work will be performed
 by the maven-release-plugin, invoking *release:clean*, *release:prepare*, and *release:perform*. These will
@@ -63,11 +64,9 @@ voting to occur on artifacts that cannot be directly promoted. After the build.s
 likely take at least 15 minutes, even on recent hardware), your current branch will be on the "next" version 
 that you provided to the release plugin.
 
-One unwanted side-effect of this approach is that after creating this branch, but *before invoking release:perform*,
-you must edit the release.properties to add the _-rcN_ suffix to the value of scm.tag. Otherwise, the release
-plugin will complain that it cannot find the branch for the release. With a successful invocation of *mvn release:perform*,
-a staging repository will be made for you on the [ASF Nexus server][2] which you can log into with your ASF 
-credentials.
+With a successful invocation of *mvn release:perform*, a staging repository will be made for you on the
+[ASF Nexus server][2] which you can log into with your ASF credentials.  The script will prompt for the
+generated number at the end of the staging repository name, i.e. 1086 for `orgapacheaccumulo-1086`.
 
 After you log into Nexus, click on _Staging Repositories_ in the _Build Promotion_ toolbar on the left side of
 the screen. Assuming your build went according to plan, you should have a new staging repository made for
@@ -87,7 +86,7 @@ SHOULD include with their vote details on the tests from the testing section the
 If given, said details for each test MUST include: the number of worker nodes in the cluster, the operating system
 and version, the Hadoop version, and the Zookeeper version.  For testing done on a version other than the release
 candidate that is deemed relevant, include the commit hash. All such gathered testing information will be included
-in the release notes. 
+in the release notes.
 
 If the vote ultimately fails, you delete the staged repository, clean up the branch you created (or wait
 until the release ultimately passes if you choose), and fix what needs fixing.
@@ -102,7 +101,7 @@ announcement.
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
 a process to get the release out to all of the mirrors.
 In Nexus:
-* Release the 1.9.3-rc3 staging repository to Maven Central
+* For example, rc3 passes. Release the X.Y.Z-rc3 staging repository to Maven Central
 * Drop old (rc1,rc2) staging repos
 
 ## Create the final Git tag
@@ -111,6 +110,13 @@ The Git repository should also contain a tag which refers to the final commit wh
 should also be signed with your GPG key. To ensure proper retention on release (stemming from ASF policy
 requirements), This final tag *must* being with "rel/". For example, a release of 1.7.0 should have a corresponding
 tag name of "rel/1.7.0".
+
+Run the command in the email generated from the `assemble/build.sh` script. It will be something like:
+* `git tag -f -m 'Apache Accumulo 1.10.0' -s rel/1.10.0 4d261254`
+
+Then push the signed tag. For example:
+* `git push upstream rel/1.10.0`
+
 
 ## Copy artifacts to dist.apache.org
 
@@ -196,18 +202,17 @@ if this is the latest release of Accumulo.
 
 ## References
 
-Some good references that explain a few things:
+- [Publishing Maven Artifacts][apache-mvn]
+- [Publishing Releases][apache-release]
 
-- [Christopher talks about making releases][3]
-- [Publishing Maven Artifacts][4]
-- [Publishing Releases][5]
-
-[1]: https://www.apache.org/dev/release-signing
-[2]: https://repository.apache.org
-[3]: https://mail-archives.apache.org/mod_mbox/accumulo-dev/201305.mbox/raw/%3CCAL5zq9bH8y0FyjXmmfXhWPj8axosn9dZ7%2Bu-R1DK4Y-WM1YoWg%40mail.gmail.com%3E
-[4]: https://www.apache.org/dev/publishing-maven-artifacts
-[5]: https://www.apache.org/dev/release-publishing
+[1]: https://infra.apache.org/release-signing
+[2]: https://repository.apache.org/#stagingRepositories
+[apache-release]: https://infra.apache.org/release-publishing
 [addrelease]: https://reporter.apache.org/addrelease?accumulo
 [verify]: {{ "/contributor/verifying-release" | relative_url }}
 [examples]: https://github.com/apache/accumulo-examples
 [website-repo]: https://github.com/apache/accumulo-website
+[keys-file]: https://downloads.apache.org/accumulo/KEYS
+[apache-mvn]: https://infra.apache.org/publishing-maven-artifacts.html
+[maven-enc]: https://maven.apache.org/guides/mini/guide-encryption.html
+[thrift]: http://archive.apache.org/dist/thrift/
