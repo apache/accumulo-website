@@ -151,6 +151,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Ryan Leary          |                                                                   |                       |
 | Sapah Shah          |                                                                   |                       |
 | Scott Kuehn         |                                                                   |                       |
+| Seth Falco          | [Elypia][ELYPIA]                                                  | [GMT][GMT]/[BST][BST] |
 | Shawn Walker        |                                                                   |                       |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
@@ -187,6 +188,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [CLOUDERA]: https://www.cloudera.com
 [DATATACT]: https://www.data-tactics.com
 [DATACATESS]: https://datacatessen.com
+[ELYPIA]: https://elypia.org
 [ENDGAME]: https://www.endgame.com
 [FLYWHEEL]: https://flywheeldata.com
 [HORTONWORKS]: https://hortonworks.com
