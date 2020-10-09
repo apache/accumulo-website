@@ -154,6 +154,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Shawn Walker        |                                                                   |                       |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
+| Szabolcs Bukros     | [Cloudera][CLOUDERA]                                              | [CEST][CEST]          |
 | Takahiko Saito      | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 | Tao Xiao            | [Nara Institute of Science and Technology][NAIST]                 |                       |
 | Ted Malaska         | [Cloudera][CLOUDERA]                                              |                       |
