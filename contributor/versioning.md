@@ -12,25 +12,27 @@ This strategy entails an intent to:
 
 1. Periodically release a new LTM `major.minor.0` version (approximately every 2 years),
 2. Maintain the LTM releases with `major.minor.(patch++)` releases until 1 year after the next LTM,
-3. Release intermediate non-LTM `major.minor.0` versions that are not expected to receive patch/bugfix releases,
-4. Roll patches/bugfixes targeting non-LTM versions into the next `major.minor.0` release, and
-5. Support upgrades from both the immediately preceding LTM and non-LTM versions.
+3. Support upgrades from both the immediately preceding LTM and non-LTM versions
 
 This strategy implies that no more than one or two LTM releases will be
-actively maintained at any given time, with a one year overlap.
+actively maintained at any given time, with a one-year overlap.
 
-The motivation for this is to streamline the work of maintaining multiple
-versions of Accumulo while not inhibiting development on newer versions, to
-provide greater confidence for risk-averse users to upgrade to versions that
-are expected to be stable and receive updates (with a one year window to do
-so), and help reduce the amount of work done by limiting upgrade paths.
+Non-LTM versions:
+
+1. Release intermediate non-LTM `major.minor.0` versions that are not expected to receive patch/bugfix releases,
+2. Roll patches/bugfixes targeting non-LTM versions into the next `major.minor.0` release
+
+Goals of the LTM strategy:
+- Streamline maintaining multiple versions of Accumulo
+- Encourage development on newer versions
+- Provide greater confidence for users to upgrade and receive updates (within one year)
+- Help reduce the amount of work done by limiting upgrade paths
 
 Note: the above strategy is a declaration of **intent** only. We use the term
 "Long Term Maintenance" rather than the more familiar "Long Term Support" or
-"Long Term Stable" terms to avoid possible confusion that may arise over
-implication of warrantees from the use of the words "support" or "stable". See
-the project LICENSE for a full disclaimer of warranties. If you have questions,
-about this, please [contact] us.
+"Long Term Stable" terms to avoid confusion over the implication of warranties
+from the use of the words "support" or "stable". See the project LICENSE for a full
+disclaimer of warranties. If you have questions, about this, please [contact] us.
 
 ## SemVer 2.0.0
 {: semver }
