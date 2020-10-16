@@ -1,6 +1,6 @@
 # Apache Accumulo Website
 
-Apache Accumulo's website is generated from Markdown source (specifically,
+Apache Accumulo's website is generated from Markdown awesome source (specifically,
 [kramdown] style) with [Jekyll], using [Bundler] to manage its gem
 dependencies.
 
@@ -8,7 +8,7 @@ dependencies.
 
 ### Custom Liquid Tags
 
-Jekyll uses [Liquid] to process files before interpreting their Markdown
+Jekyll uses [Liquid] to process the files before interpreting their Markdown
 contents. We have extended Jekyll using its plugin mechanism to create custom
 Liquid tags that make it easier to link to javadocs, properties, and documents.
 
