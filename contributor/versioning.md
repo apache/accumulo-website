@@ -8,7 +8,7 @@ redirect_from: /versioning
 
 The Apache Accumulo PMC has adopted a Long Term Maintenance (LTM) release strategy.
 
-This strategy entails an intent to:
+### LTM Versions:
 
 1. Periodically release a new LTM `major.minor.0` version (approximately every 2 years),
 2. Maintain the LTM releases with `major.minor.(patch++)` releases until 1 year after the next LTM,
@@ -17,12 +17,12 @@ This strategy entails an intent to:
 This strategy implies that no more than one or two LTM releases will be
 actively maintained at any given time, with one year of overlap.
 
-Non-LTM versions:
+### Non-LTM versions:
 
 1. Release intermediate non-LTM `major.minor.0` versions that are not expected to receive patch/bugfix releases,
 2. Roll patches/bugfixes targeting non-LTM versions into the next `major.minor.0` release
 
-Goals of the LTM strategy:
+### Goals of the LTM strategy:
 - Streamline maintaining multiple versions of Accumulo
 - Encourage development on newer versions
 - Provide greater confidence for users to upgrade and receive updates (within one year)
