@@ -15,7 +15,7 @@ This strategy entails an intent to:
 3. Support upgrades from both the immediately preceding LTM and non-LTM versions
 
 This strategy implies that no more than one or two LTM releases will be
-actively maintained at any given time, with a one-year overlap.
+actively maintained at any given time, with one year of overlap.
 
 Non-LTM versions:
 
