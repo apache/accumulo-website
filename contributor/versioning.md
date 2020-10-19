@@ -30,7 +30,7 @@ Goals of the LTM strategy:
 
 Note: the above strategy is a declaration of **intent** only. We use the term
 "Long Term Maintenance" rather than the more familiar "Long Term Support" or
-"Long Term Stable" terms to avoid confusion over the implication of warranties
+"Long Term Stable" terms to avoid any implication of warranties
 from the use of the words "support" or "stable". See the project LICENSE for a full
 disclaimer of warranties. If you have questions, about this, please [contact] us.
 
