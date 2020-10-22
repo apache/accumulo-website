@@ -86,4 +86,4 @@ Metrics from Accumulo will be immediately viewable in Grafana at [http://localho
 [monitor]: {{ site.baseurl }}/features/#screenshots
 [Grafana]: https://grafana.com/
 [InfluxDB]: https://influxdb.com/
-[dashboard]: https://raw.githubusercontent.com/apache/fluo-uno/master/conf/grafana/accumulo-dashboard.json
+[dashboard]: https://raw.githubusercontent.com/apache/fluo-uno/main/plugins/influx-metrics/accumulo-dashboard.json
