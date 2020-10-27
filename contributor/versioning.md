@@ -37,11 +37,11 @@ disclaimer of warranties. If you have questions, about this, please [contact] us
 ## SemVer 2.0.0
 {: semver }
 
-The Apache Accumulo PMC closed a vote on 2014/12/12 which adopted [Semantic Versioning 2.0.0][1] as
+The Apache Accumulo PMC closed a vote on 2014/12/12 which adopted [Semantic Versioning 2.0.0][semver] as
 the reference document on the meaning and requirements of the versions of Apache Accumulo. Semantic
 versioning requires a definition of a public API: this definition is unchanged over previous releases and
-can be found in section 9 of the [README][2]. A copy of the specification is included here, licensed under
-[Creative Commons - CC BY 3.0][3]:
+can be found in section 9 of the [README][readme]. A copy of the specification is included here, licensed under
+[Creative Commons - CC BY 3.0][cc]:
 
 ### Semantic Versioning Specification (SemVer)
 
@@ -99,7 +99,7 @@ preceding identifiers are equal. Example: 1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-al
 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0.
 
 
-[1]: https://semver.org/spec/v2.0.0
-[2]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=README.md;hb=refs/heads/main
-[3]: https://creativecommons.org/licenses/by/3.0
+[semver]: https://semver.org/spec/v2.0.0
+[readme]: https://gitbox.apache.org/repos/asf?p=accumulo.git;a=blob;f=README.md;hb=refs/heads/main
+[cc]: https://creativecommons.org/licenses/by/3.0
 [contact]: {{ site.baseurl }}/contact-us
