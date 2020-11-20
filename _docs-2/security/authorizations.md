@@ -98,7 +98,7 @@ the [Accumulo shell][shell], use the `setuaths` and `getauths` commands. They ca
 retrieved and modified in Java using `getUserAuthorizations` and `changeUserAuthorizations`
 methods of [SecurityOperations].
 
-When a user creates a [Scanner] or [BatchScanner] a set of [Authorizations] is passed.
+When a user creates a [Scanner] or [BatchScanner], a set of [Authorizations] is passed.
 If the Authorizations passed to the scanner are not a subset of the user's Authorizations,
 then an exception will be thrown.
 
@@ -111,19 +111,18 @@ conflict with any existing constraints.
     config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
 
 Any user with the alter table permission can add or remove this constraint.
-This constraint is not applied to bulk imported data, if this a concern then
-disable the bulk import permission.
+This constraint is not applied to bulk imported data, if this is a concern, disable the bulk import permission.
 
 ### Advanced Authorizations Handling
 
 For applications serving many users, it is not expected that an Accumulo user
 will be created for each application user. In this case an Accumulo user with
-all authorizations needed by any of the applications users must be created. To
+all authorizations needed by all of the application's users must be created. To
 service queries, the application should create a scanner with the application
 user's authorizations. These authorizations could be obtained from a trusted 3rd
 party.
 
-Often production systems will integrate with Public-Key Infrastructure (PKI) and
+Often, production systems will integrate with Public-Key Infrastructure (PKI) and
 designate client code within the query layer to negotiate with PKI servers in order
 to authenticate users and retrieve their authorization tokens (credentials). This
 requires users to specify only the information necessary to authenticate themselves

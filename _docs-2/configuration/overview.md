@@ -14,7 +14,7 @@ Configuration is managed differently for Accumulo clients and servers.
 ## Server Configuration
 
 Accumulo processes (i.e master, tablet server, monitor, etc) are configured by [server properties] whose values can be
-set in the following configuration locations (with increasing precedence) that are described in detail below:
+set in the following configuration locations (with increasing precedence):
 
 1. [Default](#default) - All properties have a default value
 2. [Site](#site) - Properties set in [accumulo.properties]
@@ -46,7 +46,7 @@ Overriding properties is useful if you can't change [accumulo.properties]. It's 
 
 ### System
 
-System configuration refers to [server properties] set for the entire Accumulo instance/cluster. These settings are stored in ZooKeeper and can identified by **zk mutable: yes**
+System configuration refers to [server properties] set for the entire Accumulo instance/cluster. These settings are stored in ZooKeeper and can be identified by **zk mutable: yes**
 in their description on the [server properties] page. System configuration will override any site configuration set in [accumulo.properties]. While most system configuration
 settings take effect immediately, some require a restart of the process which is indicated in the **zk mutable** section of their description. System configuration can be set using
 the following shell command:
@@ -101,8 +101,8 @@ Accumulo's current configuration can be viewed in the shell using the `config` c
 * `config -ns <NAMESPACE>` - view configuration for a specific namespace
 * `config -t <TABLE>` - view configuration for a specific table
 
-Below is example shell output from viewing configuration for the table `foo`. Please note how `table.compaction.major.ratio`
-is set in multiple locations but the value `1.6` set in the `table` scope is used as it has the highest precedence.
+Below is an example shell output from viewing configuration for the table `foo`. Please note how `table.compaction.major.ratio`
+is set in multiple locations but, the value `1.6` set in the `table` scope, is used as it has the highest precedence.
 
 ```
 root@accumulo-instance> config -t foo

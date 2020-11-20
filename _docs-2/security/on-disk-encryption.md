@@ -60,20 +60,20 @@ For more help getting started see {% jlink org.apache.accumulo.core.security.cry
 ## Things to keep in mind
 
 The on disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
-is written to disk with these files but there are a few scenarios that can take place where data will be unencrypted, 
+is written to disk with these files but, there are a few scenarios that can take place where data will be unencrypted, 
 even with the crypto service enabled.
 
 ### Sorted WALs
 
 If a tablet server is killed with WALs enabled, Accumulo will create temporary sorted WALs during recovery that are unencrypted.  
-These files will only contain recent data that has not been compacted but will be written to the disk unencrypted. Once recovery 
+These files will only contain recent data that has not been compacted but, will be written to the disk unencrypted. Once recovery 
 is finished, these unencrypted files will be removed.
 
 ### Data in Memory & Logs
 
 For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory 
 while Accumulo is running.  Depending on the situation, this also means that some data can be printed to logs. A stacktrace being logged 
-during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging but 
+during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging but, 
 its the additional data that gets encrypted on disk that could be exposed in a log file. 
 
 ### Bulk Import

@@ -54,7 +54,7 @@ The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumul
 ## Host files
 
 The `accumulo-cluster` script uses the host files below to determine where Accumulo processes should be run.
-These files are not in `conf/` directory the Accumulo release tarball by default. They can be created by running
+These files are not in `conf/` directory in the Accumulo release tarball by default. They can be created by running
 the command `accumulo-cluster create-config`.
 
 ### gc
@@ -64,7 +64,7 @@ to run standby Garbage Collectors that can take over if the lead Garbage Collect
 
 ### masters
 
-Contains a list of hosts where [Master] processes should run. While only one host needed, others can be specified
+Contains a list of hosts where [Master] processes should run. While only one host is needed, others can be specified
 to run on standby Masters that can take over if the lead Master fails.
 
 ### monitor

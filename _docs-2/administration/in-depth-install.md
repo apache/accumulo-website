@@ -113,7 +113,7 @@ and specify the following:
 3. Optionally, choose a different location for Accumulo logs using `$ACCUMULO_LOG_DIR`
 
 Accumulo uses `HADOOP_HOME` and `ZOOKEEPER_HOME` to locate Hadoop and Zookeeper jars
-and add them the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
+and add them to the `CLASSPATH` variable. If you are running a vendor-specific release of Hadoop
 or Zookeeper, you may need to change how your `CLASSPATH` is built in [accumulo-env.sh]. If
 Accumulo has problems later on finding jars, run `accumulo classpath` to print Accumulo's
 classpath.
@@ -260,7 +260,7 @@ to result in data being leaked to users who should not have access to that data.
 In Hadoop-2.6.0, a new CredentialProvider class was introduced which serves as a common
 implementation to abstract away the storage and retrieval of passwords from plaintext
 storage in configuration files. Any Property marked with the `Sensitive` annotation
-is a candidate for use with these CredentialProviders. For version of Hadoop which lack
+is a candidate for use with these CredentialProviders. For versions of Hadoop which lack
 these classes, the feature will just be unavailable for use.
 
 A comma separated list of CredentialProviders can be configured using the Accumulo Property
@@ -290,7 +290,7 @@ general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/ac
 ```
 
 This configuration will then transparently extract the [instance.secret] from
-the configured KeyStore and alleviates a human readable storage of the sensitive
+the configured KeyStore and elliminates human readable storage of the sensitive
 property.
 
 A KeyStore can also be stored in HDFS, which will make the KeyStore readily available to
