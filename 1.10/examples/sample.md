@@ -94,7 +94,7 @@ feature works.  The commands determine what files the sampex table is using.
 Below shows running `accumulo rfile-info` on the file above.  This shows the
 rfile has a normal default locality group and a sample default locality group.
 The output also shows the configuration used to create the sample locality
-group.  The sample configuration within a rfile must match the tables sample
+group.  The sample configuration within an RFile must match the tables sample
 configuration for sample scan to work.
 
     $ ./bin/accumulo rfile-info hdfs://localhost:10000/accumulo/tables/2/default_tablet/A000000s.rf

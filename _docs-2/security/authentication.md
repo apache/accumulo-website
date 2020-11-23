@@ -41,7 +41,7 @@ client.securityOperations().createLocalUser("bob", new PasswordToken("pass"));
 ## Authenticating users
 
 Users are authenticated when they [create an Accumulo client]({% durl getting-started/clients#creating-an-accumulo-client %})
-or when the log in to the [Accumulo shell]({% durl getting-started/shell %}).
+or when they log in to the [Accumulo shell]({% durl getting-started/shell %}).
 
 Authentication can also be tested in the shell:
 
@@ -59,7 +59,7 @@ boolean valid = client.securityOperations().authenticateUser("bob", new Password
 
 ## Changing user passwords
 
-A user's password can changed be in the shell:
+A user's password can be changed in the shell:
 
 ```
 root@uno> passwd -u bob

@@ -17,7 +17,7 @@ about which files to compact.
 
 Summary data is stored in each file Accumulo produces.  Accumulo can gather
 summary information from across a cluster merging it along the way.  In order
-for this to be fast the, summary information should fit in cache.  There is a
+for this to be fast, the summary information should fit in cache.  There is a
 dedicated cache for summary data on each tserver with a configurable size.  In
 order for summary data to fit in cache, it should probably be small.
 
@@ -36,7 +36,7 @@ ranges per a file.  However, the ranges are not granular enough to completely
 offset extra data.
 
 Any source of inaccuracies is reported when summary information is requested.
-In the shell examples below this can be seen on the `File Statistics` line.
+In the shell examples below, this can be seen on the `File Statistics` line.
 For files missing summary information, the compact command in the shell has a
 `--sf-no-summary` option.  This options compacts files that do not have the
 summary information configured for the table.  The compact command also has the
@@ -57,7 +57,7 @@ The following tablet server and table properties configure summarization.
 ## Permissions
 
 Because summary data may be derived from sensitive data, requesting summary data
-requires a special permission.  User must have the table permission
+requires a special permission.  Users must have the table permission
 `GET_SUMMARIES` in order to retrieve summary data.
 
 ## Bulk import
@@ -69,7 +69,7 @@ class has options for creating RFiles with embedded summary data.
 
 ## Examples
 
-This example walks through using summarizers in the Accumulo shell.  Below a
+This example walks through using summarizers in the Accumulo shell.  Below, a
 table is created and some data is inserted to summarize.
 
     root@uno> createtable summary_test

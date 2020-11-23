@@ -98,7 +98,7 @@ the [Accumulo shell][shell], use the `setuaths` and `getauths` commands. They ca
 retrieved and modified in Java using `getUserAuthorizations` and `changeUserAuthorizations`
 methods of [SecurityOperations].
 
-When a user creates a [Scanner] or [BatchScanner] a set of [Authorizations] is passed.
+When a user creates a [Scanner] or [BatchScanner], a set of [Authorizations] is passed.
 If the Authorizations passed to the scanner are not a subset of the user's Authorizations,
 then an exception will be thrown.
 
@@ -118,7 +118,7 @@ disable the bulk import permission.
 
 For applications serving many users, it is not expected that an Accumulo user
 will be created for each application user. In this case an Accumulo user with
-all authorizations needed by any of the applications users must be created. To
+all authorizations needed by any of the application's users must be created. To
 service queries, the application should create a scanner with the application
 user's authorizations. These authorizations could be obtained from a trusted 3rd
 party.

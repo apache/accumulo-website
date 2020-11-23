@@ -11,7 +11,7 @@ This sample data is kept up to date as a table is mutated.  What key values are
 placed in the sample data is configurable per table.
 
 This feature can be used for query estimation and optimization.  For an example
-of estimation assume an Accumulo table is configured to generate a sample
+of estimation, assume an Accumulo table is configured to generate a sample
 containing one millionth of a tables data.   If a query is executed against the
 sample and returns one thousand results, then the same query against all the
 data would probably return a billion results.  A nice property of having
@@ -34,11 +34,11 @@ for examples of how to configure a [Sampler] on a table.
 Once a table is configured with a [Sampler], all writes after that point will
 generate sample data.  For data written before sampling was configured, sample
 data will not be present.  A compaction can be initiated that only compacts the
-files in the table that do not have sample data.  The [sampling example][example] 
+files in the table that do not have sample data.  The [sampling example][example]
 shows how to do this.
 
 If the sampling configuration of a table is changed, then Accumulo will start
-generating new sample data with the new configuration.   However old data will
+generating new sample data with the new configuration.   However, old data will
 still have sample data generated with the previous configuration.  A selective
 compaction can also be issued in this case to regenerate the sample data.
 

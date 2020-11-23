@@ -25,7 +25,7 @@ hardware. Tables can be split at any time by using the shell:
 
     user@myinstance mytable> addsplits -sf /local_splitfile -t mytable
 
-For the purposes of providing parallelism to ingest it is not necessary to create more
+For the purposes of providing parallelism to ingest, it is not necessary to create more
 tablets than there are physical machines within the cluster as the aggregate ingest
 rate is a function of the number of physical machines. Note that the aggregate ingest
 rate is still subject to the number of machines running ingest clients, and the

@@ -42,7 +42,7 @@ MapReduce jobs to run with both Accumulo's & Hadoop's dependencies on the classp
 Since 2.0, Accumulo no longer has the same versions for dependencies as Hadoop. While this allows
 Accumulo to update its dependencies more frequently, it can cause problems if both Accumulo's &
 Hadoop's dependencies are on the classpath of the MapReduce job. When launching a MapReduce job that
-use Accumulo, you should build a [shaded jar] with all of your dependencies and complete the following
+uses Accumulo, you should build a [shaded jar] with all of your dependencies and complete the following
 steps so YARN only includes Hadoop code (and not all of Hadoop's dependencies) when running your MapReduce job:
 
 1. Set `export HADOOP_USE_CLIENT_CLASSLOADER=true` in your environment before submitting
@@ -148,7 +148,7 @@ Follow the steps below to write to an Accumulo table from a MapReduce job.
 
 ## Write output to RFiles in HDFS
 
-Follow the step below to have a MapReduce job output to RFiles in HDFS. These files
+Follow the steps below to have a MapReduce job output to RFiles in HDFS. These files
 can then be bulk imported into Accumulo:
 
 1. Create a Mapper or Reducer with `Key` & `Value` as output parameters.

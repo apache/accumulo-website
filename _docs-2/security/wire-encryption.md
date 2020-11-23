@@ -40,7 +40,7 @@ In `accumulo.properties`, the following properties are required:
 
 Optionally, SSL client-authentication (two-way SSL) can also be enabled by setting
 {% plink instance.rpc.ssl.clientAuth %} `true` in `accumulo.properties`.
-This requires that each client has access to  valid certificate to set up a secure connection
+This requires that each client has access to a valid certificate to set up a secure connection
 to the servers. By default, Accumulo uses one-way SSL which does not require clients to have
 their own certificate.
 
