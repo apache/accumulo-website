@@ -102,7 +102,7 @@ Accumulo's current configuration can be viewed in the shell using the `config` c
 * `config -t <TABLE>` - view configuration for a specific table
 
 Below is an example shell output from viewing configuration for the table `foo`. Please note how `table.compaction.major.ratio`
-is set in multiple locations but, the value `1.6` set in the `table` scope, is used as it has the highest precedence.
+is set in multiple locations, but the value `1.6` set in the `table` scope is used because it has the highest precedence.
 
 ```
 root@accumulo-instance> config -t foo
