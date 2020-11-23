@@ -57,7 +57,7 @@ The following tablet server and table properties configure summarization.
 ## Permissions
 
 Because summary data may be derived from sensitive data, requesting summary data
-requires a special permission.  A user must have the table permission
+requires a special permission.  Users must have the table permission
 `GET_SUMMARIES` in order to retrieve summary data.
 
 ## Bulk import
