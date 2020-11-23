@@ -290,7 +290,7 @@ general.security.credential.provider.paths=jceks://file/path/to/accumulo/conf/ac
 ```
 
 This configuration will then transparently extract the [instance.secret] from
-the configured KeyStore and elliminates human readable storage of the sensitive
+the configured KeyStore and eliminates human readable storage of the sensitive
 property.
 
 A KeyStore can also be stored in HDFS, which will make the KeyStore readily available to
