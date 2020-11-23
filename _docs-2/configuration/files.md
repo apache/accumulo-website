@@ -54,7 +54,7 @@ The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumul
 ## Host files
 
 The `accumulo-cluster` script uses the host files below to determine where Accumulo processes should be run.
-These files are not in `conf/` directory in the Accumulo release tarball by default. They can be created by running
+These files are not in the `conf/` directory of the Accumulo release tarball by default. They can be created by running
 the command `accumulo-cluster create-config`.
 
 ### gc

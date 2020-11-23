@@ -71,7 +71,7 @@ into multiple tablets.
     zy
     zz
 
-Run the MapReduce job using the [AccumuloFileOutputFormat] to create the files to
+Run the MapReduce job, using the [AccumuloFileOutputFormat] to create the files to
 be introduced to Accumulo. Once this is complete, the files can be added to
 Accumulo via the shell:
 

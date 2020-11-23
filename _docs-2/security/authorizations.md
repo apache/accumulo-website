@@ -110,8 +110,7 @@ conflict with any existing constraints.
 
     config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
 
-Any user with the alter table permission can add or remove this constraint.
-This constraint is not applied to bulk imported data, if this is a concern, disable the bulk import permission.
+Any user with the alter table permission can add or remove this constraint.  This constraint is not applied to bulk imported data, if this a concern then disable the bulk import permission.
 
 ### Advanced Authorizations Handling
 
@@ -122,7 +121,7 @@ service queries, the application should create a scanner with the application
 user's authorizations. These authorizations could be obtained from a trusted 3rd
 party.
 
-Often, production systems will integrate with Public-Key Infrastructure (PKI) and
+Often production systems will integrate with Public-Key Infrastructure (PKI) and
 designate client code within the query layer to negotiate with PKI servers in order
 to authenticate users and retrieve their authorization tokens (credentials). This
 requires users to specify only the information necessary to authenticate themselves

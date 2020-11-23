@@ -32,8 +32,7 @@ and consult the javadoc of the classes there. See the [sampling example][example
 for examples of how to configure a [Sampler] on a table.
 
 Once a table is configured with a [Sampler], all writes after that point will
-generate sample data.  Sample data will not be present for data written before sampling was configured.  A compaction can be initiated that only compacts the
-files in the table that do not have sample data.  The [sampling example][example] 
+generate sample data.  For data written before sampling was configured, sample data will not be present.  A compaction can be initiated that only compacts the files in the table that do not have sample data.  The [sampling example][example] 
 shows how to do this.
 
 If the sampling configuration of a table is changed, then Accumulo will start
