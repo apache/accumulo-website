@@ -118,7 +118,7 @@ disable the bulk import permission.
 
 For applications serving many users, it is not expected that an Accumulo user
 will be created for each application user. In this case an Accumulo user with
-all authorizations needed by all of the application's users must be created. To
+all authorizations needed by any of the application's users must be created. To
 service queries, the application should create a scanner with the application
 user's authorizations. These authorizations could be obtained from a trusted 3rd
 party.
