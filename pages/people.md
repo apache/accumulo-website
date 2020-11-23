@@ -89,6 +89,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | David Protzman      |                                                                   |                       |
 | Dennis Patrone      | [The Johns Hopkins University Applied Physics Laboratory][JHUAPL] | [ET][ET]              |
 | Dima Spivak         | [Cloudera][CLOUDERA]                                              |                       |
+| Dominic Garguilo    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Ed Kohlwey          | [Booz Allen Hamilton][BOOZ]                                       |                       |
 | Ed Seidl            | [Lawrence Livermore National Laboratory][LLNL]                    | [PT][PT]              |
 | Edward Yoon         |                                                                   |                       |
