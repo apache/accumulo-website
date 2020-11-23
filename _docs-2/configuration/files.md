@@ -33,7 +33,7 @@ See the [quick start] for help with configuring this file.
 ## accumulo-env.sh
 
 The {% ghc assemble/conf/accumulo-env.sh %} file configures the Java classpath and JVM options needed to run
-Accumulo processes. See the [quick install] for help with configuring this file.
+Accumulo processes. See the [quick start] for help with configuring this file.
 
 ## Log configuration files
 
