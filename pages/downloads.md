@@ -94,7 +94,7 @@ enhancements, and more.
 </div>
 
 
-{% assign linkVers = '1.10.0' %}
+{% assign linkVers = '1.10.1' %}
 ### {{linkVers}} **Legacy**{: .label .label-default} **LTM**{: .label .label-success}
 {: #legacy }
 
