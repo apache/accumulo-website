@@ -65,7 +65,7 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 ## Current Releases
 
-{% assign linkVers = '2.0.0' %}
+{% assign linkVers = '2.0.1' %}
 ### {{linkVers}} **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
 {: #latest }
 

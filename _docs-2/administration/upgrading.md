@@ -53,7 +53,7 @@ When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 
 
 ```
 ./accumulo-1.9.3/bin/stop-all.sh
-./accumulo-2.0.0/bin/accumulo-cluster start
+./accumulo-2.0.1/bin/accumulo-cluster start
 ```
 It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.
 
@@ -69,7 +69,7 @@ Below is a list of client API changes that users are required to make for 2.0:
   <dependency>
     <groupId>org.apache.accumulo</groupId>
     <artifactId>accumulo-core</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
   </dependency>
   ```
 * ClientConfiguration objects can no longer be ceated using `new ClientConfiguration()`.
