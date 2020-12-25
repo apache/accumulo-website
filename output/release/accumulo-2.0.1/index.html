@@ -81,7 +81,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.0.0/">2.0.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.0.1/">2.0.1 (Latest)</a></li>
             <li><a href="/release/accumulo-1.10.1/">1.10.1</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
@@ -142,7 +142,7 @@
           
           
 
-<p>09 Dec 2020</p>
+<p>24 Dec 2020</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
         <li class="previous"><a href="/release/accumulo-2.0.0/">&laquo;&nbsp;Apache Accumulo 2.0.0</a></li>
@@ -152,11 +152,6 @@
     </ul></nav>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.0.0/">the latest release notes</a>.</p>
-</div>
-
 
 
 <div class="alert alert-warning" role="alert">
@@ -164,53 +159,70 @@
 </div>
 
 
-<p>Apache Accumulo 2.0.1 contains bug fixes for 2.0.0. This release contains contributions from 
-the Apace Accumulo community. . The following release notes highlight some of the
-changes. If anything is missing from this list, please <a href="/contact-us">contact</a> the developers
-to have it included.</p>
+<p>Apache Accumulo 2.0.1 contains bug fixes for 2.0.0.</p>
 
-<p>Users of that have migrated to 2.0.0 are urged to upgrade to 2.0.1 as soon as it is
-available.</p>
+<p>Since 2.0 is a non-LTM release line, and since an LTM release line has not yet
+been made available for 2.x, this patch backports important bug fixes to 2.0
+that could affect any existing 2.0.0 users. Users that have already migrated to
+2.0.0 are urged to upgrade to 2.0.1 as soon as possible, and users of 1.10 who
+wish to upgrade to 2.0 should upgrade directly to 2.0.1, bypassing 2.0.0.</p>
 
-<h2 id="minimum-requirements">Minimum Requirements</h2>
-
-<p>The versions mentioned here are a guide only. It is not expected that our
-convenience binary tarball will work out-of-the-box with your particular
-environment, and some responsibility is placed on users to properly configure
-Accumulo, or even patch and rebuild it from source, for their particular
-environment.</p>
-
-<p>Please <a href="/contact-us">contact</a> us or file or create a github <a href="https://github.com/apache/accumulo/issues">issue</a> if you have trouble with a
-specific version or wish to seek tips. Be prepared to provide details of the
-problems you encounter, as well as perform some troubleshooting steps of your
-own, in order to get the best response.</p>
+<p>These release notes are highlights of the changes since 2.0.0. The full
+detailed changes can be seen in the git history. If anything is missing from
+this list, please <a href="/contact-us">contact</a> us to have it included.</p>
 
 <h2 id="major-bug-fixes">Major Bug Fixes</h2>
 
 <ul>
-  <li>Update exceptions when permissions check fail <a href="https://github.com/apache/accumulo/pull/1828">#1828</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues/1828">#1828</a>, <a href="https://github.com/apache/accumulo/issues/1832">#1832</a> Throw exceptions when permission checks fail,
+and improve test coverage for permissions checks</li>
 </ul>
 
-<h2 id="bug-fixes">Bug Fixes</h2>
+<h3 id="other-bug-fixes">Other Bug Fixes</h3>
 
 <ul>
-  <li>Fix AccumuloClient builder by from modifying provided properties when building a client <a href="https://github.com/apache/accumulo/issues/1839">#1839</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues/1839">#1839</a> Fix AccumuloClient’s builder to prevent it from modifying a
+provided Properties object when building a client from Properties</li>
 </ul>
 
-<h2 id="other-miscellaneous-bug-fixes">Other Miscellaneous Bug Fixes</h2>
+<h2 id="note-about-newer-jdk-versions-11-and-later">Note About Newer JDK Versions (11 and later)</h2>
 
-<ul>
-  <li>Testing and build improvements.
-    <ul>
-      <li>Improved IT tests for auditing flush commands.</li>
-      <li>Improved PermissionsIT coverage.</li>
-    </ul>
-  </li>
-</ul>
+<p>While work has been done on other branches to better support newer JDK
+versions, that is not the case for this non-LTM release. Certain non-critical
+aspects of this release are known to break with some newer versions of JDK.</p>
+
+<p>For example, the version of <code class="language-plaintext highlighter-rouge">maven-javadoc-plugin</code> may fail to generate the
+javadocs using a newer JDK’s javadoc tool. In addition, this release assumes
+the use of the CMS garbage collector in its build tests and in minicluster.
+Newer JDKs, where CMS has been removed, may fail to execute Accumulo build
+tests in this release.</p>
+
+<p>Therefore, it is recommended to use JDK 8 or JDK 11 with this release, which
+are known to work.</p>
+
+<h2 id="note-about-zookeeper-versions-35-and-later">Note About ZooKeeper Versions 3.5 and Later</h2>
+
+<p>This release assumes the use of ZooKeeper 3.4. While work has been done on
+other branches to better support newer ZooKeeper versions (3.5 and later), this
+is a targeted release to fix specific bugs and does not include those kinds of
+improvements.</p>
+
+<p>Therefore, in order to use this release with ZooKeeper versions 3.5 and later,
+you may need to edit your default class path, or perform other minor changes to
+work smoothly with those versions of ZooKeeper. Please <a href="/contact-us">contact</a> us if you need
+assistance working with newer versions of ZooKeeper.</p>
 
 <h2 id="upgrading">Upgrading</h2>
 
 <p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="useful-links">Useful Links</h2>
+
+<ul>
+  <li><a href="https://lists.apache.org/thread.html/r0835b67240060cae394c7e4a7ad18a7238f17cabc7a508aa176c95c9%40%3Cdev.accumulo.apache.org%3E">Release VOTE email thread</a></li>
+  <li><a href="https://github.com/apache/accumulo/compare/rel/2.0.0...apache:rel/2.0.1">All Changes since 2.0.0</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F19">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+</ul>
 
 
 
