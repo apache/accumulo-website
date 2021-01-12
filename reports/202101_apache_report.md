@@ -13,7 +13,9 @@ The owner of http://www.accumulodata.com no longer has access to the email used 
 domain, and the registrar will not accept communications from alternate accounts.  Currently, the 
 domain is set to expire on 2021-06-28, and without access by the owner, should automatically expire.
 The Accumulo PMC is currently trying to determine if other actions are required. Initial emails are 
-at [1] and follow-up discussions at [4].
+at [1] and follow-up discussions at [4].  Advice received Brand Management VP suggested that 
+allowing the domain to expire in 6 months is a viable option and allows volunteer efforts to be put 
+towards better uses.  
 
 ## Membership Data:
 
@@ -32,14 +34,13 @@ Community changes, past quarter:
 
 ## Project Activity:
 
-- [CVE-2020-17533](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17533), authenticated 
-  users could perform certain administrative operations without having the appropriate permissions, 
-  was reported on 2020-12-09 and resolved with the accumulo-2.0.1 (2020-12-24) and accumulo-1.10.1 
-  (2020-12-22) releases.
-- GitHub activity summary over the past quarter (as of 2021-01-07) 
-  - 48 GitHub issues created / 44 issues closed.
-  - 120 GitHib PRs opened / 97 PRs closed.
-  - 145 commits from 18 committers.
+- [CVE-2020-17533](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-17533) was reported on 
+  2020-12-09 and resolved within 14 days.  The CVE concerned allowed authenticated users to perform 
+  certain administrative operations without having the appropriate permissions.
+- Project activity on the next release remains active with significant improvements to the current 
+  baseline. The remaining issues are being actively worked.
+- There is community interest in improving support for cloud computing platforms (AWS, Azure) and 
+  alternate files systems.  
 
 ## Community Health:
 
