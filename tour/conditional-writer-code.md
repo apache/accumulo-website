@@ -8,7 +8,7 @@ Below is a solution to the exercise.
   static boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
     try (ConditionalWriter writer = client.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
       Condition condition = new Condition("location", "home");
-      if(expectedAddr != null) {
+      if (expectedAddr != null) {
         condition.setValue(expectedAddr);
       }
       ConditionalMutation mutation = new ConditionalMutation(id, condition);
@@ -18,7 +18,6 @@ Below is a solution to the exercise.
       throw new RuntimeException(e);
     }
   }
-
 ```
 
 The following output shows running the example with a conditional writer.

@@ -1,7 +1,7 @@
 ---
 title: Data Model
 ---
-Data is stored in Accumulo in a distributed sorted map. The Keys of the map are broken up logically into a few different parts, 
+Data is stored in Accumulo in a distributed sorted map. The `Key`s of the map are broken up logically into a few different parts, 
 as seen in the image below.
 
 ![key value pair]({{ site.baseurl }}/images/docs/key_value.png)

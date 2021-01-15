@@ -18,12 +18,12 @@ version of Accumulo that runs on your local filesystem.  It should only be used 
 great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be seen in the `target/mac######` directory.
 
 3. Modify the _exercise_ method to print a hello message. You will put your code in this method for each lesson.
-    ```java
-    static void exercise(AccumuloClient client) {
-        // start writing your code here
-        System.out.println("Hello world");
-    }
-    ```
+```java
+  static void exercise(AccumuloClient client) {
+    // Write your code here
+    System.out.println("Hello world"); 
+  }
+```
 4. Use the following Maven command to build and run the tour.
 ```commandline
 mvn -q clean verify exec:exec
