@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 1.3.5-incubating</title>
+<title>Apache Accumulo 2.1.0</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -138,37 +138,61 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 1.3.5-incubating</h1>
+          <h1 class="title">Apache Accumulo 2.1.0</h1>
           
           
 
-<p>16 Dec 2011</p>
+<p>19 Jan 2020</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
-      
-        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
       
     
       
-        <li class="next"><a href="/release/accumulo-1.3.6/">Apache Accumulo 1.3.6&nbsp;&raquo;</a></li>
+        <li class="next"><a href="/release/accumulo-1.3.5-incubating/">Apache Accumulo 1.3.5-incubating&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
 
-
-
-<div class="alert alert-warning" role="alert">
-  <p>This version of Accumulo has been superceded by a newer version.</p>
-  <p>Please check <a class="alert-link" href="/release/">our release archive</a> for a newer version.</p>
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-2.0.1/">the latest release notes</a>.</p>
 </div>
 
 
-<p>Apache Accumulo 1.3.5-incubating is the first release of Accumulo containing <a href="https://github.com/apache/accumulo/blob/1.3.5/CHANGES">these changes</a>.</p>
 
-<p>Below are resources for this release:</p>
+<div class="alert alert-warning" role="alert">
+  <p>This version is not a <a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.</p>
+</div>
 
-<ul>
-  <li><a href="/1.3/user_manual/">User Manual</a> - In-depth developer and administrator documentation</li>
-</ul>
+
+<p>** DRAFT RELEASE NOTES **</p>
+
+<h2 id="notable-changes">Notable Changes</h2>
+
+<h3 id="fixed-gc-metadata-hotspots">Fixed GC Metadata hotspots</h3>
+
+<p>Prior to this release, Accumulo stored GC file candidates in the metadata table
+using rows of the form <code class="language-plaintext highlighter-rouge">~del&lt;URI&gt;</code>. This row schema lead to uneven load on
+the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> the row fromat was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
+even load on the metadata table and even data spread in the tablets. After
+upgrading, there may still be splits in the metadata table using the old row
+format. These splits can be merged away as shown in the example below which
+starts off with splits generated from the old and new row schema. The old
+splits with the prefix <code class="language-plaintext highlighter-rouge">~delhdfs</code> are merged away.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; getsplits -t accumulo.metadata 
+2&lt;
+~
+~del55
+~dela7
+~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000a0.rf
+~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000kb.rf
+root@uno&gt; merge -t accumulo.metadata -b ~delhdfs -e ~delhdfs~
+root@uno&gt; getsplits -t accumulo.metadata 
+2&lt;
+~
+~del55
+~dela7
+</code></pre></div></div>
 
 
 
@@ -177,11 +201,9 @@
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
-      
     
       
-        <li class="next"><a href="/release/accumulo-1.3.6/">Apache Accumulo 1.3.6&nbsp;&raquo;</a></li>
+        <li class="next"><a href="/release/accumulo-1.3.5-incubating/">Apache Accumulo 1.3.5-incubating&nbsp;&raquo;</a></li>
       
     </ul></nav>
 

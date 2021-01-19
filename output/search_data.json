@@ -334,6 +334,14 @@
     }
     ,
   
+    "release-accumulo-2-1-0": {
+      "title": "Apache Accumulo 2.1.0",
+      "content"	 : "** DRAFT RELEASE NOTES **Notable ChangesFixed GC Metadata hotspotsPrior to this release, Accumulo stored GC file candidates in the metadata tableusing rows of the form ~del&amp;lt;URI&amp;gt;. This row schema lead to uneven load onthe metadata table and metadata tablets that were eventually never used. In #1043 the row fromat was changed to ~del&amp;lt;hash(URI)&amp;gt;&amp;lt;URI&amp;gt; resulting ineven load on the metadata table and even data spread in the tablets. Afterupgrading, there may still be splits in the metadata table using the old rowformat. These splits can be merged away as shown in the example below whichstarts off with splits generated from the old and new row schema. The oldsplits with the prefix ~delhdfs are merged away.root@uno&amp;gt; getsplits -t accumulo.metadata 2&amp;lt;~~del55~dela7~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000a0.rf~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000kb.rfroot@uno&amp;gt; merge -t accumulo.metadata -b ~delhdfs -e ~delhdfs~root@uno&amp;gt; getsplits -t accumulo.metadata 2&amp;lt;~~del55~dela7",
+      "url": " /release/accumulo-2.1.0/",
+      "categories": "release"
+    }
+    ,
+  
     "blog-2019-12-16-accumulo-proxy-html": {
       "title": "Accumulo Clients in Other Programming Languages",
       "content"	 : "Apache Accumulo has an Accumulo Proxy that allows communication with Accumulo using clients writtenin languages other than Java. This blog post shows how to run the Accumulo Proxy process using Unoand communicate with Accumulo using a Python client.First, clone the Accumulo Proxy repository.git clone https://github.com/apache/accumulo-proxyAssuming you have Uno set up on your machine, configure uno.conf to start the Accumulo Proxyby setting the configuration below:export POST_RUN_PLUGINS=&quot;accumulo-proxy&quot;export PROXY_REPO=/path/to/accumulo-proxyRun the following command to set up Accumulo again. The Proxy will be started after Accumulo runs.uno setup accumuloAfter Accumulo is set up, you should see the following output from uno:Executing post run plugin: accumulo-proxyInstalling Accumulo Proxy at /path/to/fluo-uno/install/accumulo-proxy-2.0.0-SNAPSHOTAccumulo Proxy 2.0.0-SNAPSHOT is running    * view logs at /path/to/fluo-uno/install/logs/accumulo-proxy/Next, follow the instructions below to create a Python 2.7 client that creates an Accumulo tablenamed pythontest and writes data to it:mkdir accumulo-client/cd accumulo-client/pipenv --python 2.7pipenv install thriftpipenv install -e /path/to/accumulo-proxy/src/main/pythoncp /path/to/accumulo-proxy/src/main/python/basic_client.py .# Edit credentials if neededvim basic_client.pypipenv run python2 basic_client.pyVerify that the table was created or data was written using uno ashell or the Accumulo monitor.",
