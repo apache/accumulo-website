@@ -16,10 +16,10 @@ A `Scanner` by default will scan all `Key`s in a table but this can be inefficie
 scanner.setRange(new Range("id0000", "id0010"));  // returns rows from id0000 to id0010
 ```
 
-As your data grows larger, Accumulo will split tables into smaller pieces called `Tablet`s which can be distributed across multiple Tablet Servers.  
-By default, a table will get split into `Tablet`s on row boundaries, guaranteeing an entire row to be on one Tablet Server.  We have the ability to 
-tell Accumulo where to split tables by setting split points. This is done using `addSplits` in the [TableOperations] API.  The image below 
-demonstrates how Accumulo splits data.  
+As your data grows larger, Accumulo will split tables into smaller pieces called `Tablet`s which can be distributed across multiple Tablet Servers.
+By default, a table will get split into `Tablet`s on row boundaries, guaranteeing an entire row to be on one Tablet Server.  We have the ability to
+tell Accumulo where to split tables by setting split points. This is done using `addSplits` in the [TableOperations] API.  The image below
+demonstrates how Accumulo splits data.
 
 ![data distribution]({{ site.baseurl }}/images/docs/data_distribution.png)
 
@@ -32,8 +32,8 @@ Take a minute to learn these Accumulo terms:
 
 Knowing these terms are critical when working closely with Accumulo.  Iterators are especially unique and powerful.  More on them later.
 
-When working with large amounts of data across many 'Tablet Server's, a simple Scanner might not do the trick. Next lesson we learn about the power of 
-the multi-threaded `BatchScanner`!  
+When working with large amounts of data across many 'Tablet Server's, a simple Scanner might not do the trick. Next lesson we learn about the power of
+the multi-threaded `BatchScanner`!
 
 [Range]: {% jurl org.apache.accumulo.core.data.Range %}
 [TableOperations]: {% jurl org.apache.accumulo.core.client.admin.TableOperations %}

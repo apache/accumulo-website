@@ -1,7 +1,7 @@
 ---
 title: Data Model
 ---
-Data is stored in Accumulo in a distributed sorted map. The `Key`s of the map are broken up logically into a few different parts, 
+Data is stored in Accumulo in a distributed sorted map. The `Key`s of the map are broken up logically into a few different parts,
 as seen in the image below.
 
 ![key value pair]({{ site.baseurl }}/images/docs/key_value.png)
@@ -12,7 +12,7 @@ as seen in the image below.
 **Column Visibility** - Security label controlling access to the key/value pair.<br/>
 **Timestamp** - Generated automatically and used for versioning.
 
-The **value** is where the actual data is stored. For brevity, we often refer to the 3 parts of the column as the family, qualifier and visibility. 
+The **value** is where the actual data is stored. For brevity, we often refer to the 3 parts of the column as the family, qualifier and visibility.
 
 Take a closer look at the Mutation object created in the first exercise:
 ```java

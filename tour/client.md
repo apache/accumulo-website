@@ -18,7 +18,7 @@ Start by using table operations to list the default tables and instance operatio
   static void exercise(AccumuloClient client) throws Exception {
     for (String t : client.tableOperations().list())
       System.out.println("Table: " + t);
-     
+
     System.out.println("Instance ID: " + client.instanceOperations().getInstanceID());
 }
 ```

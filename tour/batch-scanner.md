@@ -1,7 +1,7 @@
 ---
 title: Batch Scanner
 ---
-Running on a single thread, a `Scanner` will retrieve a single `Range` of data and return `Key`s in sorted order. A [BatchScanner] 
+Running on a single thread, a `Scanner` will retrieve a single `Range` of data and return `Key`s in sorted order. A [BatchScanner]
 will retrieve multiple `Range`s of data using multiple threads.  A `BatchScanner` can be more efficient but does not guarantee `Key`s will be returned in sorted order.
 
 For this exercise, we need to generate a bunch of data to test BatchScanner.  Copy the code below into your _exercise_ method.
