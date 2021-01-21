@@ -37,7 +37,7 @@ changed since it was read.
 
 ```java
   static String getAddress(AccumuloClient client, String id) {
-    // The IsolatedScanner ensures partial changes to a row are not seen
+	// The IsolatedScanner ensures partial changes to a row are not seen
     try (Scanner scanner = new IsolatedScanner(client.createScanner("GothamPD", Authorizations.EMPTY))) {
       scanner.setRange(Range.exact(id, "location", "home"));
       for (Entry<Key,Value> entry : scanner) {
@@ -64,36 +64,34 @@ changed since it was read.
     return CompletableFuture.runAsync(() -> {
       String currAddr, newAddr;
       do {
-        currAddr = getAddress(client, id);
-        newAddr = modifier.apply(currAddr);
-        System.out.printf("Thread %3d attempting change %20s -> %-20s\n",
-            Thread.currentThread().getId(), "'"+currAddr+"'", "'"+newAddr+"'");
+       currAddr = getAddress(client, id);
+       newAddr = modifier.apply(currAddr);
+       System.out.printf("Thread %3d attempting change %20s -> %-20s\n",
+       Thread.currentThread().getId(), "'"+currAddr+"'", "'"+newAddr+"'");
       } while (!setAddress(client, id, currAddr, newAddr));
-    });
+    }
   }
 
   static void exercise(AccumuloClient client) throws Exception {
     client.tableOperations().create("GothamPD");
-
     String id = "id0001";
-
     setAddress(client, id, null, "  1007 Mountain Drive, Gotham, New York  ");
 
-    // create async operation to trim whitespace
+    // Create async operation to trim whitespace
     Future<Void> future1 = modifyAddress(client, id, String::trim);
 
-    // create async operation to replace Dr with Drive
+    // Create async operation to replace Dr with Drive
     Future<Void> future2 = modifyAddress(client, id, addr -> addr.replace("Drive", "Dr"));
 
-    // create async operation to replace New York with NY
+    // Create async operation to replace New York with NY
     Future<Void> future3 = modifyAddress(client, id, addr -> addr.replace("New York", "NY"));
 
-    // wait for async operations to complete
+    // Wait for async operations to complete
     future1.get();
     future2.get();
     future3.get();
 
-    // print the address stored in Accumulo
+    // Print the address stored in Accumulo
     System.out.println("Final address : '"+getAddress(client, id)+"'");
   }
 ```
