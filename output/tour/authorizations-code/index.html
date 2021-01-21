@@ -154,7 +154,7 @@
     <span class="c1">// Create a table called "GothamPD".</span>
     <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
 
-	<span class="c1">// Create a "secretId" authorization &amp; visibility</span>
+    <span class="c1">// Create a "secretId" authorization &amp; visibility</span>
     <span class="kd">final</span> <span class="nc">String</span> <span class="n">secretId</span> <span class="o">=</span> <span class="s">"secretId"</span><span class="o">;</span>
     <span class="nc">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Authorizations</span><span class="o">(</span><span class="n">secretId</span><span class="o">);</span>
     <span class="nc">ColumnVisibility</span> <span class="n">colVis</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnVisibility</span><span class="o">(</span><span class="n">secretId</span><span class="o">);</span>
@@ -188,14 +188,14 @@
       <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation3</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="c1">// Create a second client for the commissioner user and output all the rows visible to them.  </span>
+    <span class="c1">// Create a second client for the commissioner user and output all the rows visible to them.</span>
     <span class="c1">// Make sure to pass the proper authorizations.</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">commishClient</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">().</span><span class="na">from</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">properties</span><span class="o">()).</span><span class="na">as</span><span class="o">(</span><span class="s">"commissioner"</span><span class="o">,</span> <span class="s">"gordonrocks"</span><span class="o">).</span><span class="na">build</span><span class="o">())</span> <span class="o">{</span>
       <span class="nc">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">commishClient</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
-      <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span> 
-	    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
-	   <span class="o">}</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+      <span class="o">}</span>
     <span class="o">}</span>
   <span class="o">}</span>
 </code></pre></div></div>
