@@ -150,8 +150,8 @@
 <div id="tour-content">
   <p>Below is the solution for the exercise.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-    <span class="c1">// create a table called "GothamPD".</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="c1">// Create a table called "GothamPD".</span>
     <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
 
     <span class="c1">// Create a row for Batman</span>
@@ -175,23 +175,24 @@
     <span class="c1">// Create a BatchWriter to the GothamPD table and add your mutations to it.</span>
     <span class="c1">// Once the BatchWriter is closed by the try w/ resources, data will be available to scans.</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">))</span> <span class="o">{</span>
-        <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation1</span><span class="o">);</span>
-        <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation2</span><span class="o">);</span>
-        <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation3</span><span class="o">);</span>
+      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation1</span><span class="o">);</span>
+      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation2</span><span class="o">);</span>
+      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation3</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="c1">// Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">))</span> <span class="o">{</span>
-        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
-        <span class="c1">// A Scanner is an extension of java.lang.Iterable so behaves just like one.</span>
-        <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
-            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
 
+     <span class="c1">// Note: A Scanner is an extension of java.lang.Iterable so it will traverse through the table.</span>
+     <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
+       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+     <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+</code></pre></div></div>
 <p>The code above will print (timestamp will differ):</p>
+
 <pre><code class="language-commandline">Gotham Police Department Persons of Interest:
 Key : id0001 hero:alias [] 1511306370025 false            Value : Batman
 Key : id0001 hero:name [] 1511306370025 false             Value : Bruce Wayne

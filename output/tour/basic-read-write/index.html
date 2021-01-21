@@ -152,8 +152,8 @@
 data in tables and rows.  Each row in an Accumulo table can hold many key/value pairs. Our next exercise shows how to
 write and read from a table.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-    <span class="c1">// create a table called "GothamPD".</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="c1">// Create a table called "GothamPD".</span>
     <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
 
     <span class="c1">// Create a Mutation object to hold all changes to a row in a table.  Each row has a unique row ID.</span>
@@ -166,20 +166,20 @@ write and read from a table.</p>
 
     <span class="c1">// Create a BatchWriter to the GothamPD table and add your mutation to it. Try w/ resources will close for us.</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">))</span> <span class="o">{</span>
-        <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
+      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
     <span class="o">}</span>
-
     <span class="c1">// Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">))</span> <span class="o">{</span>
-        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
-        <span class="c1">// A Scanner is an extension of java.lang.Iterable so behaves just like one.</span>
-        <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
-            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
 
+      <span class="c1">// Note: A Scanner is an extension of java.lang.Iterable so it will traverse through the scanner's range.</span>
+      <span class="c1">// In this case, since no range was set on the Scanner, it will traverse the entire table.</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+</code></pre></div></div>
 <p>Copy this code into your <code class="language-plaintext highlighter-rouge">exercise</code> method then compile and run.</p>
 
 <p>Good job! That is all it takes to write and read from Accumulo.</p>
@@ -189,7 +189,7 @@ write and read from a table.</p>
 
 <h3 id="but-wait-i-thought-accumulo-was-all-about-security">But wait… I thought Accumulo was all about Security?</h3>
 
-<p>Spoiler Alert: it is!  Did you notice the <code class="language-plaintext highlighter-rouge">Authorizations.EMPTY</code> we passed in when creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a>?  The data
+<p>Spoiler Alert: It is!  Did you notice the <code class="language-plaintext highlighter-rouge">Authorizations.EMPTY</code> we passed in when creating a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.1/org/apache/accumulo/core/client/Scanner.html">Scanner</a>?  The data
 we created in this first lesson was not secured with Authorizations so the Scanner didn’t require any Authorizations 
 to read it.  More to come later in the <a href="/tour/authorizations">Authorizations</a> lesson!</p>
 

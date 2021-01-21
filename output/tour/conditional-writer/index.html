@@ -186,7 +186,7 @@ is the batch writer always makes the update, even when the value has
 changed since it was read.</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="nc">String</span> <span class="nf">getAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// The IsolatedScanner ensures partial changes to a row are not seen</span>
+	<span class="c1">// The IsolatedScanner ensures partial changes to a row are not seen</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IsolatedScanner</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">)))</span> <span class="o">{</span>
       <span class="n">scanner</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="nc">Range</span><span class="o">.</span><span class="na">exact</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">));</span>
       <span class="k">for</span> <span class="o">(</span><span class="nc">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
@@ -213,36 +213,34 @@ changed since it was read.</p>
     <span class="k">return</span> <span class="nc">CompletableFuture</span><span class="o">.</span><span class="na">runAsync</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
       <span class="nc">String</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">;</span>
       <span class="k">do</span> <span class="o">{</span>
-        <span class="n">currAddr</span> <span class="o">=</span> <span class="n">getAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
-        <span class="n">newAddr</span> <span class="o">=</span> <span class="n">modifier</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">currAddr</span><span class="o">);</span>
-        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Thread %3d attempting change %20s -&gt; %-20s\n"</span><span class="o">,</span>
-            <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getId</span><span class="o">(),</span> <span class="s">"'"</span><span class="o">+</span><span class="n">currAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">+</span><span class="n">newAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">);</span>
+       <span class="n">currAddr</span> <span class="o">=</span> <span class="n">getAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+       <span class="n">newAddr</span> <span class="o">=</span> <span class="n">modifier</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">currAddr</span><span class="o">);</span>
+       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Thread %3d attempting change %20s -&gt; %-20s\n"</span><span class="o">,</span>
+       <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getId</span><span class="o">(),</span> <span class="s">"'"</span><span class="o">+</span><span class="n">currAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">+</span><span class="n">newAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">);</span>
       <span class="o">}</span> <span class="k">while</span> <span class="o">(!</span><span class="n">setAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">));</span>
-    <span class="o">});</span>
+    <span class="o">}</span>
   <span class="o">}</span>
 
   <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
     <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
-
     <span class="nc">String</span> <span class="n">id</span> <span class="o">=</span> <span class="s">"id0001"</span><span class="o">;</span>
-
     <span class="n">setAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="s">"  1007 Mountain Drive, Gotham, New York  "</span><span class="o">);</span>
 
-    <span class="c1">// create async operation to trim whitespace</span>
+    <span class="c1">// Create async operation to trim whitespace</span>
     <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future1</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="nl">String:</span><span class="o">:</span><span class="n">trim</span><span class="o">);</span>
 
-    <span class="c1">// create async operation to replace Dr with Drive</span>
+    <span class="c1">// Create async operation to replace Dr with Drive</span>
     <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future2</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"Drive"</span><span class="o">,</span> <span class="s">"Dr"</span><span class="o">));</span>
 
-    <span class="c1">// create async operation to replace New York with NY</span>
+    <span class="c1">// Create async operation to replace New York with NY</span>
     <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future3</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"New York"</span><span class="o">,</span> <span class="s">"NY"</span><span class="o">));</span>
 
-    <span class="c1">// wait for async operations to complete</span>
+    <span class="c1">// Wait for async operations to complete</span>
     <span class="n">future1</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
     <span class="n">future2</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
     <span class="n">future3</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
 
-    <span class="c1">// print the address stored in Accumulo</span>
+    <span class="c1">// Print the address stored in Accumulo</span>
     <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Final address : '"</span><span class="o">+</span><span class="n">getAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">)+</span><span class="s">"'"</span><span class="o">);</span>
   <span class="o">}</span>
 </code></pre></div></div>

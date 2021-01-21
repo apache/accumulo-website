@@ -153,7 +153,7 @@
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">,</span> <span class="nc">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="nc">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">try</span> <span class="o">(</span><span class="nc">ConditionalWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createConditionalWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ConditionalWriterConfig</span><span class="o">()))</span> <span class="o">{</span>
       <span class="nc">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Condition</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">);</span>
-      <span class="k">if</span><span class="o">(</span><span class="n">expectedAddr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">expectedAddr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">condition</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expectedAddr</span><span class="o">);</span>
       <span class="o">}</span>
       <span class="nc">ConditionalMutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConditionalMutation</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">condition</span><span class="o">);</span>
@@ -163,7 +163,6 @@
       <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
     <span class="o">}</span>
   <span class="o">}</span>
-
 </code></pre></div></div>
 
 <p>The following output shows running the example with a conditional writer.
