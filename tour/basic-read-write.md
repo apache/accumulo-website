@@ -38,14 +38,14 @@ Copy this code into your `exercise` method then compile and run.
 
 Good job! That is all it takes to write and read from Accumulo.
 
-Notice a lot of other information was printed from the Keys we created. Accumulo is flexible because hidden within its 
+Notice a lot of other information was printed from the Keys we created. Accumulo is flexible because hidden within its
 [Key] is a rich data model that can be broken up into different parts.  We will cover the [Data Model][dmodel] in the next lesson.
 
 ### But wait... I thought Accumulo was all about Security?
 
 Spoiler Alert: It is!  Did you notice the `Authorizations.EMPTY` we passed in when creating a [Scanner]?  The data
-we created in this first lesson was not secured with Authorizations so the Scanner didn't require any Authorizations 
-to read it.  More to come later in the [Authorizations][auths] lesson! 
+we created in this first lesson was not secured with Authorizations so the Scanner didn't require any Authorizations
+to read it.  More to come later in the [Authorizations][auths] lesson!
 
 [dmodel]: /tour/data-model
 [auths]: /tour/authorizations

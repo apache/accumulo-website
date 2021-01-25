@@ -44,6 +44,7 @@ $(function() {
 | jmanno        | [Jeffrey Manno](https://github.com/Manno15)       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
+| knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]|
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
@@ -120,7 +121,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Joseph Koshakow     |                                                                   | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
-| Karthick Narendran  | [Microsoft][MICROSOFT]                                            | [BST][BST]            |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |

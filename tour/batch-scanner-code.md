@@ -23,20 +23,20 @@ Below is a solution to the exercise.
     try (BatchScanner batchScanner = client.createBatchScanner("GothamPD", Authorizations.EMPTY, 5)) {
 
       // 2. Create a collection of 2 sample ranges and set it to the batchScanner
-  	  List<Range>ranges = new ArrayList<Range>();
-  	  ranges.add(new Range("id1000", "id1999"));
-  	  ranges.add(new Range("id9000", "id9999"));
-  	  batchScanner.setRanges(ranges);
+      List<Range>ranges = new ArrayList<Range>();
+      ranges.add(new Range("id1000", "id1999"));
+      ranges.add(new Range("id9000", "id9999"));
+      batchScanner.setRanges(ranges);
 
-  	  // 3. Fetch just the columns we want
-  	  batchScanner.fetchColumn(new Text("villain"), new Text("yearsOfService"));
+      // 3. Fetch just the columns we want
+      batchScanner.fetchColumn(new Text("villain"), new Text("yearsOfService"));
 
-  	  // 4. Calculate average years of service
-  	  Long totalYears = 0L;
-  	  Long entriesRead = 0L;
-  	  for (Map.Entry<Key, Value> entry : batchScanner) {
-  	    totalYears += Long.valueOf(entry.getValue().toString());
-  	    entriesRead++;
+      // 4. Calculate average years of service
+      Long totalYears = 0L;
+      Long entriesRead = 0L;
+      for (Map.Entry<Key, Value> entry : batchScanner) {
+        totalYears += Long.valueOf(entry.getValue().toString());
+        entriesRead++;
       }
       System.out.println("The average years of service of " + entriesRead + " villains is " + totalYears / entriesRead);
     }

@@ -21,7 +21,7 @@ great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be see
 ```java
   static void exercise(AccumuloClient client) {
     // Write your code here
-    System.out.println("Hello world"); 
+    System.out.println("Hello world");
   }
 ```
 4. Use the following Maven command to build and run the tour.

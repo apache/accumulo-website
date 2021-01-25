@@ -43,14 +43,14 @@ Below is a solution for the exercise.
       writer.addMutation(mutation3);
     }
 
-    // Create a second client for the commissioner user and output all the rows visible to them.  
+    // Create a second client for the commissioner user and output all the rows visible to them.
     // Make sure to pass the proper authorizations.
     try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties()).as("commissioner", "gordonrocks").build()) {
       Scanner scan = commishClient.createScanner("GothamPD", auths);
       System.out.println("Gotham Police Department Persons of Interest:");
-      for (Map.Entry<Key, Value> entry : scan) { 
-	    System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
-	   }
+      for (Map.Entry<Key, Value> entry : scan) {
+        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
+      }
     }
   }
 ```
