@@ -14,10 +14,12 @@ The properties used to create the client can be seen in ```accumulo-client.prope
 Notice the client can be wrapped in a Java try-with-resources since it is AutoCloseable.
 
 Start by using table operations to list the default tables and instance operations to get the instance ID.
+
 ```java
   static void exercise(AccumuloClient client) throws Exception {
     for (String t : client.tableOperations().list())
       System.out.println("Table: " + t);
+
     System.out.println("Instance ID: " + client.instanceOperations().getInstanceID());
 }
 ```

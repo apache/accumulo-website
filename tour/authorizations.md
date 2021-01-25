@@ -1,6 +1,7 @@
 ---
 title: Authorizations
 ---
+
 [Authorizations] are a set of `String`s that enable a user to read protected data. Users are granted authorizations
 and choose which ones to use when scanning a table. The chosen authorizations are evaluated against the [ColumnVisibility]
 of each Accumulo key in the scan. If the boolean expression of the ColumnVisibility evaluates to true, the data will be
