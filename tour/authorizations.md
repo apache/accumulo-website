@@ -15,7 +15,7 @@ For example:
 
 We now want to secure our secret identities of the heroes so that only users with the proper authorizations can read their names.
 
-1\. Using the code from the previous exercise, add the following to the beginning of the _exercise_ method.
+1. Using the code from the previous exercise, add the following to the beginning of the _exercise_ method.
 
   ```java
   // Create a "secretId" authorization & visibility
