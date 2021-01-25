@@ -28,24 +28,24 @@ We now want to secure our secret identities of the heroes so that only users wit
   client.securityOperations().changeUserAuthorizations("commissioner", auths);
   client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
   ```
-2\. The [Mutation] API allows you to set the `secretId` visibility on a column. Find the proper method for setting a column visibility in
+2. The [Mutation] API allows you to set the `secretId` visibility on a column. Find the proper method for setting a column visibility in
 the Mutation API and modify the code so the `colVis` variable created above secures the "name" columns.
 
-3\. Build and run.  What data do you see?
+3. Build and run.  What data do you see?
 * You should see all of the data except the secret identities of Batman and Robin. This is because the `Scanner` was created from the root user which doesn't have the `secretId` authorization.
 * Replace the `Authorizations.EMPTY` in the Scanner with the `auths` variable created above and run it again.
 * This should result in an error since the root user doesn't have the authorizations we tried to pass to the Scanner.
 
-4\. Use the following to create a client for the "commissioner" using the [Accumulo] entry point.
+4. Use the following to create a client for the "commissioner" using the [Accumulo] entry point.
 
 ```java
   try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties()).as("commissioner", "gordonrocks").build()) {
     // Insert your code here
   }
 ```
-5\. Using the commissioner client, create a Scanner with the authorizations needed to view the secret identities.
+5. Using the commissioner client, create a Scanner with the authorizations needed to view the secret identities.
 
-6\. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
+6. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
 
 ```commandline
 Key : id0001 hero:name [secretId] 1511900180231 false         Value : Bruce Wayne
