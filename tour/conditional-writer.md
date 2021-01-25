@@ -37,7 +37,7 @@ changed since it was read.
 
 ```java
   static String getAddress(AccumuloClient client, String id) {
-	// The IsolatedScanner ensures partial changes to a row are not seen
+    // The IsolatedScanner ensures partial changes to a row are not seen
     try (Scanner scanner = new IsolatedScanner(client.createScanner("GothamPD", Authorizations.EMPTY))) {
       scanner.setRange(Range.exact(id, "location", "home"));
       for (Entry<Key,Value> entry : scanner) {
