@@ -85,6 +85,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Christian Rohling   | [Endgame][ENDGAME]                                                | [ET][ET]              |
 | Craig Scheiderer    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Damon Brown         | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
+| Dane Magbuhos       |                                                                   | [ET][ET]              |
 | Dave Wang           | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | David M. Lyle       |                                                                   |                       |
 | David Protzman      |                                                                   |                       |

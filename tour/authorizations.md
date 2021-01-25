@@ -1,7 +1,6 @@
 ---
 title: Authorizations
 ---
-
 [Authorizations] are a set of `String`s that enable a user to read protected data. Users are granted authorizations
 and choose which ones to use when scanning a table. The chosen authorizations are evaluated against the [ColumnVisibility]
 of each Accumulo key in the scan. If the boolean expression of the ColumnVisibility evaluates to true, the data will be
@@ -28,7 +27,17 @@ We now want to secure our secret identities of the heroes so that only users wit
   client.securityOperations().changeUserAuthorizations("commissioner", auths);
   client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
 ```
+  ```java
+  // Create a "secretId" authorization & visibility
+  final String secretId = "secretId";
+  Authorizations auths = new Authorizations(secretId);
+  ColumnVisibility colVis = new ColumnVisibility(secretId);
 
+  // Create a user with the "secretId" authorization and grant him read permissions on our table
+  client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
+  client.securityOperations().changeUserAuthorizations("commissioner", auths);
+  client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
+  ```
 2. The [Mutation] API allows you to set the `secretId` visibility on a column. Find the proper method for setting a column visibility in
 the Mutation API and modify the code so the `colVis` variable created above secures the "name" columns.
 
@@ -38,15 +47,16 @@ the Mutation API and modify the code so the `colVis` variable created above secu
 * This should result in an error since the root user doesn't have the authorizations we tried to pass to the Scanner.
 
 4. Use the following to create a client for the "commissioner" using the [Accumulo] entry point.
+
 ```java
   try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties()).as("commissioner", "gordonrocks").build()) {
     // Insert your code here
   }
 ```
-
 5. Using the commissioner client, create a Scanner with the authorizations needed to view the secret identities.
 
 6. Build and run.  You should see all the rows in the GothamPD table printed, including these secured key/value pairs:
+
 ```commandline
 Key : id0001 hero:name [secretId] 1511900180231 false         Value : Bruce Wayne
 Key : id0002 hero:name [secretId] 1511900180231 false         Value : Dick Grayson
