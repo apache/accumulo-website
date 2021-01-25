@@ -9,7 +9,7 @@ Below is a solution for the exercise.
     // Create a table called "GothamPD".
     client.tableOperations().create("GothamPD");
 
-	// Create a "secretId" authorization & visibility
+    // Create a "secretId" authorization & visibility
     final String secretId = "secretId";
     Authorizations auths = new Authorizations(secretId);
     ColumnVisibility colVis = new ColumnVisibility(secretId);
