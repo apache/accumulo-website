@@ -168,11 +168,46 @@
 
 <h2 id="notable-changes">Notable Changes</h2>
 
+<h3 id="compaction-changes">Compaction Changes</h3>
+
+<p>Significant changes were made to how Accumulo compacts files in this release.  See 
+<a href="/docs/2.x/administration/compaction">compaction </a> for details, below are some highlights.</p>
+
+<ul>
+  <li>Multiple concurrent compactions per tablet on disjoint files is now
+supported.  Previously only a single compaction could run on a tablet.  This
+allows tablets that are running long compactions on large files to
+concurrently compact new smaller files that arrive.</li>
+  <li>Multiple compaction thread pools per tablet server are now supported.
+Previously only a single thread pool existed within a tablet server for
+compactions.  With a single thread pool, if all threads are working on long
+compactions it can starve quick compactions.  Now compactions with little
+data can be processed by dedicated thread pools.</li>
+  <li>Accumulo’s default algorithm for selecting files to compact was modified to
+select the smallest set of files that meet the compaction ratio criteria
+instead of the largest set.  This change makes tablets more aggressive about
+reducing their number files while still doing logarithmic compaction work.
+This change also enables efficiently compacting new small files that arrive
+during a long running compaction.</li>
+  <li>Having dedicated compaction threads pools for tables is now supported
+through configuration.  The default configuration for Accumulo sets up
+dedicated thread pools for compacting the Accumulo metadata table.</li>
+  <li>Merging minor compactions were dropped.  These were added to Accumulo to
+address the problem of new files arriving while a long running compaction
+was running.  Merging minor compactions could cause O(N^2) compaction work.
+The new compaction changes in this release can satisfy this use case while
+doing a logarithmic amount of work.</li>
+</ul>
+
+<p>CompactionStrategy was deprecated in favor of new public APIs.
+See its <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a> 
+for more information.</p>
+
 <h3 id="fixed-gc-metadata-hotspots">Fixed GC Metadata hotspots</h3>
 
 <p>Prior to this release, Accumulo stored GC file candidates in the metadata table
 using rows of the form <code class="language-plaintext highlighter-rouge">~del&lt;URI&gt;</code>. This row schema lead to uneven load on
-the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> the row fromat was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
+the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> the row format was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
 even load on the metadata table and even data spread in the tablets. After
 upgrading, there may still be splits in the metadata table using the old row
 format. These splits can be merged away as shown in the example below which
