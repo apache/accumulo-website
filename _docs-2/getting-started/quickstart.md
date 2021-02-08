@@ -1,22 +1,29 @@
 ---
-title: Quick Start
+title: Setup
 category: getting-started
 order: 1
+skip_doc_h1: true
 ---
+# User Manual (2.x)
 
-This quick start provides basic instructions for installing and running Accumulo. For detailed instructions,
-see the [in-depth installation guide][in-depth].
+Starting with Accumulo 2.0, the user manual now lives on the website as a series of web pages. Previously, it was one large 
+pdf document that was only generated during a release. The user manual can now be updated very quickly and indexed 
+for searching across many webpages.
 
-## Consider using automated tools
+The manual can now be 
+searched using the [Search link][search] at the top of the website or navigated by clicking the links to the left. If you are new 
+to Accumulo, follow the instructions below to get started.  For detailed instructions, see the [in-depth installation guide][in-depth].
+
+## Setup for testing or development
 
 If you are setting up Accumulo for **testing or development,** consider using the following tools:
 
 * [Uno] sets up Accumulo on a single machine for development
 * [Muchos] sets up Accumulo on a cluster (optionally launched in Amazon EC2 and Microsoft Azure VM)
 
-If you are setting up Accumulo for a **production** environment, follow the instructions in this quick start.
+If you are setting up Accumulo for a **production** environment, follow the instructions below.
 
-## Install Accumulo
+## Setup for Production
 
 Either [download] or [build] a binary distribution of Accumulo from source code and
 unpack as follows.
@@ -200,6 +207,7 @@ When finished, use the following commands to stop Accumulo:
 * Stop Accumulo service: `accumulo-service tserver stop`
 * Stop Accumulo cluster: `accumulo-cluster stop`
 
+[search]: {{ site.baseurl }}/search
 [in-depth]: {% durl administration/in-depth-install %}
 [download]: {{ site.baseurl }}/downloads
 [build]: https://github.com/apache/accumulo/blob/main/README.md#building
