@@ -4,12 +4,12 @@ category: administration
 order: 7
 ---
 
-## Upgrading from 2.0.x to 2.1
+## Upgrading from 1.10.x or 2.0.x to 2.1
 
-The recommended way to upgrade from a prior 2.0.x release is to stop Accumulo, upgrade to 2.1 and
-then start 2.1. To upgrade from a release prior to 2.0, follow the [below steps](#upgrading-from-189-to-20)
-to upgrade to 2.0 and then perform the upgrade to 2.1. A direct upgrade from releases prior to 2.0
-has not been tested.
+The recommended way to upgrade from a prior 1.10.x or 2.0.x release is to stop Accumulo, upgrade
+to 2.1 and then start 2.1. To upgrade from a release prior to 1.10, follow the
+[below steps](#upgrading-from-189-to-20) to upgrade to 2.0 and then perform the upgrade to 2.1. A
+direct upgrade from releases prior to 1.10 has not been tested.
 
 ### Rename master Properties, Config Files, and Script References
 
@@ -29,7 +29,6 @@ after installing 2.1 but before starting it.
 ```
 ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
 ```
-
 
 ## Upgrading from 1.8/9 to 2.0
 
