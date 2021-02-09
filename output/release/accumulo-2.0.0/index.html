@@ -327,6 +327,21 @@ However, it will break any code that was relying on the undocumented and broken
 behavior to compare <code class="language-plaintext highlighter-rouge">Value</code> objects with byte arrays. Such comparisons will now
 always return <code class="language-plaintext highlighter-rouge">false</code> instead of <code class="language-plaintext highlighter-rouge">true</code>, even if the contents are equal.</p>
 
+<h3 id="removed-default-dynamic-reloading-classpath-directory-libext">Removed default dynamic reloading classpath directory (lib/ext)</h3>
+
+<p>In <a href="https://github.com/apache/accumulo/issues/1179">#1179</a>, the default directory for dynamic class reloading (lib/ext)
+was removed and the default value for the deprecated property
+<code class="language-plaintext highlighter-rouge">general.dynamic.classpaths</code> was set to blank. This was done as part of a plan
+to phase out class loading behaviors that are tightly coupled to Accumulo, in
+favor of more user-pluggable class loading features that are easier to maintain
+separately from Accumulo’s core code.</p>
+
+<p>To continue to use this feature until it is removed, you must set this property
+to a value. However, it is recommended to add your non-dynamic user class paths
+to the <code class="language-plaintext highlighter-rouge">CLASSPATH</code> environment in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> instead, or to leverage the
+per-table context class paths feature, depending on your use case. For
+reference, the previous default value was <code class="language-plaintext highlighter-rouge">$ACCUMULO_HOME/lib/ext/[^.].*.jar</code>.</p>
+
 <h3 id="other-notable-changes">Other Notable Changes</h3>
 
 <ul>
