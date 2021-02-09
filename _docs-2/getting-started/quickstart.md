@@ -14,6 +14,12 @@ The manual can now be
 searched using the [Search link][search] at the top of the website or navigated by clicking the links to the left. If you are new 
 to Accumulo, follow the instructions below to get started.  For detailed instructions, see the [in-depth installation guide][in-depth].
 
+## Master/Manager naming
+
+As of release 2.1, all references to "master" have been changed to "manager." If you are using/installing
+a release prior to 2.1, substitute "master" in place of "manager" for any property name, file name, or
+process name referenced in this documentation.
+
 ## Setup for testing or development
 
 If you are setting up Accumulo for **testing or development,** consider using the following tools:
@@ -53,7 +59,7 @@ properly for Accumulo. Please see the [Erasure Coding guide][ec-guide] for more 
 The primary configuration files for Accumulo are [accumulo.properties], [accumulo-env.sh],
 and [accumulo-client.properties] which are located in the `conf/` directory.
 
-The [accumulo.properties] file configures Accumulo server processes (i.e. tablet server, master,
+The [accumulo.properties] file configures Accumulo server processes (i.e. tablet server, manager,
 monitor, etc). Follow these steps to set it up:
 
 1. Run `accumulo-util build-native` to build native code.  If this command fails, disable
@@ -87,7 +93,7 @@ The [accumulo-env.sh] file sets up environment variables needed by Accumulo:
     | Yes     | -Xmx384m -Xms384m | -Xmx768m -Xms768m | -Xmx1536m -Xms1536m | -Xmx2g -Xms2g |
     | No      | -Xmx512m -Xms512m | -Xmx1g -Xms1g     | -Xmx2g -Xms2g       | -Xmx3g -Xms3g |
 
-3. (Optional) Review the memory settings for the Accumulo master, garbage collector, and monitor
+3. (Optional) Review the memory settings for the Accumulo manager, garbage collector, and monitor
    in the `JAVA_OPTS` section of [accumulo-env.sh].
 
 The [accumulo-client.properties] file is used by the Accumulo shell and can be passed to Accumulo
@@ -135,7 +141,7 @@ Each method above has instructions below.
 
 ### Run Accumulo processes
 
-Start Accumulo processes (tserver, master, monitor, etc) using command below:
+Start Accumulo processes (tserver, manager, monitor, etc) using command below:
 
     accumulo tserver
 
@@ -143,7 +149,7 @@ The process will run in the foreground. Use ctrl-c to quit.
 
 ### Run Accumulo services
 
-Start Accumulo services (tserver, master, monitor, etc) using command below:
+Start Accumulo services (tserver, manager, monitor, etc) using command below:
 
     accumulo-service tserver start
 
@@ -154,7 +160,7 @@ to be created. Use the command below to create them:
 
     accumulo-cluster create-config
 
-This creates five files ([masters], [gc], [monitor], [tservers], & [tracers])
+This creates five files ([managers], [gc], [monitor], [tservers], & [tracers])
 in the `conf/` directory that contain the node names where Accumulo services
 are run on your cluster. By default, all files are configured to `localhost`. If
 you are running a single-node Accumulo cluster, these files do not need to be
@@ -165,7 +171,7 @@ changed and the next section should be skipped.
 If you are running an Accumulo cluster on multiple nodes, the following files
 in `conf/` should be configured with a newline separated list of node names:
 
- * [masters] : Accumulo primary coordinating process. Must specify one node. Can
+ * [managers] : Accumulo primary coordinating process. Must specify one node. Can
                specify a few for fault tolerance.
  * [gc]      : Accumulo garbage collector. Must specify one node. Can specify a
                few for fault tolerance.
@@ -221,7 +227,7 @@ When finished, use the following commands to stop Accumulo:
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
 [monitor]: {% durl configuration/files#monitor %}
-[masters]: {% durl configuration/files#masters %}
+[managers]: {% durl configuration/files#managers %}
 [tservers]: {% durl configuration/files#tservers %}
 [tracers]: {% durl configuration/files#tracers %}
 [Uno]: https://github.com/apache/fluo-uno
