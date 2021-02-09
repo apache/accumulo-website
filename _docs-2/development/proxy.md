@@ -13,7 +13,7 @@ without requiring access to all tablet servers in the cluster.
 ## Prerequisites
 
 The proxy server can live on any node in which the basic client API would work. That
-means it must be able to communicate with the Master, ZooKeepers, NameNode, and the
+means it must be able to communicate with the Manager, ZooKeepers, NameNode, and the
 DataNodes. A proxy client only needs the ability to communicate with the proxy server.
 
 ## Running the Proxy Server
