@@ -145,9 +145,9 @@
 <p>19 Jan 2020</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-    
+        <li class="previous"><a href="/release/accumulo-2.0.1/">&laquo;&nbsp;Apache Accumulo 2.0.1</a></li>
       
-        <li class="next"><a href="/release/accumulo-1.3.5-incubating/">Apache Accumulo 1.3.5-incubating&nbsp;&raquo;</a></li>
+    
       
     </ul></nav>
 
@@ -165,6 +165,14 @@
 
 
 <p>** DRAFT RELEASE NOTES **</p>
+
+<h2 id="binary-incompatibility">Binary Incompatibility</h2>
+
+<p>This release is known to be incompatible with prior versions of the client
+libraries. That is, the 2.0.0 or 2.0.1 version of the client libraries will not
+be able to communicate with a 2.1.0 or later installaction of Accumulo, nor will
+the 2.1.0 or later version of the client libraries communicate with a 2.0.1 or
+earlier installation.</p>
 
 <h2 id="notable-changes">Notable Changes</h2>
 
@@ -229,6 +237,75 @@ root@uno&gt; getsplits -t accumulo.metadata
 ~dela7
 </code></pre></div></div>
 
+<h3 id="master-renamed-to-manager">Master Renamed to Manager</h3>
+
+<p>In order to support more inclusive language in our code, the Accumulo team has
+renamed all references to the word “master” to “manager” (with the exception
+of deprecated classes and packages retained for compatibility). This change
+includes the master process, configuration properties with master in the name,
+utilities with master in the name, and packages/classes in the code base. Where
+these changes affect the public API, the deprecated “master” name will still be
+supported until at least Accumulo 3.0.</p>
+
+<blockquote>
+  <p><strong>Important</strong>
+  One particular change to be aware of is that certain state for the manager
+  process is stored in ZooKeeper, previously in under a directory named
+  <code class="language-plaintext highlighter-rouge">masters</code>. This directory has been renamed to <code class="language-plaintext highlighter-rouge">managers</code>, and the upgrade
+  will happen automatically if you launch Accumulo using the provided scripts.
+  However, if you do not use the built in scripts (e.g., accumulo-cluster or
+  accumulo-service), then you will need to perform a one-time upgrade of the
+  ZooKeeper state by executing the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility:</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
+</code></pre></div>  </div>
+</blockquote>
+
+<p>Some other specific examples of these changes include:</p>
+
+<ul>
+  <li>All configuration properties starting with <code class="language-plaintext highlighter-rouge">master.</code> have been renamed to
+start with <code class="language-plaintext highlighter-rouge">manager.</code> instead. The <code class="language-plaintext highlighter-rouge">master.*</code> property names in the site
+configuration file (or passed on the command-line) are converted internally
+to the new name, and a warning is printed. However, the old name can still be
+used until at least the 3.0 release of Accumulo. Any <code class="language-plaintext highlighter-rouge">master.*</code> properties
+that have been set in ZooKeeper will be automatically converted to the new
+<code class="language-plaintext highlighter-rouge">manager.*</code> name when Accumulo is upgraded. The old property names can still
+be used by the <code class="language-plaintext highlighter-rouge">config</code> shell command or via the methods accessible via
+<code class="language-plaintext highlighter-rouge">AccumuloClient</code>, but a warning will be generated when the old names are
+used. You are encouraged to update all references to <code class="language-plaintext highlighter-rouge">master</code> in your site
+configuration files to <code class="language-plaintext highlighter-rouge">manager</code> when installing Accumulo 2.1.</li>
+  <li>The tablet balancers in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer</code>
+package have all been relocated to <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer</code>.
+DefaultLoadBalancer has been also renamed to SimpleLoadBalancer along with
+the move. The default balancer has been updated from
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TableLoadBalancer</code> to
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TableLoadBalancer</code>, and the
+default per-table balancer has been updated from
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.DefaultLoadBalancer</code> to
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.SimpleLoadBalancer</code>. If you have
+customized the tablet balancer configuration, you are strongly encouraged to
+update your configuration to reference the updated balancer names. If you
+written a custom tablet balancer, it should be updated to implement the new
+interface <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TabletBalancer</code>
+rather than extending the deprecated abstract
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TabletBalancer</code>.</li>
+  <li>The configuration file <code class="language-plaintext highlighter-rouge">masters</code> for identifying the manager host(s) has been
+deprecated. If this file is found, a warning will be printed. The replacement
+file <code class="language-plaintext highlighter-rouge">managers</code> should be used (i.e., rename your masters file to managers)
+instead.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">master</code> argument to the <code class="language-plaintext highlighter-rouge">accumulo-service</code> script has been deprecated,
+and the replacement <code class="language-plaintext highlighter-rouge">manager</code> argument should be used instead.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-master</code> argument to the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.util.ZooZap</code>
+utility has been deprecated and the replacement <code class="language-plaintext highlighter-rouge">-manager</code> argument should be
+used instead.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">GetMasterStats</code> utility has been renamed to <code class="language-plaintext highlighter-rouge">GetManagerStats</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">org.apache.accumulo.master.state.SetGoalState</code> is deprecated, and any custom
+scripts that invoke this utility should be updated to call
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.manager.state.SetGoalState</code> instead.</li>
+  <li><code class="language-plaintext highlighter-rouge">masterMemory</code> in <code class="language-plaintext highlighter-rouge">minicluster.properties</code> has been deprecated and
+<code class="language-plaintext highlighter-rouge">managerMemory</code> should be used instead in any <code class="language-plaintext highlighter-rouge">minicluster.properties</code> files
+you have configured.</li>
+</ul>
 
 
 <hr>
@@ -236,9 +313,9 @@ root@uno&gt; getsplits -t accumulo.metadata
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-    
+        <li class="previous"><a href="/release/accumulo-2.0.1/">&laquo;&nbsp;Apache Accumulo 2.0.1</a></li>
       
-        <li class="next"><a href="/release/accumulo-1.3.5-incubating/">Apache Accumulo 1.3.5-incubating&nbsp;&raquo;</a></li>
+    
       
     </ul></nav>
 
