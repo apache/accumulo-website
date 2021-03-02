@@ -41,17 +41,17 @@ There are short-circuits along this path when compactions are already queued for
 
 The CompactionManager operates on the set of online tablets hosted by the TabletServer. The CompactionManager contains a set of CompactionServices where each CompactionService is initialized with a CompactionPlanner class name, read and write rates, and other options using the following properties:
 
-  * *tserver.compaction.major.service.<service>.planner*: the fully qualified CompactionPlanner implementation class name for the service <service>.
+  * `tserver.compaction.major.service.<service>.planner`: the fully qualified CompactionPlanner implementation class name for the service `<service>`.
 
-  * *tserver.compaction.major.service.<service>.rate.limit*: maximum number of bytes to read or write per second for all compactions in this service.
+  * `tserver.compaction.major.service.<service>.rate.limit`: maximum number of bytes to read or write per second for all compactions in this service.
 
-  * *tserver.compaction.major.service.<service>.planner.opts.**: other properties used to configure the planner.
+  * `tserver.compaction.major.service.<service>.planner.opts.*`: other properties used to configure the planner.
 
 
 The DefaultCompactionPlanner implementation is configured to create multiple queues from the configuration where each queue is configured with file size thresholds and the number of threads. For example, the DefaultCompactionPlanner is configured by the following properties:
 
 
-  * *tserver.compaction.major.service.<service>.planner.opts.executors*: a json array where each object in the array has the fields name, maxSize, and numThreads. For example:
+  * `tserver.compaction.major.service.<service>.planner.opts.executors`: a json array where each object in the array has the fields name, maxSize, and numThreads. For example:
 
 ```  
 [
@@ -61,7 +61,7 @@ The DefaultCompactionPlanner implementation is configured to create multiple que
 ]
 ```
 
-  * *tserver.compaction.major.service.<service>.planner.opts.maxOpen*: number of files that will be included in a single compaction
+  * `tserver.compaction.major.service.<service>.planner.opts.maxOpen`: number of files that will be included in a single compaction
 
 
 # External Compactions
@@ -86,7 +86,7 @@ tserver.compaction.major.service.<service>.planner.opts.executors -
 ]
 ```
 
-This planner would create CompactionExecutor’s for the internal queues and a new ExternalCompactionExecutor for the external queue. When ExternalCompactionExecutor::submit is called this Executor would send a request to the CompactionCoordinator to queue the compaction request for execution on external queue EQ1. The CompactionCoordinator adds this request to the list of requests from all TabletServers. Compactor processes that are running will request the next compaction task from the CompactionCoordinator when they are free to do work and will notify the CompactionCoordinator when the compaction has completed (or failed)
+This planner would create CompactionExecutor’s for the internal queues and a new ExternalCompactionExecutor for the external queue. When ExternalCompactionExecutor::submit is called this Executor would eventually communicate summary information to the CompactionCoordinator that enables it to later request work for EQ1 from the tserver. The CompactionCoordinator adds this request to the list of requests from all TabletServers. Compactor processes that are running will request the next compaction task from the CompactionCoordinator when they are free to do work and will notify the CompactionCoordinator when the compaction has completed (or failed).
 
 ## APIs
 
