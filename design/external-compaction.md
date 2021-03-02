@@ -35,7 +35,7 @@ The CompactionManager operates on the set of online hosted tablets and calls Com
 
 There are short-circuits along this path when compactions are already queued for the tablet and other cases which are not described here. For internal compactions the CompactionService keeps track of the queued and running compaction tasks.
 
-![Image of Internal Compactions](https://github.com/dlmarion/accumulo-website/tree/external-compaction-design/design/internal_compactions.jpg)
+![Image of Internal Compactions](https://github.com/dlmarion/accumulo-website/tree/external-compaction-design/design/internal_compactions.png)
   
 ## Configuration
 
@@ -172,7 +172,7 @@ The CompactionCoordinator is responsible for managing the work queue. For each e
 
 The coordinator could take the summary information and organize it as follows for each external compaction queue.  Then for a given compaction queue it knows which tservers currently have work.  For example in the picture below tservers ts1,ts9 and ? have work at priority level 7 for some queue. The coordinator could possibly round robin requests among the tservers of the highest priority level until that priority level is empty.
 
-![Image of Coordinator Queue](https://github.com/dlmarion/accumulo-website/tree/external-compaction-design/design/coordinator_queue.png)
+![Image of Coordinator Queue](https://github.com/dlmarion/accumulo-website/tree/external-compaction-design/design/coordinator_queue.jpg)
 
 When the coordinator calls getTabletServerQueueInfo() on a tsever via RPC, it would need to take the information returned by the tserver and reconcile it with its global summary of information adding and removing the tserver from priority levels as needed.
 This information could potentially be kept in memory in a structure of the form Map<QueueName, SortedMap<Priority, LinkedHashSet<Tserver>>> and when the coordinator starts it polls tservers and constructs the global queue summary map.  Periodically the coordinator could ask tservers for updated summaries and/or the reserveJob RPC call to tservers could return updated summary information.
