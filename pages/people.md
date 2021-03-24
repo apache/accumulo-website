@@ -174,7 +174,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
 |                      |
-| Harjit Singh         |                                                                  |[ET][ET]|
+| Harjit Singh         |                                                                  | [ET][ET]|
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
