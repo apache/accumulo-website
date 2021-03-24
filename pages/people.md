@@ -98,6 +98,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Elina Wise          | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Eugene Cheipesh     |                                                                   |                       |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
+| Harjit Singh        |                                                                   | [ET][ET]              |
 | Hayden Marchant     |                                                                   |                       |
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
@@ -173,7 +174,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
-| Harjit Singh        |                                                                   | [ET][ET]              |
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
