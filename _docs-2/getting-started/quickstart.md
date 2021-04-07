@@ -137,7 +137,9 @@ Each method above has instructions below.
 
 Start Accumulo processes (tserver, master, monitor, etc) using command below:
 
+    accumulo master
     accumulo tserver
+    accumulo monitor
 
 The process will run in the foreground. Use ctrl-c to quit.
 
@@ -145,7 +147,9 @@ The process will run in the foreground. Use ctrl-c to quit.
 
 Start Accumulo services (tserver, master, monitor, etc) using command below:
 
+    accumulo-service master start
     accumulo-service tserver start
+    accumulo-service monitor start
 
 ### Run an Accumulo cluster
 
