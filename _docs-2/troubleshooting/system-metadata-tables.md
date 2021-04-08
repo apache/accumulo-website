@@ -57,7 +57,7 @@ Let's decode this little session:
     attempt to improve data locality.
  
 * `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
-    Last assigned location for this tablet.  It was last held on 127.0.0.1:9997, and the
+    Last assigned location for this tablet (its current location, if it is still hosted). It was last assigned to 127.0.0.1:9997, and the
     unique tablet server lock data was `13fe86cd27101e5`.
 
 * `srv:dir []    /default_tablet` -
