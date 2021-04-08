@@ -170,6 +170,9 @@ accumulo tserver
 
 The process will run in the foreground. Use ctrl-c to quit.
 
+For a fully operational instance, each individual service will need to be
+started.
+
 ### Run individual Accumulo services
 
 Start individual Accumulo processes (tserver, master, monitor, etc) as a
@@ -179,6 +182,9 @@ service name. For example, to start only the tserver, run:
 ```
 accumulo-service tserver start
 ```
+
+For a fully operational instance, each individual service will need to be
+started.
 
 ### Run an Accumulo cluster
 
@@ -208,7 +214,7 @@ If you are running an Accumulo cluster on multiple nodes, the following files in
  * [monitor] : Node where Accumulo monitoring web server is run.
  * [tservers] : Accumulo worker processes. List all of the nodes where tablet
    servers should run in this file.
- * [tracers] : Optional capability. Can specify zero or more nodes. 
+ * [tracers] : Optional capability. Can specify zero or more nodes.
 
 The Accumulo, Hadoop, and Zookeeper software should be present at the same
 location on every node. Also the files in the `conf` directory must be copied to
