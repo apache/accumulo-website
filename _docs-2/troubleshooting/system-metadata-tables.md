@@ -51,12 +51,14 @@ Let's decode this little session:
     key/value pair, and is 186 bytes long.
 
 * `last:13fe86cd27101e5 []    127.0.0.1:9997` -
-    Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
+    The last location data was written locally (from a minor or major compaction). Data was last written on 127.0.0.1:9997, and the
     unique tablet server lock data was `13fe86cd27101e5`. The default balancer
-    will tend to put tablets back on their last location.
-
+    will tend to assign tablets to the last location where its files have been written to
+    attempt to improve data locality.
+ 
 * `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
-    The current location of this tablet.
+    Last assigned location for this tablet (its current location, if it is still hosted). It was last assigned to 127.0.0.1:9997, and the
+    unique tablet server lock data was `13fe86cd27101e5`.
 
 * `srv:dir []    /default_tablet` -
     Files written for this tablet will be placed into
@@ -104,4 +106,3 @@ Besides these columns, you may see:
 
 * `rowId scan` -
     A marker that prevents a file from being removed while there are still active scans using it.
-
