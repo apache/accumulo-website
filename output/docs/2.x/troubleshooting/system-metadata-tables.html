@@ -477,13 +477,15 @@ shell&gt; scan -b 3; -e 3&lt;
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">last:13fe86cd27101e5 []    127.0.0.1:9997</code> -
-  Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
+  The last location data was written locally (from a minor or major compaction). Data was last written on 127.0.0.1:9997, and the
   unique tablet server lock data was <code class="language-plaintext highlighter-rouge">13fe86cd27101e5</code>. The default balancer
-  will tend to put tablets back on their last location.</p>
+  will tend to assign tablets to the last location where its files have been written to
+  attempt to improve data locality.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">loc:13fe86cd27101e5 []    127.0.0.1:9997</code> -
-  The current location of this tablet.</p>
+  Last assigned location for this tablet (its current location, if it is still hosted). It was last assigned to 127.0.0.1:9997, and the
+  unique tablet server lock data was <code class="language-plaintext highlighter-rouge">13fe86cd27101e5</code>.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">srv:dir []    /default_tablet</code> -
@@ -549,7 +551,6 @@ shell&gt; scan -b 3; -e 3&lt;
   A marker that prevents a file from being removed while there are still active scans using it.</p>
   </li>
 </ul>
-
 
 
     <div class="row" style="margin-top: 20px;">
