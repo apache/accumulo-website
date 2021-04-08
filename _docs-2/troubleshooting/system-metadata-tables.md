@@ -53,7 +53,7 @@ Let's decode this little session:
 * `last:13fe86cd27101e5 []    127.0.0.1:9997` -
     The last location data was written locally (from a minor or major compaction). Data was last written on 127.0.0.1:9997, and the
     unique tablet server lock data was `13fe86cd27101e5`. The default balancer
-    will tend to put tablets back on their last location where files writes have occurred to
+    will tend to assign tablets to the last location where its files have been written to
     attempt to improve data locality.
  
 * `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
