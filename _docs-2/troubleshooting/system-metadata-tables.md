@@ -51,7 +51,7 @@ Let's decode this little session:
     key/value pair, and is 186 bytes long.
 
 * `last:13fe86cd27101e5 []    127.0.0.1:9997` -
-    The last location data was written locally. Data was last written on 127.0.0.1:9997, and the
+    The last location data was written locally (from a minor or major compaction). Data was last written on 127.0.0.1:9997, and the
     unique tablet server lock data was `13fe86cd27101e5`. The default balancer
     will tend to put tablets back on their last location where files writes have occurred to
     attempt to improve data locality.
@@ -106,4 +106,3 @@ Besides these columns, you may see:
 
 * `rowId scan` -
     A marker that prevents a file from being removed while there are still active scans using it.
-
