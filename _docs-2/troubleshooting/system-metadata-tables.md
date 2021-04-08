@@ -51,12 +51,14 @@ Let's decode this little session:
     key/value pair, and is 186 bytes long.
 
 * `last:13fe86cd27101e5 []    127.0.0.1:9997` -
-    Last location for this tablet.  It was last held on 127.0.0.1:9997, and the
-    unique tablet server lock data was `13fe86cd27101e5`. The default balancer
-    will tend to put tablets back on their last location.
+    Last assigned location for this tablet.  It was last held on 127.0.0.1:9997, and the
+    unique tablet server lock data was `13fe86cd27101e5`.
 
 * `loc:13fe86cd27101e5 []    127.0.0.1:9997` -
-    The current location of this tablet.
+    The last location data was written locally. Data was last written on 127.0.0.1:9997, and the
+    unique tablet server lock data was `13fe86cd27101e5`. The default balancer
+    will tend to put tablets back on their last location where files writes have occurred to 
+    attempt to improve data locality.
 
 * `srv:dir []    /default_tablet` -
     Files written for this tablet will be placed into
