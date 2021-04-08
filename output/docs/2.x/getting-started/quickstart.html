@@ -423,77 +423,91 @@
 
     <h1 id="user-manual-2x">User Manual (2.x)</h1>
 
-<p>Starting with Accumulo 2.0, the user manual now lives on the website as a series of web pages. Previously, it was one large 
-pdf document that was only generated during a release. The user manual can now be updated very quickly and indexed 
+<p>Starting with Accumulo 2.0, the user manual now lives on the website as a series
+of web pages. Previously, it was one large pdf document that was only generated
+during a release. The user manual can now be updated very quickly and indexed
 for searching across many webpages.</p>
 
-<p>The manual can now be 
-searched using the <a href="/search">Search link</a> at the top of the website or navigated by clicking the links to the left. If you are new 
-to Accumulo, follow the instructions below to get started.  For detailed instructions, see the <a href="/docs/2.x/administration/in-depth-install">in-depth installation guide</a>.</p>
+<p>The manual can now be searched using the <a href="/search">Search link</a> at the top of the
+website or navigated by clicking the links to the left. If you are new to
+Accumulo, follow the instructions below to get started. For detailed
+instructions, see the <a href="/docs/2.x/administration/in-depth-install">in-depth installation guide</a>.</p>
 
 <h2 id="setup-for-testing-or-development">Setup for testing or development</h2>
 
-<p>If you are setting up Accumulo for <strong>testing or development,</strong> consider using the following tools:</p>
+<p>If you are setting up Accumulo for <strong>testing or development,</strong> consider using
+the following tools:</p>
 
 <ul>
   <li><a href="https://github.com/apache/fluo-uno">Uno</a> sets up Accumulo on a single machine for development</li>
-  <li><a href="https://github.com/apache/fluo-muchos">Muchos</a> sets up Accumulo on a cluster (optionally launched in Amazon EC2 and Microsoft Azure VM)</li>
+  <li><a href="https://github.com/apache/fluo-muchos">Muchos</a> sets up Accumulo on a cluster (optionally launched in Amazon EC2 and
+Microsoft Azure VM)</li>
 </ul>
 
-<p>If you are setting up Accumulo for a <strong>production</strong> environment, follow the instructions below.</p>
+<p>If you are setting up Accumulo for a <strong>production</strong> environment, follow the
+instructions below.</p>
 
 <h2 id="setup-for-production">Setup for Production</h2>
 
-<p>Either <a href="/downloads">download</a> or <a href="https://github.com/apache/accumulo/blob/main/README.md#building">build</a> a binary distribution of Accumulo from source code and
-unpack as follows.</p>
+<p>Either <a href="/downloads">download</a> or <a href="https://github.com/apache/accumulo/blob/main/README.md#building">build</a> a binary distribution of Accumulo from source code
+and unpack as follows.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar xzf /path/to/accumulo-2.0.1-bin.tar.gz
 cd accumulo-2.0.1
 </code></pre></div></div>
 
-<p>There are four scripts in the <code class="language-plaintext highlighter-rouge">bin</code> directory of the tarball distribution that are used
-to manage Accumulo:</p>
+<p>There are four scripts in the <code class="language-plaintext highlighter-rouge">bin</code> directory of the tarball distribution that
+are used to manage Accumulo:</p>
 
 <ol>
   <li><code class="language-plaintext highlighter-rouge">accumulo</code> - Runs Accumulo command-line tools and starts Accumulo processes</li>
-  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> - Runs Accumulo processes as services</li>
-  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> - Manages Accumulo cluster on a single node or several nodes</li>
-  <li><code class="language-plaintext highlighter-rouge">accumulo-util</code> - Accumulo utilities for building native libraries, running jars, etc.</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> - Runs individual Accumulo processes as background
+services</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> - Manages Accumulo cluster on a single node or several
+nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-util</code> - Accumulo utilities for building native libraries, running
+jars, etc.</li>
 </ol>
 
-<p>These scripts will be used in the remaining instructions to configure and run Accumulo.
-For convenience, consider adding <code class="language-plaintext highlighter-rouge">accumulo-2.0.1/bin/</code> to your shell’s path.</p>
+<p>These scripts will be used in the remaining instructions to configure and run
+Accumulo. For convenience, consider adding <code class="language-plaintext highlighter-rouge">accumulo-2.0.1/bin/</code>
+to your shell’s path.</p>
 
 <h2 id="configuring-accumulo">Configuring Accumulo</h2>
 
-<p>Accumulo requires running <a href="https://zookeeper.apache.org/">Zookeeper</a> and <a href="https://hadoop.apache.org/">HDFS</a> instances which should be set up
-before configuring Accumulo.</p>
+<p>Accumulo requires running <a href="https://zookeeper.apache.org/">Zookeeper</a> and <a href="https://hadoop.apache.org/">HDFS</a> instances which should be set
+up before configuring Accumulo.</p>
 
-<p><strong>Important note:</strong> If using <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html">Erasure Coding</a> (EC), data loss will occur unless it is configured
-properly for Accumulo. Please see the <a href="/docs/2.x/administration/erasure-coding">Erasure Coding guide</a> for more information.</p>
+<p><strong>Important note:</strong> If using <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html">Erasure Coding</a> (EC), data loss will occur unless
+it is configured properly for Accumulo. Please see the <a href="/docs/2.x/administration/erasure-coding">Erasure Coding guide</a>
+for more information.</p>
 
-<p>The primary configuration files for Accumulo are <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>, <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>,
-and <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> which are located in the <code class="language-plaintext highlighter-rouge">conf/</code> directory.</p>
+<p>The primary configuration files for Accumulo are <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>,
+<a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>, and <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> which are located in the
+<code class="language-plaintext highlighter-rouge">conf/</code> directory.</p>
 
-<p>The <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file configures Accumulo server processes (i.e. tablet server, master,
-monitor, etc). Follow these steps to set it up:</p>
+<p>The <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file configures Accumulo server processes (i.e. tablet
+server, master, monitor, etc). Follow these steps to set it up:</p>
 
 <ol>
   <li>
-    <p>Run <code class="language-plaintext highlighter-rouge">accumulo-util build-native</code> to build native code.  If this command fails, disable
-native maps by setting <a href="/docs/2.x/configuration/server-properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a> to <code class="language-plaintext highlighter-rouge">false</code>.</p>
+    <p>Run <code class="language-plaintext highlighter-rouge">accumulo-util build-native</code> to build native code. If this command fails,
+disable native maps by setting <a href="/docs/2.x/configuration/server-properties#tserver_memory_maps_native_enabled">tserver.memory.maps.native.enabled</a>
+to <code class="language-plaintext highlighter-rouge">false</code>.</p>
   </li>
   <li>
-    <p>Set <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> to HDFS location where Accumulo will store data. If your namenode
-is running at 192.168.1.9:8020 and you want to store data in <code class="language-plaintext highlighter-rouge">/accumulo</code> in HDFS, then set
-<a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> to <code class="language-plaintext highlighter-rouge">hdfs://192.168.1.9:8020/accumulo</code>.</p>
+    <p>Set <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> to HDFS location where Accumulo will store
+data. If your namenode is running at 192.168.1.9:8020 and you want to store
+data in <code class="language-plaintext highlighter-rouge">/accumulo</code> in HDFS, then set <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> to
+<code class="language-plaintext highlighter-rouge">hdfs://192.168.1.9:8020/accumulo</code>.</p>
   </li>
   <li>
     <p>Set <a href="/docs/2.x/configuration/server-properties#instance_zookeeper_host">instance.zookeeper.host</a> to the location of your Zookeepers</p>
   </li>
   <li>
-    <p>(Optional) Change <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a> (which is used by Accumulo processes to communicate)
-from the default. This value should match on all servers.</p>
+    <p>(Optional) Change <a href="/docs/2.x/configuration/server-properties#instance_secret">instance.secret</a> (which is used by Accumulo
+processes to communicate) from the default. This value should match on all
+servers.</p>
   </li>
 </ol>
 
@@ -501,18 +515,20 @@ from the default. This value should match on all servers.</p>
 
 <ol>
   <li>
-    <p>Set <code class="language-plaintext highlighter-rouge">HADOOP_HOME</code> and <code class="language-plaintext highlighter-rouge">ZOOKEEPER_HOME</code> to the location of your Hadoop and Zookeeper
-installations. Accumulo will use these locations to find Hadoop and Zookeeper jars and add
-them to your <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable. If you are running a vendor-specific release of
-Hadoop or Zookeeper, you may need to modify how the <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable is built in
-<a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. If Accumulo has problems loading classes when you start it, run 
-<code class="language-plaintext highlighter-rouge">accumulo classpath</code> to print Accumulo’s classpath.</p>
+    <p>Set <code class="language-plaintext highlighter-rouge">HADOOP_HOME</code> and <code class="language-plaintext highlighter-rouge">ZOOKEEPER_HOME</code> to the location of your Hadoop and
+Zookeeper installations. Accumulo will use these locations to find Hadoop and
+Zookeeper jars and add them to your <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable. If you are running
+a vendor-specific release of Hadoop or Zookeeper, you may need to modify how
+the <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable is built in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. If Accumulo has
+problems loading classes when you start it, run <code class="language-plaintext highlighter-rouge">accumulo classpath</code> to print
+Accumulo’s classpath.</p>
   </li>
   <li>
-    <p>Accumulo tablet servers are configured by default to use 1GB of memory (768MB is allocated to
-JVM and 256MB is allocated for native maps). Native maps are allocated memory equal to 33% of
-the tserver JVM heap. The table below can be used if you would like to change tserver memory
-usage in the <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> section of <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>:</p>
+    <p>Accumulo tablet servers are configured by default to use 1GB of memory (768MB
+is allocated to JVM and 256MB is allocated for native maps). Native maps are
+allocated memory equal to 33% of the tserver JVM heap. The table below can be
+used if you would like to change tserver memory usage in the <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code>
+section of <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>:</p>
 
     <table>
       <thead>
@@ -548,26 +564,28 @@ in the <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> secti
   </li>
 </ol>
 
-<p>The <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> file is used by the Accumulo shell and can be passed to Accumulo
-clients to simplify connecting to Accumulo. Below are steps to configure it.</p>
+<p>The <a href="/docs/2.x/configuration/files#accumulo-clientproperties">accumulo-client.properties</a> file is used by the Accumulo shell and can be
+passed to Accumulo clients to simplify connecting to Accumulo. Below are steps
+to configure it.</p>
 
 <ol>
   <li>
-    <p>Set <a href="/docs/2.x/configuration/client-properties#instance_name">instance.name</a> and <a href="/docs/2.x/configuration/client-properties#instance_zookeepers">instance.zookeepers</a> to the Accumulo instance and zookeeper connection
-string of your instance.</p>
+    <p>Set <a href="/docs/2.x/configuration/client-properties#instance_name">instance.name</a> and <a href="/docs/2.x/configuration/client-properties#instance_zookeepers">instance.zookeepers</a> to
+the Accumulo instance and zookeeper connection string of your instance.</p>
   </li>
   <li>
-    <p>Pick an authentication type and set <a href="/docs/2.x/configuration/client-properties#auth_type">auth.type</a> accordingly.  The most common <code class="language-plaintext highlighter-rouge">auth.type</code>
-is <code class="language-plaintext highlighter-rouge">password</code> which requires <a href="/docs/2.x/configuration/client-properties#auth_principal">auth.principal</a> to be set and <a href="/docs/2.x/configuration/client-properties#auth_token">auth.token</a> to be set the password
-of <code class="language-plaintext highlighter-rouge">auth.principal</code>. For the Accumulo shell, <code class="language-plaintext highlighter-rouge">auth.token</code> can be commented out and the shell will
-prompt you for the password of <code class="language-plaintext highlighter-rouge">auth.principal</code> at login.</p>
+    <p>Pick an authentication type and set <a href="/docs/2.x/configuration/client-properties#auth_type">auth.type</a> accordingly. The
+most common <code class="language-plaintext highlighter-rouge">auth.type</code> is <code class="language-plaintext highlighter-rouge">password</code> which requires <a href="/docs/2.x/configuration/client-properties#auth_principal">auth.principal</a>
+to be set and <a href="/docs/2.x/configuration/client-properties#auth_token">auth.token</a> to be set the password of
+<code class="language-plaintext highlighter-rouge">auth.principal</code>. For the Accumulo shell, <code class="language-plaintext highlighter-rouge">auth.token</code> can be commented out
+and the shell will prompt you for the password of <code class="language-plaintext highlighter-rouge">auth.principal</code> at login.</p>
   </li>
 </ol>
 
 <h2 id="initialization">Initialization</h2>
 
-<p>Accumulo needs to initialize the locations where it stores data in Zookeeper
-and HDFS.  The following command will do this.</p>
+<p>Accumulo needs to initialize the locations where it stores data in Zookeeper and
+HDFS. The following command will do this.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo init
 </code></pre></div></div>
@@ -578,8 +596,8 @@ and HDFS.  The following command will do this.</p>
   <li><strong>Instance name</strong> : This is the name of the Accumulo instance and its
 Accumulo clients need to know it in order to connect.</li>
   <li><strong>Root password</strong> : Initialization sets up an initial Accumulo root user and
-prompts for its password.  This information will be needed to later connect
-to Accumulo.</li>
+prompts for its password. This information will be needed to later connect to
+Accumulo.</li>
 </ul>
 
 <h2 id="run-accumulo">Run Accumulo</h2>
@@ -588,89 +606,105 @@ to Accumulo.</li>
 
 <ol>
   <li>
-    <p>Run Accumulo processes using <code class="language-plaintext highlighter-rouge">accumulo</code> command which runs processes in foreground and
-will not redirect stderr/stdout. Useful for creating init.d scripts that run Accumulo.</p>
+    <p>Run Accumulo processes using <code class="language-plaintext highlighter-rouge">accumulo</code> command which runs processes in
+foreground and will not redirect stderr/stdout. Useful for creating init.d
+scripts that run Accumulo.</p>
   </li>
   <li>
-    <p>Run Accumulo processes as services using <code class="language-plaintext highlighter-rouge">accumulo-service</code> which uses <code class="language-plaintext highlighter-rouge">accumulo</code>
-command but backgrounds processes, redirects stderr/stdout and manages pid files.
-Useful if you are using a cluster management tool (i.e. Ansible, Salt, etc).</p>
+    <p>Run individual Accumulo processes as services using <code class="language-plaintext highlighter-rouge">accumulo-service</code> which
+uses <code class="language-plaintext highlighter-rouge">accumulo</code> command but backgrounds processes, redirects stderr/stdout
+and manages pid files. This is useful if you are using a cluster management
+tool (i.e. Ansible, Salt, etc).</p>
   </li>
   <li>
     <p>Run an Accumulo cluster on one or more nodes using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> (which
 uses <code class="language-plaintext highlighter-rouge">accumulo-service</code> to run services). Useful for local development and
-testing or if you are not using a cluster management tool in production.</p>
+testing or if you are not using your own cluster management tool in
+production.</p>
   </li>
 </ol>
 
 <p>Each method above has instructions below.</p>
 
-<h3 id="run-accumulo-processes">Run Accumulo processes</h3>
+<h3 id="run-individual-accumulo-processes">Run individual Accumulo processes</h3>
 
-<p>Start Accumulo processes (tserver, master, monitor, etc) using command below:</p>
+<p>Start Accumulo processes (tserver, master, monitor, etc) using the accumulo
+command followed by the service name. For example, to start only the tserver,
+run:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver
 </code></pre></div></div>
 
 <p>The process will run in the foreground. Use ctrl-c to quit.</p>
 
-<h3 id="run-accumulo-services">Run Accumulo services</h3>
+<p>For a fully operational instance, each individual service will need to be
+started.</p>
 
-<p>Start Accumulo services (tserver, master, monitor, etc) using command below:</p>
+<h3 id="run-individual-accumulo-services">Run individual Accumulo services</h3>
+
+<p>Start individual Accumulo processes (tserver, master, monitor, etc) as a
+background service using the example accumulo-service script followed by the
+service name. For example, to start only the tserver, run:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
 </code></pre></div></div>
 
+<p>For a fully operational instance, each individual service will need to be
+started.</p>
+
 <h3 id="run-an-accumulo-cluster">Run an Accumulo cluster</h3>
 
-<p>Before using the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script, additional configuration files need
-to be created. Use the command below to create them:</p>
+<p>Before using the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script to start the cluster, additional
+configuration files may need to be created. Use the command below to create them
+from provided templates:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-cluster create-config
 </code></pre></div></div>
 
-<p>This creates five files (<a href="/docs/2.x/configuration/files#masters">masters</a>, <a href="/docs/2.x/configuration/files#gc">gc</a>, <a href="/docs/2.x/configuration/files#monitor">monitor</a>, <a href="/docs/2.x/configuration/files#tservers">tservers</a>, &amp; <a href="/docs/2.x/configuration/files#tracers">tracers</a>)
-in the <code class="language-plaintext highlighter-rouge">conf/</code> directory that contain the node names where Accumulo services
-are run on your cluster. By default, all files are configured to <code class="language-plaintext highlighter-rouge">localhost</code>. If
-you are running a single-node Accumulo cluster, these files do not need to be
+<p>This creates five files (<a href="/docs/2.x/configuration/files#masters">masters</a>, <a href="/docs/2.x/configuration/files#gc">gc</a>, <a href="/docs/2.x/configuration/files#monitor">monitor</a>, <a href="/docs/2.x/configuration/files#tservers">tservers</a>, &amp; <a href="/docs/2.x/configuration/files#tracers">tracers</a>) in
+the <code class="language-plaintext highlighter-rouge">conf/</code> directory that contain the node names where Accumulo services are
+run on your cluster. By default, all files are configured to <code class="language-plaintext highlighter-rouge">localhost</code>. If you
+are running a single-node Accumulo cluster, these files do not need to be
 changed and the next section should be skipped.</p>
 
 <h4 id="multi-node-configuration">Multi-node configuration</h4>
 
-<p>If you are running an Accumulo cluster on multiple nodes, the following files
-in <code class="language-plaintext highlighter-rouge">conf/</code> should be configured with a newline separated list of node names:</p>
+<p>If you are running an Accumulo cluster on multiple nodes, the following files in
+<code class="language-plaintext highlighter-rouge">conf/</code> should be configured with a newline separated list of node names:</p>
 
 <ul>
   <li><a href="/docs/2.x/configuration/files#masters">masters</a> : Accumulo primary coordinating process. Must specify one node. Can
-            specify a few for fault tolerance.</li>
+specify a few for fault tolerance.</li>
   <li><a href="/docs/2.x/configuration/files#gc">gc</a>      : Accumulo garbage collector. Must specify one node. Can specify a
-            few for fault tolerance.</li>
+few for fault tolerance.</li>
   <li><a href="/docs/2.x/configuration/files#monitor">monitor</a> : Node where Accumulo monitoring web server is run.</li>
-  <li><a href="/docs/2.x/configuration/files#tservers">tservers</a> : Accumulo worker processes. List all of the nodes where tablet servers
-            should run in this file.</li>
+  <li><a href="/docs/2.x/configuration/files#tservers">tservers</a> : Accumulo worker processes. List all of the nodes where tablet
+servers should run in this file.</li>
   <li><a href="/docs/2.x/configuration/files#tracers">tracers</a> : Optional capability. Can specify zero or more nodes.</li>
 </ul>
 
 <p>The Accumulo, Hadoop, and Zookeeper software should be present at the same
-location on every node. Also the files in the <code class="language-plaintext highlighter-rouge">conf</code> directory must be copied
-to every node. There are many ways to replicate the software and configuration,
-two possible tools that can help replicate software and/or config are <a href="https://code.google.com/p/pdsh/">pdcp</a>
-and <a href="https://code.google.com/p/parallel-ssh/">prsync</a>.</p>
+location on every node. Also the files in the <code class="language-plaintext highlighter-rouge">conf</code> directory must be copied to
+every node. There are many ways to replicate the software and configuration, two
+possible tools that can help replicate software and/or config are <a href="https://code.google.com/p/pdsh/">pdcp</a> and
+<a href="https://code.google.com/p/parallel-ssh/">prsync</a>.</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script uses ssh to start processes on remote nodes. Before
-attempting to start Accumulo, <a href="https://www.google.com/search?q=hadoop+passwordless+ssh&amp;ie=utf-8&amp;oe=utf-8">passwordless ssh</a> must be setup on the cluster.</p>
+<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script uses ssh to start processes on remote nodes.
+Before attempting to start Accumulo, <a href="https://www.google.com/search?q=hadoop+passwordless+ssh&amp;ie=utf-8&amp;oe=utf-8">passwordless ssh</a> must be setup on
+the cluster.</p>
 
 <h4 id="start-cluster">Start cluster</h4>
 
 <p>After configuring and initializing Accumulo, use the following command to start
-the cluster:</p>
+the cluster using the provided cluster management script:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-cluster start
 </code></pre></div></div>
 
 <h2 id="first-steps">First steps</h2>
 
-<p>Once you have started Accumulo, use the following command to run the Accumulo shell:</p>
+<p>Once you have started Accumulo, use the following command to run the Accumulo
+shell:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo shell -u root
 </code></pre></div></div>
@@ -685,7 +719,7 @@ the cluster:</p>
 <p>When finished, use the following commands to stop Accumulo:</p>
 
 <ul>
-  <li>Stop Accumulo service: <code class="language-plaintext highlighter-rouge">accumulo-service tserver stop</code></li>
+  <li>Stop an individual Accumulo service: <code class="language-plaintext highlighter-rouge">accumulo-service tserver stop</code></li>
   <li>Stop Accumulo cluster: <code class="language-plaintext highlighter-rouge">accumulo-cluster stop</code></li>
 </ul>
 
