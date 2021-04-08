@@ -149,7 +149,7 @@ You can remove the WAL references in the metadata table.
 
 Note: the colon (`:`) is omitted when specifying the _row cf cq_ for the delete command.
 
-The master will automatically discover the tablet no longer has a bad WAL reference and will
+The manager will automatically discover the tablet no longer has a bad WAL reference and will
 assign the tablet.  You will need to remove the reference from all the tablets to get them
 online.
 
@@ -261,7 +261,7 @@ with the empty WAL.
     $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
 
 After the corrupt WAL file has been replaced, the system should automatically recover.
-It may be necessary to restart the Accumulo Master process as an exponential
+It may be necessary to restart the Accumulo Manager process as an exponential
 backup policy is used which could lead to a long wait before Accumulo will
 try to re-load the WAL file.
 
@@ -330,7 +330,7 @@ overridden by using the `--local-wal-directories` option on the tool. It can be 
 
     accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 
-**I am trying to start the master after upgrading but the upgrade is aborting with the following message:**
+**I am trying to start the manager after upgrading but the upgrade is aborting with the following message:**
   `org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.`
 
 You can use the shell to delete completed FATE transactions using the following:
@@ -339,7 +339,7 @@ You can use the shell to delete completed FATE transactions using the following:
 * Start shell
 * Run `fate print` to list all
 * If completed, just delete with `fate delete`
-* Start masters once there are no more fate operations
+* Start managers once there are no more fate operations
 
 If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.
 

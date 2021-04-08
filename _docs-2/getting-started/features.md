@@ -61,11 +61,11 @@ can share a pool of datanodes.
 
 ## Integrity/Availability
 
-### Master fail over
+### Manager fail over
 
-Multiple masters can be configured.  Zookeeper locks are used to determine
-which master is active.  The remaining masters simply wait for the current
-master to lose its lock.  Current master state is held in the metadata table
+Multiple managers can be configured.  Zookeeper locks are used to determine
+which manager is active.  The remaining managers simply wait for the current
+manager to lose its lock.  Current manager state is held in the metadata table
 and Zookeeper.
 
 ### Logical time
@@ -75,11 +75,11 @@ across the cluster is incorrect. This ensures that updates and deletes are not
 lost. If a tablet is served on machine with time a year in the future, then the
 tablet will continue to issue new timestamps a year in the future, even when it
 moves to another server. In this case the timestamps preserve ordering, but
-lose their meaning. In addition to logical time, Accumulo has master
-authoritative time. The master averages the time of all of the tablet servers
+lose their meaning. In addition to logical time, Accumulo has manager
+authoritative time. The manager averages the time of all of the tablet servers
 and sends this back to the tablet servers. Tablet servers use this information
 to adjust the timestamps they issue. So logical time ensures ordering is
-always correct and master authoritative time tries to ensure that timestamps
+always correct and manager authoritative time tries to ensure that timestamps
 are meaningful.
 
 ### Logical Time for bulk import
@@ -99,9 +99,9 @@ time.
 ### FATE
 
 [FATE] (short for **Fa**ult **T**olerant **E**xecutor) is a framework for executing
-operations in a fault tolerant manner. Before FATE, if the master process died in the
+operations in a fault tolerant manner. Before FATE, if the manager process died in the
 middle of creating a table it could leave the system in an inconsistent state.
-With this new framework, if the master dies in the middle of create table it
+With this new framework, if the manager dies in the middle of create table it
 will continue on restart. Also, the client requesting the create table operation
 will never know anything happened. The framework serializes work in Zookeeper
 before attempting to do the work. Clients start a FATE transaction, seed it
@@ -109,7 +109,7 @@ with work, and then wait for it to finish. Most table operations are executed
 using this framework. Persistent, per table, read-write locks are created in
 Zookeeper to synchronize operations across process faults.
 
-### Scalable master
+### Scalable manager
 
 Stores its metadata in an Accumulo table and Zookeeper.
 

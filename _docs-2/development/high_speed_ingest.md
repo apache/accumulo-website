@@ -14,7 +14,7 @@ performance.
 ## Pre-Splitting New Tables
 
 New tables consist of a single tablet by default. As mutations are applied, the table
-grows and splits into multiple tablets which are balanced by the Master across
+grows and splits into multiple tablets which are balanced by the Manager across
 TabletServers. This implies that the aggregate ingest rate will be limited to fewer
 servers than are available within the cluster until the table has reached the point
 where there are tablets on every TabletServer.

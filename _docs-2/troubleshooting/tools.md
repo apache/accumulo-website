@@ -59,12 +59,12 @@ Likewise, `rfile-info` will dump the key-value pairs and show you the contents o
     row columnFamily:columnQualifier [visibility] timestamp deleteFlag -> Value
     ...
 
-## GetMasterStats
+## GetManagerStats
 
-The `GetMasterStats` tool can be used to retrieve Accumulo state and statistics:
+The `GetManagerStats` tool can be used to retrieve Accumulo state and statistics:
 
 
-    $ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
+    $ accumulo org.apache.accumulo.test.GetManagerStats | grep Load
      OS Load Average: 0.27
 
 ## FindOfflineTablets

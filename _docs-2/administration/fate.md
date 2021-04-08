@@ -14,7 +14,7 @@ very difficult to achieve. Accumulo includes a Fault-Tolerant Executor (FATE) wh
 is widely used server-side to implement the client API safely and correctly.
 
 Fault-Tolerant Executor (FATE) is the implementation detail which ensures that tables in creation when the
-Master dies will be successfully created when another Master process is started.
+Manager dies will be successfully created when another Manager process is started.
 This alleviates the need for any external tools to correct some bad state -- Accumulo can
 undo the failure and self-heal without any external intervention.
 
@@ -22,7 +22,7 @@ undo the failure and self-heal without any external intervention.
 
 FATE consists of two primary components: a repeatable, persisted operation (REPO), a storage
 layer for REPOs and an execution system to run REPOs. Accumulo uses ZooKeeper as the storage
-layer for FATE and the Accumulo Master acts as the execution system to run REPOs.
+layer for FATE and the Accumulo Manager acts as the execution system to run REPOs.
 
 The important characteristic of REPOs are that they implemented in a way that is idempotent:
 every operation must be able to undo or replay a partial execution of itself. Requiring the

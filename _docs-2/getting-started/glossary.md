@@ -78,6 +78,10 @@ major compaction
 merged into a single file, it is called a *full major compaction*.
 
 master
+: > the old name for the manager process. This process was renamed as of the
+2.1.0 release of Accumulo.
+
+manager
 : > process that detects and responds to tablet failures, balances load across
 tablet servers by assigning and migrating tablets when required, coordinates
 table operations, and handles tablet server logistics (startup, shutdown,

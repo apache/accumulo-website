@@ -40,7 +40,7 @@ Accumulo processes. See the [quick start] for help with configuring this file.
 ### log4j-service.properties
 
 The {% ghc assemble/conf/log4j-service.properties %} file configures logging for most Accumulo services
-(i.e [Master], [Tablet Server], [Garbage Collector]) except for the Monitor.
+(i.e [Manager], [Tablet Server], [Garbage Collector]) except for the Monitor.
 
 ### log4j-monitor.properties
 
@@ -62,10 +62,10 @@ the command `accumulo-cluster create-config`.
 Contains a list of hosts where [Garbage Collector] processes should run. While only one host is needed, others can be specified
 to run standby Garbage Collectors that can take over if the lead Garbage Collector fails.
 
-### masters
+### managers
 
-Contains a list of hosts where [Master] processes should run. While only one host is needed, others can be specified
-to run on standby Masters that can take over if the lead Master fails.
+Contains a list of hosts where [Manager] processes should run. While only one host is needed, others can be specified
+to run on standby Managers that can take over if the lead Manager fails.
 
 ### monitor
 
@@ -83,7 +83,7 @@ Contains a list of hosts where [Tracer] processes should run. While only one hos
 to run standby Tracers that can take over if the lead Tracer fails.
 
 [Garbage Collector]: {% durl getting-started/design#garbage-collector %}
-[Master]: {% durl getting-started/design#master %}
+[Manager]: {% durl getting-started/design#manager %}
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
 [Tracer]: {% durl getting-started/design#tracer %}
