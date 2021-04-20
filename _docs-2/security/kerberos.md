@@ -74,7 +74,7 @@ A delegation token is nothing more than a short-term, on-the-fly password genera
 credentials.  In Hadoop itself, the Namenode and ResourceManager, for HDFS and YARN respectively, act as the gateway for
 delegation tokens requests. For example, before a YARN job is submitted, the implementation will request delegation
 tokens from the NameNode and ResourceManager so the YARN tasks can communicate with HDFS and YARN. In the same manner,
-support has been added in the Accumulo Master to generate delegation tokens to enable interaction with Accumulo via
+support has been added in the Accumulo Manager to generate delegation tokens to enable interaction with Accumulo via
 MapReduce when Kerberos authentication is enabled in a manner similar to HDFS and YARN.
 
 Generating an expiring password is, arguably, more secure than distributing the user's
@@ -99,7 +99,7 @@ a trace user with appropriate permissions.
 
 The first step is to obtain a Kerberos identity for the Accumulo server processes.
 When running Accumulo with Kerberos enabled, a valid Kerberos identity will be required
-to initiate any RPC between Accumulo processes (e.g. Master and TabletServer) in addition
+to initiate any RPC between Accumulo processes (e.g. Manager and TabletServer) in addition
 to any HDFS action (e.g. client to HDFS or TabletServer to HDFS).
 
 #### Generate Principal and Keytab
@@ -157,7 +157,7 @@ in `accumulo.properties`.
 Although it should be a prerequisite, it is ever important that you have DNS properly
 configured for your nodes and that Accumulo is configured to use the FQDN. It
 is extremely important to use the FQDN in each of the "hosts" files for each
-Accumulo process: `masters`, `monitors`, `tservers`, `tracers`, and `gc`.
+Accumulo process: `managers`, `monitors`, `tservers`, `tracers`, and `gc`.
 
 Normally, no changes are needed in `accumulo-env.sh` to enable Kerberos. Typically, the `krb5.conf`
 is installed on the local machine in `/etc/`, and the Java library implementations will look
@@ -267,12 +267,12 @@ Here, `$PROXY_USER` can impersonate user1 and user2 only from host1.domain.com o
 
 In these examples, the value `$PROXY_USER` is the Kerberos principal of the server which is acting on behalf of a user.
 Impersonation is enforced by the Kerberos principal and the host from which the RPC originated (from the perspective
-of the Accumulo TabletServers/Masters). An asterisk (*) can be used to specify all users or all hosts (depending on the context).
+of the Accumulo TabletServers/Managers). An asterisk (*) can be used to specify all users or all hosts (depending on the context).
 
 #### Delegation Tokens
 
 Within Accumulo services, the primary task to implement delegation tokens is the generation and distribution
-of a shared secret among all Accumulo tabletservers and the master. The secret key allows for generation
+of a shared secret among all Accumulo tabletservers and the manager. The secret key allows for generation
 of delegation tokens for users and verification of delegation tokens presented by clients. If a server
 process is unaware of the secret key used to create a delegation token, the client cannot be authenticated.
 As ZooKeeper distribution is an asynchronous operation (typically on the order of seconds), the
@@ -474,11 +474,11 @@ javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: 
         at org.apache.accumulo.core.rpc.UGIAssumingTransport.open(UGIAssumingTransport.java:49)
         at org.apache.accumulo.core.rpc.ThriftUtil.createClientTransport(ThriftUtil.java:357)
         at org.apache.accumulo.core.rpc.ThriftUtil.createTransport(ThriftUtil.java:255)
-        at org.apache.accumulo.server.master.LiveTServerSet$TServerConnection.getTableMap(LiveTServerSet.java:106)
-        at org.apache.accumulo.master.Master.gatherTableInformation(Master.java:996)
-        at org.apache.accumulo.master.Master.access$600(Master.java:160)
-        at org.apache.accumulo.master.Master$StatusThread.updateStatus(Master.java:911)
-        at org.apache.accumulo.master.Master$StatusThread.run(Master.java:901)
+        at org.apache.accumulo.server.manager.LiveTServerSet$TServerConnection.getTableMap(LiveTServerSet.java:106)
+        at org.apache.accumulo.manager.Manager.gatherTableInformation(Manager.java:996)
+        at org.apache.accumulo.manager.Manager.access$600(Manager.java:160)
+        at org.apache.accumulo.manager.Manager$StatusThread.updateStatus(Manager.java:911)
+        at org.apache.accumulo.manager.Manager$StatusThread.run(Manager.java:901)
 Caused by: GSSException: No valid credentials provided (Mechanism level: Server not found in Kerberos database (7) - LOOKING_UP_SERVER)
         at sun.security.jgss.krb5.Krb5Context.initSecContext(Krb5Context.java:710)
         at sun.security.jgss.GSSContextImpl.initSecContext(GSSContextImpl.java:248)
@@ -531,7 +531,7 @@ Caused by: org.apache.thrift.transport.TTransportException: Peer indicated failu
 on, is extremely important when negotiating an SASL connection. This problem commonly arises when the Accumulo
 servers are not configured to listen on the address denoted by their FQDN.
 
-The values in the Accumulo "hosts" files (In `accumulo/conf`: `masters`, `monitors`, `tservers`, `tracers`,
+The values in the Accumulo "hosts" files (In `accumulo/conf`: `managers`, `monitors`, `tservers`, `tracers`,
 and `gc`) should match the instance component of the Kerberos server principal (e.g. `host` in `accumulo/host@EXAMPLE.COM`).
 
 **Q**: After configuring my system for Kerberos, server processes come up normally and I can interact with the system. However,
