@@ -156,21 +156,27 @@ var mirrorsCallback = function(json) {
   htmlContent += '<optgroup label="Preferred Mirror (based on location)">';
   htmlContent += '<option selected="selected">' + json.preferred + '</option>';
   htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="HTTP Mirrors">';
-  for (var i = 0; i < json.http.length; i++) {
-    htmlContent += '<option>' + json.http[i] + '</option>';
+  if (json.hasOwnProperty('http')) {
+    htmlContent += '<optgroup label="HTTP Mirrors">';
+    for (var i = 0; i < json.http.length; i++) {
+      htmlContent += '<option>' + json.http[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="FTP Mirrors">';
-  for (var i = 0; i < json.ftp.length; i++) {
-    htmlContent += '<option>' + json.ftp[i] + '</option>';
+  if (json.hasOwnProperty('ftp')) {
+    htmlContent += '<optgroup label="FTP Mirrors">';
+    for (var i = 0; i < json.ftp.length; i++) {
+      htmlContent += '<option>' + json.ftp[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="Backup Mirrors">';
-  for (var i = 0; i < json.backup.length; i++) {
-    htmlContent += '<option>' + json.backup[i] + '</option>';
+  if (json.hasOwnProperty('backup')) {
+    htmlContent += '<optgroup label="Backup Mirrors">';
+    for (var i = 0; i < json.backup.length; i++) {
+      htmlContent += '<option>' + json.backup[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
   htmlContent += '</select></div></div>';
 
   $("#mirror_selection").html(htmlContent);
