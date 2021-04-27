@@ -1,29 +1,30 @@
 ---
 Title: JShell Accumulo Feature
-Author: R. Dane Magbuhos
-Reviewers: Christopher Tubbs, Keith Turner
+
 ---
 
 ## Overview
-First introduced in Java 9+, [JShell][JShell Doc] is an interactive Read-Evaluate-Print-Loop (REPL) 
-Java tool that assess user's inputed declarations, statements, and expressions and outputs 
-the results. This tool provides a convenient way to test out and execute quick tasks with Accumulo
-in the terminal.
+First introduced in Java 9, [JShell][jshell-doc] is an interactive Read-Evaluate-Print-Loop (REPL) 
+Java tool that interprets user's input and outputs the results. This tool provides a convenient way 
+to test out and execute quick tasks with Accumulo in the terminal. This feature is apart of the 
+upcoming Accumulo 2.1 release. If you're a developer and want to get involved in testing, 
+[contact us][contact] or review our [contributing guide][guide]
 
 ## Major Features
-* During Accumulo build, produces a default JShell script called `jshell-init.jsh` 
-containing up-to-date [Accumulo Java APIs][public APIs] and [AccumuloClient][client] 
-build implementation
+* Default JShell script provides initial imports for interacting with Accumulo's API and 
+provided in Accumulo's binary distribution tarball
 
-* Startup JShell with default or custom JShell script 
 
-* Both JShell start up options automatically import all relevant Java APIs 
+* On startup, JShell Accumulo  will automatically import the `CLASSPATH`, load in a configured 
+environment from user's `conf/accumulo-env.sh`, and invoke `conf/jshell-init.jsh` to 
+allow rapid Accumulo task executions
+
+
+* JShell Accumulo can startup using default/custom JShell script and users can append any JShell 
+command-line [options][jshell-option] to the startup command
 
 ## Booting Up JShell Accumulo
-After installing and configuring the [latest Accumulo update][accumulo-repo]
-follow the steps below to startup JShell:
-
-1) Open up a terminal and navigate to Accumulo's home directory 
+1) Open up a terminal and navigate to Accumulo's installation directory 
 
 2) To startup JShell with **default script** use this command:
 
@@ -35,13 +36,11 @@ $ bin/accumulo jshell
 ```bash
 $ bin/accumulo jshell --startup (file/path/to/custom_script.jsh)
 ```
+**Note:** Executing this specific command  _"$jshell"_  will startup JShell, however you will be required to manually import the `CLASSPATH` and the configured environment from `conf/accumulo-env.sh`. In addition, you will need to provide the file directory path to `conf/jshell-init.jsh` before any Accumulo tasks can be performed. Using one of the startup commands above will automate 
+the setup process.
+
 ## JShell Accumulo Default Script
-The auto-generated `jshell-init.jsh` is located in Accumulo's `conf/` directory. 
-Inside `jshell-init.jsh` contains [Accumulo Java APIs][public APIs] formatted as import statements 
-and [AccumuloClient][client] build implementation. On startup the script automatically loads in the 
-APIs and attempts to construct a client. Should additional APIs and/or code implementations be 
-needed, simply append them to `jshell-init.jsh`. Alternatively you can create a separate JShell 
-script and specify the custom script's file path on startup.
+The auto-generated `jshell-init.jsh` is a customizable file located in Accumulo's installation `conf/` directory. Inside `jshell-init.jsh` contains [Accumulo Java APIs][public APIs] formatted as import statements and [AccumuloClient][client] build implementation. On startup the script automatically loads in the APIs and attempts to construct a client. Should additional APIs and/or code implementations be needed, simply append them to `jshell-init.jsh`. Alternatively you can create a separate JShell script and specify the custom script's file path on startup.
 
 The build implementation finds and uses `accumulo-client.properties` in Accumulo's 
 classpath to auto-generate an [AccumuloClient][client] called **client**. 
@@ -74,7 +73,7 @@ jshell>
 ```
 
 ## JShell Accumulo Example
-1) Booting up JShell using default script
+1) Booting up JShell Accumulo using default script
 
 ```
 Preparing JShell for Apache Accumulo 
@@ -109,19 +108,20 @@ jshell>
   try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
       writer.addMutation(mutation);
   }
-
+  
   // Read and print all rows of the "GothamPD" table. 
   // Try w/ resources will close for us.
-  try (org.apache.accumulo.core.client.Scanner scan =
-    client.createScanner("GothamPD", Authorizations.EMPTY)) {
+  try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
     System.out.println("Gotham Police Department Persons of Interest:");
     
     // A Scanner is an extension of java.lang.Iterable so behaves just like one.
-    for (Map.Entry<Key,Value> entry : scan) {
-      System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
-    }
+    scan.forEach((k, v) -> System.out.printf("Key : %-50s Value : %s\n", k, v));
   }
 ```
+
+**Note:** The fully-qualified class name for Accumulo Scanner or `org.apache.accumulo.core.client.Scanner` needs to be used due to conflicting issues with 
+Java's built-in java.util.Scanner. However, to shorten the Accumulo Scanner's declaration, 
+assign scan to `ScannerBase` type instead.  
 
 3) Executing the Accumulo task above outputs:
 
@@ -135,7 +135,10 @@ Key : id0001 hero:wearsCape? [] 1618926204602 false       Value : true
 jshell>
 ```
 
-[accumulo-repo]: https://github.com/apache/accumulo
+
+[contact]: https://accumulo.apache.org/contact-us/
+[guide]: https://accumulo.apache.org/how-to-contribute/ 
 [client]: https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html
-[JShell Doc]: https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8
+[jshell-doc]: https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8
+[jshell-option]: https://docs.oracle.com/javase/9/tools/jshell.htm#JSWOR-GUID-C337353B-074A-431C-993F-60C226163F00 
 [public APIs]: https://accumulo.apache.org/api/
