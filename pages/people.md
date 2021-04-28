@@ -170,11 +170,12 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Trent Nadeau        | [Anthem Engineering LLC][ANTHEMENG]                               | [ET][ET]              |
 | Tristen Georgiou    | [PHEMI][PHEMI]                                                    | [PT][PT]              |
 | Tushar Dhadiwal     | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
+| Umang goyal         |                                                                   | [GMT][GMT]            |
 | Vicky Kak           |                                                                   |                       |
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
-| Umang goyal         |                                                                   | [GMT][GMT]            |
+
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
