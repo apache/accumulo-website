@@ -72,6 +72,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Aishwarya Thangappa | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
+| Ali Mustafa         | [FAST-NU][FAST-NU]                                                | [PKT][PKT]            |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST] |
@@ -195,6 +196,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [DATACATESS]: https://datacatessen.com
 [ELYPIA]: https://elypia.org
 [ENDGAME]: https://www.endgame.com
+[FAST-NU]: https://nu.edu.pk/
 [FLYWHEEL]: https://flywheeldata.com
 [HORTONWORKS]: https://hortonworks.com
 [IBM]: https://www.ibm.com
@@ -231,4 +233,5 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [JST]: https://www.timeanddate.com/time/zones/jst
 [MT]: https://www.timeanddate.com/time/zones/mt
 [PT]: https://www.timeanddate.com/time/zones/pt
+[PKT]: https://www.timeanddate.com/time/zones/pkt
 [CEST]: https://www.timeanddate.com/time/zones/cest
