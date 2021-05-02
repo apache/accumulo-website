@@ -100,6 +100,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Eugene Cheipesh     |                                                                   |                       |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Harjit Singh        |                                                                   | [ET][ET]              |
+| Hasan Gürcan        |                                                                   | [CEST][CEST]          |
 | Hayden Marchant     |                                                                   |                       |
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
