@@ -73,6 +73,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Ali Mustafa         | [FAST-NU][FAST-NU]                                                | [PKT][PKT]            |
+| Amisha Sahu         |                                                                   | [IST][IST]            |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST] |
