@@ -4,11 +4,12 @@ Title: JShell Accumulo Feature
 ---
 
 ## Overview
+
 First introduced in Java 9, [JShell][jshell-doc] is an interactive Read-Evaluate-Print-Loop (REPL) 
-Java tool that interprets user's input and outputs the results. This tool provides a convenient way 
-to test out and execute quick tasks with Accumulo in the terminal. This feature is apart of the 
-upcoming Accumulo 2.1 release. If you're a developer and want to get involved in testing, 
-[contact us][contact] or review our [contributing guide][guide]
+Java tool that interprets user's input and outputs the results. This tool provides a convenient 
+way to test out and execute quick tasks with Accumulo in the terminal. This feature is a part 
+of the upcoming Accumulo 2.1 release. If you're a developer and want to get involved in testing, 
+[contact us][contact] or review our [contributing guide][guide].
 
 ## Major Features
 * Default JShell script provides initial imports for interacting with Accumulo's API and 
@@ -16,8 +17,8 @@ provided in Accumulo's binary distribution tarball
 
 
 * On startup, JShell Accumulo  will automatically import the `CLASSPATH`, load in a configured 
-environment from user's `conf/accumulo-env.sh`, and invoke `conf/jshell-init.jsh` to 
-allow rapid Accumulo task executions
+environment from user's `conf/accumulo-env.sh`, and invoke `conf/jshell-init.jsh` 
+to allow rapid Accumulo task executions
 
 
 * JShell Accumulo can startup using default/custom JShell script and users can append any JShell 
@@ -34,16 +35,28 @@ $ bin/accumulo jshell
 3) To startup JShell with **custom script** use this command:
 
 ```bash
-$ bin/accumulo jshell --startup (file/path/to/custom_script.jsh)
+$ bin/accumulo jshell --startup file/path/to/custom_script.jsh
 ```
-**Note:** Executing this specific command  _"$jshell"_  will startup JShell, however you will be required to manually import the `CLASSPATH` and the configured environment from `conf/accumulo-env.sh`. In addition, you will need to provide the file directory path to `conf/jshell-init.jsh` before any Accumulo tasks can be performed. Using one of the startup commands above will automate 
-the setup process.
+**Note:** One can execute the `jshell` command to startup JShell. However, doing so will require 
+manually importing the `CLASSPATH` and the configured environment from `conf/accumulo-env.sh` 
+and manually specifying the startup file for `conf/jshell-init.jsh` before any Accumulo tasks 
+can be performed. Using one of the startup commands above will automate that process 
+for convenience. 
+ 
 
 ## JShell Accumulo Default Script
-The auto-generated `jshell-init.jsh` is a customizable file located in Accumulo's installation `conf/` directory. Inside `jshell-init.jsh` contains [Accumulo Java APIs][public APIs] formatted as import statements and [AccumuloClient][client] build implementation. On startup the script automatically loads in the APIs and attempts to construct a client. Should additional APIs and/or code implementations be needed, simply append them to `jshell-init.jsh`. Alternatively you can create a separate JShell script and specify the custom script's file path on startup.
+The auto-generated `jshell-init.jsh` is a customizable file located in Accumulo's installation 
+`conf/` directory. Inside, `jshell-init.jsh` contains [Accumulo Java APIs][public APIs] 
+formatted as import statements and [AccumuloClient][client] build implementation. On startup, 
+the script automatically loads in the APIs and attempts to construct a client. Should additional 
+APIs and/or code implementations be needed, simply append them to `jshell-init.jsh`. 
+Alternatively, you can create a separate JShell script and specify the custom script's file path 
+on startup.
 
-The build implementation finds and uses `accumulo-client.properties` in Accumulo's 
-classpath to auto-generate an [AccumuloClient][client] called **client**. 
+To construct an [AccumuloClient][client], the provided `conf/jshell-init.jsh` script finds 
+and uses `accumulo-client.properties` in Accumulo's class path, and assigns the result 
+to a variable called **client**. 
+
 If `accumulo-client.properties` is found, a similar result will be produced below:
 
 ``` 
@@ -58,6 +71,7 @@ Use 'client' to interact with Accumulo
 
 jshell> 
 ```
+
 If `accumulo-client.properties` is not found, an [AccumuloClient][client] will not 
 auto-generate and will produce the following result below:
 
@@ -119,9 +133,10 @@ jshell>
   }
 ```
 
-**Note:** The fully-qualified class name for Accumulo Scanner or `org.apache.accumulo.core.client.Scanner` needs to be used due to conflicting issues with 
-Java's built-in java.util.Scanner. However, to shorten the Accumulo Scanner's declaration, 
-assign scan to `ScannerBase` type instead.  
+**Note:** The fully-qualified class name for Accumulo Scanner or 
+`org.apache.accumulo.core.client.Scanner` needs to be used due to conflicting issues with 
+Java's built-in java.util.Scanner. However, to shorten the Accumulo Scanner's declaration, assign 
+scan to `ScannerBase` type instead.  
 
 3) Executing the Accumulo task above outputs:
 
@@ -134,8 +149,6 @@ Key : id0001 hero:wearsCape? [] 1618926204602 false       Value : true
 
 jshell>
 ```
-
-
 [contact]: https://accumulo.apache.org/contact-us/
 [guide]: https://accumulo.apache.org/how-to-contribute/ 
 [client]: https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html
