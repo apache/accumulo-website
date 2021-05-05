@@ -6,10 +6,164 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 05 May 2021 17:10:04 +0000</pubDate>
-    <lastBuildDate>Wed, 05 May 2021 17:10:04 +0000</lastBuildDate>
+    <pubDate>Wed, 05 May 2021 19:46:27 +0000</pubDate>
+    <lastBuildDate>Wed, 05 May 2021 19:46:27 +0000</lastBuildDate>
     <generator>Jekyll v4.2.0</generator>
     
+    
+      <item>
+        <title>Jshell Accumulo Feature</title>
+        <description>&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;First introduced in Java 9, &lt;a href=&quot;https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8&quot;&gt;JShell&lt;/a&gt; is an interactive Read-Evaluate-Print-Loop (REPL) 
+Java tool that interprets user’s input and outputs the results. This tool provides a convenient 
+way to test out and execute quick tasks with Accumulo in the terminal. This feature is a part 
+of the upcoming Accumulo 2.1 release. If you’re a developer and want to get involved in testing, 
+&lt;a href=&quot;https://accumulo.apache.org/contact-us/&quot;&gt;contact us&lt;/a&gt; or review our &lt;a href=&quot;https://accumulo.apache.org/how-to-contribute/&quot;&gt;contributing guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;major-features&quot;&gt;Major Features&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Default JShell script provides initial imports for interacting with Accumulo’s API and 
+provided in Accumulo’s binary distribution tarball&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;On startup, JShell Accumulo  will automatically import the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt;, load in a configured 
+environment from user’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt;, and invoke &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; 
+to allow rapid Accumulo task executions&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;JShell Accumulo can startup using default/custom JShell script and users can append any JShell 
+command-line &lt;a href=&quot;https://docs.oracle.com/javase/9/tools/jshell.htm#JSWOR-GUID-C337353B-074A-431C-993F-60C226163F00&quot;&gt;options&lt;/a&gt; to the startup command&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;booting-up-jshell-accumulo&quot;&gt;Booting Up JShell Accumulo&lt;/h2&gt;
+&lt;p&gt;1) Open up a terminal and navigate to Accumulo’s installation directory&lt;/p&gt;
+
+&lt;p&gt;2) To startup JShell with &lt;strong&gt;default script&lt;/strong&gt; use this command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/accumulo jshell 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;3) To startup JShell with &lt;strong&gt;custom script&lt;/strong&gt; use this command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/accumulo jshell &lt;span class=&quot;nt&quot;&gt;--startup&lt;/span&gt; file/path/to/custom_script.jsh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; One can execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell&lt;/code&gt; command to startup JShell. However, doing so will require 
+manually importing the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt; and the configured environment from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt; 
+and manually specifying the startup file for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; before any Accumulo tasks 
+can be performed. Using one of the startup commands above will automate that process 
+for convenience.&lt;/p&gt;
+
+&lt;h2 id=&quot;jshell-accumulo-default-script&quot;&gt;JShell Accumulo Default Script&lt;/h2&gt;
+&lt;p&gt;The auto-generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; is a customizable file located in Accumulo’s installation 
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/&lt;/code&gt; directory. Inside, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; contains &lt;a href=&quot;https://accumulo.apache.org/api/&quot;&gt;Accumulo Java APIs&lt;/a&gt; 
+formatted as import statements and &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; build implementation. On startup, 
+the script automatically loads in the APIs and attempts to construct a client. Should additional 
+APIs and/or code implementations be needed, simply append them to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt;. 
+Alternatively, you can create a separate JShell script and specify the custom script’s file path 
+on startup.&lt;/p&gt;
+
+&lt;p&gt;To construct an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt;, the provided &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; script finds 
+and uses &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; in Accumulo’s class path, and assigns the result 
+to a variable called &lt;strong&gt;client&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; is found, a similar result will be produced below:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+
+Building Accumulo client using 'jar:file:/home/accumulo/lib/accumulo-client.jar!/accumulo-client.properties'
+
+Use 'client' to interact with Accumulo
+
+|  Welcome to JShell -- Version 11.0.10
+|  For an introduction type: /help intro
+
+jshell&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; is not found, an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; will not 
+auto-generate and will produce the following result below:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+
+'accumulo-client.properties' was not found on the classpath
+
+|  Welcome to JShell -- Version 11.0.10
+|  For an introduction type: /help intro
+
+jshell&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;jshell-accumulo-example&quot;&gt;JShell Accumulo Example&lt;/h2&gt;
+&lt;p&gt;1) Booting up JShell Accumulo using default script&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+
+Building Accumulo client using 'file:/home/accumulo/conf/accumulo-client.properties'
+
+Use 'client' to interact with Accumulo
+
+|  Welcome to JShell -- Version 11.0.10
+|  For an introduction type: /help intro
+
+jshell&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2) Providing JShell with an Accumulo task&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Java&quot;&gt;  // Create a table called &quot;GothamPD&quot;.
+  client.tableOperations().create(&quot;GothamPD&quot;);
+
+  // Create a Mutation object to hold all changes to a row in a table. 
+  // Each row has a unique row ID.
+  Mutation mutation = new Mutation(&quot;id0001&quot;);
+
+  // Create key/value pairs for Batman. Put them in the &quot;hero&quot; family.
+  mutation.put(&quot;hero&quot;, &quot;alias&quot;, &quot;Batman&quot;);
+  mutation.put(&quot;hero&quot;, &quot;name&quot;, &quot;Bruce Wayne&quot;);
+  mutation.put(&quot;hero&quot;, &quot;wearsCape?&quot;, &quot;true&quot;);
+
+  // Create a BatchWriter to the GothamPD table and add your mutation to it. 
+  // Try w/ resources will close for us.
+  try (BatchWriter writer = client.createBatchWriter(&quot;GothamPD&quot;)) {
+      writer.addMutation(mutation);
+  }
+  
+  // Read and print all rows of the &quot;GothamPD&quot; table. 
+  // Try w/ resources will close for us.
+  try (ScannerBase scan = client.createScanner(&quot;GothamPD&quot;, Authorizations.EMPTY)) {
+    System.out.println(&quot;Gotham Police Department Persons of Interest:&quot;);
+    
+    // A Scanner is an extension of java.lang.Iterable so behaves just like one.
+    scan.forEach((k, v) -&amp;gt; System.out.printf(&quot;Key : %-50s Value : %s\n&quot;, k, v));
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The fully-qualified class name for Accumulo Scanner or 
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;org.apache.accumulo.core.client.Scanner&lt;/code&gt; needs to be used due to conflicting issues with 
+Java’s built-in java.util.Scanner. However, to shorten the Accumulo Scanner’s declaration, assign 
+scan to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ScannerBase&lt;/code&gt; type instead.&lt;/p&gt;
+
+&lt;p&gt;3) Executing the Accumulo task above outputs:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mutation ==&amp;gt; org.apache.accumulo.core.data.Mutation@1
+Gotham Police Department Persons of Interest:
+Key : id0001 hero:alias [] 1618926204602 false            Value : Batman
+Key : id0001 hero:name [] 1618926204602 false             Value : Bruce Wayne
+Key : id0001 hero:wearsCape? [] 1618926204602 false       Value : true
+
+jshell&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Wed, 21 Apr 2021 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2021/04/21/jshell-accumulo-feature.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2021/04/21/jshell-accumulo-feature.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 2.0.1</title>
@@ -1409,147 +1563,6 @@ stored in HDFS.&lt;/p&gt;
         <pubDate>Tue, 10 Sep 2019 00:00:00 +0000</pubDate>
         <link>https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Top 10 Reasons to Upgrade</title>
-        <description>&lt;p&gt;Accumulo 2.0 has been in development for quite some time now and is packed with new features, bug
-fixes, performance improvements and redesigned components.  All of these changes bring challenges
-when upgrading your production cluster so you may be wondering… why should I upgrade?&lt;/p&gt;
-
-&lt;p&gt;My top 10 reasons to upgrade. For all changes see the &lt;a href=&quot;/release/accumulo-2.0.0/&quot;&gt;release notes&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;#summaries&quot;&gt;Summaries&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#new-bulk-import&quot;&gt;New Bulk Import&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#simplified-scripts-and-config&quot;&gt;Simplified Scripts and Config&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#new-monitor&quot;&gt;New Monitor&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#new-apis&quot;&gt;New APIs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#offline-creation&quot;&gt;Offline creation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#search-documentation&quot;&gt;Search Documentation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#new-crypto&quot;&gt;On disk encryption&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#zstandard-compression&quot;&gt;ZStandard Compression&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#new-scan-executors&quot;&gt;New Scan Executors&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;summaries&quot;&gt;Summaries&lt;/h3&gt;
-
-&lt;p&gt;This feature allows detailed stats about Tables to be written directly into Accumulo files (R-Files). 
-Summaries can be used to make precise decisions about your data. Once configured, summaries become a 
-part of your Tables, so they won’t impact ingest or query performance of your cluster.&lt;/p&gt;
-
-&lt;p&gt;Here are some example use cases:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A compaction could automatically run if deletes compose more than 25% of the data&lt;/li&gt;
-  &lt;li&gt;An admin could optimize compactions by configuring specific age off of data&lt;/li&gt;
-  &lt;li&gt;An admin could analyze R-File summaries for better performance tuning of a cluster&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For more info check out the &lt;a href=&quot;/docs/2.x//development/summaries&quot;&gt;summary docs for 2.0&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;new-bulk-import&quot;&gt;New Bulk Import&lt;/h3&gt;
-
-&lt;p&gt;Bulk Ingest was completely redone for 2.0.  Previously, Bulk Ingest relied on expensive inspections of 
-R-Files across multiple Tablet Servers. With enough data, an old Bulk Ingest operation could easily 
-hold up simpler Table operations and critical compactions of files.&lt;/p&gt;
-
-&lt;p&gt;The new Bulk Ingest gives the user control over the R-File inspection, allows for offline bulk
-ingesting and provides performance &lt;a href=&quot;/release/accumulo-2.0.0/#new-bulk-import-api&quot;&gt;improvements&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;simplified-scripts-and-config&quot;&gt;Simplified Scripts and Config&lt;/h2&gt;
-
-&lt;p&gt;Many improvements were done to the scripts and configuration. See Mike’s description of the &lt;a href=&quot;/blog/2016/11/16/simpler-scripts-and-config.html&quot;&gt;improvements.&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;new-monitor&quot;&gt;New Monitor&lt;/h2&gt;
-
-&lt;p&gt;The Monitor has been re-written using REST, Javascript and more modern Web Tech.  It is faster, 
-cleaner and more maintainable than the previous version. Here is a screen shot:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/accumulo-monitor-1.png&quot; width=&quot;50%&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;new-apis&quot;&gt;New APIs&lt;/h2&gt;
-
-&lt;p&gt;Connecting to Accumulo is now easier with a single point of entry for clients. It can now be done with 
-a fluent API, 2 imports and using minimal code:&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.accumulo.core.client.Accumulo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.apache.accumulo.core.client.AccumuloClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;AccumuloClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Accumulo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-          &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;instance&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;zk&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-          &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;pass&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;c1&quot;&gt;// use the client&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;tableOperations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;newTable&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;As you can see the client is also closable, which gives developers more control over resources.
-See the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.1/org/apache/accumulo/core/client/Accumulo.html&quot;&gt;Accumulo entry point javadoc&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Key and Mutation have new fluent APIs, which now allow mixing of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;String&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;byte[]&lt;/code&gt; types.&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;Key&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;foo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bar&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;row0017&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;001&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;qualifier&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;v99&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;002&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;qualifier&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;More examples for &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/core/src/test/java/org/apache/accumulo/core/data/KeyBuilderTest.java&quot;&gt;Key&lt;/a&gt; and &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.0/org/apache/accumulo/core/data/Mutation.html#at()&quot;&gt;Mutation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;table-creation-options&quot;&gt;Table creation options&lt;/h2&gt;
-
-&lt;p&gt;Tables can now be created with splits, which is much faster than creating a
-table and then adding splits.  Tables can also be created in an offline state
-now.  The new bulk import API supports offline tables.  This enables the
-following method of getting a lot of data into a new table very quickly.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Create offline table with splits&lt;/li&gt;
-  &lt;li&gt;Bulk import into new offline table&lt;/li&gt;
-  &lt;li&gt;Bring table online&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;See the javadoc for &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.1/org/apache/accumulo/core/client/admin/NewTableConfiguration.html&quot;&gt;NewTableConfiguration&lt;/a&gt; and search for methods introduced in 2.0.0 for more information.&lt;/p&gt;
-
-&lt;h2 id=&quot;search-documentation&quot;&gt;Search Documentation&lt;/h2&gt;
-
-&lt;p&gt;New ability to quickly search documentation on the website. The user manual was completely redone 
-for 2.0. Check it out &lt;a href=&quot;/docs/2.x//getting-started/quickstart&quot;&gt;here&lt;/a&gt;. Users can now quickly &lt;a href=&quot;/search/&quot;&gt;search&lt;/a&gt; the website across all 2.x documentation.&lt;/p&gt;
-
-&lt;h2 id=&quot;new-crypto&quot;&gt;New Crypto&lt;/h2&gt;
-
-&lt;p&gt;On disk encryption was redone to be more secure and flexible. For an in depth description of how Accumulo 
-does on disk encryption, see the &lt;a href=&quot;/docs/2.x//security/on-disk-encryption&quot;&gt;user manual&lt;/a&gt;.  NOTE: This is currently an experimental feature.
-An experimental feature is considered a work in progress or incomplete and could change.&lt;/p&gt;
-
-&lt;h2 id=&quot;zstandard-compression&quot;&gt;Zstandard compression&lt;/h2&gt;
-
-&lt;p&gt;Support for Zstandard compression was added in 2.0.  It has been measured to perform better than 
-gzip (better compression ratio and speed) and snappy (better compression ratio). Checkout Facebook’s &lt;a href=&quot;https://facebook.github.io/zstd/&quot;&gt;github&lt;/a&gt; for Zstandard and
-the &lt;a href=&quot;/docs/2.x//configuration/server-properties&quot;&gt;table.file.compress.type&lt;/a&gt; property for configuring Accumulo.&lt;/p&gt;
-
-&lt;h2 id=&quot;new-scan-executors&quot;&gt;New Scan Executors&lt;/h2&gt;
-
-&lt;p&gt;Users now have more control over scans with the new scan executors.  Tables can be configured to utilize these 
-powerful new mechanisms using just a few properties, giving user control over things like scan prioritization and 
-better cluster resource utilization.&lt;/p&gt;
-
-&lt;p&gt;For example, a cluster has a bunch of long running scans and one really fast scan.  The long running scans will eat up 
-a majority of the server resources causing the one really fast scan to be delayed.  Scan executors allow an admin 
-to configure the cluster in a way that allows the one fast scan to be prioritized and not have to wait.&lt;/p&gt;
-
-&lt;p&gt;Checkout some examples in the &lt;a href=&quot;/docs/2.x//administration/scan-executors&quot;&gt;user guide&lt;/a&gt;.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/blog/2019/08/12/why-upgrade.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/08/12/why-upgrade.html</guid>
         
         
         <category>blog</category>
