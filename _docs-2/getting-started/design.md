@@ -93,7 +93,7 @@ at one time. Leader election will be performed internally to choose the active M
 The Accumulo Compactor process is an optional application that can be used to run compactions
 outside of the TabletServer. One to many Compactors can be run on a cluster and each Compactor
 process performs one compaction at a time. The Compactor registers its existence in ZooKeeper
-and communicates with the Compaction Coordinator to retrieve it's work and to register the
+and communicates with the Compaction Coordinator to retrieve its work and to register the
 completion status of the compaction. The Compactor process will continue to perform compactions
 in situations where normal in-TabletServer compactions would fail, such as TabletServer restart
 and Tablet re-hosting.
