@@ -76,7 +76,7 @@ in an Accumulo deployment:
 
   * *Compactor*: Accumulo process that runs external compactions and is started with the name of a queue for which it will perform compactions.  In a typical deployment there will be many of these processes running, some for queue A, queue B, etc.  This process will only run a single compaction at a time and will communicate with the Compaction Coordinator to get a compaction job and report its status.
 
-  * *Compaction Coordinator*: a process that manages the compaction queues for all external compactions in the system and assigns compaction jasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status. 
+  * *Compaction Coordinator*: a process that manages the compaction queues for all external compactions in the system and assigns compaction tasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status. 
 
 ### Configuration
 
