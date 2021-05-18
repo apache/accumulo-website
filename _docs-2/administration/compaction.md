@@ -53,9 +53,9 @@ Below are some Accumulo shell commands that do the following :
 
 ```
 config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
-config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","maxSize":"16M","numThreads":8},{"name":"medium","maxSize":"128M","numThreads":4},{"name":"large","numThreads":2}]'
+config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":8},{"name":"medium","type":"internal","maxSize":"128M","numThreads":4},{"name":"large","type":"internal","numThreads":2}]'
 config -s tserver.compaction.major.service.cs2.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
-config -s 'tserver.compaction.major.service.cs2.planner.opts.executors=[{"name":"small","maxSize":"16M","numThreads":4},{"name":"medium","maxSize":"128M","numThreads":2},{"name":"large","numThreads":1}]'
+config -s 'tserver.compaction.major.service.cs2.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":4},{"name":"medium","type":"internal","maxSize":"128M","numThreads":2},{"name":"large","type":"internal","numThreads":1}]'
 config -s tserver.compaction.major.service.cs2.throughput=40M
 config -t ci -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
 config -t ci -s table.compaction.dispatcher.opts.service=cs1
@@ -78,18 +78,40 @@ in an Accumulo deployment:
 
   * *Compaction Coordinator*: a process that manages the compaction queues for all external compactions in the system and assigns compaction tasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status. 
 
+### Starting the Components
+
+The CompactionCoordinator and Compactor components are started in the same manner as the other Accumulo services.
+
+To start a CompactionCoordinator:
+
+```
+accumulo compaction-coordinator &
+```
+
+To start a Compactor:
+
+```
+accumulo compactor -q <queueName>
+```
+
 ### Configuration
 
 Configuration for external compactions is very similar to the internal compaction example above.
-In the example below we create a Compaction Service `cs1` and configure it with an externalQueue
+In the example below we create a Compaction Service `cs1` and configure it with an queue
 named `DCQ1`. We then define the Compaction Dispatcher on table `testTable` and configure the
-table to use the `cs1` Compaction Service for planning and executing compactions.
+table to use the `cs1` Compaction Service for planning and executing all compactions.
 
 ```
 config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
-config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"all","externalQueue":"DCQ1"}]'
+config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"all","type":"external","queue":"DCQ1"}]'
 config -t testTable -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
 config -t testTable -s table.compaction.dispatcher.opts.service=cs1
+```
+
+Note that you can mix internal and external options, for example:
+
+```
+config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":8},{"name":"medium","type":"internal","maxSize":"128M","numThreads":4},{"name":"large","type":"external","queue":"LargeQ"}]'
 ```
 
 ### Overview
