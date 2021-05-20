@@ -145,9 +145,9 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Michael Berman      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Miguel Pereira      | [SRA International, Inc][SRA]                                     | [ET][ET]              |
 | Mike Fagan          | [Arcus Research][ARCUS]                                           | [MT][MT]              |
-| Nicolás Alarcón R.  |                                                                   | [CEST][CEST]          |
 | Morgan Haskel       |                                                                   |                       |
 | Nguessan Kouame     |                                                                   |                       |
+| Nicolás Alarcón R.  |                                                                   | [CEST][CEST]          |
 | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Philip Young        |                                                                   |                       |
