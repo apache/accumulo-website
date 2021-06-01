@@ -88,6 +88,26 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
+### Compactor
+
+The Accumulo Compactor process is an optional application that can be used to run compactions
+outside of the TabletServer. One to many Compactors can be run on a cluster and each Compactor
+process performs one compaction at a time. The Compactor registers its existence in ZooKeeper
+and communicates with the Compaction Coordinator to retrieve its work and to register the
+completion status of the compaction. The Compactor process will continue to perform compactions
+in situations where normal in-TabletServer compactions would fail, such as TabletServer restart
+and Tablet re-hosting.
+
+### Compaction Coordinator
+
+The Accumulo Compaction Coordinator is an optional application that is required to run compactions
+outside of the TabletServer. The Coordinator is responsible for communicating with the
+TabletServers, to identify what external compaction work needs to be done, and the Compactors
+to assign work, get status updates, and cancel running external compactions.
+
+Multiple Coordinators may be run. The Coordinators will choose among themselves a single active Coordinator,
+and the others will become backups if the active Coordinator should fail.
+
 ### Client
 
 Accumulo has a client library that can be used to write applications that write and read
