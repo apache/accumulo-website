@@ -132,6 +132,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
+| Luke Foster         | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Mandar Inamdar      | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
 | Mario Pastorelli    | [Teralytics AG][TERALYTICS]                                       | [CEST][CEST]          |
 | Markus Cozowicz     | [Microsoft][MICROSOFT]                                            | [CET][CEST]           |
