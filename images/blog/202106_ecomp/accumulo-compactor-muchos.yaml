@@ -1,0 +1,180 @@
+# The following instance properties are mapped into the containers as
+# accumulo.properties and will be picked up by compactor processes.  Its
+# important that the instance props exactly match those of all other Accumulo
+# processes in the cluster in order for them to be able to communicate with each
+# other.  So if all other processes use ect2-0 as the zookeeper host, we could
+# not use the IP addr here and still authenticate with other proccesses because
+# the values for the prop would not match exactly.  See the comment about
+# hostnames further down.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: accumulo-properties
+data:
+  accumulo.properties: |
+    coordinator.port.client=30100
+    general.rpc.timeout=240s
+    instance.secret=muchos
+    instance.volumes=hdfs://accucluster/accumulo
+    instance.zookeeper.host=ect2-0:2181
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: accumulo-logging
+data:
+  log4j2-service.properties: |
+    status = info
+    dest = err
+    name = AccumuloCompactorLoggingProperties
+    appender.console.type = Console
+    appender.console.name = STDOUT
+    appender.console.target = SYSTEM_OUT
+    appender.console.layout.type = PatternLayout
+    appender.console.layout.pattern = %d{ISO8601} [%-8c{2}] %-5p: %m%n
+    appender.console.filter.threshold.type = ThresholdFilter
+    appender.console.filter.threshold.level = info
+    logger.hadoop.name = org.apache.hadoop
+    logger.hadoop.level = debug
+    logger.zookeeper.name = org.apache.zookeeper
+    logger.zookeeper.level = error
+    logger.accumulo.name = org.apache.accumulo
+    logger.accumulo.level = debug
+    rootLogger.level = info
+    rootLogger.appenderRef.console.ref = STDOUT
+---
+# Muchos configured a nameservice of accucluster for HDFS.  Urls sent to
+# compactors from the coordinator would be of the form hdfs://accucluster/... .
+# Therefore compactors need to be able to resolve the accucluster nameservice.
+# The following data is mapped into the containers as the hdfs-site.xml file in
+# order to support resolving accucluster.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hdfs-site
+data:
+  hdfs-site.xml: |
+    <configuration>
+      <property>
+        <name>dfs.datanode.synconclose</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>dfs.nameservices</name>
+        <value>accucluster</value>
+      </property>
+      <property>
+        <name>dfs.internal.nameservices</name>
+        <value>accucluster</value>
+      </property>
+      <property>
+        <name>dfs.namenode.secondary.http-address.accucluster</name>
+        <value>ect2-0:50090</value>
+      </property>
+      <property>
+        <name>dfs.namenode.secondary.https-address.accucluster</name>
+        <value>ect2-0:50091</value>
+      </property>
+      <property>
+  	<name>dfs.namenode.rpc-address.accucluster</name>
+        <value>ect2-0:8020</value>
+      </property>
+      <property>
+        <name>dfs.namenode.http-address.accucluster</name>
+        <value>ect2-0:50070</value>
+      </property>
+      <property>
+        <name>dfs.namenode.https-address.accucluster</name>
+        <value>ect2-0:50071</value>
+      </property>
+      <property>
+        <name>dfs.namenode.servicerpc-address.accucluster</name>
+        <value>ect2-0:8025</value>
+      </property>
+      <property>
+        <name>dfs.namenode.lifeline.rpc-address.accucluster</name>
+        <value>ect2-0:8050</value>
+      </property>
+      <property>
+        <name>dfs.client.failover.proxy.provider.accucluster</name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+       </property>
+    </configuration>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accumulo-compactor
+  labels:
+    app: accumulo-compactor
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: accumulo-compactor
+  template:
+    metadata:
+      labels:
+        app: accumulo-compactor
+    spec:
+      # There was no shared DNS setup between the Muchos cluster and Kubernetes
+      # cluster, however they did share a private vnet.  Also Kubernetes was
+      # configured to give each pod an IP addr on the vnet, making the pods IP
+      # addrs visible to any process on the Muchos cluster.  So the two
+      # clusters could see each others IP addrs, but did not share a common
+      # DNS.  Compactors need to access Zookeeper and the Coordinator and both
+      # of these ran on host ect2-0, a hostname defined on the Muchos cluster.
+      # Therefore the hostname ect2-0 is defined for each pod below so that it
+      # can resolve this VM running in the Muchos cluster.  Given time a
+      # solution using DNS between the two clusters could probably be figured
+      # out.  This solution would probably be specific to an environment and
+      # Muchos tries to make very few assumptions.
+      hostNetwork: false
+      hostAliases:
+      - ip: "10.1.0.5"
+        hostnames:
+        - "ect2-0"
+      containers:
+      - name: accumulo-compactor
+        image: extcompne.azurecr.io/accumulo
+        command: ["/bin/bash","-c"]
+        # Since the Kubernetes and Muchos clusters do not share a common DNS,
+        # its very important that compactor processes advertise themselves in
+        # Zookeeper using IP addrs.  In the following command -a $(hostname -I)
+        # accomplishes this.
+        args: ["accumulo compactor -q DCQ1 -a $(hostname -I)"]
+        ports:
+        - containerPort: 9101
+        resources:
+          requests:
+            cpu: .9
+            memory: "2048Mi"
+          limits:
+            cpu: 1
+            memory: "2048Mi"
+        env:
+        - name: HADOOP_USER_NAME
+          value: centos
+        - name: ACCUMULO_JAVA_OPTS
+          value: "-Xmx1g"
+        volumeMounts:
+        - name: "config"
+          mountPath: "/opt/accumulo/conf/accumulo.properties"
+          subPath: "accumulo.properties"
+        - name: "logging"
+          mountPath: "/opt/accumulo/conf/log4j2-service.properties"
+          subPath: "log4j2-service.properties"
+        - name: "hdfs"
+          mountPath: "/opt/hadoop/etc/hadoop/hdfs-site.xml"
+          subPath: "hdfs-site.xml"
+      volumes:
+      - name: "config"
+        configMap:
+          name: "accumulo-properties"
+      - name: "logging"
+        configMap:
+          name: "accumulo-logging"
+      - name: "hdfs"
+        configMap:
+          name: "hdfs-site"
+
