@@ -36,7 +36,7 @@ compactions:
 
  * Allow major compactions to continue when the originating TabletServer dies
  * Allow major compactions to occur while a Tablet migrates to a new Tablet Server
- * Reduce the load on the TabletServer, giving it more cycles to insert mutations and respond to scans (assuming it’s running on different hosts).  Map reduce jobs and compactions can lower the effectiveness of processor caches for scans, so moving them off can be beneficial.
+ * Reduce the load on the TabletServer, giving it more cycles to insert mutations and respond to scans (assuming it’s running on different hosts).  MapReduce jobs and compactions can lower the effectiveness of processor and page caches for scans, so moving compactions off the host can be beneficial.
  * Allow major compactions to be scaled differently than the number of TabletServers, giving users more flexibility in allocating resources.
  * Even out hotspots where a few Tablet Servers have a lot of compaction work. External compactions allow this work to spread much wider than previously possible.
 
