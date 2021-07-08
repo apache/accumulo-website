@@ -6,10 +6,497 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 07 Jul 2021 19:01:41 +0000</pubDate>
-    <lastBuildDate>Wed, 07 Jul 2021 19:01:41 +0000</lastBuildDate>
+    <pubDate>Thu, 08 Jul 2021 22:23:19 +0000</pubDate>
+    <lastBuildDate>Thu, 08 Jul 2021 22:23:19 +0000</lastBuildDate>
     <generator>Jekyll v4.2.0</generator>
     
+    
+      <item>
+        <title>External Compactions</title>
+        <description>&lt;p&gt;External compactions are a new feature in Accumulo 2.1.0 which allows
+compaction work to run outside of Tablet Servers.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;There are two types of &lt;a href=&quot;https://storage.googleapis.com/pub-tools-public-publication-data/pdf/68a74a85e1662fe02ff3967497f31fda7f32225c.pdf&quot;&gt;compactions&lt;/a&gt; in Accumulo - Minor and Major. Minor
+compactions flush recently written data from memory to a new file. Major
+compactions merge two or more Tablet files together into one new file. Starting
+in 2.1 Tablet Servers can run multiple major compactions for a Tablet
+concurrently; there is no longer a single thread pool per Tablet Server that
+runs compactions. Major compactions can be resource intensive and may run for a
+long time depending on several factors, to include the number and size of the
+input files, and the iterators configured to run during major compaction.
+Additionally, the Tablet Server does not currently have a mechanism in place to
+stop a major compaction that is taking too long or using too many resources.
+There is a mechanism to throttle the read and write speed of major compactions
+as a way to reduce the resource contention on a Tablet Server where many
+concurrent compactions are running. However, throttling compactions on a busy
+system will just lead to an increasing amount of queued compactions. Finally,
+major compaction work can be wasted in the event of an untimely death of the
+Tablet Server or if a Tablet is migrated to another Tablet Server.&lt;/p&gt;
+
+&lt;p&gt;An external compaction is a major compaction that occurs outside of a Tablet
+Server. The external compaction feature is an extension of the major compaction
+service in the Tablet Server and is configured as part of the systems
+compaction service configuration. Thus, it is an optional feature. The goal of
+the external compaction feature is to overcome some of the drawbacks of the
+Major compactions that happen inside the Tablet Server. Specifically, external
+compactions:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Allow major compactions to continue when the originating TabletServer dies&lt;/li&gt;
+  &lt;li&gt;Allow major compactions to occur while a Tablet migrates to a new Tablet Server&lt;/li&gt;
+  &lt;li&gt;Reduce the load on the TabletServer, giving it more cycles to insert mutations and respond to scans (assuming it’s running on different hosts).  MapReduce jobs and compactions can lower the effectiveness of processor and page caches for scans, so moving compactions off the host can be beneficial.&lt;/li&gt;
+  &lt;li&gt;Allow major compactions to be scaled differently than the number of TabletServers, giving users more flexibility in allocating resources.&lt;/li&gt;
+  &lt;li&gt;Even out hotspots where a few Tablet Servers have a lot of compaction work. External compactions allow this work to spread much wider than previously possible.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The external compaction feature in Apache Accumulo version 2.1.0 adds two new
+system-level processes and new configuration properties. The new system-level
+processes are the Compactor and the Compaction Coordinator.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Compactor is a process that is responsible for executing a major compaction. There can be many Compactor’s running on a system. The Compactor communicates with the Compaction Coordinator to get information about the next major compaction it will run and to report the completion state.&lt;/li&gt;
+  &lt;li&gt;The Compaction Coordinator is a single process like the Manager. It is responsible for communicating with the Tablet Servers to gather information about queued external compactions, to reserve a major compaction on the Compactor’s behalf, and to report the completion status of the reserved major compaction.  For external compactions that complete when the Tablet is offline, the Compaction Coordinator buffers this information and reports it later.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;details&quot;&gt;Details&lt;/h2&gt;
+
+&lt;p&gt;Before we explain the implementation for external compactions, it’s probably
+useful to explain the changes for major compactions that were made in the 2.1.0
+branch before external compactions were added. This is most apparent in the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tserver.compaction.major.service&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table.compaction.dispatcher&lt;/code&gt; configuration
+properties. The simplest way to explain this is that you can now define a
+service for executing compactions and then assign that service to a table
+(which implies you can have multiple services assigned to different tables).
+This gives the flexibility to prevent one table’s compactions from impacting
+another table. Each service has named thread pools with size thresholds.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration&quot;&gt;Configuration&lt;/h3&gt;
+
+&lt;p&gt;The configuration below defines a compaction service named cs1 using
+the DefaultCompactionPlanner that is configured to have three named thread
+pools (small, medium, and large). Each thread pool is configured with a number
+of threads to run compactions and a size threshold. If the sum of the input
+file sizes is less than 16MB, then the major compaction will be assigned to the
+small pool, for example.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
+tserver.compaction.major.service.cs1.planner.opts.executors=[
+{&quot;name&quot;:&quot;small&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;16M&quot;,&quot;numThreads&quot;:8},
+{&quot;name&quot;:&quot;medium&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;128M&quot;,&quot;numThreads&quot;:4},
+{&quot;name&quot;:&quot;large&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;numThreads&quot;:2}]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To assign compaction service cs1 to the table ci, you would use the following properties:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t ci -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
+config -t ci -s table.compaction.dispatcher.opts.service=cs1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A small modification to the
+tserver.compaction.major.service.cs1.planner.opts.executors property in the
+example above would enable it to use external compactions. For example, let’s
+say that we wanted all of the large compactions to be done externally, you
+would use this configuration:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tserver.compaction.major.service.cs1.planner.opts.executors=[
+{&quot;name&quot;:&quot;small&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;16M&quot;,&quot;numThreads&quot;:8},
+{&quot;name&quot;:&quot;medium&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;128M&quot;,&quot;numThreads&quot;:4},
+{&quot;name&quot;:&quot;large&quot;,&quot;type&quot;:&quot;external&quot;,&quot;queue&quot;:&quot;DCQ1&quot;}]'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In this example the queue DCQ1 can be any arbitrary name and allows you to
+define multiple pools of Compactor’s.&lt;/p&gt;
+
+&lt;p&gt;Behind these new configurations in 2.1 lies a new algorithm for choosing which
+files to compact.  This algorithm attempts to find the smallest set of files
+that meets the compaction ratio criteria. Prior to 2.1, Accumulo looked for the
+largest set of files that met the criteria.  Both algorithms do logarithmic
+amounts of work.  The new algorithm better utilizes multiple thread pools
+available for running comactions of different sizes.&lt;/p&gt;
+
+&lt;h3 id=&quot;compactor&quot;&gt;Compactor&lt;/h3&gt;
+
+&lt;p&gt;A Compactor is started with the name of the queue for which it will complete
+major compactions. You pass in the queue name when starting the Compactor, like
+so:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bin/accumulo compactor -q DCQ1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once started the Compactor tries to find the location of the
+Compaction Coordinator in ZooKeeper and connect to it. Then, it asks the
+Compaction Coordinator for the next compaction job for the queue. The
+Compaction Coordinator will return to the Compactor the necessary information to
+run the major compaction, assuming there is work to be done. Note that the
+class performing the major compaction in the Compactor is the same one used in
+the Tablet Server, so we are just transferring all of the input parameters from
+the Tablet Server to the Compactor. The Compactor communicates information back
+to the Compaction Coordinator when the compaction has started, finished
+(successfully or not), and during the compaction (progress updates).&lt;/p&gt;
+
+&lt;h3 id=&quot;compaction-coordinator&quot;&gt;Compaction Coordinator&lt;/h3&gt;
+
+&lt;p&gt;The Compaction Coordinator is a singleton process in the system like the
+Manager. Also, like the Manager it supports standby Compaction Coordinator’s
+using locks in ZooKeeper. The Compaction Coordinator is started using the
+command:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bin/accumulo compaction-coordinator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When running, the Compaction Coordinator polls the TabletServers for summary
+information about their external compaction queues. It keeps track of the major
+compaction priorities for each Tablet Server and queue. When a Compactor
+requests the next major compaction job the Compaction Coordinator finds the
+Tablet Server with the highest priority major compaction for that queue and
+communicates with that Tablet Server to reserve an external compaction. The
+priority in this case is an integer value based on the number of input files
+for the compaction. For system compactions, the number is negative starting at
+-32768 and increasing to -1 and for user compactions it’s a non-negative number
+starting at 0 and limited to 32767. When the Tablet Server reserves the
+external compaction an entry is written into the metadata table row for the
+Tablet with the address of the Compactor running the compaction and all of the
+configuration information passed back from the Tablet Server. Below is an
+example of the ecomp metadata column:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2;10ba2e8ba2e8ba5 ecomp:ECID:94db8374-8275-4f89-ba8b-4c6b3908bc50 []    {&quot;inputs&quot;:[&quot;hdfs://accucluster/accumulo/tables/2/t-00000ur/A00001y9.rf&quot;,&quot;hdfs://accucluster/accumulo/tables/2/t-00000ur/C00005lp.rf&quot;,&quot;hdfs://accucluster/accumulo/tables/2/t-00000ur/F0000dqm.rf&quot;,&quot;hdfs://accucluster/accumulo/tables/2/t-00000ur/F0000dq1.rf&quot;],&quot;nextFiles&quot;:[],&quot;tmp&quot;:&quot;hdfs://accucluster/accumulo/tables/2/t-00000ur/C0000dqs.rf_tmp&quot;,&quot;compactor&quot;:&quot;10.2.0.139:9133&quot;,&quot;kind&quot;:&quot;SYSTEM&quot;,&quot;executorId&quot;:&quot;DCQ1&quot;,&quot;priority&quot;:-32754,&quot;propDels&quot;:true,&quot;selectedAll&quot;:false}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When the Compactor notifies the Compaction Coordinator that it has finished the
+major compaction, the Compaction Coordinator attempts to notify the Tablet
+Server and inserts an external compaction final state marker into the metadata
+table. Below is an example of the final state marker:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []        {&quot;extent&quot;:{&quot;tableId&quot;:&quot;2&quot;},&quot;state&quot;:&quot;FINISHED&quot;,&quot;fileSize&quot;:12354,&quot;entries&quot;:100000}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If the Compaction Coordinator is able to reach the Tablet Server and that Tablet
+Server is still hosting the Tablet, then the compaction is committed and both
+of the entries are removed from the metadata table. In the case that the Tablet
+is offline when the compaction attempts to commit, there is a thread in the
+Compaction Coordinator that looks for completed, but not yet committed, external
+compactions and periodically attempts to contact the Tablet Server hosting the
+Tablet to commit the compaction. The Compaction Coordinator periodically removes
+the final state markers related to Tablets that no longer exist. In the case of
+an external compaction failure the Compaction Coordinator notifies the Tablet
+and the Tablet cleans up file reservations and removes the metadata entry.&lt;/p&gt;
+
+&lt;h3 id=&quot;edge-cases&quot;&gt;Edge Cases&lt;/h3&gt;
+
+&lt;p&gt;There are several situations involving external compactions that we tested as part of this feature. These are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Tablet migration&lt;/li&gt;
+  &lt;li&gt;When a user initiated compaction is canceled&lt;/li&gt;
+  &lt;li&gt;What a Table is taken offline&lt;/li&gt;
+  &lt;li&gt;When a Tablet is split or merged&lt;/li&gt;
+  &lt;li&gt;Coordinator restart&lt;/li&gt;
+  &lt;li&gt;Tablet Server death&lt;/li&gt;
+  &lt;li&gt;Table deletion&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Compactors periodically check if the compaction they are running is related to
+a deleted table, split/merged Tablet, or canceled user initiated compaction. If
+any of these cases happen the Compactor interrupts the compaction and notifies
+the Compaction Coordinator. An external compaction continues in the case of
+Tablet Server death, Tablet migration, Coordinator restart, and the Table being
+taken offline.&lt;/p&gt;
+
+&lt;h2 id=&quot;cluster-test&quot;&gt;Cluster Test&lt;/h2&gt;
+
+&lt;p&gt;The following tests were run on a cluster to exercise this new feature.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Run continuous ingest for 24h with large compactions running externally in an autoscaled Kubernetes cluster.&lt;/li&gt;
+  &lt;li&gt;After ingest completion, started a full table compaction with all compactions running externally.&lt;/li&gt;
+  &lt;li&gt;Run continuous ingest verification process that looks for lost data.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;
+
+&lt;p&gt;For these tests Accumulo, Zookeeper, and HDFS were run on a cluster in Azure
+setup by Muchos and external compactions were run in a separate Kubernetes
+cluster running in Azure.  The Accumulo cluster had the following
+configuration.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Centos 7&lt;/li&gt;
+  &lt;li&gt;Open JDK 11&lt;/li&gt;
+  &lt;li&gt;Zookeeper 3.6.2&lt;/li&gt;
+  &lt;li&gt;Hadoop 3.3.0&lt;/li&gt;
+  &lt;li&gt;Accumulo 2.1.0-SNAPSHOT &lt;a href=&quot;https://github.com/apache/accumulo/commit/dad7e01ae7d450064cba5d60a1e0770311ebdb64&quot;&gt;dad7e01&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;23 D16s_v4 VMs, each with 16x128G HDDs stripped using LVM. 22 were workers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following diagram shows how the two clusters were setup.  The Muchos and
+Kubernetes clusters were on the same private vnet, each with its own /16 subnet
+in the 10.x.x.x IP address space.  The Kubernetes cluster that ran external
+compactions was backed by at least 3 D8s_v4 VMs, with VMs autoscaling with the
+number of pods running.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/clusters-layout.png&quot; alt=&quot;Cluster Layout&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One problem we ran into was communication between Compactors running inside
+Kubernetes with processes like the Compaction Coordinator and DataNodes running
+outside of Kubernetes in the Muchos cluster.  For some insights into how these
+problems were overcome, checkout the comments in the &lt;a href=&quot;/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml&quot;&gt;deployment
+spec&lt;/a&gt; used.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration-1&quot;&gt;Configuration&lt;/h3&gt;
+
+&lt;p&gt;The following Accumulo shell commands set up a new compaction service named
+cs1.  This compaction service has an internal executor with 4 threads named
+small for compactions less than 32M, an internal executor with 2 threads named
+medium for compactions less than 128M, and an external compaction queue named
+DCQ1 for all other compactions.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{&quot;name&quot;:&quot;small&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;32M&quot;,&quot;numThreads&quot;:4},{&quot;name&quot;:&quot;medium&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;maxSize&quot;:&quot;128M&quot;,&quot;numThreads&quot;:2},{&quot;name&quot;:&quot;large&quot;,&quot;type&quot;:&quot;external&quot;,&quot;queue&quot;:&quot;DCQ1&quot;}]'
+config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The continuous ingest table was configured to use the above compaction service.
+The table’s compaction ratio was also lowered from the default of 3 to 2.  A
+lower compaction ratio results in less files per Tablet and more compaction
+work.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t ci -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
+config -t ci -s table.compaction.dispatcher.opts.service=cs1
+config -t ci -s table.compaction.major.ratio=2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The Compaction Coordinator was manually started on the Muchos VM where the
+Accumulo Manager, Zookeeper server, and the Namenode were running. The
+following command was used to do this.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nohup accumulo compaction-coordinator &amp;gt;/var/data/logs/accumulo/compaction-coordinator.out 2&amp;gt;/var/data/logs/accumulo/compaction-coordinator.err &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To start Compactors, Accumulo’s
+&lt;a href=&quot;https://github.com/apache/accumulo-docker/tree/next-release&quot;&gt;docker&lt;/a&gt; image was
+built from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;next-release&lt;/code&gt; branch by checking out the Apache Accumulo git
+repo at commit &lt;a href=&quot;https://github.com/apache/accumulo/commit/dad7e01ae7d450064cba5d60a1e0770311ebdb64&quot;&gt;dad7e01&lt;/a&gt; and building the binary distribution using the
+command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mvn clean package -DskipTests&lt;/code&gt;. The resulting tar file was copied to
+the accumulo-docker base directory and the image was built using the command:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build --build-arg ACCUMULO_VERSION=2.1.0-SNAPSHOT --build-arg ACCUMULO_FILE=accumulo-2.1.0-SNAPSHOT-bin.tar.gz \
+             --build-arg HADOOP_FILE=hadoop-3.3.0.tar.gz \
+             --build-arg ZOOKEEPER_VERSION=3.6.2  --build-arg ZOOKEEPER_FILE=apache-zookeeper-3.6.2-bin.tar.gz  \
+             -t accumulo .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The Docker image was tagged and then pushed to a container registry accessible by
+Kubernetes. Then the following commands were run to start the Compactors using
+&lt;a href=&quot;/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml&quot;&gt;accumulo-compactor-muchos.yaml&lt;/a&gt;.
+The yaml file contains comments explaining issues related to IP addresses and DNS names.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f accumulo-compactor-muchos.yaml 
+kubectl autoscale deployment accumulo-compactor --cpu-percent=80 --min=10 --max=660
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The autoscale command causes Compactors to scale between 10
+and 660 pods based on CPU usage. When pods average CPU is above 80%, then
+pods are added to meet the 80% goal. When it’s below 80%, pods
+are stopped to meet the 80% goal with 5 minutes between scale down
+events. This can sometimes lead to running compactions being
+stopped. During the test there were ~537 dead compactions that were probably
+caused by this (there were 44K successful external compactions). The max of 660
+was chosen based on the number of datanodes in the Muchos cluster.  There were
+22 datanodes and 30x22=660, so this conceptually sets a limit of 30 external
+compactions per datanode.  This was well tolerated by the Muchos cluster.  One
+important lesson we learned is that external compactions can strain the HDFS
+DataNodes, so it’s important to consider how many concurrent external
+compactions will be running. The Muchos cluster had 22x16=352 cores on the
+worker VMs, so the max of 660 exceeds what the Muchos cluster could run itself.&lt;/p&gt;
+
+&lt;h3 id=&quot;ingesting-data&quot;&gt;Ingesting data&lt;/h3&gt;
+
+&lt;p&gt;After starting Compactors, 22 continuous ingest clients (from
+accumulo_testing) were started.  The following plot shows the number of
+compactions running in the three different compaction queues
+configured.  The executor cs1_small is for compactions &amp;lt;= 32M and it stayed
+pretty busy as minor compactions constantly produce new small files.  In 2.1.0
+merging minor compactions were removed, so it’s important to ensure a
+compaction queue is properly configured for new small files. The executor
+cs1_medium was for compactions &amp;gt;32M and &amp;lt;=128M and it was not as busy, but did
+have steady work.  The external compaction queue DCQ1 processed all compactions
+over 128M and had some spikes of work.  These spikes are to be expected with
+continuous ingest as all Tablets are written to evenly and eventually all of
+the Tablets need to run large compactions around the same time.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-running.png&quot; alt=&quot;Compactions Running&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following plot shows the number of pods running in Kubernetes.  As
+Compactors used more and less CPU the number of pods automatically scaled up
+and down.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-pods-running.png&quot; alt=&quot;Pods Running&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following plot shows the number of compactions queued.  When the
+compactions queued for cs1_small spiked above 750, it was adjusted from 4
+threads per Tablet Server to 6 threads.  This configuration change was made while
+everything was running and the Tablet Servers saw it and reconfigured their thread
+pools on the fly.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-queued.png&quot; alt=&quot;Pods Queued&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The metrics emitted by Accumulo for these plots had the following names.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.e_DCQ1_queued&lt;/li&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.e_DCQ1_running&lt;/li&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.i_cs1_medium_queued&lt;/li&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.i_cs1_medium_running&lt;/li&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.i_cs1_small_queued&lt;/li&gt;
+  &lt;li&gt;TabletServer1.tserver.compactionExecutors.i_cs1_small_running&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Tablet servers emit metrics about queued and running compactions for every
+compaction executor configured.  User can observe these metrics and tune
+the configuration based on what they see, as was done in this test.&lt;/p&gt;
+
+&lt;p&gt;The following plot shows the average files per Tablet during the
+test. The numbers are what would be expected for a compaction ratio of 2 when
+the system is keeping up with compaction work. Also, animated GIFs were created to
+show a few tablets &lt;a href=&quot;/images/blog/202107_ecomp/files_over_time.html&quot;&gt;files over time&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-files-per-tablet.png&quot; alt=&quot;Files Per Tablet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following is a plot of the number Tablets during the test.
+Eventually there were 11.28K Tablets around 512 Tablets per Tablet Server.  The
+Tablets were close to splitting again at the end of the test as each Tablet was
+getting close to 1G.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-online-tablets.png&quot; alt=&quot;Online Tablets&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following plot shows ingest rate over time.  The rate goes down as the
+number of Tablets per Tablet Server goes up, this is expected.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-ingest-rate.png&quot; alt=&quot;Ingest Rate&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following plot shows the number of key/values in Accumulo during
+the test.  When ingest was stopped, there were 266 billion key values in the
+continuous ingest table.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/ci-entries.png&quot; alt=&quot;Table Entries&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;full-table-compaction&quot;&gt;Full table compaction&lt;/h3&gt;
+
+&lt;p&gt;After stopping ingest and letting things settle, a full table compaction was
+kicked off. Since all of these compactions would be over 128M, all of them were
+scheduled on the external queue DCQ1.  The two plots below show compactions
+running and queued for the ~2 hours it took to do the compaction. When the
+compaction was initiated there were 10 Compactors running in pods.  All 11K
+Tablets were queued for compaction and because the pods were always running
+high CPU Kubernetes kept adding pods until the max was reached resulting in 660
+Compactors running until all the work was done.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/full-table-compaction-queued.png&quot; alt=&quot;Full Table Compactions Running&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202107_ecomp/full-table-compaction-running.png&quot; alt=&quot;Full Table Compactions Queued&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;verification&quot;&gt;Verification&lt;/h3&gt;
+
+&lt;p&gt;After running everything mentioned above, the continuous ingest verification
+map reduce job was run.  This job looks for holes in the linked list produced
+by continuous ingest which indicate Accumulo lost data.  No holes were found.
+The counts below were emitted by the job.  If there were holes a non-zero
+UNDEFINED count would be present.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        org.apache.accumulo.testing.continuous.ContinuousVerify$Counts
+                REFERENCED=266225036149
+                UNREFERENCED=22010637
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;hurdles&quot;&gt;Hurdles&lt;/h2&gt;
+
+&lt;h3 id=&quot;how-to-scale-up&quot;&gt;How to Scale Up&lt;/h3&gt;
+
+&lt;p&gt;We ran into several issues running the Compactors in Kubernetes. First, we knew
+that we could use Kubernetes &lt;a href=&quot;https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/&quot;&gt;Horizontal Pod Autoscaler&lt;/a&gt; (HPA) to scale the
+Compactors up and down based on load. But the question remained how to do that.
+Probably the best metric to use for scaling the Compactors is the size of the
+external compaction queue. Another possible solution is to take the DataNode
+utilization into account somehow. We found that in scaling up the Compactors
+based on their CPU usage we could overload DataNodes.  Once DataNodes were
+overwhelmed, Compactors CPU would drop and the number of pods would naturally
+scale down.&lt;/p&gt;
+
+&lt;p&gt;To use custom metrics you would need to get the metrics from Accumulo into a
+metrics store that has a &lt;a href=&quot;https://github.com/kubernetes/metrics/blob/master/IMPLEMENTATIONS.md#custom-metrics-api&quot;&gt;metrics adapter&lt;/a&gt;. One possible solution, available
+in Hadoop 3.3.0, is to use Prometheus, the &lt;a href=&quot;https://github.com/kubernetes-sigs/prometheus-adapter&quot;&gt;Prometheus Adapter&lt;/a&gt;, and enable
+the Hadoop PrometheusMetricsSink added in 
+&lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-16398&quot;&gt;HADOOP-16398&lt;/a&gt; to expose the custom queue
+size metrics. This seemed like the right solution, but it also seemed like a
+lot of work that was outside the scope of this blog post. Ultimately we decided
+to take the simplest approach - use the native Kubernetes metrics-server and
+scale off CPU usage of the Compactors. As you can see in the “Compactions Queued”
+and “Compactions Running” graphs above from the full table compaction, it took about
+45 minutes for Kubernetes to scale up Compactors to the maximum configured (660). Compactors
+likely would have been scaled up much faster if scaling was done off the queued compactions
+instead of CPU usage.&lt;/p&gt;
+
+&lt;h3 id=&quot;gracefully-scaling-down&quot;&gt;Gracefully Scaling Down&lt;/h3&gt;
+
+&lt;p&gt;The Kubernetes Pod &lt;a href=&quot;https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination&quot;&gt;termination process&lt;/a&gt; provides a mechanism for the user to
+define a pre-stop hook that will be called before the Pod is terminated.
+Without this hook Kubernetes sends a SIGTERM to the Pod, followed by a
+user-defined grace period, then a SIGKILL. For the purposes of this test we did
+not define a pre-stop hook or a grace period. It’s likely possible to handle
+this situation more gracefully, but for this test our Compactors were killed
+and the compaction work lost when the HPA decided to scale down the Compactors.
+It was a good test of how we handled failed Compactors.  Investigation is
+needed to determine if changes are needed in Accumulo to facilitate graceful
+scale down.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-to-connect&quot;&gt;How to Connect&lt;/h3&gt;
+
+&lt;p&gt;The other major issue we ran into was connectivity between the Compactors and
+the other server processes. The Compactor communicates with ZooKeeper and the
+Compaction Coordinator, both of which were running outside of Kubernetes.  There
+is no common DNS between the Muchos and Kubernetes cluster, but IPs were
+visible to both. The Compactor connects to ZooKeeper to find the address of the
+Compaction Coordinator so that it can connect to it and look for work. By
+default the Accumulo server processes use the hostname as their address which
+would not work as those names would not resolve inside the Kubernetes cluster.
+We had to start the Accumulo processes using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-a&lt;/code&gt; argument and set the
+hostname to the IP address. Solving connectivity issues between components
+running in Kubernetes and components external to Kubernetes depends on the capabilities
+available in the environment and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-a&lt;/code&gt; option may be part of the solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;In this blog post we introduced the concept and benefits of external
+compactions, the new server processes and how to configure the compaction
+service. We deployed a 23-node Accumulo cluster using Muchos with a variable
+sized Kubernetes cluster that dynamically scaled Compactors on 3 to 100 compute
+nodes from 10 to 660 instances. We ran continuous ingest on the Accumulo
+cluster to create compactions that were run both internal and external to the
+Tablet Server and demonstrated external compactions completing successfully and
+Compactors being killed.&lt;/p&gt;
+
+&lt;p&gt;We discussed also running the following test, but did not have time.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Agitating the Compaction Coordinator, Tablet Servers and Compactors while ingest was running.&lt;/li&gt;
+  &lt;li&gt;Comparing the impact on queries for internal vs external compactions.&lt;/li&gt;
+  &lt;li&gt;Having multiple external compaction queues, each with its own set of autoscaled Compactor pods.&lt;/li&gt;
+  &lt;li&gt;Forcing full table compactions while ingest was running.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The test we ran shows that basic functionality works well, it would be nice to
+stress the feature in other ways though.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 08 Jul 2021 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2021/07/08/external-compactions.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2021/07/08/external-compactions.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Jshell Accumulo Feature</title>
@@ -1422,147 +1909,6 @@ Accumulo dev list &lt;a href=&quot;https://lists.apache.org/thread.html/4ac5b0f6
         <pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate>
         <link>https://accumulo.apache.org/blog/2019/09/17/erasure-coding.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/09/17/erasure-coding.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Using S3 as a data store for Accumulo</title>
-        <description>&lt;p&gt;Accumulo can store its files in S3, however S3 does not support the needs of
-write ahead logs and the Accumulo metadata table. One way to solve this problem
-is to store the metadata table and write ahead logs in HDFS and everything else
-in S3.  This post shows how to do that using Accumulo 2.0 and Hadoop 3.2.0.
-Running on S3 requires a new feature in Accumulo 2.0, that volume choosers are
-aware of write ahead logs.&lt;/p&gt;
-
-&lt;h2 id=&quot;hadoop-setup&quot;&gt;Hadoop setup&lt;/h2&gt;
-
-&lt;p&gt;At least the following settings should be added to Hadoop’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;core-site.xml&lt;/code&gt; file on each node in the cluster.&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.access.key&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;KEY&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.secret.key&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;SECRET&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- without this setting Accumulo tservers would have problems when trying to open lots of files --&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.s3a.connection.maximum&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;128&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;See &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/index.html#S3A&quot;&gt;S3A docs&lt;/a&gt;
-for more S3A settings.  To get hadoop command to work with s3 set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;export
-HADOOP_OPTIONAL_TOOLS=&quot;hadoop-aws&quot;&lt;/code&gt; in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hadoop-env.sh&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;When trying to use Accumulo with Hadoop’s AWS jar &lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-16080&quot;&gt;HADOOP-16080&lt;/a&gt; was
-encountered.  The following instructions build a relocated hadoop-aws jar as a
-work around.  After building the jar copy it to all nodes in the cluster.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; /tmp/haws-reloc
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /tmp/haws-reloc
-&lt;span class=&quot;c&quot;&gt;# get the Maven pom file that builds a relocated jar&lt;/span&gt;
-wget https://gist.githubusercontent.com/keith-turner/f6dcbd33342732e42695d66509239983/raw/714cb801eb49084e0ceef5c6eb4027334fd51f87/pom.xml
-mvn package &lt;span class=&quot;nt&quot;&gt;-Dhadoop&lt;/span&gt;.version&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;your hadoop version&amp;gt;
-&lt;span class=&quot;c&quot;&gt;# the new jar will be in target&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;target/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;accumulo-setup&quot;&gt;Accumulo setup&lt;/h2&gt;
-
-&lt;p&gt;For each node in the cluster, modify &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; to add S3 jars to the
-classpath.  Your versions may differ depending on your Hadoop version,
-following versions were included with Hadoop 3.2.0.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_CONF_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ZOOKEEPER_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/client/*&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:/somedir/hadoop-aws-relocated.3.2.0.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/aws-java-sdk-bundle-1.11.375.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# The following are dependencies needed by by the previous jars and are subject to change&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-api-2.2.11.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/commons-lang3-3.7jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;CLASSPATH
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Set the following in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; and then run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt;, but don’t start Accumulo.&lt;/p&gt;
-
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After running Accumulo init we need to configure storing write ahead logs in
-HDFS.  Set the following in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo,s3a://&amp;lt;bucket&amp;gt;/accumulo&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.volume.chooser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;org.apache.accumulo.server.fs.PreferredVolumeChooser&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;s3a://&amp;lt;bucket&amp;gt;/accumulo&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo init --add-volumes&lt;/code&gt; to initialize the S3 volume.  Doing this
-in two steps avoids putting any Accumulo metadata files in S3 during init.
-Copy &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; to all nodes and start Accumulo.&lt;/p&gt;
-
-&lt;p&gt;Individual tables can be configured to store their files in HDFS by setting the
-table property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table.custom.volume.preferred&lt;/code&gt;.  This should be set for the
-metadata table in case it splits using the following Accumulo shell command.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&amp;lt;namenode&amp;gt;/accumulo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;accumulo-example&quot;&gt;Accumulo example&lt;/h2&gt;
-
-&lt;p&gt;The following Accumulo shell session shows an example of writing data to S3 and
-reading it back.  It also shows scanning the metadata table to verify the data
-is stored in S3.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@muchos&amp;gt; createtable s3test
-root@muchos s3test&amp;gt; insert r1 f1 q1 v1
-root@muchos s3test&amp;gt; insert r1 f1 q2 v2
-root@muchos s3test&amp;gt; flush -w
-2019-09-10 19:39:04,695 [shell.Shell] INFO : Flush of table s3test  completed.
-root@muchos s3test&amp;gt; scan 
-r1 f1:q1 []    v1
-r1 f1:q2 []    v2
-root@muchos s3test&amp;gt; scan -t accumulo.metadata -c file
-2&amp;lt; file:s3a://&amp;lt;bucket&amp;gt;/accumulo/tables/2/default_tablet/F000007b.rf []    234,2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;These instructions were only tested a few times and may not result in a stable
-system. I have &lt;a href=&quot;https://gist.github.com/keith-turner/149f35f218d10e13227461714012d7bf&quot;&gt;run&lt;/a&gt; a 24hr test with Accumulo and S3.&lt;/p&gt;
-
-&lt;h2 id=&quot;is-s3guard-needed&quot;&gt;Is S3Guard needed?&lt;/h2&gt;
-
-&lt;p&gt;I am not completely certain about this, but I don’t think S3Guard is needed for
-regular Accumulo tables.  There are two reasons I think this is so.  First each
-Accumulo user tablet stores its list of files in the metadata table using
-absolute URIs.  This allows a tablet to have files on multiple DFS instances.
-Therefore Accumulo never does a DFS list operation to get a tablets files, it
-always uses whats in the metadata table.  Second, Accumulo gives each file a
-unique name using a counter stored in Zookeeper and file names are never
-reused.&lt;/p&gt;
-
-&lt;p&gt;Things are sligthly different for Accumulo’s metadata.  User tablets store
-their file list in the metadata table.  Metadata tablets store their file list
-in the root table.  The root table stores its file list in DFS.  Therefore it
-would be dangerous to place the root tablet in S3 w/o using S3Guard.  That is
-why these instructions place Accumulo metadata in HDFS. &lt;strong&gt;Hopefully&lt;/strong&gt; this
-configuration allows the system to be consistent w/o using S3Guard.&lt;/p&gt;
-
-&lt;p&gt;When Accumulo 2.1.0 is released with the changes made by &lt;a href=&quot;https://github.com/apache/accumulo/issues/1313&quot;&gt;#1313&lt;/a&gt; for issue
-&lt;a href=&quot;https://github.com/apache/accumulo/issues/936&quot;&gt;#936&lt;/a&gt;, it may be possible to store the metadata table in S3 w/o
-S3Gaurd.  If this is the case then only the write ahead logs would need to be
-stored in HDFS.&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 10 Sep 2019 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/09/10/accumulo-S3-notes.html</guid>
         
         
         <category>blog</category>
