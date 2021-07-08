@@ -227,13 +227,13 @@ in the 10.x.x.x IP address space.  The Kubernetes cluster that ran external
 compactions was backed by at least 3 D8s_v4 VMs, with VMs autoscaling with the
 number of pods running.
 
-![Cluster Layout](/images/blog/202106_ecomp/clusters-layout.png)
+![Cluster Layout](/images/blog/202107_ecomp/clusters-layout.png)
 
 One problem we ran into was communication between Compactors running inside
 Kubernetes with processes like the Compaction Coordinator and DataNodes running
 outside of Kubernetes in the Muchos cluster.  For some insights into how these
 problems were overcome, checkout the comments in the [deployment
-spec](/images/blog/202106_ecomp/accumulo-compactor-muchos.yaml) used.
+spec](/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml) used.
  
 ### Configuration
 
@@ -284,7 +284,7 @@ docker build --build-arg ACCUMULO_VERSION=2.1.0-SNAPSHOT --build-arg ACCUMULO_FI
 
 The Docker image was tagged and then pushed to a container registry accessible by
 Kubernetes. Then the following commands were run to start the Compactors using
-[accumulo-compactor-muchos.yaml](/images/blog/202106_ecomp/accumulo-compactor-muchos.yaml).
+[accumulo-compactor-muchos.yaml](/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml).
 The yaml file contains comments explaining issues related to IP addresses and DNS names.
 
 ```
@@ -322,13 +322,13 @@ over 128M and had some spikes of work.  These spikes are to be expected with
 continuous ingest as all Tablets are written to evenly and eventually all of
 the Tablets need to run large compactions around the same time. 
   
-![Compactions Running](/images/blog/202106_ecomp/ci-running.png)
+![Compactions Running](/images/blog/202107_ecomp/ci-running.png)
 
 The following plot shows the number of pods running in Kubernetes.  As
 Compactors used more and less CPU the number of pods automatically scaled up
 and down.
 
-![Pods Running](/images/blog/202106_ecomp/ci-pods-running.png)
+![Pods Running](/images/blog/202107_ecomp/ci-pods-running.png)
 
 The following plot shows the number of compactions queued.  When the
 compactions queued for cs1_small spiked above 750, it was adjusted from 4
@@ -336,7 +336,7 @@ threads per Tablet Server to 6 threads.  This configuration change was made whil
 everything was running and the Tablet Servers saw it and reconfigured their thread
 pools on the fly.
 
-![Pods Queued](/images/blog/202106_ecomp/ci-queued.png)
+![Pods Queued](/images/blog/202107_ecomp/ci-queued.png)
 
 The metrics emitted by Accumulo for these plots had the following names.
 
@@ -354,27 +354,28 @@ the configuration based on what they see, as was done in this test.
 
 The following plot shows the average files per Tablet during the
 test. The numbers are what would be expected for a compaction ratio of 2 when
-the system is keeping up with compaction work.
+the system is keeping up with compaction work. Also, animated GIFs were created to
+show a few tablets [files over time](/images/blog/202107_ecomp/files_over_time.html).
 
-![Files Per Tablet](/images/blog/202106_ecomp/ci-files-per-tablet.png)
+![Files Per Tablet](/images/blog/202107_ecomp/ci-files-per-tablet.png)
 
 The following is a plot of the number Tablets during the test.
 Eventually there were 11.28K Tablets around 512 Tablets per Tablet Server.  The
 Tablets were close to splitting again at the end of the test as each Tablet was
 getting close to 1G.
 
-![Online Tablets](/images/blog/202106_ecomp/ci-online-tablets.png)
+![Online Tablets](/images/blog/202107_ecomp/ci-online-tablets.png)
 
 The following plot shows ingest rate over time.  The rate goes down as the
 number of Tablets per Tablet Server goes up, this is expected.
 
-![Ingest Rate](/images/blog/202106_ecomp/ci-ingest-rate.png)
+![Ingest Rate](/images/blog/202107_ecomp/ci-ingest-rate.png)
 
 The following plot shows the number of key/values in Accumulo during
 the test.  When ingest was stopped, there were 266 billion key values in the
 continuous ingest table.
 
-![Table Entries](/images/blog/202106_ecomp/ci-entries.png)
+![Table Entries](/images/blog/202107_ecomp/ci-entries.png)
 
 ### Full table compaction
 
@@ -387,9 +388,9 @@ Tablets were queued for compaction and because the pods were always running
 high CPU Kubernetes kept adding pods until the max was reached resulting in 660
 Compactors running until all the work was done.
 
-![Full Table Compactions Running](/images/blog/202106_ecomp/full-table-compaction-queued.png)
+![Full Table Compactions Running](/images/blog/202107_ecomp/full-table-compaction-queued.png)
 
-![Full Table Compactions Queued](/images/blog/202106_ecomp/full-table-compaction-running.png)
+![Full Table Compactions Queued](/images/blog/202107_ecomp/full-table-compaction-running.png)
 
 ### Verification
 
