@@ -129,6 +129,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
+| Kartik Sethi        |                                                                   | [IST]                 |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
@@ -181,7 +182,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
-
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
