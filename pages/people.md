@@ -126,10 +126,10 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Joseph Koshakow     |                                                                   | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
+| Kartik Sethi        |                                                                   | [IST](https://www.timeanddate.com/worldclock/india/new-delhi)                |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
-| Kartik Sethi        |                                                                   | [IST]                 |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
