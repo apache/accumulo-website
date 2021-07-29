@@ -35,6 +35,7 @@ $(function() {
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
 | ctubbsii      | [Christopher Tubbs](https://github.com/ctubbsii)  | [NSA][NSA]                             | [ET][ET] |
 | dlmarion      | Dave Marion                                       | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
+| domgarguilo   | [Dominic Garguilo](https://github.com/DomGarguilo)| [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
 | ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | edcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
@@ -94,7 +95,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | David Protzman      |                                                                   |                       |
 | Dennis Patrone      | [The Johns Hopkins University Applied Physics Laboratory][JHUAPL] | [ET][ET]              |
 | Dima Spivak         | [Cloudera][CLOUDERA]                                              |                       |
-| Dominic Garguilo    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Ed Kohlwey          | [Booz Allen Hamilton][BOOZ]                                       |                       |
 | Ed Seidl            | [Lawrence Livermore National Laboratory][LLNL]                    | [PT][PT]              |
 | Edward Yoon         |                                                                   |                       |
