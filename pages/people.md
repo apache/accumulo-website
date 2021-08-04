@@ -163,6 +163,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Scott Kuehn         |                                                                   |                       |
 | Seth Falco          | [Elypia][ELYPIA]                                                  | [GMT][GMT]/[BST][BST] |
 | Shawn Walker        |                                                                   |                       |
+| Shivakumar Gangamath|                                                                   | [IST][IST]            |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
 | Szabolcs Bukros     | [Cloudera][CLOUDERA]                                              | [CEST][CEST]          |
