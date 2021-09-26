@@ -183,6 +183,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Vincent Russell     |                                                                   |                       |
 | Volth               |                                                                   |                       |
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
+| Xiao Wang           | [Stevens Institute of Technology][SIT]                            | [ET][ET]              |
 
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
@@ -221,6 +222,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [PRAXIS]: https://www.praxiseng.com
 [SABRE]: https://www.sabre-eng.com
 [SACAT]: https://sa.catapult.org.uk
+[SIT]: https://www.stevens.edu
 [SPLYT]: https://www.splyt.com
 [SQRRL]: http://sqrrl.com
 [SRA]: https://sra.com
