@@ -211,13 +211,13 @@ doing a logarithmic amount of work.</li>
 
 <p>CompactionStrategy was deprecated in favor of new public APIs.
 See its <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a> 
-for more information.</p>
+for more information. Github tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a> <a href="https://github.com/apache/accumulo/issues/">#</a></p>
 
 <h3 id="fixed-gc-metadata-hotspots">Fixed GC Metadata hotspots</h3>
 
 <p>Prior to this release, Accumulo stored GC file candidates in the metadata table
 using rows of the form <code class="language-plaintext highlighter-rouge">~del&lt;URI&gt;</code>. This row schema lead to uneven load on
-the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> the row format was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
+the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> <a href="https://github.com/apache/accumulo/issues/1344">#1344</a> the row format was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
 even load on the metadata table and even data spread in the tablets. After
 upgrading, there may still be splits in the metadata table using the old row
 format. These splits can be merged away as shown in the example below which
@@ -307,7 +307,85 @@ scripts that invoke this utility should be updated to call
   <li><code class="language-plaintext highlighter-rouge">masterMemory</code> in <code class="language-plaintext highlighter-rouge">minicluster.properties</code> has been deprecated and
 <code class="language-plaintext highlighter-rouge">managerMemory</code> should be used instead in any <code class="language-plaintext highlighter-rouge">minicluster.properties</code> files
 you have configured.</li>
+  <li>See also <a href="https://github.com/apache/accumulo/issues/1640">#1640</a> <a href="https://github.com/apache/accumulo/issues/1642">#1642</a> <a href="https://github.com/apache/accumulo/issues/1703">#1703</a> <a href="https://github.com/apache/accumulo/issues/1704">#1704</a> <a href="https://github.com/apache/accumulo/issues/1873">#1873</a> <a href="https://github.com/apache/accumulo/issues/1907">#1907</a></li>
 </ul>
+
+<h3 id="new-spi-package">New SPI Package</h3>
+
+<p>New SPI Package <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
+
+<h3 id="new-listtablets-shell-command">New listtablets shell command.</h3>
+
+<p>New command for debugging tablets called listtablets <a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
+
+<h3 id="new-option-for-cloning-offline">New option for cloning offline</h3>
+
+<p>Added option to leave cloned tables offline <a href="https://github.com/apache/accumulo/issues/1474">#1474</a> <a href="https://github.com/apache/accumulo/issues/1475">#1475</a></p>
+
+<h3 id="new-max-tablets-option-in-bulk-import">New max tablets option in bulk import</h3>
+
+<p>Created max tablets property in new bulk import <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
+
+<h3 id="new-ability-for-user-to-define-context-classloaders">New ability for user to define context classloaders</h3>
+
+<p>Deprecated VFS ClassLoader and added ability for user to define context classloaders <a href="https://github.com/apache/accumulo/issues/1747">#1747</a> <a href="https://github.com/apache/accumulo/issues/1715">#1715</a></p>
+
+<h3 id="updated-hash-algorithm">Updated hash algorithm</h3>
+
+<p>TODO clarify what was done for this. <a href="https://github.com/apache/accumulo/issues/1787">#1787</a> <a href="https://github.com/apache/accumulo/issues/1788">#1788</a> <a href="https://github.com/apache/accumulo/issues/1798">#1798</a> <a href="https://github.com/apache/accumulo/issues/1810">#1810</a></p>
+
+<h3 id="various-performance-improvements-when-deleting-tables">Various Performance improvements when deleting tables</h3>
+
+<p>Make delete table operations cancel user compactions <a href="https://github.com/apache/accumulo/issues/2030">#2030</a>.
+Added check to not flush when table is being deleted <a href="https://github.com/apache/accumulo/issues/1887">#1887</a>.
+Make the UnloadTabletHandler log before waiting for deletes to finish <a href="https://github.com/apache/accumulo/issues/1881">#1881</a>.
+Stop user flush if table is being deleted <a href="https://github.com/apache/accumulo/issues/1931">#1931</a></p>
+
+<h3 id="new-jshell-entry-point">New jshell entry point</h3>
+
+<p>Created new “jshell” convenience entry point <a href="https://github.com/apache/accumulo/issues/1870">#1870</a> <a href="https://github.com/apache/accumulo/issues/1910">#1910</a></p>
+
+<h3 id="other-notable-changes">Other notable changes</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/1309">#1309</a> Prevent cloning metadata table</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1294">#1294</a> <a href="https://github.com/apache/accumulo/issues/1299">#1299</a> Add optional -t tablename to importdirectory shell command.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1332">#1332</a> Disable FileSystemMonitor checks by default</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1345">#1345</a> <a href="https://github.com/apache/accumulo/issues/1352">#1352</a> Allow gc initiated compaction as option.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1090">#1090</a> <a href="https://github.com/apache/accumulo/issues/1330">#1330</a> Consolidate/Simplify ServerOpts</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1389">#1389</a> Always choose volume for new tablet files.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1390">#1390</a> <a href="https://github.com/apache/accumulo/issues/1400">#1400</a> <a href="https://github.com/apache/accumulo/issues/1411">#1411</a> Declare core.iterators package public API</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1441">#1441</a> <a href="https://github.com/apache/accumulo/issues/1405">#1405</a> Improvements to Upgrades</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1397">#1397</a> <a href="https://github.com/apache/accumulo/issues/1461">#1461</a> Replace relative paths on upgrade.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1456">#1456</a> <a href="https://github.com/apache/accumulo/issues/1457">#1457</a> Prevent catastrophic tserver shutdown by rate limiting the shutdown</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1528">#1528</a> <a href="https://github.com/apache/accumulo/issues/1514">#1514</a> <a href="https://github.com/apache/accumulo/issues/1515">#1515</a> <a href="https://github.com/apache/accumulo/issues/1516">#1516</a> Upgraded to Log4j2</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1513">#1513</a> <a href="https://github.com/apache/accumulo/issues/1530">#1530</a> <a href="https://github.com/apache/accumulo/issues/1531">#1531</a> <a href="https://github.com/apache/accumulo/issues/1877">#1877</a> Upgraded to Zookeeper 3.5.9</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1053">#1053</a> <a href="https://github.com/apache/accumulo/issues/1060">#1060</a> <a href="https://github.com/apache/accumulo/issues/1576">#1576</a> Support multiple volumes in import table</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1464">#1464</a> Leverage SimpleThreadPool for improving importtable performance</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1568">#1568</a> Support multiple tservers / node in accumulo-service</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1644">#1644</a> <a href="https://github.com/apache/accumulo/issues/1645">#1645</a> Fix issue with minor compaction not retrying</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1660">#1660</a> Dropped MemoryManager property</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1543">#1543</a> <a href="https://github.com/apache/accumulo/issues/1650">#1650</a> Use batching strategy for SimpleGarbageCollector candidate memory utilization</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1692">#1692</a> Fix file permissions in source assembly tarball</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1721">#1721</a> Mark security properties experimental</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1739">#1739</a> <a href="https://github.com/apache/accumulo/issues/1746">#1746</a> Cleanup Splits file if CreateTable FaTE operation fails.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1742">#1742</a> <a href="https://github.com/apache/accumulo/issues/1765">#1765</a> Added forEach to Scanner</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1764">#1764</a> <a href="https://github.com/apache/accumulo/issues/1783">#1783</a> Parallelize listcompactions in shell</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1797">#1797</a> Add table option to shell delete command.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1848">#1848</a> Update column name in the monitor UI</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2039">#2039</a> <a href="https://github.com/apache/accumulo/issues/2045">#2045</a> Add bulk import option to ignore empty dirs</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2064">#2064</a> Add option to disable encryption to AESCryptoService</li>
+  <li><a href="https://github.com/apache/accumulo/issues/">#</a></li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="210-github-project">2.1.0 GitHub Project</h2>
+
+<p><a href="https://github.com/apache/accumulo/projects/3">All tickets related to 2.1.0.</a></p>
+
 
 
 <hr>
