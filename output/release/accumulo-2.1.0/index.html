@@ -172,7 +172,7 @@
 
 <p>This release is known to be incompatible with prior versions of the client
 libraries. That is, the 2.0.0 or 2.0.1 version of the client libraries will not
-be able to communicate with a 2.1.0 or later installaction of Accumulo, nor will
+be able to communicate with a 2.1.0 or later installation of Accumulo, nor will
 the 2.1.0 or later version of the client libraries communicate with a 2.0.1 or
 earlier installation.</p>
 
@@ -212,6 +212,14 @@ doing a logarithmic amount of work.</li>
 <p>CompactionStrategy was deprecated in favor of new public APIs.
 See its <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a> 
 for more information. Github tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a> <a href="https://github.com/apache/accumulo/issues/">#</a></p>
+
+<h3 id="external-compactions-experimental">External Compactions (experimental)</h3>
+
+<p>This release includes two new optional server components, CompactionCoordinator and Compactor,
+that enables the user to run major compactions outside of the Tablet Server. See 
+<a href="/docs/2.x/_docs-2/getting-started/design.md}, {% dlink administration/compaction">compaction </a> and the
+External Compaction <a href="https://accumulo.apache.org/blog/2021/07/08/external-compactions.html">blog post</a> for more information. This work was completed
+over many tickets, see the GitHub <a href="https://github.com/apache/accumulo/projects/20">project</a> for the related issues. <a href="https://github.com/apache/accumulo/issues/2096">#2096</a></p>
 
 <h3 id="fixed-gc-metadata-hotspots">Fixed GC Metadata hotspots</h3>
 
@@ -310,6 +318,20 @@ you have configured.</li>
   <li>See also <a href="https://github.com/apache/accumulo/issues/1640">#1640</a> <a href="https://github.com/apache/accumulo/issues/1642">#1642</a> <a href="https://github.com/apache/accumulo/issues/1703">#1703</a> <a href="https://github.com/apache/accumulo/issues/1704">#1704</a> <a href="https://github.com/apache/accumulo/issues/1873">#1873</a> <a href="https://github.com/apache/accumulo/issues/1907">#1907</a></li>
 </ul>
 
+<h3 id="new-tracing-facility">New Tracing Facility</h3>
+
+<p>HTrace support was removed in this release and has been replaced with <a href="https://opentelemetry.io/">OpenTelemetry</a>. Trace information
+will not be shown in the monitor. See comments in <a href="https://github.com/apache/accumulo/issues/2259">#2259</a> for an example of how to configure
+Accumulo to emit traces to supported OpenTelemetry sinks. <a href="https://github.com/apache/accumulo/issues/2257">#2257</a></p>
+
+<h3 id="new-metrics-implementation">New Metrics Implementation</h3>
+
+<p>The Hadoop Metrics2 framework is no longer being used to emit metrics from Accumulo. Accumulo is now
+using the <a href="https://micrometer.io/">Micrometer</a> framework. Metric name and type changes have been documented in
+org.apache.accumulo.core.metrics.MetricsProducer, see the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.0.1/org/apache/accumulo/core/metrics/MetricsProducer.html">javadoc</a>
+for more information. See comments in <a href="https://github.com/apache/accumulo/issues/2305">#2305</a> for an example of how to configure Accumulo to emit
+metrics to supported Micrometer sinks. <a href="https://github.com/apache/accumulo/issues/1134">#1134</a></p>
+
 <h3 id="new-spi-package">New SPI Package</h3>
 
 <p>New SPI Package <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
@@ -328,7 +350,16 @@ you have configured.</li>
 
 <h3 id="new-ability-for-user-to-define-context-classloaders">New ability for user to define context classloaders</h3>
 
-<p>Deprecated VFS ClassLoader and added ability for user to define context classloaders <a href="https://github.com/apache/accumulo/issues/1747">#1747</a> <a href="https://github.com/apache/accumulo/issues/1715">#1715</a></p>
+<p>Deprecated the existing VFS ClassLoader for eventual removal and created a new mechanism for users
+to load their own classloader implementations. The new VFS classloader and VFS context classloaders
+are in a new <a href="https://github.com/apache/accumulo-classloaders/tree/main/modules/vfs-class-loader">repo</a> and can now be specified using system properties. <a href="https://github.com/apache/accumulo/issues/1747">#1747</a> <a href="https://github.com/apache/accumulo/issues/1715">#1715</a></p>
+
+<h3 id="change-in-uncaught-exceptionerror-handling-in-server-side-threads">Change in uncaught Exception/Error handling in server-side threads</h3>
+
+<p>Consolidated and normalized thread pool and thread creation. All threads created through this code path
+will have an UncaughtExceptionHanlder attached to it that will log the fact that the Thread encountered
+an uncaught Exception and is now dead. When an Error is encountered it will attempt to print a message
+to stderr then terminate the VM using Runtime.halt. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a href="https://github.com/apache/accumulo/issues/1818">#1818</a></p>
 
 <h3 id="updated-hash-algorithm">Updated hash algorithm</h3>
 
@@ -336,7 +367,8 @@ you have configured.</li>
 
 <h3 id="various-performance-improvements-when-deleting-tables">Various Performance improvements when deleting tables</h3>
 
-<p>Make delete table operations cancel user compactions <a href="https://github.com/apache/accumulo/issues/2030">#2030</a>.
+<p>Make delete table operations cancel user compactions <a href="https://github.com/apache/accumulo/issues/2030">#2030</a> <a href="https://github.com/apache/accumulo/issues/2169">#2169</a>.
+Prevent compactions from starting when delete table is called <a href="https://github.com/apache/accumulo/issues/2182">#2182</a> <a href="https://github.com/apache/accumulo/issues/2240">#2240</a>.
 Added check to not flush when table is being deleted <a href="https://github.com/apache/accumulo/issues/1887">#1887</a>.
 Make the UnloadTabletHandler log before waiting for deletes to finish <a href="https://github.com/apache/accumulo/issues/1881">#1881</a>.
 Stop user flush if table is being deleted <a href="https://github.com/apache/accumulo/issues/1931">#1931</a></p>
@@ -375,7 +407,6 @@ Stop user flush if table is being deleted <a href="https://github.com/apache/acc
   <li><a href="https://github.com/apache/accumulo/issues/1848">#1848</a> Update column name in the monitor UI</li>
   <li><a href="https://github.com/apache/accumulo/issues/2039">#2039</a> <a href="https://github.com/apache/accumulo/issues/2045">#2045</a> Add bulk import option to ignore empty dirs</li>
   <li><a href="https://github.com/apache/accumulo/issues/2064">#2064</a> Add option to disable encryption to AESCryptoService</li>
-  <li><a href="https://github.com/apache/accumulo/issues/">#</a></li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
