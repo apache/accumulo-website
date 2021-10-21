@@ -161,12 +161,28 @@
 
 
 
-<div class="alert alert-warning" role="alert">
-  <p>This version is not a <a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.</p>
+<div class="alert alert-success" role="alert">
+  <p>This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.</p>
 </div>
 
 
 <p>** DRAFT RELEASE NOTES **</p>
+
+<h2 id="about">About</h2>
+
+<p>TODO high level description of the release</p>
+
+<p>TODO summarize contributions</p>
+
+<p>According to the <a href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a> strategy, the intent is to
+maintain the X.X release line with critical bug and security fixes until one
+year after the next LTM version is released.</p>
+
+<p>TODO Version Upgrade guidance</p>
+
+<h2 id="minimum-requirements">Minimum Requirements</h2>
+
+<p>TODO describe requirements</p>
 
 <h2 id="binary-incompatibility">Binary Incompatibility</h2>
 
@@ -176,9 +192,9 @@ be able to communicate with a 2.1.0 or later installation of Accumulo, nor will
 the 2.1.0 or later version of the client libraries communicate with a 2.0.1 or
 earlier installation.</p>
 
-<h2 id="notable-changes">Notable Changes</h2>
+<h2 id="major-changes">Major Changes</h2>
 
-<h3 id="compaction-changes">Compaction Changes</h3>
+<h3 id="overhaul-of-table-compactions">Overhaul of Table Compactions</h3>
 
 <p>Significant changes were made to how Accumulo compacts files in this release.  See 
 <a href="/docs/2.x/administration/compaction">compaction </a> for details, below are some highlights.</p>
@@ -334,11 +350,31 @@ metrics to supported Micrometer sinks. <a href="https://github.com/apache/accumu
 
 <h3 id="new-spi-package">New SPI Package</h3>
 
-<p>New SPI Package <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
+<p>TODO describe New SPI Package <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
 
 <h3 id="new-listtablets-shell-command">New listtablets shell command.</h3>
 
-<p>New command for debugging tablets called listtablets <a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
+<p>A new command was created for debugging called listtablets, that shows detailed tablet information 
+on a single line. This command aggregates data about a tablet such as status, location, size, 
+number of entries and HDFS directory name. It even shows the start and end rows of tablets, 
+displaying them in the same sorted order they are stored in the metadata. See example command output below.
+<a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; listtablets -t test_ingest -h
+2021-01-04T15:12:47,663 [Shell.audit] INFO : root@uno&gt; listtablets -t test_ingest -h
+NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END                 
+TABLE: test_ingest
+1    t-0000007       1     0            60       552 HOSTED     CURRENT:ip-10-113-12-25:9997   2     -INF                 row_0000000005      
+2    t-0000006       1     0           500     2.71K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000005       row_0000000055      
+3    t-0000008       1     0         5.00K    24.74K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000055       row_0000000555      
+4    default_tablet  1     0         4.44K    22.01K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000555       +INF                     
+root@uno&gt; listtablets -t accumulo.metadata
+2021-01-04T15:13:21,750 [Shell.audit] INFO : root@uno&gt; listtablets -t accumulo.metadata
+NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END                 
+TABLE: accumulo.metadata
+1    table_info      2     0     7         524       HOSTED     CURRENT:ip-10-113-12-25:9997   !0    -INF                 ~                   
+2    default_tablet  0     0     0         0         HOSTED     CURRENT:ip-10-113-12-25:9997   !0    ~                    +INF
+</code></pre></div></div>
 
 <h3 id="new-option-for-cloning-offline">New option for cloning offline</h3>
 
@@ -346,7 +382,10 @@ metrics to supported Micrometer sinks. <a href="https://github.com/apache/accumu
 
 <h3 id="new-max-tablets-option-in-bulk-import">New max tablets option in bulk import</h3>
 
-<p>Created max tablets property in new bulk import <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
+<p>The property <code class="language-plaintext highlighter-rouge">table.bulk.max.tablets</code> was created in new bulk import technique. This property acts as a cluster performance 
+failsafe to prevent a single ingested file from being distributed across too much of a cluster. The value is enforced
+by the new bulk import technique and is the maximum number of tablets allowed for one bulk import file. When this property
+is set, an error will be thrown when the value is exceeded during a bulk import. <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
 
 <h3 id="new-ability-for-user-to-define-context-classloaders">New ability for user to define context classloaders</h3>
 
@@ -367,15 +406,26 @@ to stderr then terminate the VM using Runtime.halt. <a href="https://github.com/
 
 <h3 id="various-performance-improvements-when-deleting-tables">Various Performance improvements when deleting tables</h3>
 
-<p>Make delete table operations cancel user compactions <a href="https://github.com/apache/accumulo/issues/2030">#2030</a> <a href="https://github.com/apache/accumulo/issues/2169">#2169</a>.
-Prevent compactions from starting when delete table is called <a href="https://github.com/apache/accumulo/issues/2182">#2182</a> <a href="https://github.com/apache/accumulo/issues/2240">#2240</a>.
-Added check to not flush when table is being deleted <a href="https://github.com/apache/accumulo/issues/1887">#1887</a>.
-Make the UnloadTabletHandler log before waiting for deletes to finish <a href="https://github.com/apache/accumulo/issues/1881">#1881</a>.
-Stop user flush if table is being deleted <a href="https://github.com/apache/accumulo/issues/1931">#1931</a></p>
+<ul>
+  <li>Make delete table operations cancel user compactions <a href="https://github.com/apache/accumulo/issues/2030">#2030</a> <a href="https://github.com/apache/accumulo/issues/2169">#2169</a>.</li>
+  <li>Prevent compactions from starting when delete table is called <a href="https://github.com/apache/accumulo/issues/2182">#2182</a> <a href="https://github.com/apache/accumulo/issues/2240">#2240</a>.</li>
+  <li>Added check to not flush when table is being deleted <a href="https://github.com/apache/accumulo/issues/1887">#1887</a>.</li>
+  <li>Added log message before waiting for deletes to finish <a href="https://github.com/apache/accumulo/issues/1881">#1881</a>.</li>
+  <li>Added code to stop user flush if table is being deleted <a href="https://github.com/apache/accumulo/issues/1931">#1931</a></li>
+</ul>
 
 <h3 id="new-jshell-entry-point">New jshell entry point</h3>
 
 <p>Created new “jshell” convenience entry point <a href="https://github.com/apache/accumulo/issues/1870">#1870</a> <a href="https://github.com/apache/accumulo/issues/1910">#1910</a></p>
+
+<h3 id="new-monitor-compactions-page--performance-improvements">New Monitor Compactions page &amp; performance improvements</h3>
+
+<p>A page was added to the Monitor that lists the active compactions and the longest running
+active compaction. As an optimization, the page will only fetch data if a user loads the
+page and will only do so a maximum of once a minute. The same optimization was added for the Active Scans page,
+along with the addition of a “Fetched” column indicating when the data was retrieved. <a href="https://github.com/apache/accumulo/issues/2283">#2283</a> <a href="https://github.com/apache/accumulo/issues/2294">#2294</a></p>
+
+<p><img src="/images/release/active-compactions-table.png" alt="Active Compactions" /></p>
 
 <h3 id="other-notable-changes">Other notable changes</h3>
 
@@ -407,6 +457,7 @@ Stop user flush if table is being deleted <a href="https://github.com/apache/acc
   <li><a href="https://github.com/apache/accumulo/issues/1848">#1848</a> Update column name in the monitor UI</li>
   <li><a href="https://github.com/apache/accumulo/issues/2039">#2039</a> <a href="https://github.com/apache/accumulo/issues/2045">#2045</a> Add bulk import option to ignore empty dirs</li>
   <li><a href="https://github.com/apache/accumulo/issues/2064">#2064</a> Add option to disable encryption to AESCryptoService</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2117">#2117</a> Make sorted recovery write to RFiles</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
