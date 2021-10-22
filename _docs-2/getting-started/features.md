@@ -261,7 +261,7 @@ the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 
 ### Lexicoders
 
-[Lexicoders]({% durl getting-started/table_design#lexicoders) (since 1.6.0) help encode data (i.e numbers, dates)
+[Lexicoders]({% durl getting-started/table_design#lexicoders %}) (since 1.6.0) help encode data (i.e numbers, dates)
 into Accumulo keys in a way that their natural sort order is preserved.
 
 ## Extensible Behaviors
