@@ -1,7 +1,7 @@
 ---
 title: "Top 10 Reasons to Upgrade"
 author: Mike Miller
-reviewers: Keith Turner, Christopher Tubbs
+reviewers: Keith Turner
 ---
 
 Accumulo 2.0 has been in development for quite some time now and is packed with new features, bug

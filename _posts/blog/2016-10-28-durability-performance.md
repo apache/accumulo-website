@@ -2,7 +2,7 @@
 title: "Durability Performance Implications"
 date: 2016-11-02 17:00:00 +0000
 author: Keith Turner
-reviewers: Josh Elser, Dave Marion, Christopher Tubbs
+reviewers: Josh Elser, Dave Marion
 ---
 
 ## Overview

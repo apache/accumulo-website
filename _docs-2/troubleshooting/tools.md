@@ -102,8 +102,14 @@ every tablet matches, and the start and stop for the table is empty:
 
     $ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
     Enter the connection password:
-    All is well for table !0
-    All is well for table 1
+    Checking tables whose metadata is found in: accumulo.root (+r)
+    ...All is well for table accumulo.metadata (!0)
+    No problems found in accumulo.root (+r)
+
+    Checking tables whose metadata is found in: accumulo.metadata (!0)
+    ...All is well for table accumulo.replication (+rep)
+    ...All is well for table trace (1)
+    No problems found in accumulo.metadata (!0)
 
 ## RemoveEntriesForMissingFiles
 

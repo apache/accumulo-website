@@ -40,7 +40,7 @@ Any questions/ideas don't hesitate to [contact us][contact].
     git checkout -b accumulo-4321
 ```
 1. Do work and commit to your branch. You can reference [this link][messages] for a guide on how to write good commit log messages.
-1. Ensure you works satisfies the guidelines laid out in the `CONTRIBUTING.md` file.
+1. Ensure your branch builds cleanly using the command: ```mvn clean verify -DskipITs```
 1. If needed, squash to the minimum number of commits. For help on squashing commits, see this [tutorial][squash-tutorial] or [StackOverflow answer][squash-stack].
 1. [Push] your branch to your fork.
 ```

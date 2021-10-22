@@ -17,21 +17,27 @@ var mirrorsCallback = function(json) {
   htmlContent += '<optgroup label="Preferred Mirror (based on location)">';
   htmlContent += '<option selected="selected">' + json.preferred + '</option>';
   htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="HTTP Mirrors">';
-  for (var i = 0; i < json.http.length; i++) {
-    htmlContent += '<option>' + json.http[i] + '</option>';
+  if (json.hasOwnProperty('http')) {
+    htmlContent += '<optgroup label="HTTP Mirrors">';
+    for (var i = 0; i < json.http.length; i++) {
+      htmlContent += '<option>' + json.http[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="FTP Mirrors">';
-  for (var i = 0; i < json.ftp.length; i++) {
-    htmlContent += '<option>' + json.ftp[i] + '</option>';
+  if (json.hasOwnProperty('ftp')) {
+    htmlContent += '<optgroup label="FTP Mirrors">';
+    for (var i = 0; i < json.ftp.length; i++) {
+      htmlContent += '<option>' + json.ftp[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
-  htmlContent += '<optgroup label="Backup Mirrors">';
-  for (var i = 0; i < json.backup.length; i++) {
-    htmlContent += '<option>' + json.backup[i] + '</option>';
+  if (json.hasOwnProperty('backup')) {
+    htmlContent += '<optgroup label="Backup Mirrors">';
+    for (var i = 0; i < json.backup.length; i++) {
+      htmlContent += '<option>' + json.backup[i] + '</option>';
+    }
+    htmlContent += '</optgroup>';
   }
-  htmlContent += '</optgroup>';
   htmlContent += '</select></div></div>';
 
   $("#mirror_selection").html(htmlContent);
@@ -61,7 +67,7 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 {% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
 {% assign btnSigStyle = 'class="btn btn-default" style="font-family: monospace"' %}
 {% assign btnHashStyle = 'class="btn btn-default" style="font-family: monospace"' %}
-{% assign btnDocStyle = 'class="btn btn-default" style="text-transform: none; font-family: monospace"' %}
+{% assign btnDocStyle = 'class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
 
 ## Current Releases
 
@@ -76,7 +82,7 @@ enhancements, and more.
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="row btn-group" style="margin-left: 70px">
+<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
   <div class="col btn-group">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div><div class="col btn-group">
@@ -85,7 +91,7 @@ enhancements, and more.
   </div>
 </div>
 {% endfor %}
-<div class="row btn-group-sm" style="margin: 25px; margin-left: 50px">
+<div class="row btn-group-sm" style="margin: 20px">
   <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
@@ -104,7 +110,7 @@ The most recent legacy (1.x) release of Apache Accumulo&reg; is version
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="row btn-group" style="margin-left: 70px">
+<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
   <div class="col btn-group">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div><div class="col btn-group">
@@ -113,7 +119,7 @@ The most recent legacy (1.x) release of Apache Accumulo&reg; is version
   </div>
 </div>
 {% endfor %}
-<div class="row btn-group-sm" style="margin: 25px; margin-left: 50px">
+<div class="row btn-group-sm" style="margin: 20px">
   <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
