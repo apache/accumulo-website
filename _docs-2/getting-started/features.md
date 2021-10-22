@@ -356,16 +356,6 @@ multiplied by the largest file size.  If this cannot be done with all the
 files, the largest file is removed from consideration, and the remaining files
 are considered for compaction.  This is done until there are no files to merge.
 
-### Merging Minor Compaction
-
-When a max number of files per tablet is reached, minor compactions will merge
-data from the in-memory map with the smallest file instead of creating new
-files.  This throttles ingest.  In previous releases, new files were just created
-even if major compactions were falling behind and the number of tablets per file
-was growing.  Without this feature, ingest performance can roughly continue at a
-constant rate, even as scan performance decreases because tablets have too many
-files.
-
 ### Encryption
 
 Accumulo can encrypt its [data on disk]({% durl security/on-disk-encryption %}) and

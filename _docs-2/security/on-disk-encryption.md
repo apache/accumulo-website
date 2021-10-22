@@ -63,12 +63,6 @@ The on disk encryption configured here is only for RFiles and Write Ahead Logs (
 is written to disk with these files, but there are a few scenarios that can take place where data will be unencrypted, 
 even with the crypto service enabled.
 
-### Sorted WALs
-
-If a tablet server is killed with WALs enabled, Accumulo will create temporary sorted WALs during recovery that are unencrypted.  
-These files will only contain recent data that has not been compacted but will be written to the disk unencrypted. Once recovery 
-is finished, these unencrypted files will be removed.
-
 ### Data in Memory & Logs
 
 For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory 
