@@ -64,6 +64,10 @@ master is down. Check for a running master.
 The monitor uses the ZooKeeper `stat` [four-letter-word][zk-4lw] command to retrieve information.
 The ZooKeeper configuration may require explicitly listing the `stat` command in the four-letter-word whitelist.
 
+**I've lost the Accumulo root password, now what?**
+
+Running `accumulo init --reset-security` will prompt you for a new root password. CAUTION: this command will delete all existing users. You will need to re-create all other users and set permissions accordingly. Running the `accumulo admin dumpConfig` command will output current configuration, including current users, which may aid in this process.
+
 ## Accumulo Processes
 
 **My tablet server crashed!  The logs say that it lost its zookeeper lock.**
