@@ -225,9 +225,13 @@ The new compaction changes in this release can satisfy this use case while
 doing a logarithmic amount of work.</li>
 </ul>
 
-<p>CompactionStrategy was deprecated in favor of new public APIs.
-See its <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a> 
-for more information. Github tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a> <a href="https://github.com/apache/accumulo/issues/">#</a></p>
+<p>CompactionStrategy was deprecated in favor of new public APIs. CompactionStrategy was never public API as it
+used internal types and one of these types <code class="language-plaintext highlighter-rouge">FileRef</code> was removed in 2.1. Users who have written a CompactionStrategy
+can replace <code class="language-plaintext highlighter-rouge">FileRef</code> with its replacement internal type <code class="language-plaintext highlighter-rouge">StoredTabletFile</code> but this is not recommended. Since it is
+very likely that CompactionStrategy will be removed in a future release, any work put into rewriting a CompactionStrategy
+will be lost. It is recommended that users implement CompactionSelector, CompactionConfigurer, and CompactionPlanner instead.  The new compaction changes in 2.1 introduce new algorithms for optimally scheduling compactions across multiple thread pools, configuring a deprecated compaction strategy may result is missing out on the benefits of these new algorithms. See
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a>
+for more information. Github tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a></p>
 
 <h3 id="external-compactions-experimental">External Compactions (experimental)</h3>
 
