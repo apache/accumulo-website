@@ -212,7 +212,7 @@ exist in the file but are commented out as they are optional.
 #### Multi-node configuration
 
 If you are running an Accumulo cluster on multiple nodes, the `conf/cluster.yaml`
-files contains section that should be configured with a list of node names in yaml format:
+file contains sections that should be configured with a list of node names in yaml format:
 
  * [manager] : Accumulo primary coordinating process. Must specify one node. Can
    specify a few for fault tolerance.
