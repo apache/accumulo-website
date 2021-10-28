@@ -225,7 +225,7 @@ file contains sections that should be configured with a list of node names in ya
  * [compaction.coordinator] : Optional. Must specify one node. Can specify a few
    for fault tolerance.
  * [compaction.compactor] : Optional. Accumulo external compactor processes. List of
-   all nodes where compactors should run
+   all nodes where compactors should run.
 
 The Accumulo, Hadoop, and Zookeeper software should be present at the same
 location on every node. Also the files in the `conf` directory must be copied to
