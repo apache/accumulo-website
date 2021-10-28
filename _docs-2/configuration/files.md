@@ -55,7 +55,7 @@ The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumul
 
 The `accumulo-cluster` script uses the `cluster.yaml` file to determine where Accumulo processes should be run.
 This file is not in the `conf/` directory of the Accumulo release tarball by default. It can be created by running
-the command `accumulo-cluster create-config`. The `clustery.yaml` file contains the following sections:
+the command `accumulo-cluster create-config`. The `cluster.yaml` file contains the following sections:
 
 ### gc
 
