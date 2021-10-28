@@ -90,7 +90,7 @@ others can be specified to run standby CompactionCoordinators that can take over
 ### Compactor
 
 Contains a list of hosts where [Compactor] processes should run. While only one host is needed, it is recommended that
-multiple Compactors are run for improved external compaction performace.
+multiple Compactors are run for improved external compaction performance.
 
 [Garbage Collector]: {% durl getting-started/design#garbage-collector %}
 [Manager]: {% durl getting-started/design#manager %}
