@@ -229,7 +229,7 @@ documentation for details.
 ### Hostnames in configuration files
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
-network. While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
+network. While IP addresses, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
 it is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop
 cluster. Failing to consistently use FQDNs can have unexpected consequences in how Accumulo uses
 the FileSystem.
