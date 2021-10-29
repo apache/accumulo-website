@@ -38,6 +38,8 @@ their value in [accumulo.properties].
 |-----|-------------|--------------
 |4445 | Shutdown Port (Accumulo MiniCluster) | n/a
 |4560 | Accumulo monitor (for centralized log display) | [monitor.port.log4j]
+|9132 | Accumulo Compaction Coordinator | [compaction.coordinator.port.client]
+|9133 | Accumulo Compactor | [compactor.port.client]
 |9995 | Accumulo HTTP monitor | [monitor.port.client]
 |9997 | Tablet Server | [tserver.port.client]
 |9998 | Accumulo GC | [gc.port.client]
@@ -93,8 +95,7 @@ installed Accumulo using downstream packaging, the `conf/` could be something el
 
 Before starting Accumulo, the configuration files [accumulo-env.sh] and [accumulo.properties] must
 exist in `conf/` and be properly configured. If you are using `accumulo-cluster` to launch a
-cluster, the `conf/` directory must also contain host files for Accumulo services (i.e [gc],
-[managers], [monitor][monitor-host], [tservers], [tracers]). You can either create these files
+cluster, the `conf/` directory must also contain a `cluster.yaml` file. You can either create these files
 manually or run `accumulo-cluster create-config`.
 
 Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
@@ -201,10 +202,10 @@ performance to the write-ahead log file which will slow ingest.
 If you are using `accumulo-cluster` to start a cluster, configure the following on the
 machine that will serve as the Accumulo manager:
 
-1. Run `accumulo-cluster create-config` to create the [managers] and [tservers] files.
-2. Write the IP address or domain name of the Accumulo Manager to the [managers] file in `conf/`.
+1. Run `accumulo-cluster create-config` to create the `cluster.yaml` file.
+2. Write the IP address or domain name of the Accumulo Manager to the [manager] section.
 3. Write the IP addresses or domain name of the machines that will be TabletServers to the
-   [tservers] file in `conf/`, one per line.
+   [tserver] section.
 
 Note that if using domain names rather than IP addresses, DNS must be configured
 properly for all machines participating in the cluster. DNS can be a confusing source
@@ -228,11 +229,7 @@ documentation for details.
 ### Hostnames in configuration files
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
-network. All of the "host" configuration files for Accumulo ([gc], [managers], [tservers],
-[monitor][monitor-host], [tracers]) as well as [instance.volumes] in [accumulo.properties] must
-contain some host reference.
-
-While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
+network. While IP addresses, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
 it is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop
 cluster. Failing to consistently use FQDNs can have unexpected consequences in how Accumulo uses
 the FileSystem.
@@ -718,6 +715,8 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 [mailing lists][contact] for more info.
 
+[compaction.coordinator.port.client]: {% purl compaction.coordinator.port.client %}
+[compactor.port.client]: {% purl compactor.port.client %}
 [contact]: {{ site.baseurl }}/contact-us
 [quick start]: {% durl getting-started/quickstart %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
@@ -751,8 +750,8 @@ Please check the release notes for your Accumulo version or use the
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
 [monitor-host]: {% durl configuration/files#monitor %}
-[managers]: {% durl configuration/files#managers %}
-[tservers]: {% durl configuration/files#tservers %}
+[manager]: {% durl configuration/files#managers %}
+[tserver]: {% durl configuration/files#tservers %}
 [tracers]: {% durl configuration/files#tracers %}
 [log4j-service.properties]: {% durl configuration/files#log4j-serviceproperties %}
 [log4j-monitor.properties]: {% durl configuration/files#log4j-monitorproperties %}
