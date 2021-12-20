@@ -42,10 +42,9 @@ Accumulo client operations will be traced as part of a client application
 operation if the client application is also instrumented using OpenTelemetry
 and invokes the Accumulo client operation in a Span. Client application
 developers can use the OpenTelemetry [documentation] to instrument the
-application. To collect traces in the client, Accumulo needs the same two
-items mentioned previously: `general.opentelemetry.enabled` in the client
-application and the `io.opentelemetry.api.GlobalOpenTelemetry.globalOpenTelemetry`
-member variable must be set.
+application. To collect traces in the client, Accumulo needs the
+`io.opentelemetry.api.GlobalOpenTelemetry.globalOpenTelemetry` member
+variable set to an OpenTelemetry instance.
 
 ### Tracing from the Shell
 You can enable tracing for operations run from the shell by using the
