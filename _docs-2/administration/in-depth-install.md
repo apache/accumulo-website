@@ -447,7 +447,7 @@ assigned will transition to UNASSIGNED until they are reassigned by the Manager 
 active tserver.  With the [table.suspend.duration] set to > 0, a tablet will go from HOSTED to
 SUSPENDED when the tserver goes offline. The tablets will stay SUSPENDED until the tserver comes
 back online or, if the [table.suspend.duration] has passed. If the table.suspend.duration has passed
-before the tserver has returned, it will the become UNASSIGNED and eligible for reassignment
+before the tserver has returned, it will then become UNASSIGNED and eligible for reassignment
 by the Manager. If a tablet is UNASSIGNED it will not enter the SUSPENDED state.
 
 It is important not to choose too large a value for [table.suspend.duration], as during this time,
