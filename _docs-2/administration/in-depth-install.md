@@ -442,6 +442,14 @@ TabletServer to return before reassigning that TabletServer's responsibilities t
 TabletServers. If the TabletServer returns to the cluster before the specified timeout has elapsed,
 Accumulo will assign the TabletServer its original responsibilities.
 
+Tablet Status: Normally tablets will be in a HOSTED state. When a tserver goes off-line, the tablets
+assigned will transition to UNASSIGNED until they are reassigned by the Manager process to another
+active tserver.  With the [table.suspend.duration] set to > 0, a tablet will go from HOSTED to
+SUSPENDED when the tserver goes offline. The tablets will stay SUSPENDED until the tserver comes
+back online or, if the [table.suspend.duration] has passed. If the table.suspend.duration has passed
+before the tserver has returned, it will then become UNASSIGNED and eligible for reassignment
+by the Manager. If a tablet is UNASSIGNED it will not enter the SUSPENDED state.
+
 It is important not to choose too large a value for [table.suspend.duration], as during this time,
 all scans against the data that TabletServer had hosted will block (or time out).
 
