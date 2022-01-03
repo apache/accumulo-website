@@ -16,7 +16,7 @@ enabled follows all the requests made on behalf of the user throughout
 the distributed infrastructure of accumulo, and across all threads of
 execution.
 
-Starting with version 2.1.0 Accumulo uses [OpenTelemetry] to collect
+Starting with version 2.1.0, Accumulo uses [OpenTelemetry] to collect
 and transport trace information to a back-end server that can display
 the trace information. The Accumulo Trace server process and `trace` table
 are no longer used. Also, the old `trace` configuration properties are now
