@@ -100,6 +100,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Edward Yoon         |                                                                   |                       |
 | Elina Wise          | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Eugene Cheipesh     |                                                                   |                       |
+| Filipe Rodrigues    |                                                                   | [GMT][GMT]
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Harjit Singh        |                                                                   | [ET][ET]              |
 | Hasan Gürcan        |                                                                   | [CEST][CEST]          |
