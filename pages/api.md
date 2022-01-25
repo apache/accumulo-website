@@ -9,6 +9,7 @@ packages and their sub-packages excluding those named *impl*, *thrift*, or
 
  * {% jlink -f org.apache.accumulo.core.client %}
  * {% jlink -f org.apache.accumulo.core.data %}
+ * {% jlink -f org.apache.accumulo.core.iterators %}
  * {% jlink -f org.apache.accumulo.core.security %}
  * {% jlink -f org.apache.accumulo.minicluster %}
  * {% jlink -f org.apache.accumulo.hadoop %} (since 2.0.0)
@@ -38,7 +39,7 @@ For 2.0 and later, this can be simplified, because sub-packages not intended
 for public API were relocated, and also altered to include the new MapReduce module:
 
 ```regex
-import\s+org\.apache\.accumulo\.(?!(core\.(client|data|security)|minicluster|hadoop)\.).*
+import\s+org\.apache\.accumulo\.(?!(core\.(client|data|iterators|security)|minicluster|hadoop)\.).*
 ```
 
 See the [blog post][post] about using the checkstyle plugin for more explicit non-API detection.
