@@ -264,9 +264,12 @@ the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 [Lexicoders]({% durl getting-started/table_design#lexicoders) (since 1.6.0) help encode data (i.e numbers, dates)
 into Accumulo keys in a way that their natural sort order is preserved.
 
-## Extensible Behaviors
+## Plugins
 
-### Pluggable balancer
+The [Service Plugin Interface (SPI)][spi] was created to expose Accumulo system level information to
+plugins in a stable manner.
+
+### Balancer
 
 Users can provide a balancer plugin that decides how to distribute tablets
 across a table.  These plugins can be provided on a per table basis.  This is
@@ -278,26 +281,22 @@ balancer moves one child to another tablet server.  The assumption here is that
 splitting tablets are being actively written to, so this keeps write load evenly
 spread.
 
-### Pluggable memory manager
+### Cache
 
-The plugin that decides when and what tablets to minor compact is configurable.
-The default plugin compacts the largest tablet when memory is over a certain
-threshold.  It varies the threshold over time depending on minor compaction
-speed.  It flushes tablets that are not written to for a configurable time
-period.
+See the page on [Caching]({% durl administration/caching %})
 
-### Pluggable logger assignment strategy
+### Compaction
 
-The plugin that decided which loggers should be assigned to which tablet
-servers is configurable.
+Compactions were reworked in 2.1 to allow plugin capabilities. TODO expand
 
-### Pluggable compaction strategy
+### Scan
 
-The plugin that decides which files should be chosen for major compaction is now
-configurable. Given certain workloads, it may be known that once data is written,
-it is very unlikely that more data will be written to it, and thus paying the penalty
-to re-write a large file can be avoided. Implementations of this compaction strategy
-can be used to optimize the data that compactions will write.
+Scan Executors were added to the SPI in 2.0. See the [Scan Executors]({% durl administration/scan-executors %}) page.
+
+### Volume Chooser
+
+The Volume Chooser has been around for some time but was refactored in 2.1 to be included in the SPI.
+See the [javadoc][volume-chooser] for more information.
 
 ## General Administration
 
@@ -418,3 +417,5 @@ beginning and end of the range are split, compacted, and then merged.
 [multivolume]: {% durl administration/multivolume %}
 [Iterators]: {% durl development/iterators %}
 [monitor]: {% durl administration/monitoring-metrics %}
+[spi]: TODO
+[volume-chooser]: TODO
