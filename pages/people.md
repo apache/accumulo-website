@@ -131,6 +131,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
+| Kylian Meulin       |                                                                   | [GMT][GMT]/[BST][BST] |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
 | Laura Schanno       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Luke Brassard       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
