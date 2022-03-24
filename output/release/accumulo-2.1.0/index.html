@@ -409,8 +409,11 @@ are in a new <a href="https://github.com/apache/accumulo-classloaders/tree/main/
 
 <p>Consolidated and normalized thread pool and thread creation. All threads created through this code path
 will have an UncaughtExceptionHanlder attached to it that will log the fact that the Thread encountered
-an uncaught Exception and is now dead. When an Error is encountered it will attempt to print a message
-to stderr then terminate the VM using Runtime.halt. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a href="https://github.com/apache/accumulo/issues/1818">#1818</a></p>
+an uncaught Exception and is now dead. When an Error is encountered in a server process, it will attempt
+to print a message to stderr then terminate the VM using Runtime.halt. On the client side, the default
+UncaughtExceptionHandler will only log the Exception/Error in the client and does not terminate the VM.
+Additionally, the user has the ability to set their own UncaughtExceptionHandler implementation on the
+client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a href="https://github.com/apache/accumulo/issues/1818">#1818</a> <a href="https://github.com/apache/accumulo/issues/2554">#2554</a></p>
 
 <h3 id="updated-hash-algorithm">Updated hash algorithm</h3>
 
@@ -476,6 +479,10 @@ for External Compactions that allows seeing the progress of compactions and many
   <li><a href="https://github.com/apache/accumulo/issues/2117">#2117</a> <a href="https://github.com/apache/accumulo/issues/2236">#2236</a> Make sorted recovery write to RFiles. New <code class="language-plaintext highlighter-rouge">tserver.wal.sort.file.</code> property to configure</li>
   <li><a href="https://github.com/apache/accumulo/issues/2076">#2076</a> Sorted recovery files can now be encrypted</li>
   <li><a href="https://github.com/apache/accumulo/issues/2273">#2273</a> Upgrade Thrift to 0.15.0</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2462">#2462</a> Added SUBMITTED FaTE status to differentiate between things that are submitted and running</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2467">#2467</a> Added option to fate shell command to cancel FaTE operations that are NEW or SUBMITTED</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2562">#2562</a> Updated fate shell command to use CommandLine options instead of manual arg parsing</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2524">#2524</a> Scheduled background tasks are now periodically checked to see if they failed</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
