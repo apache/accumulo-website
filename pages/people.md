@@ -152,6 +152,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Morgan Haskel       |                                                                   |                       |
 | Nguessan Kouame     |                                                                   |                       |
 | Nicolás Alarcón R.  |                                                                   | [CEST][CEST]          |
+| Nikita Sirohi.      | [Ghost Locomotion][GHOST]                                         | [PT][PT]              |
 | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Philip Young        |                                                                   |                       |
@@ -207,6 +208,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [ENDGAME]: https://www.endgame.com
 [FAST-NU]: https://nu.edu.pk/
 [FLYWHEEL]: https://flywheeldata.com
+[GHOST]: https://www.driveghost.com/
 [HORTONWORKS]: https://hortonworks.com
 [IBM]: https://www.ibm.com
 [JHUAPL]: https://www.jhuapl.edu
