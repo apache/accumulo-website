@@ -227,7 +227,7 @@ can replace <code class="language-plaintext highlighter-rouge">FileRef</code> wi
 very likely that CompactionStrategy will be removed in a future release, any work put into rewriting a CompactionStrategy
 will be lost. It is recommended that users implement CompactionSelector, CompactionConfigurer, and CompactionPlanner instead.  The new compaction changes in 2.1 introduce new algorithms for optimally scheduling compactions across multiple thread pools, configuring a deprecated compaction strategy may result is missing out on the benefits of these new algorithms. See
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.0.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a>
-for more information. Github tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a></p>
+for more information. GitHub tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a></p>
 
 <h3 id="external-compactions-experimental">External Compactions (experimental)</h3>
 
@@ -311,7 +311,7 @@ default per-table balancer has been updated from
 <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.SimpleLoadBalancer</code>. If you have
 customized the tablet balancer configuration, you are strongly encouraged to
 update your configuration to reference the updated balancer names. If you
-written a custom tablet balancer, it should be updated to implement the new
+have written a custom tablet balancer, it should be updated to implement the new
 interface <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TabletBalancer</code>
 rather than extending the deprecated abstract
 <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TabletBalancer</code>.</li>
@@ -408,7 +408,7 @@ are in a new <a href="https://github.com/apache/accumulo-classloaders/tree/main/
 <h3 id="change-in-uncaught-exceptionerror-handling-in-server-side-threads">Change in uncaught Exception/Error handling in server-side threads</h3>
 
 <p>Consolidated and normalized thread pool and thread creation. All threads created through this code path
-will have an UncaughtExceptionHanlder attached to it that will log the fact that the Thread encountered
+will have an UncaughtExceptionHandler attached to it that will log the fact that the Thread encountered
 an uncaught Exception and is now dead. When an Error is encountered in a server process, it will attempt
 to print a message to stderr then terminate the VM using Runtime.halt. On the client side, the default
 UncaughtExceptionHandler will only log the Exception/Error in the client and does not terminate the VM.
@@ -433,14 +433,19 @@ client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a hr
 
 <p>Created new “jshell” convenience entry point <a href="https://github.com/apache/accumulo/issues/1870">#1870</a> <a href="https://github.com/apache/accumulo/issues/1910">#1910</a></p>
 
-<h3 id="new-monitor-pages--improvments">New Monitor Pages &amp; Improvments</h3>
+<h3 id="new-monitor-pages-improvements--features">New Monitor Pages, Improvements &amp; Features</h3>
 
-<p>A page was added to the Monitor that lists the active compactions and the longest running
-active compaction. As an optimization, the page will only fetch data if a user loads the
-page and will only do so a maximum of once a minute. The same optimization was added for the Active Scans page,
-along with the addition of a “Fetched” column indicating when the data was retrieved. A new page was also created 
-for External Compactions that allows seeing the progress of compactions and many details about ongoing compactions.
-<a href="https://github.com/apache/accumulo/issues/2283">#2283</a> <a href="https://github.com/apache/accumulo/issues/2294">#2294</a> <a href="https://github.com/apache/accumulo/issues/2358">#2358</a></p>
+<ul>
+  <li>A page was added to the Monitor that lists the active compactions and the longest running
+active compaction. As an optimization, this page will only fetch data if a user loads the
+page and will only do so a maximum of once a minute. This optimization was also added for the Active Scans page,
+along with the addition of a “Fetched” column indicating when the data was retrieved.</li>
+  <li>A new page was also created for External Compactions that allows users to see the progress of compactions and other details about ongoing compactions.</li>
+  <li>A new feature was added to the Tablet Server page to help users identify which tservers are in recovery mode. When 
+a tserver is recovering, its corresponding row in the Tablet Server Status table will be highlighted.</li>
+</ul>
+
+<p><a href="https://github.com/apache/accumulo/issues/2283">#2283</a> <a href="https://github.com/apache/accumulo/issues/2294">#2294</a> <a href="https://github.com/apache/accumulo/issues/2358">#2358</a> <a href="https://github.com/apache/accumulo/issues/2663">#2663</a></p>
 
 <h3 id="new-tserver-scan-timeout-property">New tserver scan timeout property</h3>
 
