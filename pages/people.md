@@ -71,14 +71,14 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 |---------------------|-------------------------------------------------------------------|-----------------------|
 | Aaron Glahe         | [Data Tactics][DATATACT]                                          | [ET][ET]              |
 | Aishwarya Thangappa | [Microsoft][MICROSOFT]                                            | [PT][PT]              |
-| Akshit Mangotra     |                                                                   | [IST][IST]            |
+| Akshit Mangotra     |                                                                   | [IST][IST-India]      |
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Ali Mustafa         | [FAST-NU][FAST-NU]                                                | [PKT][PKT]            |
-| Amisha Sahu         |                                                                   | [IST][IST]            |
+| Amisha Sahu         |                                                                   | [IST][IST-India]      |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
-| Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST] |
+| Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST-Ireland] |
 | Ben Manes           |                                                                   | [PT][PT]              |
 | Benjamin Fach       |                                                                   |                       |
 | Bob Thorman         | [AT&amp;T][ATT]                                                   |                       |
@@ -127,7 +127,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Joseph Koshakow     |                                                                   | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
-| Kartik Sethi        |                                                                   | [IST](https://www.timeanddate.com/worldclock/india/new-delhi)                |
+| Kartik Sethi        |                                                                   | [IST][IST-India]                |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
@@ -166,9 +166,10 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Scott Kuehn         |                                                                   |                       |
 | Seth Falco          | [Elypia][ELYPIA]                                                  | [GMT][GMT]/[BST][BST] |
 | Shawn Walker        |                                                                   |                       |
-| Shivakumar Gangamath|                                                                   | [IST][IST]            |
+| Shivakumar Gangamath|                                                                   | [IST][IST-India]      |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
+| Swastik Pal         |                                                                   | [IST][IST-India]      |
 | Szabolcs Bukros     | [Cloudera][CLOUDERA]                                              | [CEST][CEST]          |
 | Takahiko Saito      | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 | Tao Xiao            | [Nara Institute of Science and Technology][NAIST]                 |                       |
@@ -238,7 +239,8 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [WAVE]: https://www.wavestrike.com
 [WRENCH]: https://wrench.io
 [BST]: https://www.timeanddate.com/time/zones/bst
-[IST]: https://www.timeanddate.com/time/zones/ist-ireland
+[IST-Ireland]: https://www.timeanddate.com/time/zones/ist-ireland
+[IST-India]: https://www.timeanddate.com/time/zones/ist
 [CT]: https://www.timeanddate.com/time/zones/ct
 [ET]: https://www.timeanddate.com/time/zones/et
 [GMT]: https://www.timeanddate.com/time/zones/gmt
