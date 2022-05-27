@@ -169,6 +169,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Shivakumar Gangamath|                                                                   | [IST][IST]            |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
 | Supun Kamburugamuva |                                                                   |                       |
+| Swastik Pal         |                                                                   | [IST](https://www.timeanddate.com/time/zones/ist)|
 | Szabolcs Bukros     | [Cloudera][CLOUDERA]                                              | [CEST][CEST]          |
 | Takahiko Saito      | [Hortonworks][HORTONWORKS]                                        | [PT][PT]              |
 | Tao Xiao            | [Nara Institute of Science and Technology][NAIST]                 |                       |
