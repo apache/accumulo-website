@@ -19,7 +19,7 @@ great here on the tour.  Files and logs used by [MiniAccumuloCluster] can be see
 
 3. Modify the _exercise_ method to print a hello message. You will put your code in this method for each lesson.
 ```java
-  static void exercise(AccumuloClient client) {
+  static void exercise(AccumuloClient client) throws Exception {
     // Write your code here
     System.out.println("Hello world");
   }
