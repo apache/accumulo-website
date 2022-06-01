@@ -152,3 +152,116 @@ An XML dump file can be later used to restore ZooKeeper.
     $ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite < dump.xml
 
 This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using `accumulo-util`.
+
+# zoo-info-viewer (new in 2.1)
+
+View Accumulo information stored in ZooKeeper in a human-readable format.  The utility can be run without an Accumulo 
+instance. If an instance id or name is not provided on the command line, the instance will be read from
+HDFS, otherwise only a running ZooKeeper instance is required to run the command.
+
+To run the command:
+
+    $ accumulo zoo-info-viewer [--instanceId id | --instanceName name] [mode-options] [--outfile filename]
+
+    mode options:
+    --print-instances
+    --print-id-map
+    --print-props [--system] [-ns | --namespaces list] [-t | --tables list]
+
+## mode: print instances
+The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:
+
+    $ accumulo zoo-info-viewer  --print-instances
+
+    -----------------------------------------------
+    Report Time: 2022-05-31T21:07:19.673258Z
+    -----------------------------------------------
+    Instances (Instance Name, Instance ID)
+    test_a=1111465d-b7bb-42c2-919b-111111111111
+    test_b=2222465d-b7bb-42c2-919b-222222222222
+    uno=9cc9465d-b7bb-42c2-919b-ddf74b610c82
+    
+    -----------------------------------------------
+
+## mode: print id-map
+If a shell is not available or convenient, the zoo-info-viewer can provide the same 
+information as the `namespaces -l` and `tables -l` commands. Note, the zoo-info-viewer output is
+sorted by the id. 
+
+    $ accumulo zoo-info-viewer --print-id-map
+    -----------------------------------------------
+    Report Time: 2022-05-25T19:33:42.079969Z
+    -----------------------------------------------
+    ID Mapping (id => name) for instance: 8f006afd-8673-4a5a-b940-60405755197f
+    Namespace ids:
+    +accumulo =>                 accumulo
+    +default  =>                       ""
+    1         =>               ns_sample1
+
+    Table ids:
+    !0        =>        accumulo.metadata
+    +r        =>            accumulo.root
+    +rep      =>     accumulo.replication
+    2         =>          ns_sample1.tbl1
+    3         =>                     tbl2
+
+    -----------------------------------------------
+
+## mode: print property mappings
+
+With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not direclty
+readable with the ZooKeeper zkCli utility.  The properties can be listed in an Accumulo shell with the `config` command.
+However, if a shell is not available, this utility `zoo-info-viewer` can be used instead.
+
+The `zoo-info-viewer` option `--print-props` with no other options will print all the configuration properties 
+for system, namespaces and tables.  The `print-props` can be filtered the with additional options, `--system` will print
+the system configuration, `-ns` or `--namespaces` expects a list of the namespace names,  
+`-t` or `--tables` expects a list of table names included in the output. 
+
+    $ accumulo zoo-info-viewer  --print-props
+
+    -----------------------------------------------
+    Report Time: 2022-05-31T21:18:11.562867Z
+    -----------------------------------------------
+    ZooKeeper properties for instance ID: 9cc9465d-b7bb-42c2-919b-ddf74b610c82
+
+    Name: System, Data Version:0, Data Timestamp: 2022-05-31T15:51:52.772265Z:
+    -- none --
+
+    Namespace:
+    Name: , Data Version:0, Data Timestamp: 2022-05-31T15:51:53.015613Z:
+    -- none --
+
+    Name: accumulo, Data Version:0, Data Timestamp: 2022-05-31T15:51:53.034172Z:
+    -- none --
+
+    Name: ns1, Data Version:0, Data Timestamp: 2022-05-31T21:17:22.927165Z:
+    -- none --
+
+    Tables:
+    Name: accumulo.metadata, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.511811Z:
+    table.cache.block.enable=true
+    table.cache.index.enable=true
+    ...
+
+    Name: accumulo.replication, Data Version:1, Data Timestamp: 2022-05-31T15:51:53.516346Z:
+    table.formatter=org.apache.accumulo.server.replication.StatusFormatter
+    table.group.repl=repl
+    ...
+
+    Name: accumulo.root, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.501174Z:
+    table.cache.block.enable=true
+    table.cache.index.enable=true
+    ...
+
+    Name: ns1.tbl1, Data Version:1, Data Timestamp: 2022-05-31T21:17:41.111836Z:
+    table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+    table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+    ...
+
+    Name: tbl3, Data Version:1, Data Timestamp: 2022-05-31T21:17:54.083044Z:
+    table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+    table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+    ...
+    -----------------------------------------------
+
