@@ -299,6 +299,12 @@ it is very unlikely that more data will be written to it, and thus paying the pe
 to re-write a large file can be avoided. Implementations of this compaction strategy
 can be used to optimize the data that compactions will write.
 
+### Pluggable Block Caches
+
+Accumulo provides two BlockCacheManager implementations (LruBlockCacheManager and
+TinyLfuBlockCacheManager) that construct on-heap block caches. Users can provide
+alternate BlockCacheManager implementations using the property `tserver.cache.manager.class`.
+
 ## General Administration
 
 ### Monitor page
