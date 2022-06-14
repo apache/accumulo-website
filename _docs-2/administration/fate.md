@@ -36,17 +36,22 @@ For example, a command that is not completing could be blocked on the execution 
 operation. Accumulo provides an Accumulo shell command to interact with fate.
 
 The `fate` shell command accepts a number of arguments for different functionality:
-`list`/`print`, `fail`, `delete`, `dump`.
+`list`/`print`, `cancel`, `fail`, `delete`, `dump`.
 
 ### List/Print
 
 Without any additional arguments, this command will print all operations that still exist in
 the FATE store (ZooKeeper). This will include active, pending, and completed operations (completed
 operations are lazily removed from the store). Each operation includes a unique "transaction ID", the
-state of the operation (e.g. `NEW`, `IN_PROGRESS`, `FAILED`), any locks the
+state of the operation (e.g. `NEW`, `SUBMITTED`, `IN_PROGRESS`, `FAILED`), any locks the
 transaction actively holds and any locks it is waiting to acquire.
 
 This option can also accept transaction IDs which will restrict the list of transactions shown.
+
+### Cancel
+
+This command can be used to cancel NEW or SUBMITTED FATE transactions. This command requires
+one or more transaction ids.
 
 ### Fail
 
