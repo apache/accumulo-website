@@ -573,6 +573,18 @@ priority of 1.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scan -t tex --execution-hints scan_type=alpha
 </code></pre></div></div>
 
+<p>Execution Hints can also be used to influence how the block caches are used for
+a scan. The following configuration would modify the <code class="language-plaintext highlighter-rouge">gamma</code> executor to use blocks
+in the cache if they are already cached, but would never load mising blocks into the
+cache.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t tex -s table.scan.dispatcher.opts.cacheUsage.gamma=opportunistic
+</code></pre></div></div>
+
+<p>Other valid values are <code class="language-plaintext highlighter-rouge">disabled</code> which does not use data in the block caches,
+<code class="language-plaintext highlighter-rouge">enabled</code> which uses the block cache as it normally would and <code class="language-plaintext highlighter-rouge">table</code> which enables
+the block cache for the scan if it’s enabled on the table.</p>
+
 
 
     <div class="row" style="margin-top: 20px;">
