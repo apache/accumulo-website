@@ -18,6 +18,9 @@ for tables where read performance is critical.
 
 ## Configuration
 
+The {% plink tserver.cache.manager.class %} property controls which block cache implementation is used within the tablet server. Users
+can supply their own implementation and set custom configuration properties to control it's behavior (see org.apache.accumulo.core.spi.cache.BlockCacheManager$Configuration.java).
+
 The index and data block caches are configured for tables by the following properties:
 
 * {% plink table.cache.block.enable %} - enables data block cache on the table (default is `false`)
