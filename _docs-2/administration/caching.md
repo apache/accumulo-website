@@ -20,7 +20,6 @@ for tables where read performance is critical.
 
 The {% plink tserver.cache.manager.class %} property controls which block cache implementation is used within the tablet server. Users
 can supply their own implementation and set custom configuration properties to control it's behavior (see org.apache.accumulo.core.spi.cache.BlockCacheManager$Configuration.java).
-An example off-heap block cache implementation and configuration can be found at: https://github.com/keith-turner/accumulo-ohc.
 
 The index and data block caches are configured for tables by the following properties:
 
