@@ -211,7 +211,7 @@ sorted by the id.
 
 With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not direclty
 readable with the ZooKeeper zkCli utility.  The properties can be listed in an Accumulo shell with the `config` command.
-however, if a shell is not available, this utility `zoo-info-viewer` can be used instead.
+However, if a shell is not available, this utility `zoo-info-viewer` can be used instead.
 
 The `zoo-info-viewer` option `--print-props` with no other options will print all the configuration properties 
 for system, namespaces and tables.  The `print-props` can be filtered the with additional options, `--system` will print
