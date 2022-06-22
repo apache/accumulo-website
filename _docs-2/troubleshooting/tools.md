@@ -169,7 +169,7 @@ To run the command:
     --print-properties [--system] [-ns | --namespaces list] [-t | --tables list]
 
 ## mode: print instances
-The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name, id mapping run:
+The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:
 
     $ accumulo zoo-info-viewer  --print-instances
 
