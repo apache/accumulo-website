@@ -6,10 +6,159 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 15 Jun 2022 15:01:27 +0000</pubDate>
-    <lastBuildDate>Wed, 15 Jun 2022 15:01:27 +0000</lastBuildDate>
+    <pubDate>Fri, 08 Jul 2022 10:57:26 +0000</pubDate>
+    <lastBuildDate>Fri, 08 Jul 2022 10:57:26 +0000</lastBuildDate>
     <generator>Jekyll v4.2.0</generator>
     
+    
+      <item>
+        <title>2.1.0 Metrics and Tracing Changes</title>
+        <description>&lt;p&gt;Metrics and Tracing changed in 2.1.0. This post explains the new implementations and provides examples on how to configure them.&lt;/p&gt;
+
+&lt;h1 id=&quot;metrics&quot;&gt;Metrics&lt;/h1&gt;
+
+&lt;p&gt;Accumulo was &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-1817&quot;&gt;modified&lt;/a&gt; in version 1.7.0 (2015) to use the Hadoop Metrics2 framework for capturing and emitting internal Accumulo metrics. &lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt;, a newer metrics framework, supports sending metrics to many popular &lt;a href=&quot;https://micrometer.io/docs/concepts#_supported_monitoring_systems&quot;&gt;monitoring systems&lt;/a&gt;. In Accumulo 2.1.0 support for the Hadoop Metrics2 framework has been removed in favor of using Micrometer. Metrics are disabled by default.&lt;/p&gt;
+
+&lt;p&gt;Micrometer has the concept of a &lt;a href=&quot;https://micrometer.io/docs/concepts#_registry&quot;&gt;MeterRegistry&lt;/a&gt;, which is used to create and emit metrics to the supported monitoring systems. Additionally, Micrometer supports sending metrics to multiple monitoring systems concurrently. Configuring Micrometer in Accumulo will require you to write a small peice of code to provide the MeterRegistry configuration. Specifically, you will need to create a class that implements &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/core/src/main/java/org/apache/accumulo/core/metrics/MeterRegistryFactory.java&quot;&gt;MeterRegistryFactory&lt;/a&gt;. Your implementation will need to create and configure the appropriate MeterRegistry. Additionally, you will need to add the MeterRegistry jar file and the jar file containing your MeterRegistryFactory implementation to Accumulo’s classpath. The page for each monitoring system that Micrometer supports contains instructions on how to configure the registry and which jar file is required.&lt;/p&gt;
+
+&lt;p&gt;Accumulo’s metrics integration test uses a &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/test/src/main/java/org/apache/accumulo/test/metrics/TestStatsDRegistryFactory.java&quot;&gt;TestStatsDRegistryFactory&lt;/a&gt; to create and configure a &lt;a href=&quot;https://micrometer.io/docs/registry/statsD&quot;&gt;StatsD Meter Registry&lt;/a&gt;. The instructions below provide an example of how to use this class to emit Accumulo’s metrics to a Telegraf - InfluxDB - Grafana monitoring stack.&lt;/p&gt;
+
+&lt;h2 id=&quot;metrics-example&quot;&gt;Metrics Example&lt;/h2&gt;
+
+&lt;p&gt;This example uses a Docker container that contains Telegraf-InfluxDB-Grafana system. We will configure Accumulo to send metrics to the &lt;a href=&quot;https://www.influxdata.com/time-series-platform/telegraf/&quot;&gt;Telegraf&lt;/a&gt; component running in the Docker image. Telegraf will persist the metrics in &lt;a href=&quot;https://www.influxdata.com/products/influxdb-overview/&quot;&gt;InfluxDB&lt;/a&gt; and then we will visualize the metris using &lt;a href=&quot;https://grafana.com/&quot;&gt;Grafana&lt;/a&gt;. This example assumes that you have installed Docker (or equivalent engine) and have an Accumulo database already installed and initialized. We will be installing some things, modifying the Accumulo configuration, and starting Accumulo.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Download the Telegraf-Influx-Grafana (TIG) Docker image
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker pull artlov/docker-telegraf-influxdb-grafana:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Create directories for the Docker container
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /tmp/metrics/influxdb
+chmod 777 /tmp/metrics/influxdb
+mkdir /tmp/metrics/grafana
+mkdir /tmp/metrics/grafana-dashboards
+mkdir -p /tmp/metrics/telegraf/conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Download Telegraf configuration and Grafana dashboard
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /tmp/metrics/telegraf/conf
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/templates/telegraf.conf.tftpl
+cat telegraf.conf.tftpl | sed &quot;s/\${manager_ip}/localhost/&quot; &amp;gt; telegraf.conf
+cd /tmp/metrics/grafana-dashboards
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.json
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Start the TIG Docker container
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --ulimit nofile=66000:66000 -d --rm \
+ --restart always \
+ --name tig-stack \
+ -p 3003:3003 \
+ -p 3004:8888 \
+ -p 8086:8086 \
+ -p 22022:22 \
+ -p 8125:8125/udp \
+ -v /tmp/metrics/influxdb:/var/lib/influxdb \
+ -v /tmp/metrics/grafana:/var/lib/grafana \
+ -v /tmp/metrics/telegraf/conf:/etc/telegraf \
+ -v /tmp/metrics/grafana-dashboards:/etc/grafana/provisioning/dashboards \
+ artlov/docker-telegraf-influxdb-grafana:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Download Micrometer StatsD Meter Registry jar
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget -O micrometer-registry-statsd-1.9.1.jar https://search.maven.org/remotecontent?filepath=io/micrometer/micrometer-registry-statsd/1.9.1/micrometer-registry-statsd-1.9.1.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;At a mininum you need to enable the metrics using the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.enabled&lt;/code&gt; and supply the name of the MeterRegistryFactory class using the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.factory&lt;/code&gt;. To enable &lt;a href=&quot;https://micrometer.io/docs/ref/jvm&quot;&gt;JVM&lt;/a&gt; metrics, use the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.jvm.metrics.enabled&lt;/code&gt;. Modify the accumulo.properties configuration file by adding the properties below.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Micrometer settings
+general.micrometer.enabled=true
+general.micrometer.jvm.metrics.enabled=true
+general.micrometer.factory=org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Copy the micrometer-registry-statsd-1.9.1.jar and accumulo-test.jar into the Accumulo lib directory&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;The TestStatsDRegistryFactory uses system properties to determine the host and port of the StatsD server. In this example the Telegraf component started in step 4 above contains a StatsD server listening on localhost:8125. Configure the TestStatsDRegistryFactory by adding the following system properties to the JAVA_OPTS variable in accumulo-env.sh.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;-Dtest.meter.registry.host=127.0.0.1&quot;
+&quot;-Dtest.meter.registry.port=8125&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Start Accumulo.  You should see the following statement in the server log files
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[metrics.MetricsUtil] INFO : initializing metrics, enabled:true, class:org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Log into Grafana (http://localhost:3003/) using the default credentials (root/root). Click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Home&lt;/code&gt; icon at the top, then click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Accumulo Micrometer Test Dashboard&lt;/code&gt;. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot; alt=&quot;Grafana Screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;tracing&quot;&gt;Tracing&lt;/h1&gt;
+
+&lt;p&gt;With the retirement of HTrace, Accumulo has selected to replace it’s tracing functionality with &lt;a href=&quot;https://opentelemetry.io/&quot;&gt;OpenTelemetry&lt;/a&gt; in version 2.1.0. Hadoop appears to be on the same &lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-15566&quot;&gt;path&lt;/a&gt; which, when finished, should provide better insight into Accumulo’s use of HDFS. OpenTelemetry supports exporting Trace information to several different systems, to include &lt;a href=&quot;https://www.jaegertracing.io/&quot;&gt;Jaeger&lt;/a&gt;, &lt;a href=&quot;https://zipkin.io/&quot;&gt;Zipkin&lt;/a&gt;, and others. The HTrace trace spans in the Accumulo source code have been updated to use OpenTelemetry trace spans. If tracing is enabled, then Accumulo will use the OpenTelemetry implementation registered with the &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/blob/main/api/all/src/main/java/io/opentelemetry/api/GlobalOpenTelemetry.java&quot;&gt;GlobalOpenTelemetry&lt;/a&gt; object. Tracing is disabled by default and a no-op OpenTelemetry implementation is used.&lt;/p&gt;
+
+&lt;h2 id=&quot;tracing-example&quot;&gt;Tracing Example&lt;/h2&gt;
+
+&lt;p&gt;This example uses the OpenTelemetry Java Agent jar file to configure and export trace information to Jaeger. The OpenTelemetry Java Agent jar file bundles together the supported Java exporters, provides a way to &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure&quot;&gt;configure&lt;/a&gt; them, and registers them with the GlobalOpenTelemetry singleton that is used by Accumulo. An alternate method to supplying the OpenTelemetry dependencies, without using the Java Agent jar file, is to create a shaded jar with the OpenTelemetry &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure&quot;&gt;autoconfigure&lt;/a&gt; module and it’s runtime dependencies and place the resulting shaded jar on the classpath. An example Maven pom.xml file to create the shaded jar is &lt;a href=&quot;https://github.com/apache/accumulo/pull/2259#issuecomment-965571339&quot;&gt;here&lt;/a&gt;. When using this alternate method you can skip step 2 and the uncommenting of the java agent in step 5 below.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Download Jaeger all-in-one Docker image
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  docker pull jaegertracing/all-in-one:1.35
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Download OpenTelemetry Java Agent (https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure)
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  wget -O opentelemetry-javaagent-1.14.0.jar https://search.maven.org/remotecontent?filepath=io/opentelemetry/javaagent/opentelemetry-javaagent/1.14.0/opentelemetry-javaagent-1.14.0.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;To enable tracing, you need to set the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.opentelemetry.enabled&lt;/code&gt; property. Modify the accumulo.properties configuration file and add the following property.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# OpenTelemetry settings
+general.opentelemetry.enabled=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;To enable tracing in the shell, set the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.opentelemetry.enabled&lt;/code&gt; property in the accumulo-client.properties configuration file.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# OpenTelemetry settings
+general.opentelemetry.enabled=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Configure the OpenTelemetry JavaAgent in accumulo-env.sh by uncommenting the following and updating the path to the java agent jar:
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ## Optionally setup OpenTelemetry SDK AutoConfigure
+  ## See https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure
+  #JAVA_OPTS=('-Dotel.traces.exporter=jaeger' '-Dotel.metrics.exporter=none' '-Dotel.logs.exporter=none' &quot;${JAVA_OPTS[@]}&quot;)
+  ## Optionally setup OpenTelemetry Java Agent
+  ## See https://github.com/open-telemetry/opentelemetry-java-instrumentation for more options
+  #JAVA_OPTS=('-javaagent:path/to/opentelemetry-javaagent-all.jar' &quot;${JAVA_OPTS[@]}&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Start Jaeger Docker container
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -d --rm --name jaeger \
+ -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+ -p 5775:5775/udp \
+ -p 6831:6831/udp \
+ -p 6832:6832/udp \
+ -p 5778:5778 \
+ -p 16686:16686 \
+ -p 14268:14268 \
+ -p 14250:14250 \
+ -p 9411:9411 jaegertracing/all-in-one:1.35
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Start Accumulo.  You should see the following statement in the server log files
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[trace.TraceUtil] INFO : Trace enabled in Accumulo: yes, OpenTelemetry instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.v1_10.ApplicationOpenTelemetry110, Tracer instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.trace.ApplicationTracer
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;View traces in Jaeger UI at http://localhost:16686. You can select the service name on the left panel and click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Find Traces&lt;/code&gt; to view the trace information. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot; alt=&quot;Jaeger Screenshot&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 22 Jun 2022 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2022/06/22/2.1.0-metrics-and-tracing.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2022/06/22/2.1.0-metrics-and-tracing.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 1.10.2</title>
@@ -1511,149 +1660,6 @@ to the maven-checkstyle-plugin configuration.&lt;/p&gt;
         <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
         <link>https://accumulo.apache.org/blog/2019/11/04/checkstyle-import-control.html</link>
         <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/11/04/checkstyle-import-control.html</guid>
-        
-        
-        <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Using Azure Data Lake Gen2 storage as a data store for Accumulo</title>
-        <description>&lt;p&gt;Accumulo can store its files in &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction&quot;&gt;Azure Data Lake Storage Gen2&lt;/a&gt;
-using the &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver&quot;&gt;ABFS (Azure Blob File System)&lt;/a&gt; driver.
-Similar to &lt;a href=&quot;/blog/2019/09/10/accumulo-S3-notes.html&quot;&gt;S3 blog&lt;/a&gt;,
-the write ahead logs &amp;amp; Accumulo metadata can be stored in HDFS and everything else on Gen2 storage
-using the volume chooser feature introduced in Accumulo 2.0. The configurations referred on this blog
-are specific to Accumulo 2.0 and Hadoop 3.2.0.&lt;/p&gt;
-
-&lt;h2 id=&quot;hadoop-setup&quot;&gt;Hadoop setup&lt;/h2&gt;
-
-&lt;p&gt;For ABFS client to talk to Gen2 storage, it requires one of the Authentication mechanism listed &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html#Authentication&quot;&gt;here&lt;/a&gt;
-This post covers &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview&quot;&gt;Azure Managed Identity&lt;/a&gt;
-formerly known as Managed Service Identity or MSI. This feature provides Azure services with an 
-automatically managed identity in &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis&quot;&gt;Azure AD&lt;/a&gt;
-and it avoids the need for credentials or other sensitive information from being stored in code 
-or configs/JCEKS. Plus, it comes free with Azure AD.&lt;/p&gt;
-
-&lt;p&gt;At least the following should be added to Hadoop’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;core-site.xml&lt;/code&gt; on each node.&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.auth.type&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;OAuth&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth.provider.type&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.hadoop.fs.azurebfs.oauth2.MsiTokenProvider&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth2.msi.tenant&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;TenantID&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.azure.account.oauth2.client.id&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;value&amp;gt;&lt;/span&gt;ClientID&lt;span class=&quot;nt&quot;&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;See &lt;a href=&quot;https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html&quot;&gt;ABFS doc&lt;/a&gt;
-for more information on Hadoop Azure support.&lt;/p&gt;
-
-&lt;p&gt;To get hadoop command to work with ADLS Gen2 set the 
-following entries in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hadoop-env.sh&lt;/code&gt;. As Gen2 storage is TLS enabled by default, 
-it is important we use the native OpenSSL implementation of TLS.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTIONAL_TOOLS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hadoop-azure&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-Dorg.wildfly.openssl.path=&amp;lt;path/to/OpenSSL/libraries&amp;gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_OPTS&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;To verify the location of the OpenSSL libraries, run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;whereis libssl&lt;/code&gt; command 
-on the host&lt;/p&gt;
-
-&lt;h2 id=&quot;accumulo-setup&quot;&gt;Accumulo setup&lt;/h2&gt;
-
-&lt;p&gt;For each node in the cluster, modify &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; to add Azure storage jars to the
-classpath.  Your versions may differ depending on your Hadoop version,
-following versions were included with Hadoop 3.2.0.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_CONF_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ZOOKEEPER_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/*:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/client/*&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/azure-data-lake-store-sdk-2.2.9.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/azure-keyvault-core-1.0.0.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/hadoop-azure-3.2.0.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/tools/lib/wildfly-openssl-1.0.4.Final.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-api-2.2.11.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/commons-lang3-3.7.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/httpclient-4.5.2.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jackson-core-asl-1.9.13.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HADOOP_HOME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/share/hadoop/common/lib/jackson-mapper-asl-1.9.13.jar&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;CLASSPATH
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Include &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Dorg.wildfly.openssl.path&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;JAVA_OPTS&lt;/code&gt; in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-env.sh&lt;/code&gt; as shown below. This
-java property is an optional performance enhancement for TLS.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ACCUMULO_JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-XX:+UseConcMarkSweepGC'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-XX:CMSInitiatingOccupancyFraction=75'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-XX:+CMSClassUnloadingEnabled'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-XX:OnOutOfMemoryError=kill -9 %p'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-XX:-OmitStackTraceInFastThrow'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-Djava.net.preferIPv4Stack=true'&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'-Dorg.wildfly.openssl.path=/usr/lib64'&lt;/span&gt;
-  &lt;span class=&quot;s2&quot;&gt;&quot;-Daccumulo.native.lib.path=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/native&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Set the following in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; and then run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo init&lt;/code&gt;, but don’t start Accumulo.&lt;/p&gt;
-
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;name node&amp;gt;/accumulo&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After running Accumulo init we need to configure storing write ahead logs in
-HDFS.  Set the following in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;instance.volumes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo,abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.volume.chooser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;org.apache.accumulo.server.fs.PreferredVolumeChooser&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;general.custom.volume.preferred.logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;hdfs://&amp;lt;namenode&amp;gt;/accumulo&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo init --add-volumes&lt;/code&gt; to initialize the Azure DLS Gen2 volume.  Doing this
-in two steps avoids putting any Accumulo metadata files in Gen2  during init.
-Copy &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.properties&lt;/code&gt; to all nodes and start Accumulo.&lt;/p&gt;
-
-&lt;p&gt;Individual tables can be configured to store their files in HDFS by setting the
-table property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table.custom.volume.preferred&lt;/code&gt;.  This should be set for the
-metadata table in case it splits using the following Accumulo shell command.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config -t accumulo.metadata -s table.custom.volume.preferred=hdfs://&amp;lt;namenode&amp;gt;/accumulo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;accumulo-example&quot;&gt;Accumulo example&lt;/h2&gt;
-
-&lt;p&gt;The following Accumulo shell session shows an example of writing data to Gen2 and
-reading it back.  It also shows scanning the metadata table to verify the data
-is stored in Gen2.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@muchos&amp;gt; createtable gen2test
-root@muchos gen2test&amp;gt; insert r1 f1 q1 v1
-root@muchos gen2test&amp;gt; insert r1 f1 q2 v2
-root@muchos gen2test&amp;gt; flush -w
-2019-10-16 08:01:00,564 [shell.Shell] INFO : Flush of table gen2test  completed.
-root@muchos gen2test&amp;gt; scan
-r1 f1:q1 []    v1
-r1 f1:q2 []    v2
-root@muchos gen2test&amp;gt; scan -t accumulo.metadata -c file
-4&amp;lt; file:abfss://&amp;lt;file_system&amp;gt;@&amp;lt;storage_account_name&amp;gt;.dfs.core.windows.net/accumulo/tables/4/default_tablet/F00000gj.rf []    234,2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;These instructions will help to configure Accumulo to use Azure’s Data Lake Gen2 Storage along with HDFS. With this setup, 
-we are able to successfully run the continuos ingest test. Going forward, we’ll experiment more on this space 
-with ADLS Gen2 and add/update blog as we come along.&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/blog/2019/10/15/accumulo-adlsgen2-notes.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2019/10/15/accumulo-adlsgen2-notes.html</guid>
         
         
         <category>blog</category>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>2.1.0 Metrics and Tracing Changes</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.0.1/">2.0.1 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.10.2/">1.10.2</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.0)</a></li>
+            <li><a href="/api">Public API</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">2.1.0 Metrics and Tracing Changes</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Dave Marion<br>
+<b>Date: </b>&nbsp;&nbsp;22 Jun 2022<br>
+
+</p>
+
+<p>Metrics and Tracing changed in 2.1.0. This post explains the new implementations and provides examples on how to configure them.</p>
+
+<h1 id="metrics">Metrics</h1>
+
+<p>Accumulo was <a href="https://issues.apache.org/jira/browse/ACCUMULO-1817">modified</a> in version 1.7.0 (2015) to use the Hadoop Metrics2 framework for capturing and emitting internal Accumulo metrics. <a href="https://micrometer.io/">Micrometer</a>, a newer metrics framework, supports sending metrics to many popular <a href="https://micrometer.io/docs/concepts#_supported_monitoring_systems">monitoring systems</a>. In Accumulo 2.1.0 support for the Hadoop Metrics2 framework has been removed in favor of using Micrometer. Metrics are disabled by default.</p>
+
+<p>Micrometer has the concept of a <a href="https://micrometer.io/docs/concepts#_registry">MeterRegistry</a>, which is used to create and emit metrics to the supported monitoring systems. Additionally, Micrometer supports sending metrics to multiple monitoring systems concurrently. Configuring Micrometer in Accumulo will require you to write a small peice of code to provide the MeterRegistry configuration. Specifically, you will need to create a class that implements <a href="https://github.com/apache/accumulo/blob/main/core/src/main/java/org/apache/accumulo/core/metrics/MeterRegistryFactory.java">MeterRegistryFactory</a>. Your implementation will need to create and configure the appropriate MeterRegistry. Additionally, you will need to add the MeterRegistry jar file and the jar file containing your MeterRegistryFactory implementation to Accumulo’s classpath. The page for each monitoring system that Micrometer supports contains instructions on how to configure the registry and which jar file is required.</p>
+
+<p>Accumulo’s metrics integration test uses a <a href="https://github.com/apache/accumulo/blob/main/test/src/main/java/org/apache/accumulo/test/metrics/TestStatsDRegistryFactory.java">TestStatsDRegistryFactory</a> to create and configure a <a href="https://micrometer.io/docs/registry/statsD">StatsD Meter Registry</a>. The instructions below provide an example of how to use this class to emit Accumulo’s metrics to a Telegraf - InfluxDB - Grafana monitoring stack.</p>
+
+<h2 id="metrics-example">Metrics Example</h2>
+
+<p>This example uses a Docker container that contains Telegraf-InfluxDB-Grafana system. We will configure Accumulo to send metrics to the <a href="https://www.influxdata.com/time-series-platform/telegraf/">Telegraf</a> component running in the Docker image. Telegraf will persist the metrics in <a href="https://www.influxdata.com/products/influxdb-overview/">InfluxDB</a> and then we will visualize the metris using <a href="https://grafana.com/">Grafana</a>. This example assumes that you have installed Docker (or equivalent engine) and have an Accumulo database already installed and initialized. We will be installing some things, modifying the Accumulo configuration, and starting Accumulo.</p>
+
+<ol>
+  <li>Download the Telegraf-Influx-Grafana (TIG) Docker image
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull artlov/docker-telegraf-influxdb-grafana:latest
+</code></pre></div>    </div>
+  </li>
+  <li>Create directories for the Docker container
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir -p /tmp/metrics/influxdb
+chmod 777 /tmp/metrics/influxdb
+mkdir /tmp/metrics/grafana
+mkdir /tmp/metrics/grafana-dashboards
+mkdir -p /tmp/metrics/telegraf/conf
+</code></pre></div>    </div>
+  </li>
+  <li>Download Telegraf configuration and Grafana dashboard
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /tmp/metrics/telegraf/conf
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/templates/telegraf.conf.tftpl
+cat telegraf.conf.tftpl | sed "s/\${manager_ip}/localhost/" &gt; telegraf.conf
+cd /tmp/metrics/grafana-dashboards
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.json
+wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.yaml
+</code></pre></div>    </div>
+  </li>
+  <li>Start the TIG Docker container
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --ulimit nofile=66000:66000 -d --rm \
+ --restart always \
+ --name tig-stack \
+ -p 3003:3003 \
+ -p 3004:8888 \
+ -p 8086:8086 \
+ -p 22022:22 \
+ -p 8125:8125/udp \
+ -v /tmp/metrics/influxdb:/var/lib/influxdb \
+ -v /tmp/metrics/grafana:/var/lib/grafana \
+ -v /tmp/metrics/telegraf/conf:/etc/telegraf \
+ -v /tmp/metrics/grafana-dashboards:/etc/grafana/provisioning/dashboards \
+ artlov/docker-telegraf-influxdb-grafana:latest
+</code></pre></div>    </div>
+  </li>
+  <li>Download Micrometer StatsD Meter Registry jar
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -O micrometer-registry-statsd-1.9.1.jar https://search.maven.org/remotecontent?filepath=io/micrometer/micrometer-registry-statsd/1.9.1/micrometer-registry-statsd-1.9.1.jar
+</code></pre></div>    </div>
+  </li>
+  <li>At a mininum you need to enable the metrics using the property <code class="language-plaintext highlighter-rouge">general.micrometer.enabled</code> and supply the name of the MeterRegistryFactory class using the property <code class="language-plaintext highlighter-rouge">general.micrometer.factory</code>. To enable <a href="https://micrometer.io/docs/ref/jvm">JVM</a> metrics, use the property <code class="language-plaintext highlighter-rouge">general.micrometer.jvm.metrics.enabled</code>. Modify the accumulo.properties configuration file by adding the properties below.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Micrometer settings
+general.micrometer.enabled=true
+general.micrometer.jvm.metrics.enabled=true
+general.micrometer.factory=org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Copy the micrometer-registry-statsd-1.9.1.jar and accumulo-test.jar into the Accumulo lib directory</p>
+  </li>
+  <li>The TestStatsDRegistryFactory uses system properties to determine the host and port of the StatsD server. In this example the Telegraf component started in step 4 above contains a StatsD server listening on localhost:8125. Configure the TestStatsDRegistryFactory by adding the following system properties to the JAVA_OPTS variable in accumulo-env.sh.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"-Dtest.meter.registry.host=127.0.0.1"
+"-Dtest.meter.registry.port=8125"
+</code></pre></div>    </div>
+  </li>
+  <li>Start Accumulo.  You should see the following statement in the server log files
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[metrics.MetricsUtil] INFO : initializing metrics, enabled:true, class:org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
+</code></pre></div>    </div>
+  </li>
+  <li>Log into Grafana (http://localhost:3003/) using the default credentials (root/root). Click the <code class="language-plaintext highlighter-rouge">Home</code> icon at the top, then click the <code class="language-plaintext highlighter-rouge">Accumulo Micrometer Test Dashboard</code>. If everything is working correctly, then you should see something like the image below.</li>
+</ol>
+
+<p><img src="/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png" alt="Grafana Screenshot" /></p>
+
+<h1 id="tracing">Tracing</h1>
+
+<p>With the retirement of HTrace, Accumulo has selected to replace it’s tracing functionality with <a href="https://opentelemetry.io/">OpenTelemetry</a> in version 2.1.0. Hadoop appears to be on the same <a href="https://issues.apache.org/jira/browse/HADOOP-15566">path</a> which, when finished, should provide better insight into Accumulo’s use of HDFS. OpenTelemetry supports exporting Trace information to several different systems, to include <a href="https://www.jaegertracing.io/">Jaeger</a>, <a href="https://zipkin.io/">Zipkin</a>, and others. The HTrace trace spans in the Accumulo source code have been updated to use OpenTelemetry trace spans. If tracing is enabled, then Accumulo will use the OpenTelemetry implementation registered with the <a href="https://github.com/open-telemetry/opentelemetry-java/blob/main/api/all/src/main/java/io/opentelemetry/api/GlobalOpenTelemetry.java">GlobalOpenTelemetry</a> object. Tracing is disabled by default and a no-op OpenTelemetry implementation is used.</p>
+
+<h2 id="tracing-example">Tracing Example</h2>
+
+<p>This example uses the OpenTelemetry Java Agent jar file to configure and export trace information to Jaeger. The OpenTelemetry Java Agent jar file bundles together the supported Java exporters, provides a way to <a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure">configure</a> them, and registers them with the GlobalOpenTelemetry singleton that is used by Accumulo. An alternate method to supplying the OpenTelemetry dependencies, without using the Java Agent jar file, is to create a shaded jar with the OpenTelemetry <a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure">autoconfigure</a> module and it’s runtime dependencies and place the resulting shaded jar on the classpath. An example Maven pom.xml file to create the shaded jar is <a href="https://github.com/apache/accumulo/pull/2259#issuecomment-965571339">here</a>. When using this alternate method you can skip step 2 and the uncommenting of the java agent in step 5 below.</p>
+
+<ol>
+  <li>Download Jaeger all-in-one Docker image
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker pull jaegertracing/all-in-one:1.35
+</code></pre></div>    </div>
+  </li>
+  <li>Download OpenTelemetry Java Agent (https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  wget -O opentelemetry-javaagent-1.14.0.jar https://search.maven.org/remotecontent?filepath=io/opentelemetry/javaagent/opentelemetry-javaagent/1.14.0/opentelemetry-javaagent-1.14.0.jar
+</code></pre></div>    </div>
+  </li>
+  <li>To enable tracing, you need to set the <code class="language-plaintext highlighter-rouge">general.opentelemetry.enabled</code> property. Modify the accumulo.properties configuration file and add the following property.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># OpenTelemetry settings
+general.opentelemetry.enabled=true
+</code></pre></div>    </div>
+  </li>
+  <li>To enable tracing in the shell, set the <code class="language-plaintext highlighter-rouge">general.opentelemetry.enabled</code> property in the accumulo-client.properties configuration file.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># OpenTelemetry settings
+general.opentelemetry.enabled=true
+</code></pre></div>    </div>
+  </li>
+  <li>Configure the OpenTelemetry JavaAgent in accumulo-env.sh by uncommenting the following and updating the path to the java agent jar:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ## Optionally setup OpenTelemetry SDK AutoConfigure
+  ## See https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure
+  #JAVA_OPTS=('-Dotel.traces.exporter=jaeger' '-Dotel.metrics.exporter=none' '-Dotel.logs.exporter=none' "${JAVA_OPTS[@]}")
+  ## Optionally setup OpenTelemetry Java Agent
+  ## See https://github.com/open-telemetry/opentelemetry-java-instrumentation for more options
+  #JAVA_OPTS=('-javaagent:path/to/opentelemetry-javaagent-all.jar' "${JAVA_OPTS[@]}")
+</code></pre></div>    </div>
+  </li>
+  <li>Start Jaeger Docker container
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --rm --name jaeger \
+ -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+ -p 5775:5775/udp \
+ -p 6831:6831/udp \
+ -p 6832:6832/udp \
+ -p 5778:5778 \
+ -p 16686:16686 \
+ -p 14268:14268 \
+ -p 14250:14250 \
+ -p 9411:9411 jaegertracing/all-in-one:1.35
+</code></pre></div>    </div>
+  </li>
+  <li>Start Accumulo.  You should see the following statement in the server log files
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[trace.TraceUtil] INFO : Trace enabled in Accumulo: yes, OpenTelemetry instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.v1_10.ApplicationOpenTelemetry110, Tracer instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.trace.ApplicationTracer
+</code></pre></div>    </div>
+  </li>
+  <li>View traces in Jaeger UI at http://localhost:16686. You can select the service name on the left panel and click <code class="language-plaintext highlighter-rouge">Find Traces</code> to view the trace information. If everything is working correctly, then you should see something like the image below.</li>
+</ol>
+
+<p><img src="/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png" alt="Jaeger Screenshot" /></p>
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2022 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
