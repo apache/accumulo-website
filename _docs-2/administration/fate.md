@@ -13,10 +13,10 @@ steps in a way that is tolerant to node failure and other concurrent operations 
 very difficult to achieve. Accumulo includes a Fault-Tolerant Executor (FATE) which
 is widely used server-side to implement the client API safely and correctly.
 
-Fault-Tolerant Executor (FATE) is the implementation detail which ensures that tables in creation when the
-Manager dies will be successfully created when another Manager process is started.
-This alleviates the need for any external tools to correct some bad state -- Accumulo can
-undo the failure and self-heal without any external intervention.
+Fault-Tolerant Executor (FATE) is the implementation detail which ensures that tables in 
+creation when the Manager dies will be successfully created when another Manager process is 
+started. This alleviates the need for any external tools to correct some bad state -- Accumulo 
+can undo the failure and self-heal without any external intervention.
 
 ## Overview
 
@@ -28,6 +28,42 @@ The important characteristic of REPOs are that they implemented in a way that is
 every operation must be able to undo or replay a partial execution of itself. Requiring the
 implementation of the operation to support this functional greatly simplifies the execution
 of these operations. This property is also what guarantees safety in light of failure conditions.
+
+### REPO Stack 
+
+A FATE transaction is composed of a sequence of Repeatable persisted operations (REPO).  In order to start a FATE transaction,
+a REPO is pushed onto a per transaction REPO stack.  The top of the stack always contains the
+next REPO the FATE transaction should execute.  When a REPO is successful it may return another
+REPO which is pushed on the stack.
+
+### FATE Structure in ZooKeeper
+
+The storage layer in ZooKeeper is organized by storing each FATE transaction in a unique path based
+on the FATE transaction id. The base path for FATE transactions is:
+
+``` 
+/accumulo/[INSTANCE_ID]/fate/tx_[TXID]
+```
+
+The data stored on the transaction id node provides the current FATE transaction status (e.g. NEW, IN_PROGRESS, 
+SUCCESS, FAILED,...)
+
+Under the transaction id node, there will be a number of REPOs and a debug node that provides additional
+information. The debug information is added when the transaction is created and is the command class simple name.
+The REPOs form a stack of operations that will be performed in order and in ZooKeeper are numbered `repo_0000000000`
+to `repo_#` The REPO with the largest number is the top of the stack. The top of the stack is the REPO currently
+running or the next REPO that will start on the next execution. The REPO with the lowest number
+(usually repo_0000000000) is the operation that spawned the FATE operations.
+
+```
+Sample FATE ZooKeeper paths:
+
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/debug
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/repo_0000000002
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/repo_0000000000
+
+```
 
 ## Administration
 
