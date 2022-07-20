@@ -72,7 +72,7 @@ For example, a command that is not completing could be blocked on the execution 
 operation. Accumulo provides an Accumulo shell command to interact with fate.
 
 The `fate` shell command accepts a number of arguments for different functionality:
-`list`/`print`, `cancel`, `fail`, `delete`, `dump`.
+`list`/`print`, `summary`, `cancel`, `fail`, `delete`, `dump`.
 
 ### List/Print
 
@@ -84,6 +84,46 @@ transaction actively holds and any locks it is waiting to acquire.
 
 This option can also accept transaction IDs which will restrict the list of transactions shown.
 
+### Summary (new in 2.1)
+
+Similar to the List/Print command, this command prints a snapshot of all operations in the FATE store (ZooKeeper).
+The information includes summary counts of: 
+
+  * Operation States (`NEW`, `SUBMITTED`, `IN_PROGRESS`, `FAILED`)
+  * The FATE transaction commands
+  * The current executing steps
+  * Expanded FATE information details
+
+The expanded FATE details supplement the information provided by list/print by including the running duration since the
+FATE was created, the names of the namespace and tables for locks the transaction holds or is waiting to acquire.
+(Note: depending on the operation and the step, the expanded details fields may be incomplete or unknown when the 
+snapshot information is gathered.) 
+
+This option accepts a filter for the details section by the state of the operation 
+(e.g. `NEW`, `SUBMITTED`, `IN_PROGRESS`, `FAILED`). The command also provides the option to output the information 
+formatted as json.
+
+Sample output:
+
+```
+Report Time: 2022-07-07T11:42:02Z
+Status counts:
+  IN_PROGRESS: 2
+
+Command counts:
+  CompactRange: 2
+
+Step counts:
+  CompactionDriver: 2
+
+Fate transactions (oldest first):
+Status Filters: [NONE]
+
+Running	txn_id				Status		Command		Step (top)		locks held:(table id, name)	locks waiting:(table id, name)
+0:00:04	0c143900c230c1df	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
+0:00:03	55f59a2ae838e19e	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
+
+```
 ### Cancel
 
 This command can be used to cancel NEW or SUBMITTED FATE transactions. This command requires
