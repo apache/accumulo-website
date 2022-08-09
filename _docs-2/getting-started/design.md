@@ -88,7 +88,7 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
-### Compactor
+### Compactor (experimental)
 
 The Accumulo Compactor process is an optional application that can be used to run compactions
 outside of the TabletServer. One to many Compactors can be run on a cluster and each Compactor
@@ -98,7 +98,7 @@ completion status of the compaction. The Compactor process will continue to perf
 in situations where normal in-TabletServer compactions would fail, such as TabletServer restart
 and Tablet re-hosting.
 
-### Compaction Coordinator
+### Compaction Coordinator (experimental)
 
 The Accumulo Compaction Coordinator is an optional application that is required to run compactions
 outside of the TabletServer. The Coordinator is responsible for communicating with the
@@ -107,6 +107,18 @@ to assign work, get status updates, and cancel running external compactions.
 
 Multiple Coordinators may be run. The Coordinators will choose among themselves a single active Coordinator,
 and the others will become backups if the active Coordinator should fail.
+
+### Scan Server (experimental)
+
+The Accumulo Scan Server is an optional application that can be used to run scans on a tablet's data
+outside of the Tablet Server. Many Scan Servers can be run on a cluster and each Scan Server may run
+one or more scans concurrently (dependent on configuration). Scans running in a Scan Server do not have
+to be concerned about tablet re-hosting or contention with ingest, compactions, and other tablet
+maintenance activities. The trade-off when using Scan Server's is that the tablet hosted within
+the ScanServer may not contain the exact same data as the corresponding tablet hosted by the
+Tablet Server. The Scan Server does not have any of the Tablet data that may reside within the
+in-memory maps and the tablet may reference files that have been compacted as tablet metadata can
+be cached within the Scan Server (See Scan Server configuration properties).
 
 ### Client
 
