@@ -71,3 +71,5 @@ For details about governance policies for the Accumulo project view the followin
 [consensus]: {{ site.baseurl }}/contributor/consensusBuilding
 [lazy]: {{ site.baseurl }}/contributor/lazyConsensus
 [voting]: {{ site.baseurl }}/contributor/voting
+[IntelliJ]: https://www.jetbrains.com/idea/download
+[Eclipse]: https://www.eclipse.org/downloads/packages

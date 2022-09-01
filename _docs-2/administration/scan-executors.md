@@ -159,6 +159,19 @@ priority of 1.
 scan -t tex --execution-hints scan_type=alpha
 ```
 
+Execution Hints can also be used to influence how the block caches are used for
+a scan. The following configuration would modify the `gamma` executor to use blocks
+in the cache if they are already cached, but would never load mising blocks into the
+cache.
+
+```
+config -t tex -s table.scan.dispatcher.opts.cacheUsage.gamma=opportunistic
+```
+
+Other valid values are `disabled` which does not use data in the block caches,
+`enabled` which uses the block cache as it normally would and `table` which enables
+the block cache for the scan if it's enabled on the table.
+
 [tserver]: {{ page.docs_baseurl }}/getting-started/design#tablet-server-1
 [setExecutionHints]: {% jurl org.apache.accumulo.core.client.ScannerBase#setExecutionHints-java.util.Map- %}
 

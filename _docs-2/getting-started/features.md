@@ -261,7 +261,7 @@ the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 
 ### Lexicoders
 
-[Lexicoders]({% durl getting-started/table_design#lexicoders) (since 1.6.0) help encode data (i.e numbers, dates)
+[Lexicoders]({% durl getting-started/table_design#lexicoders %}) (since 1.6.0) help encode data (i.e numbers, dates)
 into Accumulo keys in a way that their natural sort order is preserved.
 
 ## Extensible Behaviors
@@ -298,6 +298,12 @@ configurable. Given certain workloads, it may be known that once data is written
 it is very unlikely that more data will be written to it, and thus paying the penalty
 to re-write a large file can be avoided. Implementations of this compaction strategy
 can be used to optimize the data that compactions will write.
+
+### Pluggable Block Caches
+
+Accumulo provides two BlockCacheManager implementations (LruBlockCacheManager and
+TinyLfuBlockCacheManager) that construct on-heap block caches. Users can provide
+alternate BlockCacheManager implementations using the property `tserver.cache.manager.class`.
 
 ## General Administration
 
