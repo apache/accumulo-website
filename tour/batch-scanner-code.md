@@ -40,18 +40,14 @@ jshell> try (BatchScanner batchScanner = client.createBatchScanner("GothamBatch"
    ...>   batchScanner.fetchColumn(new Text("villain"), new Text("yearsOfService"));
    ...> 
    ...>   // Calculate average years of service
-   ...>   Long totalYears = 0L;
-   ...>   Long entriesRead = 0L;
-   ...>   for (Map.Entry<Key, Value> entry : batchScanner) {
-   ...>     totalYears += Long.valueOf(entry.getValue().toString());
-   ...>     entriesRead++;
-   ...>   }
-   ...>   System.out.println("The average years of service of " + entriesRead + " villains is " + totalYears / entriesRead);
+   --->   long villianCount = batchScanner.stream().count();
+   --->   Double average = batchScanner.stream().map(Map.Entry::getValue).map(Value::toString).mapToLong(Long::valueOf).average().getAsDouble();
+   --->   System.out.println("The average years of service of " + villianCount + " villians is " + average);
    ...> }
 ```
 
 Running the solution above should print output similar to below:
 
 ```
-The average years of service of 2000 villains is 24
+The average years of service of 2000 villains is 24.8125
 ```
