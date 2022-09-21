@@ -70,7 +70,7 @@ a test dependency:
 </dependency>
 ```
 
-To use the Iterator test harness, create a class that extends the [BaseJUnit4IteratorTest] class
+To use the Iterator test harness, create a class that extends the [IteratorTestBase] class
 and defines the following:
 
   * A `SortedMap` of input data (`Key`-`Value` pairs)
@@ -93,23 +93,20 @@ import java.util.SortedMap;
 import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.data.Range;
 import org.apache.accumulo.core.data.Value;
-import org.apache.accumulo.iteratortest.IteratorTestCaseFinder;
+import org.apache.accumulo.iteratortest.IteratorTestBase;
 import org.apache.accumulo.iteratortest.IteratorTestInput;
 import org.apache.accumulo.iteratortest.IteratorTestOutput;
-import org.apache.accumulo.iteratortest.junit4.BaseJUnit4IteratorTest;
-import org.apache.accumulo.iteratortest.testcases.IteratorTestCase;
-import org.junit.runners.Parameterized.Parameters;
+import org.apache.accumulo.iteratortest.IteratorTestParameters;
 
-public class MyIteratorTest extends BaseJUnit4IteratorTest {
+public class MyIteratorTest extends IteratorTestBase {
 
-  @Parameters
-  public static Object[][] parameters() {
-    final IteratorTestInput input = createIteratorInput();
-    final IteratorTestOutput output = createIteratorOutput();
-    final List<IteratorTestCase> testCases = IteratorTestCaseFinder.findAllTestCases();
-    return BaseJUnit4IteratorTest.createParameters(input, output, tests);
+  @Override
+  protected Stream<IteratorTestParameters> parameters() {
+      var input = new IteratorTestInput(MyIterator.class, Map.of(), createRange(), INPUT_DATA);
+      var expectedOutput = new IteratorTestOutput(OUTPUT_DATA);
+      return builtinTestCases().map(test -> test.toParameters(input, expectedOutput));
   }
-
+    
   private static SortedMap<Key,Value> INPUT_DATA = createInputData();
   private static SortedMap<Key,Value> OUTPUT_DATA = createOutputData();
 
@@ -121,30 +118,21 @@ public class MyIteratorTest extends BaseJUnit4IteratorTest {
     // TODO -- implement this method
   }
 
-  private static IteratorTestInput createIteratorInput() {
-    final Map<String,String> options = createIteratorOptions(); 
-    final Range range = createRange();
-    return new IteratorTestInput(MyIterator.class, options, range, INPUT_DATA);
-  }
-
-  private static Map<String,String> createIteratorOptions() {
-    // TODO -- implement this method
-    // Tip: Use INPUT_DATA if helpful in generating output
+  private static Map<String,String> createOpts() {
+    IteratorSetting setting = new IteratorSetting(50, MyIterator.class);
+    // TODO -- add iterator specific options
+    return setting.getOptions();
   }
 
   private static Range createRange() {
     // TODO -- implement this method
-  }
-
-  private static IteratorTestOutput createIteratorOutput() {
-    return new IteratorTestOutput(OUTPUT_DATA);
   }
 }
 ```
 
 ### Limitations
 
-While the provided [IteratorTestCase]s should exercise common edge-cases in user iterators,
+While the classes that implement [IteratorTestCase]s should exercise common edge-cases in user iterators,
 there are still many limitations to the existing test harness. Some of them are:
 
   * Can only specify a single iterator, not many (a "stack")
@@ -154,6 +142,6 @@ there are still many limitations to the existing test harness. Some of them are:
 These are left as future improvements to the harness.
 
 [Range]: {% jurl org.apache.accumulo.core.data.Range %}
-[IteratorTestCase]: {% jurl org.apache.accumulo.iteratortest.testcases.IteratorTestCase %}
-[BaseJUnit4IteratorTest]: {% jurl org.apache.accumulo.iteratortest.junit4.BaseJUnit4IteratorTest %}
+[IteratorTestCase]: {% jurl org.apache.accumulo.iteratortest.IteratorTestCase %}
+[IteratorTestBase]: {% jurl org.apache.accumulo.iteratortest.IteratorTestBase %}
 [MiniAccumuloCluster]: {% jurl org.apache.accumulo.minicluster.MiniAccumuloCluster %}
