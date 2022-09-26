@@ -5,23 +5,57 @@ order: 5
 ---
 
 For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
-for 2.0, making it easier to configure and more secure.  The files that can be encrypted include: [RFiles][design] and Write Ahead Logs (WALs). NOTE: This feature is considered experimental. For more information, see the [notes below](#things-to-keep-in-mind).
+for 2.0, making it easier to configure and more secure.  Starting with 2.1 On Disk Encryption can now be configured
+per table as well as for the entire instance (all tables). The files that can be encrypted include: [RFiles][design] and Write Ahead 
+Logs (WALs). NOTE: This feature is considered experimental. For more information, see the [notes below](#things-to-keep-in-mind).
 
 ## Configuration
 
-To encrypt all tables on disk, encryption must be enabled before an Accumulo instance is initialized.  If on disk 
-encryption is enabled on an existing cluster, only files created after it is enabled will be encrypted 
-(root and metadata tables will not be encrypted in this case) and existing data won't be encrypted until compaction.  To configure on disk encryption, add the 
-{% plink instance.crypto.service %} property to your `accumulo.properties` file.  The value of this property is the
+To encrypt tables on disk, encryption must be enabled before an Accumulo instance is initialized. This is
+done by configuring a crypto service factory. If on disk encryption is enabled on an existing cluster, only files
+created after it is enabled will be encrypted (root and metadata tables will not be encrypted in this case) and
+existing data won't be encrypted until compaction. 
+
+### Encrypting All Tables
+
+To encrypt all tables, the generic crypto service factory can be used, `GenericCryptoServiceFactory`. This factory
+is useful for general purpose on disk encryption with no table context.
+```
+instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.GenericCryptoServiceFactory
+```
+
+The GenericCryptoServiceFactory requires configuring a crypto service to load and this can be done by adding the
+{% plink general.custom.crypto.service %} property to your `accumulo.properties` file.  The value of this property is the
 class name of the service which will perform crypto on RFiles and WALs. 
 ```
-instance.crypto.service=org.apache.accumulo.core.security.crypto.impl.AESCryptoService
+general.custom.crypto.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
 ```
+
+### Per Table Encryption
+
+To encrypt per table, the per table crypto service factory can be used, `PerTableCryptoServiceFactory`. This factory
+will load a crypto service configured by table. 
+```
+instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.PerTableCryptoServiceFactory
+```
+
+The PerTableCryptoServiceFactory requires configuring a crypto service to load for the table RFiles and this can be done by adding the
+{% plink table.crypto.opts.service %} property to a table. Example in the accumulo shell:
+```
+createtable table1 -prop table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
+```
+The PerTableCryptoServiceFactory also requires configuring a recovery and WAL crypto service by adding the following
+properties to your `accumulo.properties` file.
+```
+general.custom.crypto.recovery.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
+general.custom.crypto.wal.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
+```
+
 Out of the box, Accumulo provides the `AESCryptoService` for basic encryption needs.  This class provides AES encryption 
 with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
-below is required by this crypto service to be set using the {% plink instance.crypto.opts.\* %} prefix.
+below is required by this crypto service to be set using the {% plink general.custom.crypto.\* %} prefix.
 ```
-instance.crypto.opts.key.uri=file:///secure/path/to/crypto-key-file
+general.custom.crypto.key.uri=file:///secure/path/to/crypto-key-file
 ```
 This property tells the crypto service where to find the file containing the key encryption key. The key file can be 16 or 32 bytes.
 For example, openssl can be used to create a random 32 byte key:
@@ -56,6 +90,13 @@ required to perform decryption. The FileDecrypter only has one method:
   InputStream decryptStream(InputStream inputStream) throws CryptoService.CryptoException;
 ```
 For more help getting started see {% jlink org.apache.accumulo.core.security.crypto.impl.AESCryptoService %}.
+
+## Disabling Crypto
+
+Crypto can be disabled by setting the property `general.custom.crypto.enabled` to false.
+```
+general.custom.crypto.enabled=false
+```
 
 ## Things to keep in mind
 
