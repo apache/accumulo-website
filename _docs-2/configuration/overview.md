@@ -59,6 +59,17 @@ They can also be set using {% jlink org.apache.accumulo.core.client.admin.Instan
 client.instanceOperations().setProperty("table.durability", "flush");
 ```
 
+The java api also supports adding, modifying and removing multiple properties in a single operation:
+
+```java
+client.instanceOperations().modifyProperties(properties -> {
+  properties.remove(Property.TABLE_FILE_MAX.getKey());
+  properties.put("table.bloom.enabled", "true");
+  properties.put("table.bloom.error.rate", "0.75");
+  properties.put("table.bloom.size", "128000");
+});
+
+```
 ### Namespace
 
 Namespace configuration refers to [table.* properties] set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
@@ -72,6 +83,16 @@ It can also be set using {% jlink org.apache.accumulo.core.client.admin.Namespac
 client.namespaceOperations().setProperty("mynamespace", "table.durability", "sync");
 ```
 
+The java api also supports adding, modifying and removing multiple properties in a single operation:
+
+```java
+client.namespaceOperations().modifyProperties("mynamespace", properties -> {
+        properties.remove(Property.TABLE_FILE_MAX.getKey());
+        properties.put("table.bloom.enabled", "true");
+        properties.put("table.bloom.error.rate", "0.75");
+        properties.put("table.bloom.size", "128000");
+        });
+
 ### Table
 
 Table configuration refers to [table.* properties] set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:
@@ -82,6 +103,17 @@ They can also be set using {% jlink org.apache.accumulo.core.client.admin.TableO
 
 ```java
 client.tableOperations().setProperty("mytable", "table.durability", "log");
+```
+
+The java api also supports adding, modifying and removing multiple properties in a single operation:
+
+```java
+client.tableOperations().modifyProperties("mytable", properties -> {
+        properties.remove(Property.TABLE_FILE_MAX.getKey());
+        properties.put("table.bloom.enabled", "true");
+        properties.put("table.bloom.error.rate", "0.75");
+        properties.put("table.bloom.size", "128000");
+        });
 ```
 
 ### Zookeeper Considerations
