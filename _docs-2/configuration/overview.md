@@ -63,7 +63,7 @@ The java api also supports adding, modifying and removing multiple properties in
 
 ```java
 client.instanceOperations().modifyProperties(properties -> {
-  properties.remove(Property.TABLE_FILE_MAX.getKey());
+  properties.remove("table.file.max");
   properties.put("table.bloom.enabled", "true");
   properties.put("table.bloom.error.rate", "0.75");
   properties.put("table.bloom.size", "128000");
@@ -87,7 +87,7 @@ The java api also supports adding, modifying and removing multiple properties in
 
 ```java
 client.namespaceOperations().modifyProperties("mynamespace", properties -> {
-        properties.remove(Property.TABLE_FILE_MAX.getKey());
+        properties.remove("table.file.max");
         properties.put("table.bloom.enabled", "true");
         properties.put("table.bloom.error.rate", "0.75");
         properties.put("table.bloom.size", "128000");
@@ -109,7 +109,7 @@ The java api also supports adding, modifying and removing multiple properties in
 
 ```java
 client.tableOperations().modifyProperties("mytable", properties -> {
-        properties.remove(Property.TABLE_FILE_MAX.getKey());
+        properties.remove("table.file.max");
         properties.put("table.bloom.enabled", "true");
         properties.put("table.bloom.error.rate", "0.75");
         properties.put("table.bloom.size", "128000");
