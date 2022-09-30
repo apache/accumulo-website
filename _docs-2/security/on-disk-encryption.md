@@ -7,7 +7,8 @@ order: 5
 For an additional layer of security, Accumulo can encrypt files stored on-disk.  On Disk encryption was reworked 
 for 2.0, making it easier to configure and more secure.  Starting with 2.1, On Disk Encryption can now be configured
 per table as well as for the entire instance (all tables). The files that can be encrypted include: [RFiles][design] and Write Ahead 
-Logs (WALs). NOTE: This feature is considered experimental. For more information, see the [notes below](#things-to-keep-in-mind).
+Logs (WALs). NOTE: This feature is considered experimental and [upgrading](../administration/upgrading) a previously encrypted instance
+is not supported. For more information, see the [notes below](#things-to-keep-in-mind).
 
 ## Configuration
 
@@ -63,6 +64,17 @@ openssl rand -out /path/to/keyfile 32
 ```
 Initializing Accumulo after these instance properties are set, will enable on-disk encryption across your entire cluster.
 
+### Disabling Crypto
+
+When using the AESCryptoService, crypto can be disabled by setting the property `general.custom.crypto.enabled` to false. 
+However, this will disable all crypto as there is currently no way to disable only for specific tables. When disabled
+existing encrypted files can still be read and scanned as long as the Accumulo instance and any table specific 
+properties are still configured but new files will not be encrypted.
+
+```
+general.custom.crypto.enabled=false
+```
+
 ## Custom Crypto
 
 The new crypto interface for 2.0 allows for easier custom implementation of encryption and decryption. Your
@@ -90,33 +102,35 @@ required to perform decryption. The FileDecrypter only has one method:
 ```
 For more help getting started see {% jlink org.apache.accumulo.core.security.crypto.impl.AESCryptoService %}.
 
-## Disabling Crypto
-
-Crypto can be disabled by setting the property `general.custom.crypto.enabled` to false.
-```
-general.custom.crypto.enabled=false
-```
-
 ## Things to keep in mind
+
+### Utilities need access to encryption properties
+
+When utilities run that read encrypted files but do not connect to Zookeeper the utility needs to be provided 
+the encryption properties. For example, when using [rfile-info](../troubleshooting/tools#rfileinfo) to examine
+an encrypted rfile the accumulo.properties file can be copied, the necessary encryption parameters added,
+and then the properties file can be passed to the utility with the `-p` argument.
+
+### Some data will be unencrypted
 
 The on-disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
 is written to disk with these files, but there are a few scenarios that can take place where data will be unencrypted, 
 even with the crypto service enabled.
 
-### Data in Memory & Logs
+#### Data in Memory & Logs
 
 For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory 
 while Accumulo is running.  Depending on the situation, this also means that some data can be printed to logs. A stacktrace being logged 
 during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging, but 
 its the additional data that gets encrypted on-disk that could be exposed in a log file. 
 
-### Bulk Import
+#### Bulk Import
 
 There are 2 ways to create RFiles for bulk ingest: with the [RFile API][rfile] and during Map Reduce using [AccumuloFileOutputFormat].  
 The [RFile API][rfile] allows passing in the configuration properties for encryption mentioned above.  The [AccumuloFileOutputFormat] does 
 not allow for encryption of RFiles so any data bulk imported through this process will be unencrypted.
 
-### Zookeeper
+#### Zookeeper
 
 Accumulo stores a lot of metadata about the cluster in Zookeeper.  Keep in mind that this metadata does not get encrypted with On Disk encryption enabled.
 
