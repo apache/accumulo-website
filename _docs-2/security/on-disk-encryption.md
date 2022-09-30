@@ -4,21 +4,21 @@ category: security
 order: 5
 ---
 
-For an additional layer of security, Accumulo can encrypt files stored on disk.  On Disk encryption was reworked 
-for 2.0, making it easier to configure and more secure.  Starting with 2.1 On Disk Encryption can now be configured
+For an additional layer of security, Accumulo can encrypt files stored on-disk.  On Disk encryption was reworked 
+for 2.0, making it easier to configure and more secure.  Starting with 2.1, On Disk Encryption can now be configured
 per table as well as for the entire instance (all tables). The files that can be encrypted include: [RFiles][design] and Write Ahead 
 Logs (WALs). NOTE: This feature is considered experimental. For more information, see the [notes below](#things-to-keep-in-mind).
 
 ## Configuration
 
-To encrypt tables on disk, encryption must be enabled before an Accumulo instance is initialized. This is
+To encrypt tables on-disk, encryption must be enabled before an Accumulo instance is initialized. This is
 done by configuring a crypto service factory. If on-disk encryption is enabled on an existing cluster, only files
 created after it is enabled will be encrypted and existing data won't be encrypted until compaction.
 
 ### Encrypting All Tables
 
 To encrypt all tables, the generic crypto service factory can be used, `GenericCryptoServiceFactory`. This factory
-is useful for general purpose on disk encryption with no table context.
+is useful for general purpose on-disk encryption with no table context.
 ```
 instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.GenericCryptoServiceFactory
 ```
@@ -61,7 +61,7 @@ For example, openssl can be used to create a random 32 byte key:
 ```
 openssl rand -out /path/to/keyfile 32
 ```
-Initializing Accumulo after these instance properties are set, will enable on disk encryption across your entire cluster.
+Initializing Accumulo after these instance properties are set, will enable on-disk encryption across your entire cluster.
 
 ## Custom Crypto
 
@@ -99,7 +99,7 @@ general.custom.crypto.enabled=false
 
 ## Things to keep in mind
 
-The on disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
+The on-disk encryption configured here is only for RFiles and Write Ahead Logs (WALs).  The majority of data in Accumulo
 is written to disk with these files, but there are a few scenarios that can take place where data will be unencrypted, 
 even with the crypto service enabled.
 
@@ -108,7 +108,7 @@ even with the crypto service enabled.
 For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory 
 while Accumulo is running.  Depending on the situation, this also means that some data can be printed to logs. A stacktrace being logged 
 during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging, but 
-its the additional data that gets encrypted on disk that could be exposed in a log file. 
+its the additional data that gets encrypted on-disk that could be exposed in a log file. 
 
 ### Bulk Import
 
