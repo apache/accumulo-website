@@ -12,9 +12,8 @@ Logs (WALs). NOTE: This feature is considered experimental. For more information
 ## Configuration
 
 To encrypt tables on disk, encryption must be enabled before an Accumulo instance is initialized. This is
-done by configuring a crypto service factory. If on disk encryption is enabled on an existing cluster, only files
-created after it is enabled will be encrypted (root and metadata tables will not be encrypted in this case) and
-existing data won't be encrypted until compaction. 
+done by configuring a crypto service factory. If on-disk encryption is enabled on an existing cluster, only files
+created after it is enabled will be encrypted and existing data won't be encrypted until compaction.
 
 ### Encrypting All Tables
 
@@ -24,8 +23,8 @@ is useful for general purpose on disk encryption with no table context.
 instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.GenericCryptoServiceFactory
 ```
 
-The GenericCryptoServiceFactory requires configuring a crypto service to load and this can be done by adding the
-{% plink general.custom.crypto.service %} property to your `accumulo.properties` file.  The value of this property is the
+The `GenericCryptoServiceFactory` requires configuring a crypto service to load and this can be done by setting the
+{% plink general.custom.crypto.service %} property.  The value of this property is the
 class name of the service which will perform crypto on RFiles and WALs. 
 ```
 general.custom.crypto.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
@@ -39,12 +38,12 @@ will load a crypto service configured by table.
 instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.PerTableCryptoServiceFactory
 ```
 
-The PerTableCryptoServiceFactory requires configuring a crypto service to load for the table RFiles and this can be done by adding the
+The `PerTableCryptoServiceFactory` requires configuring a crypto service to load for the table RFiles and this can be done by adding the
 {% plink table.crypto.opts.service %} property to a table. Example in the accumulo shell:
 ```
 createtable table1 -prop table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
 ```
-The PerTableCryptoServiceFactory also requires configuring a recovery and WAL crypto service by adding the following
+The `PerTableCryptoServiceFactory` also requires configuring a recovery and WAL crypto service by adding the following
 properties to your `accumulo.properties` file.
 ```
 general.custom.crypto.recovery.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
