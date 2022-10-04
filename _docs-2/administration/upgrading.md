@@ -30,6 +30,11 @@ after installing 2.1 but before starting it.
 ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
 ```
 
+### Encrypted Instances
+
+**Warning**: Upgrading a previously encrypted instance is not supported as the implementation
+and properties have changed.
+
 ## Upgrading from 1.8/9 to 2.0
 
 Follow the steps below to upgrade your Accumulo instance and client to 2.0.
