@@ -20,7 +20,19 @@ Follow these steps to make a release of Apache Accumulo.
 There are number of things that are required before attempting to build a release.
 
 1. Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn't require re-authentication mid-build, as it will cause things to fail. For example, you can add `default-cache-ttl 6000` to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough [ASF release signing documentation][1].
-2. Once you are able to sign a release, add your gpg key to the [KEYS file][keys-file] (instructions are at the top of the file).  This will require updating the SVN repository (more below).
+2. Once you are able to sign a release, add your gpg key to the [KEYS file][keys-file] (instructions are at the top of the file).  This will require updating the SVN repository (more information below about the SVN repository). You can use something similar to the instructions below for updating the KEYS file:
+   ```
+   # install git-svn
+   sudo yum install -y git-svn
+   # clone the SVN repo into the directory accumulo-dist-gitsvn
+   git svn clone https://dist.apache.org/repos/dist/release/accumulo accumulo-dist-gitsvn
+   cd accumulo-dist-gitsvn
+   # make changes to KEYS file, then commit the changes locally
+   git add KEYS
+   git commit
+   # push the changes to the remote SVN repo
+   git svn dcommit --username=<ASF_Username>
+   ```
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
    the maven-release-plugin and staging the release candidate).  Your Apache ID and password should be in a <server> section of ~/.m2/settings.xml as shown [here][apache-mvn].
    To encrypt the password follow these [instructions][maven-enc].
