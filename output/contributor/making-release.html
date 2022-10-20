@@ -158,7 +158,19 @@
 
 <ol>
   <li>Use gpg-agent, and be sure to increase the gpg-agent cache timeout (via .gnupg/gpg-agent.conf) to ensure that the agent doesn’t require re-authentication mid-build, as it will cause things to fail. For example, you can add <code class="language-plaintext highlighter-rouge">default-cache-ttl 6000</code> to increase the timeout from the default of 10 minutes to over an hour. If you do not have a GPG key, reference the very thorough <a href="https://infra.apache.org/release-signing">ASF release signing documentation</a>.</li>
-  <li>Once you are able to sign a release, add your gpg key to the <a href="https://downloads.apache.org/accumulo/KEYS">KEYS file</a> (instructions are at the top of the file).  This will require updating the SVN repository (more below).</li>
+  <li>Once you are able to sign a release, add your gpg key to the <a href="https://downloads.apache.org/accumulo/KEYS">KEYS file</a> (instructions are at the top of the file).  This will require updating the SVN repository (more information below about the SVN repository). You can use something similar to the instructions below for updating the KEYS file:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install git-svn
+sudo yum install -y git-svn
+# clone the SVN repo into the directory accumulo-dist-gitsvn
+git svn clone https://dist.apache.org/repos/dist/release/accumulo accumulo-dist-gitsvn
+cd accumulo-dist-gitsvn
+# make changes to KEYS file, then commit the changes locally
+git add KEYS
+git commit
+# push the changes to the remote SVN repo
+git svn dcommit --username=&lt;ASF_Username&gt;
+</code></pre></div>    </div>
+  </li>
   <li>Ensure that you’re building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
 the maven-release-plugin and staging the release candidate).  Your Apache ID and password should be in a <server> section of ~/.m2/settings.xml as shown [here][apache-mvn].
 To encrypt the password follow these [instructions][maven-enc].</server></li>
