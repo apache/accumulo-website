@@ -31,7 +31,7 @@ ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDi
 
 The `accumulo-cluster` script now uses a single file that defines the location of the managers,
 tservers, etc. You can create this file using the command `accumulo-cluster create-config`. You
-will then need to transfer the contents of the individual files to this new consolidated file.
+will then need to transfer the contents of the current individual files to this new consolidated file.
 
 ### Encrypted Instances
 
