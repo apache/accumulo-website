@@ -79,7 +79,7 @@ run more or less tests. Information about these can be found in the [Accumulo Te
   - Two 24-hour periods of the continuous ingest test, with successful verification, one with
     agitation and one without
   - A 24-hour period of the bulk continuous ingest test, with successful verification
-  - A 72-hour period of continuous ingest wihtout verification, but check the logs for any errors
+  - A 72-hour period of continuous ingest without verification, but check the logs for any errors
     and ensure the cluster is still functional
 
 ## Foundation Level Requirements ##
