@@ -17,9 +17,6 @@ Although not required until at least release 3.0, it is strongly recommended as 
 upgrade to rename any properties in `accumulo.properties` (or properties specified on the command
 line) starting with `master.`. `master` should be replaced with `manager`.
 
-The configuration file `masters` which identifies the hostnames of the hosts running the manager
-server(s) should be renamed to `managers`.
-
 Any reference to `master` in other scripts (e.g., invoking `accumulo-service master` from an init
 script) should be renamed to `manager` (`accumulo-service manager` for the previous example).
 
@@ -29,6 +26,12 @@ after installing 2.1 but before starting it.
 ```
 ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
 ```
+
+### Create new cluster configuration file
+
+The `accumulo-cluster` script now uses a single file that defines the location of the managers,
+tservers, etc. You can create this file using the command `accumulo-cluster create-config`. You
+will then need to transfer the contents of the current individual files to this new consolidated file.
 
 ### Encrypted Instances
 
