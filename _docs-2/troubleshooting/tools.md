@@ -65,7 +65,7 @@ To examine an encrypted rfile the necessary encryption properties must be provid
 the `accumulo.properties` file can be copied, the necessary encryption parameters added, and then the properties file can 
 be passed to the utility with the `-p` argument. 
 
-For example, if using `PerTableCryptoFactory` and the `AESCryptoService`, you would need the following properties in
+For example, if using `PerTableCryptoServiceFactory` and the `AESCryptoService`, you would need the following properties in
 your accumulo.properties file:
 
 ```
