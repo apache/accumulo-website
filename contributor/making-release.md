@@ -34,8 +34,8 @@ There are number of things that are required before attempting to build a releas
    git svn dcommit --username=<ASF_Username>
    ```
 3. Ensure that you're building Apache Accumulo with a username that has the same name as your Apache ID (this is due to
-   the maven-release-plugin and staging the release candidate).  Your Apache ID and password should be in a <server> section of ~/.m2/settings.xml as shown [here][apache-mvn].
-   To encrypt the password follow these [instructions][mvnenc].
+   the maven-release-plugin and staging the release candidate). Your Apache ID and password should be in a `<server>` section of `~/.m2/settings.xml` as shown [here][apache-mvn].
+   To encrypt the password follow these [instructions][maven-enc].
 4. Have a clean workspace before starting.
 5. The build will require having the same version of [Thrift binary][thrift] installed on your machine. 
 
@@ -226,5 +226,5 @@ if this is the latest release of Accumulo.
 [website-repo]: https://github.com/apache/accumulo-website
 [keys-file]: https://downloads.apache.org/accumulo/KEYS
 [apache-mvn]: https://infra.apache.org/publishing-maven-artifacts.html
-[mvnenc]: https://maven.apache.org/guides/mini/guide-encryption.html
+[maven-enc]: https://maven.apache.org/guides/mini/guide-encryption.html
 [thrift]: http://archive.apache.org/dist/thrift/
