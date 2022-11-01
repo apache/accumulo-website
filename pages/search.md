@@ -3,7 +3,7 @@ title: Search
 permalink: /search/
 ---
 
-Search results are limited to blog posts, release notes, and the 2.0 documentation.
+Search results are limited to blog posts, release notes, and the 2.x documentation.
 
 <div class="row">
   <div class="col-lg-6">
