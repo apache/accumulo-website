@@ -4,6 +4,40 @@ category: administration
 order: 7
 ---
 
+## Upgrading from 1.10.x or 2.0.x to 2.1
+
+The recommended way to upgrade from a prior 1.10.x or 2.0.x release is to stop Accumulo, upgrade
+to 2.1 and then start 2.1. To upgrade from a release prior to 1.10, follow the
+[below steps](#upgrading-from-189-to-20) to upgrade to 2.0 and then perform the upgrade to 2.1. A
+direct upgrade from releases prior to 1.10 has not been tested.
+
+### Rename master Properties, Config Files, and Script References
+
+Although not required until at least release 3.0, it is strongly recommended as a part of the
+upgrade to rename any properties in `accumulo.properties` (or properties specified on the command
+line) starting with `master.`. `master` should be replaced with `manager`.
+
+Any reference to `master` in other scripts (e.g., invoking `accumulo-service master` from an init
+script) should be renamed to `manager` (`accumulo-service manager` for the previous example).
+
+If the manager is not started using the provided `accumulo-cluster` or `accumulo-service` scripts,
+then a one-time upgrade step will need to be performed. Run the `RenameMasterDirInZK` utility
+after installing 2.1 but before starting it.
+```
+${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
+```
+
+### Create new cluster configuration file
+
+The `accumulo-cluster` script now uses a single file that defines the location of the managers,
+tservers, etc. You can create this file using the command `accumulo-cluster create-config`. You
+will then need to transfer the contents of the current individual files to this new consolidated file.
+
+### Encrypted Instances
+
+**Warning**: Upgrading a previously encrypted instance is not supported as the implementation
+and properties have changed.
+
 ## Upgrading from 1.8/9 to 2.0
 
 Follow the steps below to upgrade your Accumulo instance and client to 2.0.

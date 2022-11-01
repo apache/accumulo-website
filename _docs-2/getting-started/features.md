@@ -61,11 +61,11 @@ can share a pool of datanodes.
 
 ## Integrity/Availability
 
-### Master fail over
+### Manager fail over
 
-Multiple masters can be configured.  Zookeeper locks are used to determine
-which master is active.  The remaining masters simply wait for the current
-master to lose its lock.  Current master state is held in the metadata table
+Multiple managers can be configured.  Zookeeper locks are used to determine
+which manager is active.  The remaining managers simply wait for the current
+manager to lose its lock.  Current manager state is held in the metadata table
 and Zookeeper.
 
 ### Logical time
@@ -75,11 +75,11 @@ across the cluster is incorrect. This ensures that updates and deletes are not
 lost. If a tablet is served on machine with time a year in the future, then the
 tablet will continue to issue new timestamps a year in the future, even when it
 moves to another server. In this case the timestamps preserve ordering, but
-lose their meaning. In addition to logical time, Accumulo has master
-authoritative time. The master averages the time of all of the tablet servers
+lose their meaning. In addition to logical time, Accumulo has manager
+authoritative time. The manager averages the time of all of the tablet servers
 and sends this back to the tablet servers. Tablet servers use this information
 to adjust the timestamps they issue. So logical time ensures ordering is
-always correct and master authoritative time tries to ensure that timestamps
+always correct and manager authoritative time tries to ensure that timestamps
 are meaningful.
 
 ### Logical Time for bulk import
@@ -99,9 +99,9 @@ time.
 ### FATE
 
 [FATE] (short for **Fa**ult **T**olerant **E**xecutor) is a framework for executing
-operations in a fault tolerant manner. Before FATE, if the master process died in the
+operations in a fault tolerant manner. Before FATE, if the manager process died in the
 middle of creating a table it could leave the system in an inconsistent state.
-With this new framework, if the master dies in the middle of create table it
+With this new framework, if the manager dies in the middle of create table it
 will continue on restart. Also, the client requesting the create table operation
 will never know anything happened. The framework serializes work in Zookeeper
 before attempting to do the work. Clients start a FATE transaction, seed it
@@ -109,7 +109,7 @@ with work, and then wait for it to finish. Most table operations are executed
 using this framework. Persistent, per table, read-write locks are created in
 Zookeeper to synchronize operations across process faults.
 
-### Scalable master
+### Scalable manager
 
 Stores its metadata in an Accumulo table and Zookeeper.
 
@@ -264,9 +264,12 @@ the Javadoc for [ConditionalMutation] and [ConditionalWriter].
 [Lexicoders]({% durl getting-started/table_design#lexicoders %}) (since 1.6.0) help encode data (i.e numbers, dates)
 into Accumulo keys in a way that their natural sort order is preserved.
 
-## Extensible Behaviors
+## Plugins
 
-### Pluggable balancer
+The [Service Plugin Interface (SPI)][spi] was created to expose Accumulo system level information to
+plugins in a stable manner.
+
+### Balancer
 
 Users can provide a balancer plugin that decides how to distribute tablets
 across a table.  These plugins can be provided on a per table basis.  This is
@@ -278,26 +281,22 @@ balancer moves one child to another tablet server.  The assumption here is that
 splitting tablets are being actively written to, so this keeps write load evenly
 spread.
 
-### Pluggable memory manager
+### Cache
 
-The plugin that decides when and what tablets to minor compact is configurable.
-The default plugin compacts the largest tablet when memory is over a certain
-threshold.  It varies the threshold over time depending on minor compaction
-speed.  It flushes tablets that are not written to for a configurable time
-period.
+See the page on [Caching]({% durl administration/caching %})
 
-### Pluggable logger assignment strategy
+### Compaction
 
-The plugin that decided which loggers should be assigned to which tablet
-servers is configurable.
+Compactions were reworked in 2.1 to allow plugin capabilities. TODO expand
 
-### Pluggable compaction strategy
+### Scan
 
-The plugin that decides which files should be chosen for major compaction is now
-configurable. Given certain workloads, it may be known that once data is written,
-it is very unlikely that more data will be written to it, and thus paying the penalty
-to re-write a large file can be avoided. Implementations of this compaction strategy
-can be used to optimize the data that compactions will write.
+Scan Executors were added to the SPI in 2.0. See the [Scan Executors]({% durl administration/scan-executors %}) page.
+
+### Volume Chooser
+
+The Volume Chooser has been around for some time but was refactored in 2.1 to be included in the SPI.
+See the [javadoc][volume-chooser] for more information.
 
 ### Pluggable Block Caches
 
@@ -362,16 +361,6 @@ multiplied by the largest file size.  If this cannot be done with all the
 files, the largest file is removed from consideration, and the remaining files
 are considered for compaction.  This is done until there are no files to merge.
 
-### Merging Minor Compaction
-
-When a max number of files per tablet is reached, minor compactions will merge
-data from the in-memory map with the smallest file instead of creating new
-files.  This throttles ingest.  In previous releases, new files were just created
-even if major compactions were falling behind and the number of tablets per file
-was growing.  Without this feature, ingest performance can roughly continue at a
-constant rate, even as scan performance decreases because tablets have too many
-files.
-
 ### Encryption
 
 Accumulo can encrypt its [data on disk]({% durl security/on-disk-encryption %}) and
@@ -434,3 +423,5 @@ beginning and end of the range are split, compacted, and then merged.
 [multivolume]: {% durl administration/multivolume %}
 [Iterators]: {% durl development/iterators %}
 [monitor]: {% durl administration/monitoring-metrics %}
+[spi]: TODO
+[volume-chooser]: TODO

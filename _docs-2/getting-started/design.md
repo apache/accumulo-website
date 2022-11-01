@@ -33,7 +33,7 @@ machines.
 ## Components
 
 An instance of Accumulo includes many TabletServers, one Garbage Collector process,
-one Master server and many Clients.
+one Manager server and many Clients.
 
 ### Tablet Server
 
@@ -55,17 +55,17 @@ Collector will identify files that are no longer needed by any process, and
 delete them. Multiple garbage collectors can be run to provide hot-standby support.
 They will perform leader election among themselves to choose a single active instance.
 
-### Master
+### Manager
 
-The Accumulo Master is responsible for detecting and responding to TabletServer
+The Accumulo Manager is responsible for detecting and responding to TabletServer
 failure. It tries to balance the load across TabletServer by assigning tablets carefully
-and instructing TabletServers to unload tablets when necessary. The Master ensures all
+and instructing TabletServers to unload tablets when necessary. The Manager ensures all
 tablets are assigned to one TabletServer each, and handles table creation, alteration,
-and deletion requests from clients. The Master also coordinates startup, graceful
+and deletion requests from clients. The Manager also coordinates startup, graceful
 shutdown and recovery of changes in write-ahead logs when Tablet servers fail.
 
-Multiple masters may be run. The masters will choose among themselves a single master,
-and the others will become backups if the master should fail.
+Multiple managers may be run. The managers will choose among themselves a single manager,
+and the others will become backups if the manager should fail.
 
 ### Tracer
 
@@ -88,6 +88,38 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
+### Compactor (experimental)
+
+The Accumulo Compactor process is an optional application that can be used to run compactions
+outside of the TabletServer. One to many Compactors can be run on a cluster and each Compactor
+process performs one compaction at a time. The Compactor registers its existence in ZooKeeper
+and communicates with the Compaction Coordinator to retrieve its work and to register the
+completion status of the compaction. The Compactor process will continue to perform compactions
+in situations where normal in-TabletServer compactions would fail, such as TabletServer restart
+and Tablet re-hosting.
+
+### Compaction Coordinator (experimental)
+
+The Accumulo Compaction Coordinator is an optional application that is required to run compactions
+outside of the TabletServer. The Coordinator is responsible for communicating with the
+TabletServers, to identify what external compaction work needs to be done, and the Compactors
+to assign work, get status updates, and cancel running external compactions.
+
+Multiple Coordinators may be run. The Coordinators will choose among themselves a single active Coordinator,
+and the others will become backups if the active Coordinator should fail.
+
+### Scan Server (experimental)
+
+The Accumulo Scan Server is an optional application that can be used to run scans on a tablet's data
+outside of the Tablet Server. Many Scan Servers can be run on a cluster and each Scan Server may run
+one or more scans concurrently (dependent on configuration). Scans running in a Scan Server do not have
+to be concerned about tablet re-hosting or contention with ingest, compactions, and other tablet
+maintenance activities. The trade-off when using Scan Server's is that the tablet hosted within
+the ScanServer may not contain the exact same data as the corresponding tablet hosted by the
+Tablet Server. The Scan Server does not have any of the Tablet data that may reside within the
+in-memory maps and the tablet may reference files that have been compacted as tablet metadata can
+be cached within the Scan Server (See Scan Server configuration properties).
+
 ### Client
 
 Accumulo has a client library that can be used to write applications that write and read
@@ -97,11 +129,11 @@ data to/from Accumulo. See the [Accumulo clients documentation][clients] for mor
 
 Accumulo stores data in tables, which are partitioned into tablets. Tablets are
 partitioned on row boundaries so that all of the columns and values for a particular
-row are found together within the same tablet. The Master assigns Tablets to one
+row are found together within the same tablet. The Manager assigns Tablets to one
 TabletServer at a time. This enables row-level transactions to take place without
 using distributed locking or some other complicated synchronization mechanism. As
 clients insert and query data, and as machines are added and removed from the
-cluster, the Master migrates tablets to ensure they remain available and that the
+cluster, the Manager migrates tablets to ensure they remain available and that the
 ingest and query load is balanced across the cluster.
 
 ![data distribution]({{ site.baseurl }}/images/docs/data_distribution.png)
@@ -166,7 +198,7 @@ was introduced in Accumulo 1.4.
 
 ## Fault-Tolerance
 
-If a TabletServer fails, the Master detects it and automatically reassigns the tablets
+If a TabletServer fails, the Manager detects it and automatically reassigns the tablets
 assigned from the failed server to other servers. Any key-value pairs that were in
 memory at the time the TabletServer fails are automatically reapplied from the Write-Ahead
 Log(WAL) to prevent any loss of data.
@@ -176,8 +208,8 @@ servers for recovery. To make the recovery process efficient, the updates within
 grouped by tablet.  TabletServers can quickly apply the mutations from the sorted logs
 that are destined for the tablets they have now been assigned.
 
-TabletServer failures are noted on the Master's monitor page, accessible via
-`http://master-address:9995/monitor`.
+TabletServer failures are noted on the Manager's monitor page, accessible via
+`http://manager-address:9995/monitor`.
 
 ![failure handling]({{ site.baseurl }}/images/docs/failure_handling.png)
 

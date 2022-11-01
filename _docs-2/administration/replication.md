@@ -31,14 +31,14 @@ the system wants to send.
 
 Data is replicated by using the Write-Ahead logs (WAL) that each TabletServer is
 already maintaining. TabletServers record which WALs have data that need to be
-replicated to the `accumulo.metadata` table. The Master uses these records,
+replicated to the `accumulo.metadata` table. The Manager uses these records,
 combined with the local Accumulo table that the WAL was used with, to create records
 in the `replication` table which track which peers the given WAL should be
-replicated to. The Master latter uses these work entries to assign the actual
+replicated to. The Manager latter uses these work entries to assign the actual
 replication task to a local TabletServer using ZooKeeper. A TabletServer will get
 a lock in ZooKeeper for the replication of this file to a peer, and proceed to
 replicate to the peer, recording progress in the `replication` table as
-data is successfully replicated on the peer. Later, the Master and Garbage Collector
+data is successfully replicated on the peer. Later, the Manager and Garbage Collector
 will remove records from the `accumulo.metadata` and `replication` tables
 and files from HDFS, respectively, after replication to all peers is complete.
 
@@ -133,14 +133,14 @@ and the full class name for the implementation. This can be configured via the s
 
 Two implementations of [WorkAssigner] are provided:
 
-1. The {% jlink org.apache.accumulo.master.replication.UnorderedWorkAssigner %} can be used to overcome the limitation
+1. The {% jlink org.apache.accumulo.manager.replication.UnorderedWorkAssigner %} can be used to overcome the limitation
 of only a single WAL being replicated to a target and peer at any time. Depending on the table schema,
 it's possible that multiple versions of the same Key with different values are infrequent or nonexistent.
 In this case, parallel replication to a peer and target is possible without any downsides. In the case
 where this implementation is used were column updates are frequent, it is possible that there will be
 an inconsistency between the primary and the peer.
 
-2. The {% jlink org.apache.accumulo.master.replication.SequentialWorkAssigner %} is configured for an
+2. The {% jlink org.apache.accumulo.manager.replication.SequentialWorkAssigner %} is configured for an
 instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
 replicated in the order in which they were created. This is sufficient to ensure that updates to a table
 will be replayed in the correct order on the peer. This implementation has the downside of only replicating
@@ -159,7 +159,7 @@ section of this document. Theoretically, an implementation of this interface cou
 
 The [AccumuloReplicaSystem] uses Thrift to communicate with a peer Accumulo instance
 and replicate the necessary data. The TabletServer running on the primary will communicate
-with the Master on the peer to request the address of a TabletServer on the peer which
+with the Manager on the peer to request the address of a TabletServer on the peer which
 this TabletServer will use to replicate the data.
 
 The TabletServer on the primary will then replicate data in batches of a configurable
@@ -211,7 +211,7 @@ replication.name=primary
 replication.name=peer
 ```
 
-### masters and tservers files
+### managers and tservers files
 
 Be *sure* to use non-local IP addresses. Other nodes need to connect to it and using localhost will likely result in
 a local node talking to another local node.

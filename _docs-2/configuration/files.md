@@ -40,7 +40,7 @@ Accumulo processes. See the [quick start] for help with configuring this file.
 ### log4j-service.properties
 
 The {% ghc assemble/conf/log4j-service.properties %} file configures logging for most Accumulo services
-(i.e [Master], [Tablet Server], [Garbage Collector]) except for the Monitor.
+(i.e [Manager], [Tablet Server], [Garbage Collector]) except for the Monitor.
 
 ### log4j-monitor.properties
 
@@ -51,40 +51,52 @@ The {% ghc assemble/conf/log4j-monitor.properties %} file configures logging for
 The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumulo commands (i.e `accumulo init`,
 `accumulo shell`, etc).
 
-## Host files
+## cluster.yaml
 
-The `accumulo-cluster` script uses the host files below to determine where Accumulo processes should be run.
-These files are not in the `conf/` directory of the Accumulo release tarball by default. They can be created by running
-the command `accumulo-cluster create-config`.
+The `accumulo-cluster` script uses the `cluster.yaml` file to determine where Accumulo processes should be run.
+This file is not in the `conf/` directory of the Accumulo release tarball by default. It can be created by running
+the command `accumulo-cluster create-config`. The `cluster.yaml` file contains the following sections:
 
 ### gc
 
 Contains a list of hosts where [Garbage Collector] processes should run. While only one host is needed, others can be specified
 to run standby Garbage Collectors that can take over if the lead Garbage Collector fails.
 
-### masters
+### manager
 
-Contains a list of hosts where [Master] processes should run. While only one host is needed, others can be specified
-to run on standby Masters that can take over if the lead Master fails.
+Contains a list of hosts where [Manager] processes should run. While only one host is needed, others can be specified
+to run on standby Managers that can take over if the lead Manager fails.
 
 ### monitor
 
 Contains a list of hosts where [Monitor] processes should run. While only one host is needed, others can be specified
 to run standby Monitors that can take over if the lead Monitor fails.
 
-### tservers
+### tserver
 
 Contains list of hosts where [Tablet Server] processes should run. While only one host is needed, it is recommended that
 multiple tablet servers are run for improved fault tolerance and peformance.
 
-### tracers
+### tracer
 
 Contains a list of hosts where [Tracer] processes should run. While only one host is needed, others can be specified
 to run standby Tracers that can take over if the lead Tracer fails.
 
+### Compaction Coordinator
+
+Contains a list of hosts where [CompactionCoordinator] processes should run. While only one host is needed,
+others can be specified to run standby CompactionCoordinators that can take over if the lead CompactionCoordinator fails.
+
+### Compactor
+
+Contains a list of hosts where [Compactor] processes should run. While only one host is needed, it is recommended that
+multiple Compactors are run for improved external compaction performance.
+
 [Garbage Collector]: {% durl getting-started/design#garbage-collector %}
-[Master]: {% durl getting-started/design#master %}
+[Manager]: {% durl getting-started/design#manager %}
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
 [Tracer]: {% durl getting-started/design#tracer %}
+[CompactionCoordinator]: {% durl getting-started/design#compaction%20coordinator%}
+[Compactor]: {% durl getting-started/design#compactor %}
 [quick start]: {% durl getting-started/quickstart#configuring-accumulo %}

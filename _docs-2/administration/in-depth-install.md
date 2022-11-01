@@ -38,13 +38,15 @@ their value in [accumulo.properties].
 |-----|-------------|--------------
 |4445 | Shutdown Port (Accumulo MiniCluster) | n/a
 |4560 | Accumulo monitor (for centralized log display) | [monitor.port.log4j]
+|9132 | Accumulo Compaction Coordinator | [compaction.coordinator.port.client]
+|9133 | Accumulo Compactor | [compactor.port.client]
 |9995 | Accumulo HTTP monitor | [monitor.port.client]
 |9997 | Tablet Server | [tserver.port.client]
 |9998 | Accumulo GC | [gc.port.client]
-|9999 | Master Server | [master.port.client]
+|9999 | Manager Server | [manager.port.client]
 |12234 | Accumulo Tracer | [trace.port.client]
 |42424 | Accumulo Proxy Server | n/a
-|10001 | Master Replication service | [master.replication.coordinator.port]
+|10001 | Manager Replication service | [manager.replication.coordinator.port]
 |10002 | TabletServer Replication service | [replication.receipt.service.port]
 
 In addition, the user can provide `0` and an ephemeral port will be chosen instead. This
@@ -81,7 +83,7 @@ These scripts will be used in the remaining instructions to configure and run Ac
 
 Accumulo requires HDFS and ZooKeeper to be configured and running
 before starting. Password-less SSH should be configured between at least the
-Accumulo master and TabletServer machines. It is also a good idea to run Network
+Accumulo manager and TabletServer machines. It is also a good idea to run Network
 Time Protocol (NTP) within the cluster to ensure nodes' clocks don't get too out of
 sync, which can cause problems with automatically timestamped data.
 
@@ -93,13 +95,12 @@ installed Accumulo using downstream packaging, the `conf/` could be something el
 
 Before starting Accumulo, the configuration files [accumulo-env.sh] and [accumulo.properties] must
 exist in `conf/` and be properly configured. If you are using `accumulo-cluster` to launch a
-cluster, the `conf/` directory must also contain host files for Accumulo services (i.e [gc],
-[masters], [monitor][monitor-host], [tservers], [tracers]). You can either create these files
+cluster, the `conf/` directory must also contain a `cluster.yaml` file. You can either create these files
 manually or run `accumulo-cluster create-config`.
 
 Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e Master, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
+(i.e Manager, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
 the Monitor which is configured by [log4j-monitor.properties]. All Accumulo commands (i.e `init`,
 `shell`, etc) are configured by [log4j.properties].
 
@@ -123,7 +124,7 @@ by set in the `JAVA_OPTS` settings for 'tservers' in [accumulo-env.sh]. Note the
 syntax is that of the Java JVM command line options. This value should be less than the
 physical memory of the machines running TabletServers.
 
-There are similar options for the master's memory usage and the garbage collector
+There are similar options for the manager's memory usage and the garbage collector
 process. Reduce these if they exceed the physical RAM of your hardware and
 increase them, within the bounds of the physical RAM, if a process fails because of
 insufficient memory.
@@ -131,7 +132,7 @@ insufficient memory.
 Note that you will be specifying the Java heap space in [accumulo-env.sh]. You should
 make sure that the total heap space used for the Accumulo tserver and the Hadoop
 DataNode and TaskTracker is less than the available memory on each worker node in
-the cluster. On large clusters, it is recommended that the Accumulo master, Hadoop
+the cluster. On large clusters, it is recommended that the Accumulo manager, Hadoop
 NameNode, secondary NameNode, and Hadoop JobTracker all be run on separate
 machines to allow them to use more heap space. If you are running these on the
 same machine on a small cluster, likewise make sure their heap space settings fit
@@ -199,12 +200,12 @@ performance to the write-ahead log file which will slow ingest.
 ### Cluster Specification
 
 If you are using `accumulo-cluster` to start a cluster, configure the following on the
-machine that will serve as the Accumulo master:
+machine that will serve as the Accumulo manager:
 
-1. Run `accumulo-cluster create-config` to create the [masters] and [tservers] files.
-2. Write the IP address or domain name of the Accumulo Master to the [masters] file in `conf/`.
+1. Run `accumulo-cluster create-config` to create the `cluster.yaml` file.
+2. Write the IP address or domain name of the Accumulo Manager to the [manager] section.
 3. Write the IP addresses or domain name of the machines that will be TabletServers to the
-   [tservers] file in `conf/`, one per line.
+   [tserver] section.
 
 Note that if using domain names rather than IP addresses, DNS must be configured
 properly for all machines participating in the cluster. DNS can be a confusing source
@@ -228,17 +229,13 @@ documentation for details.
 ### Hostnames in configuration files
 
 Accumulo has a number of configuration files which can contain references to other hosts in your
-network. All of the "host" configuration files for Accumulo ([gc], [masters], [tservers],
-[monitor][monitor-host], [tracers]) as well as [instance.volumes] in [accumulo.properties] must
-contain some host reference.
-
-While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
+network. While IP addresses, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
 it is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop
 cluster. Failing to consistently use FQDNs can have unexpected consequences in how Accumulo uses
 the FileSystem.
 
 A common way for this problem can be observed is via applications that use Bulk Ingest. The Accumulo
-Master coordinates moving the input files to Bulk Ingest to an Accumulo-managed directory. However,
+Manager coordinates moving the input files to Bulk Ingest to an Accumulo-managed directory. However,
 Accumulo cannot safely move files across different Hadoop FileSystems. This is problematic because
 Accumulo also cannot make reliable assertions across what is the same FileSystem which is specified
 with different names. Naively, while 127.0.0.1:8020 might be a valid identifier for an HDFS
@@ -246,7 +243,7 @@ instance, Accumulo identifies `localhost:8020` as a different HDFS instance than
 
 ### Deploy Configuration
 
-Copy [accumulo-env.sh] and [accumulo.properties] from the `conf/` directory on the master to all
+Copy [accumulo-env.sh] and [accumulo.properties] from the `conf/` directory on the manager to all
 Accumulo tablet servers. The "host" configuration files files `accumulo-cluster` only need to be on
 servers where that command is run.
 
@@ -389,7 +386,7 @@ can provide some information about the status of tables via reading the metadata
 
 ### Stopping Accumulo
 
-To shutdown cleanly, run `accumulo-cluster stop` and the master will orchestrate the
+To shutdown cleanly, run `accumulo-cluster stop` and the manager will orchestrate the
 shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may
 take some time for particular configurations.
 
@@ -434,7 +431,7 @@ can be use to start/stop processes on a node.
 #### A note on rolling restarts
 
 For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window
-can place significant load on the Master server. If slightly lower availability is acceptable, this
+can place significant load on the Manager server. If slightly lower availability is acceptable, this
 load can be reduced by globally setting [table.suspend.duration] to a positive value.
 
 With [table.suspend.duration] set to, say, `5m`, Accumulo will wait for 5 minutes for any dead
@@ -519,7 +516,7 @@ demonstrates basic audit logging with example configuration options for log4j.
 In the event of TabletServer failure or error on shutting Accumulo down, some
 mutations may not have been minor compacted to HDFS properly. In this case,
 Accumulo will automatically reapply such mutations from the write-ahead log
-either when the tablets from the failed server are reassigned by the Master (in the
+either when the tablets from the failed server are reassigned by the Manager (in the
 case of a single TabletServer failure) or the next time Accumulo starts (in the event of
 failure during shutdown).
 
@@ -620,7 +617,7 @@ kernel panic when provisioning a memory page. This often happens in VMs due to
 the large number of processes that must run in a small memory footprint. In
 addition to the Linux core processes, a single-node Accumulo setup requires a
 Hadoop Namenode, a Hadoop Secondary Namenode a Hadoop Datanode, a Zookeeper
-server, an Accumulo Master, an Accumulo GC and an Accumulo TabletServer.
+server, an Accumulo Manager, an Accumulo GC and an Accumulo TabletServer.
 Typical setups also include an Accumulo Monitor, an Accumulo Tracer, a Hadoop
 ResourceManager, a Hadoop NodeManager, provisioning software, and client
 applications. Between all of these processes, it is not uncommon to
@@ -674,7 +671,7 @@ requirements, it is a good idea to reduce maximum heap limits and turn off
 unnecessary processes. If you're not using YARN in your application, you can
 turn off the ResourceManager and NodeManager. If you're not expecting to
 re-provision the cluster frequently you can turn off or reduce provisioning
-processes such as Salt Stack minions and masters.
+processes such as Salt Stack minions and managers.
 
 #### Disk Space
 
@@ -726,6 +723,8 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 [mailing lists][contact] for more info.
 
+[compaction.coordinator.port.client]: {% purl compaction.coordinator.port.client %}
+[compactor.port.client]: {% purl compactor.port.client %}
 [contact]: {{ site.baseurl }}/contact-us
 [quick start]: {% durl getting-started/quickstart %}
 [monitor]: {% durl administration/monitoring-metrics#monitor %}
@@ -738,10 +737,10 @@ Please check the release notes for your Accumulo version or use the
 [monitor.port.client]: {% purl monitor.port.client %}
 [tserver.port.client]: {% purl tserver.port.client %}
 [gc.port.client]: {% purl gc.port.client %}
-[master.port.client]: {% purl master.port.client %}
+[manager.port.client]: {% purl manager.port.client %}
 [trace.port.client]: {% purl trace.port.client %}
 [table.suspend.duration]: {% purl table.suspend.duration %}
-[master.replication.coordinator.port]: {% purl master.replication.coordinator.port %}
+[manager.replication.coordinator.port]: {% purl manager.replication.coordinator.port %}
 [replication.receipt.service.port]: {% purl replication.receipt.service.port %}
 [tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
 [tserver.memory.maps.max]: {% purl tserver.memory.maps.max %}
@@ -759,8 +758,8 @@ Please check the release notes for your Accumulo version or use the
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
 [monitor-host]: {% durl configuration/files#monitor %}
-[masters]: {% durl configuration/files#masters %}
-[tservers]: {% durl configuration/files#tservers %}
+[manager]: {% durl configuration/files#managers %}
+[tserver]: {% durl configuration/files#tservers %}
 [tracers]: {% durl configuration/files#tracers %}
 [log4j-service.properties]: {% durl configuration/files#log4j-serviceproperties %}
 [log4j-monitor.properties]: {% durl configuration/files#log4j-monitorproperties %}
