@@ -71,8 +71,8 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 ## Current Releases
 
-{% assign linkVers = '2.0.1' %}
-### {{linkVers}} **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
+{% assign linkVers = '2.1.0' %}
+### {{linkVers}} **Latest**{: .label .label-primary} **LTM**{: .label .label-success}
 {: #latest }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
@@ -106,6 +106,8 @@ enhancements, and more.
 
 The most recent legacy (1.x) release of Apache Accumulo&reg; is version
 {{linkVers}}.
+
+The 1.10 release series will reach end-of-life on **November 1, 2023**.
 
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
