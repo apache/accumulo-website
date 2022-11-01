@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -426,7 +430,40 @@
     </div>
     
 
-    <h2 id="upgrading-from-189-to-20">Upgrading from 1.8/9 to 2.0</h2>
+    <h2 id="upgrading-from-110x-or-20x-to-21">Upgrading from 1.10.x or 2.0.x to 2.1</h2>
+
+<p>The recommended way to upgrade from a prior 1.10.x or 2.0.x release is to stop Accumulo, upgrade
+to 2.1 and then start 2.1. To upgrade from a release prior to 1.10, follow the
+<a href="#upgrading-from-189-to-20">below steps</a> to upgrade to 2.0 and then perform the upgrade to 2.1. A
+direct upgrade from releases prior to 1.10 has not been tested.</p>
+
+<h3 id="rename-master-properties-config-files-and-script-references">Rename master Properties, Config Files, and Script References</h3>
+
+<p>Although not required until at least release 3.0, it is strongly recommended as a part of the
+upgrade to rename any properties in <code class="language-plaintext highlighter-rouge">accumulo.properties</code> (or properties specified on the command
+line) starting with <code class="language-plaintext highlighter-rouge">master.</code>. <code class="language-plaintext highlighter-rouge">master</code> should be replaced with <code class="language-plaintext highlighter-rouge">manager</code>.</p>
+
+<p>Any reference to <code class="language-plaintext highlighter-rouge">master</code> in other scripts (e.g., invoking <code class="language-plaintext highlighter-rouge">accumulo-service master</code> from an init
+script) should be renamed to <code class="language-plaintext highlighter-rouge">manager</code> (<code class="language-plaintext highlighter-rouge">accumulo-service manager</code> for the previous example).</p>
+
+<p>If the manager is not started using the provided <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> or <code class="language-plaintext highlighter-rouge">accumulo-service</code> scripts,
+then a one-time upgrade step will need to be performed. Run the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility
+after installing 2.1 but before starting it.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
+</code></pre></div></div>
+
+<h3 id="create-new-cluster-configuration-file">Create new cluster configuration file</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script now uses a single file that defines the location of the managers,
+tservers, etc. You can create this file using the command <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>. You
+will then need to transfer the contents of the current individual files to this new consolidated file.</p>
+
+<h3 id="encrypted-instances">Encrypted Instances</h3>
+
+<p><strong>Warning</strong>: Upgrading a previously encrypted instance is not supported as the implementation
+and properties have changed.</p>
+
+<h2 id="upgrading-from-189-to-20">Upgrading from 1.8/9 to 2.0</h2>
 
 <p>Follow the steps below to upgrade your Accumulo instance and client to 2.0.</p>
 

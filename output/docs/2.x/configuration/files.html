@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -461,7 +465,7 @@ Accumulo processes. See the <a href="/docs/2.x/getting-started/quickstart#config
 <h3 id="log4j-serviceproperties">log4j-service.properties</h3>
 
 <p>The <a href="https://github.com/apache/accumulo/blob/main/assemble/conf/log4j-service.properties">log4j-service.properties</a> file configures logging for most Accumulo services
-(i.e <a href="/docs/2.x/getting-started/design#master">Master</a>, <a href="/docs/2.x/getting-started/design#tablet-server">Tablet Server</a>, <a href="/docs/2.x/getting-started/design#garbage-collector">Garbage Collector</a>) except for the Monitor.</p>
+(i.e <a href="/docs/2.x/getting-started/design#manager">Manager</a>, <a href="/docs/2.x/getting-started/design#tablet-server">Tablet Server</a>, <a href="/docs/2.x/getting-started/design#garbage-collector">Garbage Collector</a>) except for the Monitor.</p>
 
 <h3 id="log4j-monitorproperties">log4j-monitor.properties</h3>
 
@@ -472,36 +476,46 @@ Accumulo processes. See the <a href="/docs/2.x/getting-started/quickstart#config
 <p>The <a href="https://github.com/apache/accumulo/blob/main/assemble/conf/log4j.properties">log4j.properties</a> file configures logging for Accumulo commands (i.e <code class="language-plaintext highlighter-rouge">accumulo init</code>,
 <code class="language-plaintext highlighter-rouge">accumulo shell</code>, etc).</p>
 
-<h2 id="host-files">Host files</h2>
+<h2 id="clusteryaml">cluster.yaml</h2>
 
-<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script uses the host files below to determine where Accumulo processes should be run.
-These files are not in the <code class="language-plaintext highlighter-rouge">conf/</code> directory of the Accumulo release tarball by default. They can be created by running
-the command <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script uses the <code class="language-plaintext highlighter-rouge">cluster.yaml</code> file to determine where Accumulo processes should be run.
+This file is not in the <code class="language-plaintext highlighter-rouge">conf/</code> directory of the Accumulo release tarball by default. It can be created by running
+the command <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>. The <code class="language-plaintext highlighter-rouge">cluster.yaml</code> file contains the following sections:</p>
 
 <h3 id="gc">gc</h3>
 
 <p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#garbage-collector">Garbage Collector</a> processes should run. While only one host is needed, others can be specified
 to run standby Garbage Collectors that can take over if the lead Garbage Collector fails.</p>
 
-<h3 id="masters">masters</h3>
+<h3 id="manager">manager</h3>
 
-<p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#master">Master</a> processes should run. While only one host is needed, others can be specified
-to run on standby Masters that can take over if the lead Master fails.</p>
+<p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#manager">Manager</a> processes should run. While only one host is needed, others can be specified
+to run on standby Managers that can take over if the lead Manager fails.</p>
 
 <h3 id="monitor">monitor</h3>
 
 <p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#monitor">Monitor</a> processes should run. While only one host is needed, others can be specified
 to run standby Monitors that can take over if the lead Monitor fails.</p>
 
-<h3 id="tservers">tservers</h3>
+<h3 id="tserver">tserver</h3>
 
 <p>Contains list of hosts where <a href="/docs/2.x/getting-started/design#tablet-server">Tablet Server</a> processes should run. While only one host is needed, it is recommended that
 multiple tablet servers are run for improved fault tolerance and peformance.</p>
 
-<h3 id="tracers">tracers</h3>
+<h3 id="tracer">tracer</h3>
 
 <p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#tracer">Tracer</a> processes should run. While only one host is needed, others can be specified
 to run standby Tracers that can take over if the lead Tracer fails.</p>
+
+<h3 id="compaction-coordinator">Compaction Coordinator</h3>
+
+<p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#compaction%20coordinator">CompactionCoordinator</a> processes should run. While only one host is needed,
+others can be specified to run standby CompactionCoordinators that can take over if the lead CompactionCoordinator fails.</p>
+
+<h3 id="compactor">Compactor</h3>
+
+<p>Contains a list of hosts where <a href="/docs/2.x/getting-started/design#compactor">Compactor</a> processes should run. While only one host is needed, it is recommended that
+multiple Compactors are run for improved external compaction performance.</p>
 
 
 

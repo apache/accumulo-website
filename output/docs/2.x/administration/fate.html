@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -435,21 +439,55 @@ steps in a way that is tolerant to node failure and other concurrent operations 
 very difficult to achieve. Accumulo includes a Fault-Tolerant Executor (FATE) which
 is widely used server-side to implement the client API safely and correctly.</p>
 
-<p>Fault-Tolerant Executor (FATE) is the implementation detail which ensures that tables in creation when the
-Master dies will be successfully created when another Master process is started.
-This alleviates the need for any external tools to correct some bad state – Accumulo can
-undo the failure and self-heal without any external intervention.</p>
+<p>Fault-Tolerant Executor (FATE) is the implementation detail which ensures that tables in 
+creation when the Manager dies will be successfully created when another Manager process is 
+started. This alleviates the need for any external tools to correct some bad state – Accumulo 
+can undo the failure and self-heal without any external intervention.</p>
 
 <h2 id="overview">Overview</h2>
 
 <p>FATE consists of two primary components: a repeatable, persisted operation (REPO), a storage
 layer for REPOs and an execution system to run REPOs. Accumulo uses ZooKeeper as the storage
-layer for FATE and the Accumulo Master acts as the execution system to run REPOs.</p>
+layer for FATE and the Accumulo Manager acts as the execution system to run REPOs.</p>
 
 <p>The important characteristic of REPOs are that they implemented in a way that is idempotent:
 every operation must be able to undo or replay a partial execution of itself. Requiring the
 implementation of the operation to support this functional greatly simplifies the execution
 of these operations. This property is also what guarantees safety in light of failure conditions.</p>
+
+<h3 id="repo-stack">REPO Stack</h3>
+
+<p>A FATE transaction is composed of a sequence of Repeatable persisted operations (REPO).  In order to start a FATE transaction,
+a REPO is pushed onto a per transaction REPO stack.  The top of the stack always contains the
+next REPO the FATE transaction should execute.  When a REPO is successful it may return another
+REPO which is pushed on the stack.</p>
+
+<h3 id="fate-structure-in-zookeeper">FATE Structure in ZooKeeper</h3>
+
+<p>The storage layer in ZooKeeper is organized by storing each FATE transaction in a unique path based
+on the FATE transaction id. The base path for FATE transactions is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/accumulo/[INSTANCE_ID]/fate/tx_[TXID]
+</code></pre></div></div>
+
+<p>The data stored on the transaction id node provides the current FATE transaction status (e.g. NEW, IN_PROGRESS, 
+SUCCESS, FAILED,…)</p>
+
+<p>Under the transaction id node, there will be a number of REPOs and a debug node that provides additional
+information. The debug information is added when the transaction is created and is the command class simple name.
+The REPOs form a stack of operations that will be performed in order and in ZooKeeper are numbered <code class="language-plaintext highlighter-rouge">repo_0000000000</code>
+to <code class="language-plaintext highlighter-rouge">repo_#</code> The REPO with the largest number is the top of the stack. The top of the stack is the REPO currently
+running or the next REPO that will start on the next execution. The REPO with the lowest number
+(usually repo_0000000000) is the operation that spawned the FATE operations.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sample FATE ZooKeeper paths:
+
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/debug
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/repo_0000000002
+/accumulo/dcbf6855-8eac-4b44-a4a9-7ad39caafe9a/fate/tx_4dd46d49d60f1a17/repo_0000000000
+
+</code></pre></div></div>
 
 <h2 id="administration">Administration</h2>
 
@@ -458,17 +496,63 @@ For example, a command that is not completing could be blocked on the execution 
 operation. Accumulo provides an Accumulo shell command to interact with fate.</p>
 
 <p>The <code class="language-plaintext highlighter-rouge">fate</code> shell command accepts a number of arguments for different functionality:
-<code class="language-plaintext highlighter-rouge">list</code>/<code class="language-plaintext highlighter-rouge">print</code>, <code class="language-plaintext highlighter-rouge">fail</code>, <code class="language-plaintext highlighter-rouge">delete</code>, <code class="language-plaintext highlighter-rouge">dump</code>.</p>
+<code class="language-plaintext highlighter-rouge">list</code>/<code class="language-plaintext highlighter-rouge">print</code>, <code class="language-plaintext highlighter-rouge">summary</code>, <code class="language-plaintext highlighter-rouge">cancel</code>, <code class="language-plaintext highlighter-rouge">fail</code>, <code class="language-plaintext highlighter-rouge">delete</code>, <code class="language-plaintext highlighter-rouge">dump</code>.</p>
 
 <h3 id="listprint">List/Print</h3>
 
 <p>Without any additional arguments, this command will print all operations that still exist in
 the FATE store (ZooKeeper). This will include active, pending, and completed operations (completed
 operations are lazily removed from the store). Each operation includes a unique “transaction ID”, the
-state of the operation (e.g. <code class="language-plaintext highlighter-rouge">NEW</code>, <code class="language-plaintext highlighter-rouge">IN_PROGRESS</code>, <code class="language-plaintext highlighter-rouge">FAILED</code>), any locks the
+state of the operation (e.g. <code class="language-plaintext highlighter-rouge">NEW</code>, <code class="language-plaintext highlighter-rouge">SUBMITTED</code>, <code class="language-plaintext highlighter-rouge">IN_PROGRESS</code>, <code class="language-plaintext highlighter-rouge">FAILED</code>), any locks the
 transaction actively holds and any locks it is waiting to acquire.</p>
 
 <p>This option can also accept transaction IDs which will restrict the list of transactions shown.</p>
+
+<h3 id="summary-new-in-21">Summary (new in 2.1)</h3>
+
+<p>Similar to the List/Print command, this command prints a snapshot of all operations in the FATE store (ZooKeeper).
+The information includes summary counts of:</p>
+
+<ul>
+  <li>Operation States (<code class="language-plaintext highlighter-rouge">NEW</code>, <code class="language-plaintext highlighter-rouge">SUBMITTED</code>, <code class="language-plaintext highlighter-rouge">IN_PROGRESS</code>, <code class="language-plaintext highlighter-rouge">FAILED</code>)</li>
+  <li>The FATE transaction commands</li>
+  <li>The current executing steps</li>
+  <li>Expanded FATE information details</li>
+</ul>
+
+<p>The expanded FATE details supplement the information provided by list/print by including the running duration since the
+FATE was created, the names of the namespace and tables for locks the transaction holds or is waiting to acquire.
+(Note: depending on the operation and the step, the expanded details fields may be incomplete or unknown when the 
+snapshot information is gathered.)</p>
+
+<p>This option accepts a filter for the details section by the state of the operation 
+(e.g. <code class="language-plaintext highlighter-rouge">NEW</code>, <code class="language-plaintext highlighter-rouge">SUBMITTED</code>, <code class="language-plaintext highlighter-rouge">IN_PROGRESS</code>, <code class="language-plaintext highlighter-rouge">FAILED</code>). The command also provides the option to output the information 
+formatted as json.</p>
+
+<p>Sample output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Report Time: 2022-07-07T11:42:02Z
+Status counts:
+  IN_PROGRESS: 2
+
+Command counts:
+  CompactRange: 2
+
+Step counts:
+  CompactionDriver: 2
+
+Fate transactions (oldest first):
+Status Filters: [NONE]
+
+Running	txn_id				Status		Command		Step (top)		locks held:(table id, name)	locks waiting:(table id, name)
+0:00:04	0c143900c230c1df	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
+0:00:03	55f59a2ae838e19e	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
+
+</code></pre></div></div>
+<h3 id="cancel">Cancel</h3>
+
+<p>This command can be used to cancel NEW or SUBMITTED FATE transactions. This command requires
+one or more transaction ids.</p>
 
 <h3 id="fail">Fail</h3>
 

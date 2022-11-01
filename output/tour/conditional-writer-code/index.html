@@ -147,38 +147,39 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Conditional Writer Code</h2>
-  <p class="text-muted">Tour page 12 of 12</p>
+  <p class="text-muted">Tour page 12 of 13</p>
 </div>
 <div id="tour-content">
   <p>Below is a solution to the exercise.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">,</span> <span class="nc">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="nc">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">try</span> <span class="o">(</span><span class="nc">ConditionalWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createConditionalWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ConditionalWriterConfig</span><span class="o">()))</span> <span class="o">{</span>
-      <span class="nc">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Condition</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">);</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">expectedAddr</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">condition</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expectedAddr</span><span class="o">);</span>
-      <span class="o">}</span>
-      <span class="nc">ConditionalMutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConditionalMutation</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">condition</span><span class="o">);</span>
-      <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">);</span>
-      <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">mutation</span><span class="o">).</span><span class="na">getStatus</span><span class="o">()</span> <span class="o">==</span> <span class="nc">Status</span><span class="o">.</span><span class="na">ACCEPTED</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-</code></pre></div></div>
+<pre><code class="language-commandline">jshell&gt; boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
+   ...&gt;   try (ConditionalWriter writer = client.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
+   ...&gt;     Condition condition = new Condition("location", "home");
+   ...&gt;     if (expectedAddr != null) {
+   ...&gt;       condition.setValue(expectedAddr);
+   ...&gt;     }
+   ...&gt;     ConditionalMutation mutation = new ConditionalMutation(id, condition);
+   ...&gt;     mutation.put("location", "home", newAddr);
+   ...&gt;     return writer.write(mutation).getStatus() == ConditionalWriter.Status.ACCEPTED;
+   ...&gt;   } catch (Exception e) {
+   ...&gt;     throw new RuntimeException();
+   ...&gt;   }
+   ...&gt; }
+</code></pre>
 
 <p>The following output shows running the example with a conditional writer.
 Threads retry when conditional mutations are rejected.  The final address has
 all three modifications.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
-Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
-Thread  39 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
-Thread  38 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '1007 Mountain Dr, Gotham, New York'
-Thread  39 attempting change '  1007 Mountain Dr, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, NY  '
-Thread  39 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, NY'
+<pre><code class="language-commandline">jshell&gt; concurrent_writes()
+GothamPD table already exists...proceeding...
+Thread  52 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '1007 Mountain Dr, Gotham, New York'
+Thread  91 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '   1007 Mountain Dr, Gotham, NY  '
+Thread  90 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '   1007 Mountain Dr, Gotham, New York  '
+Thread  90 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, New York'
+Thread  91 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, NY'
 Final address : '1007 Mountain Dr, Gotham, NY'
-</code></pre></div></div>
+</code></pre>
 
 </div>
 
@@ -189,6 +190,8 @@ if (e.keyCode == '37') { window.location = '/tour/conditional-writer/'; }
 
 
 
+if (e.keyCode == '39') { window.location = '/tour/using-iterators/'; }
+
 };
 </script>
 
@@ -198,7 +201,9 @@ if (e.keyCode == '37') { window.location = '/tour/conditional-writer/'; }
     <a href="/tour/conditional-writer/">&lt;</a>
     
 
-    12 / 12
+    12 / 13
+    
+    <a href="/tour/using-iterators/">&gt;</a>
     
   </h2>
 </div>

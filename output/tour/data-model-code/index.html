@@ -147,55 +147,61 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Data Model Code</h2>
-  <p class="text-muted">Tour page 5 of 12</p>
+  <p class="text-muted">Tour page 5 of 13</p>
 </div>
 <div id="tour-content">
-  <p>Below is the solution for the exercise.</p>
+  <p>Below is the solution for the complete exercise.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-    <span class="c1">// Create a table called "GothamPD".</span>
-    <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
+<pre><code class="language-commandline">jshell&gt; client.tableOperations().create("GothamPD");
+</code></pre>
+<p>Create a row for Batman</p>
+<pre><code class="language-commandline">jshell&gt; Mutation mutation1 = new Mutation("id0001");
+mutation1 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
-    <span class="c1">// Create a row for Batman</span>
-    <span class="nc">Mutation</span> <span class="n">mutation1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"id0001"</span><span class="o">);</span>
-    <span class="n">mutation1</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"alias"</span><span class="o">,</span> <span class="s">"Batman"</span><span class="o">);</span>
-    <span class="n">mutation1</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"Bruce Wayne"</span><span class="o">);</span>
-    <span class="n">mutation1</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"wearsCape?"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+jshell&gt; mutation1.put("hero","alias", "Batman");
+jshell&gt; mutation1.put("hero","name", "Bruce Wayne");
+jshell&gt; mutation1.put("hero","wearsCape?", "true");
+</code></pre>
 
-    <span class="c1">// Create a row for Robin</span>
-    <span class="nc">Mutation</span> <span class="n">mutation2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"id0002"</span><span class="o">);</span>
-    <span class="n">mutation2</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"alias"</span><span class="o">,</span> <span class="s">"Robin"</span><span class="o">);</span>
-    <span class="n">mutation2</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"Dick Grayson"</span><span class="o">);</span>
-    <span class="n">mutation2</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"wearsCape?"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+<p>Create a row for Robin</p>
+<pre><code class="language-commandline">jshell&gt; Mutation mutation2 = new Mutation("id0002");
+mutation2 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
-    <span class="c1">// Create a row for Joker</span>
-    <span class="nc">Mutation</span> <span class="n">mutation3</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"id0003"</span><span class="o">);</span>
-    <span class="n">mutation3</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"villain"</span><span class="o">,</span><span class="s">"alias"</span><span class="o">,</span> <span class="s">"Joker"</span><span class="o">);</span>
-    <span class="n">mutation3</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"villain"</span><span class="o">,</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"Unknown"</span><span class="o">);</span>
-    <span class="n">mutation3</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"villain"</span><span class="o">,</span><span class="s">"wearsCape?"</span><span class="o">,</span> <span class="s">"false"</span><span class="o">);</span>
+jshell&gt; mutation2.put("hero","alias", "Robin");
+jshell&gt; mutation2.put("hero","name", "Dick Grayson");
+jshell&gt; mutation2.put("hero","wearsCape?", "true");
+</code></pre>
 
-    <span class="c1">// Create a BatchWriter to the GothamPD table and add your mutations to it.</span>
-    <span class="c1">// Once the BatchWriter is closed by the try w/ resources, data will be available to scans.</span>
-    <span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">))</span> <span class="o">{</span>
-      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation1</span><span class="o">);</span>
-      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation2</span><span class="o">);</span>
-      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation3</span><span class="o">);</span>
-    <span class="o">}</span>
+<p>Create a row for Joker</p>
+<pre><code class="language-commandline">jshell&gt; Mutation mutation3 = new Mutation("id0003");
+mutation3 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
-    <span class="c1">// Read and print all rows of the "GothamPD" table. Try w/ resources will close for us.</span>
-    <span class="k">try</span> <span class="o">(</span><span class="nc">Scanner</span> <span class="n">scan</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">))</span> <span class="o">{</span>
-      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Gotham Police Department Persons of Interest:"</span><span class="o">);</span>
+jshell&gt; mutation3.put("villain","alias", "Joker");
+jshell&gt; mutation3.put("villain","name", "Unknown");
+jshell&gt; mutation3.put("villain","wearsCape?", "false");
+</code></pre>
 
-     <span class="c1">// Note: A Scanner is an extension of java.lang.Iterable so it will traverse through the table.</span>
-     <span class="k">for</span> <span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span> <span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scan</span><span class="o">)</span> <span class="o">{</span>
-       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Key : %-50s  Value : %s\n"</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
-     <span class="o">}</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-</code></pre></div></div>
-<p>The code above will print (timestamp will differ):</p>
+<p>Create a BatchWriter to the GothamPD table and add your mutations to it.
+Once the BatchWriter is closed by the try-with-resources, data will be available to scans.</p>
 
-<pre><code class="language-commandline">Gotham Police Department Persons of Interest:
+<pre><code class="language-commandline">jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+   ...&gt;   writer.addMutation(mutation1);
+   ...&gt;   writer.addMutation(mutation2);
+   ...&gt;   writer.addMutation(mutation3);
+   ...&gt; }
+</code></pre>
+
+<p>Read and print all rows of the “GothamPD” table. Try-with-resources will close for us.</p>
+
+<p>Note: A Scanner is an extension of <code class="language-plaintext highlighter-rouge">java.lang.Iterable</code> so it will traverse through the table.</p>
+
+<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+   ...&gt;   System.out.println("Gotham Police Department Persons of Interest:");
+   ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
+   ...&gt;     System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
+   ...&gt;   }
+   ...&gt; }
+Gotham Police Department Persons of Interest:
 Key : id0001 hero:alias [] 1511306370025 false            Value : Batman
 Key : id0001 hero:name [] 1511306370025 false             Value : Bruce Wayne
 Key : id0001 hero:wearsCape? [] 1511306370025 false       Value : true
@@ -206,6 +212,8 @@ Key : id0003 villain:alias [] 1511306370025 false         Value : Joker
 Key : id0003 villain:name [] 1511306370025 false          Value : Unknown
 Key : id0003 villain:wearsCape? [] 1511306370025 false    Value : false
 </code></pre>
+<p>Timestamps will differ.</p>
+
 
 </div>
 
@@ -227,7 +235,7 @@ if (e.keyCode == '39') { window.location = '/tour/authorizations/'; }
     <a href="/tour/data-model/">&lt;</a>
     
 
-    5 / 12
+    5 / 13
     
     <a href="/tour/authorizations/">&gt;</a>
     

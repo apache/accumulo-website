@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -405,6 +407,8 @@
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
                 
               </div>
             </div>
@@ -577,7 +581,7 @@ shell&gt; delete 3&lt; log 127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
 
 <p>Note: the colon (<code class="language-plaintext highlighter-rouge">:</code>) is omitted when specifying the <em>row cf cq</em> for the delete command.</p>
 
-<p>The master will automatically discover the tablet no longer has a bad WAL reference and will
+<p>The manager will automatically discover the tablet no longer has a bad WAL reference and will
 assign the tablet.  You will need to remove the reference from all the tablets to get them
 online.</p>
 
@@ -696,7 +700,7 @@ $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+1001
 </code></pre></div></div>
 
 <p>After the corrupt WAL file has been replaced, the system should automatically recover.
-It may be necessary to restart the Accumulo Master process as an exponential
+It may be necessary to restart the Accumulo Manager process as an exponential
 backup policy is used which could lead to a long wait before Accumulo will
 try to re-load the WAL file.</p>
 
@@ -768,7 +772,7 @@ overridden by using the <code class="language-plaintext highlighter-rouge">--loc
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
 </code></pre></div></div>
 
-<p><strong>I am trying to start the master after upgrading but the upgrade is aborting with the following message:</strong>
+<p><strong>I am trying to start the manager after upgrading but the upgrade is aborting with the following message:</strong>
   <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.</code></p>
 
 <p>You can use the shell to delete completed FATE transactions using the following:</p>
@@ -778,7 +782,7 @@ overridden by using the <code class="language-plaintext highlighter-rouge">--loc
   <li>Start shell</li>
   <li>Run <code class="language-plaintext highlighter-rouge">fate print</code> to list all</li>
   <li>If completed, just delete with <code class="language-plaintext highlighter-rouge">fate delete</code></li>
-  <li>Start masters once there are no more fate operations</li>
+  <li>Start managers once there are no more fate operations</li>
 </ul>
 
 <p>If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.</p>

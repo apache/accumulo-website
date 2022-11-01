@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -435,7 +439,7 @@
 
 <h2 id="server-configuration">Server Configuration</h2>
 
-<p>Accumulo processes (i.e master, tablet server, monitor, etc) are configured by <a href="/docs/2.x/configuration/server-properties">server properties</a> whose values can be
+<p>Accumulo processes (i.e manager, tablet server, monitor, etc) are configured by <a href="/docs/2.x/configuration/server-properties">server properties</a> whose values can be
 set in the following configuration locations (with increasing precedence):</p>
 
 <ol>
@@ -458,7 +462,7 @@ While default values have the lowest precedence, they are usually optimal.  Howe
 <h3 id="site">Site</h3>
 
 <p>Site configuration refers to <a href="/docs/2.x/configuration/server-properties">server properties</a> set in the <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> file which can be found in the <code class="language-plaintext highlighter-rouge">conf/</code> directory. Site configuration will override the default value
-of a property. If you are running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (master, tserver, etc) read their
+of a property. If you are running Accumulo on a cluster, any updates to accumulo.properties must be synced across the cluster. Accumulo processes (manager, tserver, etc) read their
 local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> on start up so processes must be restarted to apply changes. Certain properties can only be set in accumulo.properties. These properties have <strong>zk mutable: no</strong>
 in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.</p>
 
@@ -482,6 +486,16 @@ the following shell command:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"flush"</span><span class="o">);</span>
 </code></pre></div></div>
 
+<p>The java api also supports adding, modifying and removing multiple properties in a single operation:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">modifyProperties</span><span class="o">(</span><span class="n">properties</span> <span class="o">-&gt;</span> <span class="o">{</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="s">"table.file.max"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.enabled"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
+<span class="o">});</span>
+
+</code></pre></div></div>
 <h3 id="namespace">Namespace</h3>
 
 <p>Namespace configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
@@ -495,16 +509,35 @@ will override System configuration and can be set using the following shell comm
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">namespaceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mynamespace"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"sync"</span><span class="o">);</span>
 </code></pre></div></div>
 
-<h3 id="table">Table</h3>
+<p>The java api also supports adding, modifying and removing multiple properties in a single operation:</p>
 
-<p>Table configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">namespaceOperations</span><span class="o">().</span><span class="na">modifyProperties</span><span class="o">(</span><span class="s">"mynamespace"</span><span class="o">,</span> <span class="n">properties</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="s">"table.file.max"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.enabled"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
+        <span class="o">});</span>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t TABLE -s PROPERTY=VALUE
+<span class="err">###</span> <span class="nc">Table</span>
+
+<span class="nc">Table</span> <span class="n">configuration</span> <span class="n">refers</span> <span class="n">to</span> <span class="o">[</span><span class="n">table</span><span class="o">.*</span> <span class="n">properties</span><span class="o">]</span> <span class="n">set</span> <span class="k">for</span> <span class="n">a</span> <span class="n">certain</span> <span class="n">table</span><span class="o">.</span> <span class="nc">These</span> <span class="n">settings</span> <span class="n">are</span> <span class="n">stored</span> <span class="n">in</span> <span class="nc">ZooKeeper</span> <span class="n">and</span> <span class="n">can</span> <span class="n">be</span> <span class="n">set</span> <span class="n">using</span> <span class="n">the</span> <span class="n">following</span> <span class="n">shell</span> <span class="nl">command:</span>
+
+    <span class="n">config</span> <span class="o">-</span><span class="n">t</span> <span class="no">TABLE</span> <span class="o">-</span><span class="n">s</span> <span class="no">PROPERTY</span><span class="o">=</span><span class="no">VALUE</span>
+
+<span class="nc">They</span> <span class="n">can</span> <span class="n">also</span> <span class="n">be</span> <span class="n">set</span> <span class="n">using</span> <span class="o">[</span><span class="nc">TableOperations</span><span class="o">](</span><span class="nl">https:</span><span class="c1">//static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/admin/TableOperations.html) in the Java API:</span>
+
+<span class="err">```</span><span class="n">java</span>
+<span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>They can also be set using <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/admin/TableOperations.html">TableOperations</a> in the Java API:</p>
+<p>The java api also supports adding, modifying and removing multiple properties in a single operation:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">modifyProperties</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="n">properties</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="s">"table.file.max"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.enabled"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
+        <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
+        <span class="o">});</span>
 </code></pre></div></div>
 
 <h3 id="zookeeper-considerations">Zookeeper Considerations</h3>

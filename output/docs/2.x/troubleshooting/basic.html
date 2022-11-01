@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -450,7 +454,7 @@ Probably a start-up problem.  Look in <code class="language-plaintext highlighte
 components that make up a running Accumulo instance. It will highlight
 unusual or unexpected conditions.</p>
 
-<p>Point your browser to the monitor (typically the master host, on port 9995).  Is anything red or yellow?</p>
+<p>Point your browser to the monitor (typically the manager host, on port 9995).  Is anything red or yellow?</p>
 
 <p><strong>My browser is reporting connection refused, and I cannot get to the monitor</strong></p>
 
@@ -476,11 +480,11 @@ monitor while on the machine running the monitor:</p>
 
 <p>Verify that you are not firewalled from the monitor if it is running on a remote host.</p>
 
-<p><strong>The monitor responds, but there are no numbers for tservers and tables.  The summary page says the master is down.</strong></p>
+<p><strong>The monitor responds, but there are no numbers for tservers and tables.  The summary page says the manager is down.</strong></p>
 
-<p>The monitor program gathers all the details about the master and the
-tablet servers through the master. It will be mostly blank if the
-master is down. Check for a running master.</p>
+<p>The monitor program gathers all the details about the manager and the
+tablet servers through the manager. It will be mostly blank if the
+manager is down. Check for a running manager.</p>
 
 <p><strong>The ZooKeeper information is not available on the Overview page.</strong></p>
 
@@ -527,12 +531,12 @@ $ accumulo org.apache.accumulo.server.util.TabletServerLocks -list
                   127.0.0.1:9997             null
 </code></pre></div></div>
 
-<p>You can find the master and instance id for any accumulo instances using the same zookeeper instance:</p>
+<p>You can find the manager and instance id for any accumulo instances using the same zookeeper instance:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.ListInstances
 INFO : Using ZooKeepers localhost:2181
 
- Instance Name       | Instance ID                          | Master
+ Instance Name       | Instance ID                          | Manager
 ---------------------+--------------------------------------+-------------------------------
               "test" | 6140b72e-edd8-4126-b2f5-e74a8bbe323b |                127.0.0.1:9999
 </code></pre></div></div>

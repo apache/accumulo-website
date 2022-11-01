@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -453,14 +457,14 @@ the system wants to send.</p>
 
 <p>Data is replicated by using the Write-Ahead logs (WAL) that each TabletServer is
 already maintaining. TabletServers record which WALs have data that need to be
-replicated to the <code class="language-plaintext highlighter-rouge">accumulo.metadata</code> table. The Master uses these records,
+replicated to the <code class="language-plaintext highlighter-rouge">accumulo.metadata</code> table. The Manager uses these records,
 combined with the local Accumulo table that the WAL was used with, to create records
 in the <code class="language-plaintext highlighter-rouge">replication</code> table which track which peers the given WAL should be
-replicated to. The Master latter uses these work entries to assign the actual
+replicated to. The Manager latter uses these work entries to assign the actual
 replication task to a local TabletServer using ZooKeeper. A TabletServer will get
 a lock in ZooKeeper for the replication of this file to a peer, and proceed to
 replicate to the peer, recording progress in the <code class="language-plaintext highlighter-rouge">replication</code> table as
-data is successfully replicated on the peer. Later, the Master and Garbage Collector
+data is successfully replicated on the peer. Later, the Manager and Garbage Collector
 will remove records from the <code class="language-plaintext highlighter-rouge">accumulo.metadata</code> and <code class="language-plaintext highlighter-rouge">replication</code> tables
 and files from HDFS, respectively, after replication to all peers is complete.</p>
 
@@ -554,7 +558,7 @@ and the full class name for the implementation. This can be configured via the s
 
 <ol>
   <li>
-    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.1.0/org/apache/accumulo/master/replication/UnorderedWorkAssigner.html">UnorderedWorkAssigner</a> can be used to overcome the limitation
+    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-manager/2.1.0/org/apache/accumulo/manager/replication/UnorderedWorkAssigner.html">UnorderedWorkAssigner</a> can be used to overcome the limitation
 of only a single WAL being replicated to a target and peer at any time. Depending on the table schema,
 it’s possible that multiple versions of the same Key with different values are infrequent or nonexistent.
 In this case, parallel replication to a peer and target is possible without any downsides. In the case
@@ -562,7 +566,7 @@ where this implementation is used were column updates are frequent, it is possib
 an inconsistency between the primary and the peer.</p>
   </li>
   <li>
-    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-master/2.1.0/org/apache/accumulo/master/replication/SequentialWorkAssigner.html">SequentialWorkAssigner</a> is configured for an
+    <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-manager/2.1.0/org/apache/accumulo/manager/replication/SequentialWorkAssigner.html">SequentialWorkAssigner</a> is configured for an
 instance. The SequentialWorkAssigner ensures that, per peer and each remote identifier, each WAL is
 replicated in the order in which they were created. This is sufficient to ensure that updates to a table
 will be replayed in the correct order on the peer. This implementation has the downside of only replicating
@@ -582,7 +586,7 @@ section of this document. Theoretically, an implementation of this interface cou
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.1.0/org/apache/accumulo/server/replication/AccumuloReplicaSystem.html">AccumuloReplicaSystem</a> uses Thrift to communicate with a peer Accumulo instance
 and replicate the necessary data. The TabletServer running on the primary will communicate
-with the Master on the peer to request the address of a TabletServer on the peer which
+with the Manager on the peer to request the address of a TabletServer on the peer which
 this TabletServer will use to replicate the data.</p>
 
 <p>The TabletServer on the primary will then replicate data in batches of a configurable
@@ -634,7 +638,7 @@ in replication together. In this example, we will use the names provided in the 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>replication.name=peer
 </code></pre></div></div>
 
-<h3 id="masters-and-tservers-files">masters and tservers files</h3>
+<h3 id="managers-and-tservers-files">managers and tservers files</h3>
 
 <p>Be <em>sure</em> to use non-local IP addresses. Other nodes need to connect to it and using localhost will likely result in
 a local node talking to another local node.</p>

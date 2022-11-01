@@ -147,38 +147,53 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Connecting to Accumulo</h2>
-  <p class="text-muted">Tour page 2 of 12</p>
+  <p class="text-muted">Tour page 2 of 13</p>
 </div>
 <div id="tour-content">
-  <p>Connecting to a live instance of Accumulo is done through the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object.  This object contains a live connection
-to Accumulo and will remain open until closed.  All client operations can be accessed from this one object.</p>
+  <p>Connecting to a live instance of Accumulo is done through the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object.  This object
+contains a live connection to Accumulo and will remain open until closed.  All client operations
+can be accessed from this one object.</p>
 
-<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/Accumulo.html">Accumulo</a> entry point is used to create a client by calling <code class="language-plaintext highlighter-rouge">Accumulo.newClient()</code>.  The client can
-be created from properties by using one of the <code class="language-plaintext highlighter-rouge">from()</code> methods or using the <code class="language-plaintext highlighter-rouge">to()</code> and <code class="language-plaintext highlighter-rouge">as()</code> methods
-to specify the connection information directly.</p>
+<p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/Accumulo.html">Accumulo</a> entry point is used to create a client by calling <code class="language-plaintext highlighter-rouge">Accumulo.newClient()</code>.  The
+client can be created from properties by using one of the <code class="language-plaintext highlighter-rouge">from()</code> methods or using the
+<code class="language-plaintext highlighter-rouge">to()</code> and <code class="language-plaintext highlighter-rouge">as()</code> methods to specify the connection information directly. A later example
+will illustrate how to create a new client.</p>
 
-<p>For the tour, the client is passed to each exercise method and then closed before stopping the cluster.
-The properties used to create the client can be seen in <code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> under <code class="language-plaintext highlighter-rouge">target/mac######/conf</code>
-Notice the client can be wrapped in a Java try-with-resources since it is AutoCloseable.</p>
+<p>For the tour, you will use the <code class="language-plaintext highlighter-rouge">client</code> provided by the JShell to perform the required operations.
+The properties used to create the client can be viewed in the file contained in the <code class="language-plaintext highlighter-rouge">clientPropUrl</code>
+variable.</p>
 
-<p>Start by using table operations to list the default tables and instance operations to get the instance ID.</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-    <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">t</span> <span class="o">:</span> <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">list</span><span class="o">())</span>
-      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Table: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">);</span>
+<pre><code class="language-commandline">jshell&gt; /vars
+|    URL clientPropUrl = file:&lt;path_to_accumulo-client.properties file&gt;
+</code></pre>
 
-    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Instance ID: "</span> <span class="o">+</span> <span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">getInstanceID</span><span class="o">());</span>
-<span class="o">}</span>
-</code></pre></div></div>
+<p>Let’s start by using table operations to list the default tables and instance operations to get
+the instance ID.</p>
 
-<p>Different types of operations are accessed by their respective method on the client:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">();</span>
-<span class="n">client</span><span class="o">.</span><span class="na">namespaceOperations</span><span class="o">();</span>
-<span class="n">client</span><span class="o">.</span><span class="na">securityOperations</span><span class="o">();</span>
-<span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">();</span>
-<span class="n">client</span><span class="o">.</span><span class="na">replicationOperations</span><span class="o">();</span>
-</code></pre></div></div>
+<pre><code class="language-commandline">jshell&gt; client.tableOperations().list().forEach(System.out::println);
+accumulo.metadata
+accumulo.replication
+accumulo.root
+</code></pre>
 
-<p>The client is also used directly to create Scanners and perform batch operations.  These will be explored later.</p>
+<p>Now let’s retrieve the instance ID.</p>
+
+<pre><code class="language-commandline">jshell&gt; System.out.println(client.instanceOperations().getInstanceID());
+8b9839f7-cdc6-44ca-b527-43db45acc79f
+</code></pre>
+
+<p>Different types of operations are accessed by their respective methods on the client:</p>
+
+<ul>
+  <li>client.tableOperations();</li>
+  <li>client.namespaceOperations();</li>
+  <li>client.securityOperations();</li>
+  <li>client.instanceOperations();</li>
+  <li>client.replicationOperations();</li>
+</ul>
+
+<p>The client is also used to create Scanners and perform batch operations.  These will be
+explored later.</p>
 
 
 </div>
@@ -201,7 +216,7 @@ if (e.keyCode == '39') { window.location = '/tour/basic-read-write/'; }
     <a href="/tour/getting-started/">&lt;</a>
     
 
-    2 / 12
+    2 / 13
     
     <a href="/tour/basic-read-write/">&gt;</a>
     

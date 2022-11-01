@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Accumulo Documentation - Authorizations</title>
+<title>Accumulo Documentation - ZooKeeper</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -253,12 +253,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="true" aria-controls="collapsesecurity">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
                   Security
                 </a>
               </h4>
             </div>
-            <div id="collapsesecurity" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsesecurity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -268,7 +268,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions </a></div>
                 
-                <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/security/authorizations">Authorizations </a></div>
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption </a></div>
                 
@@ -387,12 +387,12 @@
           
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
                   Troubleshooting
                 </a>
               </h4>
             </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapsetroubleshooting" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div class="panel-body">
                 
                 
@@ -408,7 +408,7 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
                 
               </div>
             </div>
@@ -420,146 +420,40 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Security &nbsp;&gt;&gt;&nbsp; Authorizations</p>
+    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Troubleshooting &nbsp;&gt;&gt;&nbsp; ZooKeeper</p>
     
 
     
     <div class="row">
-      <div class="col-md-10"><h1>Authorizations</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/security/authorizations.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-10"><h1>ZooKeeper</h1></div>
+      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/troubleshooting/zookeeper.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>
     
 
-    <p>In Accumulo, data is written with <a href="/docs/2.x/security/authorizations#security-labels">security labels</a> that limit access to only users with the proper
-<a href="/docs/2.x/security/authorizations#authorizations">authorizations</a>.</p>
+    <h2 id="acl-errors-during-upgrade">ACL errors during upgrade</h2>
 
-<h2 id="configuration">Configuration</h2>
+<p>Manual intervention is required in the event that an upgrade fails due to unexpected znode ACLs. To resolve this issue ZooKeeper will need to be restarted with an additional property to bypass existing ACLs so that the ACLs can be fixed. Specifically, the <code class="language-plaintext highlighter-rouge">DigestAuthenticationProvider.superDigest</code> ZooKeeper Authentication <a href="https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperAdmin.html#sc_authOptions">option</a> needs to be set so that you can log into the ZooKeeper shell and fix the ACLs. The steps for this are:</p>
 
-<p>Accumulo’s <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.1.0/org/apache/accumulo/server/security/handler/Authorizor.html">Authorizor</a> is configured by setting <a href="/docs/2.x/configuration/server-properties#instance_security_authorizor">instance.security.authorizor</a>. The default
-authorizor is the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-server-base/2.1.0/org/apache/accumulo/server/security/handler/ZKAuthorizor.html">ZKAuthorizor</a> which is described
-below.</p>
-
-<h2 id="security-labels">Security Labels</h2>
-
-<p>Every <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/data/Key.html">Key</a>-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/data/Value.html">Value</a> pair in Accumulo has its own security label, stored under the column visibility
-element of the key, which is used to determine whether a given user meets the security
-requirements to read the value. This enables data of various security levels to be stored
-within the same row, and users of varying degrees of access to query the same table, while
-preserving data confidentiality.</p>
-
-<h3 id="writing-labeled-data">Writing labeled data</h3>
-
-<p>When <a href="/docs/2.x/getting-started/clients#writing-data">writing data to Accumulo</a>, users can
-specify a security label for each value by passing a [ColumnVisibilty] to the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/data/Mutation.html">Mutation</a>.</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"employees"</span><span class="o">))</span> <span class="o">{</span>
-  <span class="nc">Mutation</span> <span class="n">mut</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"employee1"</span><span class="o">);</span>
-  <span class="n">mut</span><span class="o">.</span><span class="na">at</span><span class="o">().</span><span class="na">family</span><span class="o">(</span><span class="s">"pay"</span><span class="o">).</span><span class="na">qualifier</span><span class="o">(</span><span class="s">"salary"</span><span class="o">).</span><span class="na">visibility</span><span class="o">(</span><span class="s">"payroll"</span><span class="o">).</span><span class="na">value</span><span class="o">(</span><span class="s">"50000"</span><span class="o">);</span>
-  <span class="n">mut</span><span class="o">.</span><span class="na">at</span><span class="o">().</span><span class="na">family</span><span class="o">(</span><span class="s">"pay"</span><span class="o">).</span><span class="na">qualifier</span><span class="o">(</span><span class="s">"period"</span><span class="o">).</span><span class="na">visibility</span><span class="o">(</span><span class="s">"public"</span><span class="o">).</span><span class="na">value</span><span class="o">(</span><span class="s">"monthly"</span><span class="o">);</span>
-  <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mut</span><span class="o">)</span>
-<span class="o">}</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Stop ZooKeeper
+2. Run the following from ZOOKEEPER_HOME replacing `$secret` with some value:
+```
+export CLASSPATH="lib/*"
+java org.apache.zookeeper.server.auth.DigestAuthenticationProvider accumulo:$secret
+```
+3. Add the following to zoo.cfg replacing `$digest` with the digest value returned from step 2:
+```
+DigestAuthenticationProvider.superDigest=accumulo:$digest
+```
+4. Restart ZooKeeper
+5. Log into ZooKeeper using the `zkCli` and run `addauth digest accumulo:$secret` using the secret from step 2.
+6. Then, correct the ACL on the znode using the command `setAcl -R &lt;path&gt; world:anyone:r,auth:accumulo:cdrwa`
 </code></pre></div></div>
-
-<h3 id="security-label-expression-syntax">Security Label Expression Syntax</h3>
-
-<p>Security labels consist of a set of user-defined tokens that are required to read the
-value the label is associated with. The set of tokens required can be specified using
-syntax that supports logical AND <code class="language-plaintext highlighter-rouge">&amp;</code> and OR <code class="language-plaintext highlighter-rouge">|</code> combinations of terms, as
-well as nesting groups <code class="language-plaintext highlighter-rouge">()</code> of terms together.</p>
-
-<p>Each term is comprised of one to many alpha-numeric characters, hyphens, underscores or
-periods. Optionally, each term may be wrapped in quotation marks
-which removes the restriction on valid characters. In quoted terms, quotation marks
-and backslash characters can be used as characters in the term by escaping them
-with a backslash.</p>
-
-<p>For example, suppose within our organization we want to label our data values with
-security labels defined in terms of user roles. We might have tokens such as:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin
-audit
-system
-</code></pre></div></div>
-
-<p>These can be specified alone or combined using logical operators:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Users must have admin privileges
-admin
-
-// Users must have admin and audit privileges
-admin&amp;audit
-
-// Users with either admin or audit privileges
-admin|audit
-
-// Users must have audit and one or both of admin or system
-(admin|system)&amp;audit
-</code></pre></div></div>
-
-<p>When both <code class="language-plaintext highlighter-rouge">|</code> and <code class="language-plaintext highlighter-rouge">&amp;</code> operators are used, parentheses must be used to specify
-precedence of the operators.</p>
-
-<h2 id="authorizations">Authorizations</h2>
-
-<p>When clients attempt to read data from Accumulo, any security labels present are
-examined against an <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> object passed by the client code when the
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are created. If the Authorizations are determined to be
-insufficient to satisfy the security label, the value is suppressed from the set of
-results sent back to the client.</p>
-
-<p><a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> are specified as a comma-separated list of tokens the user possesses:</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// user possesses both admin and system level access</span>
-<span class="nc">Authorizations</span> <span class="n">auths</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Authorizations</span><span class="o">(</span><span class="s">"admin"</span><span class="o">,</span><span class="s">"system"</span><span class="o">);</span>
-
-<span class="nc">Scanner</span> <span class="n">s</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"table"</span><span class="o">,</span> <span class="n">auths</span><span class="o">);</span>
-</code></pre></div></div>
-
-<h3 id="user-authorizations">User Authorizations</h3>
-
-<p>Each Accumulo user has a set of associated security labels. To manipulate these in
-the <a href="/docs/2.x/getting-started/shell">Accumulo shell</a>, use the <code class="language-plaintext highlighter-rouge">setuaths</code> and <code class="language-plaintext highlighter-rouge">getauths</code> commands. They can be
-retrieved and modified in Java using <code class="language-plaintext highlighter-rouge">getUserAuthorizations</code> and <code class="language-plaintext highlighter-rouge">changeUserAuthorizations</code>
-methods of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/admin/SecurityOperations.html">SecurityOperations</a>.</p>
-
-<p>When a user creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a>, a set of <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/security/Authorizations.html">Authorizations</a> is passed.
-If the Authorizations passed to the scanner are not a subset of the user’s Authorizations,
-then an exception will be thrown.</p>
-
-<p>To prevent users from writing data they can not read, add the visibility
-constraint to a table. Use the -evc option in the <code class="language-plaintext highlighter-rouge">createtable</code> shell command to
-enable this constraint. For existing tables, use the <code class="language-plaintext highlighter-rouge">config</code> command to
-enable the visibility constraint. Ensure the constraint number does not
-conflict with any existing constraints.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t table -s table.constraint.1=org.apache.accumulo.core.security.VisibilityConstraint
-</code></pre></div></div>
-
-<p>Any user with the alter table permission can add or remove this constraint.
-This constraint is not applied to bulk imported data, if this a concern then
-disable the bulk import permission.</p>
-
-<h3 id="advanced-authorizations-handling">Advanced Authorizations Handling</h3>
-
-<p>For applications serving many users, it is not expected that an Accumulo user
-will be created for each application user. In this case an Accumulo user with
-all authorizations needed by any of the application’s users must be created. To
-service queries, the application should create a scanner with the application
-user’s authorizations. These authorizations could be obtained from a trusted 3rd
-party.</p>
-
-<p>Often production systems will integrate with Public-Key Infrastructure (PKI) and
-designate client code within the query layer to negotiate with PKI servers in order
-to authenticate users and retrieve their authorization tokens (credentials). This
-requires users to specify only the information necessary to authenticate themselves
-to the system. Once user identity is established, their credentials can be accessed by
-the client code and passed to Accumulo outside of the reach of the user.</p>
 
 
 
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/security/authorizations.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/troubleshooting/zookeeper.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
     </div>  
   </div>
 </div>

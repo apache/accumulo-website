@@ -147,36 +147,127 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Getting Started</h2>
-  <p class="text-muted">Tour page 1 of 12</p>
+  <p class="text-muted">Tour page 1 of 13</p>
 </div>
 <div id="tour-content">
-  <p>First make sure you have Java, Maven and Git installed on your machine.  Oh you are already rocking? OK let’s go!</p>
+  <p>To complete the tour you will need a running Accumulo instance. If you do not have access to an
+Accumulo cluster you can use <a href="https://github.com/apache/fluo-uno">fluo-uno</a> to set up a single node instance for use with the Tour.</p>
 
-<ol>
-  <li>Clone the code repository for the tour onto your machine:
-    <pre><code class="language-commandline">git clone -b tour https://github.com/apache/accumulo-website.git tour
-cd tour
+<p>Once you have an instance up and running, start the Accumulo JShell interface by typing the command
+below. The ‘$’ represents the system prompt.</p>
+
+<pre><code class="language-commandline">$ accumulo jshell
 </code></pre>
-  </li>
-  <li>Open <a href="https://github.com/apache/accumulo-website/blob/tour/src/main/java/tour/Main.java">Main.java</a> in your favorite editor.
-    <pre><code class="language-commandline">vim ./src/main/java/tour/Main.java
+
+<p>This will present you with a Java JShell interface with the required Accumulo libraries pre-loaded
+and a working Accumulo <code class="language-plaintext highlighter-rouge">client</code> object.</p>
+
+<pre><code class="language-commandline">Preparing JShell for Apache Accumulo
+
+Use 'client' to interact with Accumulo
+
+|  Welcome to JShell -- Version 11
+|  For an introduction type: /help intro
+
+jshell&gt;
 </code></pre>
-    <p>Notice the main method creates a <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/2.1.0/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> with a root password of “tourpass”.  <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/2.1.0/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> is a mini
-version of Accumulo that runs on your local filesystem.  It should only be used for development purposes but will work
-great here on the tour.  Files and logs used by <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-minicluster/2.1.0/org/apache/accumulo/minicluster/MiniAccumuloCluster.html">MiniAccumuloCluster</a> can be seen in the <code class="language-plaintext highlighter-rouge">target/mac######</code> directory.</p>
-  </li>
-  <li>Modify the <em>exercise</em> method to print a hello message. You will put your code in this method for each lesson.
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
- <span class="c1">// Write your code here</span>
- <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hello world"</span><span class="o">);</span>
-  <span class="o">}</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Use the following Maven command to build and run the tour.
-    <pre><code class="language-commandline">mvn -q clean verify exec:exec
+
+<p>JShell has a few commands that can be helpful.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/imports</code> lists the currently loaded imports in the JShell session.</p>
+
+<pre><code class="language-commandline">jshell&gt; /imports
+|    import java.io.*
+|    import java.math.*
+|    import java.net.*
+|    import java.nio.file.*
+|    import java.util.*
+|    import java.util.concurrent.*
+|    import java.util.function.*
+|    import java.util.prefs.*
+|    import java.util.regex.*
+|    import java.util.stream.*
+|    import org.apache.accumulo.core.client.*
+|    import org.apache.accumulo.core.client.admin.*
+|    import org.apache.accumulo.core.client.admin.compaction.*
+|    import org.apache.accumulo.core.client.lexicoder.*
+|    import org.apache.accumulo.core.client.mapred.*
+|    import org.apache.accumulo.core.client.mapreduce.*
+|    import org.apache.accumulo.core.client.mapreduce.lib.partition.*
+|    import org.apache.accumulo.core.client.replication.*
+|    import org.apache.accumulo.core.client.rfile.*
+|    import org.apache.accumulo.core.client.sample.*
+|    import org.apache.accumulo.core.client.security.*
+|    import org.apache.accumulo.core.client.security.tokens.*
+|    import org.apache.accumulo.core.client.summary.*
+|    import org.apache.accumulo.core.client.summary.summarizers.*
+|    import org.apache.accumulo.core.data.*
+|    import org.apache.accumulo.core.data.constraints.*
+|    import org.apache.accumulo.core.security.*
+|    import org.apache.accumulo.minicluster.*
+|    import org.apache.accumulo.hadoop.mapreduce.*
+|    import org.apache.accumulo.hadoop.mapreduce.partition.*
+|    import org.apache.hadoop.io.Text
 </code></pre>
-  </li>
-</ol>
+
+<p><code class="language-plaintext highlighter-rouge">/vars</code> will display all currently defined variables.</p>
+
+<pre><code class="language-commandline">jshell&gt; /vars
+|    URL clientPropUrl = file:&lt;path_to_accumulo_dir&gt;/conf/accumulo-client.properties
+|    AccumuloClient client = org.apache.accumulo.core.clientImpl.ClientContext@7cbee484
+</code></pre>
+
+<p><code class="language-plaintext highlighter-rouge">/list</code> displays all user defined code snippets.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/list &lt;id&gt;</code> displays the snippet with the specified id.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/list &lt;name&gt;</code> displays the snippet with the specified name.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/&lt;id&gt;</code> will re-run the snippet with the given id.</p>
+
+<p>For example:</p>
+
+<pre><code class="language-commandline">jshell&gt; var x = 12;
+x ==&gt; 12
+
+jshell&gt; var y = 23;
+y ==&gt; 23
+
+jshell&gt; int add(int x, int y) {
+   ...&gt;   return x + y;
+   ...&gt; }
+|  created method add(int,int)
+
+jshell&gt; add(4,5);
+$6 ==&gt; 9      
+
+jshell&gt; /list
+
+   1 : System.out.println("Preparing JShell for Apache Accumulo");
+   2 : var x = 12;
+   3 : var y = 23;
+   4 : int add(int x, int y) {
+         return x + y;
+       }
+
+ jshell&gt; /list add
+
+   5 : int add(int x, int y) {
+         return x + y;
+       }
+
+jshell&gt; /list 4
+
+   4 : int add(int x, int y) {
+         return x + y;
+       }
+       
+jshell&gt; /4
+add(4,5);
+$8 ==&gt; 9
+</code></pre>
+
+<p>Ok, let’s go!</p>
 
 
 </div>
@@ -195,7 +286,7 @@ if (e.keyCode == '39') { window.location = '/tour/client/'; }
   <h2>
     
 
-    1 / 12
+    1 / 13
     
     <a href="/tour/client/">&gt;</a>
     

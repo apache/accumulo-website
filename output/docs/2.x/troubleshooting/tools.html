@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -405,6 +407,8 @@
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
                 
               </div>
             </div>
@@ -482,11 +486,48 @@ row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
 ...
 </code></pre></div></div>
 
-<h2 id="getmasterstats">GetMasterStats</h2>
+<h3 id="encrypted-files">Encrypted Files</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">GetMasterStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
+<p>To examine an encrypted rfile the necessary encryption properties must be provided to the utility. To do this
+the <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file can be copied, the necessary encryption parameters added, and then the properties file can 
+be passed to the utility with the <code class="language-plaintext highlighter-rouge">-p</code> argument.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetMasterStats | grep Load
+<p>For example, if using <code class="language-plaintext highlighter-rouge">PerTableCryptoServiceFactory</code> and the <code class="language-plaintext highlighter-rouge">AESCryptoService</code>, you would need the following properties in
+your accumulo.properties file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.custom.crypto.key.uri=&lt;path-to-key&gt;/data-encryption.key
+instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.PerTableCryptoServiceFactory
+table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info hdfs://localhost:8020/accumulo/tables/1/default_tablet/F0000001.rf -p &lt;path-to-properties&gt;/accumulo.properties
+Reading file: hdfs://localhost:8020/accumulo/tables/1/default_tablet/F0000001.rf
+Encrypted with Params: ...
+...
+RFile Version            : 8
+
+Locality group           : &lt;DEFAULT&gt;
+	Num   blocks           : 1
+	Index level 0          : 37 bytes  1 blocks
+	...
+
+Meta block     : BCFile.index
+      Raw size             : 4 bytes
+      ...
+
+Meta block     : RFile.index
+      Raw size             : 121 bytes
+      ...
+...
+</code></pre></div></div>
+
+<h2 id="getmanagerstats">GetManagerStats</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">GetManagerStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetManagerStats | grep Load
  OS Load Average: 0.27
 </code></pre></div></div>
 
@@ -555,14 +596,46 @@ Enter the connection password:
 2013-07-16 13:10:57,296 [util.RemoveEntriesForMissingFiles] INFO : 1 files of 3 missing
 </code></pre></div></div>
 
-<h2 id="cleanzookeeper">CleanZookeeper</h2>
+<h2 id="changesecret-new-in-21">ChangeSecret (new in 2.1)</h2>
 
-<p>If you have entries in zookeeper for old instances that you no longer need, remove them using CleanZookeeper:</p>
+<p>Changes the unique secret given to the instance that all servers must know. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.
+Note that Accumulo must be shut down to run this utility.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CleanZookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin changeSecret
+Old secret:
+New secret:
+New instance id is 6e7f416b-c578-45df-8016-c9bc6b400e13
+Be sure to put your new secret in accumulo.properties
 </code></pre></div></div>
 
-<p>This command will not delete the instance pointed to by the local <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file.</p>
+<h2 id="deletezooinstance-new-in-21">DeleteZooInstance (new in 2.1)</h2>
+
+<p>Deletes specific a specific instance name or id from zookeeper or cleans up all old instances. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<p>To delete a specific instance use <code class="language-plaintext highlighter-rouge">-i</code> or <code class="language-plaintext highlighter-rouge">--instance</code> flags.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -i instance1
+Deleted instance: instance1
+</code></pre></div></div>
+
+<p>If you try to delete the current instance a warning prompt will be displayed.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -i uno
+Warning: This is the current instance, are you sure? (yes|no): no
+Instance deletion of 'uno' cancelled.
+
+$ accumulo admin deleteZooInstance -i uno
+Warning: This is the current instance, are you sure? (yes|no): yes
+Deleted instance: instance1
+</code></pre></div></div>
+
+<p>If you have entries in zookeeper for old instances that you no longer need, use the <code class="language-plaintext highlighter-rouge">-c</code> or <code class="language-plaintext highlighter-rouge">--clean</code> flags.
+This command will not delete the instance pointed to by the local <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -c
+Deleted instance: instance1
+Deleted instance: instance2
+</code></pre></div></div>
 
 <h2 id="accumulo-util-dump-zoo">accumulo-util dump-zoo</h2>
 
@@ -571,9 +644,9 @@ Enter the connection password:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo
 </code></pre></div></div>
 
-<p>It can also be run using the <code class="language-plaintext highlighter-rouge">accumulo</code> command and full class name.</p>
+<p>It can also be run using the <code class="language-plaintext highlighter-rouge">accumulo</code> command.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.DumpZookeeper
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo dump-zoo
 </code></pre></div></div>
 
 <p>If you would like to backup ZooKeeper, run the following command to write its contents as XML to file.</p>
@@ -581,14 +654,172 @@ Enter the connection password:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo --xml --root /accumulo &gt;dump.xml
 </code></pre></div></div>
 
-<h1 id="restorezookeeper">RestoreZookeeper</h1>
+<h2 id="restorezookeeper">RestoreZookeeper</h2>
 
-<p>An XML dump file can be later used to restore ZooKeeper.</p>
+<p>An XML dump file can be later used to restore ZooKeeper. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RestoreZookeeper --overwrite &lt; dump.xml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin restoreZoo --overwrite &lt; dump.xml
 </code></pre></div></div>
 
 <p>This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using <code class="language-plaintext highlighter-rouge">accumulo-util</code>.</p>
+
+<h2 id="tabletserverlocks-new-in-21">TabletServerLocks (new in 2.1)</h2>
+
+<p>List or delete Tablet Server locks. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin locks
+    localhost:9997 TSERV_CLIENT=localhost:9997
+
+$ accumulo admin locks -delete localhost:9997
+
+$ accumulo admin locks
+    localhost:9997             &lt;none&gt;
+</code></pre></div></div>
+
+<h2 id="verifytabletassignments-new-in-21">VerifyTabletAssignments (new in 2.1)</h2>
+
+<p>Verify all tablets are assigned to tablet servers. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin verifyTabletAssigns
+Checking table accumulo.metadata
+Checking table accumulo.replication
+Tablet +rep&lt;&lt; has no location
+Checking table accumulo.root
+Checking table t1
+Checking table t2
+Checking table t3
+
+$ accumulo admin verifyTabletAssigns -v
+Checking table accumulo.metadata
+Tablet !0;~&lt; is located at localhost:9997
+Tablet !0&lt;;~ is located at localhost:9997
+Checking table accumulo.replication
+Tablet +rep&lt;&lt; has no location
+Checking table accumulo.root
+Tablet +r&lt;&lt; is located at localhost:9997
+Checking table t1
+Tablet 1&lt;&lt; is located at localhost:9997
+Checking table t2
+Tablet 2&lt;&lt; is located at localhost:9997
+Checking table t3
+Tablet 3&lt;&lt; is located at localhost:9997
+</code></pre></div></div>
+
+<h1 id="zoo-info-viewer-new-in-21">zoo-info-viewer (new in 2.1)</h1>
+
+<p>View Accumulo information stored in ZooKeeper in a human-readable format.  The utility can be run without an Accumulo 
+instance. If an instance id or name is not provided on the command line, the instance will be read from
+HDFS, otherwise only a running ZooKeeper instance is required to run the command.</p>
+
+<p>To run the command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer [--instanceId id | --instanceName name] [mode-options] [--outfile filename]
+
+mode options:
+--print-instances
+--print-id-map
+--print-props [--system] [-ns | --namespaces list] [-t | --tables list]
+</code></pre></div></div>
+
+<h2 id="mode-print-instances">mode: print instances</h2>
+<p>The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-instances
+
+-----------------------------------------------
+Report Time: 2022-05-31T21:07:19.673258Z
+-----------------------------------------------
+Instances (Instance Name, Instance ID)
+test_a=1111465d-b7bb-42c2-919b-111111111111
+test_b=2222465d-b7bb-42c2-919b-222222222222
+uno=9cc9465d-b7bb-42c2-919b-ddf74b610c82
+
+-----------------------------------------------
+</code></pre></div></div>
+
+<h2 id="mode-print-id-map">mode: print id-map</h2>
+<p>If a shell is not available or convenient, the zoo-info-viewer can provide the same 
+information as the <code class="language-plaintext highlighter-rouge">namespaces -l</code> and <code class="language-plaintext highlighter-rouge">tables -l</code> commands. Note, the zoo-info-viewer output is
+sorted by the id.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-id-map
+-----------------------------------------------
+Report Time: 2022-05-25T19:33:42.079969Z
+-----------------------------------------------
+ID Mapping (id =&gt; name) for instance: 8f006afd-8673-4a5a-b940-60405755197f
+Namespace ids:
++accumulo =&gt;                 accumulo
++default  =&gt;                       ""
+1         =&gt;               ns_sample1
+
+Table ids:
+!0        =&gt;        accumulo.metadata
++r        =&gt;            accumulo.root
++rep      =&gt;     accumulo.replication
+2         =&gt;          ns_sample1.tbl1
+3         =&gt;                     tbl2
+
+-----------------------------------------------
+</code></pre></div></div>
+
+<h2 id="mode-print-property-mappings">mode: print property mappings</h2>
+
+<p>With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not direclty
+readable with the ZooKeeper zkCli utility.  The properties can be listed in an Accumulo shell with the <code class="language-plaintext highlighter-rouge">config</code> command.
+However, if a shell is not available, this utility <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> can be used instead.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> option <code class="language-plaintext highlighter-rouge">--print-props</code> with no other options will print all the configuration properties 
+for system, namespaces and tables.  The <code class="language-plaintext highlighter-rouge">print-props</code> can be filtered the with additional options, <code class="language-plaintext highlighter-rouge">--system</code> will print
+the system configuration, <code class="language-plaintext highlighter-rouge">-ns</code> or <code class="language-plaintext highlighter-rouge">--namespaces</code> expects a list of the namespace names,<br />
+<code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">--tables</code> expects a list of table names included in the output.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-props
+
+-----------------------------------------------
+Report Time: 2022-05-31T21:18:11.562867Z
+-----------------------------------------------
+ZooKeeper properties for instance ID: 9cc9465d-b7bb-42c2-919b-ddf74b610c82
+
+Name: System, Data Version:0, Data Timestamp: 2022-05-31T15:51:52.772265Z:
+-- none --
+
+Namespace:
+Name: , Data Version:0, Data Timestamp: 2022-05-31T15:51:53.015613Z:
+-- none --
+
+Name: accumulo, Data Version:0, Data Timestamp: 2022-05-31T15:51:53.034172Z:
+-- none --
+
+Name: ns1, Data Version:0, Data Timestamp: 2022-05-31T21:17:22.927165Z:
+-- none --
+
+Tables:
+Name: accumulo.metadata, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.511811Z:
+table.cache.block.enable=true
+table.cache.index.enable=true
+...
+
+Name: accumulo.replication, Data Version:1, Data Timestamp: 2022-05-31T15:51:53.516346Z:
+table.formatter=org.apache.accumulo.server.replication.StatusFormatter
+table.group.repl=repl
+...
+
+Name: accumulo.root, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.501174Z:
+table.cache.block.enable=true
+table.cache.index.enable=true
+...
+
+Name: ns1.tbl1, Data Version:1, Data Timestamp: 2022-05-31T21:17:41.111836Z:
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+...
+
+Name: tbl3, Data Version:1, Data Timestamp: 2022-05-31T21:17:54.083044Z:
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+...
+-----------------------------------------------
+</code></pre></div></div>
 
 
     <div class="row" style="margin-top: 20px;">

@@ -147,33 +147,78 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Data Model</h2>
-  <p class="text-muted">Tour page 4 of 12</p>
+  <p class="text-muted">Tour page 4 of 13</p>
 </div>
 <div id="tour-content">
-  <p>Data is stored in Accumulo in a distributed sorted map. The <code class="language-plaintext highlighter-rouge">Key</code>s of the map are broken up logically into a few different parts,
-as seen in the image below.</p>
+  <p>Data is stored in Accumulo in a distributed sorted map. The <code class="language-plaintext highlighter-rouge">Key's</code> of the map are broken up logically
+into a few different parts, as seen in the image below.</p>
 
 <p><img src="/images/docs/key_value.png" alt="key value pair" /></p>
 
-<p><strong>Row ID</strong> - Unique identifier for the row.<br />
-<strong>Column Family</strong> - Logical grouping of the key. This field can be used to partition data within a node.<br />
-<strong>Column Qualifier</strong> - More specific attribute of the key.<br />
-<strong>Column Visibility</strong> - Security label controlling access to the key/value pair.<br />
-<strong>Timestamp</strong> - Generated automatically and used for versioning.</p>
+<p><br /></p>
 
-<p>The <strong>value</strong> is where the actual data is stored. For brevity, we often refer to the 3 parts of the column as the family, qualifier and visibility.</p>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Row ID</strong></td>
+      <td>Unique identifier for the row</td>
+    </tr>
+    <tr>
+      <td><strong>Column Family</strong></td>
+      <td>Logical grouping of the key. This field can be used to partition data within a node</td>
+    </tr>
+    <tr>
+      <td><strong>Column Qualifier</strong></td>
+      <td>More specific attribute of the key</td>
+    </tr>
+    <tr>
+      <td><strong>Column Visibility</strong></td>
+      <td>Security label controlling access to the key/value pair</td>
+    </tr>
+    <tr>
+      <td><strong>Timestamp</strong></td>
+      <td>Generated automatically and used for versioning</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <strong>value</strong> is where the actual data is stored. For brevity, we often refer to the 3 parts of the
+column as the family, qualifier, and visibility.</p>
 
 <p>Take a closer look at the Mutation object created in the first exercise:</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"id0001"</span><span class="o">);</span>
-<span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"hero"</span><span class="o">,</span><span class="s">"alias"</span><span class="o">,</span> <span class="s">"Batman"</span><span class="o">);</span>
-</code></pre></div></div>
-<p>It can be broken down as follows: <br />
-<strong>Row ID</strong>: id0001  <strong>Column Family</strong>: hero  <strong>Column Qualifier</strong>: alias  <strong>Value</strong>: Batman</p>
+<pre><code class="language-commandline">Mutation mutation1 = new Mutation("id0001");
+mutation1.put("hero","alias", "Batman");
+</code></pre>
+<p>It can be broken down as follows: <br /></p>
 
-<p>For this exercise add a few more rows to the GothamDB table.  Create a row for Robin (id0002), who is a hero that also wears a cape
-and his name is “Dick Grayson”.  Create a row for Joker (id0003), who is a villain with an “Unknown” name and doesn’t wear a cape. Build and run.</p>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Row ID</strong>:</td>
+      <td>id0001</td>
+    </tr>
+    <tr>
+      <td><strong>Column Family</strong>:</td>
+      <td>hero</td>
+    </tr>
+    <tr>
+      <td><strong>Column Qualifier</strong>:</td>
+      <td>alias</td>
+    </tr>
+    <tr>
+      <td><strong>Value</strong>:</td>
+      <td>Batman</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>Notice how the data is printed in sorted order. Accumulo sorts by Row ID then family and then qualifier.</p>
+<p>As an exercise, add a few more rows to the GothamPD table.  Create a row for Robin (id0002), who is a
+hero that also wears a cape and his name is “Dick Grayson”.  Create a row for Joker (id0003), who is
+a villain with an “Unknown” name and doesn’t wear a cape. Compare your output to the output displayed
+on the next page.</p>
+
+<p>Notice how the data is printed in sorted order. Accumulo sorts by Row ID, then Family, and then
+Qualifier.</p>
 
 </div>
 
@@ -195,7 +240,7 @@ if (e.keyCode == '39') { window.location = '/tour/data-model-code/'; }
     <a href="/tour/basic-read-write/">&lt;</a>
     
 
-    4 / 12
+    4 / 13
     
     <a href="/tour/data-model-code/">&gt;</a>
     

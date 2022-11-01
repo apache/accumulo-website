@@ -147,7 +147,7 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Conditional Writer</h2>
-  <p class="text-muted">Tour page 11 of 12</p>
+  <p class="text-muted">Tour page 11 of 13</p>
 </div>
 <div id="tour-content">
   <p>Suppose the Gotham PD is storing home addresses for persons of interest in
@@ -166,7 +166,7 @@ of how this can go wrong.</p>
 </ol>
 
 <p>In this situation the changes made by User 1 are lost, ending up with <code class="language-plaintext highlighter-rouge">1007
-Mountain Drive, Gotham, NY</code> instead of <code class="language-plaintext highlighter-rouge">1007 Mountain Dr, Gotham, NY</code>.  To
+Mountain Drive, Gotham, NY</code> instead of <code class="language-plaintext highlighter-rouge">1007 Mountain Dr, Gotham, New York</code>.  To
 correctly handle this, Accumulo offers the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.  The
 ConditionalWriter atomically checks conditions on a row and only applies a
 mutation when all conditions are satisfied.</p>
@@ -183,79 +183,84 @@ starts multiple threads, with each thread doing the following.</p>
   <li>If write was unsuccessful, then goto step 1.</li>
 </ol>
 
-<p>This process can result in threads overwriting each other changes.  The problem
-is the batch writer always makes the update, even when the value has
-changed since it was read.</p>
+<p>This process can result in threads overwriting each other’s changes.  The problem is the batch writer
+always makes the update, even when the value has changed since it was read.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">static</span> <span class="nc">String</span> <span class="nf">getAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// The IsolatedScanner ensures partial changes to a row are not seen</span>
-    <span class="k">try</span> <span class="o">(</span><span class="nc">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IsolatedScanner</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">createScanner</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">,</span> <span class="nc">Authorizations</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">)))</span> <span class="o">{</span>
-      <span class="n">scanner</span><span class="o">.</span><span class="na">setRange</span><span class="o">(</span><span class="nc">Range</span><span class="o">.</span><span class="na">exact</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">));</span>
-      <span class="k">for</span> <span class="o">(</span><span class="nc">Entry</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">scanner</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
-      <span class="o">}</span>
-      <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">TableNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
+<p>To simplify, we will create several small methods to illustrate the issue.</p>
 
-  <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">setAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">,</span> <span class="nc">String</span> <span class="n">expectedAddr</span><span class="o">,</span> <span class="nc">String</span> <span class="n">newAddr</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">try</span> <span class="o">(</span><span class="nc">BatchWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">))</span> <span class="o">{</span>
-      <span class="nc">Mutation</span> <span class="n">mutation</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
-      <span class="n">mutation</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"home"</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">);</span>
-      <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mutation</span><span class="o">);</span>
-      <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
+<pre><code class="language-commandline">jshell&gt; String getAddress(AccumuloClient client, String id)  {
+    ...&gt;   try (org.apache.accumulo.core.client.Scanner scan = new IsolatedScanner(client.createScanner("GothamPD", Authorizations.EMPTY))) {
+    ...&gt;     scan.setRange(Range.exact(id, "location", "home"));
+    ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
+    ...&gt;       return entry.getValue().toString();
+    ...&gt;     }
+    ...&gt;     return null;
+    ...&gt;   } catch (TableNotFoundException e) {
+    ...&gt;     throw new RuntimeException(e);
+    ...&gt;   }
+    ...&gt; }
+    |  created method getAddress(AccumuloClient,String)
 
-  <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="nf">modifyAddress</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">,</span> <span class="nc">String</span> <span class="n">id</span><span class="o">,</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">modifier</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="nc">CompletableFuture</span><span class="o">.</span><span class="na">runAsync</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
-      <span class="nc">String</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">;</span>
-      <span class="k">do</span> <span class="o">{</span>
-       <span class="n">currAddr</span> <span class="o">=</span> <span class="n">getAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
-       <span class="n">newAddr</span> <span class="o">=</span> <span class="n">modifier</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">currAddr</span><span class="o">);</span>
-       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Thread %3d attempting change %20s -&gt; %-20s\n"</span><span class="o">,</span>
-       <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getId</span><span class="o">(),</span> <span class="s">"'"</span><span class="o">+</span><span class="n">currAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">+</span><span class="n">newAddr</span><span class="o">+</span><span class="s">"'"</span><span class="o">);</span>
-      <span class="o">}</span> <span class="k">while</span> <span class="o">(!</span><span class="n">setAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">currAddr</span><span class="o">,</span> <span class="n">newAddr</span><span class="o">));</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
 
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exercise</span><span class="o">(</span><span class="nc">AccumuloClient</span> <span class="n">client</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-    <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"GothamPD"</span><span class="o">);</span>
-    <span class="nc">String</span> <span class="n">id</span> <span class="o">=</span> <span class="s">"id0001"</span><span class="o">;</span>
-    <span class="n">setAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="s">"  1007 Mountain Drive, Gotham, New York  "</span><span class="o">);</span>
+jshell&gt; boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
+   ...&gt;   try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+   ...&gt;     Mutation mutation = new Mutation(id);
+   ...&gt;     mutation.put("location", "home", newAddr);
+   ...&gt;     writer.addMutation(mutation);
+   ...&gt;     return true;
+   ...&gt;   } catch (Exception e) {
+   ...&gt;     throw new RuntimeException(e);
+   ...&gt;   }
+   ...&gt; }
+|  created method setAddress(AccumuloClient,String,String,String)
 
-    <span class="c1">// Create async operation to trim whitespace</span>
-    <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future1</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="nl">String:</span><span class="o">:</span><span class="n">trim</span><span class="o">);</span>
 
-    <span class="c1">// Create async operation to replace Dr with Drive</span>
-    <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future2</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"Drive"</span><span class="o">,</span> <span class="s">"Dr"</span><span class="o">));</span>
+jshell&gt; Future&lt;Void&gt; modifyAddress(AccumuloClient client, String id, Function&lt;String,String&gt; modifier) throws Exception {
+   ...&gt;   return CompletableFuture.runAsync(() -&gt; {
+   ...&gt;     String currAddr, newAddr;
+   ...&gt;     do {
+   ...&gt;       currAddr = getAddress(client, id);
+   ...&gt;       newAddr = modifier.apply(currAddr);
+   ...&gt;       System.out.printf("Thread %3d attempting change %20s -&gt; %-20s\n",
+   ...&gt;       Thread.currentThread().getId(), "'"+currAddr+"'", "'"+newAddr+"'");
+   ...&gt;     } while (!setAddress(client, id, currAddr, newAddr));
+   ...&gt;   });
+   ...&gt; }
+|  created method modifyAddress(AccumuloClient,String,Function&lt;String,String&gt;)
 
-    <span class="c1">// Create async operation to replace New York with NY</span>
-    <span class="nc">Future</span><span class="o">&lt;</span><span class="nc">Void</span><span class="o">&gt;</span> <span class="n">future3</span> <span class="o">=</span> <span class="n">modifyAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">addr</span> <span class="o">-&gt;</span> <span class="n">addr</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">"New York"</span><span class="o">,</span> <span class="s">"NY"</span><span class="o">));</span>
+        
+jshell&gt; void concurrent_writes() throws Exception {
+   ...&gt;   try {
+   ...&gt;     client.tableOperations().create("GothamPD");
+   ...&gt;   } catch (TableExistsException e) {
+   ...&gt;     System.out.println("GothamPD table already exists...proceeding...");
+   ...&gt;   }
+   ...&gt;   String id = "id0001";
+   ...&gt;   setAddress(client, id, null, "   1007 Mountain Drive, Gotham, New York  ");
+   ...&gt;   Future&lt;Void&gt; future1 = modifyAddress(client, id, String::trim);
+   ...&gt;   Future&lt;Void&gt; future2 = modifyAddress(client, id, addr -&gt; addr.replace("Drive", "Dr"));
+   ...&gt;   Future&lt;Void&gt; future3 = modifyAddress(client, id, addr -&gt; addr.replace("New York", "NY"));
+   ...&gt;   future1.get();
+   ...&gt;   future2.get();
+   ...&gt;   future3.get();
+   ...&gt;   System.out.println("Final address : '" + getAddress(client, id) + "'");
+   ...&gt; }
+|  created method concurrent_writes()
 
-    <span class="c1">// Wait for async operations to complete</span>
-    <span class="n">future1</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
-    <span class="n">future2</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
-    <span class="n">future3</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
-
-    <span class="c1">// Print the address stored in Accumulo</span>
-    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Final address : '"</span><span class="o">+</span><span class="n">getAddress</span><span class="o">(</span><span class="n">client</span><span class="o">,</span> <span class="n">id</span><span class="o">)+</span><span class="s">"'"</span><span class="o">);</span>
-  <span class="o">}</span>
-</code></pre></div></div>
+</code></pre>
 
 <p>The following is one of a few possible outputs.  Notice that only the
 modification of <code class="language-plaintext highlighter-rouge">Drive</code> to <code class="language-plaintext highlighter-rouge">Dr</code> shows up in the final output.  The other
 modifications were lost.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread  36 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
-Thread  38 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Drive, Gotham, NY  '
-Thread  37 attempting change '  1007 Mountain Drive, Gotham, New York  ' -&gt; '  1007 Mountain Dr, Gotham, New York  '
-Final address : '  1007 Mountain Dr, Gotham, New York  '
-</code></pre></div></div>
+<pre><code class="language-commandline">jshell&gt; concurrent_writes()
+GothamPD table already exists...proceeding...
+Thread  52 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '   1007 Mountain Drive, Gotham, NY  '
+Thread  38 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
+Thread  53 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '   1007 Mountain Dr, Gotham, New York  '
+Final address : '   1007 Mountain Dr, Gotham, New York  '
+
+</code></pre>
 
 <p>To fix this example, make the following changes in <code class="language-plaintext highlighter-rouge">setAddress()</code> to use a
 ConditionalWriter.</p>
@@ -289,7 +294,7 @@ if (e.keyCode == '39') { window.location = '/tour/conditional-writer-code/'; }
     <a href="/tour/batch-scanner-code/">&lt;</a>
     
 
-    11 / 12
+    11 / 13
     
     <a href="/tour/conditional-writer-code/">&gt;</a>
     

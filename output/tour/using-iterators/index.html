@@ -147,15 +147,145 @@
 
 <div id="tour-header">
   <h2><a href="/tour/">Accumulo Tour</a>: Using Iterators</h2>
-  <p class="text-muted">Tour page  of 12</p>
+  <p class="text-muted">Tour page 13 of 13</p>
 </div>
 <div id="tour-content">
-  
+  <p>Suppose at the end of each day we record the number of villains a hero has caught that day. Iterators
+can assist with this. Iterators are server-side programming mechanisms that allow filtering and
+aggregation operations on data during scans and during compactions.</p>
+
+<p>Let’s begin by adding some data for our hero’s recording recent crime-stopping statistics.</p>
+
+<pre><code class="language-commandlne">jshell&gt; client.tableOperations().create("GothamCrimeStats");
+
+jshell&gt; Mutation mutation1 = new Mutation("id0001");
+mutation1 ==&gt; org.apache.accumulo.core.data.Mutation@1
+jshell&gt; mutation1.put("hero", "alias", "Batman");
+
+// last three days of Batman's statistics
+jshell&gt; mutation1.put("hero", "villainsCaptured", "2");
+jshell&gt; mutation1.put("hero", "villainsCaptured", "1");
+jshell&gt; mutation1.put("hero", "villainsCaptured", "5");
+
+jshell&gt; Mutation mutation2 = new Mutation("id0002");
+mutation2 ==&gt; org.apache.accumulo.core.data.Mutation@1
+jshell&gt; mutation2.put("hero", "alias", "Robin");
+
+// last three days of Robin's statistics
+jshell&gt; mutation2.put("hero", "villainsCaptured", "1");
+jshell&gt; mutation2.put("hero", "villainsCaptured", "0");
+jshell&gt; mutation2.put("hero", "villainsCaptured", "2");
+
+jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamCrimeStats")) {
+   ...&gt;   writer.addMutation(mutation1);
+   ...&gt;   writer.addMutation(mutation2);
+   ...&gt; }
+</code></pre>
+
+<p>Let’s scan to see the data.</p>
+
+<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
+   ...&gt;   System.out.println("Gotham Police Department Crime Statistics:");
+   ...&gt;   for(Map.Entry&lt;Key, Value&gt; entry : scan) {
+   ...&gt;     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
+   ...&gt;   }
+   ...&gt; }
+</code></pre>
+
+<p>You may notice a problem. We only see the latest entry. That is due to the
+<code class="language-plaintext highlighter-rouge">versioningIterator</code> which is applied to all tables by default. It filters out all but the latest entry
+when scanning a table.</p>
+
+<p>In order to see a record of past days we can remove the <code class="language-plaintext highlighter-rouge">versioningiterator</code> (you could also choose
+a set number of past entries to display). The iterator is named <code class="language-plaintext highlighter-rouge">vers</code>.</p>
+
+<p>To simplify, we will import some additional packages to save some typing.</p>
+
+<pre><code class="language-commandline">jshell&gt; import org.apache.accumulo.core.iterators.IteratorUtil.IteratorScope;
+jshell&gt; client.tableOperations().removeIterator("GothamCrimeStats", "vers", EnumSet.allOf(IteratorScope.class));
+</code></pre>
+
+<p>Now let’s scan again.</p>
+
+<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
+   ...&gt;   System.out.println("Gotham Police Department Crime Statistics:");
+   ...&gt;   for(Map.Entry&lt;Key, Value&gt; entry : scan) {
+   ...&gt;     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
+   ...&gt;   }
+   ...&gt; }   
+Gotham Police Department Crime Statistics:
+Key : id0001 hero:alias [] 1654697915769 false              Value : Batman
+Key : id0001 hero:villainsCaptured [] 1654697915769 false   Value : 5
+Key : id0001 hero:villainsCaptured [] 1654697915769 false   Value : 1
+Key : id0001 hero:villainsCaptured [] 1654697915769 false   Value : 2
+Key : id0002 hero:alias [] 1654697915769 false              Value : Robin
+Key : id0002 hero:villainsCaptured [] 1654697915769 false   Value : 2
+Key : id0002 hero:villainsCaptured [] 1654697915769 false   Value : 0
+Key : id0002 hero:villainsCaptured [] 1654697915769 false   Value : 1
+</code></pre>
+
+<p>You will now see ALL entries added to the table.</p>
+
+<p>Instead of seeing a daily history, let’s instead keep a running total of captured villains.
+A <code class="language-plaintext highlighter-rouge">summingcombiner</code> can be used to accomplish this.</p>
+
+<pre><code class="language-commandline">jshell&gt; import org.apache.accumulo.core.iterators.user.SummingCombiner;
+jshell&gt; import org.apache.accumulo.core.iterators.LongCombiner
+</code></pre>
+
+<p>Create an IteratorSetting object. Set the encoding type and indicate the columns to be summed.
+Also, it is a good idea to check for any iterator conflicts prior to attaching the iterator to the
+table.</p>
+
+<pre><code class="language-commandline">jshell&gt; IteratorSetting scSetting = new IteratorSetting(30, "sum", SummingCombiner.class);
+jshell&gt; LongCombiner.setEncodingType(scSetting, LongCombiner.Type.STRING);
+jshell&gt; scSetting.addOption("columns", "hero:villainsCaptured");
+jshell&gt; client.tableOperations().checkIteratorConflicts("GothamCrimeStats", scSetting, EnumSet.allOf(IteratorScope.class));
+jshell&gt; client.tableOperations().attachIterator("GothamCrimeStats", scSetting);
+</code></pre>
+
+<p>Let’s scan again and see what results we get.</p>
+
+<pre><code class="language-commandline">jshell&gt; try ( org.apache.accumulo.core.client.Scanner scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
+   ...&gt;   for(Map.Entry&lt;Key, Value&gt; entry : scan) {
+   ...&gt;     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
+   ...&gt;   }
+   ...&gt; }
+Key : id0001 hero:alias [] 1654699186182 false              Value : Batman
+Key : id0001 hero:villainsCaptured [] 1654699186182 false   Value : 8
+Key : id0002 hero:alias [] 1654699186182 false              Value : Robin
+Key : id0002 hero:villainsCaptured [] 1654699186182 false   Value : 3
+</code></pre>
+
+<p>Adding additional statistics will result in a continual update of the relevant statistic.</p>
+
+<pre><code class="language-commandline">jshell&gt; mutation1 = new Mutation("id0001");
+jshell&gt; mutation1.put("hero", "villainsCaptured", "4");
+jshell&gt; mutation2 = new Mutation("id0002");
+jshell&gt; mutation2.put("hero", "villainsCaptured", "2");
+
+jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamCrimeStats")) {
+   ...&gt;   writer.addMutation(mutation1);
+   ...&gt;   writer.addMutation(mutation2);
+   ...&gt; }
+
+jshell&gt; try ( org.apache.accumulo.core.client.Scanner scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
+   ...&gt;   for(Map.Entry&lt;Key, Value&gt; entry : scan) {
+   ...&gt;     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
+   ...&gt;   }
+   ...&gt; }
+Key : id0001 hero:alias [] 1654779673027 false              Value : Batman
+Key : id0001 hero:villainsCaptured [] 1654780041402 false   Value : 12
+Key : id0002 hero:alias [] 1654779673027 false              Value : Robin
+Key : id0002 hero:villainsCaptured [] 1654780041402 false   Value : 5
+</code></pre>
 
 </div>
 
 <script>
 document.body.onkeyup = function(e){
+
+if (e.keyCode == '37') { window.location = '/tour/conditional-writer-code/'; }
 
 
 
@@ -165,8 +295,10 @@ document.body.onkeyup = function(e){
 <div class="text-center">
   <h2>
     
+    <a href="/tour/conditional-writer-code/">&lt;</a>
+    
 
-     / 12
+    13 / 13
     
   </h2>
 </div>

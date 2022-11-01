@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -406,6 +408,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
+                
               </div>
             </div>
           
@@ -433,7 +437,7 @@
   <li><a href="#performance" id="markdown-toc-performance">Performance</a></li>
   <li><a href="#testing" id="markdown-toc-testing">Testing</a></li>
   <li><a href="#client-api" id="markdown-toc-client-api">Client API</a></li>
-  <li><a href="#extensible-behaviors" id="markdown-toc-extensible-behaviors">Extensible Behaviors</a></li>
+  <li><a href="#plugins" id="markdown-toc-plugins">Plugins</a></li>
   <li><a href="#general-administration" id="markdown-toc-general-administration">General Administration</a></li>
   <li><a href="#internal-data-management" id="markdown-toc-internal-data-management">Internal Data Management</a></li>
   <li><a href="#on-demand-data-management" id="markdown-toc-on-demand-data-management">On-demand Data Management</a></li>
@@ -488,11 +492,11 @@ can share a pool of datanodes.</p>
 
 <h2 id="integrityavailability">Integrity/Availability</h2>
 
-<h3 id="master-fail-over">Master fail over</h3>
+<h3 id="manager-fail-over">Manager fail over</h3>
 
-<p>Multiple masters can be configured.  Zookeeper locks are used to determine
-which master is active.  The remaining masters simply wait for the current
-master to lose its lock.  Current master state is held in the metadata table
+<p>Multiple managers can be configured.  Zookeeper locks are used to determine
+which manager is active.  The remaining managers simply wait for the current
+manager to lose its lock.  Current manager state is held in the metadata table
 and Zookeeper.</p>
 
 <h3 id="logical-time">Logical time</h3>
@@ -502,11 +506,11 @@ across the cluster is incorrect. This ensures that updates and deletes are not
 lost. If a tablet is served on machine with time a year in the future, then the
 tablet will continue to issue new timestamps a year in the future, even when it
 moves to another server. In this case the timestamps preserve ordering, but
-lose their meaning. In addition to logical time, Accumulo has master
-authoritative time. The master averages the time of all of the tablet servers
+lose their meaning. In addition to logical time, Accumulo has manager
+authoritative time. The manager averages the time of all of the tablet servers
 and sends this back to the tablet servers. Tablet servers use this information
 to adjust the timestamps they issue. So logical time ensures ordering is
-always correct and master authoritative time tries to ensure that timestamps
+always correct and manager authoritative time tries to ensure that timestamps
 are meaningful.</p>
 
 <h3 id="logical-time-for-bulk-import">Logical Time for bulk import</h3>
@@ -526,9 +530,9 @@ time.</p>
 <h3 id="fate">FATE</h3>
 
 <p><a href="/docs/2.x/administration/fate">FATE</a> (short for <strong>Fa</strong>ult <strong>T</strong>olerant <strong>E</strong>xecutor) is a framework for executing
-operations in a fault tolerant manner. Before FATE, if the master process died in the
+operations in a fault tolerant manner. Before FATE, if the manager process died in the
 middle of creating a table it could leave the system in an inconsistent state.
-With this new framework, if the master dies in the middle of create table it
+With this new framework, if the manager dies in the middle of create table it
 will continue on restart. Also, the client requesting the create table operation
 will never know anything happened. The framework serializes work in Zookeeper
 before attempting to do the work. Clients start a FATE transaction, seed it
@@ -536,7 +540,7 @@ with work, and then wait for it to finish. Most table operations are executed
 using this framework. Persistent, per table, read-write locks are created in
 Zookeeper to synchronize operations across process faults.</p>
 
-<h3 id="scalable-master">Scalable master</h3>
+<h3 id="scalable-manager">Scalable manager</h3>
 
 <p>Stores its metadata in an Accumulo table and Zookeeper.</p>
 
@@ -691,9 +695,12 @@ the Javadoc for <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-
 <p><a href="/docs/2.x/getting-started/table_design#lexicoders">Lexicoders</a> (since 1.6.0) help encode data (i.e numbers, dates)
 into Accumulo keys in a way that their natural sort order is preserved.</p>
 
-<h2 id="extensible-behaviors">Extensible Behaviors</h2>
+<h2 id="plugins">Plugins</h2>
 
-<h3 id="pluggable-balancer">Pluggable balancer</h3>
+<p>The <a href="TODO">Service Plugin Interface (SPI)</a> was created to expose Accumulo system level information to
+plugins in a stable manner.</p>
+
+<h3 id="balancer">Balancer</h3>
 
 <p>Users can provide a balancer plugin that decides how to distribute tablets
 across a table.  These plugins can be provided on a per table basis.  This is
@@ -705,26 +712,22 @@ balancer moves one child to another tablet server.  The assumption here is that
 splitting tablets are being actively written to, so this keeps write load evenly
 spread.</p>
 
-<h3 id="pluggable-memory-manager">Pluggable memory manager</h3>
+<h3 id="cache">Cache</h3>
 
-<p>The plugin that decides when and what tablets to minor compact is configurable.
-The default plugin compacts the largest tablet when memory is over a certain
-threshold.  It varies the threshold over time depending on minor compaction
-speed.  It flushes tablets that are not written to for a configurable time
-period.</p>
+<p>See the page on <a href="/docs/2.x/administration/caching">Caching</a></p>
 
-<h3 id="pluggable-logger-assignment-strategy">Pluggable logger assignment strategy</h3>
+<h3 id="compaction">Compaction</h3>
 
-<p>The plugin that decided which loggers should be assigned to which tablet
-servers is configurable.</p>
+<p>Compactions were reworked in 2.1 to allow plugin capabilities. TODO expand</p>
 
-<h3 id="pluggable-compaction-strategy">Pluggable compaction strategy</h3>
+<h3 id="scan">Scan</h3>
 
-<p>The plugin that decides which files should be chosen for major compaction is now
-configurable. Given certain workloads, it may be known that once data is written,
-it is very unlikely that more data will be written to it, and thus paying the penalty
-to re-write a large file can be avoided. Implementations of this compaction strategy
-can be used to optimize the data that compactions will write.</p>
+<p>Scan Executors were added to the SPI in 2.0. See the <a href="/docs/2.x/administration/scan-executors">Scan Executors</a> page.</p>
+
+<h3 id="volume-chooser">Volume Chooser</h3>
+
+<p>The Volume Chooser has been around for some time but was refactored in 2.1 to be included in the SPI.
+See the <a href="TODO">javadoc</a> for more information.</p>
 
 <h3 id="pluggable-block-caches">Pluggable Block Caches</h3>
 
@@ -788,16 +791,6 @@ only if all files are larger than a configurable ratio (default is 3)
 multiplied by the largest file size.  If this cannot be done with all the
 files, the largest file is removed from consideration, and the remaining files
 are considered for compaction.  This is done until there are no files to merge.</p>
-
-<h3 id="merging-minor-compaction">Merging Minor Compaction</h3>
-
-<p>When a max number of files per tablet is reached, minor compactions will merge
-data from the in-memory map with the smallest file instead of creating new
-files.  This throttles ingest.  In previous releases, new files were just created
-even if major compactions were falling behind and the number of tablets per file
-was growing.  Without this feature, ingest performance can roughly continue at a
-constant rate, even as scan performance decreases because tablets have too many
-files.</p>
 
 <h3 id="encryption">Encryption</h3>
 

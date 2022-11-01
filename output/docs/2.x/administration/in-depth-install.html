@@ -346,6 +346,8 @@
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
                 
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
+                
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
@@ -405,6 +407,8 @@
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
                 
                 <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
+                
+                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
                 
               </div>
             </div>
@@ -476,6 +480,16 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
       <td><a href="/docs/2.x/configuration/server-properties#monitor_port_log4j">monitor.port.log4j</a></td>
     </tr>
     <tr>
+      <td>9132</td>
+      <td>Accumulo Compaction Coordinator</td>
+      <td><a href="/docs/2.x/configuration/server-properties#compaction_coordinator_port_client">compaction.coordinator.port.client</a></td>
+    </tr>
+    <tr>
+      <td>9133</td>
+      <td>Accumulo Compactor</td>
+      <td><a href="/docs/2.x/configuration/server-properties#compactor_port_client">compactor.port.client</a></td>
+    </tr>
+    <tr>
       <td>9995</td>
       <td>Accumulo HTTP monitor</td>
       <td><a href="/docs/2.x/configuration/server-properties#monitor_port_client">monitor.port.client</a></td>
@@ -492,8 +506,8 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
     </tr>
     <tr>
       <td>9999</td>
-      <td>Master Server</td>
-      <td><a href="/docs/2.x/configuration/server-properties#master_port_client">master.port.client</a></td>
+      <td>Manager Server</td>
+      <td><a href="/docs/2.x/configuration/server-properties#manager_port_client">manager.port.client</a></td>
     </tr>
     <tr>
       <td>12234</td>
@@ -507,8 +521,8 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
     </tr>
     <tr>
       <td>10001</td>
-      <td>Master Replication service</td>
-      <td><a href="/docs/2.x/configuration/server-properties#master_replication_coordinator_port">master.replication.coordinator.port</a></td>
+      <td>Manager Replication service</td>
+      <td><a href="/docs/2.x/configuration/server-properties#manager_replication_coordinator_port">manager.replication.coordinator.port</a></td>
     </tr>
     <tr>
       <td>10002</td>
@@ -555,7 +569,7 @@ is chosen for all machines in the cluster.</p>
 
 <p>Accumulo requires HDFS and ZooKeeper to be configured and running
 before starting. Password-less SSH should be configured between at least the
-Accumulo master and TabletServer machines. It is also a good idea to run Network
+Accumulo manager and TabletServer machines. It is also a good idea to run Network
 Time Protocol (NTP) within the cluster to ensure nodes’ clocks don’t get too out of
 sync, which can cause problems with automatically timestamped data.</p>
 
@@ -567,13 +581,12 @@ installed Accumulo using downstream packaging, the <code class="language-plainte
 
 <p>Before starting Accumulo, the configuration files <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> must
 exist in <code class="language-plaintext highlighter-rouge">conf/</code> and be properly configured. If you are using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> to launch a
-cluster, the <code class="language-plaintext highlighter-rouge">conf/</code> directory must also contain host files for Accumulo services (i.e <a href="/docs/2.x/configuration/files#gc">gc</a>,
-<a href="/docs/2.x/configuration/files#masters">masters</a>, <a href="/docs/2.x/configuration/files#monitor">monitor</a>, <a href="/docs/2.x/configuration/files#tservers">tservers</a>, <a href="/docs/2.x/configuration/files#tracers">tracers</a>). You can either create these files
+cluster, the <code class="language-plaintext highlighter-rouge">conf/</code> directory must also contain a <code class="language-plaintext highlighter-rouge">cluster.yaml</code> file. You can either create these files
 manually or run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>.</p>
 
 <p>Logging is configured in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> to use three log4j configuration files in <code class="language-plaintext highlighter-rouge">conf/</code>. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e Master, TabletServer, Garbage Collector) is configured by <a href="/docs/2.x/configuration/files#log4j-serviceproperties">log4j-service.properties</a> except for
+(i.e Manager, TabletServer, Garbage Collector) is configured by <a href="/docs/2.x/configuration/files#log4j-serviceproperties">log4j-service.properties</a> except for
 the Monitor which is configured by <a href="/docs/2.x/configuration/files#log4j-monitorproperties">log4j-monitor.properties</a>. All Accumulo commands (i.e <code class="language-plaintext highlighter-rouge">init</code>,
 <code class="language-plaintext highlighter-rouge">shell</code>, etc) are configured by <a href="/docs/2.x/configuration/files#log4jproperties">log4j.properties</a>.</p>
 
@@ -599,7 +612,7 @@ by set in the <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code
 syntax is that of the Java JVM command line options. This value should be less than the
 physical memory of the machines running TabletServers.</p>
 
-<p>There are similar options for the master’s memory usage and the garbage collector
+<p>There are similar options for the manager’s memory usage and the garbage collector
 process. Reduce these if they exceed the physical RAM of your hardware and
 increase them, within the bounds of the physical RAM, if a process fails because of
 insufficient memory.</p>
@@ -607,7 +620,7 @@ insufficient memory.</p>
 <p>Note that you will be specifying the Java heap space in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a>. You should
 make sure that the total heap space used for the Accumulo tserver and the Hadoop
 DataNode and TaskTracker is less than the available memory on each worker node in
-the cluster. On large clusters, it is recommended that the Accumulo master, Hadoop
+the cluster. On large clusters, it is recommended that the Accumulo manager, Hadoop
 NameNode, secondary NameNode, and Hadoop JobTracker all be run on separate
 machines to allow them to use more heap space. If you are running these on the
 same machine on a small cluster, likewise make sure their heap space settings fit
@@ -679,13 +692,13 @@ performance to the write-ahead log file which will slow ingest.</p>
 <h3 id="cluster-specification">Cluster Specification</h3>
 
 <p>If you are using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> to start a cluster, configure the following on the
-machine that will serve as the Accumulo master:</p>
+machine that will serve as the Accumulo manager:</p>
 
 <ol>
-  <li>Run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code> to create the <a href="/docs/2.x/configuration/files#masters">masters</a> and <a href="/docs/2.x/configuration/files#tservers">tservers</a> files.</li>
-  <li>Write the IP address or domain name of the Accumulo Master to the <a href="/docs/2.x/configuration/files#masters">masters</a> file in <code class="language-plaintext highlighter-rouge">conf/</code>.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code> to create the <code class="language-plaintext highlighter-rouge">cluster.yaml</code> file.</li>
+  <li>Write the IP address or domain name of the Accumulo Manager to the <a href="/docs/2.x/configuration/files#managers">manager</a> section.</li>
   <li>Write the IP addresses or domain name of the machines that will be TabletServers to the
-<a href="/docs/2.x/configuration/files#tservers">tservers</a> file in <code class="language-plaintext highlighter-rouge">conf/</code>, one per line.</li>
+<a href="/docs/2.x/configuration/files#tservers">tserver</a> section.</li>
 </ol>
 
 <p>Note that if using domain names rather than IP addresses, DNS must be configured
@@ -712,17 +725,13 @@ documentation for details.</p>
 <h3 id="hostnames-in-configuration-files">Hostnames in configuration files</h3>
 
 <p>Accumulo has a number of configuration files which can contain references to other hosts in your
-network. All of the “host” configuration files for Accumulo (<a href="/docs/2.x/configuration/files#gc">gc</a>, <a href="/docs/2.x/configuration/files#masters">masters</a>, <a href="/docs/2.x/configuration/files#tservers">tservers</a>,
-<a href="/docs/2.x/configuration/files#monitor">monitor</a>, <a href="/docs/2.x/configuration/files#tracers">tracers</a>) as well as <a href="/docs/2.x/configuration/server-properties#instance_volumes">instance.volumes</a> in <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> must
-contain some host reference.</p>
-
-<p>While IP address, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
+network. While IP addresses, short hostnames, or fully qualified domain names (FQDN) are all technically valid,
 it is good practice to always use FQDNs for both Accumulo and other processes in your Hadoop
 cluster. Failing to consistently use FQDNs can have unexpected consequences in how Accumulo uses
 the FileSystem.</p>
 
 <p>A common way for this problem can be observed is via applications that use Bulk Ingest. The Accumulo
-Master coordinates moving the input files to Bulk Ingest to an Accumulo-managed directory. However,
+Manager coordinates moving the input files to Bulk Ingest to an Accumulo-managed directory. However,
 Accumulo cannot safely move files across different Hadoop FileSystems. This is problematic because
 Accumulo also cannot make reliable assertions across what is the same FileSystem which is specified
 with different names. Naively, while 127.0.0.1:8020 might be a valid identifier for an HDFS
@@ -730,7 +739,7 @@ instance, Accumulo identifies <code class="language-plaintext highlighter-rouge"
 
 <h3 id="deploy-configuration">Deploy Configuration</h3>
 
-<p>Copy <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> from the <code class="language-plaintext highlighter-rouge">conf/</code> directory on the master to all
+<p>Copy <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> and <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a> from the <code class="language-plaintext highlighter-rouge">conf/</code> directory on the manager to all
 Accumulo tablet servers. The “host” configuration files files <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> only need to be on
 servers where that command is run.</p>
 
@@ -868,7 +877,7 @@ can provide some information about the status of tables via reading the metadata
 
 <h3 id="stopping-accumulo">Stopping Accumulo</h3>
 
-<p>To shutdown cleanly, run <code class="language-plaintext highlighter-rouge">accumulo-cluster stop</code> and the master will orchestrate the
+<p>To shutdown cleanly, run <code class="language-plaintext highlighter-rouge">accumulo-cluster stop</code> and the manager will orchestrate the
 shutdown of all the tablet servers. Shutdown waits for all minor compactions to finish, so it may
 take some time for particular configurations.</p>
 
@@ -916,7 +925,7 @@ can be use to start/stop processes on a node.</p>
 <h4 id="a-note-on-rolling-restarts">A note on rolling restarts</h4>
 
 <p>For sufficiently large Accumulo clusters, restarting multiple TabletServers within a short window
-can place significant load on the Master server. If slightly lower availability is acceptable, this
+can place significant load on the Manager server. If slightly lower availability is acceptable, this
 load can be reduced by globally setting <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> to a positive value.</p>
 
 <p>With <a href="/docs/2.x/configuration/server-properties#table_suspend_duration">table.suspend.duration</a> set to, say, <code class="language-plaintext highlighter-rouge">5m</code>, Accumulo will wait for 5 minutes for any dead
@@ -1000,7 +1009,7 @@ demonstrates basic audit logging with example configuration options for log4j.</
 <p>In the event of TabletServer failure or error on shutting Accumulo down, some
 mutations may not have been minor compacted to HDFS properly. In this case,
 Accumulo will automatically reapply such mutations from the write-ahead log
-either when the tablets from the failed server are reassigned by the Master (in the
+either when the tablets from the failed server are reassigned by the Manager (in the
 case of a single TabletServer failure) or the next time Accumulo starts (in the event of
 failure during shutdown).</p>
 
@@ -1102,7 +1111,7 @@ kernel panic when provisioning a memory page. This often happens in VMs due to
 the large number of processes that must run in a small memory footprint. In
 addition to the Linux core processes, a single-node Accumulo setup requires a
 Hadoop Namenode, a Hadoop Secondary Namenode a Hadoop Datanode, a Zookeeper
-server, an Accumulo Master, an Accumulo GC and an Accumulo TabletServer.
+server, an Accumulo Manager, an Accumulo GC and an Accumulo TabletServer.
 Typical setups also include an Accumulo Monitor, an Accumulo Tracer, a Hadoop
 ResourceManager, a Hadoop NodeManager, provisioning software, and client
 applications. Between all of these processes, it is not uncommon to
@@ -1157,7 +1166,7 @@ requirements, it is a good idea to reduce maximum heap limits and turn off
 unnecessary processes. If you’re not using YARN in your application, you can
 turn off the ResourceManager and NodeManager. If you’re not expecting to
 re-provision the cluster frequently you can turn off or reduce provisioning
-processes such as Salt Stack minions and masters.</p>
+processes such as Salt Stack minions and managers.</p>
 
 <h4 id="disk-space">Disk Space</h4>
 
