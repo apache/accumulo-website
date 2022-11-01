@@ -392,7 +392,7 @@ take some time for particular configurations.
 
 ### Adding a Tablet Server
 
-Update your `conf/tservers` file to account for the addition.
+Update your `conf/cluster.yaml` file to account for the addition.
 
 Next, ssh to each of the hosts you want to add and run:
 
@@ -413,13 +413,13 @@ Alternatively, you can ssh to each of the hosts you want to remove and run:
 
     accumulo-service tserver stop
 
-Be sure to update your `conf/tservers` file to account for the removal of these hosts. Bear in mind
+Be sure to update your `conf/cluster.yaml` file to account for the removal of these hosts. Bear in mind
 that the monitor will not re-read the tservers file automatically, so it will report the
 decommissioned servers as down; it's recommended that you restart the monitor so that the node list
 is up to date.
 
 The steps described to decommission a node can also be used (without removal of the host from the
-`conf/tservers` file) to gracefully stop a node. This will ensure that the tabletserver is cleanly
+`conf/cluster.yaml` file) to gracefully stop a node. This will ensure that the tabletserver is cleanly
 stopped and recovery will not need to be performed when the tablets are re-hosted.
 
 ### Restarting process on a node
