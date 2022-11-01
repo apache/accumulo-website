@@ -91,7 +91,7 @@ Accumulo processes log files when debugging missing metrics output.
 
 ### Metric Names
 
-See the javadoc for %{ jlink org.apache.accumulo.core.metrics.MetricsProducer %} for a list of metric names that will be
+See the javadoc for {% jlink org.apache.accumulo.core.metrics.MetricsProducer %} for a list of metric names that will be
 emitted and a mapping to their prior names when Accumulo was using Hadoop Metrics2.
 
 [Micrometer]: https://micrometer.io/
