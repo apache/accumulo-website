@@ -77,17 +77,17 @@ to run standby Monitors that can take over if the lead Monitor fails.
 Contains list of hosts where [Tablet Server] processes should run. While only one host is needed, it is recommended that
 multiple tablet servers are run for improved fault tolerance and peformance.
 
-### tracer
+### sserver
 
-Contains a list of hosts where [Tracer] processes should run. While only one host is needed, others can be specified
-to run standby Tracers that can take over if the lead Tracer fails.
+Contains a list of hosts where [ScanServer] processes should run. While only only one host is needed, it is recommended
+that multiple ScanServers are run for improved performance.
 
-### Compaction Coordinator
+### compaction coordinator
 
 Contains a list of hosts where [CompactionCoordinator] processes should run. While only one host is needed,
 others can be specified to run standby CompactionCoordinators that can take over if the lead CompactionCoordinator fails.
 
-### Compactor
+### compaction compactor
 
 Contains a list of hosts where [Compactor] processes should run. While only one host is needed, it is recommended that
 multiple Compactors are run for improved external compaction performance.
@@ -96,7 +96,7 @@ multiple Compactors are run for improved external compaction performance.
 [Manager]: {% durl getting-started/design#manager %}
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
-[Tracer]: {% durl getting-started/design#tracer %}
-[CompactionCoordinator]: {% durl getting-started/design#compaction%20coordinator%}
-[Compactor]: {% durl getting-started/design#compactor %}
+[CompactionCoordinator]: {% durl getting-started/design#compaction-coordinator-experimental %}
+[Compactor]: {% durl getting-started/design#compactor-experimental %}
+[ScanServer]: {% durl getting-started/design#scan-server-experimental %}
 [quick start]: {% durl getting-started/quickstart#configuring-accumulo %}

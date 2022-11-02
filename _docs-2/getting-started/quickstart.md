@@ -221,7 +221,7 @@ file contains sections that should be configured with a list of node names in ya
  * [monitor] : Node where Accumulo monitoring web server is run.
  * [tserver] : Accumulo worker processes. List all of the nodes where tablet
    servers should run.
- * [tracer] : Optional capability. Can specify zero or more nodes.
+ * [sserver] : Optional. List of all nodes where scan servers should run.
  * [compaction.coordinator] : Optional. Must specify one node. Can specify a few
    for fault tolerance.
  * [compaction.compactor] : Optional. Accumulo external compactor processes. List of
@@ -285,8 +285,9 @@ When finished, use the following commands to stop Accumulo:
 [manager]: {% durl configuration/files#managers %}
 [tserver]: {% durl configuration/files#tservers %}
 [tracer]: {% durl configuration/files#tracers %}
-[compaction.coordinator]: {% durl configuration/files#Compaction%20Coordinator %}
-[compaction.compactor]: {% durl configuration/files#Compactor %}
+[compaction.coordinator]: {% durl configuration/files#compaction%20coordinator %}
+[compaction.compactor]: {% durl configuration/files#compaction%20compactor %}
+[sserver]: {% durl configuration/files#sserver %}
 [Uno]: https://github.com/apache/fluo-uno
 [Muchos]: https://github.com/apache/fluo-muchos
 [Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html
