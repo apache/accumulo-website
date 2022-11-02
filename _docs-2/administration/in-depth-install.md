@@ -64,9 +64,11 @@ at the low end of the range to, and including, the high end of the range.
 Download a binary distribution of Accumulo and install it to a directory on a disk with
 sufficient space:
 
-    cd <install directory>
-    tar xzf accumulo-{{ page.latest_release }}-bin.tar.gz
-    cd accumulo-{{ page.latest_release }}
+```bash
+cd <install directory>
+tar xzf accumulo-{{ page.latest_release }}-bin.tar.gz
+cd accumulo-{{ page.latest_release }}
+```
 
 Repeat this step on each machine in your cluster. Typically, the same `<install directory>`
 is chosen for all machines in the cluster.
@@ -158,8 +160,10 @@ architecture. These will be passed to the Makefile in the environment variable `
 
 Examples:
 
-    accumulo-util build-native
-    accumulo-util build-native -m32
+```bash
+accumulo-util build-native
+accumulo-util build-native -m32
+```
 
 After building the native map from the source, you will find the artifact in
 `lib/native`. Upon starting up, the tablet server will look
@@ -186,7 +190,9 @@ this value, it is also important to adjust the values below:
 The maximum size of the native maps for a server should be less than the product of the write-ahead
 log maximum size and minor compaction threshold for log files:
 
-    $table.compaction.minor.logs.threshold * $tserver.walog.max.size >= $tserver.memory.maps.max
+```
+$table.compaction.minor.logs.threshold * $tserver.walog.max.size >= $tserver.memory.maps.max
+```
 
 This formula ensures that minor compactions won't be automatically triggered before the native
 maps can be completely saturated.
@@ -397,7 +403,9 @@ Update your `conf/cluster.yaml` file to account for the addition.
 
 Next, ssh to each of the hosts you want to add and run:
 
-    accumulo-service tserver start
+```bash
+accumulo-service tserver start
+```
 
 Make sure the host in question has the new configuration, or else the tablet
 server won't start; at a minimum this needs to be on the host(s) being added,
@@ -408,11 +416,15 @@ but in practice it's good to ensure consistent configuration across all nodes.
 If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.
 
-    accumulo admin stop <host(s)> {<host> ...}
+```bash
+accumulo admin stop <host(s)> {<host> ...}
+```
 
 Alternatively, you can ssh to each of the hosts you want to remove and run:
 
-    accumulo-service tserver stop
+```bash
+accumulo-service tserver stop
+```
 
 Be sure to update your `conf/cluster.yaml` file to account for the removal of these hosts. Bear in mind
 that the monitor will not re-read the tservers file automatically, so it will report the
@@ -538,17 +550,19 @@ URL `hdfs://namenode.example.com:8020` which is going to be moved to `hdfs://nam
 Before moving HDFS over to the HA namenode, use `accumulo admin volumes` to confirm
 that the only volume displayed is the volume from the current namenode's HDFS URL.
 
-    Listing volumes referenced in zookeeper
-            Volume : hdfs://namenode.example.com:8020/accumulo
+```
+Listing volumes referenced in zookeeper
+    Volume : hdfs://namenode.example.com:8020/accumulo
 
-    Listing volumes referenced in accumulo.root tablets section
-            Volume : hdfs://namenode.example.com:8020/accumulo
-    Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
+Listing volumes referenced in accumulo.root tablets section
+    Volume : hdfs://namenode.example.com:8020/accumulo
+Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
-    Listing volumes referenced in accumulo.metadata tablets section
-            Volume : hdfs://namenode.example.com:8020/accumulo
+Listing volumes referenced in accumulo.metadata tablets section
+    Volume : hdfs://namenode.example.com:8020/accumulo
 
-    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
+Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
+```
 
 After verifying the current volume is correct, shut down the cluster and transition HDFS to the HA
 nameservice.
@@ -567,19 +581,21 @@ instance.volumes.replacements=hdfs://namenode.example.com:8020/accumulo hdfs://n
 Run `accumulo init --add-volumes` and start up the accumulo cluster. Verify that the
 new nameservice volume shows up with `accumulo admin volumes`.
 
-    Listing volumes referenced in zookeeper
-            Volume : hdfs://namenode.example.com:8020/accumulo
-            Volume : hdfs://nameservice1/accumulo
+```
+Listing volumes referenced in zookeeper
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
 
-    Listing volumes referenced in accumulo.root tablets section
-            Volume : hdfs://namenode.example.com:8020/accumulo
-            Volume : hdfs://nameservice1/accumulo
-    Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
+Listing volumes referenced in accumulo.root tablets section
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
+Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
-    Listing volumes referenced in accumulo.metadata tablets section
-            Volume : hdfs://namenode.example.com:8020/accumulo
-            Volume : hdfs://nameservice1/accumulo
-    Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
+Listing volumes referenced in accumulo.metadata tablets section
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
+Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
+```
 
 Some erroneous GarbageCollector messages may still be seen for a small period while data is
 transitioning to the new volumes. This is expected and can usually be ignored.
@@ -657,13 +673,13 @@ Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
 simple calculation for physical memory requirements follows:
 
 ```
-  Physical memory needed
-    = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
-    = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process)
-        + (total applications memory, provisioning memory, etc.) + (1G)
-    = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
-    = (2150M) + (7G) + (2G) + (1G)
-    = ~12GB
+Physical memory needed
+  = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
+  = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process)
+      + (total applications memory, provisioning memory, etc.) + (1G)
+  = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
+  = (2150M) + (7G) + (2G) + (1G)
+  = ~12GB
 ```
 
 These calculations can add up quickly with the large number of processes,

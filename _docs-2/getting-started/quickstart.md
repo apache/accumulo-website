@@ -106,10 +106,10 @@ The [accumulo-env.sh] file sets up environment variables needed by Accumulo:
    used if you would like to change tserver memory usage in the `JAVA_OPTS`
    section of [accumulo-env.sh]:
 
-    | Native? | 512MB             | 1GB               | 2GB                 | 3GB           |
-    |---------|-------------------|-------------------|---------------------|---------------|
-    | Yes     | -Xmx384m -Xms384m | -Xmx768m -Xms768m | -Xmx1536m -Xms1536m | -Xmx2g -Xms2g |
-    | No      | -Xmx512m -Xms512m | -Xmx1g -Xms1g     | -Xmx2g -Xms2g       | -Xmx3g -Xms3g |
+   | Native? | 512MB             | 1GB               | 2GB                 | 3GB           |
+   |---------|-------------------|-------------------|---------------------|---------------|
+   | Yes     | -Xmx384m -Xms384m | -Xmx768m -Xms768m | -Xmx1536m -Xms1536m | -Xmx2g -Xms2g |
+   | No      | -Xmx512m -Xms512m | -Xmx1g -Xms1g     | -Xmx2g -Xms2g       | -Xmx3g -Xms3g |
 
 3. (Optional) Review the memory settings for the Accumulo manager, garbage collector, and monitor
    in the `JAVA_OPTS` section of [accumulo-env.sh].

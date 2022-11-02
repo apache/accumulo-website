@@ -24,8 +24,7 @@ the Accumulo connection information in this file will be used. This file can be 
 in Java using the following code:
 
 ```java
-AccumuloClient client = Accumulo.newClient()
-                           .from("/path/to/accumulo-client.properties").build();
+AccumuloClient client = Accumulo.newClient().from("/path/to/accumulo-client.properties").build();
 ```
 
 See the [quick start] for help with configuring this file.
