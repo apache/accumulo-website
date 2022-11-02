@@ -154,11 +154,6 @@
     </ul></nav>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.0/">the latest release notes</a>.</p>
-</div>
-
 
 
 <div class="alert alert-success" role="alert">
@@ -166,98 +161,120 @@
 </div>
 
 
-<p>** DRAFT RELEASE NOTES **</p>
-
 <h2 id="about">About</h2>
 
-<p>TODO high level description of the release</p>
+<p>Apache Accumulo 2.1.0 brings many new features and updates since 1.10 and 2.0. The 2.1 release
+series is an LTM series, and as such, is expected to receive stability-improving bugfixes, as
+needed. This makes this series suitable for production environments where stability is preferable
+over new features that might appear in subsequent non-LTM releases.</p>
 
-<p>TODO summarize contributions</p>
-
-<p>TODO Version Upgrade guidance</p>
+<p>This release has received more than 1200 commits from over 50 contributors, including numerous
+bugfixes, updates, and features.</p>
 
 <h2 id="minimum-requirements">Minimum Requirements</h2>
 
-<p>TODO describe requirements</p>
+<p>This version of Accumulo requires at least Java 11 to run. Various Java 11 versions from different
+distributors were used throughout its testing and development, so we expect it to work with any
+standard OpenJDK-based Java distribution.</p>
+
+<p>At least Hadoop 3 is required, though it is recommended to use a more recent version. Version 3.3
+was used extensively during testing, but we have no specific knowledge that an earlier version of
+Hadoop 3 will not work. Whichever major/minor version you use, it is recommended to use the latest
+bugfix/patch version available. By default, our POM depends on 3.3.4.</p>
+
+<p>During much of this release’s development, ZooKeeper 3.5 was used as a minimum. However, that
+version reach its end-of-life during development, and we do not recommend using end-of-life versions
+of ZooKeeper. The latest bugfix version of 3.6, 3.7, or 3.8 should also work fine. By default, our
+POM depends on 3.8.0.</p>
 
 <h2 id="binary-incompatibility">Binary Incompatibility</h2>
 
-<p>This release is known to be incompatible with prior versions of the client
-libraries. That is, the 2.0.0 or 2.0.1 version of the client libraries will not
-be able to communicate with a 2.1.0 or later installation of Accumulo, nor will
-the 2.1.0 or later version of the client libraries communicate with a 2.0.1 or
-earlier installation.</p>
+<p>This release is known to be incompatible with prior versions of the client libraries. That is, the
+2.0.0 or 2.0.1 version of the client libraries will not be able to communicate with a 2.1.0 or later
+installation of Accumulo, nor will the 2.1.0 or later version of the client libraries communicate
+with a 2.0.1 or earlier installation.</p>
 
-<h2 id="major-changes">Major Changes</h2>
+<h2 id="major-new-features">Major New Features</h2>
 
 <h3 id="overhaul-of-table-compactions">Overhaul of Table Compactions</h3>
 
-<p>Significant changes were made to how Accumulo compacts files in this release.  See
+<p>Significant changes were made to how Accumulo compacts files in this release. See
 <a href="/docs/2.x/administration/compaction">compaction </a> for details, below are some highlights.</p>
 
 <ul>
-  <li>Multiple concurrent compactions per tablet on disjoint files is now
-supported.  Previously only a single compaction could run on a tablet.  This
-allows tablets that are running long compactions on large files to
-concurrently compact new smaller files that arrive.</li>
-  <li>Multiple compaction thread pools per tablet server are now supported.
-Previously only a single thread pool existed within a tablet server for
-compactions.  With a single thread pool, if all threads are working on long
-compactions it can starve quick compactions.  Now compactions with little
-data can be processed by dedicated thread pools.</li>
-  <li>Accumulo’s default algorithm for selecting files to compact was modified to
-select the smallest set of files that meet the compaction ratio criteria
-instead of the largest set.  This change makes tablets more aggressive about
-reducing their number files while still doing logarithmic compaction work.
-This change also enables efficiently compacting new small files that arrive
+  <li>Multiple concurrent compactions per tablet on disjoint files is now supported.  Previously only a
+single compaction could run on a tablet.  This allows tablets that are running long compactions
+on large files to concurrently compact new smaller files that arrive.</li>
+  <li>Multiple compaction thread pools per tablet server are now supported. Previously only a single
+thread pool existed within a tablet server for compactions.  With a single thread pool, if all
+threads are working on long compactions it can starve quick compactions.  Now compactions with
+little data can be processed by dedicated thread pools.</li>
+  <li>Accumulo’s default algorithm for selecting files to compact was modified to select the smallest
+set of files that meet the compaction ratio criteria instead of the largest set.  This change
+makes tablets more aggressive about reducing their number files while still doing logarithmic
+compaction work. This change also enables efficiently compacting new small files that arrive
 during a long running compaction.</li>
-  <li>Having dedicated compaction threads pools for tables is now supported
-through configuration.  The default configuration for Accumulo sets up
-dedicated thread pools for compacting the Accumulo metadata table.</li>
-  <li>Merging minor compactions were dropped.  These were added to Accumulo to
-address the problem of new files arriving while a long running compaction
-was running.  Merging minor compactions could cause O(N^2) compaction work.
-The new compaction changes in this release can satisfy this use case while
-doing a logarithmic amount of work.</li>
+  <li>Having dedicated compaction threads pools for tables is now supported through configuration.  The
+default configuration for Accumulo sets up dedicated thread pools for compacting the Accumulo
+metadata table.</li>
+  <li>Merging minor compactions were dropped.  These were added to Accumulo to address the problem of
+new files arriving while a long running compaction was running.  Merging minor compactions could
+cause O(N^2) compaction work. The new compaction changes in this release can satisfy this use
+case while doing a logarithmic amount of work.</li>
 </ul>
 
-<p>CompactionStrategy was deprecated in favor of new public APIs. CompactionStrategy was never public API as it
-used internal types and one of these types <code class="language-plaintext highlighter-rouge">FileRef</code> was removed in 2.1. Users who have written a CompactionStrategy
-can replace <code class="language-plaintext highlighter-rouge">FileRef</code> with its replacement internal type <code class="language-plaintext highlighter-rouge">StoredTabletFile</code> but this is not recommended. Since it is
-very likely that CompactionStrategy will be removed in a future release, any work put into rewriting a CompactionStrategy
-will be lost. It is recommended that users implement CompactionSelector, CompactionConfigurer, and CompactionPlanner instead.  The new compaction changes in 2.1 introduce new algorithms for optimally scheduling compactions across multiple thread pools, configuring a deprecated compaction strategy may result is missing out on the benefits of these new algorithms. See
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.1.0/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a>
-for more information. GitHub tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a></p>
+<p>CompactionStrategy was deprecated in favor of new public APIs. CompactionStrategy was never public
+API as it used internal types and one of these types <code class="language-plaintext highlighter-rouge">FileRef</code> was removed in 2.1. Users who have
+written a CompactionStrategy can replace <code class="language-plaintext highlighter-rouge">FileRef</code> with its replacement internal type
+<code class="language-plaintext highlighter-rouge">StoredTabletFile</code> but this is not recommended. Since it is very likely that CompactionStrategy will
+be removed in a future release, any work put into rewriting a CompactionStrategy will be lost. It is
+recommended that users implement CompactionSelector, CompactionConfigurer, and CompactionPlanner
+instead.  The new compaction changes in 2.1 introduce new algorithms for optimally scheduling
+compactions across multiple thread pools, configuring a deprecated compaction strategy may result is
+missing out on the benefits of these new algorithms.</p>
+
+<p>See the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.1.0/org/apache/accumulo/tserver/compaction/CompactionStrategy.html">javadoc</a> for more
+information.</p>
+
+<p>GitHub tickets related to these changes: <a href="https://github.com/apache/accumulo/issues/564">#564</a> <a href="https://github.com/apache/accumulo/issues/1605">#1605</a> <a href="https://github.com/apache/accumulo/issues/1609">#1609</a> <a href="https://github.com/apache/accumulo/issues/1649">#1649</a></p>
 
 <h3 id="external-compactions-experimental">External Compactions (experimental)</h3>
 
-<p>This feature includes two new optional server components, CompactionCoordinator and Compactor,
-that enables the user to run major compactions outside of the Tablet Server. See
-<a href="/docs/2.x/_docs-2/getting-started/design.md">design.md </a>, <a href="/docs/2.x/administration/compaction">compaction </a> and the
-External Compaction <a href="/blog/2021/07/08/external-compactions.html">blog post</a> for more information. This work was completed
-over many tickets, see the GitHub <a href="https://github.com/apache/accumulo/projects/20">project</a> for the related issues. <a href="https://github.com/apache/accumulo/issues/2096">#2096</a></p>
+<p>This feature includes two new optional server components, CompactionCoordinator and Compactor, that
+enables the user to run major compactions outside of the TabletServer. See <a href="/docs/2.x/getting-started/design">design </a>, <a href="/docs/2.x/administration/compaction">compaction </a>, and the External Compaction <a href="/blog/2021/07/08/external-compactions.html">blog
+post</a> for more information. This work was completed over many tickets, see the GitHub
+<a href="https://github.com/apache/accumulo/projects/20">project</a> for the related issues. <a href="https://github.com/apache/accumulo/issues/2096">#2096</a></p>
 
 <h3 id="scan-servers-experimental">Scan Servers (experimental)</h3>
 
-<p>This feature includes a new optional server component, Scan Server, that enables the user
-to run scans outside of the Tablet Server. See <a href="/docs/2.x/_docs-2/getting-started/design.md">design.md </a>,
-<a href="https://github.com/apache/accumulo/issues/2411">#2411</a>, and <a href="https://github.com/apache/accumulo/issues/2665">#2665</a> for more information.</p>
+<p>This feature includes a new optional server component, Scan Server, that enables the user to run
+scans outside of the TabletServer. See <a href="/docs/2.x/getting-started/design">design </a>,
+<a href="https://github.com/apache/accumulo/issues/2411">#2411</a>, and <a href="https://github.com/apache/accumulo/issues/2665">#2665</a> for more information. Importantly, users can utilize this
+feature to avoid bogging down the TabletServer with long-running scans, slow iterators, etc.,
+provided they are willing to tolerate eventual consistency.</p>
 
-<h3 id="new-per-table-on-disk-encryption-experimental">New Per Table On Disk Encryption (Experimental)</h3>
+<h3 id="new-per-table-on-disk-encryption-experimental">New Per-Table On-Disk Encryption (experimental)</h3>
 
-<p>On Disk Encryption can now be configured per table as well as for the entire instance (all tables).
-See <a href="/docs/2.x/security/on-disk-encryption">on-disk-encryption </a> for more information.</p>
+<p>On-disk encryption can now be configured on a per table basis as well as for the entire instance
+(all tables). See <a href="/docs/2.x/security/on-disk-encryption">on-disk-encryption </a> for more information.</p>
+
+<h3 id="new-jshell-entry-point">New jshell entry point</h3>
+
+<p>Created new “jshell” convenience entry point. Run <code class="language-plaintext highlighter-rouge">bin/accumulo jshell</code> to start up jshell,
+preloaded with Accumulo classes imported and with an instance of AccumuloClient already created for
+you to connect to Accumulo (assuming you have a client properties file on the class path)  <a href="https://github.com/apache/accumulo/issues/1870">#1870</a> <a href="https://github.com/apache/accumulo/issues/1910">#1910</a></p>
+
+<h2 id="major-improvements">Major Improvements</h2>
 
 <h3 id="fixed-gc-metadata-hotspots">Fixed GC Metadata hotspots</h3>
 
-<p>Prior to this release, Accumulo stored GC file candidates in the metadata table
-using rows of the form <code class="language-plaintext highlighter-rouge">~del&lt;URI&gt;</code>. This row schema lead to uneven load on
-the metadata table and metadata tablets that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> <a href="https://github.com/apache/accumulo/issues/1344">#1344</a> the row format was changed to <code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in
-even load on the metadata table and even data spread in the tablets. After
-upgrading, there may still be splits in the metadata table using the old row
-format. These splits can be merged away as shown in the example below which
-starts off with splits generated from the old and new row schema. The old
-splits with the prefix <code class="language-plaintext highlighter-rouge">~delhdfs</code> are merged away.</p>
+<p>Prior to this release, Accumulo stored GC file candidates in the metadata table using rows of the
+form <code class="language-plaintext highlighter-rouge">~del&lt;URI&gt;</code>. This row schema lead to uneven load on the metadata table and metadata tablets
+that were eventually never used. In <a href="https://github.com/apache/accumulo/issues/1043">#1043</a> / <a href="https://github.com/apache/accumulo/issues/1344">#1344</a>, the row format was changed to
+<code class="language-plaintext highlighter-rouge">~del&lt;hash(URI)&gt;&lt;URI&gt;</code> resulting in even load on the metadata table and even data spread in the
+tablets. After upgrading, there may still be splits in the metadata table using the old row format.
+These splits can be merged away as shown in the example below which starts off with splits generated
+from the old and new row schema. The old splits with the prefix <code class="language-plaintext highlighter-rouge">~delhdfs</code> are merged away.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; getsplits -t accumulo.metadata
 2&lt;
@@ -276,23 +293,21 @@ root@uno&gt; getsplits -t accumulo.metadata
 
 <h3 id="master-renamed-to-manager">Master Renamed to Manager</h3>
 
-<p>In order to support more inclusive language in our code, the Accumulo team has
-renamed all references to the word “master” to “manager” (with the exception
-of deprecated classes and packages retained for compatibility). This change
-includes the master process, configuration properties with master in the name,
-utilities with master in the name, and packages/classes in the code base. Where
-these changes affect the public API, the deprecated “master” name will still be
-supported until at least Accumulo 3.0.</p>
+<p>In order to use more inclusive language in our code, the Accumulo team has renamed all references to
+the word “master” to “manager” (with the exception of deprecated classes and packages retained for
+compatibility). This change includes the master server process, configuration properties with master
+in the name, utilities with master in the name, and packages/classes in the code base. Where these
+changes affect the public API, the deprecated “master” name will still be supported until Accumulo
+3.0.</p>
 
 <blockquote>
   <p><strong>Important</strong>
-  One particular change to be aware of is that certain state for the manager
-  process is stored in ZooKeeper, previously in under a directory named
-  <code class="language-plaintext highlighter-rouge">masters</code>. This directory has been renamed to <code class="language-plaintext highlighter-rouge">managers</code>, and the upgrade
-  will happen automatically if you launch Accumulo using the provided scripts.
-  However, if you do not use the built in scripts (e.g., accumulo-cluster or
-  accumulo-service), then you will need to perform a one-time upgrade of the
-  ZooKeeper state by executing the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility:</p>
+  One particular change to be aware of is that certain state for the manager process is stored in
+  ZooKeeper, previously in under a directory named <code class="language-plaintext highlighter-rouge">masters</code>. This directory has been renamed to
+  <code class="language-plaintext highlighter-rouge">managers</code>, and the upgrade will happen automatically if you launch Accumulo using the provided
+  scripts. However, if you do not use the built in scripts (e.g., accumulo-cluster or
+  accumulo-service), then you will need to perform a one-time upgrade of the ZooKeeper state by
+  executing the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility:</p>
   <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
 </code></pre></div>  </div>
 </blockquote>
@@ -300,76 +315,68 @@ supported until at least Accumulo 3.0.</p>
 <p>Some other specific examples of these changes include:</p>
 
 <ul>
-  <li>All configuration properties starting with <code class="language-plaintext highlighter-rouge">master.</code> have been renamed to
-start with <code class="language-plaintext highlighter-rouge">manager.</code> instead. The <code class="language-plaintext highlighter-rouge">master.*</code> property names in the site
-configuration file (or passed on the command-line) are converted internally
-to the new name, and a warning is printed. However, the old name can still be
-used until at least the 3.0 release of Accumulo. Any <code class="language-plaintext highlighter-rouge">master.*</code> properties
-that have been set in ZooKeeper will be automatically converted to the new
-<code class="language-plaintext highlighter-rouge">manager.*</code> name when Accumulo is upgraded. The old property names can still
-be used by the <code class="language-plaintext highlighter-rouge">config</code> shell command or via the methods accessible via
-<code class="language-plaintext highlighter-rouge">AccumuloClient</code>, but a warning will be generated when the old names are
-used. You are encouraged to update all references to <code class="language-plaintext highlighter-rouge">master</code> in your site
-configuration files to <code class="language-plaintext highlighter-rouge">manager</code> when installing Accumulo 2.1.</li>
-  <li>The tablet balancers in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer</code>
-package have all been relocated to <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer</code>.
-DefaultLoadBalancer has been also renamed to SimpleLoadBalancer along with
-the move. The default balancer has been updated from
+  <li>All configuration properties starting with <code class="language-plaintext highlighter-rouge">master.</code> have been renamed to start with <code class="language-plaintext highlighter-rouge">manager.</code>
+instead. The <code class="language-plaintext highlighter-rouge">master.*</code> property names in the site configuration file (or passed on the
+command-line) are converted internally to the new name, and a warning is printed. However, the old
+name can still be used until at least the 3.0 release of Accumulo. Any <code class="language-plaintext highlighter-rouge">master.*</code> properties that
+have been set in ZooKeeper will be automatically converted to the new <code class="language-plaintext highlighter-rouge">manager.*</code> name when
+Accumulo is upgraded. The old property names can still be used by the <code class="language-plaintext highlighter-rouge">config</code> shell command or
+via the methods accessible via <code class="language-plaintext highlighter-rouge">AccumuloClient</code>, but a warning will be generated when the old
+names are used. You are encouraged to update all references to <code class="language-plaintext highlighter-rouge">master</code> in your site configuration
+files to <code class="language-plaintext highlighter-rouge">manager</code> when installing Accumulo 2.1.</li>
+  <li>The tablet balancers in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer</code> package have all been
+relocated to <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer</code>. DefaultLoadBalancer has been also
+renamed to SimpleLoadBalancer along with the move. The default balancer has been updated from
 <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TableLoadBalancer</code> to
-<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TableLoadBalancer</code>, and the
-default per-table balancer has been updated from
-<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.DefaultLoadBalancer</code> to
-<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.SimpleLoadBalancer</code>. If you have
-customized the tablet balancer configuration, you are strongly encouraged to
-update your configuration to reference the updated balancer names. If you
-have written a custom tablet balancer, it should be updated to implement the new
-interface <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TabletBalancer</code>
-rather than extending the deprecated abstract
-<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TabletBalancer</code>.</li>
-  <li>The configuration file <code class="language-plaintext highlighter-rouge">masters</code> for identifying the manager host(s) has been
-deprecated. If this file is found, a warning will be printed. The replacement
-file <code class="language-plaintext highlighter-rouge">managers</code> should be used (i.e., rename your masters file to managers)
-instead.</li>
-  <li>The <code class="language-plaintext highlighter-rouge">master</code> argument to the <code class="language-plaintext highlighter-rouge">accumulo-service</code> script has been deprecated,
-and the replacement <code class="language-plaintext highlighter-rouge">manager</code> argument should be used instead.</li>
-  <li>The <code class="language-plaintext highlighter-rouge">-master</code> argument to the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.util.ZooZap</code>
-utility has been deprecated and the replacement <code class="language-plaintext highlighter-rouge">-manager</code> argument should be
-used instead.</li>
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TableLoadBalancer</code>, and the default per-table
+balancer has been updated from <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.DefaultLoadBalancer</code> to
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.SimpleLoadBalancer</code>. If you have customized the
+tablet balancer configuration, you are strongly encouraged to update your configuration to
+reference the updated balancer names. If you have written a custom tablet balancer, it should be
+updated to implement the new interface
+<code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.manager.balancer.TabletBalancer</code> rather than extending the deprecated
+abstract <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.master.balancer.TabletBalancer</code>.</li>
+  <li>The configuration file <code class="language-plaintext highlighter-rouge">masters</code> for identifying the manager host(s) has been deprecated. If this
+file is found, a warning will be printed. The replacement file <code class="language-plaintext highlighter-rouge">managers</code> should be used (i.e.,
+rename your masters file to managers) instead.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">master</code> argument to the <code class="language-plaintext highlighter-rouge">accumulo-service</code> script has been deprecated, and the replacement
+<code class="language-plaintext highlighter-rouge">manager</code> argument should be used instead.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-master</code> argument to the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.server.util.ZooZap</code> utility has been deprecated
+and the replacement <code class="language-plaintext highlighter-rouge">-manager</code> argument should be used instead.</li>
   <li>The <code class="language-plaintext highlighter-rouge">GetMasterStats</code> utility has been renamed to <code class="language-plaintext highlighter-rouge">GetManagerStats</code>.</li>
-  <li><code class="language-plaintext highlighter-rouge">org.apache.accumulo.master.state.SetGoalState</code> is deprecated, and any custom
-scripts that invoke this utility should be updated to call
-<code class="language-plaintext highlighter-rouge">org.apache.accumulo.manager.state.SetGoalState</code> instead.</li>
-  <li><code class="language-plaintext highlighter-rouge">masterMemory</code> in <code class="language-plaintext highlighter-rouge">minicluster.properties</code> has been deprecated and
-<code class="language-plaintext highlighter-rouge">managerMemory</code> should be used instead in any <code class="language-plaintext highlighter-rouge">minicluster.properties</code> files
-you have configured.</li>
+  <li><code class="language-plaintext highlighter-rouge">org.apache.accumulo.master.state.SetGoalState</code> is deprecated, and any custom scripts that invoke
+this utility should be updated to call <code class="language-plaintext highlighter-rouge">org.apache.accumulo.manager.state.SetGoalState</code> instead.</li>
+  <li><code class="language-plaintext highlighter-rouge">masterMemory</code> in <code class="language-plaintext highlighter-rouge">minicluster.properties</code> has been deprecated and <code class="language-plaintext highlighter-rouge">managerMemory</code> should be used
+instead in any <code class="language-plaintext highlighter-rouge">minicluster.properties</code> files you have configured.</li>
   <li>See also <a href="https://github.com/apache/accumulo/issues/1640">#1640</a> <a href="https://github.com/apache/accumulo/issues/1642">#1642</a> <a href="https://github.com/apache/accumulo/issues/1703">#1703</a> <a href="https://github.com/apache/accumulo/issues/1704">#1704</a> <a href="https://github.com/apache/accumulo/issues/1873">#1873</a> <a href="https://github.com/apache/accumulo/issues/1907">#1907</a></li>
 </ul>
 
 <h3 id="new-tracing-facility">New Tracing Facility</h3>
 
-<p>HTrace support was removed in this release and has been replaced with <a href="https://opentelemetry.io/">OpenTelemetry</a>. Trace information
-will not be shown in the monitor. See comments in <a href="https://github.com/apache/accumulo/issues/2259">#2259</a> for an example of how to configure
-Accumulo to emit traces to supported OpenTelemetry sinks. <a href="https://github.com/apache/accumulo/issues/2257">#2257</a></p>
+<p>HTrace support was removed in this release and has been replaced with <a href="https://opentelemetry.io/">OpenTelemetry</a>. Trace information will not be shown in the monitor. See comments in <a href="https://github.com/apache/accumulo/issues/2259">#2259</a> for an example of how to configure Accumulo to emit traces to supported OpenTelemetry sinks.
+<a href="https://github.com/apache/accumulo/issues/2257">#2257</a></p>
 
 <h3 id="new-metrics-implementation">New Metrics Implementation</h3>
 
 <p>The Hadoop Metrics2 framework is no longer being used to emit metrics from Accumulo. Accumulo is now
-using the <a href="https://micrometer.io/">Micrometer</a> framework. Metric name and type changes have been documented in
-org.apache.accumulo.core.metrics.MetricsProducer, see the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/metrics/MetricsProducer.html">javadoc</a>
-for more information. See comments in <a href="https://github.com/apache/accumulo/issues/2305">#2305</a> for an example of how to configure Accumulo to emit
-metrics to supported Micrometer sinks. <a href="https://github.com/apache/accumulo/issues/1134">#1134</a></p>
+using the <a href="https://micrometer.io/">Micrometer</a> framework. Metric name and type changes have been
+documented in org.apache.accumulo.core.metrics.MetricsProducer, see the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/metrics/MetricsProducer.html">javadoc</a> for more information. See comments in <a href="https://github.com/apache/accumulo/issues/2305">#2305</a> for an example of how to configure Accumulo to emit metrics to supported Micrometer sinks.
+<a href="https://github.com/apache/accumulo/issues/1134">#1134</a></p>
 
 <h3 id="new-spi-package">New SPI Package</h3>
 
-<p>TODO describe New SPI Package <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
+<p>A new Service Plugin Interface (SPI) package was created in the accumulo-core jar, at
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/package-summary.html">org.apache.accumulo.core.spi</a>, under which exists interfaces for the various pluggable
+components. See <a href="https://github.com/apache/accumulo/issues/1900">#1900</a> <a href="https://github.com/apache/accumulo/issues/1905">#1905</a> <a href="https://github.com/apache/accumulo/issues/1880">#1880</a> <a href="https://github.com/apache/accumulo/issues/1891">#1891</a> <a href="https://github.com/apache/accumulo/issues/1426">#1426</a></p>
 
-<h3 id="new-listtablets-shell-command">New listtablets shell command.</h3>
+<h2 id="minor-improvements">Minor Improvements</h2>
+
+<h3 id="new-listtablets-shell-command">New listtablets Shell Command</h3>
 
 <p>A new command was created for debugging called listtablets, that shows detailed tablet information
-on a single line. This command aggregates data about a tablet such as status, location, size,
-number of entries and HDFS directory name. It even shows the start and end rows of tablets,
-displaying them in the same sorted order they are stored in the metadata. See example command output below.
-<a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
+on a single line. This command aggregates data about a tablet such as status, location, size, number
+of entries and HDFS directory name. It even shows the start and end rows of tablets, displaying them
+in the same sorted order they are stored in the metadata. See example command output below. <a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; listtablets -t test_ingest -h
 2021-01-04T15:12:47,663 [Shell.audit] INFO : root@uno&gt; listtablets -t test_ingest -h
@@ -387,50 +394,60 @@ TABLE: accumulo.metadata
 2    default_tablet  0     0     0         0         HOSTED     CURRENT:ip-10-113-12-25:9997   !0    ~                    +INF
 </code></pre></div></div>
 
-<h3 id="new-utility-for-generating-splits">New Utility for generating splits</h3>
+<h3 id="new-utility-for-generating-splits">New Utility for Generating Splits</h3>
 
-<p>A new command line utility was created to generate split points from 1 or more rfiles. One or more HDFS directories can
-be given as well. The utility will iterate over all the files provided and determine the proper split points
-based on either the size or number given. It uses Apache Datasketches to get the split points from the data. <a href="https://github.com/apache/accumulo/issues/2361">#2361</a> <a href="https://github.com/apache/accumulo/issues/2368">#2368</a></p>
+<p>A new command line utility was created to generate split points from 1 or more rfiles. One or more
+HDFS directories can be given as well. The utility will iterate over all the files provided and
+determine the proper split points based on either the size or number given. It uses Apache
+Datasketches to get the split points from the data. <a href="https://github.com/apache/accumulo/issues/2361">#2361</a> <a href="https://github.com/apache/accumulo/issues/2368">#2368</a></p>
 
-<h3 id="new-option-for-cloning-offline">New option for cloning offline</h3>
+<h3 id="new-option-for-cloning-offline">New Option for Cloning Offline</h3>
 
 <p>Added option to leave cloned tables offline <a href="https://github.com/apache/accumulo/issues/1474">#1474</a> <a href="https://github.com/apache/accumulo/issues/1475">#1475</a></p>
 
-<h3 id="new-max-tablets-option-in-bulk-import">New max tablets option in bulk import</h3>
+<h3 id="new-max-tablets-option-in-bulk-import">New Max Tablets Option in Bulk Import</h3>
 
-<p>The property <code class="language-plaintext highlighter-rouge">table.bulk.max.tablets</code> was created in new bulk import technique. This property acts as a cluster performance
-failsafe to prevent a single ingested file from being distributed across too much of a cluster. The value is enforced
-by the new bulk import technique and is the maximum number of tablets allowed for one bulk import file. When this property
-is set, an error will be thrown when the value is exceeded during a bulk import. <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
+<p>The property <code class="language-plaintext highlighter-rouge">table.bulk.max.tablets</code> was created in new bulk import technique. This property acts
+as a cluster performance failsafe to prevent a single ingested file from being distributed across
+too much of a cluster. The value is enforced by the new bulk import technique and is the maximum
+number of tablets allowed for one bulk import file. When this property is set, an error will be
+thrown when the value is exceeded during a bulk import. <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
 
-<h3 id="new-health-check-thread-in-tserver">New Health check Thread in tserver</h3>
+<h3 id="new-health-check-thread-in-tabletserver">New Health Check Thread in TabletServer</h3>
 
-<p>A new thread was added to the tablet server to periodically verify tablet metadata. <a href="https://github.com/apache/accumulo/issues/2320">#2320</a> This thread also prints
-to the debug log how long it takes the tserver to scan the metadata table. The property tserver.health.check.interval was
-added to control the frequency at which this health check takes place. <a href="https://github.com/apache/accumulo/issues/2583">#2583</a></p>
+<p>A new thread was added to the tablet server to periodically verify tablet metadata. <a href="https://github.com/apache/accumulo/issues/2320">#2320</a>
+This thread also prints to the debug log how long it takes the tserver to scan the metadata table.
+The property tserver.health.check.interval was added to control the frequency at which this health
+check takes place. <a href="https://github.com/apache/accumulo/issues/2583">#2583</a></p>
 
 <h3 id="new-ability-for-user-to-define-context-classloaders">New ability for user to define context classloaders</h3>
 
 <p>Deprecated the existing VFS ClassLoader for eventual removal and created a new mechanism for users
 to load their own classloader implementations. The new VFS classloader and VFS context classloaders
-are in a new <a href="https://github.com/apache/accumulo-classloaders/tree/main/modules/vfs-class-loader">repo</a> and can now be specified using system properties. <a href="https://github.com/apache/accumulo/issues/1747">#1747</a> <a href="https://github.com/apache/accumulo/issues/1715">#1715</a></p>
+are in a new <a href="https://github.com/apache/accumulo-classloaders/tree/main/modules/vfs-class-loader">repo</a> and can now be specified using Java’s own system
+properties. Alternatively, one can set their own classloader (they always could do this). <a href="https://github.com/apache/accumulo/issues/1747">#1747</a> <a href="https://github.com/apache/accumulo/issues/1715">#1715</a></p>
 
-<p>Please reference the Known Issues section of the 2.0.1 release notes for an issue affecting the VFSClassLoader.</p>
+<p>Please reference the Known Issues section of the 2.0.1 release notes for an issue affecting the
+VFSClassLoader.</p>
 
 <h3 id="change-in-uncaught-exceptionerror-handling-in-server-side-threads">Change in uncaught Exception/Error handling in server-side threads</h3>
 
-<p>Consolidated and normalized thread pool and thread creation. All threads created through this code path
-will have an UncaughtExceptionHandler attached to it that will log the fact that the Thread encountered
-an uncaught Exception and is now dead. When an Error is encountered in a server process, it will attempt
-to print a message to stderr then terminate the VM using Runtime.halt. On the client side, the default
-UncaughtExceptionHandler will only log the Exception/Error in the client and does not terminate the VM.
-Additionally, the user has the ability to set their own UncaughtExceptionHandler implementation on the
-client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a href="https://github.com/apache/accumulo/issues/1818">#1818</a> <a href="https://github.com/apache/accumulo/issues/2554">#2554</a></p>
+<p>Consolidated and normalized thread pool and thread creation. All threads created through this code
+path will have an UncaughtExceptionHandler attached to it that will log the fact that the Thread
+encountered an uncaught Exception and is now dead. When an Error is encountered in a server process,
+it will attempt to print a message to stderr then terminate the VM using Runtime.halt. On the client
+side, the default UncaughtExceptionHandler will only log the Exception/Error in the client and does
+not terminate the VM. Additionally, the user has the ability to set their own
+UncaughtExceptionHandler implementation on the client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a href="https://github.com/apache/accumulo/issues/1818">#1818</a> <a href="https://github.com/apache/accumulo/issues/2554">#2554</a></p>
 
 <h3 id="updated-hash-algorithm">Updated hash algorithm</h3>
 
-<p>TODO clarify what was done for this. <a href="https://github.com/apache/accumulo/issues/1787">#1787</a> <a href="https://github.com/apache/accumulo/issues/1788">#1788</a> <a href="https://github.com/apache/accumulo/issues/1798">#1798</a> <a href="https://github.com/apache/accumulo/issues/1810">#1810</a></p>
+<p>With the default password Authenticator, Accumulo used to store password hashes using SHA-256 and
+using custom code to add a salt. In this release, we now use Apache commons-codec to store password
+hashes in the <code class="language-plaintext highlighter-rouge">crypt(3)</code> standard format. With this change, we’ve also defaulted to using the
+stronger SHA-512. Existing stored password hashes (if upgrading from an earlier version of Accumulo)
+will automatically be upgraded when users authenticate or change their passwords, and Accumulo will
+log a warning if it detects any passwords have not been upgraded. <a href="https://github.com/apache/accumulo/issues/1787">#1787</a> <a href="https://github.com/apache/accumulo/issues/1788">#1788</a> <a href="https://github.com/apache/accumulo/issues/1798">#1798</a> <a href="https://github.com/apache/accumulo/issues/1810">#1810</a></p>
 
 <h3 id="various-performance-improvements-when-deleting-tables">Various Performance improvements when deleting tables</h3>
 
@@ -442,20 +459,18 @@ client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a hr
   <li>Added code to stop user flush if table is being deleted <a href="https://github.com/apache/accumulo/issues/1931">#1931</a></li>
 </ul>
 
-<h3 id="new-jshell-entry-point">New jshell entry point</h3>
-
-<p>Created new “jshell” convenience entry point <a href="https://github.com/apache/accumulo/issues/1870">#1870</a> <a href="https://github.com/apache/accumulo/issues/1910">#1910</a></p>
-
 <h3 id="new-monitor-pages-improvements--features">New Monitor Pages, Improvements &amp; Features</h3>
 
 <ul>
-  <li>A page was added to the Monitor that lists the active compactions and the longest running
-active compaction. As an optimization, this page will only fetch data if a user loads the
-page and will only do so a maximum of once a minute. This optimization was also added for the Active Scans page,
+  <li>A page was added to the Monitor that lists the active compactions and the longest running active
+compaction. As an optimization, this page will only fetch data if a user loads the page and will
+only do so a maximum of once a minute. This optimization was also added for the Active Scans page,
 along with the addition of a “Fetched” column indicating when the data was retrieved.</li>
-  <li>A new feature was added to the Tablet Server page to help users identify which tservers are in recovery mode. When
-a tserver is recovering, its corresponding row in the Tablet Server Status table will be highlighted.</li>
-  <li>A new page was also created for External Compactions that allows users to see the progress of compactions and other details about ongoing compactions (see below).</li>
+  <li>A new feature was added to the TabletServer page to help users identify which tservers are in
+recovery mode. When a tserver is recovering, its corresponding row in the TabletServer Status
+table will be highlighted.</li>
+  <li>A new page was also created for External Compactions that allows users to see the progress of
+compactions and other details about ongoing compactions (see below).</li>
 </ul>
 
 <p><a href="https://github.com/apache/accumulo/issues/2283">#2283</a> <a href="https://github.com/apache/accumulo/issues/2294">#2294</a> <a href="https://github.com/apache/accumulo/issues/2358">#2358</a> <a href="https://github.com/apache/accumulo/issues/2663">#2663</a></p>
@@ -466,58 +481,78 @@ a tserver is recovering, its corresponding row in the Tablet Server Status table
 
 <h3 id="new-tserver-scan-timeout-property">New tserver scan timeout property</h3>
 
-<p>The new property <code class="language-plaintext highlighter-rouge">tserver.scan.results.max.timeout</code> was added to allow configuration of the timeout. A bug was
-discovered where tservers were running out of memory, partially due to this timeout being so short. The default value
-is 1 second, but now it can be increased. It is the max time for the thrift client handler to wait for scan results before
-timing out. <a href="https://github.com/apache/accumulo/issues/2599">#2599</a> <a href="https://github.com/apache/accumulo/issues/2598">#2598</a></p>
+<p>The new property <code class="language-plaintext highlighter-rouge">tserver.scan.results.max.timeout</code> was added to allow configuration of the timeout.
+A bug was discovered where tservers were running out of memory, partially due to this timeout being
+so short. The default value is 1 second, but now it can be increased. It is the max time for the
+thrift client handler to wait for scan results before timing out. <a href="https://github.com/apache/accumulo/issues/2599">#2599</a> <a href="https://github.com/apache/accumulo/issues/2598">#2598</a></p>
+
+<h3 id="always-choose-volumes-for-new-tablet-files">Always choose volumes for new tablet files</h3>
+
+<p>In <a href="https://github.com/apache/accumulo/issues/1389">#1389</a>, we changed the behavior of the VolumeChooser. It now runs any time a new file is
+created. This means VolumeChooser decisions are no longer “sticky” for tablets. This allows tablets
+to balance their files across multiple HDFS volumes, instead of the first selected. Now, only the
+directory name is “sticky” for a tablet, but the volume is not. So, new files will appear in a
+directory named the same on different volumes that the VolumeChooser selects.</p>
+
+<h3 id="iterators-package-is-now-public-api">Iterators package is now public API</h3>
+
+<p><a href="https://github.com/apache/accumulo/issues/1390">#1390</a> <a href="https://github.com/apache/accumulo/issues/1400">#1400</a> <a href="https://github.com/apache/accumulo/issues/1411">#1411</a> We declared that the core.iterators package is public
+API, so it will now follow the semver rules for public API.</p>
+
+<h3 id="better-accumulo-gc-memory-usage">Better accumulo-gc memory usage</h3>
+
+<p><a href="https://github.com/apache/accumulo/issues/1543">#1543</a> <a href="https://github.com/apache/accumulo/issues/1650">#1650</a> Switch from batching file candidates to delete based on the amount of
+available memory, and instead use a fixed-size batching strategy. This allows the accumulo-gc to run
+consistently using a batch size that is configurable by the user. The user is responsbile for
+ensuring the process is given enough memory to accommodate the batch size they configure, but this
+makes the process much more consistent and predictable.</p>
+
+<h3 id="log4j2">Log4j2</h3>
+
+<p><a href="https://github.com/apache/accumulo/issues/1528">#1528</a> <a href="https://github.com/apache/accumulo/issues/1514">#1514</a> <a href="https://github.com/apache/accumulo/issues/1515">#1515</a> <a href="https://github.com/apache/accumulo/issues/1516">#1516</a> While we still use slf4j, we have
+upgraded the default logger binding to log4j2, which comes with a bunch of features, such as dynamic
+reconfiguration, colorized console logging, and more.</p>
+
+<h3 id="added-foreach-method-to-scanner">Added forEach method to Scanner</h3>
+
+<p><a href="https://github.com/apache/accumulo/issues/1742">#1742</a> <a href="https://github.com/apache/accumulo/issues/1765">#1765</a> We added a forEach method to Scanner objects, so you can easily
+iterate over the results using a lambda / BiConsumer that accepts a key-value pair.</p>
+
+<h3 id="new-public-api-to-set-multiple-properties-atomically">New public API to set multiple properties atomically</h3>
+
+<p><a href="https://github.com/apache/accumulo/issues/2692">#2692</a> We added a new public API added to support setting multiple properties at once
+atomically using a read-modify-write pattern. This is available for table, namespace, and system
+properties, and is called <code class="language-plaintext highlighter-rouge">modifyProperties()</code>. This builds off a related change that allows us to
+more efficiently store and properties in ZooKeeper, which also results in fewer ZooKeeper watches.</p>
 
 <h3 id="other-notable-changes">Other notable changes</h3>
 
 <ul>
   <li><a href="https://github.com/apache/accumulo/issues/1174">#1174</a> <a href="https://github.com/apache/accumulo/issues/816">#816</a> Abstract metadata and change root metadata schema</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1309">#1309</a> Prevent cloning metadata table</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1309">#1309</a> Explicitly prevent cloning metadata table to prevent poor user experience</li>
   <li><a href="https://github.com/apache/accumulo/issues/1313">#1313</a> <a href="https://github.com/apache/accumulo/issues/936">#936</a> Store Root Tablet list of files in Zookeeper</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1310">#1310</a> Examine WALs used by root tablet during GC</li>
   <li><a href="https://github.com/apache/accumulo/issues/1294">#1294</a> <a href="https://github.com/apache/accumulo/issues/1299">#1299</a> Add optional -t tablename to importdirectory shell command.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1332">#1332</a> Disable FileSystemMonitor checks by default</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1345">#1345</a> <a href="https://github.com/apache/accumulo/issues/1352">#1352</a> Allow gc initiated compaction as option.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1090">#1090</a> <a href="https://github.com/apache/accumulo/issues/1330">#1330</a> Consolidate/Simplify ServerOpts</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1389">#1389</a> Always choose volume for new tablet files.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1390">#1390</a> <a href="https://github.com/apache/accumulo/issues/1400">#1400</a> <a href="https://github.com/apache/accumulo/issues/1411">#1411</a> Declare core.iterators package public API</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1441">#1441</a> <a href="https://github.com/apache/accumulo/issues/1405">#1405</a> Improvements to Upgrades</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1397">#1397</a> <a href="https://github.com/apache/accumulo/issues/1461">#1461</a> Replace relative paths on upgrade.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1332">#1332</a> Disable FileSystemMonitor checks of /proc by default (to be removed in future)</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1345">#1345</a> <a href="https://github.com/apache/accumulo/issues/1352">#1352</a> Optionally disable gc-initiated compactions/flushes</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1397">#1397</a> <a href="https://github.com/apache/accumulo/issues/1461">#1461</a> Replace relative paths in the metadata tables on upgrade.</li>
   <li><a href="https://github.com/apache/accumulo/issues/1456">#1456</a> <a href="https://github.com/apache/accumulo/issues/1457">#1457</a> Prevent catastrophic tserver shutdown by rate limiting the shutdown</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1528">#1528</a> <a href="https://github.com/apache/accumulo/issues/1514">#1514</a> <a href="https://github.com/apache/accumulo/issues/1515">#1515</a> <a href="https://github.com/apache/accumulo/issues/1516">#1516</a> Upgraded to Log4j2</li>
   <li><a href="https://github.com/apache/accumulo/issues/1053">#1053</a> <a href="https://github.com/apache/accumulo/issues/1060">#1060</a> <a href="https://github.com/apache/accumulo/issues/1576">#1576</a> Support multiple volumes in import table</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1464">#1464</a> Leverage SimpleThreadPool for improving importtable performance</li>
   <li><a href="https://github.com/apache/accumulo/issues/1568">#1568</a> Support multiple tservers / node in accumulo-service</li>
   <li><a href="https://github.com/apache/accumulo/issues/1644">#1644</a> <a href="https://github.com/apache/accumulo/issues/1645">#1645</a> Fix issue with minor compaction not retrying</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1660">#1660</a> Dropped MemoryManager property</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1543">#1543</a> <a href="https://github.com/apache/accumulo/issues/1650">#1650</a> Use batching strategy for SimpleGarbageCollector candidate memory utilization</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1692">#1692</a> Fix file permissions in source assembly tarball</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1721">#1721</a> Mark security properties experimental</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1739">#1739</a> <a href="https://github.com/apache/accumulo/issues/1746">#1746</a> Cleanup Splits file if CreateTable FaTE operation fails.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1742">#1742</a> <a href="https://github.com/apache/accumulo/issues/1765">#1765</a> Added forEach to Scanner</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1660">#1660</a> Dropped unused MemoryManager property</li>
   <li><a href="https://github.com/apache/accumulo/issues/1764">#1764</a> <a href="https://github.com/apache/accumulo/issues/1783">#1783</a> Parallelize listcompactions in shell</li>
   <li><a href="https://github.com/apache/accumulo/issues/1797">#1797</a> Add table option to shell delete command.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1848">#1848</a> Update column name in the monitor UI</li>
   <li><a href="https://github.com/apache/accumulo/issues/2039">#2039</a> <a href="https://github.com/apache/accumulo/issues/2045">#2045</a> Add bulk import option to ignore empty dirs</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2064">#2064</a> Add option to disable encryption to AESCryptoService</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2117">#2117</a> <a href="https://github.com/apache/accumulo/issues/2236">#2236</a> Make sorted recovery write to RFiles. New <code class="language-plaintext highlighter-rouge">tserver.wal.sort.file.</code> property to configure</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2117">#2117</a> <a href="https://github.com/apache/accumulo/issues/2236">#2236</a> Make sorted recovery write to RFiles. New <code class="language-plaintext highlighter-rouge">tserver.wal.sort.file.</code>
+property to configure</li>
   <li><a href="https://github.com/apache/accumulo/issues/2076">#2076</a> Sorted recovery files can now be encrypted</li>
   <li><a href="https://github.com/apache/accumulo/issues/2441">#2441</a> Upgraded to Junit 5</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2462">#2462</a> Added SUBMITTED FaTE status to differentiate between things that are submitted and running</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2467">#2467</a> Added option to fate shell command to cancel FaTE operations that are NEW or SUBMITTED</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2562">#2562</a> Updated fate shell command to use CommandLine options instead of manual arg parsing</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2524">#2524</a> Scheduled background tasks are now periodically checked to see if they failed</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2692">#2692</a> New public API added to support setting multiple properties at once atomically</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2749">#2749</a> Upgrade Monitor to Bootstrap 5</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2462">#2462</a> Added SUBMITTED FaTE status to differentiate between things submitted vs. running</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2467">#2467</a> Added fate shell command option to cancel FaTE operations that are NEW or SUBMITTED</li>
   <li><a href="https://github.com/apache/accumulo/issues/2807">#2807</a> Added several troubleshooting utilities to the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2820">#2820</a> <a href="https://github.com/apache/accumulo/issues/2900">#2900</a> <code class="language-plaintext highlighter-rouge">du</code> command performance improved by using the metadata table for computation instead of HDFS</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2920">#2920</a> Upgraded to Zookeeper 3.8.0</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2933">#2933</a> Upgraded to slf4j2</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2820">#2820</a> <a href="https://github.com/apache/accumulo/issues/2900">#2900</a> <code class="language-plaintext highlighter-rouge">du</code> command performance improved by using the metadata table for
+computation instead of HDFS</li>
   <li><a href="https://github.com/apache/accumulo/issues/2966">#2966</a> Upgrade Thrift to 0.17.0</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3015">#3015</a> Modified Shell ConfigCommand to handle permission errors when getting configuration information</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
