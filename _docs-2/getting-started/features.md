@@ -287,7 +287,8 @@ See the page on [Caching]({% durl administration/caching %})
 
 ### Compaction
 
-Compactions were reworked in 2.1 to allow plugin capabilities. TODO expand
+Compactions were reworked in 2.1 to allow plugin capabilities. See [the documentation for
+compactions]({% jurl org.apache.accumulo.core.spi.compaction %}).
 
 ### Scan
 
@@ -423,5 +424,5 @@ beginning and end of the range are split, compacted, and then merged.
 [multivolume]: {% durl administration/multivolume %}
 [Iterators]: {% durl development/iterators %}
 [monitor]: {% durl administration/monitoring-metrics %}
-[spi]: TODO
-[volume-chooser]: TODO
+[spi]: {% jurl org.apache.accumulo.core.spi %}
+[volume-chooser]: {% jurl org.apache.accumulo.core.spi.fs.VolumeChooser %}
