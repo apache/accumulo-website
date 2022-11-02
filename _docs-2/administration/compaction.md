@@ -127,17 +127,17 @@ External compactions handle faults and major system events in Accumulo. When a c
 Below are some examples of log entries and metadata table entries for external compactions. First, here are some metadata entries for table `2` . You can see that there are three files of different sizes (file size and number of entries are stored in the value portion of the metadata table rows with the "file" column qualifier).
 
 ```
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2< last:10000bf4e0a0004 []	localhost:9997
-2< loc:10000bf4e0a0004 []	localhost:9997
-2< srv:compact []	111
-2< srv:dir []	default_tablet
-2< srv:flush []	113
-2< srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2< srv:time []	M1618325648093
-2< ~tab:~pr []	\x00
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2< last:10000bf4e0a0004 []  localhost:9997
+2< loc:10000bf4e0a0004 []   localhost:9997
+2< srv:compact []   111
+2< srv:dir []   default_tablet
+2< srv:flush [] 113
+2< srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2< srv:time []  M1618325648093
+2< ~tab:~pr []  \x00
 ```
 
 Below are excerpts from the TabletServer, CompactionCoordinator, Compactor logs and metadata table. I have merged the logs in time order to make it easier to see what is happening.
@@ -156,18 +156,18 @@ running in the TabletServer, returned the information to the Coordinator. The Co
 ```
 
 ```
-2< ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []	{"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2< last:10000bf4e0a0004 []	localhost:9997
-2< loc:10000bf4e0a0004 []	localhost:9997
-2< srv:compact []	111
-2< srv:dir []	default_tablet
-2< srv:flush []	113
-2< srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2< srv:time []	M1618325648093
-2< ~tab:~pr []	\x00
+2< ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2< last:10000bf4e0a0004 []  localhost:9997
+2< loc:10000bf4e0a0004 []   localhost:9997
+2< srv:compact []   111
+2< srv:dir []   default_tablet
+2< srv:flush [] 113
+2< srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2< srv:time []  M1618325648093
+2< ~tab:~pr []  \x00
 ```
 
 Next, the Compactor runs the compaction successfully and reports the status back to the Coordinator. The Coordinator inserts a final state marker into the metadata table (below the logs).
@@ -199,20 +199,20 @@ false, kind:USER)
 ```
 
 ```
-2< ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []	{"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []	841,1000
-2< last:10000bf4e0a0004 []	localhost:9997
-2< loc:10000bf4e0a0004 []	localhost:9997
-2< srv:compact []	111
-2< srv:dir []	default_tablet
-2< srv:flush []	114
-2< srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2< srv:time []	M1618325653080
-2< ~tab:~pr []	\x00
-~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []	{"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
+2< ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2< last:10000bf4e0a0004 []  localhost:9997
+2< loc:10000bf4e0a0004 []   localhost:9997
+2< srv:compact []   111
+2< srv:dir []   default_tablet
+2< srv:flush [] 114
+2< srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2< srv:time []  M1618325653080
+2< ~tab:~pr []  \x00
+~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []    {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
 ```
 
 Finally, the TabletServer commits the compaction.
@@ -224,17 +224,17 @@ Finally, the TabletServer commits the compaction.
 ```
 
 ```
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf []	12354,100000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []	841,1000
-2< last:10000bf4e0a0004 []	localhost:9997
-2< loc:10000bf4e0a0004 []	localhost:9997
-2< srv:compact []	112
-2< srv:dir []	default_tablet
-2< srv:flush []	114
-2< srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2< srv:time []	M1618325653080
-2< ~tab:~pr []	\x00
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf []   12354,100000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2< file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2< last:10000bf4e0a0004 []  localhost:9997
+2< loc:10000bf4e0a0004 []   localhost:9997
+2< srv:compact []   112
+2< srv:dir []   default_tablet
+2< srv:flush [] 114
+2< srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2< srv:time []  M1618325653080
+2< ~tab:~pr []  \x00
 ```
 
 ## Logging

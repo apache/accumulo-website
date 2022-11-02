@@ -84,9 +84,9 @@ Encrypted with Params: ...
 RFile Version            : 8
 
 Locality group           : <DEFAULT>
-	Num   blocks           : 1
-	Index level 0          : 37 bytes  1 blocks
-	...
+      Num   blocks           : 1
+      Index level 0          : 37 bytes  1 blocks
+      ...
 
 Meta block     : BCFile.index
       Raw size             : 4 bytes

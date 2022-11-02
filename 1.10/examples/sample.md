@@ -102,36 +102,36 @@ configuration for sample scan to work.
     RFile Version            : 8
     
     Locality group           : <DEFAULT>
-    	Start block            : 0
-    	Num   blocks           : 1
-    	Index level 0          : 35 bytes  1 blocks
-    	First key              : 2317 doc:content [] 1437672014986 false
-    	Last key               : 9255 doc:url [] 1437672014875 false
-    	Num entries            : 8
-    	Column families        : [doc]
+      Start block            : 0
+      Num   blocks           : 1
+      Index level 0          : 35 bytes  1 blocks
+      First key              : 2317 doc:content [] 1437672014986 false
+      Last key               : 9255 doc:url [] 1437672014875 false
+      Num entries            : 8
+      Column families        : [doc]
     
     Sample Configuration     :
-    	Sampler class          : org.apache.accumulo.core.client.sample.RowSampler
-    	Sampler options        : {hasher=murmur3_32, modulus=2}
+      Sampler class          : org.apache.accumulo.core.client.sample.RowSampler
+      Sampler options        : {hasher=murmur3_32, modulus=2}
 
     Sample Locality group    : <DEFAULT>
-    	Start block            : 0
-    	Num   blocks           : 1
-    	Index level 0          : 36 bytes  1 blocks
-    	First key              : 2317 doc:content [] 1437672014986 false
-    	Last key               : 9255 doc:url [] 1437672014875 false
-    	Num entries            : 6
-    	Column families        : [doc]
+      Start block            : 0
+      Num   blocks           : 1
+      Index level 0          : 36 bytes  1 blocks
+      First key              : 2317 doc:content [] 1437672014986 false
+      Last key               : 9255 doc:url [] 1437672014875 false
+      Num entries            : 6
+      Column families        : [doc]
     
     Meta block     : BCFile.index
-          Raw size             : 4 bytes
-          Compressed size      : 12 bytes
-          Compression type     : gz
+      Raw size             : 4 bytes
+      Compressed size      : 12 bytes
+      Compression type     : gz
 
     Meta block     : RFile.index
-          Raw size             : 309 bytes
-          Compressed size      : 176 bytes
-          Compression type     : gz
+      Raw size             : 309 bytes
+      Compressed size      : 176 bytes
+      Compression type     : gz
 
 
 Shard Sampling Example

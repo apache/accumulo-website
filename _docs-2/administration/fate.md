@@ -119,9 +119,9 @@ Step counts:
 Fate transactions (oldest first):
 Status Filters: [NONE]
 
-Running	txn_id				Status		Command		Step (top)		locks held:(table id, name)	locks waiting:(table id, name)
-0:00:04	0c143900c230c1df	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
-0:00:03	55f59a2ae838e19e	IN_PROGRESS	CompactRange	CompactionDriver	held:[R:(1,ns:ns1), R:(2,t:ns1.table1)]	waiting:[]
+Running txn_id              Status      Command         Step (top)          locks held:(table id, name)             locks waiting:(table id, name)
+0:00:04 0c143900c230c1df    IN_PROGRESS CompactRange    CompactionDriver    held:[R:(1,ns:ns1), R:(2,t:ns1.table1)] waiting:[]
+0:00:03 55f59a2ae838e19e    IN_PROGRESS CompactRange    CompactionDriver    held:[R:(1,ns:ns1), R:(2,t:ns1.table1)] waiting:[]
 
 ```
 ### Cancel
