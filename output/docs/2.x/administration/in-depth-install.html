@@ -551,9 +551,9 @@ at the low end of the range to, and including, the high end of the range.</p>
 <p>Download a binary distribution of Accumulo and install it to a directory on a disk with
 sufficient space:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd &lt;install directory&gt;
-tar xzf accumulo-2.1.0-bin.tar.gz
-cd accumulo-2.1.0
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> &lt;<span class="nb">install </span>directory&gt;
+<span class="nb">tar </span>xzf accumulo-2.1.0-bin.tar.gz
+<span class="nb">cd </span>accumulo-2.1.0
 </code></pre></div></div>
 
 <p>Repeat this step on each machine in your cluster. Typically, the same <code class="language-plaintext highlighter-rouge">&lt;install directory&gt;</code>
@@ -650,8 +650,8 @@ architecture. These will be passed to the Makefile in the environment variable <
 
 <p>Examples:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-util build-native
-accumulo-util build-native -m32
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-util build-native
+accumulo-util build-native <span class="nt">-m32</span>
 </code></pre></div></div>
 
 <p>After building the native map from the source, you will find the artifact in
@@ -892,7 +892,7 @@ take some time for particular configurations.</p>
 
 <p>Next, ssh to each of the hosts you want to add and run:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver start
 </code></pre></div></div>
 
 <p>Make sure the host in question has the new configuration, or else the tablet
@@ -904,12 +904,12 @@ but in practice it’s good to ensure consistent configuration across all nodes.
 <p>If you need to take a node out of operation, you can trigger a graceful shutdown of a tablet
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo admin stop &lt;host(s)&gt; {&lt;host&gt; ...}
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo admin stop &lt;host<span class="o">(</span>s<span class="o">)&gt;</span> <span class="o">{</span>&lt;host&gt; ...<span class="o">}</span>
 </code></pre></div></div>
 
 <p>Alternatively, you can ssh to each of the hosts you want to remove and run:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver stop
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo-service tserver stop
 </code></pre></div></div>
 
 <p>Be sure to update your <code class="language-plaintext highlighter-rouge">conf/cluster.yaml</code> file to account for the removal of these hosts. Bear in mind
@@ -1036,14 +1036,14 @@ URL <code class="language-plaintext highlighter-rouge">hdfs://namenode.example.c
 that the only volume displayed is the volume from the current namenode’s HDFS URL.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
-        Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
 
 Listing volumes referenced in accumulo.root tablets section
-        Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
 Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
 Listing volumes referenced in accumulo.metadata tablets section
-        Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
 
 Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
 </code></pre></div></div>
@@ -1065,17 +1065,17 @@ instance.volumes.replacements=hdfs://namenode.example.com:8020/accumulo hdfs://n
 new nameservice volume shows up with <code class="language-plaintext highlighter-rouge">accumulo admin volumes</code>.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Listing volumes referenced in zookeeper
-        Volume : hdfs://namenode.example.com:8020/accumulo
-        Volume : hdfs://nameservice1/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
 
 Listing volumes referenced in accumulo.root tablets section
-        Volume : hdfs://namenode.example.com:8020/accumulo
-        Volume : hdfs://nameservice1/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
 Listing volumes referenced in accumulo.root deletes section (volume replacement occurs at deletion time)
 
 Listing volumes referenced in accumulo.metadata tablets section
-        Volume : hdfs://namenode.example.com:8020/accumulo
-        Volume : hdfs://nameservice1/accumulo
+    Volume : hdfs://namenode.example.com:8020/accumulo
+    Volume : hdfs://nameservice1/accumulo
 Listing volumes referenced in accumulo.metadata deletes section (volume replacement occurs at deletion time)
 </code></pre></div></div>
 
@@ -1156,13 +1156,13 @@ the memory.maps.max parameter in accumulo.properties.</li>
 Off-heap memory, plus the in-memory map of the Accumulo TServer process. A
 simple calculation for physical memory requirements follows:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Physical memory needed
-    = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
-    = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process)
-        + (total applications memory, provisioning memory, etc.) + (1G)
-    = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
-    = (2150M) + (7G) + (2G) + (1G)
-    = ~12GB
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Physical memory needed
+  = (per-process off-heap memory) + (heap memory) + (other processes) + (margin)
+  = (number of java processes * 150M + native map) + (sum of -Xmx settings for java process)
+      + (total applications memory, provisioning memory, etc.) + (1G)
+  = (11*150M +500M) + (1G +1G +1G +256M +1G +256M +512M +512M +512M +512M +512M) + (2G) + (1G)
+  = (2150M) + (7G) + (2G) + (1G)
+  = ~12GB
 </code></pre></div></div>
 
 <p>These calculations can add up quickly with the large number of processes,
