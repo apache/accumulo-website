@@ -300,7 +300,7 @@ reduce the latency for a batch of Mutations that have been written to Accumulo, 
 of seconds for replication once ingest is active. For a table which replication has just been enabled on, this is likely
 to take a few minutes before replication will begin.
 
-Once ingest is active and flowing into the system at a regular rate, replication should be occurring at a similar rate, 
+Once ingest is active and flowing into the system at a regular rate, replication should be occurring at a similar rate,
 given sufficient computing resources. Replication attempts to copy data at a rate that is to be considered low latency
 but is not a replacement for custom indexing code which can ensure near real-time referential integrity on secondary indexes.
 

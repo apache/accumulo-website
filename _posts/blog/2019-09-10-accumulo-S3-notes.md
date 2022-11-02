@@ -12,7 +12,7 @@ aware of write ahead logs.
 
 ## Hadoop setup
 
-At least the following settings should be added to Hadoop's `core-site.xml` file on each node in the cluster. 
+At least the following settings should be added to Hadoop's `core-site.xml` file on each node in the cluster.
 
 ```xml
 <property>
@@ -107,7 +107,7 @@ root@muchos s3test> insert r1 f1 q1 v1
 root@muchos s3test> insert r1 f1 q2 v2
 root@muchos s3test> flush -w
 2019-09-10 19:39:04,695 [shell.Shell] INFO : Flush of table s3test  completed.
-root@muchos s3test> scan 
+root@muchos s3test> scan
 r1 f1:q1 []    v1
 r1 f1:q2 []    v2
 root@muchos s3test> scan -t accumulo.metadata -c file

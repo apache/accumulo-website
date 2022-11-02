@@ -23,7 +23,7 @@ When data is written to Accumulo the following happens :
 
 The sync/flush step above moves data written to the WAL from memory to disk.
 Write ahead logs are stored in HDFS. HDFS supports two ways of forcing data to
-disk for an open file : `hsync` and `hflush`.  
+disk for an open file : `hsync` and `hflush`.
 
 ## HDFS Sync/Flush Details
 
@@ -60,7 +60,7 @@ where sync occurs in the datanode code.
    synchronously flushes data and filesystem metadata.
 
 If files were preallocated (this would avoid syncing local filesystem metadata)
-and checksums were stored in-line, then 1 sync could be done instead of 4.  
+and checksums were stored in-line, then 1 sync could be done instead of 4.
 
 ## Configuring WAL flush/sync in Accumulo 1.6
 
@@ -86,10 +86,10 @@ for configuring durability.  It also stopped using the `tserver.wal.sync.method`
 property.  The `table.durability` property has the following four legal values.
 This property defaults to the most durable option which is `sync`.
 
- * **none** : Do not write to WAL            
- * **log**  : Write to WAL, but do not sync  
- * **flush** : Write to WAL and call `hflush` 
- * **sync** : Write to WAL and call `hsync`  
+ * **none** : Do not write to WAL
+ * **log**  : Write to WAL, but do not sync
+ * **flush** : Write to WAL and call `hflush`
+ * **sync** : Write to WAL and call `hsync`
 
 If multiple writes arrive at around the same time with different durability
 settings, then the group commit code will choose the most durable.  This can

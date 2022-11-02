@@ -14,12 +14,12 @@ are specific to Accumulo 2.0 and Hadoop 3.2.0.
 
 For ABFS client to talk to Gen2 storage, it requires one of the Authentication mechanism listed [here](https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html#Authentication)
 This post covers [Azure Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview)
-formerly known as Managed Service Identity or MSI. This feature provides Azure services with an 
+formerly known as Managed Service Identity or MSI. This feature provides Azure services with an
 automatically managed identity in [Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis)
-and it avoids the need for credentials or other sensitive information from being stored in code 
-or configs/JCEKS. Plus, it comes free with Azure AD.  
+and it avoids the need for credentials or other sensitive information from being stored in code
+or configs/JCEKS. Plus, it comes free with Azure AD.
 
-At least the following should be added to Hadoop's `core-site.xml` on each node. 
+At least the following should be added to Hadoop's `core-site.xml` on each node.
 
 ```xml
 <property>
@@ -39,12 +39,12 @@ At least the following should be added to Hadoop's `core-site.xml` on each node.
   <value>ClientID</value>
 </property>
 ```
- 
+
 See [ABFS doc](https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html)
 for more information on Hadoop Azure support.
 
-To get hadoop command to work with ADLS Gen2 set the 
-following entries in `hadoop-env.sh`. As Gen2 storage is TLS enabled by default, 
+To get hadoop command to work with ADLS Gen2 set the
+following entries in `hadoop-env.sh`. As Gen2 storage is TLS enabled by default,
 it is important we use the native OpenSSL implementation of TLS.
 
 ```bash
@@ -52,7 +52,7 @@ export HADOOP_OPTIONAL_TOOLS="hadoop-azure"
 export HADOOP_OPTS="-Dorg.wildfly.openssl.path=<path/to/OpenSSL/libraries> ${HADOOP_OPTS}"
 ```
 
-To verify the location of the OpenSSL libraries, run `whereis libssl` command 
+To verify the location of the OpenSSL libraries, run `whereis libssl` command
 on the host
 
 ## Accumulo setup
@@ -138,8 +138,8 @@ root@muchos gen2test> scan -t accumulo.metadata -c file
 4< file:abfss://<file_system>@<storage_account_name>.dfs.core.windows.net/accumulo/tables/4/default_tablet/F00000gj.rf []    234,2
 ```
 
-These instructions will help to configure Accumulo to use Azure's Data Lake Gen2 Storage along with HDFS. With this setup, 
-we are able to successfully run the continuos ingest test. Going forward, we'll experiment more on this space 
+These instructions will help to configure Accumulo to use Azure's Data Lake Gen2 Storage along with HDFS. With this setup,
+we are able to successfully run the continuos ingest test. Going forward, we'll experiment more on this space
 with ADLS Gen2 and add/update blog as we come along.
 
 

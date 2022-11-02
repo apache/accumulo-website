@@ -57,7 +57,7 @@ SSL may be enabled for the monitor page by setting the following properties in t
  * {% plink monitor.ssl.trustStore %}
  * {% plink monitor.ssl.trustStorePassword %}
 
-If the Accumulo conf directory has been configured (in particular the `accumulo-env.sh` file must be set up), the 
+If the Accumulo conf directory has been configured (in particular the `accumulo-env.sh` file must be set up), the
 `accumulo-util gen-monitor-cert` command can be used to create the keystore and truststore files with random passwords. The command
 will print out the properties that need to be added to the `accumulo.properties` file. The stores can also be generated manually with the
 Java `keytool` command, whose usage can be seen in the `accumulo-util` script.

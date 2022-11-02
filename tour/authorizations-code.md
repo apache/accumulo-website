@@ -9,7 +9,7 @@ exists, let's delete and begin fresh.
 
 ```commandline
 client.tableOperations().delete("GothamPD");
-client.securityOperations().dropLocalUser("commissioner"); 
+client.securityOperations().dropLocalUser("commissioner");
 ```
 
 Create a table called "GothamPD".
@@ -115,7 +115,6 @@ Gotham Police Department Persons of Interest:
 |        at TabletScanClientService$Client.startScan (TabletScanClientService.java:89)
 |        at ThriftScanner.scan (ThriftScanner.java:483)
 |        ...
- 
 ```
 
 This results in an error since the root user doesn't have the authorizations we tried to pass to the Scanner
@@ -130,7 +129,7 @@ jshell> try (AccumuloClient commishClient = Accumulo.newClient().from(client.pro
    ...>     for (Map.Entry<Key, Value> entry : scan) {
    ...>       System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
    ...>     }
-   ...>   } 
+   ...>   }
    ...> }
 ```
 

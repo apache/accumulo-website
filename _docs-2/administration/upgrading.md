@@ -195,7 +195,7 @@ Prior to upgrading you must:
 
 - Verify that there are no outstanding FATE operations
   - Under 1.4 you can list what's in FATE by running ```$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print```
-  - Note that operations in any state will prevent an upgrade. It is safe to delete operations with status SUCCESSFUL. For others, 
+  - Note that operations in any state will prevent an upgrade. It is safe to delete operations with status SUCCESSFUL. For others,
       you should restart your 1.4 cluster and allow them to finish.
 - Stop the 1.4 instance.
 - Configure 1.6 to use the hdfs directory, walog directories, and zookeepers that 1.4 was using.
@@ -217,7 +217,7 @@ Note that the LocalWALRecovery tool does not delete the local files. Once you co
 
 This happens automatically the first time Accumulo 1.5 is started.
 
-- Stop the 1.4 instance.  
+- Stop the 1.4 instance.
 - Configure 1.5 to use the hdfs directory, walog directories, and zookeepers
   that 1.4 was using.
 - Copy other 1.4 configuration options as needed.

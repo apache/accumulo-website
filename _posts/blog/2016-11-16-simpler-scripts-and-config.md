@@ -20,7 +20,7 @@ bootstrap_config.sh  config-server.sh         start-all.sh                     s
 bootstrap_hdfs.sh    config.sh                start-daemon.sh                  stop-here.sh     tup.sh
 ```
 
-The number of scripts made it difficult to know which scripts to use.  If you added the `bin/` directory to your 
+The number of scripts made it difficult to know which scripts to use.  If you added the `bin/` directory to your
 `PATH`, it could add unnecessary commands to your PATH or cause commands to be overridden due generic names
 (like 'start-all.sh'). The number of scripts were reduced by removing scripts that are no longer used and combining
 scripts with similar functionality.
@@ -120,7 +120,7 @@ Advanced Commands:
 The new 'accumulo-service' and 'accumulo-cluster' commands also have informative usage.
 
 ```
-$ ./accumulo-2.0.0/bin/accumulo-service 
+$ ./accumulo-2.0.0/bin/accumulo-service
 
 Usage: accumulo-service <service> <command>
 
@@ -136,7 +136,7 @@ Commands:
   stop        Stops service
   kill        Kills service
 
-$ ./accumulo-2.0.0/bin/accumulo-cluster 
+$ ./accumulo-2.0.0/bin/accumulo-cluster
 
 Usage: accumulo-cluster <command> (<argument> ...)
 

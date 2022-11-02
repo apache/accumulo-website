@@ -31,7 +31,7 @@ instructions on submitting issues and patches.
 A complex application example that makes use of most of the Accumulo feature
 stack. The Wikisearch application provides an example of indexing and querying
 Wikipedia data within Accumulo. It is a great place to start if you want to get
-familiar with good development practices building on Accumulo. 
+familiar with good development practices building on Accumulo.
 
 For details on setting up the application, see the project&apos;s [README.md][wiki-readme]
 where you can also read an overview and some performance numbers.
@@ -62,7 +62,7 @@ Accumulo issue tracker][jira-component].
 ## Adding a new Contrib Project
 
 Proposals for new contrib projects should be sent to the [Accumulo mailing
-list][mailing-list] for [developers][mail-with-subj]. 
+list][mailing-list] for [developers][mail-with-subj].
 
 If an example application only makes use of a single Accumulo feature, it is
 probably better off as an Accumulo version-specific example. You can see

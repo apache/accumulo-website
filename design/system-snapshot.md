@@ -72,14 +72,14 @@ snapshot. The FATE op would do the following :
  1. ensure snapshot name is not in use
  1. pause changing props in ZK
  1. pause non-snapshot FATE ops (let running fate ops keep running, but pause
-    any changes to the fate data store in ZK). 
+    any changes to the fate data store in ZK).
  1. pause Accumulo GC
  1. flush metadata table
  1. flush root table (probably need to to fix {% ghi 798 %})
  1. TODO should the root and metadata table be checked for consistency?
     Ongoing split and FATE ops that may cause inconsistency should resolve after
     the snapshot is restored, so this seems uneeded.
- 1. Create snapshot copying ZK to DFS (this is the snapshot assuming 
+ 1. Create snapshot copying ZK to DFS (this is the snapshot assuming
     {% ghi 936 %} is done)
  1. Unpause everything. When the GC is unpaused, it should start fresh reading
     all snapshots available.

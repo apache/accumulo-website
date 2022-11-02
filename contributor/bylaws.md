@@ -1,6 +1,6 @@
 ---
 title: Bylaws
-redirect_from: 
+redirect_from:
   - /bylaws
   - /governance/bylaws
 ---
@@ -37,7 +37,7 @@ A committer is considered emeritus, meaning inactive, by their own declaration o
 
 An emeritus committer’s commit access may be disabled as part of routine security. Access shall not be removed without notifying the committer, and access shall be maintained if the committer wishes to leave it active. A committer’s commit access shall be reactivated upon the committer’s request to the PMC.
 
-All Apache committers are required to have a signed [Contributor License Agreement][icla] (CLA) on file with the Apache Software Foundation. Under the terms of the CLA that all committers must sign, a committer's primary responsibility is to ensure that all code committed to Apache Accumulo is licensed appropriately and meets those criteria set forth in the CLA (including both original works and patches committed on behalf of other contributors). There is a [Committer FAQ][committer-faq] which provides more details on the requirements for committers. 
+All Apache committers are required to have a signed [Contributor License Agreement][icla] (CLA) on file with the Apache Software Foundation. Under the terms of the CLA that all committers must sign, a committer's primary responsibility is to ensure that all code committed to Apache Accumulo is licensed appropriately and meets those criteria set forth in the CLA (including both original works and patches committed on behalf of other contributors). There is a [Committer FAQ][committer-faq] which provides more details on the requirements for committers.
 
 It is the custom of the Accumulo project to also invite each committer to become a member of the Accumulo PMC.
 

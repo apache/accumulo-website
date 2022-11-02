@@ -4,14 +4,14 @@ author: Markus Cozowicz, Scott Graham
 ---
 
 # Overview
-[MASC](https://github.com/microsoft/masc) provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo. 
+[MASC](https://github.com/microsoft/masc) provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo.
 
 ## Major Features
 - Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API
 - Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format
 - Scala and Python support without overhead for moving between languages
 - Process streaming data from Accumulo without loading it all into Spark memory
-- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): user can define logical operators and comparisons to reduce the amount of data returned from Accumulo 
+- Push down filtering with a flexible expression language ([JUEL](http://juel.sourceforge.net/)): user can define logical operators and comparisons to reduce the amount of data returned from Accumulo
 - Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo
 - Server side inference: ML model inference can run on the Accumulo nodes using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo
 
@@ -35,7 +35,7 @@ The Accumulo-Spark connector is composed of two components:
   - row-based filtering
   - [MLeap](https://github.com/combust/mleap) ML model inference and
   - row assembly using [Apache AVRO](https://avro.apache.org/)
-- Spark DataSource V2 
+- Spark DataSource V2
   - determines the number of Spark tasks based on available Accumulo table splits
   - translates Spark filter conditions into a [JUEL](http://juel.sourceforge.net/) expression
   - configures the Accumulo iterator
@@ -44,7 +44,7 @@ The Accumulo-Spark connector is composed of two components:
 ![Architecture](/images/blog/202002_masc/architecture.svg "MASC Architecture Diagram")
 
 # Usage
-More detailed documentation on installation and use is available in the 
+More detailed documentation on installation and use is available in the
 [Connector documentation](https://github.com/microsoft/masc/blob/master/connector/README.md)
 
 ## Dependencies
@@ -103,26 +103,26 @@ See the [demo notebook](https://github.com/microsoft/masc/blob/master/connector/
 
 # Computational Performance of AI Scenario
 ## Setup
-The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used [Azure D16s_v3](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) (16 cores) virtual machines. [Fluo-muchos](https://github.com/apache/fluo-muchos) was used to handle Accumulo and Spark cluster deployments and configuration. 
+The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used [Azure D16s\_v3](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) (16 cores) virtual machines. [Fluo-muchos](https://github.com/apache/fluo-muchos) was used to handle Accumulo and Spark cluster deployments and configuration.
 
 In all experiments we use the same base dataset which is a collection of Twitter user tweets with labeled sentiment value. This dataset is known as the Sentiment140 dataset ([Go, Bhayani, & Huang, 2009](https://www-nlp.stanford.edu/courses/cs224n/2009/fp/3.pdf)). The training data consist of 1.6M samples of tweets, where each tweet has columns indicating the sentiment label, user, timestamp, query term, and text. The text is limited to 140 characters and the overall uncompressed size of the training dataset is 227MB.
 
-| sentiment | id | date | query_string | user | text |
+| sentiment | id | date | query\_string | user | text |
 | --- | --- | --- | --- | --- | --- |
-|0|1467810369|Mon Apr 06 22:19:...|    NO_QUERY|_TheSpecialOne_|@switchfoot http:...|
-|0|1467810672|Mon Apr 06 22:19:...|    NO_QUERY|  scotthamilton|is upset that he ...|
-|0|1467810917|Mon Apr 06 22:19:...|    NO_QUERY|       mattycus|@Kenichan I dived...|
+|0|1467810369|Mon Apr 06 22:19:...|    NO\_QUERY|\_TheSpecialOne\_|@switchfoot http:...|
+|0|1467810672|Mon Apr 06 22:19:...|    NO\_QUERY|  scotthamilton|is upset that he ...|
+|0|1467810917|Mon Apr 06 22:19:...|    NO\_QUERY|       mattycus|@Kenichan I dived...|
 
 To evaluate different table sizes and the impact of splitting the following procedure was used to generate the Accumulo tables:
 
 - Prefix id with split keys (e.g. 0000, 0001, ..., 1024)
 - Create Accumulo table and configure splits
-- Upload prefixed data to Accumulo using Spark and the MASC writer 
+- Upload prefixed data to Accumulo using Spark and the MASC writer
 - Duplicate data using custom Accumulo server-side iterator
 - Validate data partitioning
 
-A common machine learning scenario was evaluated using a sentiment model trained using [SparkML](https://spark.apache.org/docs/latest/ml-guide.html). 
-To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of 
+A common machine learning scenario was evaluated using a sentiment model trained using [SparkML](https://spark.apache.org/docs/latest/ml-guide.html).
+To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of
 
 - Regex Tokenizer
 - Hashing Transformer
@@ -133,7 +133,7 @@ See the [benchmark notebook (Scala)](https://github.com/microsoft/masc/blob/mast
 ## Results
 The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows
 
-- Accumulo table split size (1GB, 8GB, 32GB, 64GB) 
+- Accumulo table split size (1GB, 8GB, 32GB, 64GB)
 - Total table size (1TB, 10TB, 100TB, 1PB)
 - Operations
   - Count: plain count of the data
@@ -170,9 +170,9 @@ The second set of experiments highlights the computational performance improveme
   - [Spark DataSource](https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource)
 
 # License
-This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Apache Spark with Apache Accumulo](https://github.com/microsoft/masc). 
+This work is publicly available under the Apache License 2.0 on GitHub under [Microsoft's contributions for Apache Spark with Apache Accumulo](https://github.com/microsoft/masc).
 
-# Contributions 
+# Contributions
 Feedback, questions, and contributions are welcome!
 
 Thanks to contributions from members on the Azure Global Customer Engineering and Azure Government teams.

@@ -15,10 +15,10 @@ learned by writing code on your own. The answers to an exercise are typically pr
 The tour begins at the [Getting Started][start] page.
 
 When on a tour page, the left and right keys on the keyboard can be used to navigate. If you have any
-questions or suggestions while going through the tour, please email our [mailing list][mlist] or 
-[create an issue][issue]. 
+questions or suggestions while going through the tour, please email our [mailing list][mlist] or
+[create an issue][issue].
 
-This version works interactively making use of the JShell feature of Java. It is designed to work on 
+This version works interactively making use of the JShell feature of Java. It is designed to work on
 versions of Accumulo 2.1.x or greater.
 
 {% for p in tour_pages %}

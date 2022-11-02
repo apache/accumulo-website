@@ -1,7 +1,7 @@
 ---
 title: Release Archive
 permalink: /release/
-redirect_from: 
+redirect_from:
   - /release_notes/
   - /release_notes.html
 ---

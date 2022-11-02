@@ -34,7 +34,7 @@ First add the checkstyle Maven plugin to your pom.
 ```
 The plugin version is the latest at the time of this post.  For more information see the website for
 the [Apache Maven Checkstyle Plugin][plugin].  The configuration above adds the plugin to ```check``` execution goal
-so it will always run with your build.  
+so it will always run with your build.
 
 Create the configuration file specified above: ```checkstyle.xml```
 

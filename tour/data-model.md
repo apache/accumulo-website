@@ -26,7 +26,7 @@ mutation1.put("hero","alias", "Batman");
 It can be broken down as follows: <br/>
 
 | **Row ID**: | id0001 |
-| **Column Family**: | hero |  
+| **Column Family**: | hero |
 | **Column Qualifier**: | alias |
 | **Value**: | Batman |
 

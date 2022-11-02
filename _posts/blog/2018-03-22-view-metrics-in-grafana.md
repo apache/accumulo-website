@@ -13,7 +13,7 @@ using [Hadoop Metrics2][metrics2]. While it's easy to configure Accumulo to send
 setting up and configuring a metrics visualization tool (i.e Graphite, Ganglia, Grafana/InfluxDB) to collect
 and view these metrics.
 
-To ease this burden, this post describes how to send Accumulo metrics to [InfluxDB], a time series database, 
+To ease this burden, this post describes how to send Accumulo metrics to [InfluxDB], a time series database,
 and make them viewable in [Grafana], a visualization tool.
 
 Below is a screenshot of Accumulo metrics in Grafana:
@@ -27,7 +27,7 @@ Below is a screenshot of Accumulo metrics in Grafana:
 
 ```
 uno setup accumulo --with-metrics
-``` 
+```
 
 Metrics from Accumulo will be immediately viewable in Grafana at [http://localhost:3000/](http://localhost:3000/).
 

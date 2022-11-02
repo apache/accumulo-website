@@ -162,7 +162,7 @@ Accumulo process: `managers`, `monitors`, `tservers`, `tracers`, and `gc`.
 Normally, no changes are needed in `accumulo-env.sh` to enable Kerberos. Typically, the `krb5.conf`
 is installed on the local machine in `/etc/`, and the Java library implementations will look
 here to find the necessary configuration to communicate with the KDC. Some installations
-may require a different `krb5.conf` to be used for Accumulo which can be accomplished 
+may require a different `krb5.conf` to be used for Accumulo which can be accomplished
 by adding the JVM system property `-Djava.security.krb5.conf=/path/to/other/krb5.conf` to
 `JAVA_OPTS` in `accumulo-env.sh`.
 

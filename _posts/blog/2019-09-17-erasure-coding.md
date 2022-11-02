@@ -4,8 +4,8 @@ author: Ed Seidl
 reviewers:
 ---
 
-HDFS normally stores multiple copies of each file for both performance and durability reasons. 
-The number of copies is controlled via HDFS replication settings, and by default is set to 3. Hadoop 3, 
+HDFS normally stores multiple copies of each file for both performance and durability reasons.
+The number of copies is controlled via HDFS replication settings, and by default is set to 3. Hadoop 3,
 introduced the use of erasure coding (EC), which improves durability while decreasing overhead.
 Since Accumulo 2.0 now supports Hadoop 3, it's time to take a look at whether using
 EC with Accumulo makes sense.
@@ -17,7 +17,7 @@ EC with Accumulo makes sense.
 ### EC Intro
 
 By default HDFS achieves durability via block replication.  Usually
-the replication count is 3, resulting in a storage overhead of 200%. Hadoop 3 
+the replication count is 3, resulting in a storage overhead of 200%. Hadoop 3
 introduced EC as a better way to achieve durability.  More info can be
 found [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html).
 EC behaves much like RAID 5 or 6...for *k* blocks of data, *m* blocks of
@@ -36,8 +36,8 @@ to the DataNodes.  This increases the CPU and network load on the client.  The C
 hit can be mitigated by using Intels ISA-L library, but only on CPUs
 that support AVX or AVX2 instructions.  (See [EC Myths] and [EC Introduction]
 for some interesting claims). In addition, unlike the serial replication I/O path,
-the EC I/O path is parallel providing greater throughput. In our testing, sequential writes to 
-an EC directory were as much as 3 times faster than a replication directory 
+the EC I/O path is parallel providing greater throughput. In our testing, sequential writes to
+an EC directory were as much as 3 times faster than a replication directory
 , and reads were up to 2 times faster.
 
 Another side effect of EC is loss of data locality.  For performance reasons, EC
@@ -52,7 +52,7 @@ without compromising sequential read/write performance.
 Before continuing, an important caveat;  the current implementation of EC on Hadoop supports neither hsync
 nor hflush.  Both of these operations are silent no-ops (EC [limitations]).  We discovered this the hard
 way when a data center power loss resulted in write-ahead log corruption, which were
-stored in an EC directory.  To avoid this problem ensure all 
+stored in an EC directory.  To avoid this problem ensure all
 WAL directories use replication.  It's probably a good idea to keep the
 accumulo namespace replicated as well, but we have no evidence to back up that assertion.  As with all
 things, don't test on production data.
@@ -81,7 +81,7 @@ Spark executors, performing tests with 16 executors that did not stress the clus
 128 executors which exhausted our network bandwidth allotment of 5 Gbps. As can be seen, in the 16 executor
 environment, we saw greater than a 3X bump in throughput using RS 10-4 with 1MB stripes over triple replication.
 At saturation, the speed up was still over 2X, which is in line with the results from [EC Myths]. Also of note,
-using RS 6-3 with 64KB stripes performed better than the same with 1MB stripes, which is a nice result for Accumulo, 
+using RS 6-3 with 64KB stripes performed better than the same with 1MB stripes, which is a nice result for Accumulo,
 as we'll show later.
 
 |Encoding|16 executors|128 executors|
@@ -113,7 +113,7 @@ Accumulo sequential I/O is doing far more than just reading or writing files; co
 for example, place quite a load upon the tablet server CPUs.  An example to illustrate this is shown below.
 The time in minutes to bulk-write 400 million rows to RFiles with 40 Spark executors is listed for both EC
 using RS 6-3 with 1MB stripes and triple replication.  The choice of compressor has a much more profound
-effect on the write times than the choice of underlying encoding for the directory being written to 
+effect on the write times than the choice of underlying encoding for the directory being written to
 (although without compression EC is much faster than replication).
 
 |Compressor | RS 6-3 1MB | Replication | File size (GB) |
@@ -130,12 +130,12 @@ with each row consisting of 10 columns.  16 Spark executors each performed 10000
 sought 10 random rows.  Thus 16 million individual rows were returned in batches of 10.  For each batch of
 10, the time in milliseconds was captured, and theses times were collected in a histogram of 50ms buckets, with
 a catch-all bucket for queries that took over 1 second.  For this test we reconfigured our cluster to make use
-of c5n.4xlarge nodes featuring must faster networking speeds (15 Gbps sustained vs 5 Gbps for 
-c5.4xlarge). Because these nodes are in short supply, we ran with only 16 HDFS nodes (c5n.4xlarge), 
+of c5n.4xlarge nodes featuring must faster networking speeds (15 Gbps sustained vs 5 Gbps for
+c5.4xlarge). Because these nodes are in short supply, we ran with only 16 HDFS nodes (c5n.4xlarge),
 but still had 16 Spark nodes (also c5n.4xlarge).  Zookeeper and master nodes remained the same.
 
 In the table below, we show the min, max, and average times in milliseconds for each batch of 10 across
-four different encoding policies.  The clear winner here is replication, and the clear loser RS 10-4 with 
+four different encoding policies.  The clear winner here is replication, and the clear loser RS 10-4 with
 1MB stripes, but RS 6-3 with 64KB stripes is not looking too bad.
 
 |Encoding|Min|Avg|Max|
@@ -171,7 +171,7 @@ attributed to missing data, and how much to simply having less computing power a
 ### Conclusion
 HDFS with erasure coding has the potential to double your available Accumulo storage, at the cost of a hit in
 random seek times, but a potential increase in sequential scan performance. We will be proposing some changes
-to Accumulo to make working with EC a bit easier. Our initial thoughts are collected in this 
+to Accumulo to make working with EC a bit easier. Our initial thoughts are collected in this
 Accumulo dev list [post](https://lists.apache.org/thread.html/4ac5b0f664e15fa120e748892612f1e417b7dee3e1539669d179900c@%3Cdev.accumulo.apache.org%3E).
 
 [EC Myths]: https://www.slideshare.net/HadoopSummit/debunking-the-myths-of-hdfs-erasure-coding-performance

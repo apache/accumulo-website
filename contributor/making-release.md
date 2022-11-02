@@ -1,6 +1,6 @@
 ---
 title: Making a Release
-redirect_from: 
+redirect_from:
   - /releasing
   - /contributor/releasing
   - /governance/releasing
@@ -37,7 +37,7 @@ There are number of things that are required before attempting to build a releas
    the maven-release-plugin and staging the release candidate). Your Apache ID and password should be in a `<server>` section of `~/.m2/settings.xml` as shown [here][apache-mvn].
    To encrypt the password follow these [instructions][maven-enc].
 4. Have a clean workspace before starting.
-5. The build will require having the same version of [Thrift binary][thrift] installed on your machine. 
+5. The build will require having the same version of [Thrift binary][thrift] installed on your machine.
 
 Given all of this, it's recommended that you only attempt making a release from a GNU/Linux machine.
 
@@ -71,9 +71,9 @@ When invoking build.sh with the --create-release-candidate option, the majority 
 by the maven-release-plugin, invoking *release:clean*, *release:prepare*, and *release:perform*. These will
 guide you through choosing the correct versions. The default options provided should be what you choose.
 It is highly recommended that an 'RC' suffix is *not* appended to the release version the plugin prompts
-you for, as that will result in that version string being placed into the poms, which then would require 
-voting to occur on artifacts that cannot be directly promoted. After the build.sh script finishes (this will 
-likely take at least 15 minutes, even on recent hardware), your current branch will be on the "next" version 
+you for, as that will result in that version string being placed into the poms, which then would require
+voting to occur on artifacts that cannot be directly promoted. After the build.sh script finishes (this will
+likely take at least 15 minutes, even on recent hardware), your current branch will be on the "next" version
 that you provided to the release plugin.
 
 With a successful invocation of *mvn release:perform*, a staging repository will be made for you on the
@@ -108,7 +108,7 @@ announcement.
 
 # Post release Tasks
 
-## Promote the artifacts 
+## Promote the artifacts
 
 Promote that staged repository using Nexus which you can do with the click of a button. This will trigger
 a process to get the release out to all of the mirrors.

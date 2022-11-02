@@ -46,10 +46,10 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
 </property>
 <property>
   <name>dfs.ha.fencing.methods</name>
-  <value>sshfence(hdfs:22)      
+  <value>sshfence(hdfs:22)
          shell(/bin/true)</value>
 </property>
-<property>   
+<property>
   <name>dfs.ha.fencing.ssh.private-key-files</name>
   <value><PRIVATE_KEY_LOCATION></value>
 </property>
@@ -58,7 +58,7 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
   <value>30000</value>
 </property>
 <property>
-  <name>ha.zookeeper.quorum</name>   
+  <name>ha.zookeeper.quorum</name>
   <value>zkHost1:2181,zkHost2:2181,zkHost3:2181</value>
 </property>
 ```
@@ -74,7 +74,7 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
   <name>dfs.ha.namenodes.nameserviceA</name>
   <value>nn1,nn2</value>
 </property>
-<property> 
+<property>
   <name>dfs.ha.namenodes.nameserviceB</name>
   <value>nn3,nn4</value>
 </property>
@@ -102,7 +102,7 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
   <name>dfs.namenode.rpc-address.nameserviceB.nn4</name>
   <value>host4:8020</value>
 </property>
-<property> 
+<property>
   <name>dfs.namenode.http-address.nameserviceB.nn3</name>
   <value>host3:50070</value>
 </property>
@@ -110,12 +110,12 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
   <name>dfs.namenode.http-address.nameserviceB.nn4</name>
   <value>host4:50070</value>
 </property>
-<property> 
+<property>
   <name>dfs.namenode.shared.edits.dir.nameserviceA.nn1</name>
   <value>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceA</value>
 </property>
 <property>
-  <name>dfs.namenode.shared.edits.dir.nameserviceA.nn2</name>   
+  <name>dfs.namenode.shared.edits.dir.nameserviceA.nn2</name>
   <value>qjournal://jHost1:8485;jHost2:8485;jHost3:8485/nameserviceA</value>
 </property>
 <property>
@@ -130,7 +130,7 @@ The example configuration below shows how to set up Accumulo with HA NameNodes a
   <name>dfs.client.failover.proxy.provider.nameserviceA</name>
   <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
 </property>
-<property> 
+<property>
   <name>dfs.client.failover.proxy.provider.nameserviceB</name>
   <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
 </property>

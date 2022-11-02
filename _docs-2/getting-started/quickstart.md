@@ -72,7 +72,7 @@ The primary configuration files for Accumulo are [accumulo.properties],
 [accumulo-env.sh], and [accumulo-client.properties] which are located in the
 `conf/` directory.
 
-The [accumulo.properties] file configures Accumulo server processes (i.e. tablet 
+The [accumulo.properties] file configures Accumulo server processes (i.e. tablet
 server, manager, monitor, etc). Follow these steps to set it up:
 
 1. Run `accumulo-util build-native` to build native code. If this command fails,

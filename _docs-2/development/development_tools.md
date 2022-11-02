@@ -106,7 +106,7 @@ public class MyIteratorTest extends IteratorTestBase {
       var expectedOutput = new IteratorTestOutput(OUTPUT_DATA);
       return builtinTestCases().map(test -> test.toParameters(input, expectedOutput));
   }
-    
+
   private static SortedMap<Key,Value> INPUT_DATA = createInputData();
   private static SortedMap<Key,Value> OUTPUT_DATA = createOutputData();
 

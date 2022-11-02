@@ -96,7 +96,7 @@ jshell> int add(int x, int y) {
 |  created method add(int,int)
 
 jshell> add(4,5);
-$6 ==> 9      
+$6 ==> 9
 
 jshell> /list
 
@@ -118,7 +118,7 @@ jshell> /list 4
    4 : int add(int x, int y) {
          return x + y;
        }
-       
+
 jshell> /4
 add(4,5);
 $8 ==> 9

@@ -16,7 +16,7 @@ issue, please do the following :
  * Close the JIRA issue as a duplicate.
 
 Eventually, JIRA will be transitioned to a read-only state for reference.  For
-finding issues to work, there may still be 
+finding issues to work, there may still be
 [open issues labeled for newbies][newbie-issues] in JIRA.
 
 ## GitHub Project Boards (Projects)

@@ -141,7 +141,7 @@ configuration.
 
 The `SimpleScanDispatcher`, which is the default dispatcher, supports
 `executor.<type>=<executor>` options. When a scanner sets a hint of the form
-`scan_type=<type>` it will use the executor configured for that type. 
+`scan_type=<type>` it will use the executor configured for that type.
 
 After restarting tservers, the following command will start a scan that uses
 the executor `special` with a priority of 3.  The scan dispatcher maps the scan

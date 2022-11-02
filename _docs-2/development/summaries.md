@@ -13,7 +13,7 @@ memory will not contribute to summary statistics.
 
 This feature can be used to inform a user about what data is in their table.
 Summary statistics can also be used by compaction strategies to make decisions
-about which files to compact.  
+about which files to compact.
 
 Summary data is stored in each file Accumulo produces.  Accumulo can gather
 summary information from across a cluster merging it along the way.  In order
@@ -104,7 +104,7 @@ The visibility summarizer is configured below and the table is flushed.
 Flushing the table creates a file creating summary data in the process. The
 summary data returned counts how many times each column visibility occurred.
 The statistics with a `c:` prefix are visibilities.  The others are generic
-statistics created by the CountingSummarizer that VisibilitySummarizer extends. 
+statistics created by the CountingSummarizer that VisibilitySummarizer extends.
 
     root@uno summary_test> config -t summary_test -s table.summarizer.vis=org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer
     root@uno summary_test> summaries
@@ -113,7 +113,7 @@ statistics created by the CountingSummarizer that VisibilitySummarizer extends.
     root@uno summary_test> summaries
     Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {}
     File Statistics    : [total:1, missing:0, extra:0, large:0]
-    Summary Statistics : 
+    Summary Statistics :
        c:                                                           = 4
        c:PI                                                         = 1
        c:PI&GEO                                                     = 2
@@ -137,7 +137,7 @@ visibilities that were not counted.
  root@uno summary_test> summaries
   Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
   File Statistics    : [total:1, missing:0, extra:0, large:0]
-  Summary Statistics : 
+  Summary Statistics :
      c:PI                                                         = 1
      c:PI&GEO                                                     = 2
      c:PI&TIME                                                    = 3
@@ -169,7 +169,7 @@ root@uno summary_test> flush -w
 root@uno summary_test> summaries
  Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
  File Statistics    : [total:2, missing:0, extra:0, large:0]
- Summary Statistics : 
+ Summary Statistics :
     c:PI                                                         = 1
     c:PI&GEO                                                     = 2
     c:PI&TIME                                                    = 4
@@ -180,7 +180,7 @@ root@uno summary_test> summaries
 
  Summarizer         : org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer del {}
  File Statistics    : [total:2, missing:0, extra:0, large:0]
- Summary Statistics : 
+ Summary Statistics :
     deletes                                                      = 1
     total                                                        = 11
 ```
@@ -201,7 +201,7 @@ root@uno summary_test> flush -w
 root@uno summary_test> summaries
  Summarizer         : org.apache.accumulo.core.client.summary.summarizers.VisibilitySummarizer vis {maxCounters=3}
  File Statistics    : [total:1, missing:0, extra:0, large:0]
- Summary Statistics : 
+ Summary Statistics :
     c:PI                                                         = 1
     c:PI&GEO                                                     = 1
     c:PI&TIME                                                    = 2
@@ -212,10 +212,10 @@ root@uno summary_test> summaries
 
  Summarizer         : org.apache.accumulo.core.client.summary.summarizers.DeletesSummarizer del {}
  File Statistics    : [total:1, missing:0, extra:0, large:0]
- Summary Statistics : 
+ Summary Statistics :
     deletes                                                      = 0
     total                                                        = 6
-root@uno summary_test>   
+root@uno summary_test>
 ```
 
 [AccumuloFileOutputFormat]: {% jurl org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat %}

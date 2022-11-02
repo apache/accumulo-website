@@ -133,7 +133,8 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 ## <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></small> Legend
 {: #legend }
 
-**LTM**{: .label .label-success} / **non-LTM**{: .label .label-warning} indicates a [Long Term Maintenance][LTM] release or not  
+**LTM**{: .label .label-success} / **non-LTM**{: .label .label-warning} indicates a [Long Term Maintenance][LTM] release or not
+
 **Latest**{: .label .label-primary} / **Legacy**{: .label .label-default} indicates the latest or previous generation
 
 

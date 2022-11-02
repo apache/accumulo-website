@@ -77,7 +77,7 @@ jshell> Future<Void> modifyAddress(AccumuloClient client, String id, Function<St
    ...> }
 |  created method modifyAddress(AccumuloClient,String,Function<String,String>)
 
-        
+
 jshell> void concurrent_writes() throws Exception {
    ...>   try {
    ...>     client.tableOperations().create("GothamPD");

@@ -44,7 +44,7 @@ jshell> try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authori
    ...>     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
    ...>   }
    ...> }
-```   
+```
 
 You may notice a problem. We only see the latest entry. That is due to the
 `versioningIterator` which is applied to all tables by default. It filters out all but the latest entry
@@ -68,7 +68,7 @@ jshell> try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authori
    ...>   for(Map.Entry<Key, Value> entry : scan) {
    ...>     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
    ...>   }
-   ...> }   
+   ...> }
 Gotham Police Department Crime Statistics:
 Key : id0001 hero:alias [] 1654697915769 false              Value : Batman
 Key : id0001 hero:villainsCaptured [] 1654697915769 false   Value : 5

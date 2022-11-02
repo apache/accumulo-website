@@ -7,23 +7,23 @@ order: 9
 With the release of version 3.0.0, Hadoop introduced the use of [Erasure Coding]
 (EC) in HDFS.  By default HDFS achieves durability via block replication.
 Usually the replication count is 3, resulting in a storage overhead of 200%.
-Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much 
+Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much
 like RAID 5 or 6...for *k* blocks of data, *m* blocks of parity data are generated,
-from which the original data can be recovered in the event of disk or node 
+from which the original data can be recovered in the event of disk or node
 failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3,
 where 6 data blocks produce 3 parity blocks, an overhead of only 50%.  In
 addition to doubling the available disk space, RS-6-3 is also more fault
 tolerant...a loss of 3 data blocks can be tolerated, whereas triple replication
 can only sustain a loss of two.
 
-To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop 
-with support for Intel's ISA-L library. Instructions for doing this can be found 
+To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop
+with support for Intel's ISA-L library. Instructions for doing this can be found
 [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Enable_Intel_ISA-L)
 
 ### Important Warning
-As noted 
+As noted
 [here](https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations),
-the current EC implementation does not support `hflush()` and `hsync()`.  These 
+the current EC implementation does not support `hflush()` and `hsync()`. These
 functions are no-ops, which means that EC coded files are not guaranteed to
 be written to disk after a sync or flush.  For this reason, **EC should never
 be used for the Accumulo write-ahead logs.  Data loss may, and most likely will,
@@ -34,8 +34,8 @@ occur.** It is also recommended that tables in the `accumulo` namespace (`root` 
 Due to the striped nature of an EC encoded file, an EC enabled HDFS client is threaded.
 This becomes an issue when an Accumulo client or service is configured to use multiple
 threads to read or write to HDFS, and becomes especially problematic when doing bulk
-imports. By default, Accumulo will use eight times the number of cores on the client 
-machine to scan the files to be imported and map them to tablet files. Each thread 
+imports. By default, Accumulo will use eight times the number of cores on the client
+machine to scan the files to be imported and map them to tablet files. Each thread
 created to scan the input files will create on the order of *k* threads to perform
 parallel I/O. RS-10-4 on a 16 core machine, for instance, will spawn over a thousand
 threads to perform this operation. If sufficient memory is not available, this operation
@@ -89,7 +89,7 @@ RS-6-3-64k
 ```
 
 And changing the policy for a parent will also change its children.  The `-setPolicy`
-command here issues a warning that existing files will not be converted.  To 
+command here issues a warning that existing files will not be converted. To
 switch the policy for an existing file, you must create a new file (through
 a copy, for instance).  For Accumulo, if you change the encoding policy for
 a table's directories, you would then have to perform a major compaction on
@@ -108,7 +108,7 @@ RS-6-3-1024k
 ### Configuring EC for a New Instance
 If you wish to create a new instance with a single encoding policy for all tables,
 you simply need to change the encoding policy on the `tables` directory after
-running `accumulo init` (see 
+running `accumulo init` (see
 [Quick Start]({% durl getting-started/quickstart#initialization %}) guide).  To
 keep the tables in the `accumulo` namespace using replication, you
 would then need to manually change them back to using replication.  Assuming
@@ -165,11 +165,11 @@ user@instance> compact -t test.table1
 
 ### Defining Custom EC Policies
 Hadoop by default will enable only a single EC policy, which is
-determined by the value of the `dfs.namenode.ec.system.default.policy` 
+determined by the value of the `dfs.namenode.ec.system.default.policy`
 configuration setting.  To enable an existing policy, use the `hdfs ec -enablePolicy`
-command.  To define custom policies, you must first edit the 
+command.  To define custom policies, you must first edit the
 `user_ec_policies.xml` file found in the Hadoop configuration directory,
-and then run the `hdfs ec -addPolicies` command.  For example, to add 
+and then run the `hdfs ec -addPolicies` command.  For example, to add
 RS-6-3-64k as a policy, you first edit `user_ec_policies.xml` and add
 the following:
 
@@ -193,7 +193,7 @@ the following:
 </policies>
 </configuration>
 ```
-Here the schema "RSk6m3" defines a Reed-Solomon encoding with *k*=6 
+Here the schema "RSk6m3" defines a Reed-Solomon encoding with *k*=6
 data blocks and *m*=3 parity blocks.  This schema is then used to define
 a policy that uses RS-6-3 encoding with a stripe size of 64k.  To add
 this policy:

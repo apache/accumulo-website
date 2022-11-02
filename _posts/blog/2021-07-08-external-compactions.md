@@ -58,7 +58,7 @@ properties. The simplest way to explain this is that you can now define a
 service for executing compactions and then assign that service to a table
 (which implies you can have multiple services assigned to different tables).
 This gives the flexibility to prevent one table's compactions from impacting
-another table. Each service has named thread pools with size thresholds. 
+another table. Each service has named thread pools with size thresholds.
 
 ### Configuration
 
@@ -218,13 +218,13 @@ configuration.
  * Zookeeper 3.6.2
  * Hadoop 3.3.0
  * Accumulo 2.1.0-SNAPSHOT [dad7e01][2]
- * 23 D16s_v4 VMs, each with 16x128G HDDs stripped using LVM. 22 were workers.
+ * 23 D16s\_v4 VMs, each with 16x128G HDDs stripped using LVM. 22 were workers.
 
 
 The following diagram shows how the two clusters were setup.  The Muchos and
 Kubernetes clusters were on the same private vnet, each with its own /16 subnet
 in the 10.x.x.x IP address space.  The Kubernetes cluster that ran external
-compactions was backed by at least 3 D8s_v4 VMs, with VMs autoscaling with the
+compactions was backed by at least 3 D8s\_v4 VMs, with VMs autoscaling with the
 number of pods running.
 
 ![Cluster Layout](/images/blog/202107_ecomp/clusters-layout.png)
@@ -234,7 +234,7 @@ Kubernetes with processes like the Compaction Coordinator and DataNodes running
 outside of Kubernetes in the Muchos cluster.  For some insights into how these
 problems were overcome, checkout the comments in the [deployment
 spec](/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml) used.
- 
+
 ### Configuration
 
 The following Accumulo shell commands set up a new compaction service named
@@ -288,7 +288,7 @@ Kubernetes. Then the following commands were run to start the Compactors using
 The yaml file contains comments explaining issues related to IP addresses and DNS names.
 
 ```
-kubectl apply -f accumulo-compactor-muchos.yaml 
+kubectl apply -f accumulo-compactor-muchos.yaml
 kubectl autoscale deployment accumulo-compactor --cpu-percent=80 --min=10 --max=660
 ```
 
@@ -310,18 +310,18 @@ worker VMs, so the max of 660 exceeds what the Muchos cluster could run itself.
 ### Ingesting data
 
 After starting Compactors, 22 continuous ingest clients (from
-accumulo_testing) were started.  The following plot shows the number of
+accumulo-testing) were started.  The following plot shows the number of
 compactions running in the three different compaction queues
-configured.  The executor cs1_small is for compactions <= 32M and it stayed
+configured.  The executor cs1\_small is for compactions <= 32M and it stayed
 pretty busy as minor compactions constantly produce new small files.  In 2.1.0
 merging minor compactions were removed, so it's important to ensure a
 compaction queue is properly configured for new small files. The executor
-cs1_medium was for compactions >32M and <=128M and it was not as busy, but did
+cs1\_medium was for compactions >32M and <=128M and it was not as busy, but did
 have steady work.  The external compaction queue DCQ1 processed all compactions
 over 128M and had some spikes of work.  These spikes are to be expected with
 continuous ingest as all Tablets are written to evenly and eventually all of
-the Tablets need to run large compactions around the same time. 
-  
+the Tablets need to run large compactions around the same time.
+
 ![Compactions Running](/images/blog/202107_ecomp/ci-running.png)
 
 The following plot shows the number of pods running in Kubernetes.  As
@@ -331,7 +331,7 @@ and down.
 ![Pods Running](/images/blog/202107_ecomp/ci-pods-running.png)
 
 The following plot shows the number of compactions queued.  When the
-compactions queued for cs1_small spiked above 750, it was adjusted from 4
+compactions queued for cs1\_small spiked above 750, it was adjusted from 4
 threads per Tablet Server to 6 threads.  This configuration change was made while
 everything was running and the Tablet Servers saw it and reconfigured their thread
 pools on the fly.
@@ -341,12 +341,12 @@ pools on the fly.
 The metrics emitted by Accumulo for these plots had the following names.
 
 
- * TabletServer1.tserver.compactionExecutors.e_DCQ1_queued
- * TabletServer1.tserver.compactionExecutors.e_DCQ1_running
- * TabletServer1.tserver.compactionExecutors.i_cs1_medium_queued
- * TabletServer1.tserver.compactionExecutors.i_cs1_medium_running
- * TabletServer1.tserver.compactionExecutors.i_cs1_small_queued
- * TabletServer1.tserver.compactionExecutors.i_cs1_small_running
+ * TabletServer1.tserver.compactionExecutors.e\_DCQ1\_queued
+ * TabletServer1.tserver.compactionExecutors.e\_DCQ1\_running
+ * TabletServer1.tserver.compactionExecutors.i\_cs1\_medium\_queued
+ * TabletServer1.tserver.compactionExecutors.i\_cs1\_medium\_running
+ * TabletServer1.tserver.compactionExecutors.i\_cs1\_small\_queued
+ * TabletServer1.tserver.compactionExecutors.i\_cs1\_small\_running
 
 Tablet servers emit metrics about queued and running compactions for every
 compaction executor configured.  User can observe these metrics and tune
@@ -423,7 +423,7 @@ scale down.
 To use custom metrics you would need to get the metrics from Accumulo into a
 metrics store that has a [metrics adapter][4]. One possible solution, available
 in Hadoop 3.3.0, is to use Prometheus, the [Prometheus Adapter][5], and enable
-the Hadoop PrometheusMetricsSink added in 
+the Hadoop PrometheusMetricsSink added in
 [HADOOP-16398](https://issues.apache.org/jira/browse/HADOOP-16398) to expose the custom queue
 size metrics. This seemed like the right solution, but it also seemed like a
 lot of work that was outside the scope of this blog post. Ultimately we decided

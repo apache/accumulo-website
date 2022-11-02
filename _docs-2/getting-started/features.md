@@ -124,7 +124,7 @@ Scans will not see data inserted into a row after the scan of that row begins.
 If consecutive keys have identical portions (row, colf, colq, or colvis), there
 is a flag to indicate that a portion is the same as that of the previous key.
 This is applied when keys are stored on disk and when transferred over the
-network.  Starting with 1.5, prefix erasure is supported.  When it is cost 
+network.  Starting with 1.5, prefix erasure is supported.  When it is cost
 effective, prefixes repeated in subsequent key fields are not repeated.
 
 ### Native In-Memory Map
@@ -162,9 +162,9 @@ per table basis.
 
 ### Binary search in RFile blocks
 
-RFile uses its index to locate a block of key values.  Once it reaches a block, 
+RFile uses its index to locate a block of key values.  Once it reaches a block,
 it performs a linear scan to find a key of interest.  Accumulo will generate
-indexes of cached blocks in an adaptive manner.  Accumulo indexes the most 
+indexes of cached blocks in an adaptive manner.  Accumulo indexes the most
 frequently read blocks.  When a block is read a few times, a small index
 is generated.  As a block is read more, larger indexes are generated, making
 future seeks faster. This strategy allows Accumulo to dynamically respond to
@@ -174,16 +174,16 @@ read patterns without precomputing block indexes when RFiles are written.
 
 ### Mini Accumulo Cluster
 
-Mini Accumulo cluster is a set of utility code that makes it easy to spin up 
+Mini Accumulo cluster is a set of utility code that makes it easy to spin up
 a local Accumulo instance running against the local filesystem.  Mini Accumulo
-is slower than Mock Accumulo, but its behavior mirrors a real Accumulo 
+is slower than Mock Accumulo, but its behavior mirrors a real Accumulo
 instance more closely.
 
 ### Accumulo Maven Plugin
 
 Using the Mini Accumulo Cluster in unit and integration tests is a great way for
 developers to test their applications against Accumulo in an environment that is
-much closer to physical deployments than a Mock Accumulo environment. 
+much closer to physical deployments than a Mock Accumulo environment.
 Accumulo 1.6.0 also introduced a [maven-accumulo-plugin] which
 can be used to start a Mini Accumulo Cluster instance as a part of the Maven
 lifecycle that your application tests can use.
@@ -399,12 +399,12 @@ filter to the clone, and force a major compaction.
 
 ### Import/Export Table
 
-An offline tables metadata and files can easily be copied to another cluster and 
+An offline tables metadata and files can easily be copied to another cluster and
 imported.
 
 ### Compact Range
 
-Compact each tablet that falls within a row range down to a single file.  
+Compact each tablet that falls within a row range down to a single file.
 
 ### Delete Range
 

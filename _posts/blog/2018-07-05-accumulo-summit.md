@@ -2,7 +2,7 @@
 title: "Accumulo Summit is on October 15th!"
 ---
 
-The [Fifth Annual Accumulo Summit][summit] will be held on October 15, 2018 at the [Sheraton Columbia Town Center Hotel][hotel] in Columbia, MD. 
+The [Fifth Annual Accumulo Summit][summit] will be held on October 15, 2018 at the [Sheraton Columbia Town Center Hotel][hotel] in Columbia, MD.
 
 This day-long event offers a unique opportunity for attendees to get introduced to Apache Accumulo, sharpen their skillsets, and connect with leading Accumulo users and developers.
 

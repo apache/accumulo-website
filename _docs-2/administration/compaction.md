@@ -38,10 +38,10 @@ between ingest and query performance.
 When CR=1.0 this will result in a goal of a single per file tablet, but the
 amount of work is O(N<sup>2</sup>) so 1.0 should be used with caution.  For
 example if a tablet has a 1G file and 1M file is added, then a compaction of
-the 1G and 1M file would be queued. 
+the 1G and 1M file would be queued.
 
 Compaction services and dispatchers were introduced in Accumulo 2.1, so much
-of this documentation only applies to Accumulo 2.1 and later.  
+of this documentation only applies to Accumulo 2.1 and later.
 
 ## Configuration
 
@@ -62,8 +62,8 @@ config -t ci -s table.compaction.dispatcher.opts.service=cs1
 config -t ci -s table.compaction.dispatcher.opts.service.user=cs2
 ```
 
-For more information see the javadoc for {% jlink org.apache.accumulo.core.spi.compaction %}, 
-{% jlink org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner %} and 
+For more information see the javadoc for {% jlink org.apache.accumulo.core.spi.compaction %},
+{% jlink org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner %} and
 {% jlink org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher %}
 
 The names of the compaction services and executors are used for logging and metrics.
@@ -76,7 +76,7 @@ in an Accumulo deployment:
 
   * *Compactor*: Accumulo process that runs external compactions and is started with the name of a queue for which it will perform compactions.  In a typical deployment there will be many of these processes running, some for queue A, queue B, etc.  This process will only run a single compaction at a time and will communicate with the Compaction Coordinator to get a compaction job and report its status.
 
-  * *Compaction Coordinator*: a process that manages the compaction queues for all external compactions in the system and assigns compaction tasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status. 
+  * *Compaction Coordinator*: a process that manages the compaction queues for all external compactions in the system and assigns compaction tasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status.
 
 ### Starting the Components
 
@@ -187,7 +187,7 @@ false, kind:USER)
 2021-04-13T14:54:12,601 [compactor.Compactor] INFO : Progress checks will occur every 1 seconds
 2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'read_rate_limiter': 69,672 of 0 permits/second
 2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'write_rate_limiter': 45,120 of 0 permits/second
-2021-04-13T14:54:13,179 [compactor.Compactor] INFO : Compaction completed successfully ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c 
+2021-04-13T14:54:13,179 [compactor.Compactor] INFO : Compaction completed successfully ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
 2021-04-13T14:54:13,180 [compactor.Compactor] INFO : CompactionCoordinator address is: localhost:9100
 2021-04-13T14:54:13,181 [coordinator.CompactionCoordinator] INFO : Compaction status update, id: ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, timestamp: 1618325653180, state: SUCCEEDED, message: Compaction completed successfully
 2021-04-13T14:54:14,182 [compactor.Compactor] INFO : Compaction thread finished.

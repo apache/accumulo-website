@@ -25,7 +25,7 @@ mutation2 ==> org.apache.accumulo.core.data.Mutation@1
 jshell> mutation2.put("hero","alias", "Robin");
 jshell> mutation2.put("hero","name", "Dick Grayson");
 jshell> mutation2.put("hero","wearsCape?", "true");
-```    
+```
 
 Create a row for Joker
 ```commandline
