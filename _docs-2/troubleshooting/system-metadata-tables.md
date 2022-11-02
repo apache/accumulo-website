@@ -74,7 +74,7 @@ Let's decode this little session:
     lock.
 
 * `srv:time []    M1373998392323` -
-    This indicates the time time type (`M` for milliseconds or `L` for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server's system time.
+    This indicates the time type (`M` for milliseconds or `L` for logical) and the timestamp of the most recently written key in this tablet.  It is used to ensure automatically assigned key timestamps are strictly increasing for the tablet, regardless of the tablet server's system time.
 
 * `~tab:~pr []    \x00` -
     The end-row marker for the previous tablet (prev-row).  The first byte

@@ -12,7 +12,7 @@ placed in the sample data is configurable per table.
 
 This feature can be used for query estimation and optimization.  For an example
 of estimation, assume an Accumulo table is configured to generate a sample
-containing one millionth of a tables data.   If a query is executed against the
+containing one millionth of the table's data. If a query is executed against the
 sample and returns one thousand results, then the same query against all the
 data would probably return a billion results.  A nice property of having
 Accumulo generate the sample is that its always up to date.  So estimations

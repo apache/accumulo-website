@@ -13,7 +13,7 @@ Configuration is managed differently for Accumulo clients and servers.
 
 ## Server Configuration
 
-Accumulo processes (i.e manager, tablet server, monitor, etc) are configured by [server properties] whose values can be
+Accumulo processes (i.e. manager, tablet server, monitor, etc.) are configured by [server properties] whose values can be
 set in the following configuration locations (with increasing precedence):
 
 1. [Default](#default) - All properties have a default value
@@ -72,7 +72,7 @@ client.instanceOperations().modifyProperties(properties -> {
 ```
 ### Namespace
 
-Namespace configuration refers to [table.* properties] set for a certain table namespace (i.e group of tables). These settings are stored in ZooKeeper. Namespace configuration
+Namespace configuration refers to [table.* properties] set for a certain table namespace (i.e. group of tables). These settings are stored in ZooKeeper. Namespace configuration
 will override System configuration and can be set using the following shell command:
 
     config -ns NAMESPACE -s PROPERTY=VALUE

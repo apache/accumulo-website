@@ -56,7 +56,7 @@ Using viewfs or HA namenode, introduced in Hadoop 2, offers another option for
 managing the fully qualified URIs stored in Accumulo.  Viewfs and HA namenode
 both introduce a level of indirection in the Hadoop configuration.   For
 example assume viewfs:///nn1 maps to hdfs://nn1 in the Hadoop configuration.
-If viewfs://nn1 is used by Accumulo, then its easy to map viewfs://nn1 to
+If viewfs://nn1 is used by Accumulo, then it's easy to map viewfs://nn1 to
 hdfs://nnA by changing the Hadoop configuration w/o doing anything to Accumulo.
 A production system should probably use a HA namenode.  Viewfs may be useful on
 a test system with a single non HA namenode.

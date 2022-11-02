@@ -80,7 +80,7 @@ server, manager, monitor, etc). Follow these steps to set it up:
    to `false`.
 
 2. Set {% plink instance.volumes %} to HDFS location where Accumulo will store
-   data. If your namenode is running at 192.168.1.9:8020 and you want to store
+   data. If your namenode is running at 192.168.1.9:8020, and you want to store
    data in `/accumulo` in HDFS, then set {% plink instance.volumes %} to
    `hdfs://192.168.1.9:8020/accumulo`.
 
@@ -181,7 +181,7 @@ started.
 
 ### Run individual Accumulo services
 
-Start individual Accumulo processes (tserver, master, monitor, etc) as a
+Start individual Accumulo processes (tserver, master, monitor, etc.) as a
 background service using the example accumulo-service script followed by the
 service name. For example, to start only the tserver, run:
 
@@ -228,7 +228,7 @@ file contains sections that should be configured with a list of node names in ya
    all nodes where compactors should run.
 
 The Accumulo, Hadoop, and Zookeeper software should be present at the same
-location on every node. Also the files in the `conf` directory must be copied to
+location on every node. Also, the files in the `conf` directory must be copied to
 every node. There are many ways to replicate the software and configuration, two
 possible tools that can help replicate software and/or config are [pdcp] and
 [prsync].

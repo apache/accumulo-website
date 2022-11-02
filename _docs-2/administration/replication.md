@@ -26,7 +26,7 @@ space available on the primary system.
 
 Replication configurations can be considered as a directed graph which allows cycles.
 The systems in which data was replicated from is maintained in each Mutation which
-allow each system to determine if a peer has already has the data in which
+allow each system to determine if a peer already has the data in which
 the system wants to send.
 
 Data is replicated by using the Write-Ahead logs (WAL) that each TabletServer is
@@ -233,7 +233,7 @@ root@peer> grant -t my_table -u peer Table.READ
 root@peer> tables -l
 ```
 
-Remember what the table ID for 'my_table' is. You'll need that to configured the primary instance.
+Remember what the table ID for 'my_table' is. You'll need that to configure the primary instance.
 
 ### Primary
 

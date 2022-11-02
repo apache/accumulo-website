@@ -152,7 +152,7 @@ every tablet matches, and the start and stop for the table is empty:
 
 ## RemoveEntriesForMissingFiles
 
-If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove the
+If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove
 the file reference using `RemoveEntriesForMissingFiles`. It will check every file reference
 and ensure that the file exists in HDFS.  Optionally, it will remove the reference:
 
@@ -339,7 +339,7 @@ sorted by the id.
 
 ## mode: print property mappings
 
-With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not direclty
+With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not directly
 readable with the ZooKeeper zkCli utility.  The properties can be listed in an Accumulo shell with the `config` command.
 However, if a shell is not available, this utility `zoo-info-viewer` can be used instead.
 

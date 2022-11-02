@@ -14,7 +14,7 @@ these remote computers writes down events as they occur, into a local
 file. By default, this is defined in `conf/accumulo-env.sh` as `ACCUMULO_LOG_DIR`.
 Look in the `$ACCUMULO_LOG_DIR/tserver*.log` file.  Specifically, check the end of the file.
 
-**The tablet server did not start and the debug log does not exists!  What happened?**
+**The tablet server did not start and the debug log does not exist!  What happened?**
 
 When the individual programs are started, the stdout and stderr output
 of these programs are stored in `.out` and `.err` files in
@@ -128,7 +128,7 @@ undesirable to ssh to every node in the cluster to ensure that all hosts are run
 
 **My process died again. Should I restart it via `cron` or tools like `supervisord`?**
 
-A repeatedly dying Accumulo process is a sign of a larger problem. Typically these problems are due to a
+A repeatedly dying Accumulo process is a sign of a larger problem. Typically, these problems are due to a
 misconfiguration of Accumulo or over-saturation of resources. Blind automation of any service restart inside of Accumulo
 is generally an undesirable situation as it is indicative of a problem that is being masked and ignored. Accumulo
 processes should be stable on the order of months and not require frequent restart.
@@ -146,7 +146,7 @@ Use the [rfile-info] tool on a representative file to get some idea
 of the visibilities in the underlying data.
 
 Note that the use of `rfile-info` is an administrative tool and can only
-by used by someone who can access the underlying Accumulo data. It
+be used by someone who can access the underlying Accumulo data. It
 does not provide the normal access controls in Accumulo.
 
 ## Ingest

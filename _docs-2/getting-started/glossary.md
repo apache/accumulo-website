@@ -118,7 +118,7 @@ a distinct set of tablets at any given time, but the tablets may be hosted by
 different servers over time.
 
 timestamp
-: > the portion of the key that controls versioning. Otherwise identical keys
+: > the portion of the key that controls versioning. Otherwise, identical keys
 with differing timestamps are considered to be versions of a single
 *cell*. Accumulo can be configured to keep the *N* newest
 versions of each *cell*. When a deletion entry is inserted, it deletes

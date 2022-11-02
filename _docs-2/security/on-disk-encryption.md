@@ -122,7 +122,7 @@ even with the crypto service enabled.
 For queries, data is decrypted when read from RFiles and cached in memory.  This means that data is unencrypted in memory
 while Accumulo is running.  Depending on the situation, this also means that some data can be printed to logs. A stacktrace being logged
 during an exception is one example. Accumulo developers have made sure not to expose data protected by authorizations during logging, but
-its the additional data that gets encrypted on-disk that could be exposed in a log file.
+it's the additional data that gets encrypted on-disk that could be exposed in a log file.
 
 #### Bulk Import
 
