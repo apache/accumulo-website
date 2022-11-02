@@ -24,7 +24,7 @@ preserving data confidentiality.
 ### Writing labeled data
 
 When [writing data to Accumulo]({% durl getting-started/clients#writing-data %}), users can
-specify a security label for each value by passing a [ColumnVisibilty] to the [Mutation].
+specify a security label for each value by passing a [ColumnVisibility] to the [Mutation].
 
 ```java
 try (BatchWriter writer = client.createBatchWriter("employees")) {
@@ -42,7 +42,7 @@ value the label is associated with. The set of tokens required can be specified 
 syntax that supports logical AND `&` and OR `|` combinations of terms, as
 well as nesting groups `()` of terms together.
 
-Each term is comprised of one to many alpha-numeric characters, hyphens, underscores or
+Each term is comprised of one to many alphanumeric characters, hyphens, underscores or
 periods. Optionally, each term may be wrapped in quotation marks
 which removes the restriction on valid characters. In quoted terms, quotation marks
 and backslash characters can be used as characters in the term by escaping them

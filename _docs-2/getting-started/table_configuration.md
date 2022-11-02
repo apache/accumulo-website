@@ -78,7 +78,7 @@ com.test.ExampleConstraint=1
 com.test.AnotherConstraint=2
 ```
 
-Currently there are no general-purpose constraints provided with the Accumulo
+Currently, there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
 the [Constraint][constraint] interface.
 
@@ -191,9 +191,9 @@ user@myinstance mytable> config -t mytable -s table.iterator.minc.vers.opt.maxVe
 user@myinstance mytable> config -t mytable -s table.iterator.majc.vers.opt.maxVersions=3
 ```
 
-When a table is created, by default its configured to use the
+When a table is created, by default it's configured to use the
 VersioningIterator and keep one version. A table can be created without the
-VersioningIterator with the -ndi option in the shell. Also the Java API
+VersioningIterator with the -ndi option in the shell. Also, the Java API
 has the following method
 
 ```java
@@ -205,7 +205,7 @@ client.tableOperations.create(String tableName, boolean limitVersion);
 Accumulo 1.2 introduces the concept of logical time. This ensures that timestamps
 set by Accumulo always move forward. This helps avoid problems caused by
 TabletServers that have different time settings. The per tablet counter gives unique
-one up time stamps on a per mutation basis. When using time in milliseconds, if
+one up time stamps on a per-mutation basis. When using time in milliseconds, if
 two things arrive within the same millisecond then both receive the same
 timestamp. When using time in milliseconds, Accumulo set times will still
 always move forward and never backwards.
@@ -349,7 +349,7 @@ See {% dlink administration/compaction %}
 Accumulo will balance and distribute tables across servers. Before a
 table gets large, it will be maintained as a single tablet on a single
 server. This limits the speed at which data can be added or queried
-to the speed of a single node. To improve performance when the a table
+to the speed of a single node. To improve performance when a table
 is new, or small, you can add split points and generate new tablets.
 
 In the shell:
@@ -448,7 +448,7 @@ flush option is present and is enabled by default in the shell. If the flush
 option is not enabled, then any data the source table currently has in memory
 will not exist in the clone.
 
-A cloned table copies the configuration of the source table. However the
+A cloned table copies the configuration of the source table. However, the
 permissions of the source table are not copied to the clone. After a clone is
 created, only the user that created the clone can read and write to it.
 
@@ -525,7 +525,7 @@ root@a14 cic>
 ## Exporting Tables
 
 Accumulo supports exporting tables for the purpose of copying tables to another
-cluster. Exporting and importing tables preserves the tables configuration,
+cluster. Exporting and importing tables preserves the tables' configuration,
 splits, and logical time. Tables are exported and then copied via the hadoop
 `distcp` command. To export a table, it must be offline and stay offline while
 `distcp` runs. Staying offline prevents files from being deleted during the process.

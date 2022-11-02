@@ -32,7 +32,7 @@ as `(A&B)|C`) and authorizations are sets of strings (such as `{C,D}`).
 
 [Constraints]({% durl getting-started/table_configuration#constraints %}) are configurable
 conditions where table writes are rejected. Constraints are written in Java and configurable
-on a per table basis.
+on a per-table basis.
 
 ### Sharding
 
@@ -156,9 +156,9 @@ can become quite large. When the index is large, a lot of memory is consumed and
 files take a long time to open. To avoid this problem, RFiles have a
 multi-level index tree. Index blocks can point to other index blocks or data
 blocks. The entire index never has to be resident, even when the file is
-written. When an index block exceeds the configurable size threshold, its
+written. When an index block exceeds the configurable size threshold, it's
 written out between data blocks. The size of index blocks is configurable on a
-per table basis.
+per-table basis.
 
 ### Binary search in RFile blocks
 
@@ -272,7 +272,7 @@ plugins in a stable manner.
 ### Balancer
 
 Users can provide a balancer plugin that decides how to distribute tablets
-across a table.  These plugins can be provided on a per table basis.  This is
+across a table.  These plugins can be provided on a per-table basis.  This is
 useful for ensuring a particular table's tablets are placed optimally for
 tables with special query needs.  The default balancer randomly spreads each
 table's tablets across the cluster.  It takes into account where a tablet was

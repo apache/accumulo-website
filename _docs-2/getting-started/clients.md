@@ -54,7 +54,7 @@ of the following methods:
     AccumuloClient client = Accumulo.newClient().from(props).build();
     ```
 
-If an [accumulo-client.properties] file or a Java Properties object is used to create a [AccumuloClient], the following
+If an [accumulo-client.properties] file or a Java Properties object is used to create an [AccumuloClient], the following
 [client properties][client-props] must be set:
 
 * [instance.name] - Name of Accumulo instance to connect to
@@ -69,7 +69,7 @@ If an [accumulo-client.properties] file or a Java Properties object is used to c
 | kerberos        | Path to Kerberos keytab | /path/to/keytab      |
 | Authentication token class | Base64 encoded token    | AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA |
 
-If a token class is used for `auth.type`, you can create create a Base64 encoded token using the `accumulo create-token` command.
+If a token class is used for `auth.type`, you can create a Base64 encoded token using the `accumulo create-token` command.
 
 ```
 $ accumulo create-token
@@ -82,7 +82,7 @@ auth.token = AAAAGh+LCAAAAAAAAAArTk0uSi0BAOXoolwGAAAA
 
 # Authentication
 
-When creating a [AccumuloClient], the user must be authenticated using one of the following
+When creating an [AccumuloClient], the user must be authenticated using one of the following
 implementations of [AuthenticationToken] below:
 
 1. [PasswordToken] is the must commonly used implementation.
@@ -155,11 +155,11 @@ absence.  For example a conditional mutation can require that column A is
 absent inorder to be applied.  Iterators can be applied when checking
 conditions.  Using iterators, many other operations besides equality and
 absence can be checked.  For example, using an iterator that converts values
-less than 5 to 0 and everything else to 1, its possible to only apply a
+less than 5 to 0 and everything else to 1, it's possible to only apply a
 mutation when a column is less than 5.
 
 In the case when a tablet server dies after a client sent a conditional
-mutation, its not known if the mutation was applied or not.  When this happens
+mutation, it's not known if the mutation was applied or not.  When this happens
 the [ConditionalWriter] reports a status of UNKNOWN for the ConditionalMutation.
 In many cases this situation can be dealt with by simply reading the row again
 and possibly sending another conditional mutation.  If this is not sufficient,
@@ -194,7 +194,7 @@ Durability can be set in multiple ways:
     ```
     root@uno> config -t mytable -s table.durability=sync
     ```
-3. When creating a [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
+3. When creating an [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`
    or by setting [batch.writer.durability] in [accumulo-client.properties].
 4. When a BatchWriter or ConditionalWriter is created, the durability settings above will be overridden
    by the `BatchWriterConfig` that is passed in.
@@ -266,7 +266,7 @@ columns, it is possible that you will only see two of those modifications.
 With the isolated scanner either all three of the changes are seen or none.
 
 The [IsolatedScanner] buffers rows on the client side so a large row will not
-crash a tablet server. By default rows are buffered in memory, but the user
+crash a tablet server. By default, rows are buffered in memory, but the user
 can easily supply their own buffer if they wish to buffer to disk when rows are
 large.
 

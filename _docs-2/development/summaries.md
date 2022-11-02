@@ -7,7 +7,7 @@ order: 6
 ## Overview
 
 Accumulo has the ability to generate summary statistics about data in a table
-using user defined functions.  Currently these statistics are only generated for
+using user defined functions.  Currently, these statistics are only generated for
 data written to files.  Data recently written to Accumulo that is still in
 memory will not contribute to summary statistics.
 
@@ -147,11 +147,11 @@ visibilities that were not counted.
      tooMany                                                      = 4
 ```
 
-Another summarizer is configured below that tracks the number of deletes.  Also
+Another summarizer is configured below that tracks the number of deletes.  Also,
 a compaction strategy that uses this summary data is configured.  The
 `TooManyDeletesCompactionStrategy` will force a compaction of the tablet when
 the ratio of deletes to non-deletes is over 25%.  This threshold is
-configurable.  Below a delete is added and its reflected in the statistics.  In
+configurable.  Below a delete is added and it's reflected in the statistics.  In
 this case there is 1 delete and 10 non-deletes, not enough to force a
 compaction of the tablet.
 

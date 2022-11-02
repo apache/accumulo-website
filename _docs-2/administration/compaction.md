@@ -6,7 +6,7 @@ order: 6
 
 In Accumulo each tablet has a list of files associated with it.  As data is
 written to Accumulo it is buffered in memory. The data buffered in memory is
-eventually written to files in DFS on a per tablet basis. Files can also be
+eventually written to files in DFS on a per-tablet basis. Files can also be
 added to tablets directly by bulk import. In the background tablet servers run
 major compactions to merge multiple files into one. The tablet server has to
 decide which tablets to compact and which files within a tablet to compact.
@@ -32,7 +32,7 @@ a set. The default planner looks for file sets where LFS*CR <= FSS.  By only
 compacting sets of files that meet this requirement the amount of work done by
 compactions is O(N * log<sub>CR</sub>(N)).  Increasing the ratio will
 result in less compaction work and more files per tablet.  More files per
-tablet means more higher query latency. So adjusting this ratio is a trade off
+tablet means higher query latency. So adjusting this ratio is a trade-off
 between ingest and query performance.
 
 When CR=1.0 this will result in a goal of a single per file tablet, but the
@@ -48,7 +48,7 @@ of this documentation only applies to Accumulo 2.1 and later.
 Below are some Accumulo shell commands that do the following :
 
  * Create a compaction service named `cs1` that has three executors.  The first executor named `small` has 8 threads and runs compactions less than 16M.  The second executor `medium` runs compactions less than 128M with 4 threads.  The last executor `large` runs all other compactions.
- * Create a compaction service named `cs2` that has three executors.  It has similar config to `cs1`, but its executors have less threads. Limits total I/O of all compactions within the service to 40MB/s.
+ * Create a compaction service named `cs2` that has three executors.  It has similar config to `cs1`, but its executors have fewer threads. Limits total I/O of all compactions within the service to 40MB/s.
 * Configure table `ci` to use compaction service `cs1` for system compactions and service `cs2` for user compactions.
 
 ```
@@ -97,7 +97,7 @@ accumulo compactor -q <queueName>
 ### Configuration
 
 Configuration for external compactions is very similar to the internal compaction example above.
-In the example below we create a Compaction Service `cs1` and configure it with an queue
+In the example below we create a Compaction Service `cs1` and configure it with a queue
 named `DCQ1`. We then define the Compaction Dispatcher on table `testTable` and configure the
 table to use the `cs1` Compaction Service for planning and executing all compactions.
 
@@ -120,7 +120,7 @@ The CompactionCoordinator is responsible for managing the global external compac
 
 When a Compactor is free to perform work, it asks the CompactionCoordinator for the next compaction job. The CompactionCoordinator contacts the next TabletServer that has the highest priority for the Compactor's queue. The TabletServer returns the information necessary for the compaction to occur to the CompactionCoordinator, which is passed on to the Compactor. The Compaction Coordinator maintains an in-memory list of running compactions and also inserts an entry into the metadata table for the tablet to denote that an external compaction is running. When the Compactor has finished the compaction, it notifies the CompactionCoordinator which inserts an entry into the metadata table to denote that the external compaction completed and it attempts to notify the TabletServer. If successful, the TabletServer commits the major compaction. If the TabletServer is down, or the Tablet has become hosted on a different TabletServer, then the CompactionCoordinator will fail to notify the TabletServer, but the metadata table entries will remain. The major compaction will be committed in the future by the TabletServer hosting the Tablet.
 
-External compactions handle faults and major system events in Accumulo. When a compactor process dies this will be detected and any files it had reserved in a tablet will be unreserved.  When a tserver dies, this will not impact any external compactions running on behalf of tablets that tserver was hosting.  The case of tablets not being hosted on an tserver when an external compaction tries to commit is also handled.  Tablets being deleted (by split, merge, or table deletion) will cause any associated running external compactions to be canceled.  When a user initiated compaction is canceled, any external compactions running as part of that will be canceled.
+External compactions handle faults and major system events in Accumulo. When a compactor process dies this will be detected and any files it had reserved in a tablet will be unreserved.  When a tserver dies, this will not impact any external compactions running on behalf of tablets that tserver was hosting.  The case of tablets not being hosted on a tserver when an external compaction tries to commit is also handled.  Tablets being deleted (by split, merge, or table deletion) will cause any associated running external compactions to be canceled.  When a user initiated compaction is canceled, any external compactions running as part of that will be canceled.
 
 ### External Compaction in Action
 
@@ -241,7 +241,7 @@ Finally, the TabletServer commits the compaction.
 
 The names of compaction services and executors are used in logging.  The log
 messages below are from a tserver with the configuration above with data being
-written to the ci table.  Also a compaction of the table was forced from the
+written to the ci table.  Also, a compaction of the table was forced from the
 shell.
 
 ```

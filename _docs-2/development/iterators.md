@@ -68,7 +68,7 @@ optimize itself.
 The purpose of the seek method is to advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
 the implementation of this method returns some additional processing is performed which may further advance the current
 position past the `startKey` of the [Range]. This, however, is dependent on the functionality the iterator provides. For
-example, a filtering iterator would consume a number Key-Value pairs which do not meets its criteria before `seek`
+example, a filtering iterator would consume a number Key-Value pairs which do not meet its criteria before `seek`
 returns. The important condition for `seek` to meet is that this Iterator should be ready to return the first Key-Value
 pair, or none if no such pair is available, when the method returns. The Key-Value pair would be returned by `getTopKey`
 and `getTopValue`, respectively, and `hasTop` should return a boolean denoting whether or not there is
@@ -322,7 +322,7 @@ values will be grouped, insert mutations with those fields as the key, and confi
 the table with a combining iterator that supports the summarizing operation
 desired.
 
-The only restriction on an combining iterator is that the combiner developer
+The only restriction on a combining iterator is that the combiner developer
 should not assume that all values for a given key have been seen, since new
 mutations can be inserted at anytime. This precludes using the total number of
 values in the aggregation such as when calculating an average, for example.
@@ -332,7 +332,7 @@ feature vectors for use in machine learning algorithms. For example, many
 algorithms such as k-means clustering, support vector machines, anomaly detection,
 etc. use the concept of a feature vector and the calculation of distance metrics to
 learn a particular model. The columns in an Accumulo table can be used to efficiently
-store sparse features and their weights to be incrementally updated via the use of an
+store sparse features and their weights to be incrementally updated via the use of a
 combining iterator.
 
 ## Best practices

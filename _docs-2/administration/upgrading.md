@@ -69,7 +69,7 @@ Below are some changes in 2.0 that you should be aware of:
 * `accumulo-service` script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
     - Can be used even if Accumulo was started using `accumulo-cluster` script.
 * `accumulo-env.sh` constructs environment variables (such as `JAVA_OPTS` and `CLASSPATH`) used when running Accumulo processes
-    - This file was used in Accumulo 1.x but has changed signficantly for 2.0
+    - This file was used in Accumulo 1.x but has changed significantly for 2.0
     - Environment variables (such as `$cmd`, `$bin`, `$conf`) are set before `accumulo-env.sh` is loaded and can be used to customize environment.
     - The `JAVA_OPTS` variable is constructed in `accumulo-env.sh` to pass command-line arguments to the `java` command that the starts Accumulo processes
       (i.e. `java $JAVA_OPTS main.class.for.$cmd`).
@@ -98,7 +98,7 @@ that users start using the new API, the old API will continue to be supported th
 
 Below is a list of client API changes that users are required to make for 2.0:
 
-* Update your pom.xml use Accumulo 2.0. Also, update any Hadoop & ZooKeeper dependencies in your pom.xml to match the versions runing on your cluster.
+* Update your pom.xml use Accumulo 2.0. Also, update any Hadoop & ZooKeeper dependencies in your pom.xml to match the versions running on your cluster.
   ```xml
   <dependency>
     <groupId>org.apache.accumulo</groupId>
@@ -106,7 +106,7 @@ Below is a list of client API changes that users are required to make for 2.0:
     <version>2.0.1</version>
   </dependency>
   ```
-* ClientConfiguration objects can no longer be ceated using `new ClientConfiguration()`.
+* ClientConfiguration objects can no longer be created using `new ClientConfiguration()`.
    * Use `ClientConfiguration.create()` instead
 * Some API deprecated in 1.x releases was dropped
 * Aggregators have been removed
@@ -114,7 +114,7 @@ Below is a list of client API changes that users are required to make for 2.0:
 Below is a list of recommended client API changes:
 
 * The API for [creating Accumulo clients]({% durl getting-started/clients#creating-an-accumulo-client %}) has changed in 2.0.
-  * The old API using [ZooKeeeperInstance], [Connector], [Instance], and [ClientConfiguration] has been deprecated.
+  * The old API using [ZooKeeperInstance], [Connector], [Instance], and [ClientConfiguration] has been deprecated.
   * [Connector] objects can be created from an [AccumuloClient] object using [Connector.from()]
 * Accumulo's [MapReduce API]({% durl development/mapreduce %}) has changed in 2.0.
   * A new API has been introduced in the `org.apache.accumulo.hadoop` package of the `accumulo-hadoop-mapreduce` jar.
@@ -135,7 +135,7 @@ For upgrades from prior to 1.7, follow the upgrade instructions to 1.7 first.
 
 The recommended way to upgrade from a prior 1.7.x release is to stop Accumulo, upgrade to 1.7.y and then start 1.7.y.
 
-When upgrading, there is a known issue if the upgrade fails due to outstanding [FATE] operations, see [ACCUMULO-4496] The work around if this situation is encountered:
+When upgrading, there is a known issue if the upgrade fails due to outstanding [FATE] operations, see [ACCUMULO-4496] The workaround if this situation is encountered:
 
 - Start tservers
 - Start shell
@@ -225,7 +225,7 @@ This happens automatically the first time Accumulo 1.5 is started.
 
 [FATE]: {{ site.baseurl }}/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate
 [ACCUMULO-4496]: https://issues.apache.org/jira/browse/ACCUMULO-4496
-[ZooKeeeperInstance]: {% jurl org.apache.accumulo.core.client.ZooKeeperInstance %}
+[ZooKeeperInstance]: {% jurl org.apache.accumulo.core.client.ZooKeeperInstance %}
 [Connector]: {% jurl org.apache.accumulo.core.client.Connector %}
 [Instance]: {% jurl org.apache.accumulo.core.client.Instance %}
 [ClientConfiguration]: {% jurl org.apache.accumulo.core.client.ClientConfiguration %}

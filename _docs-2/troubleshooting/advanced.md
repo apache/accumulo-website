@@ -11,7 +11,7 @@ order: 2
 The primary reason a tablet server loses its lock is that it has been pushed into swap.
 
 A large java program (like the tablet server) may have a large portion
-of its memory image unused.  The operation system will favor pushing
+of its memory image unused.  The operating system will favor pushing
 this allocated, but unused memory into swap so that the memory can be
 re-used as a disk buffer.  When the java virtual machine decides to
 access this memory, the OS will begin flushing disk buffers to return that
@@ -116,7 +116,7 @@ Ensure your client has adequate memory and is not being swapped out to disk.
 **I had disastrous HDFS failure.  After bringing everything back up, several tablets refuse to go online.**
 
 Data written to tablets is written into memory before being written into indexed files.  In case the server
-is lost before the data is saved into a an indexed file, all data stored in memory is first written into a
+is lost before the data is saved into an indexed file, all data stored in memory is first written into a
 write-ahead log (WAL).  When a tablet is re-assigned to a new tablet server, the write-ahead logs are read to
 recover any mutations that were in memory when the tablet was last hosted.
 
@@ -195,7 +195,7 @@ The directory structure in HDFS for tables will follow the general structure:
     /accumulo/tables/2/t-00001/A000007.rf
 
 If files under `/accumulo/tables` are corrupt, the best course of action is to
-recover those files in hdsf see the section on HDFS. Once these recovery efforts
+recover those files in hdfs see the section on HDFS. Once these recovery efforts
 have been exhausted, the next step depends on where the missing file(s) are
 located. Different actions are required when the bad files are in Accumulo data
 table files or if they are metadata table files.
@@ -232,7 +232,7 @@ before creating the new instance.  You will not be able to use RestoreZookeeper
 because the table names and references are likely to be different between the
 original and the new instances, but it can serve as a reference.
 
-If the files cannot be recovered, replace corrupt data files with a empty
+If the files cannot be recovered, replace corrupt data files with an empty
 rfiles to allow references in the metadata table and in the tablet servers to be
 resolved. Rebuild the metadata table if the corrupt files are metadata files.
 
@@ -245,7 +245,7 @@ WAL file, never being able to succeed.
 
 In the cases where the WAL file's original contents are unrecoverable or some degree
 of data loss is acceptable (beware if the WAL file contains updates to the Accumulo
-metadata table!), the following process can be followed to create an valid, empty
+metadata table!), the following process can be followed to create a valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 

@@ -11,7 +11,7 @@ Accumulo has the following configuration files which can be found in the
 
 The {% ghc assemble/conf/accumulo.properties %} file configures Accumulo server processes using
 [server properties]({% durl configuration/server-properties %}). This file can be found in the `conf/`
-direcory. It is needed on every host that runs Accumulo processes. Therfore, any configuration should be
+directory. It is needed on every host that runs Accumulo processes. Therefore, any configuration should be
 replicated to all hosts of the Accumulo cluster. If a property is not configured here, it might have been
 [configured another way]({% durl configuration/overview %}).  See the [quick start] for help with
 configuring this file.
@@ -74,11 +74,11 @@ to run standby Monitors that can take over if the lead Monitor fails.
 ### tserver
 
 Contains list of hosts where [Tablet Server] processes should run. While only one host is needed, it is recommended that
-multiple tablet servers are run for improved fault tolerance and peformance.
+multiple tablet servers are run for improved fault tolerance and performance.
 
 ### sserver
 
-Contains a list of hosts where [ScanServer] processes should run. While only only one host is needed, it is recommended
+Contains a list of hosts where [ScanServer] processes should run. While only one host is needed, it is recommended
 that multiple ScanServers are run for improved performance.
 
 ### compaction coordinator

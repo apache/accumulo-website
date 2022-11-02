@@ -119,6 +119,6 @@ keytool -import -trustcacerts -alias server-crt -file server.crt -keystore serve
 ```
 
 The `server.jks` file is the Java keystore containing the certificate for a given host. The above
-methods are equivalent whether the certificate is generate for an Accumulo server or a client.
+methods are equivalent whether the certificate is generated for an Accumulo server or a client.
 
 [clients]: {{ page.docs_baseurl }}/getting-started/clients#creating-an-accumulo-client

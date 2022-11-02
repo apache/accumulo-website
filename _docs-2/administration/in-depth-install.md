@@ -103,7 +103,7 @@ manually or run `accumulo-cluster create-config`.
 
 Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e Manager, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
+(i.e. Manager, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
 the Monitor which is configured by [log4j-monitor.properties]. All Accumulo commands (i.e `init`,
 `shell`, etc) are configured by [log4j.properties].
 
@@ -251,7 +251,7 @@ instance, Accumulo identifies `localhost:8020` as a different HDFS instance than
 ### Deploy Configuration
 
 Copy [accumulo-env.sh] and [accumulo.properties] from the `conf/` directory on the manager to all
-Accumulo tablet servers. The "host" configuration files files `accumulo-cluster` only need to be on
+Accumulo tablet servers. The "host" configuration files `accumulo-cluster` only need to be on
 servers where that command is run.
 
 ### Sensitive Configuration Values
@@ -351,7 +351,7 @@ Below is an example for specify the app1 context in the [accumulo.properties] fi
 general.vfs.context.classpath.app1=hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar
 ```
 
-The default behavior follows the Java ClassLoader contract in that classes, if they exists, are
+The default behavior follows the Java ClassLoader contract in that classes, if they exist, are
 loaded from the parent classloader first. You can override this behavior by delegating to the parent
 classloader after looking in this classloader first. An example of this configuration is:
 
@@ -439,7 +439,7 @@ stopped and recovery will not need to be performed when the tablets are re-hoste
 
 Occasionally, it might be necessary to restart the processes on a specific node. In addition
 to the `accumulo-cluster` script, Accumulo has a `accumulo-service` script that
-can be use to start/stop processes on a node.
+can be used to start/stop processes on a node.
 
 #### A note on rolling restarts
 
@@ -730,11 +730,11 @@ can be exacerbated by resource constraints and clock drift.
 Each release of Accumulo is built with a specific version of Apache
 Hadoop, Apache ZooKeeper and Apache Thrift. We expect Accumulo to
 work with versions that are API compatible with those versions.
-However this compatibility is not guaranteed because Hadoop, ZooKeeper
+However, this compatibility is not guaranteed because Hadoop, ZooKeeper
 and Thrift may not provide guarantees between their own versions. We
 have also found that certain versions of Accumulo and Hadoop included
 bugs that greatly affected overall stability. Thrift is particularly
-prone to compatibility changes between versions and you must use the
+prone to compatibility changes between versions, and you must use the
 same version your Accumulo is built with.
 
 Please check the release notes for your Accumulo version or use the

@@ -58,7 +58,7 @@ SimpleScanDispatcher supports an `executor` option for choosing a scan
 executor.  If this option is not set, then SimpleScanDispatcher will dispatch
 to the scan executor named `default`.
 
-To to tie everything together, consider the following use case.
+To tie everything together, consider the following use case.
 
  * Create tables named LOW1 and LOW2 using a scan executor with a single thread.
  * Create a table named HIGH with a dedicated scan executor with 8 threads.
@@ -89,7 +89,7 @@ config -t HIGH -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.Simple
 config -t HIGH -s table.scan.dispatcher.opts.executor=high
 ```
 
-While not necessary because its the default, it is safer to also set
+While not necessary because it's the default, it is safer to also set
 `table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher`
 for each table.  This ensures things work as expected in the case where
 `table.scan.dispatcher` was set at the system or namespace level.
@@ -97,7 +97,7 @@ for each table.  This ensures things work as expected in the case where
 ### Configuring and using Scan Prioritizers.
 
 When all scan executor threads are busy, incoming work is queued.  By
-default this queue has a FIFO order.  A {% jlink org.apache.accumulo.core.spi.scan.ScanPrioritizer %} can be configured to
+default, this queue has a FIFO order.  A {% jlink org.apache.accumulo.core.spi.scan.ScanPrioritizer %} can be configured to
 reorder the queue.  Accumulo ships with the {% jlink org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer %} which
 orders the queue by the ratio of run time to idle time.  For example, a scan
 with a run time of 50ms and an idle time of 200ms would have a ratio of .25.
@@ -161,7 +161,7 @@ scan -t tex --execution-hints scan_type=alpha
 
 Execution Hints can also be used to influence how the block caches are used for
 a scan. The following configuration would modify the `gamma` executor to use blocks
-in the cache if they are already cached, but would never load mising blocks into the
+in the cache if they are already cached, but would never load missing blocks into the
 cache.
 
 ```

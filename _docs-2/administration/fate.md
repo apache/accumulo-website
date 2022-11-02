@@ -32,7 +32,7 @@ of these operations. This property is also what guarantees safety in light of fa
 ### REPO Stack
 
 A FATE transaction is composed of a sequence of Repeatable persisted operations (REPO).  In order to start a FATE transaction,
-a REPO is pushed onto a per transaction REPO stack.  The top of the stack always contains the
+a REPO is pushed onto a per-transaction REPO stack.  The top of the stack always contains the
 next REPO the FATE transaction should execute.  When a REPO is successful it may return another
 REPO which is pushed on the stack.
 
@@ -147,8 +147,8 @@ invoke. It is not normal to invoke this command.
 This command accepts zero more transaction IDs.  If given no transaction IDs,
 it will dump all active transactions.  A FATE operations is compromised as a
 sequence of REPOs.  In order to start a FATE transaction, a REPO is pushed onto
-a per transaction REPO stack.  The top of the stack always contains the next
+a per-transaction REPO stack.  The top of the stack always contains the next
 REPO the FATE transaction should execute.  When a REPO is successful it may
 return another REPO which is pushed on the stack.  The `dump` command will
 print all of the REPOs on each transactions stack.  The REPOs are serialized to
-JSON in order to make them human readable.
+JSON in order to make them human-readable.

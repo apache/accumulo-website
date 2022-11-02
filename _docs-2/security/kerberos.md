@@ -22,13 +22,13 @@ which allow cross-language integration with Kerberos for authentication. GSSAPI,
 the generic security service application program interface, is a standard which
 Kerberos implements. In the Java programming language, the language itself also implements
 GSSAPI which is leveraged by other applications, like Apache Hadoop and Apache Thrift.
-SASL, simple authentication and security layer, is a framework for authentication and
+SASL, simple authentication and security layer, is a framework for authentication
 and security over the network. SASL provides a number of mechanisms for authentication,
 one of which is GSSAPI. Thus, SASL provides the transport which authenticates
 using GSSAPI that Kerberos implements.
 
 Kerberos is a very complicated software application and is deserving of much
-more description than can be provided here. An [explain like I`m 5](https://www.roguelynn.com/words/explain-like-im-5-kerberos/)
+more description than can be provided here. An [explain like I'm 5](https://www.roguelynn.com/words/explain-like-im-5-kerberos/)
 blog post is very good at distilling the basics, while [MIT Kerberos's project page](https://web.mit.edu/kerberos/)
 contains lots of documentation for users or administrators. Various Hadoop "vendors"
 also provide free documentation that includes step-by-step instructions for
@@ -187,7 +187,7 @@ to granting Authorizations and Permissions to new users.
 #### Administrative User
 
 Out of the box (without Kerberos enabled), Accumulo has a single user with administrative permissions "root".
-This users is used to "bootstrap" other users, creating less-privileged users for applications using
+This user is used to "bootstrap" other users, creating less-privileged users for applications using
 the system. In Kerberos, to authenticate with the system, it's required that the client presents Kerberos
 credentials for the principal (user) the client is trying to authenticate as.
 
@@ -243,7 +243,7 @@ it can only connect to Accumulo as itself. Impersonation, in this context, refer
 of the proxy to authenticate to Accumulo as itself, but act on behalf of an Accumulo user.
 
 Accumulo supports basic impersonation of end-users by a third party via static rules in
-`accumulo.properties`. These two properties are semi-colon separated properties which are aligned
+`accumulo.properties`. These two properties are semicolon separated properties which are aligned
 by index. This first element in the user impersonation property value matches the first element
 in the host impersonation property value, etc.
 
@@ -411,7 +411,7 @@ JVM to each YARN task is secure, even in multi-tenant instances.
 
 ### Debugging
 
-**Q**: I have valid Kerberos credentials and a correct client configuration file but
+**Q**: I have valid Kerberos credentials and a correct client configuration file, but
 I still get errors like:
 
 ```
