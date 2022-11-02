@@ -41,13 +41,14 @@ their value in [accumulo.properties].
 |9132 | Accumulo Compaction Coordinator | [compaction.coordinator.port.client]
 |9133 | Accumulo Compactor | [compactor.port.client]
 |9995 | Accumulo HTTP monitor | [monitor.port.client]
-|9997 | Tablet Server | [tserver.port.client]
+|9996 | Accumulo Scan Server | [sserver.port.client]
+|9997 | Accumulo Tablet Server | [tserver.port.client]
 |9998 | Accumulo GC | [gc.port.client]
-|9999 | Manager Server | [manager.port.client]
+|9999 | Accumulo Manager Server | [manager.port.client]
 |12234 | Accumulo Tracer | [trace.port.client]
 |42424 | Accumulo Proxy Server | n/a
-|10001 | Manager Replication service | [manager.replication.coordinator.port]
-|10002 | TabletServer Replication service | [replication.receipt.service.port]
+|10001 | Accumulo Manager Replication service | [manager.replication.coordinator.port]
+|10002 | Accumulo TabletServer Replication service | [replication.receipt.service.port]
 
 In addition, the user can provide `0` and an ephemeral port will be chosen instead. This
 ephemeral port is likely to be unique and not already bound. Thus, configuring ports to
