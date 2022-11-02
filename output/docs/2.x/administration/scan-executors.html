@@ -480,7 +480,7 @@ SimpleScanDispatcher supports an <code class="language-plaintext highlighter-rou
 executor.  If this option is not set, then SimpleScanDispatcher will dispatch
 to the scan executor named <code class="language-plaintext highlighter-rouge">default</code>.</p>
 
-<p>To to tie everything together, consider the following use case.</p>
+<p>To tie everything together, consider the following use case.</p>
 
 <ul>
   <li>Create tables named LOW1 and LOW2 using a scan executor with a single thread.</li>
@@ -511,7 +511,7 @@ config -t HIGH -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.Simple
 config -t HIGH -s table.scan.dispatcher.opts.executor=high
 </code></pre></div></div>
 
-<p>While not necessary because its the default, it is safer to also set
+<p>While not necessary because it’s the default, it is safer to also set
 <code class="language-plaintext highlighter-rouge">table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</code>
 for each table.  This ensures things work as expected in the case where
 <code class="language-plaintext highlighter-rouge">table.scan.dispatcher</code> was set at the system or namespace level.</p>
@@ -519,7 +519,7 @@ for each table.  This ensures things work as expected in the case where
 <h3 id="configuring-and-using-scan-prioritizers">Configuring and using Scan Prioritizers.</h3>
 
 <p>When all scan executor threads are busy, incoming work is queued.  By
-default this queue has a FIFO order.  A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/scan/ScanPrioritizer.html">ScanPrioritizer</a> can be configured to
+default, this queue has a FIFO order.  A <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/scan/ScanPrioritizer.html">ScanPrioritizer</a> can be configured to
 reorder the queue.  Accumulo ships with the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/scan/IdleRatioScanPrioritizer.html">IdleRatioScanPrioritizer</a> which
 orders the queue by the ratio of run time to idle time.  For example, a scan
 with a run time of 50ms and an idle time of 200ms would have a ratio of .25.
@@ -579,7 +579,7 @@ priority of 1.</p>
 
 <p>Execution Hints can also be used to influence how the block caches are used for
 a scan. The following configuration would modify the <code class="language-plaintext highlighter-rouge">gamma</code> executor to use blocks
-in the cache if they are already cached, but would never load mising blocks into the
+in the cache if they are already cached, but would never load missing blocks into the
 cache.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t tex -s table.scan.dispatcher.opts.cacheUsage.gamma=opportunistic

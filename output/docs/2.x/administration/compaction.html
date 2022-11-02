@@ -432,7 +432,7 @@
 
     <p>In Accumulo each tablet has a list of files associated with it.  As data is
 written to Accumulo it is buffered in memory. The data buffered in memory is
-eventually written to files in DFS on a per tablet basis. Files can also be
+eventually written to files in DFS on a per-tablet basis. Files can also be
 added to tablets directly by bulk import. In the background tablet servers run
 major compactions to merge multiple files into one. The tablet server has to
 decide which tablets to compact and which files within a tablet to compact.</p>
@@ -457,7 +457,7 @@ a set. The default planner looks for file sets where LFS*CR &lt;= FSS.  By only
 compacting sets of files that meet this requirement the amount of work done by
 compactions is O(N * log<sub>CR</sub>(N)).  Increasing the ratio will
 result in less compaction work and more files per tablet.  More files per
-tablet means more higher query latency. So adjusting this ratio is a trade off
+tablet means higher query latency. So adjusting this ratio is a trade-off
 between ingest and query performance.</p>
 
 <p>When CR=1.0 this will result in a goal of a single per file tablet, but the
@@ -474,7 +474,7 @@ of this documentation only applies to Accumulo 2.1 and later.</p>
 
 <ul>
   <li>Create a compaction service named <code class="language-plaintext highlighter-rouge">cs1</code> that has three executors.  The first executor named <code class="language-plaintext highlighter-rouge">small</code> has 8 threads and runs compactions less than 16M.  The second executor <code class="language-plaintext highlighter-rouge">medium</code> runs compactions less than 128M with 4 threads.  The last executor <code class="language-plaintext highlighter-rouge">large</code> runs all other compactions.</li>
-  <li>Create a compaction service named <code class="language-plaintext highlighter-rouge">cs2</code> that has three executors.  It has similar config to <code class="language-plaintext highlighter-rouge">cs1</code>, but its executors have less threads. Limits total I/O of all compactions within the service to 40MB/s.</li>
+  <li>Create a compaction service named <code class="language-plaintext highlighter-rouge">cs2</code> that has three executors.  It has similar config to <code class="language-plaintext highlighter-rouge">cs1</code>, but its executors have fewer threads. Limits total I/O of all compactions within the service to 40MB/s.</li>
   <li>Configure table <code class="language-plaintext highlighter-rouge">ci</code> to use compaction service <code class="language-plaintext highlighter-rouge">cs1</code> for system compactions and service <code class="language-plaintext highlighter-rouge">cs2</code> for user compactions.</li>
 </ul>
 
@@ -526,7 +526,7 @@ in an Accumulo deployment:</p>
 <h3 id="configuration-1">Configuration</h3>
 
 <p>Configuration for external compactions is very similar to the internal compaction example above.
-In the example below we create a Compaction Service <code class="language-plaintext highlighter-rouge">cs1</code> and configure it with an queue
+In the example below we create a Compaction Service <code class="language-plaintext highlighter-rouge">cs1</code> and configure it with a queue
 named <code class="language-plaintext highlighter-rouge">DCQ1</code>. We then define the Compaction Dispatcher on table <code class="language-plaintext highlighter-rouge">testTable</code> and configure the
 table to use the <code class="language-plaintext highlighter-rouge">cs1</code> Compaction Service for planning and executing all compactions.</p>
 
@@ -547,7 +547,7 @@ config -t testTable -s table.compaction.dispatcher.opts.service=cs1
 
 <p>When a Compactor is free to perform work, it asks the CompactionCoordinator for the next compaction job. The CompactionCoordinator contacts the next TabletServer that has the highest priority for the Compactor’s queue. The TabletServer returns the information necessary for the compaction to occur to the CompactionCoordinator, which is passed on to the Compactor. The Compaction Coordinator maintains an in-memory list of running compactions and also inserts an entry into the metadata table for the tablet to denote that an external compaction is running. When the Compactor has finished the compaction, it notifies the CompactionCoordinator which inserts an entry into the metadata table to denote that the external compaction completed and it attempts to notify the TabletServer. If successful, the TabletServer commits the major compaction. If the TabletServer is down, or the Tablet has become hosted on a different TabletServer, then the CompactionCoordinator will fail to notify the TabletServer, but the metadata table entries will remain. The major compaction will be committed in the future by the TabletServer hosting the Tablet.</p>
 
-<p>External compactions handle faults and major system events in Accumulo. When a compactor process dies this will be detected and any files it had reserved in a tablet will be unreserved.  When a tserver dies, this will not impact any external compactions running on behalf of tablets that tserver was hosting.  The case of tablets not being hosted on an tserver when an external compaction tries to commit is also handled.  Tablets being deleted (by split, merge, or table deletion) will cause any associated running external compactions to be canceled.  When a user initiated compaction is canceled, any external compactions running as part of that will be canceled.</p>
+<p>External compactions handle faults and major system events in Accumulo. When a compactor process dies this will be detected and any files it had reserved in a tablet will be unreserved.  When a tserver dies, this will not impact any external compactions running on behalf of tablets that tserver was hosting.  The case of tablets not being hosted on a tserver when an external compaction tries to commit is also handled.  Tablets being deleted (by split, merge, or table deletion) will cause any associated running external compactions to be canceled.  When a user initiated compaction is canceled, any external compactions running as part of that will be canceled.</p>
 
 <h3 id="external-compaction-in-action">External Compaction in Action</h3>
 
@@ -661,7 +661,7 @@ false, kind:USER)
 
 <p>The names of compaction services and executors are used in logging.  The log
 messages below are from a tserver with the configuration above with data being
-written to the ci table.  Also a compaction of the table was forced from the
+written to the ci table.  Also, a compaction of the table was forced from the
 shell.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2020-06-25T16:34:31,669 [tablet.files] DEBUG: Compacting 3;667;6 on cs1.small for SYSTEM from [C00001cm.rf, C00001a7.rf, F00001db.rf] size 15 MB
