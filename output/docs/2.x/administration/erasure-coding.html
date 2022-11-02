@@ -433,23 +433,23 @@
     <p>With the release of version 3.0.0, Hadoop introduced the use of <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html">Erasure Coding</a>
 (EC) in HDFS.  By default HDFS achieves durability via block replication.
 Usually the replication count is 3, resulting in a storage overhead of 200%.
-Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much 
+Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much
 like RAID 5 or 6…for <em>k</em> blocks of data, <em>m</em> blocks of parity data are generated,
-from which the original data can be recovered in the event of disk or node 
+from which the original data can be recovered in the event of disk or node
 failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3,
 where 6 data blocks produce 3 parity blocks, an overhead of only 50%.  In
 addition to doubling the available disk space, RS-6-3 is also more fault
 tolerant…a loss of 3 data blocks can be tolerated, whereas triple replication
 can only sustain a loss of two.</p>
 
-<p>To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop 
-with support for Intel’s ISA-L library. Instructions for doing this can be found 
+<p>To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop
+with support for Intel’s ISA-L library. Instructions for doing this can be found
 <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Enable_Intel_ISA-L">here</a></p>
 
 <h3 id="important-warning">Important Warning</h3>
-<p>As noted 
+<p>As noted
 <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations">here</a>,
-the current EC implementation does not support <code class="language-plaintext highlighter-rouge">hflush()</code> and <code class="language-plaintext highlighter-rouge">hsync()</code>.  These 
+the current EC implementation does not support <code class="language-plaintext highlighter-rouge">hflush()</code> and <code class="language-plaintext highlighter-rouge">hsync()</code>. These
 functions are no-ops, which means that EC coded files are not guaranteed to
 be written to disk after a sync or flush.  For this reason, <strong>EC should never
 be used for the Accumulo write-ahead logs.  Data loss may, and most likely will,
@@ -460,8 +460,8 @@ occur.</strong> It is also recommended that tables in the <code class="language-
 <p>Due to the striped nature of an EC encoded file, an EC enabled HDFS client is threaded.
 This becomes an issue when an Accumulo client or service is configured to use multiple
 threads to read or write to HDFS, and becomes especially problematic when doing bulk
-imports. By default, Accumulo will use eight times the number of cores on the client 
-machine to scan the files to be imported and map them to tablet files. Each thread 
+imports. By default, Accumulo will use eight times the number of cores on the client
+machine to scan the files to be imported and map them to tablet files. Each thread
 created to scan the input files will create on the order of <em>k</em> threads to perform
 parallel I/O. RS-10-4 on a 16 core machine, for instance, will spawn over a thousand
 threads to perform this operation. If sufficient memory is not available, this operation
@@ -511,7 +511,7 @@ RS-6-3-64k
 </code></pre></div></div>
 
 <p>And changing the policy for a parent will also change its children.  The <code class="language-plaintext highlighter-rouge">-setPolicy</code>
-command here issues a warning that existing files will not be converted.  To 
+command here issues a warning that existing files will not be converted. To
 switch the policy for an existing file, you must create a new file (through
 a copy, for instance).  For Accumulo, if you change the encoding policy for
 a table’s directories, you would then have to perform a major compaction on
@@ -529,7 +529,7 @@ RS-6-3-1024k
 <h3 id="configuring-ec-for-a-new-instance">Configuring EC for a New Instance</h3>
 <p>If you wish to create a new instance with a single encoding policy for all tables,
 you simply need to change the encoding policy on the <code class="language-plaintext highlighter-rouge">tables</code> directory after
-running <code class="language-plaintext highlighter-rouge">accumulo init</code> (see 
+running <code class="language-plaintext highlighter-rouge">accumulo init</code> (see
 <a href="/docs/2.x/getting-started/quickstart#initialization">Quick Start</a> guide).  To
 keep the tables in the <code class="language-plaintext highlighter-rouge">accumulo</code> namespace using replication, you
 would then need to manually change them back to using replication.  Assuming
@@ -583,11 +583,11 @@ user@instance&gt; compact -t test.table1
 
 <h3 id="defining-custom-ec-policies">Defining Custom EC Policies</h3>
 <p>Hadoop by default will enable only a single EC policy, which is
-determined by the value of the <code class="language-plaintext highlighter-rouge">dfs.namenode.ec.system.default.policy</code> 
+determined by the value of the <code class="language-plaintext highlighter-rouge">dfs.namenode.ec.system.default.policy</code>
 configuration setting.  To enable an existing policy, use the <code class="language-plaintext highlighter-rouge">hdfs ec -enablePolicy</code>
-command.  To define custom policies, you must first edit the 
+command.  To define custom policies, you must first edit the
 <code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> file found in the Hadoop configuration directory,
-and then run the <code class="language-plaintext highlighter-rouge">hdfs ec -addPolicies</code> command.  For example, to add 
+and then run the <code class="language-plaintext highlighter-rouge">hdfs ec -addPolicies</code> command.  For example, to add
 RS-6-3-64k as a policy, you first edit <code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> and add
 the following:</p>
 
@@ -610,7 +610,7 @@ the following:</p>
 <span class="nt">&lt;/policies&gt;</span>
 <span class="nt">&lt;/configuration&gt;</span>
 </code></pre></div></div>
-<p>Here the schema “RSk6m3” defines a Reed-Solomon encoding with <em>k</em>=6 
+<p>Here the schema “RSk6m3” defines a Reed-Solomon encoding with <em>k</em>=6
 data blocks and <em>m</em>=3 parity blocks.  This schema is then used to define
 a policy that uses RS-6-3 encoding with a stripe size of 64k.  To add
 this policy:</p>
@@ -631,7 +631,7 @@ Erasure coding policy RS-6-3-64k is enabled
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
       <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/administration/erasure-coding.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
-    </div>  
+    </div>
   </div>
 </div>
 

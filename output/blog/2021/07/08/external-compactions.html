@@ -426,7 +426,7 @@ Kubernetes. Then the following commands were run to start the Compactors using
 <a href="/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml">accumulo-compactor-muchos.yaml</a>.
 The yaml file contains comments explaining issues related to IP addresses and DNS names.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f accumulo-compactor-muchos.yaml 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f accumulo-compactor-muchos.yaml
 kubectl autoscale deployment accumulo-compactor --cpu-percent=80 --min=10 --max=660
 </code></pre></div></div>
 
@@ -448,7 +448,7 @@ worker VMs, so the max of 660 exceeds what the Muchos cluster could run itself.<
 <h3 id="ingesting-data">Ingesting data</h3>
 
 <p>After starting Compactors, 22 continuous ingest clients (from
-accumulo_testing) were started.  The following plot shows the number of
+accumulo-testing) were started.  The following plot shows the number of
 compactions running in the three different compaction queues
 configured.  The executor cs1_small is for compactions &lt;= 32M and it stayed
 pretty busy as minor compactions constantly produce new small files.  In 2.1.0
@@ -561,7 +561,7 @@ scale down.</p>
 <p>To use custom metrics you would need to get the metrics from Accumulo into a
 metrics store that has a <a href="https://github.com/kubernetes/metrics/blob/master/IMPLEMENTATIONS.md#custom-metrics-api">metrics adapter</a>. One possible solution, available
 in Hadoop 3.3.0, is to use Prometheus, the <a href="https://github.com/kubernetes-sigs/prometheus-adapter">Prometheus Adapter</a>, and enable
-the Hadoop PrometheusMetricsSink added in 
+the Hadoop PrometheusMetricsSink added in
 <a href="https://issues.apache.org/jira/browse/HADOOP-16398">HADOOP-16398</a> to expose the custom queue
 size metrics. This seemed like the right solution, but it also seemed like a
 lot of work that was outside the scope of this blog post. Ultimately we decided

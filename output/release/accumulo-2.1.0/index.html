@@ -192,7 +192,7 @@ earlier installation.</p>
 
 <h3 id="overhaul-of-table-compactions">Overhaul of Table Compactions</h3>
 
-<p>Significant changes were made to how Accumulo compacts files in this release.  See 
+<p>Significant changes were made to how Accumulo compacts files in this release.  See
 <a href="/docs/2.x/administration/compaction">compaction </a> for details, below are some highlights.</p>
 
 <ul>
@@ -232,9 +232,9 @@ for more information. GitHub tickets related to these changes: <a href="https://
 <h3 id="external-compactions-experimental">External Compactions (experimental)</h3>
 
 <p>This feature includes two new optional server components, CompactionCoordinator and Compactor,
-that enables the user to run major compactions outside of the Tablet Server. See 
+that enables the user to run major compactions outside of the Tablet Server. See
 <a href="/docs/2.x/_docs-2/getting-started/design.md">design.md </a>, <a href="/docs/2.x/administration/compaction">compaction </a> and the
-External Compaction <a href="https://accumulo.apache.org/blog/2021/07/08/external-compactions.html">blog post</a> for more information. This work was completed
+External Compaction <a href="/blog/2021/07/08/external-compactions.html">blog post</a> for more information. This work was completed
 over many tickets, see the GitHub <a href="https://github.com/apache/accumulo/projects/20">project</a> for the related issues. <a href="https://github.com/apache/accumulo/issues/2096">#2096</a></p>
 
 <h3 id="scan-servers-experimental">Scan Servers (experimental)</h3>
@@ -259,7 +259,7 @@ format. These splits can be merged away as shown in the example below which
 starts off with splits generated from the old and new row schema. The old
 splits with the prefix <code class="language-plaintext highlighter-rouge">~delhdfs</code> are merged away.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; getsplits -t accumulo.metadata 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; getsplits -t accumulo.metadata
 2&lt;
 ~
 ~del55
@@ -267,7 +267,7 @@ splits with the prefix <code class="language-plaintext highlighter-rouge">~delhd
 ~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000a0.rf
 ~delhdfs://localhost:8020/accumulo/tables/2/default_tablet/F00000kb.rf
 root@uno&gt; merge -t accumulo.metadata -b ~delhdfs -e ~delhdfs~
-root@uno&gt; getsplits -t accumulo.metadata 
+root@uno&gt; getsplits -t accumulo.metadata
 2&lt;
 ~
 ~del55
@@ -365,25 +365,25 @@ metrics to supported Micrometer sinks. <a href="https://github.com/apache/accumu
 
 <h3 id="new-listtablets-shell-command">New listtablets shell command.</h3>
 
-<p>A new command was created for debugging called listtablets, that shows detailed tablet information 
-on a single line. This command aggregates data about a tablet such as status, location, size, 
-number of entries and HDFS directory name. It even shows the start and end rows of tablets, 
+<p>A new command was created for debugging called listtablets, that shows detailed tablet information
+on a single line. This command aggregates data about a tablet such as status, location, size,
+number of entries and HDFS directory name. It even shows the start and end rows of tablets,
 displaying them in the same sorted order they are stored in the metadata. See example command output below.
 <a href="https://github.com/apache/accumulo/issues/1317">#1317</a> <a href="https://github.com/apache/accumulo/issues/1821">#1821</a></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@uno&gt; listtablets -t test_ingest -h
 2021-01-04T15:12:47,663 [Shell.audit] INFO : root@uno&gt; listtablets -t test_ingest -h
-NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END                 
+NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END
 TABLE: test_ingest
-1    t-0000007       1     0            60       552 HOSTED     CURRENT:ip-10-113-12-25:9997   2     -INF                 row_0000000005      
-2    t-0000006       1     0           500     2.71K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000005       row_0000000055      
-3    t-0000008       1     0         5.00K    24.74K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000055       row_0000000555      
-4    default_tablet  1     0         4.44K    22.01K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000555       +INF                     
+1    t-0000007       1     0            60       552 HOSTED     CURRENT:ip-10-113-12-25:9997   2     -INF                 row_0000000005
+2    t-0000006       1     0           500     2.71K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000005       row_0000000055
+3    t-0000008       1     0         5.00K    24.74K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000055       row_0000000555
+4    default_tablet  1     0         4.44K    22.01K HOSTED     CURRENT:ip-10-113-12-25:9997   2     row_0000000555       +INF
 root@uno&gt; listtablets -t accumulo.metadata
 2021-01-04T15:13:21,750 [Shell.audit] INFO : root@uno&gt; listtablets -t accumulo.metadata
-NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END                 
+NUM  TABLET_DIR      FILES WALS  ENTRIES   SIZE      STATUS     LOCATION                       ID    START (Exclusive)    END
 TABLE: accumulo.metadata
-1    table_info      2     0     7         524       HOSTED     CURRENT:ip-10-113-12-25:9997   !0    -INF                 ~                   
+1    table_info      2     0     7         524       HOSTED     CURRENT:ip-10-113-12-25:9997   !0    -INF                 ~
 2    default_tablet  0     0     0         0         HOSTED     CURRENT:ip-10-113-12-25:9997   !0    ~                    +INF
 </code></pre></div></div>
 
@@ -399,7 +399,7 @@ based on either the size or number given. It uses Apache Datasketches to get the
 
 <h3 id="new-max-tablets-option-in-bulk-import">New max tablets option in bulk import</h3>
 
-<p>The property <code class="language-plaintext highlighter-rouge">table.bulk.max.tablets</code> was created in new bulk import technique. This property acts as a cluster performance 
+<p>The property <code class="language-plaintext highlighter-rouge">table.bulk.max.tablets</code> was created in new bulk import technique. This property acts as a cluster performance
 failsafe to prevent a single ingested file from being distributed across too much of a cluster. The value is enforced
 by the new bulk import technique and is the maximum number of tablets allowed for one bulk import file. When this property
 is set, an error will be thrown when the value is exceeded during a bulk import. <a href="https://github.com/apache/accumulo/issues/1614">#1614</a></p>
@@ -453,7 +453,7 @@ client. <a href="https://github.com/apache/accumulo/issues/1808">#1808</a> <a hr
 active compaction. As an optimization, this page will only fetch data if a user loads the
 page and will only do so a maximum of once a minute. This optimization was also added for the Active Scans page,
 along with the addition of a “Fetched” column indicating when the data was retrieved.</li>
-  <li>A new feature was added to the Tablet Server page to help users identify which tservers are in recovery mode. When 
+  <li>A new feature was added to the Tablet Server page to help users identify which tservers are in recovery mode. When
 a tserver is recovering, its corresponding row in the Tablet Server Status table will be highlighted.</li>
   <li>A new page was also created for External Compactions that allows users to see the progress of compactions and other details about ongoing compactions (see below).</li>
 </ul>

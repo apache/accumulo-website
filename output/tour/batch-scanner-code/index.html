@@ -172,18 +172,18 @@
 
 <p>Create a BatchScanner with 5 query threads</p>
 <pre><code class="language-commandline">jshell&gt; try (BatchScanner batchScanner = client.createBatchScanner("GothamBatch", Authorizations.EMPTY, 5)) {
-   ...&gt; 
+   ...&gt;
    ...&gt;   // Create a collection of 2 sample ranges and set it to the batchScanner
    ...&gt;   List&lt;Range&gt; ranges = new ArrayList&lt;Range&gt;();
-   ...&gt; 
+   ...&gt;
    ...&gt;   // Create a collection of 2 sample ranges and set it to the batchScanner
    ...&gt;   ranges.add(new Range("id1000", "id1999"));
    ...&gt;   ranges.add(new Range("id9000", "id9999"));
    ...&gt;   batchScanner.setRanges(ranges);
-   ...&gt; 
+   ...&gt;
    ...&gt;   // Fetch just the columns we want
    ...&gt;   batchScanner.fetchColumn(new Text("villain"), new Text("yearsOfService"));
-   ...&gt; 
+   ...&gt;
    ...&gt;   // Calculate average years of service
    ---&gt;   long villianCount = batchScanner.stream().count();
    ---&gt;   Double average = batchScanner.stream().map(Map.Entry::getValue).map(Value::toString).mapToLong(Long::valueOf).average().getAsDouble();

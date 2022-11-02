@@ -214,14 +214,14 @@
 
 <p>Accumulo only sorts data lexicographically.  Getting something like a pair of (<em>String</em>,<em>Integer</em>) to sort correctly in Accumulo is tricky.  It’s tricky because you only want to compare the integers if the strings are equal.  It’s possible to make this sort properly in Accumulo if the data is encoded properly, but can be difficult.  To make this easier <a href="https://issues.apache.org/jira/browse/ACCUMULO-1336" title="Add lexicoders from Typo to Accumulo">ACCUMULO-1336</a> added Lexicoders to the Accumulo API.  Lexicoders provide an easy way to serialize data so that it sorts properly lexicographically.  Below is a simple example.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   PairLexicoder plex = new PairLexicoder(new StringLexicoder(), new IntegerLexicoder());
-   byte[] ba1 = plex.encode(new ComparablePair&lt;String, Integer&gt;("b",1));
-   byte[] ba2 = plex.encode(new ComparablePair&lt;String, Integer&gt;("aa",1));
-   byte[] ba3 = plex.encode(new ComparablePair&lt;String, Integer&gt;("a",2));
-   byte[] ba4 = plex.encode(new ComparablePair&lt;String, Integer&gt;("a",1)); 
-   byte[] ba5 = plex.encode(new ComparablePair&lt;String, Integer&gt;("aa",-3));
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">PairLexicoder</span> <span class="n">plex</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PairLexicoder</span><span class="o">(</span><span class="k">new</span> <span class="nc">StringLexicoder</span><span class="o">(),</span> <span class="k">new</span> <span class="nc">IntegerLexicoder</span><span class="o">());</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">ba1</span> <span class="o">=</span> <span class="n">plex</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="k">new</span> <span class="nc">ComparablePair</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;(</span><span class="s">"b"</span><span class="o">,</span><span class="mi">1</span><span class="o">));</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">ba2</span> <span class="o">=</span> <span class="n">plex</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="k">new</span> <span class="nc">ComparablePair</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;(</span><span class="s">"aa"</span><span class="o">,</span><span class="mi">1</span><span class="o">));</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">ba3</span> <span class="o">=</span> <span class="n">plex</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="k">new</span> <span class="nc">ComparablePair</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;(</span><span class="s">"a"</span><span class="o">,</span><span class="mi">2</span><span class="o">));</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">ba4</span> <span class="o">=</span> <span class="n">plex</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="k">new</span> <span class="nc">ComparablePair</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;(</span><span class="s">"a"</span><span class="o">,</span><span class="mi">1</span><span class="o">));</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">ba5</span> <span class="o">=</span> <span class="n">plex</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="k">new</span> <span class="nc">ComparablePair</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;(</span><span class="s">"aa"</span><span class="o">,-</span><span class="mi">3</span><span class="o">));</span>
 
-   //sorting ba1,ba2,ba3,ba4, and ba5 lexicographically will result in the same order as sorting the ComparablePairs
+<span class="c1">//sorting ba1,ba2,ba3,ba4, and ba5 lexicographically will result in the same order as sorting the ComparablePairs</span>
 </code></pre></div></div>
 
 <h3 id="locality-groups-in-memory">Locality groups in memory</h3>
@@ -245,36 +245,36 @@ ticket that contains numerous fixes to enable this support.</p>
 
 <p>This version of Accumulo is accompanied by a new maven plugin for testing client apps (<a href="https://issues.apache.org/jira/browse/ACCUMULO-1030" title="Create a Maven plugin to run MiniAccumuloCluster for integration testing">ACCUMULO-1030</a>). You can execute the accumulo-maven-plugin inside your project by adding the following to your pom.xml’s build plugins section:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;plugin&gt;
-    &lt;groupId&gt;org.apache.accumulo&lt;/groupId&gt;
-    &lt;artifactId&gt;accumulo-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.6.0&lt;/version&gt;
-    &lt;configuration&gt;
-      &lt;instanceName&gt;plugin-it-instance&lt;/instanceName&gt;
-      &lt;rootPassword&gt;ITSecret&lt;/rootPassword&gt;
-    &lt;/configuration&gt;
-    &lt;executions&gt;
-      &lt;execution&gt;
-        &lt;id&gt;run-plugin&lt;/id&gt;
-        &lt;goals&gt;
-          &lt;goal&gt;start&lt;/goal&gt;
-          &lt;goal&gt;stop&lt;/goal&gt;
-        &lt;/goals&gt;
-      &lt;/execution&gt;
-    &lt;/executions&gt;
-  &lt;/plugin&gt;
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>1.6.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;configuration&gt;</span>
+    <span class="nt">&lt;instanceName&gt;</span>plugin-it-instance<span class="nt">&lt;/instanceName&gt;</span>
+    <span class="nt">&lt;rootPassword&gt;</span>ITSecret<span class="nt">&lt;/rootPassword&gt;</span>
+  <span class="nt">&lt;/configuration&gt;</span>
+  <span class="nt">&lt;executions&gt;</span>
+    <span class="nt">&lt;execution&gt;</span>
+      <span class="nt">&lt;id&gt;</span>run-plugin<span class="nt">&lt;/id&gt;</span>
+      <span class="nt">&lt;goals&gt;</span>
+        <span class="nt">&lt;goal&gt;</span>start<span class="nt">&lt;/goal&gt;</span>
+        <span class="nt">&lt;goal&gt;</span>stop<span class="nt">&lt;/goal&gt;</span>
+      <span class="nt">&lt;/goals&gt;</span>
+    <span class="nt">&lt;/execution&gt;</span>
+  <span class="nt">&lt;/executions&gt;</span>
+<span class="nt">&lt;/plugin&gt;</span>
 </code></pre></div></div>
 
 <p>This plugin is designed to work in conjunction with the maven-failsafe-plugin. A small test instance of Accumulo will run during the pre-integration-test phase of the Maven build lifecycle, and will be stopped in the post-integration-test phase. Your integration tests, executed by maven-failsafe-plugin can access this instance with a MiniAccumuloInstance connector (the plugin uses MiniAccumuloInstance, internally), as in the following example:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  private static Connector conn;
-  
-  @BeforeClass
-  public static void setUp() throws Exception {
-    String instanceName = "plugin-it-instance";
-    Instance instance = new MiniAccumuloInstance(instanceName, new File("target/accumulo-maven-plugin/" + instanceName));
-    conn = instance.getConnector("root", new PasswordToken("ITSecret"));
-  }
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">static</span> <span class="nc">Connector</span> <span class="n">conn</span><span class="o">;</span>
+
+<span class="nd">@BeforeClass</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+  <span class="nc">String</span> <span class="n">instanceName</span> <span class="o">=</span> <span class="s">"plugin-it-instance"</span><span class="o">;</span>
+  <span class="nc">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MiniAccumuloInstance</span><span class="o">(</span><span class="n">instanceName</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"target/accumulo-maven-plugin/"</span> <span class="o">+</span> <span class="n">instanceName</span><span class="o">));</span>
+  <span class="n">conn</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getConnector</span><span class="o">(</span><span class="s">"root"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">PasswordToken</span><span class="o">(</span><span class="s">"ITSecret"</span><span class="o">));</span>
+<span class="o">}</span>
 </code></pre></div></div>
 
 <p>This plugin is quite limited, currently only supporting an instance name and a root user password as configuration parameters. Improvements are expected in future releases, so feedback is welcome and appreciated (file bugs/requests under the “maven-plugin” component in the Accumulo JIRA).</p>
@@ -287,7 +287,7 @@ issues such as JVM garbage collection pauses. In earlier releases, a pre-built c
 
 <p>It is recommended that users invoke the provided build_native_library.sh before running Accumulo:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   $ACCUMULO_HOME/bin/build_native_library.sh
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/build_native_library.sh
 </code></pre></div></div>
 
 <p>Be aware that you will need a C++ compiler/toolchain installed to build this library. Check your GNU/Linux distribution documentation for the package manager command.</p>
@@ -348,9 +348,9 @@ command. See the help message on the command for more information.</p>
 <h3 id="slower-writes-than-previous-accumulo-versions">Slower writes than previous Accumulo versions</h3>
 
 <p>When using Accumulo 1.6 and Hadoop 2, Accumulo will call hsync() on HDFS.
-Calling hsync improves durability by ensuring data is on disk (where other older 
+Calling hsync improves durability by ensuring data is on disk (where other older
 Hadoop versions might lose data in the face of power failure); however, calling
-hsync frequently does noticeably slow writes. A simple work around is to increase 
+hsync frequently does noticeably slow writes. A simple work around is to increase
 the value of the tserver.mutation.queue.max configuration parameter via accumulo-site.xml.</p>
 
 <p>A value of “4M” is a better recommendation, and memory consumption will increase by
@@ -360,14 +360,14 @@ mutation queues.</p>
 
 <p>For more information, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-1950" title="Reduce the number of calls to hsync">ACCUMULO-1950</a> and <a href="https://issues.apache.org/jira/browse/ACCUMULO-1905?focusedCommentId=13915208&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13915208">this comment</a>.</p>
 
-<p>Another possible cause of slower writes is the change in write ahead log replication 
-between 1.4 and 1.5.  Accumulo 1.4. defaulted to two loggers servers.  Accumulo 1.5 and 1.6 store 
+<p>Another possible cause of slower writes is the change in write ahead log replication
+between 1.4 and 1.5.  Accumulo 1.4. defaulted to two loggers servers.  Accumulo 1.5 and 1.6 store
 write ahead logs in HDFS and default to using three datanodes.</p>
 
 <h3 id="batchwriter-hold-time-error">BatchWriter hold time error</h3>
 
 <p>If a <code class="language-plaintext highlighter-rouge">BatchWriter</code> fails with <code class="language-plaintext highlighter-rouge">MutationsRejectedException</code> and the  message contains
-<code class="language-plaintext highlighter-rouge">"# server errors 1"</code> then it may be <a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a>.  To confirm this look in the tablet server logs 
+<code class="language-plaintext highlighter-rouge">"# server errors 1"</code> then it may be <a href="https://issues.apache.org/jira/browse/ACCUMULO-2388">ACCUMULO-2388</a>.  To confirm this look in the tablet server logs
 for <code class="language-plaintext highlighter-rouge">org.apache.accumulo.tserver.HoldTimeoutException</code> around the time the <code class="language-plaintext highlighter-rouge">BatchWriter</code> failed.
 If this is happening often a possible work around is to set <code class="language-plaintext highlighter-rouge">general.rpc.timeout</code> to <code class="language-plaintext highlighter-rouge">240s</code>.</p>
 
@@ -424,7 +424,7 @@ has a set of tests that must be run before the candidate is capable of becoming 
   <li>Successfully complete two 72-hour Continuous Ingest tests, with and without “agitation”</li>
 </ol>
 
-<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run 
+<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run
 on any number of nodes. <em>Agitation</em> refers to randomly restarting Accumulo processes and Hadoop Datanode processes,
 and, in HDFS High-Availability instances, forcing NameNode failover.</p>
 

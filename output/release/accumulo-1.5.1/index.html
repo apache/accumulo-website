@@ -177,9 +177,9 @@ contributed by over 30 different contributors and committers.</p>
   <li><a href="/1.5/examples">Examples</a></li>
 </ul>
 
-<p>As this is a maintenance release, Apache Accumulo 1.5.1 has no client API 
-incompatibilities over Apache Accumulo 1.5.0 and requires no manual upgrade 
-process. Users of 1.5.0 are strongly encouraged to update as soon as possible 
+<p>As this is a maintenance release, Apache Accumulo 1.5.1 has no client API
+incompatibilities over Apache Accumulo 1.5.0 and requires no manual upgrade
+process. Users of 1.5.0 are strongly encouraged to update as soon as possible
 to benefit from the improvements.</p>
 
 <h2 id="notable-improvements">Notable Improvements</h2>
@@ -190,17 +190,17 @@ here are some of the more notable improvements.</p>
 
 <h3 id="permgen-leak-from-client-api">PermGen Leak from Client API</h3>
 
-<p>Accumulo’s client code creates background threads that users presently cannot 
+<p>Accumulo’s client code creates background threads that users presently cannot
 stop through the API. This is quick to cause problems when invoking the Accumulo
-API in application containers such as Apache Tomcat or JBoss and repeatedly 
-redeploying an application. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2128">ACCUMULO-2128</a> introduces a static utility, 
-org.apache.accumulo.core.util.CleanUp, that users can invoke as part of a 
-teardown hook in their container that will stop these threads and avoid 
+API in application containers such as Apache Tomcat or JBoss and repeatedly
+redeploying an application. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2128">ACCUMULO-2128</a> introduces a static utility,
+org.apache.accumulo.core.util.CleanUp, that users can invoke as part of a
+teardown hook in their container that will stop these threads and avoid
 the eventual OutOfMemoryError “PermGen space”.</p>
 
 <h3 id="prefer-ipv4-when-starting-accumulo-processes">Prefer IPv4 when starting Accumulo processes</h3>
 
-<p>While Hadoop <a href="https://wiki.apache.org/hadoop/HadoopIPv6">does not support IPv6 networks</a>, attempting to run on a 
+<p>While Hadoop <a href="https://wiki.apache.org/hadoop/HadoopIPv6">does not support IPv6 networks</a>, attempting to run on a
 system that does not have IPv6 completely disabled can cause strange failures.
 <a href="https://issues.apache.org/jira/browse/ACCUMULO-2262">ACCUMULO-2262</a> invokes the JVM-provided configuration parameter at process
 startup to prefer IPv4 over IPv6.</p>
@@ -213,8 +213,8 @@ Additionally, a non-intuitive error was printed when a lower-case unit was provi
 
 <h3 id="apache-thrift-maximum-frame-size">Apache Thrift maximum frame size</h3>
 
-<p>Apache Thrift is used as the internal RPC service. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2360">ACCUMULO-2360</a> allows 
-users to configure the maximum frame size an Accumulo server will read. This 
+<p>Apache Thrift is used as the internal RPC service. <a href="https://issues.apache.org/jira/browse/ACCUMULO-2360">ACCUMULO-2360</a> allows
+users to configure the maximum frame size an Accumulo server will read. This
 prevents non Accumulo client from connecting and causing memory exhaustion.</p>
 
 <h3 id="multitablebatchwriter-concurrency">MultiTableBatchWriter concurrency</h3>
@@ -239,7 +239,7 @@ required.</p>
 <h2 id="notable-bug-fixes">Notable Bug Fixes</h2>
 
 <p>As with any Apache Accumulo release, we have numerous bug fixes that have been fixed. Most
-are very subtle and won’t affect the common user; however, some notable bugs were resolved 
+are very subtle and won’t affect the common user; however, some notable bugs were resolved
 as a part of 1.5.1 that are rather common.</p>
 
 <h3 id="failure-of-zookeeper-server-in-quorum-kills-connected-accumulo-services">Failure of ZooKeeper server in quorum kills connected Accumulo services</h3>
@@ -289,7 +289,7 @@ to disk before unloading a Tablet.</p>
 <h2 id="known-issues">Known Issues</h2>
 
 <p>When using Accumulo 1.5 and Hadoop 2, Accumulo will call hsync() on HDFS.
-Calling hsync improves durability by ensuring data is on disk (where other older 
+Calling hsync improves durability by ensuring data is on disk (where other older
 Hadoop versions might lose data in the face of power failure); however, calling
 hsync frequently does noticeably slow writes. A simple work around is to increase
 the value of the tserver.mutation.queue.max configuration parameter via accumulo-site.xml.</p>
@@ -329,7 +329,7 @@ has a set of tests that must be run before the candidate is capable of becoming 
   <li>Successfully complete two 72-hour Continuous Ingest tests, with and without “agitation”</li>
 </ol>
 
-<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run 
+<p>Each unit and functional test only runs on a single node, while the RandomWalk and Continuous Ingest tests run
 on any number of nodes. <em>Agitation</em> refers to randomly restarting Accumulo processes and Hadoop Datanode processes,
 and, in HDFS High-Availability instances, forcing NameNode failover.</p>
 

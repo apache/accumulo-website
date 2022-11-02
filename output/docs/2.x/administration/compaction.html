@@ -488,8 +488,8 @@ config -t ci -s table.compaction.dispatcher.opts.service=cs1
 config -t ci -s table.compaction.dispatcher.opts.service.user=cs2
 </code></pre></div></div>
 
-<p>For more information see the javadoc for <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/compaction/package-summary.html">compaction</a>, 
-<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">DefaultCompactionPlanner</a> and 
+<p>For more information see the javadoc for <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/compaction/package-summary.html">compaction</a>,
+<a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">DefaultCompactionPlanner</a> and
 <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/compaction/SimpleCompactionDispatcher.html">SimpleCompactionDispatcher</a></p>
 
 <p>The names of the compaction services and executors are used for logging and metrics.</p>
@@ -553,17 +553,17 @@ config -t testTable -s table.compaction.dispatcher.opts.service=cs1
 
 <p>Below are some examples of log entries and metadata table entries for external compactions. First, here are some metadata entries for table <code class="language-plaintext highlighter-rouge">2</code> . You can see that there are three files of different sizes (file size and number of entries are stored in the value portion of the metadata table rows with the “file” column qualifier).</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2&lt; last:10000bf4e0a0004 []	localhost:9997
-2&lt; loc:10000bf4e0a0004 []	localhost:9997
-2&lt; srv:compact []	111
-2&lt; srv:dir []	default_tablet
-2&lt; srv:flush []	113
-2&lt; srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2&lt; srv:time []	M1618325648093
-2&lt; ~tab:~pr []	\x00
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 113
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325648093
+2&lt; ~tab:~pr []  \x00
 </code></pre></div></div>
 
 <p>Below are excerpts from the TabletServer, CompactionCoordinator, Compactor logs and metadata table. I have merged the logs in time order to make it easier to see what is happening.</p>
@@ -580,18 +580,18 @@ running in the TabletServer, returned the information to the Coordinator. The Co
 2021-04-13T14:54:10,596 [coordinator.CompactionCoordinator] DEBUG: Returning external job ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c to localhost:9101
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []	{"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2&lt; last:10000bf4e0a0004 []	localhost:9997
-2&lt; loc:10000bf4e0a0004 []	localhost:9997
-2&lt; srv:compact []	111
-2&lt; srv:dir []	default_tablet
-2&lt; srv:flush []	113
-2&lt; srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2&lt; srv:time []	M1618325648093
-2&lt; ~tab:~pr []	\x00
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 113
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325648093
+2&lt; ~tab:~pr []  \x00
 </code></pre></div></div>
 
 <p>Next, the Compactor runs the compaction successfully and reports the status back to the Coordinator. The Coordinator inserts a final state marker into the metadata table (below the logs).</p>
@@ -610,7 +610,7 @@ false, kind:USER)
 2021-04-13T14:54:12,601 [compactor.Compactor] INFO : Progress checks will occur every 1 seconds
 2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'read_rate_limiter': 69,672 of 0 permits/second
 2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'write_rate_limiter': 45,120 of 0 permits/second
-2021-04-13T14:54:13,179 [compactor.Compactor] INFO : Compaction completed successfully ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c 
+2021-04-13T14:54:13,179 [compactor.Compactor] INFO : Compaction completed successfully ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
 2021-04-13T14:54:13,180 [compactor.Compactor] INFO : CompactionCoordinator address is: localhost:9100
 2021-04-13T14:54:13,181 [coordinator.CompactionCoordinator] INFO : Compaction status update, id: ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, timestamp: 1618325653180, state: SUCCEEDED, message: Compaction completed successfully
 2021-04-13T14:54:14,182 [compactor.Compactor] INFO : Compaction thread finished.
@@ -621,20 +621,20 @@ false, kind:USER)
 2021-04-13T14:54:14,290 [coordinator.CompactionFinalizer] INFO : Notifying tserver localhost:9997[10000bf4e0a0004] that compaction {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000} has finished.
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []	{"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []	12330,99000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []	1196,1000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []	841,1000
-2&lt; last:10000bf4e0a0004 []	localhost:9997
-2&lt; loc:10000bf4e0a0004 []	localhost:9997
-2&lt; srv:compact []	111
-2&lt; srv:dir []	default_tablet
-2&lt; srv:flush []	114
-2&lt; srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2&lt; srv:time []	M1618325653080
-2&lt; ~tab:~pr []	\x00
-~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []	{"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 114
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325653080
+2&lt; ~tab:~pr []  \x00
+~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []    {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
 </code></pre></div></div>
 
 <p>Finally, the TabletServer commits the compaction.</p>
@@ -644,17 +644,17 @@ false, kind:USER)
 2021-04-13T14:54:14,326 [tablet.CompactableImpl] DEBUG: Completed commit of external compaction ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf []	12354,100000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []	1302,1000
-2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []	841,1000
-2&lt; last:10000bf4e0a0004 []	localhost:9997
-2&lt; loc:10000bf4e0a0004 []	localhost:9997
-2&lt; srv:compact []	112
-2&lt; srv:dir []	default_tablet
-2&lt; srv:flush []	114
-2&lt; srv:lock []	tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
-2&lt; srv:time []	M1618325653080
-2&lt; ~tab:~pr []	\x00
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf []   12354,100000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   112
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 114
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325653080
+2&lt; ~tab:~pr []  \x00
 </code></pre></div></div>
 
 <h2 id="logging">Logging</h2>
@@ -715,7 +715,7 @@ This will only compact tablets that overlap the given row range.</p>
     <div class="row" style="margin-top: 20px;">
       <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
       <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/administration/compaction.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
-    </div>  
+    </div>
   </div>
 </div>
 

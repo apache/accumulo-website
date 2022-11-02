@@ -6,9 +6,9 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 01 Nov 2022 20:22:13 +0000</pubDate>
-    <lastBuildDate>Tue, 01 Nov 2022 20:22:13 +0000</lastBuildDate>
-    <generator>Jekyll v4.2.0</generator>
+    <pubDate>Wed, 02 Nov 2022 04:27:59 +0000</pubDate>
+    <lastBuildDate>Wed, 02 Nov 2022 04:27:59 +0000</lastBuildDate>
+    <generator>Jekyll v4.3.1</generator>
     
     
       <item>
@@ -513,7 +513,7 @@ Kubernetes. Then the following commands were run to start the Compactors using
 &lt;a href=&quot;/images/blog/202107_ecomp/accumulo-compactor-muchos.yaml&quot;&gt;accumulo-compactor-muchos.yaml&lt;/a&gt;.
 The yaml file contains comments explaining issues related to IP addresses and DNS names.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f accumulo-compactor-muchos.yaml 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f accumulo-compactor-muchos.yaml
 kubectl autoscale deployment accumulo-compactor --cpu-percent=80 --min=10 --max=660
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -535,7 +535,7 @@ worker VMs, so the max of 660 exceeds what the Muchos cluster could run itself.&
 &lt;h3 id=&quot;ingesting-data&quot;&gt;Ingesting data&lt;/h3&gt;
 
 &lt;p&gt;After starting Compactors, 22 continuous ingest clients (from
-accumulo_testing) were started.  The following plot shows the number of
+accumulo-testing) were started.  The following plot shows the number of
 compactions running in the three different compaction queues
 configured.  The executor cs1_small is for compactions &amp;lt;= 32M and it stayed
 pretty busy as minor compactions constantly produce new small files.  In 2.1.0
@@ -648,7 +648,7 @@ scale down.&lt;/p&gt;
 &lt;p&gt;To use custom metrics you would need to get the metrics from Accumulo into a
 metrics store that has a &lt;a href=&quot;https://github.com/kubernetes/metrics/blob/master/IMPLEMENTATIONS.md#custom-metrics-api&quot;&gt;metrics adapter&lt;/a&gt;. One possible solution, available
 in Hadoop 3.3.0, is to use Prometheus, the &lt;a href=&quot;https://github.com/kubernetes-sigs/prometheus-adapter&quot;&gt;Prometheus Adapter&lt;/a&gt;, and enable
-the Hadoop PrometheusMetricsSink added in 
+the Hadoop PrometheusMetricsSink added in
 &lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-16398&quot;&gt;HADOOP-16398&lt;/a&gt; to expose the custom queue
 size metrics. This seemed like the right solution, but it also seemed like a
 lot of work that was outside the scope of this blog post. Ultimately we decided
@@ -724,25 +724,25 @@ stress the feature in other ways though.&lt;/p&gt;
         <title>Jshell Accumulo Feature</title>
         <description>&lt;h2 id=&quot;overview&quot;&gt;Overview&lt;/h2&gt;
 
-&lt;p&gt;First introduced in Java 9, &lt;a href=&quot;https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8&quot;&gt;JShell&lt;/a&gt; is an interactive Read-Evaluate-Print-Loop (REPL) 
-Java tool that interprets user’s input and outputs the results. This tool provides a convenient 
-way to test out and execute quick tasks with Accumulo in the terminal. This feature is a part 
-of the upcoming Accumulo 2.1 release. If you’re a developer and want to get involved in testing, 
-&lt;a href=&quot;https://accumulo.apache.org/contact-us/&quot;&gt;contact us&lt;/a&gt; or review our &lt;a href=&quot;https://accumulo.apache.org/how-to-contribute/&quot;&gt;contributing guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;First introduced in Java 9, &lt;a href=&quot;https://docs.oracle.com/javase/9/jshell/introduction-jshell.htm#JSHEL-GUID-630F27C8-1195-4989-9F6B-2C51D46F52C8&quot;&gt;JShell&lt;/a&gt; is an interactive Read-Evaluate-Print-Loop (REPL)
+Java tool that interprets user’s input and outputs the results. This tool provides a convenient
+way to test out and execute quick tasks with Accumulo in the terminal. This feature is a part
+of the upcoming Accumulo 2.1 release. If you’re a developer and want to get involved in testing,
+&lt;a href=&quot;/contact-us/&quot;&gt;contact us&lt;/a&gt; or review our &lt;a href=&quot;/how-to-contribute/&quot;&gt;contributing guide&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;major-features&quot;&gt;Major Features&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;Default JShell script provides initial imports for interacting with Accumulo’s API and 
+    &lt;p&gt;Default JShell script provides initial imports for interacting with Accumulo’s API and
 provided in Accumulo’s binary distribution tarball&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;On startup, JShell Accumulo  will automatically import the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt;, load in a configured 
-environment from user’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt;, and invoke &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; 
+    &lt;p&gt;On startup, JShell Accumulo  will automatically import the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt;, load in a configured
+environment from user’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt;, and invoke &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt;
 to allow rapid Accumulo task executions&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;JShell Accumulo can startup using default/custom JShell script and users can append any JShell 
+    &lt;p&gt;JShell Accumulo can startup using default/custom JShell script and users can append any JShell
 command-line &lt;a href=&quot;https://docs.oracle.com/javase/9/tools/jshell.htm#JSWOR-GUID-C337353B-074A-431C-993F-60C226163F00&quot;&gt;options&lt;/a&gt; to the startup command&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
@@ -752,34 +752,34 @@ command-line &lt;a href=&quot;https://docs.oracle.com/javase/9/tools/jshell.htm#
 
 &lt;p&gt;2) To startup JShell with &lt;strong&gt;default script&lt;/strong&gt; use this command:&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/accumulo jshell 
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/accumulo jshell
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;3) To startup JShell with &lt;strong&gt;custom script&lt;/strong&gt; use this command:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/accumulo jshell &lt;span class=&quot;nt&quot;&gt;--startup&lt;/span&gt; file/path/to/custom_script.jsh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; One can execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell&lt;/code&gt; command to startup JShell. However, doing so will require 
-manually importing the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt; and the configured environment from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt; 
-and manually specifying the startup file for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; before any Accumulo tasks 
-can be performed. Using one of the startup commands above will automate that process 
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; One can execute the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell&lt;/code&gt; command to startup JShell. However, doing so will require
+manually importing the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLASSPATH&lt;/code&gt; and the configured environment from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt;
+and manually specifying the startup file for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; before any Accumulo tasks
+can be performed. Using one of the startup commands above will automate that process
 for convenience.&lt;/p&gt;
 
 &lt;h2 id=&quot;jshell-accumulo-default-script&quot;&gt;JShell Accumulo Default Script&lt;/h2&gt;
-&lt;p&gt;The auto-generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; is a customizable file located in Accumulo’s installation 
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/&lt;/code&gt; directory. Inside, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; contains &lt;a href=&quot;https://accumulo.apache.org/api/&quot;&gt;Accumulo Java APIs&lt;/a&gt; 
-formatted as import statements and &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; build implementation. On startup, 
-the script automatically loads in the APIs and attempts to construct a client. Should additional 
-APIs and/or code implementations be needed, simply append them to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt;. 
-Alternatively, you can create a separate JShell script and specify the custom script’s file path 
+&lt;p&gt;The auto-generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; is a customizable file located in Accumulo’s installation
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/&lt;/code&gt; directory. Inside, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt; contains &lt;a href=&quot;/api/&quot;&gt;Accumulo Java APIs&lt;/a&gt;
+formatted as import statements and &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; build implementation. On startup,
+the script automatically loads in the APIs and attempts to construct a client. Should additional
+APIs and/or code implementations be needed, simply append them to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jshell-init.jsh&lt;/code&gt;.
+Alternatively, you can create a separate JShell script and specify the custom script’s file path
 on startup.&lt;/p&gt;
 
-&lt;p&gt;To construct an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt;, the provided &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; script finds 
-and uses &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; in Accumulo’s class path, and assigns the result 
+&lt;p&gt;To construct an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt;, the provided &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/jshell-init.jsh&lt;/code&gt; script finds
+and uses &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; in Accumulo’s class path, and assigns the result
 to a variable called &lt;strong&gt;client&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; is found, a similar result will be produced below:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo
 
 Building Accumulo client using 'jar:file:/home/accumulo/lib/accumulo-client.jar!/accumulo-client.properties'
 
@@ -788,26 +788,26 @@ Use 'client' to interact with Accumulo
 |  Welcome to JShell -- Version 11.0.10
 |  For an introduction type: /help intro
 
-jshell&amp;gt; 
+jshell&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; is not found, an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; will not 
+&lt;p&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-client.properties&lt;/code&gt; is not found, an &lt;a href=&quot;https://www.javadoc.io/doc/org.apache.accumulo/accumulo-core/latest/org/apache/accumulo/core/client/AccumuloClient.html&quot;&gt;AccumuloClient&lt;/a&gt; will not
 auto-generate and will produce the following result below:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo
 
 'accumulo-client.properties' was not found on the classpath
 
 |  Welcome to JShell -- Version 11.0.10
 |  For an introduction type: /help intro
 
-jshell&amp;gt; 
+jshell&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;jshell-accumulo-example&quot;&gt;JShell Accumulo Example&lt;/h2&gt;
 &lt;p&gt;1) Booting up JShell Accumulo using default script&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Preparing JShell for Apache Accumulo
 
 Building Accumulo client using 'file:/home/accumulo/conf/accumulo-client.properties'
 
@@ -816,42 +816,42 @@ Use 'client' to interact with Accumulo
 |  Welcome to JShell -- Version 11.0.10
 |  For an introduction type: /help intro
 
-jshell&amp;gt; 
+jshell&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;2) Providing JShell with an Accumulo task&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-Java&quot;&gt;  // Create a table called &quot;GothamPD&quot;.
-  client.tableOperations().create(&quot;GothamPD&quot;);
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;// Create a table called &quot;GothamPD&quot;.&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;tableOperations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GothamPD&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
-  // Create a Mutation object to hold all changes to a row in a table. 
-  // Each row has a unique row ID.
-  Mutation mutation = new Mutation(&quot;id0001&quot;);
+  &lt;span class=&quot;c1&quot;&gt;// Create a Mutation object to hold all changes to a row in a table.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Each row has a unique row ID.&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mutation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;id0001&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
-  // Create key/value pairs for Batman. Put them in the &quot;hero&quot; family.
-  mutation.put(&quot;hero&quot;, &quot;alias&quot;, &quot;Batman&quot;);
-  mutation.put(&quot;hero&quot;, &quot;name&quot;, &quot;Bruce Wayne&quot;);
-  mutation.put(&quot;hero&quot;, &quot;wearsCape?&quot;, &quot;true&quot;);
+  &lt;span class=&quot;c1&quot;&gt;// Create key/value pairs for Batman. Put them in the &quot;hero&quot; family.&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hero&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;alias&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Batman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hero&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Bruce Wayne&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hero&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;wearsCape?&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;true&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
-  // Create a BatchWriter to the GothamPD table and add your mutation to it. 
-  // Try w/ resources will close for us.
-  try (BatchWriter writer = client.createBatchWriter(&quot;GothamPD&quot;)) {
-      writer.addMutation(mutation);
-  }
-  
-  // Read and print all rows of the &quot;GothamPD&quot; table. 
-  // Try w/ resources will close for us.
-  try (ScannerBase scan = client.createScanner(&quot;GothamPD&quot;, Authorizations.EMPTY)) {
-    System.out.println(&quot;Gotham Police Department Persons of Interest:&quot;);
-    
-    // A Scanner is an extension of java.lang.Iterable so behaves just like one.
-    scan.forEach((k, v) -&amp;gt; System.out.printf(&quot;Key : %-50s Value : %s\n&quot;, k, v));
-  }
-&lt;/code&gt;&lt;/pre&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Create a BatchWriter to the GothamPD table and add your mutation to it.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Try w/ resources will close for us.&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;BatchWriter&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;writer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createBatchWriter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GothamPD&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;writer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addMutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mutation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The fully-qualified class name for Accumulo Scanner or 
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;org.apache.accumulo.core.client.Scanner&lt;/code&gt; needs to be used due to conflicting issues with 
-Java’s built-in java.util.Scanner. However, to shorten the Accumulo Scanner’s declaration, assign 
+  &lt;span class=&quot;c1&quot;&gt;// Read and print all rows of the &quot;GothamPD&quot; table.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Try w/ resources will close for us.&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ScannerBase&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scan&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createScanner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GothamPD&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Authorizations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EMPTY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Gotham Police Department Persons of Interest:&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// A Scanner is an extension of java.lang.Iterable so behaves just like one.&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Key : %-50s Value : %s\n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The fully-qualified class name for Accumulo Scanner or
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;org.apache.accumulo.core.client.Scanner&lt;/code&gt; needs to be used due to conflicting issues with
+Java’s built-in java.util.Scanner. However, to shorten the Accumulo Scanner’s declaration, assign
 scan to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ScannerBase&lt;/code&gt; type instead.&lt;/p&gt;
 
 &lt;p&gt;3) Executing the Accumulo task above outputs:&lt;/p&gt;
@@ -1305,7 +1305,7 @@ operation (compact, flush)
 &lt;p&gt;&lt;img src=&quot;/images/blog/202002_masc/architecture.svg&quot; alt=&quot;Architecture&quot; title=&quot;MASC Architecture Diagram&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;usage&quot;&gt;Usage&lt;/h1&gt;
-&lt;p&gt;More detailed documentation on installation and use is available in the 
+&lt;p&gt;More detailed documentation on installation and use is available in the
 &lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/README.md&quot;&gt;Connector documentation&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
@@ -1391,7 +1391,7 @@ operation (compact, flush)
       &lt;td&gt;1467810369&lt;/td&gt;
       &lt;td&gt;Mon Apr 06 22:19:…&lt;/td&gt;
       &lt;td&gt;NO_QUERY&lt;/td&gt;
-      &lt;td&gt;&lt;em&gt;TheSpecialOne&lt;/em&gt;&lt;/td&gt;
+      &lt;td&gt;_TheSpecialOne_&lt;/td&gt;
       &lt;td&gt;@switchfoot http:…&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -1423,7 +1423,7 @@ operation (compact, flush)
   &lt;li&gt;Validate data partitioning&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;A common machine learning scenario was evaluated using a sentiment model trained using &lt;a href=&quot;https://spark.apache.org/docs/latest/ml-guide.html&quot;&gt;SparkML&lt;/a&gt;. 
+&lt;p&gt;A common machine learning scenario was evaluated using a sentiment model trained using &lt;a href=&quot;https://spark.apache.org/docs/latest/ml-guide.html&quot;&gt;SparkML&lt;/a&gt;.
 To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of&lt;/p&gt;
 
 &lt;ul&gt;

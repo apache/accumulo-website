@@ -29,4 +29,4 @@ For general information on contributing to Accumulo projects, check out the
 [How To Contribute][contribute] page.
 
 [README.md]: README.md
-[contribute]: https://accumulo.apache.org/how-to-contribute/
+[contribute]: /how-to-contribute/

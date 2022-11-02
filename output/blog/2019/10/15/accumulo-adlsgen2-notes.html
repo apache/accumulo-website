@@ -159,9 +159,9 @@ are specific to Accumulo 2.0 and Hadoop 3.2.0.</p>
 
 <p>For ABFS client to talk to Gen2 storage, it requires one of the Authentication mechanism listed <a href="https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html#Authentication">here</a>
 This post covers <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">Azure Managed Identity</a>
-formerly known as Managed Service Identity or MSI. This feature provides Azure services with an 
+formerly known as Managed Service Identity or MSI. This feature provides Azure services with an
 automatically managed identity in <a href="https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-whatis">Azure AD</a>
-and it avoids the need for credentials or other sensitive information from being stored in code 
+and it avoids the need for credentials or other sensitive information from being stored in code
 or configs/JCEKS. Plus, it comes free with Azure AD.</p>
 
 <p>At least the following should be added to Hadoop’s <code class="language-plaintext highlighter-rouge">core-site.xml</code> on each node.</p>
@@ -187,15 +187,15 @@ or configs/JCEKS. Plus, it comes free with Azure AD.</p>
 <p>See <a href="https://hadoop.apache.org/docs/current/hadoop-azure/abfs.html">ABFS doc</a>
 for more information on Hadoop Azure support.</p>
 
-<p>To get hadoop command to work with ADLS Gen2 set the 
-following entries in <code class="language-plaintext highlighter-rouge">hadoop-env.sh</code>. As Gen2 storage is TLS enabled by default, 
+<p>To get hadoop command to work with ADLS Gen2 set the
+following entries in <code class="language-plaintext highlighter-rouge">hadoop-env.sh</code>. As Gen2 storage is TLS enabled by default,
 it is important we use the native OpenSSL implementation of TLS.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">HADOOP_OPTIONAL_TOOLS</span><span class="o">=</span><span class="s2">"hadoop-azure"</span>
 <span class="nb">export </span><span class="nv">HADOOP_OPTS</span><span class="o">=</span><span class="s2">"-Dorg.wildfly.openssl.path=&lt;path/to/OpenSSL/libraries&gt; </span><span class="k">${</span><span class="nv">HADOOP_OPTS</span><span class="k">}</span><span class="s2">"</span>
 </code></pre></div></div>
 
-<p>To verify the location of the OpenSSL libraries, run <code class="language-plaintext highlighter-rouge">whereis libssl</code> command 
+<p>To verify the location of the OpenSSL libraries, run <code class="language-plaintext highlighter-rouge">whereis libssl</code> command
 on the host</p>
 
 <h2 id="accumulo-setup">Accumulo setup</h2>
@@ -275,8 +275,8 @@ root@muchos gen2test&gt; scan -t accumulo.metadata -c file
 4&lt; file:abfss://&lt;file_system&gt;@&lt;storage_account_name&gt;.dfs.core.windows.net/accumulo/tables/4/default_tablet/F00000gj.rf []    234,2
 </code></pre></div></div>
 
-<p>These instructions will help to configure Accumulo to use Azure’s Data Lake Gen2 Storage along with HDFS. With this setup, 
-we are able to successfully run the continuos ingest test. Going forward, we’ll experiment more on this space 
+<p>These instructions will help to configure Accumulo to use Azure’s Data Lake Gen2 Storage along with HDFS. With this setup,
+we are able to successfully run the continuos ingest test. Going forward, we’ll experiment more on this space
 with ADLS Gen2 and add/update blog as we come along.</p>
 
 
