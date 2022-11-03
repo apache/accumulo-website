@@ -18,10 +18,10 @@ between versions, so *ANY* FATE transaction that is present will fail the upgrad
 transactions, including commands to fail and delete transactions, are included in the Accumulo documentation 
 [FATE - Administration]({% durl administration/fate#administration %})
 
-Two significant changes from 2.0 to 2.1 that are important to note: 1) properties and services that referenced
-`master` are renamed `manager` and 2) the property storage in ZooKeeper has changed from a ZooKeeper node per
-property to a single node for all properties with one ZooKeeper property node for each table, namespace and 
-the system config properties.
+Two significant changes from 2.0 to 2.1 that are important to note:
+
+1. properties and services that referenced `master` are renamed `manager` and
+2. the property storage in ZooKeeper has changed from a ZooKeeper node per property  to a single node for all properties with one ZooKeeper property node for each table, namespace. and the system config properties.
 
 Before upgrading from 2.0 to 2.1, it is suggested that you copy the current ZooKeeper contents to a backup in case
 issues occur and you need to rollback.  There are no provisions to roll back to a previous Accumulo version
