@@ -65,7 +65,9 @@ Before stopping Accumulo 2.0, install Accumulo 2.1 and configure it by following
 Stop Accumulo.
 (optional) create a ZooKeeper snapshot using:
 
-`accumulo dump-zoo --xml --root /accumulo | tee PATH_TO_SNAPSHOT` 
+```
+accumulo dump-zoo --xml --root /accumulo | tee PATH_TO_SNAPSHOT
+```
 
 Upgrade the property storage in ZooKeeper.  This can be done using a command line utility or it will occur automatically
 when the manager is started for the first time.  Using the command line utility is optional, but may provide more
