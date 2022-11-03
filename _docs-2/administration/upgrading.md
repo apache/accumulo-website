@@ -11,6 +11,24 @@ to 2.1 and then start 2.1. To upgrade from a release prior to 1.10, follow the
 [below steps](#upgrading-from-189-to-20) to upgrade to 2.0 and then perform the upgrade to 2.1. A
 direct upgrade from releases prior to 1.10 has not been tested.
 
+Important: before starting any upgrade process you need to make sure there are no outstanding FATE transactions. This
+includes transactions that have completed with `SUCCESS` or `FAILED` but have not been removed by the automatic clean-up 
+process.  This is required because the internal serialization of FATE transactions is not guaranteed to be compatible 
+between versions, so *ANY* FATE transaction that is present will fail the upgrade.  Procedures to manage FATE 
+transactions, including commands to fail and delete transactions, are included in the Accumulo documentation 
+[FATE - Administration]({% durl administration/fate#administration %})
+
+Two significant changes from 2.0 to 2.1 that are important to note: 1) properties and services that referenced
+`master` are renamed `manager` and 2) the property storage in ZooKeeper has changed from a ZooKeeper node per
+property to a single node for all properties with one ZooKeeper property node for each table, namespace and 
+the system config properties.
+
+Before upgrading from 2.0 to 2.1, it is suggested that you copy the current ZooKeeper contents to a backup in case
+issues occur and you need to rollback.  There are no provisions to roll back to a previous Accumulo version
+once the 2.1 upgrade process has been completed other than restoring from a snapshot of ZooKeeper.
+
+Details on renaming the properties and the ZooKeeper property conversion provided in sections that follow.
+
 ### Rename master Properties, Config Files, and Script References
 
 Although not required until at least release 3.0, it is strongly recommended as a part of the
@@ -37,6 +55,43 @@ will then need to transfer the contents of the current individual files to this 
 
 **Warning**: Upgrading a previously encrypted instance is not supported as the implementation
 and properties have changed.
+
+## Upgrading from 2.0 to 2.1
+
+Upgrading to Accumulo 2.1 is done by stopping Accumulo 2.0 and starting Accumulo 2.1.
+Before stopping Accumulo 2.0, install Accumulo 2.1 and configure it by following the 
+[Quick Start]({% durl getting-started/quickstart %}).
+
+Stop Accumulo.
+(optional) create a ZooKeeper snapshot using:
+
+`accumulo dump-zoo --xml --root /accumulo | tee PATH_TO_SNAPSHOT` 
+
+Upgrade the property storage in ZooKeeper.  This can be done using a command line utility or it will occur automatically
+when the manager is started for the first time.  Using the command line utility is optional, but may provide more
+flexibility in handling issues if they were to occur.  With ZooKeeper running, the command to convert the properties
+is:
+
+`accumulo config-upgrade`
+
+The utility will print progress and a count of the number of properties converted (as delete count) and an error count
+```
+2022-11-03T14:35:44,596 [conf.SiteConfiguration] INFO : Found Accumulo configuration on classpath at /opt/fluo-uno/install/accumulo-3.0.0-SNAPSHOT/conf/accumulo.properties
+2022-11-03T14:35:45,511 [util.ConfigPropertyUpgrader] INFO : Upgrade system config properties for a1518a8b-f007-41ee-af2c-5cc760abe7fd
+2022-11-03T14:35:45,675 [util.ConfigTransformer] INFO : property transform for SystemPropKey{InstanceId=a1518a8b-f007-41ee-af2c-5cc760abe7fd'} took 29ms ms, delete count: 1, error count: 0
+2022-11-03T14:35:45,683 [util.ConfigPropertyUpgrader] INFO : Upgrading namespace +accumulo base path: /accumulo/a1518a8b-f007-41ee-af2c-5cc760abe7fd/namespaces/+accumulo/conf
+...
+2022-11-03T14:35:45,737 [util.ConfigPropertyUpgrader] INFO : Upgrading table !0 base path: /accumulo/a1518a8b-f007-41ee-af2c-5cc760abe7fd/tables/!0/conf
+2022-11-03T14:35:45,813 [util.ConfigTransformer] INFO : property transform for TablePropKey{TableId=!0'} took 72ms ms, delete count: 26, error count: 0
+...
+```
+If the upgrade utility is not used, similar messages will be printed to the manager log on the first 2.1 version 
+manager start up.
+
+When the property conversion is complete, you can verify the configuration using the zoo-info-viewer utility 
+(new in 2.1)
+
+`accumulo zoo-info-viewer  --print-props`
 
 ## Upgrading from 1.8/9 to 2.0
 
