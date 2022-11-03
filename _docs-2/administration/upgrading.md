@@ -58,21 +58,34 @@ and properties have changed.
 
 ## Upgrading from 2.0 to 2.1
 
-Upgrading to Accumulo 2.1 is done by stopping Accumulo 2.0 and starting Accumulo 2.1.
-Before stopping Accumulo 2.0, install Accumulo 2.1 and configure it by following the 
-[Quick Start]({% durl getting-started/quickstart %}).
+Note, the process fro upgrading to 2.1 assumes that you have already upgraded to 2.0.  Upgrading from a version prior 
+to 2.0 may work, but is unsupported and untested.  The basic idea is to: 
 
-Stop Accumulo.
-(optional) create a ZooKeeper snapshot using:
+- install and configure 2.1. See ({% durl /in-depth-installation%}) for configuration information
+- stop Accumulo 2.0
+- update your environment to point to 2.1 executable path.
+- (optional) create a ZooKeeper snapshot
+- (optional) run the configuration upgrade utility
+- start Accumulo 2.1
+
+The particular order for your installation may differ depending on how you choose to install Accumulo. You may want
+to stop Accumlo first if your installation is going to over-write your current installation.  The important part is that
+Accumulo 2.1 manager does not start running before the 2.1 configuration is in place for all of your nodes and if you
+want to run the optional steps to create a ZooKeeper snapshot and run the configuration update stand-alone utility.
+
+### Create ZooKeeper snapshot (optional)
 
 ```
 accumulo dump-zoo --xml --root /accumulo | tee PATH_TO_SNAPSHOT
 ```
 
-Upgrade the property storage in ZooKeeper.  This can be done using a command line utility or it will occur automatically
-when the manager is started for the first time.  Using the command line utility is optional, but may provide more
-flexibility in handling issues if they were to occur.  With ZooKeeper running, the command to convert the properties
-is:
+If you need to restore from the ZooKeeper snapshot see ({% durl troubleshooting/tools %})
+
+### Upgrade the property storage in ZooKeeper (optional)
+
+The property conversion can be done using a command line utility or it will occur automatically when the manager is 
+started for the first time.  Using the command line utility is optional, but may provide more flexibility in 
+handling issues if they were to occur.  With ZooKeeper running, the command to convert the properties is:
 
 `accumulo config-upgrade`
 
