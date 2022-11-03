@@ -93,7 +93,9 @@ manager start up.
 When the property conversion is complete, you can verify the configuration using the zoo-info-viewer utility 
 (new in 2.1)
 
-`accumulo zoo-info-viewer  --print-props`
+```
+accumulo zoo-info-viewer  --print-props
+```
 
 ## Upgrading from 1.8/9 to 2.0
 
