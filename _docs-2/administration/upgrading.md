@@ -75,7 +75,7 @@ running and then when ready, stop your instance, optionally run the upgrade util
 
 The basic upgrade sequence is to: 
 
-- stop Accumulo 2.0
+- stop Accumulo (1.10/2.0)
 - update your environment to point to 2.1 executable path.
 - (optional - but recommended) create a ZooKeeper snapshot
 - (optional) run the configuration upgrade utility
@@ -95,7 +95,9 @@ The property conversion can be done using a command line utility or it will occu
 started for the first time.  Using the command line utility is optional, but may provide more flexibility in 
 handling issues if they were to occur.  With ZooKeeper running, the command to convert the properties is:
 
-`$ACCUMULO_HOME/bin/accumulo config-upgrade`
+```
+$ACCUMULO_HOME/bin/accumulo config-upgrade
+```
 
 The utility will print progress and a count of the number of properties converted (as delete count) and an error count
 ```
@@ -115,7 +117,7 @@ When the property conversion is complete, you can verify the configuration using
 (new in 2.1)
 
 ```
-accumulo zoo-info-viewer  --print-props
+$ACCUMULO_HOME/bin/accumulo zoo-info-viewer  --print-props
 ```
 
 ## Upgrading from 1.8/9/10 to 2.0
