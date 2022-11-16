@@ -281,7 +281,7 @@ Checking table t3
 Tablet 3<< is located at localhost:9997
 ```
 
-# zoo-info-viewer (new in 2.1)
+## zoo-info-viewer (new in 2.1)
 
 View Accumulo information stored in ZooKeeper in a human-readable format.  The utility can be run without an Accumulo
 instance. If an instance id or name is not provided on the command line, the instance will be read from
