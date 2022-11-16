@@ -130,7 +130,12 @@ to configure it.
 ## Initialization
 
 Accumulo needs to initialize the locations where it stores data in Zookeeper and
-HDFS. The following command will do this.
+HDFS. 
+
+Note: Initialization only needs to be performed once for an instance - if you are performing an
+upgrade you should not run the initialization command a second time unless you really want a new instance
+
+The following command will perform the initialization.
 
 ```
 accumulo init
