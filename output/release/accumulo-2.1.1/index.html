@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Apache Accumulo 2.1.1</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="fa fa-link"></i>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
+        /></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="nav navbar-nav">
+        <li class="nav-link"><a href="/downloads">Download</a></li>
+        <li class="nav-link"><a href="/tour">Tour</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/release/accumulo-2.1.0/">2.1.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-1.10.2/">1.10.2</a></li>
+            <li><a href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a href="/api">Public API</a></li>
+            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a href="/external-docs">External Docs</a></li>
+            <li><a href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/how-to-contribute">How To Contribute</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-link"><a href="/search">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://www.apache.org">Apache Homepage <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/licenses/">License <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/security">Security <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa fa-external-link"></i></a></li>
+            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa fa-external-link"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 2.1.1</h1>
+          
+          
+
+<p>02 Nov 2022</p>
+<nav aria-label="Navigate Release Notes"><ul class="pager">
+      
+        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
+      
+    
+      
+    </ul></nav>
+
+
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.0/">the latest release notes</a>.</p>
+</div>
+
+
+
+<div class="alert alert-success" role="alert">
+  <p>This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.</p>
+</div>
+
+
+<h2 id="about">About</h2>
+
+<p>Apache Accumulo 2.1.1 is a patch release of the 2.1.0 LTM line.</p>
+
+<h3 id="major-improvements">Major Improvements</h3>
+
+<h3 id="minor-improvements">Minor Improvements</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a> Avoid filling OS file caches by setting the
+<code class="language-plaintext highlighter-rouge">FSDataOutputStream.setDropBehind</code> flag when performing likely one-time file
+accesses, as with WAL files and major compaction input files. This should allow
+files that might benefit more from caching to stay in the cache longer.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3023">#3023</a>, <a href="https://github.com/apache/accumulo/issues/3053">#3053</a> Prevent excessive logging when an ExternalCompaction
+is cancelled for cause and around the ThreadPools</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3057">#3057</a> Modified Monitor to direct DataTable errors to console</li>
+</ul>
+
+<h3 id="behavior-changes">Behavior Changes</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3082">#3082</a> ScanServers can now scan offline tables. The AccumuloClient will no longer
+throw a TableOfflineException when creating a Scanner or BatchScanner against an offline table.
+Instead, an error will be thrown on the call to iterator() if it can’t be scanned because it is offline.</li>
+</ul>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3059">#3059</a> Removed stale compactions from CompactionCoordinator internal structure. The
+CompactionCoordinator has an internal data structure where it keeps track of running compactions. Running
+compactions were not being removed from this set in some edge cases so they continued to be shown on the
+Monitor when in reality the compaction was not running. This occured in testing when the Compactor process
+was killed by the agitator. The compaction was rescheduled to run on a different Compactor, the issue here
+was just orphaned information in the data structure being shown in the Monitor.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3048">#3048</a> Output time strings on the monitor using the correct user locale (also made them more concise)</li>
+</ul>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
+
+<h2 id="211-github-project">2.1.1 GitHub Project</h2>
+
+<p><a href="https://github.com/apache/accumulo/projects/25">All tickets related to 2.1.1.</a></p>
+
+<h2 id="known-issues">Known Issues</h2>
+
+<p>At the time of release, the following issues were known:</p>
+
+
+
+<hr>
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+<nav aria-label="Navigate Release Notes"><ul class="pager">
+      
+        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
+      
+    
+      
+    </ul></nav>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2022 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
