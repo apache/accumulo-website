@@ -175,21 +175,16 @@
 <h3 id="minor-improvements">Minor Improvements</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a> Avoid filling OS file caches by setting the
+  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a> Avoid filling OS page cache by setting the
 <code class="language-plaintext highlighter-rouge">FSDataOutputStream.setDropBehind</code> flag when performing likely one-time file
-accesses, as with WAL files and major compaction input files. This should allow
-files that might benefit more from caching to stay in the cache longer.</li>
+accesses, as with WAL input and output files and major compaction input files. This should allow
+files that might benefit more from caching to stay in the cache longer. <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>
+introduces a new property, table.compaction.major.output.drop.cache, for dropping pages
+from the OS page cache for major compaction output files. These changes will only have an
+impact on HDFS FileSystem implementations and operating systems that support them.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3023">#3023</a>, <a href="https://github.com/apache/accumulo/issues/3053">#3053</a> Prevent excessive logging when an ExternalCompaction
 is cancelled for cause and around the ThreadPools</li>
   <li><a href="https://github.com/apache/accumulo/issues/3057">#3057</a> Modified Monitor to direct DataTable errors to console</li>
-</ul>
-
-<h3 id="behavior-changes">Behavior Changes</h3>
-
-<ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3082">#3082</a> ScanServers can now scan offline tables. The AccumuloClient will no longer
-throw a TableOfflineException when creating a Scanner or BatchScanner against an offline table.
-Instead, an error will be thrown on the call to iterator() if it can’t be scanned because it is offline.</li>
 </ul>
 
 <h3 id="bug-fixes">Bug Fixes</h3>
