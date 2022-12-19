@@ -175,13 +175,17 @@
 <h3 id="minor-improvements">Minor Improvements</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a> Avoid filling OS page cache by setting the
-<code class="language-plaintext highlighter-rouge">FSDataOutputStream.setDropBehind</code> flag when performing likely one-time file
-accesses, as with WAL input and output files and major compaction input files. This should allow
-files that might benefit more from caching to stay in the cache longer. <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>
-introduces a new property, table.compaction.major.output.drop.cache, for dropping pages
-from the OS page cache for major compaction output files. These changes will only have an
-impact on HDFS FileSystem implementations and operating systems that support them.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>, <a href="https://github.com/apache/accumulo/issues/3123">#3123</a> Avoid filling
+OS page cache by calling <code class="language-plaintext highlighter-rouge">setDropBehind</code> on the FS data stream when
+performing likely one-time file accesses, as with WAL and compaction input
+and output files. This should allow files that might benefit more from
+caching to stay in the cache longer. <a href="https://github.com/apache/accumulo/issues/3083">#3083</a> and <a href="https://github.com/apache/accumulo/issues/3123">#3123</a>
+introduces new properties, table.compaction.major.output.drop.cache and 
+table.compaction.minor.output.drop.cache, for dropping pages from the OS
+page cache for compaction output files. These changes will only have an
+impact on HDFS FileSystem implementations and operating systems that support
+the underlying OS system call. See associated HDFS <a href="https://issues.apache.org/jira/browse/HDFS-16864">issue</a>
+that will improve the underlying implementation when resolved.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3023">#3023</a>, <a href="https://github.com/apache/accumulo/issues/3053">#3053</a> Prevent excessive logging when an ExternalCompaction
 is cancelled for cause and around the ThreadPools</li>
   <li><a href="https://github.com/apache/accumulo/issues/3057">#3057</a> Modified Monitor to direct DataTable errors to console</li>
