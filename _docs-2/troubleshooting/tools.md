@@ -295,6 +295,7 @@ To run the command:
     --print-instances
     --print-id-map
     --print-props [--system] [-ns | --namespaces list] [-t | --tables list]
+    --print-acls
 
 ## mode: print instances
 The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:
@@ -396,3 +397,39 @@ table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIt
 ...
 -----------------------------------------------
 ```
+
+## mode: print ACLs
+
+With 2.1.1, the `zoo-info-viewer` option `--print-acls` will print the ZooKeeper ACLs for all nodes under
+the `/accumulo/INSTANCE_ID]` path.
+
+See [troubleshooting ZooKeeper] for more information on the tool output and expected ACLs.
+
+```
+$ accumulo zoo-info-viewer  --print-acls
+
+-----------------------------------------------
+Report Time: 2023-01-27T23:00:26.079546Z
+-----------------------------------------------
+Output format:
+ACCUMULO_PERM:OTHER_PERM path user_acls...
+
+ZooKeeper acls for instance ID: f491223b-1413-494e-b75a-c2ca018db00f
+
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq/locks cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/compactors cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/config cdrwa:accumulo
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/coordinators cdrwa:accumulo, r:anyone
+...
+ERROR_ACCUMULO_MISSING_SOME:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/users/root/Namespaces r:accumulo, r:anyone
+...
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/643b14db-b929-4570-b226-620bc5ac85ff cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/ad26be2a-dc52-4e0e-8e78-8fc8c3323d51 cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances cdrwa:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances/uno cdrwa:accumulo, r:anyone
+
+```
+
+[troubleshooting ZooKeeper]: {% durl troubleshooting/zookeeper %}
