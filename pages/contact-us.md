@@ -24,7 +24,7 @@ of the commit.
 
 The Accumulo project follows the standard ASF vulnerability handling process as outlined at [ASF Security Team](https://www.apache.org/security/#asf-security-team)
 
-An overview the process is:
+An overview of the process is:
 - The reporter reports the vulnerability privately to Accumulo community by sending an email to 
 `private@accumulo.apache.org` or the ASF Security Team  `security@apache.org`.
 - The Accumulo project works privately with the reporter to resolve the vulnerability.
