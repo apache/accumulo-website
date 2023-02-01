@@ -8,21 +8,19 @@ redirect_from:
 
 Below are ways to get in touch with the Apache Accumulo community.
 
-## Issues
+## Reporting Issues
 
 Accumulo uses GitHub issues to track bugs and new features. Visit [How to contribute](/how-to-contribute) for more information.
 
-## Security Issues (CVE)
+## Reporting Security Issues (CVE)
 
 We strongly encourage reporting potential security issues by privately emailing `private@accumulo.apache.org` or 
-`security@apache.org`
+`security@apache.org` That means, for example, that you should not create a public GitHub issue, since those would make 
+the issue public. GitHub pull requests and any messages associated with any commits should not make any reference to 
+the security nature of the commit.
 
-Do not make information about the vulnerability public until it is formally announced by the Accumulo community. 
-That means, for example, that you should not create a public GitHub issue, since those would make the issue public. 
-GitHub pull requests and any messages associated with any commits should not make any reference to the security nature 
-of the commit.
-
-The Accumulo project follows the standard [ASF vulnerability handling](https://www.apache.org/security/#asf-security-team) process as outlined by the ASF Security Team.
+The Accumulo project follows the standard [ASF vulnerability handling](https://www.apache.org/security/#asf-security-team) 
+process as outlined by the ASF Security Team.
 
 An overview of the process is:
 - The reporter reports the vulnerability privately to Accumulo community by sending an email to 
@@ -30,6 +28,13 @@ An overview of the process is:
 - The Accumulo project works privately with the reporter to resolve the vulnerability.
 - The Accumulo project creates a new release of the package the vulnerability affects to deliver its fix.
 - The Accumulo project publicly announces the vulnerability and describes how to apply the fix.
+
+Please:
+1. Do not make information about the vulnerability public until it is formally announced by the Accumulo community.
+2. Do not email the user, dev mailing or any public mailing list
+3. Do not send a message via Slack
+4. Do not create a GitHub issue
+5. Do not create a GitHub pull request that makes any reference to the security nature of the commit.
 
 ## Mailing Lists
 
