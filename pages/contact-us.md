@@ -12,6 +12,25 @@ Below are ways to get in touch with the Apache Accumulo community.
 
 Accumulo uses GitHub issues to track bugs and new features. Visit [How to contribute](/how-to-contribute) for more information.
 
+## Security Issues (CVE)
+
+We strongly encourage reporting potential security issues by privately emailing `private@accumulo.apache.org` or 
+`security@apache.org`
+
+Do not make information about the vulnerability public until it is formally announced by the Accumulo community. 
+That means, for example, that you should not create a public GitHub issue, since those would make the issue public. 
+GitHub pull requests and any messages associated with any commits should not make any reference to the security nature 
+of the commit.
+
+The Accumulo project follows the standard ASF vulnerability handling process as outlined at [ASF Security Team](https://www.apache.org/security/#asf-security-team)
+
+An overview the process is:
+- The reporter reports the vulnerability privately to Accumulo community by sending an email to 
+`private@accumulo.apache.org` or the ASF Security Team  `security@apache.org`.
+- The Accumulo project works privately with the reporter to resolve the vulnerability.
+- The Accumulo project creates a new release of the package the vulnerability affects to deliver its fix.
+- The Accumulo project publicly announces the vulnerability and describes how to apply the fix.
+
 ## Mailing Lists
 
 The Accumulo mailing lists are for general discussions, questions, and announcements. While you can read the archives
