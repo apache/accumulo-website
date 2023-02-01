@@ -22,7 +22,7 @@ That means, for example, that you should not create a public GitHub issue, since
 GitHub pull requests and any messages associated with any commits should not make any reference to the security nature 
 of the commit.
 
-The Accumulo project follows the standard ASF vulnerability handling process as outlined at [ASF Security Team](https://www.apache.org/security/#asf-security-team)
+The Accumulo project follows the standard [ASF vulnerability handling](https://www.apache.org/security/#asf-security-team) process as outlined by the ASF Security Team.
 
 An overview of the process is:
 - The reporter reports the vulnerability privately to Accumulo community by sending an email to 
