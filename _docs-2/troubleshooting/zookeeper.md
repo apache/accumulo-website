@@ -16,7 +16,7 @@ The utility prints out a line for each znode that contains two fields related to
    - `[ACCUMULO_OKAY | ERROR_ACCUMULO_MISSING_SOME]` - Are the permissions sufficient for Accumulo to operate 
    - `[PRIVATE | NOT_PRIVATE]` - Can other users can read data from the ZooKeeper nodes.
 
-If there are nodes with `ERROR_ACCUMULO_MISSING_SOME` are nodes where Accumulo does not have `cdrwa` permissions.
+Nodes marked with `ERROR_ACCUMULO_MISSING_SOME` means that Accumulo does not have `cdrwa` permissions.
 Without full permissions, the upgrade will fail checks. The node permissions need to be corrected with the ZooKeeper
 `setAcl` command.  If you do not have sufficient permissions to change the ACLs on a node, see the section 
 below, [ACL errors during upgrade]({% durl troubleshooting/zookeeper/ACL#errors#during#upgrade %}).
