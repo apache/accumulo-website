@@ -78,6 +78,10 @@ The command is launched using:
 ```
 > accumulo admin fate --[option]
 ```
+help that lists the fate options (and other admin commands) is available using:
+```
+> accumulo admin -h
+```
 ### List/Print
 
 Without any additional arguments, this command will print all operations that still exist in
