@@ -12,7 +12,7 @@ To run the utility, only ZooKeeper needs to be running. If hdfs is running, the 
 or it can be entered with the zoo-info-viewer command --instanceId option.  Accumulo management processes 
 *do not* need to be running. This allows checking the ACLs before starting an upgrade. 
 
-The utility prints out two summarized fields related to ZooKeeper ACL permissions:
+The utility prints out a line for each znode that contains two fields related to ZooKeeper ACL permissions:
    - `[ACCUMULO_OKAY | ERROR_ACCUMULO_MISSING_SOME]` - Are the permissions sufficient for Accumulo to operate 
    - `[PRIVATE | NOT_PRIVATE]` - Can other users can read data from the ZooKeeper nodes.
 
