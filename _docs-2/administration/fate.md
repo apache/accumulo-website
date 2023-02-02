@@ -71,9 +71,13 @@ Sometimes, it is useful to inspect the current FATE operations, both pending and
 For example, a command that is not completing could be blocked on the execution of another
 operation. Accumulo provides an Accumulo shell command to interact with fate.
 
-The `fate` shell command accepts a number of arguments for different functionality:
+The `fate` admin command accepts a number of arguments for different functionality:
 `list`/`print`, `summary`, `cancel`, `fail`, `delete`, `dump`.
 
+The command is launched using:
+```
+> accumulo admin fate --[option]
+```
 ### List/Print
 
 Without any additional arguments, this command will print all operations that still exist in
