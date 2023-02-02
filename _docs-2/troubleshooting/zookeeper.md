@@ -7,7 +7,7 @@ order: 7
 
 Accumulo requires full access to nodes in ZooKeeper under the /accumulo path.  The ACLs can be examined using the
 ZooKeeper cli `getAcl` and modified with `setAcl` commands.  With 2.1.1, the zoo-info-viewer utility has an option
-that will print all of the ACLs for the nodes under `/accumulo/[INSTANCE_ID]` (See the [zoo-info-viewer]).  
+that will print all of the ACLs for the nodes under `/accumulo/[INSTANCE_ID]` (See [zoo-info-viewer]).  
 To run the utility, only ZooKeeper needs to be running. If hdfs is running, the instance id can be read from hdfs, 
 or it can be entered with the zoo-info-viewer command --instanceId option.  Accumulo management processes 
 *do not* need to be running. This allows checking the ACLs before starting an upgrade. 
