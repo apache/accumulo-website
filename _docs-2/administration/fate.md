@@ -72,7 +72,7 @@ For example, a command that is not completing could be blocked on the execution 
 operation. Accumulo provides an Accumulo shell command to interact with fate.
 
 The `fate` admin command accepts a number of arguments for different functionality:
-`list`/`print`, `summary`, `cancel`, `fail`, `delete`, `dump`.  
+`list`/`print`, `summary`, `cancel`, `fail`, `delete`, `dump`.
 
 The command for launching the fate admin command is:
 ```
