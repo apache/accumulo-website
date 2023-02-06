@@ -719,6 +719,7 @@ mode options:
 --print-instances
 --print-id-map
 --print-props [--system] [-ns | --namespaces list] [-t | --tables list]
+--print-acls
 </code></pre></div></div>
 
 <h2 id="mode-print-instances">mode: print instances</h2>
@@ -820,6 +821,40 @@ table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIt
 ...
 -----------------------------------------------
 </code></pre></div></div>
+
+<h2 id="mode-print-acls-new-in-211">mode: print ACLs (new in 2.1.1)</h2>
+
+<p>With 2.1.1, the <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> option <code class="language-plaintext highlighter-rouge">--print-acls</code> will print the ZooKeeper ACLs for all nodes under
+the <code class="language-plaintext highlighter-rouge">/accumulo/INSTANCE_ID]</code> path.</p>
+
+<p>See <a href="/docs/2.x/troubleshooting/zookeeper">troubleshooting ZooKeeper</a> for more information on the tool output and expected ACLs.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-acls
+
+-----------------------------------------------
+Report Time: 2023-01-27T23:00:26.079546Z
+-----------------------------------------------
+Output format:
+ACCUMULO_PERM:OTHER_PERM path user_acls...
+
+ZooKeeper acls for instance ID: f491223b-1413-494e-b75a-c2ca018db00f
+
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq/locks cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/compactors cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/config cdrwa:accumulo
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/coordinators cdrwa:accumulo, r:anyone
+...
+ERROR_ACCUMULO_MISSING_SOME:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/users/root/Namespaces r:accumulo, r:anyone
+...
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/643b14db-b929-4570-b226-620bc5ac85ff cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/ad26be2a-dc52-4e0e-8e78-8fc8c3323d51 cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances cdrwa:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances/uno cdrwa:accumulo, r:anyone
+
+</code></pre></div></div>
+
 
 
     <div class="row" style="margin-top: 20px;">
