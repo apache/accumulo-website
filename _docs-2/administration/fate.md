@@ -79,8 +79,10 @@ The command for launching the fate admin command is:
 ```
 > accumulo admin fate --[option]
 ```
+
 The Accumulo admin help command option `accumulo admin -h` shows the expected usage information for the fate and
 other admin commands.
+
 ### List/Print
 
 Without any additional arguments, this command will print all operations that still exist in
