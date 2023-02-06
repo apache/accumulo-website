@@ -19,7 +19,9 @@ The basic upgrade sequence is:
 - stop Accumulo 1.10 or 2.0
 - prepare your installation of Accumulo 2.1 through whatever means you obtain the binaries and
   configure it in your environment
+- start ZooKeeper and HDFS.
 - (optional - but recommended) create a ZooKeeper snapshot
+- (optional - but recommended) validate the ZooKeeper ACLs. See [ZooKeeper ACLs]({% durl troubleshooting/ZooKeeper#ACLs %})
 - (required if not using the provided scripts to start 2.1) run the `RenameMasterDirInZK` utility
 - (optional) run the pre-upgrade utility to convert the configuration in ZooKeeper
 - start Accumulo 2.1 for the first time to complete the upgrade
