@@ -75,6 +75,7 @@ The `fate` admin command accepts a number of arguments for different functionali
 `list`/`print`, `summary`, `cancel`, `fail`, `delete`, `dump`.
 
 The command for launching the fate admin command is:
+
 ```
 > accumulo admin fate --[option]
 ```
