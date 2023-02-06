@@ -398,7 +398,7 @@ table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIt
 -----------------------------------------------
 ```
 
-## mode: print ACLs
+## mode: print ACLs (new in 2.1.1)
 
 With 2.1.1, the `zoo-info-viewer` option `--print-acls` will print the ZooKeeper ACLs for all nodes under
 the `/accumulo/INSTANCE_ID]` path.
