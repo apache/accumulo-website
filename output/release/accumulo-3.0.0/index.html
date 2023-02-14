@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 1.10.2</title>
+<title>Apache Accumulo 3.0.0</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -140,90 +140,75 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 1.10.2</h1>
+          <h1 class="title">Apache Accumulo 3.0.0</h1>
           
           
 
-<p>13 Feb 2022</p>
+<p>14 Feb 2023</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-        <li class="previous"><a href="/release/accumulo-1.10.1/">&laquo;&nbsp;Apache Accumulo 1.10.1</a></li>
+        <li class="previous"><a href="/release/accumulo-2.1.1/">&laquo;&nbsp;Apache Accumulo 2.1.1</a></li>
       
     
-      
-        <li class="next"><a href="/release/accumulo-1.10.3/">Apache Accumulo 1.10.3&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
 
-
-
-<div class="alert alert-success" role="alert">
-  <p>This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.</p>
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.0/">the latest release notes</a>.</p>
 </div>
 
 
-<h2 id="about">About</h2>
 
-<p>Apache Accumulo 1.10.2 is a bug fix release of the 1.10 LTM release line.</p>
+<div class="alert alert-warning" role="alert">
+  <p>This version is not a <a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.</p>
+</div>
 
-<p>These release notes are highlights of the changes since 1.10.1. The full
-detailed changes can be seen in the git history. If anything important is
-missing from this list, please <a href="/contact-us">contact</a> us to have it included.</p>
 
-<p>Users of 1.10.1 or earlier are encouraged to upgrade to 1.10.2, as this is a
-continuation of the 1.10 LTM release line with bug fixes and improvements, and
-it supersedes any prior 1.x version. Users are also encouraged to consider
-migrating to a 2.x version when one that is suitable for their needs becomes
-available.</p>
+<p>Apache Accumulo 3.0.0 contains significant changes from 2.1 and earlier versions.</p>
 
-<h2 id="known-issues">Known Issues</h2>
+<h2 id="notable-changes">Notable Changes</h2>
 
-<p>Apache Commons VFS was upgraded in <a href="https://github.com/apache/accumulo/issues/1295">#1295</a> and some users have reported
-issues similar to <a href="https://issues.apache.org/jira/projects/VFS/issues/VFS-683">VFS-683</a>. Possible solutions are discussed in <a href="https://github.com/apache/accumulo/issues/2775">#2775</a>.</p>
+<h3 id="arguments-to-server-processes-were-removed-in-favor-of-configuration-properties">Arguments to server processes were removed in favor of configuration properties</h3>
 
-<h2 id="major-improvements">Major Improvements</h2>
+<p>The server process arguments (<code class="language-plaintext highlighter-rouge">-a</code>, <code class="language-plaintext highlighter-rouge">-g</code>, <code class="language-plaintext highlighter-rouge">-q</code>, etc.) were removed in <a href="https://github.com/apache/accumulo/issues/3192">#3192</a>
+in favor of configuration properties that can be specified in the Accumulo configuration
+files or supplied on a per-process basis using the <code class="language-plaintext highlighter-rouge">-o</code> argument.</p>
 
-<p>This release bundles <a href="https://reload4j.qos.ch/">reload4j</a> (<a href="https://github.com/apache/accumulo/issues/2458">#2458</a>) in
-the convenience binary and uses that instead of log4j 1.2. This is to make it
-easier for users to avoid the many CVEs that apply to log4j 1.2, which is no
-longer being maintained. Accumulo 2.x versions will have already switched to
-use the latest log4j 2. However, doing so required making some breaking API
-changes and other substantial changes, so that can’t be done for Accumulo 1.10.
-Using reload4j instead, was deemed to be a viable interim solution until
-Accumulo 2.x.</p>
+<h3 id="support-for-the-replication-feature-has-been-removed">Support for the replication feature has been removed</h3>
 
-<h3 id="other-improvements">Other Improvements</h3>
+<p>The replication feature was marked as deprecated in 2.0.0 and was removed in <a href="https://github.com/apache/accumulo/issues/3080">#3080</a>.
+TODO - Need to discuss what happens to the replication table</p>
+
+<h3 id="filesystem-monitor-will-no-longer-stop-the-tabletserver">FileSystem monitor will no longer stop the TabletServer</h3>
+
+<p>In <a href="https://github.com/apache/accumulo/issues/1328">#1328</a> the <code class="language-plaintext highlighter-rouge">tserver.monitor.fs</code> property has been marked as deprecated
+and the background thread in the TabletServer was modified to <em>not</em> halt the TabletServer
+when one of the local disks becomes read-only.</p>
+
+<h3 id="other-notable-changes">Other Notable Changes</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/1808">#1808</a> Re-throw exceptions in threads instead of merely logging them</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1863">#1863</a> Avoid unnecessory redundant log sorting</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1917">#1917</a> Ensure RFileWriterBuilder API validates filenames</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2006">#2006</a> Detect system config changes in HostRegexTableLoadBalancer without restarting master</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2464">#2464</a> Apply timeout to socket.connect()</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3189">#3189</a> Standardized server lock data structure in ZooKeeper</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3115">#3115</a>, <a href="https://github.com/apache/accumulo/issues/3116">#3116</a>, <a href="https://github.com/apache/accumulo/issues/3117">#3117</a> Removed deprecated TabletBalancer, Constraint, and other APIs.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3114">#3114</a> The VolumeChooser API, deprecated in 2.1.0 in favor of an SPI implementation, was removed.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3111">#3111</a> The CompactionStrategy class, deprecated in favor of CompactionSelector and
+CompactionConfigurer, was removed.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3105">#3105</a> Removed deprecated properties</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3074">#3074</a> The ClientConfiguration class, deprecated in 2.0.0, was removed.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3073">#3073</a> The Connector and Instance client classes, deprecated in 2.0.0, were removed.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/2443">#2443</a> The MapReduce APIs, deprecated in 2.0.0, were removed.</li>
 </ul>
 
-<h3 id="other-bug-fixes">Other Bug Fixes</h3>
-
+<p>where applicable. Removed tserver TLevel logging class.</p>
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/1775">#1775</a> Ensure monitor reports a dead tserver when it is killed</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1858">#1858</a> Fix a bug in the monitor graphs due to use of int instead of long</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2370">#2370</a> Fix bug in getsplits command in the shell</li>
+  <li><a href="https://issues.apache.org/jira/browse/ACCUMULO-1787">ACCUMULO-1787</a> - Two tier compaction strategy.  Support compacting small files with snappy and large files with gzip.</li>
 </ul>
 
-<h2 id="note-about-jdk-15">Note About JDK 15</h2>
+<h2 id="upgrading">Upgrading</h2>
 
-<p>See the note in the 1.10.1 release notes about the use of JDK 15 or later, as
-the information pertaining to the use of the CMS garbage collector remains
-applicable to this version.</p>
-
-<h2 id="useful-links">Useful Links</h2>
-
-<ul>
-  <li><a href="https://lists.apache.org/thread/bq424vnov27nwnkb471oxg5nd7m6xwn9">Release VOTE email thread</a></li>
-  <li><a href="https://github.com/apache/accumulo/compare/rel/1.10.1...apache:rel/1.10.2">All Changes since 1.10.1</a></li>
-  <li><a href="https://github.com/apache/accumulo/issues?q=project%3Aapache%2Faccumulo%2F18">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
-</ul>
+<p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
 
 
 
@@ -232,11 +217,9 @@ applicable to this version.</p>
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-        <li class="previous"><a href="/release/accumulo-1.10.1/">&laquo;&nbsp;Apache Accumulo 1.10.1</a></li>
+        <li class="previous"><a href="/release/accumulo-2.1.1/">&laquo;&nbsp;Apache Accumulo 2.1.1</a></li>
       
     
-      
-        <li class="next"><a href="/release/accumulo-1.10.3/">Apache Accumulo 1.10.3&nbsp;&raquo;</a></li>
       
     </ul></nav>
 

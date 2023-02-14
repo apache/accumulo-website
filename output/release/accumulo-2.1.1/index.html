@@ -151,6 +151,8 @@
       
     
       
+        <li class="next"><a href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
+      
     </ul></nav>
 
 
@@ -175,6 +177,22 @@
 <h3 id="minor-improvements">Minor Improvements</h3>
 
 <ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3180">#3180</a> Enable users to provide per-volume Hadoop Filesystem configuration
+overrides via the Accumulo configuration. Hadoop Filesystem objects are configured
+by the standard Hadoop mechanisms (default configuration, core-site.xml,
+hdfs-site.xml, etc.), but these configuration files don’t allow for the same
+property to be specified with different values for different namespaces. This change
+allows users to specify different property values for different Accumulo volumes, which
+will be applied to the Hadoop Filesystem object created for each Accumulo volume.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3177">#3177</a> Added server side code to validate that property values conform to the
+specified property type (string, boolean, etc.).</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3175">#3175</a> Reset number of locks in SynchronousLoadingBlockCache from 2017 back
+to 5003, the value that it was in 1.10. Also, modified the lock to be fair, which allows
+the different scan threads in the server to make progress in a more fair manner when
+they need to load a block into the cache.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3118">#3118</a> Added option to the <code class="language-plaintext highlighter-rouge">admin zoo-info-viewer</code> command to dump the ACLs
+on ZooKeeper nodes. This information can be used to fix znodes with incorrect ACLs
+during the upgrade process.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>, <a href="https://github.com/apache/accumulo/issues/3123">#3123</a> Avoid filling
 OS page cache by calling <code class="language-plaintext highlighter-rouge">setDropBehind</code> on the FS data stream when
 performing likely one-time file accesses, as with WAL and compaction input
@@ -194,6 +212,8 @@ is cancelled for cause and around the ThreadPools</li>
 <h3 id="bug-fixes">Bug Fixes</h3>
 
 <ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3164">#3164</a> Fixed bug in ScanServer where failures to scan a specific tablet was not being
+handled correctly, which would lead to the tablet not being scanned.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3059">#3059</a> Removed stale compactions from CompactionCoordinator internal structure. The
 CompactionCoordinator has an internal data structure where it keeps track of running compactions. Running
 compactions were not being removed from this set in some edge cases so they continued to be shown on the
@@ -225,6 +245,8 @@ was just orphaned information in the data structure being shown in the Monitor.<
         <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
       
     
+      
+        <li class="next"><a href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
