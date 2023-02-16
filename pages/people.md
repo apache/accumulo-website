@@ -90,6 +90,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Craig Scheiderer    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Damon Brown         | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Dane Magbuhos       |                                                                   | [ET][ET]              |
+| Daniel Roberts      | [Sentinel Solutions][SENTINEL]                                    | [ET][ET]              |
 | Dave Wang           | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | David M. Lyle       |                                                                   |                       |
 | David Protzman      |                                                                   |                       |
@@ -227,6 +228,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 [PRAXIS]: https://www.praxiseng.com
 [SABRE]: https://www.sabre-eng.com
 [SACAT]: https://sa.catapult.org.uk
+[SENTINEL]: https://sentinel-corp.com
 [SIT]: https://www.stevens.edu
 [SPLYT]: https://www.splyt.com
 [SQRRL]: http://sqrrl.com
