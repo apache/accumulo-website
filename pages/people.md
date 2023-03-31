@@ -60,7 +60,7 @@ $(function() {
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 
-## Emeritus PMC and Committers
+## Committers Only (PMC Emeritus)
 
 {: .table .table-striped #pmc}
 | apache id     | name                                              | organization                           | timezone |
