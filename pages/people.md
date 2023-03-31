@@ -25,7 +25,6 @@ $(function() {
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 | alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
-| arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
@@ -49,7 +48,6 @@ $(function() {
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
-| medined       | David Medinets                                    |                                        |          |
 | mjwall        | Michael Wall                                      | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | mmiller       | [Michael Miller](https://github.com/milleruntime) | [Centroid, LLC][CENTROID]              | [ET][ET] |
 | mwalch        | [Mike Walch](https://github.com/mikewalch)        | [Peterson Technologies][PETERSON]      | [ET][ET] |
@@ -61,6 +59,14 @@ $(function() {
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
+
+## Emeritus PMC and Committers
+
+{: .table .table-striped #pmc}
+| apache id     | name                                              | organization                           | timezone |
+|---------------|---------------------------------------------------|----------------------------------------|----------|
+| arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
+| medined       | David Medinets                                    |                                        |          |
 
 ## Contributors
 
