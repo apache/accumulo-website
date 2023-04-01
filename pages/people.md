@@ -6,9 +6,9 @@ permalink: /people/
 
 <script type="text/javascript">
 
-// convert Apache IDs for PMC members into links to their Apache profile on people.apache.org
+// convert Apache IDs for committers into links to their Apache profile on people.apache.org
 $(function() {
-  $('table#pmc tbody tr td:first-child').each(function(i, obj) {
+  $('table.committers tbody tr td:first-child').each(function(i, obj) {
     var apacheid = $(obj).text();
     $(obj).html('<a href="https://people.apache.org/phonebook.html?uid=' + apacheid + '">' + apacheid + '</a>');
   });
@@ -16,9 +16,9 @@ $(function() {
 
 </script>
 
-## PMC and Committers
+## Committers and Current PMC Members
 
-{: .table .table-striped #pmc}
+{: .table .table-striped .committers #pmc}
 | apache id     | name                                              | organization                           | timezone |
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
@@ -62,7 +62,7 @@ $(function() {
 
 ## Committers Only (PMC Emeritus)
 
-{: .table .table-striped #pmc}
+{: .table .table-striped .committers #pmc-emeritus}
 | apache id     | name                                              | organization                           | timezone |
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
@@ -107,7 +107,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Edward Yoon         |                                                                   |                       |
 | Elina Wise          | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Eugene Cheipesh     |                                                                   |                       |
-| Filipe Rodrigues    |                                                                   | [GMT][GMT]
+| Filipe Rodrigues    |                                                                   | [GMT][GMT]            |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
 | Harjit Singh        |                                                                   | [ET][ET]              |
 | Hasan Gürcan        |                                                                   | [CEST][CEST]          |
@@ -134,7 +134,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jonathan Park       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Joseph Koshakow     |                                                                   | [ET][ET]              |
 | Josselin Chevalay   |                                                                   | [CEST][CEST]          |
-| Kartik Sethi        |                                                                   | [IST][IST-India]                |
+| Kartik Sethi        |                                                                   | [IST][IST-India]      |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
