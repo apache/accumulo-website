@@ -31,11 +31,6 @@ Any questions/ideas don't hesitate to [contact us][contact].
 | [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
 | [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
 
-## Confluence
-
-The [Accumulo Confluence Space][confluence] provides a collaboration space for design documents.  If you would like write
-access, please send a request to `dev@accumulo.apache.org` with your Confluence username.
-
 ## Example Contribution workflow
 
 1. Create a [GitHub account][github-join] for issues and pull requests.
@@ -68,10 +63,13 @@ access, please send a request to `dev@accumulo.apache.org` with your Confluence 
 
 * **Build resources** - [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
+* **Confluence** - [Accumulo Confluence Space][confluence] provides a collaboration space for design documents.  If you would like write
+access, please send a request to `dev@accumulo.apache.org` with your Confluence username.
 
 For more information, see the [contributor guide](/contributors-guide/).
 
 [good-first-issue]: https://github.com/apache/accumulo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
+[confluence]: https://cwiki.apache.org/confluence/display/ACCUMULO/Apache+Accumulo+Home
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
 [ac]: https://github.com/apache/accumulo/blob/main/CONTRIBUTING.md

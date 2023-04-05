@@ -94,4 +94,3 @@ Contributions to Apache Accumulo are welcome! If you are interested, read [how t
 [accumulo-channel]: https://the-asf.slack.com/messages/CERNB8NDC
 [slack-invite]: https://s.apache.org/slack-invite
 [contribute]: /how-to-contribute/
-[confluence]: https://cwiki.apache.org/confluence/display/ACCUMULO/Apache+Accumulo+Home
