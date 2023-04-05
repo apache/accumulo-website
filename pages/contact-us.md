@@ -54,11 +54,6 @@ follow discussions as they happen.
 
 Drop by and chat about Accumulo at the [#accumulo][accumulo-channel] channel on the [ASF Slack workspace][asf-slack]. Join using this [invite link][slack-invite]. If you have trouble joining, email `dev@accumulo.apache.org` for an invite.
 
-## Confluence
-
-The [Accumulo Confluence Space][confluence] provides a collaboration space for design documents.  If you would like write 
-access, please send a request to `dev@accumulo.apache.org` with your Confluence username.
-
 ## Contributions
 
 Contributions to Apache Accumulo are welcome! If you are interested, read [how to contribute][contribute]. If you need help finding something to work on, send a message to our `dev` mailing list and we'll help you find a task that interests you.

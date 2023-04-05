@@ -8,7 +8,7 @@ Contributions are welcome to all Apache Accumulo repositories. While most contri
 there are other ways to contribute to Accumulo:
 
 * communicate on one of the [mailing lists](/contact-us/#mailing-lists)
-* participate in design discussions on [Confluence](/contact-us/#Confluence)
+* participate in design discussions on [Confluence](/#Confluence)
 * review [pull requests](https://github.com/apache/accumulo/pulls)
 * verify and test new [releases](/release/)
 * update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
@@ -30,6 +30,11 @@ Any questions/ideas don't hesitate to [contact us][contact].
 | [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data |
 | [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
 | [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
+
+## Confluence
+
+The [Accumulo Confluence Space][confluence] provides a collaboration space for design documents.  If you would like write
+access, please send a request to `dev@accumulo.apache.org` with your Confluence username.
 
 ## Example Contribution workflow
 
