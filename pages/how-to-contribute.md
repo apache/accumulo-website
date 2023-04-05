@@ -20,16 +20,16 @@ Any questions/ideas don't hesitate to [contact us][contact].
 
 ## Accumulo Repositories
 
-| Repository         | Links                          | Description
-| -------------------| ------------------------------ | -----------
-| [Accumulo][a]      | [Contribute][ac] [Issues][ai]  | Core Project
-| [Website][w]       | [Contribute][wc] [Issues][wi]  | Source for this website
-| [Examples][e]      | [Contribute][ec] [Issues][ei]  | Example code
-| [Testing][t]       | [Contribute][tc] [Issues][ti]  | Test suites such as continuous ingest and random walk
-| [Docker][d]        | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
-| [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data
-| [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages
-| [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo
+| Repository         | Links                          | Description |
+| -------------------| ------------------------------ | ----------- |
+| [Accumulo][a]      | [Contribute][ac] [Issues][ai]  | Core Project |
+| [Website][w]       | [Contribute][wc] [Issues][wi]  | Source for this website |
+| [Examples][e]      | [Contribute][ec] [Issues][ei]  | Example code |
+| [Testing][t]       | [Contribute][tc] [Issues][ti]  | Test suites such as continuous ingest and random walk |
+| [Docker][d]        | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image |
+| [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data |
+| [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
+| [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
 
 ## Example Contribution workflow
 
