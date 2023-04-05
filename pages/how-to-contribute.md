@@ -8,6 +8,7 @@ Contributions are welcome to all Apache Accumulo repositories. While most contri
 there are other ways to contribute to Accumulo:
 
 * communicate on one of the [mailing lists](/contact-us/#mailing-lists)
+* participate in design discussions on [Confluence](/contact-us/#Confluence)
 * review [pull requests](https://github.com/apache/accumulo/pulls)
 * verify and test new [releases](/release/)
 * update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
