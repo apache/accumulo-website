@@ -63,8 +63,8 @@ Any questions/ideas don't hesitate to [contact us][contact].
 
 * **Build resources** - [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
-* **Confluence** - [Accumulo Confluence Space][confluence] provides a collaboration space for design documents.  If you would like write
-access, please send a request to `dev@accumulo.apache.org` with your Confluence username.
+* **Confluence** - [Accumulo Confluence Space][confluence] provides a collaboration space for design documents. If you require write
+access, please [contact us][contact] with your Confluence username and request details.
 
 For more information, see the [contributor guide](/contributors-guide/).
 
