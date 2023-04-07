@@ -8,6 +8,7 @@ Contributions are welcome to all Apache Accumulo repositories. While most contri
 there are other ways to contribute to Accumulo:
 
 * communicate on one of the [mailing lists](/contact-us/#mailing-lists)
+* view/draft/comment on designs or other docs in [Confluence][confluence]
 * review [pull requests](https://github.com/apache/accumulo/pulls)
 * verify and test new [releases](/release/)
 * update the [Accumulo website and documentation](https://github.com/apache/accumulo-website)
@@ -19,16 +20,16 @@ Any questions/ideas don't hesitate to [contact us][contact].
 
 ## Accumulo Repositories
 
-| Repository         | Links                          | Description
-| -------------------| ------------------------------ | -----------
-| [Accumulo][a]      | [Contribute][ac] [Issues][ai]  | Core Project
-| [Website][w]       | [Contribute][wc] [Issues][wi]  | Source for this website
-| [Examples][e]      | [Contribute][ec] [Issues][ei]  | Example code
-| [Testing][t]       | [Contribute][tc] [Issues][ti]  | Test suites such as continuous ingest and random walk
-| [Docker][d]        | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image
-| [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data
-| [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages
-| [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo
+| Repository         | Links                          | Description |
+| -------------------| ------------------------------ | ----------- |
+| [Accumulo][a]      | [Contribute][ac] [Issues][ai]  | Core Project |
+| [Website][w]       | [Contribute][wc] [Issues][wi]  | Source for this website |
+| [Examples][e]      | [Contribute][ec] [Issues][ei]  | Example code |
+| [Testing][t]       | [Contribute][tc] [Issues][ti]  | Test suites such as continuous ingest and random walk |
+| [Docker][d]        | [Contribute][dc] [Issues][di]  | Source for Accumulo Docker image |
+| [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data |
+| [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
+| [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
 
 ## Example Contribution workflow
 
@@ -62,10 +63,13 @@ Any questions/ideas don't hesitate to [contact us][contact].
 
 * **Build resources** - [Jenkins][jenkins]
 * **Releases** - [Making a release][making], [Verifying a release][verifying]
+* **Confluence** - [Accumulo Confluence Space][confluence] provides a collaboration space for design documents. If you require write
+access, please [contact us][contact] with your Confluence username and request details.
 
 For more information, see the [contributor guide](/contributors-guide/).
 
 [good-first-issue]: https://github.com/apache/accumulo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
+[confluence]: https://cwiki.apache.org/confluence/display/ACCUMULO/Apache+Accumulo+Home
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
 [ac]: https://github.com/apache/accumulo/blob/main/CONTRIBUTING.md
