@@ -411,9 +411,9 @@ On an instance of an Iterator: `init` is always called before `seek`, `seek` is 
 As mentioned, instances of iterators may be torn down inside the server transparently. When a 
 complex collection of iterators is performing some advanced functionality, they will not be torn 
 down until a Key-Value pair is returned out of the "stack" of iterators (and added into the batch of
-Key-Values to be returned to the caller). Being torn down means that the iterator stack is recreated
-as new instances with the original options, and then it is seeked from where it left off. References
-to the old instances are removed and the objects are lazily garbage collected by the JVM.
+Key-Values to be returned to the caller), or the iterator is yielded. Being torn down means that the 
+iterator stack is recreated as new instances with the original options, and then it is seeked from 
+where it left off.
 
 It's important to note that no state is preserved when an iterator is torn down and recreated. The
 iterator stack is completely re-initialized with the original options, and any state that was
