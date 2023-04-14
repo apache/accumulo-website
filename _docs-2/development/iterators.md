@@ -408,16 +408,16 @@ On an instance of an Iterator: `init` is always called before `seek`, `seek` is 
 
 ### Teardown
 
-As mentioned, instances of iterators may be torn down inside the server transparently. When a 
-complex collection of iterators is performing some advanced functionality, they will not be torn 
-down until a Key-Value pair is returned out of the "stack" of iterators (and added into the batch of
-Key-Values to be returned to the caller), or the iterator is yielded. Being torn down means that the 
-iterator stack is recreated as new instances with the original options, and then it is seeked from 
-where it left off.
+Instances of iterators may be torn down inside the server transparently. When a complex collection
+of iterators is performing advanced functionality, they will not be torn down until a Key-Value pair
+is returned out of the "stack" of iterators (and added into the batch of Key-Values to be returned
+to the caller), or the iterator is yielded.
 
-It's important to note that no state is preserved when an iterator is torn down and recreated. The
-iterator stack is completely re-initialized with the original options, and any state that was
-accumulated by the old instances is lost.
+When an iterator is torn down, the entire stack is dropped and no state is preserved. Only the last
+key returned (or the yielded position), original options, and seek range are retained. When the scan
+is continued, the iterator stack is rebuilt, re-initialized using the original options. The stack
+is then seeked with the original range, and the start key is replaced by the last key returned (or
+the yielded position), non-inclusive.
 
 ## Compaction-time Iterators
 
