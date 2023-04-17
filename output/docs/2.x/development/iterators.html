@@ -832,12 +832,16 @@ always see all intended data that is generated.</p>
 
 <h3 id="teardown">Teardown</h3>
 
-<p>As mentioned, instance of Iterators may be torn down inside of the server transparently. When a complex
-collection of iterators is performing some advanced functionality, they will not be torn down until a Key-Value
-pair is returned out of the “stack” of Iterators (and added into the batch of Key-Values to be returned
-to the caller). Being torn-down is equivalent to a new instance of the Iterator being creating and <code class="language-plaintext highlighter-rouge">deepCopy</code>
-being called on the new instance with the old instance provided as the argument to <code class="language-plaintext highlighter-rouge">deepCopy</code>. References
-to the old instance are removed and the object is lazily garbage collected by the JVM.</p>
+<p>Instances of iterators may be torn down inside the server transparently. When a complex collection
+of iterators is performing advanced functionality, they will not be torn down until a Key-Value pair
+is returned out of the “stack” of iterators (and added into the batch of Key-Values to be returned
+to the caller), or the iterator is yielded.</p>
+
+<p>When an iterator is torn down, the entire stack is dropped and no state is preserved. Only the last
+key returned (or the yielded position), original options, and seek range are retained. When the scan
+is continued, the iterator stack is rebuilt and re-initialized using the original options. The stack
+is then seeked with the original range, and the start key is replaced by the last key returned (or
+the yielded position), non-inclusive.</p>
 
 <h2 id="compaction-time-iterators">Compaction-time Iterators</h2>
 
