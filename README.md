@@ -108,6 +108,31 @@ HTML styled "just right".
 Jekyll will print a local URL where the site can be viewed (usually,
 [http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
 
+### Docker dev environment 
+
+A containerized development environment can be built using the local Dockerfile. 
+
+```bash
+docker build -t webdev .
+```
+
+The webdev container's run command will run jekyll's serve command with the 
+polling option enabled.  This allows for immediate review of rendered changes.   
+
+```bash
+docker run -d -v $PWD:/site -p 4000:4000 --name accumulo-website webdev
+```
+
+If there is a need to update dependencies or run additional gem commands, the container
+entrypoint can be overridden for shell access. 
+
+```bash
+docker run -v $PWD:/site -p 4000:4000 -it --entrypoint /bin/bash webdev
+```
+
+Mounting the local directory as a volume is recommended to ensure that Gemfile and 
+Gemfile.lock stay updated with any dependency changes. 
+
 ## Publishing
 
 ### Automatic Staging
@@ -156,6 +181,17 @@ avoiding force pushes.
 
 The final site can be viewed [here][production].
 
+## Tests
+
+The ability to validate html links has been added with the htmlproofer gem.   
+However, this gem currently produces a large volume of found errors. 
+Therefore, it has been added as an optional test command until formatting changes
+can be resolved. 
+
+The `--disable-external` option is used so resolving external links does not happen.  
+This operation is taxing and can result in flaky tests if used from rate-limited environments. 
+
+`bundle exec htmlproofer --disable-external ./_site`
 
 [Bundler]: https://bundler.io/
 [Jekyll]: https://jekyllrb.com/
