@@ -415,7 +415,7 @@ to the caller), or the iterator is yielded.
 
 When an iterator is torn down, the entire stack is dropped and no state is preserved. Only the last
 key returned (or the yielded position), original options, and seek range are retained. When the scan
-is continued, the iterator stack is rebuilt, re-initialized using the original options. The stack
+is continued, the iterator stack is rebuilt and re-initialized using the original options. The stack
 is then seeked with the original range, and the start key is replaced by the last key returned (or
 the yielded position), non-inclusive.
 
