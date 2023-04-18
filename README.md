@@ -108,7 +108,7 @@ HTML styled "just right".
 Jekyll will print a local URL where the site can be viewed (usually,
 [http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
 
-### Docker dev environment 
+### Testing using Docker environment 
 
 A containerized development environment can be built using the local Dockerfile. 
 
