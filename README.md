@@ -110,28 +110,66 @@ Jekyll will print a local URL where the site can be viewed (usually,
 
 ### Testing using Docker environment 
 
-A containerized development environment can be built using the local Dockerfile. 
+#### Build environment
+A containerized development environment can be built using the local 
+Dockerfile.\
+Run the build-images.sh script to generate the development environment and 
+associated images.
 
 ```bash
-docker build -t webdev .
+./build-images.sh
 ```
 
-The webdev container's run command will run jekyll's serve command with the 
-polling option enabled.  This allows for immediate review of rendered changes.   
+This action will produce two containers: `webdev` and `webdev-validator`.\
+The webdev container will execute a `jekyll serve` command with the 
+polling option enabled.\
+This provides the ability to immediately review rendered content changes.
 
 ```bash
-docker run -d -v $PWD:/site -p 4000:4000 --name accumulo-website webdev
+docker run -d -v "$PWD":/site -p 4000:4000 webdev
 ```
 
-If there is a need to update dependencies or run additional gem commands, the container
-entrypoint can be overridden for shell access. 
+Shell access can be obtained by overriding the default container command.\
+This is useful for adding new gems, or modifying the Gemfile.lock for updating
+existing dependencies.
 
 ```bash
-docker run -v $PWD:/site -p 4000:4000 -it --entrypoint /bin/bash webdev
+docker run -v "$PWD":/site -it webdev /bin/bash
 ```
 
-Mounting the local directory as a volume is recommended to ensure that Gemfile and 
-Gemfile.lock stay updated with any dependency changes. 
+Mounting the local directory as a volume is recommended to ensure that Gemfile and
+Gemfile.lock stay updated with any dependency changes.
+
+#### Validation environment
+
+The `webdev-validator` image can be used to run validation tests against the
+rendered website content.\
+The output directory `_site` needs to be volume mounted for these tests to work.
+
+Currently, only `htmlproofer` has been installed to test html structure and
+ validate links.
+
+```bash
+docker run -it -v "$PWD"/_site:/site/_site webdev-validator
+```
+
+Additional commands can be listed by passing the `--help` option to `htmlproofer`
+
+```bash
+docker run -it -v "$PWD"/_site:/site/_site webdev-validator --help
+```
+
+The `--disable-external` option is specified by default in the container. This 
+is used to ensure resolving external links does not happen.
+Link resolving is taxing and can result in flaky tests if used from
+rate-limited environments.
+
+To validate external links, simply specify the target source dir with no option 
+flags.
+
+```bash
+docker run -it -v "$PWD"/_site:/site/_site webdev-validator ./_site
+```
 
 ## Publishing
 
@@ -181,17 +219,6 @@ avoiding force pushes.
 
 The final site can be viewed [here][production].
 
-## Tests
-
-The ability to validate html links has been added with the htmlproofer gem.   
-However, this gem currently produces a large volume of found errors. 
-Therefore, it has been added as an optional test command until formatting changes
-can be resolved. 
-
-The `--disable-external` option is used so resolving external links does not happen.  
-This operation is taxing and can result in flaky tests if used from rate-limited environments. 
-
-`bundle exec htmlproofer --disable-external ./_site`
 
 [Bundler]: https://bundler.io/
 [Jekyll]: https://jekyllrb.com/

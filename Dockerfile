@@ -1,4 +1,4 @@
-FROM ruby:2.7.8-slim-bullseye
+FROM ruby:2.7.8-slim-bullseye as base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -19,3 +19,12 @@ ENV PORT=4000
 EXPOSE $PORT
 
 CMD bundle exec jekyll serve --force-polling -H $HOST -P $PORT
+
+# Create a separate validation container for testing tools.
+FROM base
+
+RUN bundle add html-proofer >=4.4.0 && bundle install
+
+ENTRYPOINT ["bundle", "exec", "htmlproofer"]
+
+CMD ["--disable-external", "./_site"]
