@@ -117,7 +117,7 @@ Run the build-images.sh script to generate the development environment and
 associated images.
 
 ```bash
-./build-images.sh
+./_scripts/build-images.sh
 ```
 
 This action will produce two containers: `webdev` and `webdev-validator`.\
