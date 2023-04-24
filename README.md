@@ -111,9 +111,9 @@ Jekyll will print a local URL where the site can be viewed (usually,
 ### Testing using Docker environment 
 
 #### Build environment
-A containerized development environment can be built using the local 
+A containerized development environment can be built using the local
 Dockerfile.\
-Run the build-images.sh script to generate the development environment and 
+Run the build-images.sh script to generate the development environment and
 associated images.
 
 ```bash
@@ -121,7 +121,7 @@ associated images.
 ```
 
 This action will produce two containers: `webdev` and `webdev-validator`.\
-The webdev container will execute a `jekyll serve` command with the 
+The webdev container will execute a `jekyll serve` command with the
 polling option enabled.\
 This provides the ability to immediately review rendered content changes.
 
@@ -159,12 +159,12 @@ Additional commands can be listed by passing the `--help` option to `htmlproofer
 docker run -it -v "$PWD"/_site:/site/_site webdev-validator --help
 ```
 
-The `--disable-external` option is specified by default in the container. This 
+The `--disable-external` option is specified by default in the container. This
 is used to ensure resolving external links does not happen.
 Link resolving is taxing and can result in flaky tests if used from
 rate-limited environments.
 
-To validate external links, simply specify the target source dir with no option 
+To validate external links, simply specify the target source dir with no option
 flags.
 
 ```bash
