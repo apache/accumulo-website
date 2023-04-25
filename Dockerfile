@@ -1,3 +1,7 @@
+# This Dockerfile builds an ruby environment for jekyll that empowers
+# making updates to the accumulo website without requiring the dev
+# to maintain a local ruby development environment.
+
 FROM ruby:2.7.8-slim-bullseye as base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -7,6 +11,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /site
+
+
+# Copy over the Gemfiles so that all build dependencies are installed
+# during build vs at runtime.
 
 COPY Gemfile /site/Gemfile
 COPY Gemfile.lock /site/Gemfile.lock
@@ -20,7 +28,9 @@ EXPOSE $PORT
 
 CMD bundle exec jekyll serve --force-polling -H $HOST -P $PORT
 
-# Create a separate validation container for testing tools.
+# Create a separate validation container for testing tools that
+# can be used to validate the rendered HTML code.
+
 FROM base
 
 RUN bundle add html-proofer >=4.4.0 && bundle install
