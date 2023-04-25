@@ -125,23 +125,33 @@ This action will produce two containers: `webdev` and `webdev-validator`.
 The webdev container will execute a `jekyll serve` command with the
 polling option enabled.
 
-This provides the ability to immediately review rendered content changes.
+The webdev container does not store any site content inside of it.
+For rendering to function, the local directory must be mounted inside
+the container in a read/write configuration.
+
+This mounting is accomplished with the volume `-v` flag in the
+following `docker run` command.
 
 ```bash
 docker run -d -v "$PWD":/site -p 4000:4000 webdev
 ```
+
+This provides the ability to immediately review rendered content changes at
+[http://127.0.0.1:4000/](http://127.0.0.1:4000/).
+
 
 Shell access can be obtained by overriding the default container command.
 
 This is useful for adding new gems, or modifying the Gemfile.lock for updating
 existing dependencies.
 
+When using shell access the local directory must be mounted to ensure
+the Gemfile and Gemfile.lock updates are reflected in your local
+environment so you can create a commit and submit a PR.
+
 ```bash
 docker run -v "$PWD":/site -it webdev /bin/bash
 ```
-
-Mounting the local directory as a volume is recommended to ensure that Gemfile and
-Gemfile.lock stay updated with any dependency changes.
 
 #### Validation environment
 

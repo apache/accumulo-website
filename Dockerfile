@@ -16,6 +16,9 @@ WORKDIR /site
 # Copy over the Gemfiles so that all build dependencies are installed
 # during build vs at runtime.
 
+# Gems will be installed under GEM_HOME which is set by the ruby image.
+# See https://hub.docker.com/_/ruby for details. 
+
 COPY Gemfile /site/Gemfile
 COPY Gemfile.lock /site/Gemfile.lock
 
