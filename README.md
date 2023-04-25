@@ -112,7 +112,8 @@ Jekyll will print a local URL where the site can be viewed (usually,
 
 #### Build environment
 A containerized development environment can be built using the local
-Dockerfile.\
+Dockerfile.
+
 Run the build-images.sh script to generate the development environment and
 associated images.
 
@@ -120,16 +121,18 @@ associated images.
 ./_scripts/build-images.sh
 ```
 
-This action will produce two containers: `webdev` and `webdev-validator`.\
+This action will produce two containers: `webdev` and `webdev-validator`.
 The webdev container will execute a `jekyll serve` command with the
-polling option enabled.\
+polling option enabled.
+
 This provides the ability to immediately review rendered content changes.
 
 ```bash
 docker run -d -v "$PWD":/site -p 4000:4000 webdev
 ```
 
-Shell access can be obtained by overriding the default container command.\
+Shell access can be obtained by overriding the default container command.
+
 This is useful for adding new gems, or modifying the Gemfile.lock for updating
 existing dependencies.
 
@@ -143,7 +146,8 @@ Gemfile.lock stay updated with any dependency changes.
 #### Validation environment
 
 The `webdev-validator` image can be used to run validation tests against the
-rendered website content.\
+rendered website content.
+
 The output directory `_site` needs to be volume mounted for these tests to work.
 
 Currently, only `htmlproofer` has been installed to test html structure and
