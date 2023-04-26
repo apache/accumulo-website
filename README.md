@@ -118,12 +118,11 @@ Run the build-images.sh script to generate the development environment and
 associated images.
 
 ```bash
-./_scripts/build-images.sh
+docker build -t webdev .
 ```
 
-This action will produce two containers: `webdev` and `webdev-validator`.
-The webdev container will execute a `jekyll serve` command with the
-polling option enabled.
+This action will produce a `webdev` container which will execute a
+`jekyll serve` command with the polling option enabled.
 
 The webdev container does not store any site content inside of it.
 For rendering to function, the local directory must be mounted inside
@@ -133,7 +132,7 @@ This mounting is accomplished with the volume `-v` flag in the
 following `docker run` command.
 
 ```bash
-docker run -d -v "$PWD":/site -p 4000:4000 webdev
+docker run -d -v "$PWD":/mnt/workdir -p 4000:4000 webdev
 ```
 
 This provides the ability to immediately review rendered content changes at
@@ -150,39 +149,7 @@ the Gemfile and Gemfile.lock updates are reflected in your local
 environment so you can create a commit and submit a PR.
 
 ```bash
-docker run -v "$PWD":/site -it webdev /bin/bash
-```
-
-#### Validation environment
-
-The `webdev-validator` image can be used to run validation tests against the
-rendered website content.
-
-The output directory `_site` needs to be volume mounted for these tests to work.
-
-Currently, only `htmlproofer` has been installed to test html structure and
- validate links.
-
-```bash
-docker run -it -v "$PWD"/_site:/site/_site webdev-validator
-```
-
-Additional commands can be listed by passing the `--help` option to `htmlproofer`
-
-```bash
-docker run -it -v "$PWD"/_site:/site/_site webdev-validator --help
-```
-
-The `--disable-external` option is specified by default in the container. This
-is used to ensure resolving external links does not happen.
-Link resolving is taxing and can result in flaky tests if used from
-rate-limited environments.
-
-To validate external links, simply specify the target source dir with no option
-flags.
-
-```bash
-docker run -it -v "$PWD"/_site:/site/_site webdev-validator ./_site
+docker run -v "$PWD":/mnt/workdir -it webdev /bin/bash
 ```
 
 ## Publishing

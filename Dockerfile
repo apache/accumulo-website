@@ -10,17 +10,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /site
-
+WORKDIR /mnt/workdir
 
 # Copy over the Gemfiles so that all build dependencies are installed
-# during build vs at runtime.
+# during the docker build. At runtime, these will be available to Jekyll
+# from the mounted directory. But that's not available during the
+# docker build, so we need to copy them in to pre-install the Gems
+
+COPY Gemfile ./Gemfile
+COPY Gemfile.lock ./Gemfile.lock
 
 # Gems will be installed under GEM_HOME which is set by the ruby image.
-# See https://hub.docker.com/_/ruby for details. 
-
-COPY Gemfile /site/Gemfile
-COPY Gemfile.lock /site/Gemfile.lock
+# See https://hub.docker.com/_/ruby for details.
 
 RUN gem update --system && bundle install && gem cleanup
 
@@ -29,15 +30,5 @@ ENV PORT=4000
 
 EXPOSE $PORT
 
+# Configure the default command to build from the mounted repository.
 CMD bundle exec jekyll serve --force-polling -H $HOST -P $PORT
-
-# Create a separate validation container for testing tools that
-# can be used to validate the rendered HTML code.
-
-FROM base
-
-RUN bundle add html-proofer >=4.4.0 && bundle install
-
-ENTRYPOINT ["bundle", "exec", "htmlproofer"]
-
-CMD ["--disable-external", "./_site"]
