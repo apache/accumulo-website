@@ -36,18 +36,15 @@ Accumulo processes. See the [quick start] for help with configuring this file.
 
 ## Log configuration files
 
-### log4j-service.properties
+### log4j2-service.properties
 
-The {% ghc assemble/conf/log4j-service.properties %} file configures logging for most Accumulo services
-(i.e [Manager], [Tablet Server], [Garbage Collector]) except for the Monitor.
+Since 2.1, the {% ghc assemble/conf/log4j2-service.properties %} file configures logging for most Accumulo services
+(i.e [Manager], [Tablet Server], [Garbage Collector], [Monitor]). Prior to 2.1 this file was named `log4j-service.properties`
+and did not apply to the [Monitor] which was configured in a separate `log4j-monitor.properties`.
 
-### log4j-monitor.properties
+### log4j2.properties
 
-The {% ghc assemble/conf/log4j-monitor.properties %} file configures logging for the [Monitor].
-
-### log4j.properties
-
-The {% ghc assemble/conf/log4j.properties %} file configures logging for Accumulo commands (i.e `accumulo init`,
+The {% ghc assemble/conf/log4j2.properties %} file configures logging for Accumulo commands (i.e `accumulo init`,
 `accumulo shell`, etc).
 
 ## cluster.yaml
