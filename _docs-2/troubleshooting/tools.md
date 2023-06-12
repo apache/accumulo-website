@@ -289,7 +289,7 @@ HDFS, otherwise only a running ZooKeeper instance is required to run the command
 
 To run the command:
 
-    $ accumulo zoo-info-viewer [--instanceId id | --instanceName name] [mode-options] [--outfile filename]
+    $ accumulo zoo-info-viewer [mode-options] [--outfile filename]
 
     mode options:
     --print-instances
@@ -301,7 +301,7 @@ To run the command:
 The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:
 
 ```
-$ accumulo zoo-info-viewer  --print-instances
+$ accumulo zoo-info-viewer --print-instances
 
 -----------------------------------------------
 Report Time: 2022-05-31T21:07:19.673258Z
@@ -406,7 +406,7 @@ the `/accumulo/INSTANCE_ID]` path.
 See [troubleshooting ZooKeeper] for more information on the tool output and expected ACLs.
 
 ```
-$ accumulo zoo-info-viewer  --print-acls
+$ accumulo zoo-info-viewer --print-acls
 
 -----------------------------------------------
 Report Time: 2023-01-27T23:00:26.079546Z
@@ -430,6 +430,71 @@ ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/lo
 ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances cdrwa:anyone
 ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances/uno cdrwa:accumulo, r:anyone
 
+```
+
+## zoo-prop-editor (new in 2.1.1)
+
+The zoo-prop-editor tool provides an emergency capability to update properties stored in ZooKeeper without a
+running Accumulo instance. Only ZooKeeper and Hadoop are required to be available to use the tool.  With 
+Accumulo 2.1, properties are stored in single ZooKeeper config nodes for the system, each namespace and
+each table. The properties are stored compressed and cannot be directly edited using the ZooKeeper command 
+lines tools like `zkCli.sh`
+
+This tool is provided for a situation if invalid properties were set by the user that prevent the instance 
+from running or if running the instance would lead to an unacceptable outcome. Users should prefer using the 
+Accumulo shell to edit properties if at all possible. Alternatively, properties can be also be viewed using 
+the zoo-info-viewer (it also does not need a running Accumulo instance).
+
+The zoo-prop-editor follows a similar command format of the shell `config` command. If a namespace or table 
+is not specified, the tool assumes the system properties. If set or delete option is not provided, the tool 
+prints the current properties. 
+
+The tool displays only the properties stored in a single ZooKeeper config node. It **does not** provide the 
+property hierarchy (default -> system -> namespace -> table) that is available with the shell `config` command.
+
+The output includes property metadata that is prefixed with `:` to support filtering with `grep -v :` to suppress 
+those lines if desired when piping the output to follow on commands.
+
+For example, to view the current system config node properties (no properties are set in this example)
+```
+$ accumulo zoo-prop-editor
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: SYSTEM
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/config
+: Name: system
+: Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Data version: 0
+: Timestamp: 2023-06-12T21:52:15.727028Z
+```
+For example, to view the properties for table `ns1.tbl1`
+```
+$ accumulo zoo-prop-editor -t ns1.tbl1
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: TABLE
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/tables/2/config
+: Name: ns1.tbl1
+: Id: 2
+: Data version: 1
+: Timestamp: 2023-06-12T21:54:31.817473Z
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.majc.vers.opt.maxVersions=1
+table.iterator.minc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.minc.vers.opt.maxVersions=1
+table.iterator.scan.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.scan.vers.opt.maxVersions=1
+
+```
+To set a property, use the `-s` or `--set` option. For example:
+```
+$ zoo-prop-editor -t ns1.tbl1 -s table.bloom.enabled=false
+```
+
+To delete a property, use the `-d` or `--delete` option. For example:
+```
+$ zoo-prop-editor -t ns1.tbl1 -d table.bloom.enabled
 ```
 
 [troubleshooting ZooKeeper]: {% durl troubleshooting/zookeeper %}
