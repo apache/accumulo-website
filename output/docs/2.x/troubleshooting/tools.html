@@ -713,7 +713,7 @@ HDFS, otherwise only a running ZooKeeper instance is required to run the command
 
 <p>To run the command:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer [--instanceId id | --instanceName name] [mode-options] [--outfile filename]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer [mode-options] [--outfile filename]
 
 mode options:
 --print-instances
@@ -725,7 +725,7 @@ mode options:
 <h2 id="mode-print-instances">mode: print instances</h2>
 <p>The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-instances
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-instances
 
 -----------------------------------------------
 Report Time: 2022-05-31T21:07:19.673258Z
@@ -829,7 +829,7 @@ the <code class="language-plaintext highlighter-rouge">/accumulo/INSTANCE_ID]</c
 
 <p>See <a href="/docs/2.x/troubleshooting/zookeeper">troubleshooting ZooKeeper</a> for more information on the tool output and expected ACLs.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-acls
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-acls
 
 -----------------------------------------------
 Report Time: 2023-01-27T23:00:26.079546Z
@@ -853,6 +853,67 @@ ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/lo
 ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances cdrwa:anyone
 ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances/uno cdrwa:accumulo, r:anyone
 
+</code></pre></div></div>
+
+<h2 id="zoo-prop-editor-new-in-211">zoo-prop-editor (new in 2.1.1)</h2>
+
+<p>The zoo-prop-editor tool provides an emergency capability to update properties stored in ZooKeeper without a
+running Accumulo instance. Only ZooKeeper and Hadoop are required to be available to use the tool.  With 
+Accumulo 2.1, properties are stored in single ZooKeeper config nodes for the system, each namespace and
+each table. The properties are stored compressed and cannot be directly edited using the ZooKeeper command 
+lines tools like <code class="language-plaintext highlighter-rouge">zkCli.sh</code></p>
+
+<p>This tool is provided for a situation if invalid properties were set by the user that prevent the instance 
+from running or if running the instance would lead to an unacceptable outcome. Users should prefer using the 
+Accumulo shell to edit properties if at all possible. Alternatively, properties can be also be viewed using 
+the zoo-info-viewer (it also does not need a running Accumulo instance).</p>
+
+<p>The zoo-prop-editor follows a similar command format of the shell <code class="language-plaintext highlighter-rouge">config</code> command. If a namespace or table 
+is not specified, the tool assumes the system properties. If set or delete option is not provided, the tool 
+prints the current properties.</p>
+
+<p>The tool displays only the properties stored in a single ZooKeeper config node. It <strong>does not</strong> provide the 
+property hierarchy (default -&gt; system -&gt; namespace -&gt; table) that is available with the shell <code class="language-plaintext highlighter-rouge">config</code> command.</p>
+
+<p>The output includes property metadata that is prefixed with <code class="language-plaintext highlighter-rouge">:</code> to support filtering with <code class="language-plaintext highlighter-rouge">grep -v :</code> to suppress 
+those lines if desired when piping the output to follow on commands.</p>
+
+<p>For example, to view the current system config node properties (no properties are set in this example)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-prop-editor
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: SYSTEM
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/config
+: Name: system
+: Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Data version: 0
+: Timestamp: 2023-06-12T21:52:15.727028Z
+</code></pre></div></div>
+<p>For example, to view the properties for table <code class="language-plaintext highlighter-rouge">ns1.tbl1</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-prop-editor -t ns1.tbl1
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: TABLE
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/tables/2/config
+: Name: ns1.tbl1
+: Id: 2
+: Data version: 1
+: Timestamp: 2023-06-12T21:54:31.817473Z
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.majc.vers.opt.maxVersions=1
+table.iterator.minc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.minc.vers.opt.maxVersions=1
+table.iterator.scan.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.scan.vers.opt.maxVersions=1
+
+</code></pre></div></div>
+<p>To set a property, use the <code class="language-plaintext highlighter-rouge">-s</code> or <code class="language-plaintext highlighter-rouge">--set</code> option. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ zoo-prop-editor -t ns1.tbl1 -s table.bloom.enabled=false
+</code></pre></div></div>
+
+<p>To delete a property, use the <code class="language-plaintext highlighter-rouge">-d</code> or <code class="language-plaintext highlighter-rouge">--delete</code> option. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ zoo-prop-editor -t ns1.tbl1 -d table.bloom.enabled
 </code></pre></div></div>
 
 
