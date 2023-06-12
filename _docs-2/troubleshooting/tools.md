@@ -289,7 +289,7 @@ HDFS, otherwise only a running ZooKeeper instance is required to run the command
 
 To run the command:
 
-    $ accumulo zoo-info-viewer [--instanceId id | --instanceName name] [mode-options] [--outfile filename]
+    $ accumulo zoo-info-viewer [mode-options] [--outfile filename]
 
     mode options:
     --print-instances
@@ -301,7 +301,7 @@ To run the command:
 The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:
 
 ```
-$ accumulo zoo-info-viewer  --print-instances
+$ accumulo zoo-info-viewer --print-instances
 
 -----------------------------------------------
 Report Time: 2022-05-31T21:07:19.673258Z
@@ -406,7 +406,7 @@ the `/accumulo/INSTANCE_ID]` path.
 See [troubleshooting ZooKeeper] for more information on the tool output and expected ACLs.
 
 ```
-$ accumulo zoo-info-viewer  --print-acls
+$ accumulo zoo-info-viewer --print-acls
 
 -----------------------------------------------
 Report Time: 2023-01-27T23:00:26.079546Z
@@ -458,23 +458,26 @@ those lines if desired when piping the output to follow on commands.
 For example, to view the current system config node properties (no properties are set in this example)
 ```
 $ accumulo zoo-prop-editor
-
 : Instance name: uno
-: Instance id: b92e515d-0277-4ea0-a5dd-404c98678c65
-: Property scope: - SYSTEM
-: id: b92e515d-0277-4ea0-a5dd-404c98678c65, data version: 0, timestamp: 2023-06-09T16:34:16.775133Z
-none
-
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: SYSTEM
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/config
+: Name: system
+: Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Data version: 0
+: Timestamp: 2023-06-12T21:52:15.727028Z
 ```
 For example, to view the properties for table `ns1.tbl1`
 ```
 $ accumulo zoo-prop-editor -t ns1.tbl1
-
 : Instance name: uno
-: Instance id: b92e515d-0277-4ea0-a5dd-404c98678c65
-: Property scope: - TABLE
-: id: 2, data version: 2, timestamp: 2023-06-09T16:36:32.222483Z
-table.bloom.enabled=true
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: TABLE
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/tables/2/config
+: Name: ns1.tbl1
+: Id: 2
+: Data version: 1
+: Timestamp: 2023-06-12T21:54:31.817473Z
 table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
 table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
 table.iterator.majc.vers.opt.maxVersions=1
