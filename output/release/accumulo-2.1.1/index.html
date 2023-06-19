@@ -82,7 +82,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-2.1.0/">2.1.0 (Latest)</a></li>
+            <li><a href="/release/accumulo-2.1.1/">2.1.1 (Latest)</a></li>
             <li><a href="/release/accumulo-1.10.3/">1.10.3</a></li>
             <li><a href="/release/">Archive</a></li>
           </ul>
@@ -144,7 +144,7 @@
           
           
 
-<p>02 Nov 2022</p>
+<p>19 Jun 2023</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
         <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
@@ -156,11 +156,6 @@
     </ul></nav>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.0/">the latest release notes</a>.</p>
-</div>
-
 
 
 <div class="alert alert-success" role="alert">
@@ -170,58 +165,105 @@
 
 <h2 id="about">About</h2>
 
-<p>Apache Accumulo 2.1.1 is a patch release of the 2.1.0 LTM line.</p>
+<p>Apache Accumulo 2.1.1 is a patch release of the 2.1.0 LTM line. It contains
+many bug fixes and minor enhancements, including a critical fix. This version
+supersedes 2.1.0. Users upgrading to 2.1 should upgrade directly to this
+version instead of 2.1.0.</p>
 
-<h3 id="major-improvements">Major Improvements</h3>
+<p>Included here are some highlights of the most interesting bugs and features
+fixed in 2.1.1. Several trivial bugs were also fixed that related to the
+presentation of information on the monitor, or to avoid spammy/excessive
+logging, but are too numerous to list here. For the full set of bug fixes,
+please see the commit history or issue tracker.</p>
 
-<h3 id="minor-improvements">Minor Improvements</h3>
+<p>NOTE: This 2.1 release also includes any applicable bug fixes and improvements
+that occurred in 1.10.3 and earlier.</p>
+
+<h3 id="critical-fixes">Critical Fixes</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3180">#3180</a> Enable users to provide per-volume Hadoop Filesystem configuration
-overrides via the Accumulo configuration. Hadoop Filesystem objects are configured
-by the standard Hadoop mechanisms (default configuration, core-site.xml,
-hdfs-site.xml, etc.), but these configuration files don’t allow for the same
-property to be specified with different values for different namespaces. This change
-allows users to specify different property values for different Accumulo volumes, which
-will be applied to the Hadoop Filesystem object created for each Accumulo volume.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3177">#3177</a> Added server side code to validate that property values conform to the
-specified property type (string, boolean, etc.).</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3175">#3175</a> Reset number of locks in SynchronousLoadingBlockCache from 2017 back
-to 5003, the value that it was in 1.10. Also, modified the lock to be fair, which allows
-the different scan threads in the server to make progress in a more fair manner when
-they need to load a block into the cache.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3118">#3118</a> Added option to the <code class="language-plaintext highlighter-rouge">admin zoo-info-viewer</code> command to dump the ACLs
-on ZooKeeper nodes. This information can be used to fix znodes with incorrect ACLs
-during the upgrade process.</li>
+  <li>Use Text instead of ByteBuffer for Cache Key in recently hashed password
+computation to ensure correctness when avoiding recomputation. This fixes a
+critical bug that would have allowed a recently authenticated user to be able
+to re-authenticate under some circumstances, without providing the correct
+password.</li>
+</ul>
+
+<h3 id="notable-improvements">Notable Improvements</h3>
+
+<p>Improvements that add capabilities:</p>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3180">#3180</a> Enable users to provide per-volume Hadoop Filesystem
+configuration overrides via the Accumulo configuration. Hadoop Filesystem
+objects are configured by the standard Hadoop mechanisms (default
+configuration, core-site.xml, hdfs-site.xml, etc.), but these configuration
+files don’t allow for the same property to be specified with different values
+for different namespaces. This change allows users to specify different
+property values for different Accumulo volumes, which will be applied to the
+Hadoop Filesystem object created for each Accumulo volume</li>
+  <li><a href="https://github.com/apache/accumulo/issues/1169">#1169</a>, <a href="https://github.com/apache/accumulo/issues/3142">#3142</a> Add configuration option for users to select
+how the last location field is used, so users have better control over
+initial assignments on restarts</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3400">#3400</a> Inject environment injected into ContextClassLoaderFactory SPI
+so implementations can read and make use of Accumulo’s own configuration</li>
+</ul>
+
+<p>Improvements that affect performance:</p>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3175">#3175</a> Reset number of locks in SynchronousLoadingBlockCache from
+2017 back to 5003, the value that it was in 1.10. <a href="https://github.com/apache/accumulo/issues/3226">#3226</a> Also,
+modified the lock to be fair, which allows the different scan threads in the
+server to make progress in a more fair manner when they need to load a block
+into the cache</li>
   <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>, <a href="https://github.com/apache/accumulo/issues/3123">#3123</a> Avoid filling
 OS page cache by calling <code class="language-plaintext highlighter-rouge">setDropBehind</code> on the FS data stream when
 performing likely one-time file accesses, as with WAL and compaction input
 and output files. This should allow files that might benefit more from
 caching to stay in the cache longer. <a href="https://github.com/apache/accumulo/issues/3083">#3083</a> and <a href="https://github.com/apache/accumulo/issues/3123">#3123</a>
-introduces new properties, table.compaction.major.output.drop.cache and 
-table.compaction.minor.output.drop.cache, for dropping pages from the OS
-page cache for compaction output files. These changes will only have an
-impact on HDFS FileSystem implementations and operating systems that support
-the underlying OS system call. See associated HDFS <a href="https://issues.apache.org/jira/browse/HDFS-16864">issue</a>
-that will improve the underlying implementation when resolved.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3023">#3023</a>, <a href="https://github.com/apache/accumulo/issues/3053">#3053</a> Prevent excessive logging when an ExternalCompaction
-is cancelled for cause and around the ThreadPools</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3057">#3057</a> Modified Monitor to direct DataTable errors to console</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3205">#3205</a> Support writing cluster config parser output to a file</li>
+introduces new properties, table.compaction.major.output.drop.cache and
+table.compaction.minor.output.drop.cache, for dropping pages from the OS page
+cache for compaction output files. These changes will only have an impact on
+HDFS FileSystem implementations and operating systems that support the
+underlying OS system call. See associated issue, <a href="https://issues.apache.org/jira/browse/HDFS-16864">HDFS-16864</a>, that will
+improve the underlying implementation when resolved.</li>
 </ul>
 
-<h3 id="bug-fixes">Bug Fixes</h3>
+<p>Improvements that help with administration:</p>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3164">#3164</a> Fixed bug in ScanServer where failures to scan a specific tablet was not being
-handled correctly, which would lead to the tablet not being scanned.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3059">#3059</a> Removed stale compactions from CompactionCoordinator internal structure. The
-CompactionCoordinator has an internal data structure where it keeps track of running compactions. Running
-compactions were not being removed from this set in some edge cases so they continued to be shown on the
-Monitor when in reality the compaction was not running. This occured in testing when the Compactor process
-was killed by the agitator. The compaction was rescheduled to run on a different Compactor, the issue here
-was just orphaned information in the data structure being shown in the Monitor.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3048">#3048</a> Output time strings on the monitor using the correct user locale (also made them more concise)</li>
+  <li><a href="https://github.com/apache/accumulo/issues/#3445">##3445</a> Add emergency maintenance utility to edit properties in
+ZooKeeper while the Accumulo cluster is shut down</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3118">#3118</a> Added option to the <code class="language-plaintext highlighter-rouge">admin zoo-info-viewer</code> command to dump
+the ACLs on ZooKeeper nodes. This information can be used to fix znodes with
+incorrect ACLs during the upgrade process</li>
+</ul>
+
+<p>Other notable changes:</p>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3126">#3126</a> Remove unintentionally bundled htrace4 from our packaging;
+users will need to provide that for themselves if they require it on their
+classpath</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3436">#3436</a> Deprecate gc.trash.ignore property. The trash can be
+customized within Hadoop if one wishes to ignore it, or configure it to be
+ignored for only specific files (and this has been tested with recent
+versions of Hadoop); In version 3.0, this property will be removed, and it
+will no longer be possible to ignore the trash by changing this property</li>
+</ul>
+
+<h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3134">#3134</a> Fixed Thrift issues due to incorrect setting of maxMessageSize</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3144">#3144</a>, <a href="https://github.com/apache/accumulo/issues/3150">#3150</a>, <a href="https://github.com/apache/accumulo/issues/3164">#3164</a> Fixed bugs in ScanServer that
+prevented a tablet from being scanned when some transient failures occurred</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3346">#3346</a>, <a href="https://github.com/apache/accumulo/issues/3366">#3366</a> Fixed tablet metadata verification task so it
+doesn’t unintentionally cause the server to halt</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3479">#3479</a> Fixed issue preventing servers from shutting down because they
+were still receiving assignments</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3492">#3492</a> Fixed a bug where bulk imports could cause compactions to hang</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
@@ -231,10 +273,6 @@ was just orphaned information in the data structure being shown in the Monitor.<
 <h2 id="211-github-project">2.1.1 GitHub Project</h2>
 
 <p><a href="https://github.com/apache/accumulo/projects/25">All tickets related to 2.1.1.</a></p>
-
-<h2 id="known-issues">Known Issues</h2>
-
-<p>At the time of release, the following issues were known:</p>
 
 
 

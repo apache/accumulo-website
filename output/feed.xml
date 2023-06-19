@@ -6,10 +6,133 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 19 Jun 2023 17:24:00 +0000</pubDate>
-    <lastBuildDate>Mon, 19 Jun 2023 17:24:00 +0000</lastBuildDate>
+    <pubDate>Mon, 19 Jun 2023 20:14:16 +0000</pubDate>
+    <lastBuildDate>Mon, 19 Jun 2023 20:14:16 +0000</lastBuildDate>
     <generator>Jekyll v4.3.1</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 2.1.1</title>
+        <description>&lt;h2 id=&quot;about&quot;&gt;About&lt;/h2&gt;
+
+&lt;p&gt;Apache Accumulo 2.1.1 is a patch release of the 2.1.0 LTM line. It contains
+many bug fixes and minor enhancements, including a critical fix. This version
+supersedes 2.1.0. Users upgrading to 2.1 should upgrade directly to this
+version instead of 2.1.0.&lt;/p&gt;
+
+&lt;p&gt;Included here are some highlights of the most interesting bugs and features
+fixed in 2.1.1. Several trivial bugs were also fixed that related to the
+presentation of information on the monitor, or to avoid spammy/excessive
+logging, but are too numerous to list here. For the full set of bug fixes,
+please see the commit history or issue tracker.&lt;/p&gt;
+
+&lt;p&gt;NOTE: This 2.1 release also includes any applicable bug fixes and improvements
+that occurred in 1.10.3 and earlier.&lt;/p&gt;
+
+&lt;h3 id=&quot;critical-fixes&quot;&gt;Critical Fixes&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use Text instead of ByteBuffer for Cache Key in recently hashed password
+computation to ensure correctness when avoiding recomputation. This fixes a
+critical bug that would have allowed a recently authenticated user to be able
+to re-authenticate under some circumstances, without providing the correct
+password.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;notable-improvements&quot;&gt;Notable Improvements&lt;/h3&gt;
+
+&lt;p&gt;Improvements that add capabilities:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3180&quot;&gt;#3180&lt;/a&gt; Enable users to provide per-volume Hadoop Filesystem
+configuration overrides via the Accumulo configuration. Hadoop Filesystem
+objects are configured by the standard Hadoop mechanisms (default
+configuration, core-site.xml, hdfs-site.xml, etc.), but these configuration
+files don’t allow for the same property to be specified with different values
+for different namespaces. This change allows users to specify different
+property values for different Accumulo volumes, which will be applied to the
+Hadoop Filesystem object created for each Accumulo volume&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1169&quot;&gt;#1169&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3142&quot;&gt;#3142&lt;/a&gt; Add configuration option for users to select
+how the last location field is used, so users have better control over
+initial assignments on restarts&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3400&quot;&gt;#3400&lt;/a&gt; Inject environment injected into ContextClassLoaderFactory SPI
+so implementations can read and make use of Accumulo’s own configuration&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Improvements that affect performance:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3175&quot;&gt;#3175&lt;/a&gt; Reset number of locks in SynchronousLoadingBlockCache from
+2017 back to 5003, the value that it was in 1.10. &lt;a href=&quot;https://github.com/apache/accumulo/issues/3226&quot;&gt;#3226&lt;/a&gt; Also,
+modified the lock to be fair, which allows the different scan threads in the
+server to make progress in a more fair manner when they need to load a block
+into the cache&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3077&quot;&gt;#3077&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3079&quot;&gt;#3079&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3083&quot;&gt;#3083&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3123&quot;&gt;#3123&lt;/a&gt; Avoid filling
+OS page cache by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;setDropBehind&lt;/code&gt; on the FS data stream when
+performing likely one-time file accesses, as with WAL and compaction input
+and output files. This should allow files that might benefit more from
+caching to stay in the cache longer. &lt;a href=&quot;https://github.com/apache/accumulo/issues/3083&quot;&gt;#3083&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/issues/3123&quot;&gt;#3123&lt;/a&gt;
+introduces new properties, table.compaction.major.output.drop.cache and
+table.compaction.minor.output.drop.cache, for dropping pages from the OS page
+cache for compaction output files. These changes will only have an impact on
+HDFS FileSystem implementations and operating systems that support the
+underlying OS system call. See associated issue, &lt;a href=&quot;https://issues.apache.org/jira/browse/HDFS-16864&quot;&gt;HDFS-16864&lt;/a&gt;, that will
+improve the underlying implementation when resolved.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Improvements that help with administration:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/#3445&quot;&gt;##3445&lt;/a&gt; Add emergency maintenance utility to edit properties in
+ZooKeeper while the Accumulo cluster is shut down&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3118&quot;&gt;#3118&lt;/a&gt; Added option to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin zoo-info-viewer&lt;/code&gt; command to dump
+the ACLs on ZooKeeper nodes. This information can be used to fix znodes with
+incorrect ACLs during the upgrade process&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Other notable changes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3126&quot;&gt;#3126&lt;/a&gt; Remove unintentionally bundled htrace4 from our packaging;
+users will need to provide that for themselves if they require it on their
+classpath&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3436&quot;&gt;#3436&lt;/a&gt; Deprecate gc.trash.ignore property. The trash can be
+customized within Hadoop if one wishes to ignore it, or configure it to be
+ignored for only specific files (and this has been tested with recent
+versions of Hadoop); In version 3.0, this property will be removed, and it
+will no longer be possible to ignore the trash by changing this property&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;notable-bug-fixes&quot;&gt;Notable Bug Fixes&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3134&quot;&gt;#3134&lt;/a&gt; Fixed Thrift issues due to incorrect setting of maxMessageSize&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3144&quot;&gt;#3144&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3150&quot;&gt;#3150&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3164&quot;&gt;#3164&lt;/a&gt; Fixed bugs in ScanServer that
+prevented a tablet from being scanned when some transient failures occurred&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3346&quot;&gt;#3346&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/3366&quot;&gt;#3366&lt;/a&gt; Fixed tablet metadata verification task so it
+doesn’t unintentionally cause the server to halt&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3479&quot;&gt;#3479&lt;/a&gt; Fixed issue preventing servers from shutting down because they
+were still receiving assignments&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/3492&quot;&gt;#3492&lt;/a&gt; Fixed a bug where bulk imports could cause compactions to hang&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+&lt;h2 id=&quot;211-github-project&quot;&gt;2.1.1 GitHub Project&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/apache/accumulo/projects/25&quot;&gt;All tickets related to 2.1.1.&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-2.1.1/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-2.1.1/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 1.10.3</title>
@@ -160,7 +283,7 @@ instead.  The new compaction changes in 2.1 introduce new algorithms for optimal
 compactions across multiple thread pools, configuring a deprecated compaction strategy may result is
 missing out on the benefits of these new algorithms.&lt;/p&gt;
 
-&lt;p&gt;See the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.1.0/org/apache/accumulo/tserver/compaction/CompactionStrategy.html&quot;&gt;javadoc&lt;/a&gt; for more
+&lt;p&gt;See the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-tserver/2.1.1/org/apache/accumulo/tserver/compaction/CompactionStrategy.html&quot;&gt;javadoc&lt;/a&gt; for more
 information.&lt;/p&gt;
 
 &lt;p&gt;GitHub tickets related to these changes: &lt;a href=&quot;https://github.com/apache/accumulo/issues/564&quot;&gt;#564&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1605&quot;&gt;#1605&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1609&quot;&gt;#1609&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1649&quot;&gt;#1649&lt;/a&gt;&lt;/p&gt;
@@ -287,13 +410,13 @@ instead in any &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&g
 
 &lt;p&gt;The Hadoop Metrics2 framework is no longer being used to emit metrics from Accumulo. Accumulo is now
 using the &lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt; framework. Metric name and type changes have been
-documented in org.apache.accumulo.core.metrics.MetricsProducer, see the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;javadoc&lt;/a&gt; for more information. See comments in &lt;a href=&quot;https://github.com/apache/accumulo/issues/2305&quot;&gt;#2305&lt;/a&gt; for an example of how to configure Accumulo to emit metrics to supported Micrometer sinks.
+documented in org.apache.accumulo.core.metrics.MetricsProducer, see the &lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.1/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;javadoc&lt;/a&gt; for more information. See comments in &lt;a href=&quot;https://github.com/apache/accumulo/issues/2305&quot;&gt;#2305&lt;/a&gt; for an example of how to configure Accumulo to emit metrics to supported Micrometer sinks.
 &lt;a href=&quot;https://github.com/apache/accumulo/issues/1134&quot;&gt;#1134&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;new-spi-package&quot;&gt;New SPI Package&lt;/h3&gt;
 
 &lt;p&gt;A new Service Plugin Interface (SPI) package was created in the accumulo-core jar, at
-&lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.0/org/apache/accumulo/core/spi/package-summary.html&quot;&gt;org.apache.accumulo.core.spi&lt;/a&gt;, under which exists interfaces for the various pluggable
+&lt;a href=&quot;https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.1/org/apache/accumulo/core/spi/package-summary.html&quot;&gt;org.apache.accumulo.core.spi&lt;/a&gt;, under which exists interfaces for the various pluggable
 components. See &lt;a href=&quot;https://github.com/apache/accumulo/issues/1900&quot;&gt;#1900&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1905&quot;&gt;#1905&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1880&quot;&gt;#1880&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1891&quot;&gt;#1891&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1426&quot;&gt;#1426&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;minor-improvements&quot;&gt;Minor Improvements&lt;/h2&gt;
@@ -1755,277 +1878,6 @@ operation (compact, flush)
         
         
         <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>Microsoft MASC, an Apache Spark connector for Apache Accumulo</title>
-        <description>&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/microsoft/masc&quot;&gt;MASC&lt;/a&gt; provides an Apache Spark native connector for Apache Accumulo to integrate the rich Spark machine learning eco-system with the scalable and secure data storage capabilities of Accumulo.&lt;/p&gt;
-
-&lt;h2 id=&quot;major-features&quot;&gt;Major Features&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Simplified Spark DataFrame read/write to Accumulo using DataSource v2 API&lt;/li&gt;
-  &lt;li&gt;Speedup of 2-5x over existing approaches for pulling key-value data into DataFrame format&lt;/li&gt;
-  &lt;li&gt;Scala and Python support without overhead for moving between languages&lt;/li&gt;
-  &lt;li&gt;Process streaming data from Accumulo without loading it all into Spark memory&lt;/li&gt;
-  &lt;li&gt;Push down filtering with a flexible expression language (&lt;a href=&quot;http://juel.sourceforge.net/&quot;&gt;JUEL&lt;/a&gt;): user can define logical operators and comparisons to reduce the amount of data returned from Accumulo&lt;/li&gt;
-  &lt;li&gt;Column pruning based on selected fields transparently reduces the amount of data returned from Accumulo&lt;/li&gt;
-  &lt;li&gt;Server side inference: ML model inference can run on the Accumulo nodes using MLeap to increase the scalability of AI solutions as well as keeping data in Accumulo&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;use-cases&quot;&gt;Use-cases&lt;/h2&gt;
-&lt;p&gt;MASC is advantageous in many use-cases, below we list a few.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Scenario 1&lt;/strong&gt;: A data analyst needs to execute model inference on large amount of data in Accumulo.&lt;br /&gt;
-&lt;strong&gt;Benefit&lt;/strong&gt;: Instead of transferring all the data to a large Spark cluster to score using a Spark model, the connector exports and runs the model on the Accumulo cluster. This reduces the need for a large Spark cluster as well as the amount of data transferred between systems, and can improve inference speeds (&amp;gt;2x speedups observed).&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Scenario 2&lt;/strong&gt;: A data scientist needs to train a Spark model on a large amount of data in Accumulo.&lt;br /&gt;
-&lt;strong&gt;Benefit&lt;/strong&gt;: Instead of pulling all the data into a large Spark cluster and restructuring the format to use Spark ML Lib tools, the connector streams data into Spark as a DataFrame reducing time to train and Spark cluster size / memory requirements.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Scenario 3&lt;/strong&gt;: A data analyst needs to perform ad hoc analysis on large amounts of data stored in Accumulo.&lt;br /&gt;
-&lt;strong&gt;Benefit&lt;/strong&gt;: Instead of pulling all the data into a large Spark cluster, the connector prunes rows and columns using pushdown filtering with a flexible expression language.&lt;/p&gt;
-
-&lt;h1 id=&quot;architecture&quot;&gt;Architecture&lt;/h1&gt;
-&lt;p&gt;The Accumulo-Spark connector is composed of two components:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Accumulo server-side iterator performs
-    &lt;ul&gt;
-      &lt;li&gt;column pruning&lt;/li&gt;
-      &lt;li&gt;row-based filtering&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/combust/mleap&quot;&gt;MLeap&lt;/a&gt; ML model inference and&lt;/li&gt;
-      &lt;li&gt;row assembly using &lt;a href=&quot;https://avro.apache.org/&quot;&gt;Apache AVRO&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Spark DataSource V2
-    &lt;ul&gt;
-      &lt;li&gt;determines the number of Spark tasks based on available Accumulo table splits&lt;/li&gt;
-      &lt;li&gt;translates Spark filter conditions into a &lt;a href=&quot;http://juel.sourceforge.net/&quot;&gt;JUEL&lt;/a&gt; expression&lt;/li&gt;
-      &lt;li&gt;configures the Accumulo iterator&lt;/li&gt;
-      &lt;li&gt;deserializes the AVRO payload&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/blog/202002_masc/architecture.svg&quot; alt=&quot;Architecture&quot; title=&quot;MASC Architecture Diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;usage&quot;&gt;Usage&lt;/h1&gt;
-&lt;p&gt;More detailed documentation on installation and use is available in the
-&lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/README.md&quot;&gt;Connector documentation&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Java 8&lt;/li&gt;
-  &lt;li&gt;Spark 2.4.3+&lt;/li&gt;
-  &lt;li&gt;Accumulo 2.0.0+&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;JARs available on Maven Central Repository:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-datasource%22&quot;&gt;&lt;img src=&quot;https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-datasource.svg?label=Maven%20Central&quot; alt=&quot;Maven Central&quot; /&gt; Spark DataSource&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://search.maven.org/search?q=g:%22com.microsoft.masc%22%20AND%20a:%22microsoft-accumulo-spark-iterator%22&quot;&gt;&lt;img src=&quot;https://img.shields.io/maven-central/v/com.microsoft.masc/microsoft-accumulo-spark-iterator.svg?label=Maven%20Central&quot; alt=&quot;Maven Central&quot; /&gt; Accumulo Iterator&lt;/a&gt; - Backend for Spark DataSource&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;example-use&quot;&gt;Example use&lt;/h2&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;configparser&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConfigParser&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pyspark.sql&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;types&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;properties_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;Read Accumulo client properties file&quot;&quot;&quot;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConfigParser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;properties_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[top]&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'top'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/opt/muchos/install/accumulo-2.0.0/conf/accumulo-client.properties'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'table'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'demo_table'&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Define Accumulo table where data will be written
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'rowkey'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'id'&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;# Identify column to use as the key for Accumulo rows
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# define the schema
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;schema&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sentiment&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IntegerType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StringType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;query_string&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StringType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StringType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StructField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StringType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Read from Accumulo
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spark&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.microsoft.accumulo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# define Accumulo properties
-&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;     &lt;span class=&quot;c1&quot;&gt;# define schema for data retrieval
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# Write to Accumulo
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'table'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'output_table'&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.microsoft.accumulo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;See the &lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb&quot;&gt;demo notebook&lt;/a&gt; for more examples.&lt;/p&gt;
-
-&lt;h1 id=&quot;computational-performance-of-ai-scenario&quot;&gt;Computational Performance of AI Scenario&lt;/h1&gt;
-&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;/h2&gt;
-&lt;p&gt;The benchmark setup used a 1,000-node Accumulo 2.0.0 Cluster (16,000 cores) running and a 256-node Spark 2.4.3 cluster (4,096 cores). All nodes used &lt;a href=&quot;https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general&quot;&gt;Azure D16s_v3&lt;/a&gt; (16 cores) virtual machines. &lt;a href=&quot;https://github.com/apache/fluo-muchos&quot;&gt;Fluo-muchos&lt;/a&gt; was used to handle Accumulo and Spark cluster deployments and configuration.&lt;/p&gt;
-
-&lt;p&gt;In all experiments we use the same base dataset which is a collection of Twitter user tweets with labeled sentiment value. This dataset is known as the Sentiment140 dataset (&lt;a href=&quot;https://www-nlp.stanford.edu/courses/cs224n/2009/fp/3.pdf&quot;&gt;Go, Bhayani, &amp;amp; Huang, 2009&lt;/a&gt;). The training data consist of 1.6M samples of tweets, where each tweet has columns indicating the sentiment label, user, timestamp, query term, and text. The text is limited to 140 characters and the overall uncompressed size of the training dataset is 227MB.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;sentiment&lt;/th&gt;
-      &lt;th&gt;id&lt;/th&gt;
-      &lt;th&gt;date&lt;/th&gt;
-      &lt;th&gt;query_string&lt;/th&gt;
-      &lt;th&gt;user&lt;/th&gt;
-      &lt;th&gt;text&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;1467810369&lt;/td&gt;
-      &lt;td&gt;Mon Apr 06 22:19:…&lt;/td&gt;
-      &lt;td&gt;NO_QUERY&lt;/td&gt;
-      &lt;td&gt;_TheSpecialOne_&lt;/td&gt;
-      &lt;td&gt;@switchfoot http:…&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;1467810672&lt;/td&gt;
-      &lt;td&gt;Mon Apr 06 22:19:…&lt;/td&gt;
-      &lt;td&gt;NO_QUERY&lt;/td&gt;
-      &lt;td&gt;scotthamilton&lt;/td&gt;
-      &lt;td&gt;is upset that he …&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;1467810917&lt;/td&gt;
-      &lt;td&gt;Mon Apr 06 22:19:…&lt;/td&gt;
-      &lt;td&gt;NO_QUERY&lt;/td&gt;
-      &lt;td&gt;mattycus&lt;/td&gt;
-      &lt;td&gt;@Kenichan I dived…&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;To evaluate different table sizes and the impact of splitting the following procedure was used to generate the Accumulo tables:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Prefix id with split keys (e.g. 0000, 0001, …, 1024)&lt;/li&gt;
-  &lt;li&gt;Create Accumulo table and configure splits&lt;/li&gt;
-  &lt;li&gt;Upload prefixed data to Accumulo using Spark and the MASC writer&lt;/li&gt;
-  &lt;li&gt;Duplicate data using custom Accumulo server-side iterator&lt;/li&gt;
-  &lt;li&gt;Validate data partitioning&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;A common machine learning scenario was evaluated using a sentiment model trained using &lt;a href=&quot;https://spark.apache.org/docs/latest/ml-guide.html&quot;&gt;SparkML&lt;/a&gt;.
-To train the classification model, we generated feature vectors from the text of tweets (text column). We used a feature engineering pipeline (a.k.a. featurizer) that breaks the text into tokens, splitting on whitespaces and discarding any capitalization and non-alphabetical characters. The pipeline consisted of&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Regex Tokenizer&lt;/li&gt;
-  &lt;li&gt;Hashing Transformer&lt;/li&gt;
-  &lt;li&gt;Logistic Regression&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;See the &lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb&quot;&gt;benchmark notebook (Scala)&lt;/a&gt; for more details.&lt;/p&gt;
-
-&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
-&lt;p&gt;The first set of experiments evaluated data transfer efficiency and ML model inference performance. The chart below shows&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Accumulo table split size (1GB, 8GB, 32GB, 64GB)&lt;/li&gt;
-  &lt;li&gt;Total table size (1TB, 10TB, 100TB, 1PB)&lt;/li&gt;
-  &lt;li&gt;Operations
-    &lt;ul&gt;
-      &lt;li&gt;Count: plain count of the data&lt;/li&gt;
-      &lt;li&gt;Inference: Accumulo server-side inference using MLeap&lt;/li&gt;
-      &lt;li&gt;Transfer: Filtering results for 30% data transfer&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Time is reported in minutes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Remarks&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Time is log-scale&lt;/li&gt;
-  &lt;li&gt;Inference was run with and without data transfer to isolate server-side performance.&lt;/li&gt;
-  &lt;li&gt;The smaller each Accumulo table split is, the more splits we have and thus higher parallelization.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/blog/202002_masc/runtime.png&quot; alt=&quot;Runtime&quot; title=&quot;Runtime Performance&quot; class=&quot;blog-img-center&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The second set of experiments highlights the computational performance improvement of using the server-side inference approach compared to running inference on the Spark cluster.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/blog/202002_masc/sparkml_vs_mleap_accumulo.png&quot; alt=&quot;Mleap&quot; title=&quot;Spark ML vs MLeap Performance&quot; class=&quot;blog-img-center&quot; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;learnings&quot;&gt;Learnings&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;Accumulo MLeap Server-side inference vs Spark ML results in a 2x improvement&lt;/li&gt;
-  &lt;li&gt;Multi-threading in Spark jobs can be used to fully utilize Accumulo servers
-    &lt;ul&gt;
-      &lt;li&gt;Useful when Spark cluster has less cores than Accumulo&lt;/li&gt;
-      &lt;li&gt;e.g. 8 threads * 2,048 Spark executor = 16,384 Accumulo threads&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Unbalanced Accumulo table splits can introduce performance bottlenecks&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;useful-links&quot;&gt;Useful links&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb&quot;&gt;Complete Jupyter demo notebook (PySpark)&lt;/a&gt; for usage of the Accumulo-Spark connector&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnectorBenchmark.ipynb&quot;&gt;Complete Jupyter benchmark notebook (Scala)&lt;/a&gt; for usage of the Accumulo-Spark connector&lt;/li&gt;
-  &lt;li&gt;GitHub Repository &lt;a href=&quot;https://github.com/microsoft/masc&quot;&gt;Microsoft’s contributions for Spark with Apache Accumulo&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/combust/mleap&quot;&gt;MLeap&lt;/a&gt; - Scala/Java stand-alone model inference for SparkML-based models&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://spark.apache.org/docs/latest/ml-guide.html&quot;&gt;SparkML&lt;/a&gt; - Spark machine learning library&lt;/li&gt;
-  &lt;li&gt;MASC Maven artifacts
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-iterator&quot;&gt;Accumulo Iterator - Backend for Spark DataSource&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://mvnrepository.com/artifact/com.microsoft.masc/microsoft-accumulo-spark-datasource&quot;&gt;Spark DataSource&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;license&quot;&gt;License&lt;/h1&gt;
-&lt;p&gt;This work is publicly available under the Apache License 2.0 on GitHub under &lt;a href=&quot;https://github.com/microsoft/masc&quot;&gt;Microsoft’s contributions for Apache Spark with Apache Accumulo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&quot;contributions&quot;&gt;Contributions&lt;/h1&gt;
-&lt;p&gt;Feedback, questions, and contributions are welcome!&lt;/p&gt;
-
-&lt;p&gt;Thanks to contributions from members on the Azure Global Customer Engineering and Azure Government teams.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/AnupamMicrosoft&quot;&gt;Anupam Sharma&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/arvindshmicrosoft&quot;&gt;Arvind Shyamsundar&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/billierinaldi&quot;&gt;Billie Rinaldi&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/chenhuims&quot;&gt;Chenhui Hu&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/loomlike&quot;&gt;Jun-Ki Min&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/phrocker&quot;&gt;Marc Parisi&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/eisber&quot;&gt;Markus Cozowicz&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Pavandeep Kalra&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/roalexan&quot;&gt;Robert Alexander&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/gramhagen&quot;&gt;Scott Graham&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/wutaomsft&quot;&gt;Tao Wu&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Special thanks to &lt;a href=&quot;https://github.com/ancasarb&quot;&gt;Anca Sarb&lt;/a&gt; for promptly assisting with &lt;a href=&quot;https://github.com/combust/mleap/issues/633&quot;&gt;MLeap performance issues&lt;/a&gt;.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 26 Feb 2020 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/blog/2020/02/26/accumulo-spark-connector.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2020/02/26/accumulo-spark-connector.html</guid>
-        
-        
-        <category>blog</category>
         
       </item>
     
