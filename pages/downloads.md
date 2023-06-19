@@ -71,7 +71,7 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 ## Current Releases
 
-{% assign linkVers = '2.1.0' %}
+{% assign linkVers = '2.1.1' %}
 ### {{linkVers}} **Latest**{: .label .label-primary} **LTM**{: .label .label-success}
 {: #latest }
 
