@@ -2,7 +2,7 @@
 # making updates to the accumulo website without requiring the dev
 # to maintain a local ruby development environment.
 
-FROM ruby:2.7.8-slim-bullseye as base
+FROM ruby:3.2.2-slim-bullseye as base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
