@@ -220,44 +220,44 @@
 </ul>
 
 <h2 id="example-use">Example use</h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">types</span> <span class="k">as</span> <span class="n">T</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span> <span class="n">pyspark.sql</span> <span class="kn">import</span> <span class="n">types</span> <span class="k">as</span> <span class="n">T</span>
 
 <span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="n">properties_file</span><span class="p">):</span>
-    <span class="s">"""Read Accumulo client properties file"""</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">properties_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="n">config</span><span class="p">.</span><span class="n">read_string</span><span class="p">(</span><span class="s">"[top]</span><span class="se">\n</span><span class="s">"</span> <span class="o">+</span> <span class="n">stream</span><span class="p">.</span><span class="n">read</span><span class="p">())</span>
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">'top'</span><span class="p">])</span>
+    <span class="sh">"""</span><span class="s">Read Accumulo client properties file</span><span class="sh">"""</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="nc">ConfigParser</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">properties_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">.</span><span class="nf">read_string</span><span class="p">(</span><span class="sh">"</span><span class="s">[top]</span><span class="se">\n</span><span class="sh">"</span> <span class="o">+</span> <span class="n">stream</span><span class="p">.</span><span class="nf">read</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nf">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="sh">'</span><span class="s">top</span><span class="sh">'</span><span class="p">])</span>
 
-<span class="n">properties</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="s">'/opt/muchos/install/accumulo-2.0.0/conf/accumulo-client.properties'</span><span class="p">)</span>
-<span class="n">properties</span><span class="p">[</span><span class="s">'table'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'demo_table'</span> <span class="c1"># Define Accumulo table where data will be written
-</span><span class="n">properties</span><span class="p">[</span><span class="s">'rowkey'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'id'</span>        <span class="c1"># Identify column to use as the key for Accumulo rows
+<span class="n">properties</span> <span class="o">=</span> <span class="nf">get_properties</span><span class="p">(</span><span class="sh">'</span><span class="s">/opt/muchos/install/accumulo-2.0.0/conf/accumulo-client.properties</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">properties</span><span class="p">[</span><span class="sh">'</span><span class="s">table</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="sh">'</span><span class="s">demo_table</span><span class="sh">'</span> <span class="c1"># Define Accumulo table where data will be written
+</span><span class="n">properties</span><span class="p">[</span><span class="sh">'</span><span class="s">rowkey</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="sh">'</span><span class="s">id</span><span class="sh">'</span>        <span class="c1"># Identify column to use as the key for Accumulo rows
 </span>
 <span class="c1"># define the schema
-</span><span class="n">schema</span> <span class="o">=</span> <span class="n">T</span><span class="p">.</span><span class="n">StructType</span><span class="p">([</span>
-  <span class="n">T</span><span class="p">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"sentiment"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="n">IntegerType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
-  <span class="n">T</span><span class="p">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"date"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
-  <span class="n">T</span><span class="p">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"query_string"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
-  <span class="n">T</span><span class="p">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
-  <span class="n">T</span><span class="p">.</span><span class="n">StructField</span><span class="p">(</span><span class="s">"text"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">)</span>
+</span><span class="n">schema</span> <span class="o">=</span> <span class="n">T</span><span class="p">.</span><span class="nc">StructType</span><span class="p">([</span>
+  <span class="n">T</span><span class="p">.</span><span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">sentiment</span><span class="sh">"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="nc">IntegerType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="p">.</span><span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">date</span><span class="sh">"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="p">.</span><span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">query_string</span><span class="sh">"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="p">.</span><span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">user</span><span class="sh">"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+  <span class="n">T</span><span class="p">.</span><span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span> <span class="n">T</span><span class="p">.</span><span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">)</span>
 <span class="p">])</span>
 
 <span class="c1"># Read from Accumulo
 </span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span>
       <span class="p">.</span><span class="n">read</span>
-      <span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="s">"com.microsoft.accumulo"</span><span class="p">)</span>
-      <span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>  <span class="c1"># define Accumulo properties
-</span>      <span class="p">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">))</span>     <span class="c1"># define schema for data retrieval
+      <span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">com.microsoft.accumulo</span><span class="sh">"</span><span class="p">)</span>
+      <span class="p">.</span><span class="nf">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>  <span class="c1"># define Accumulo properties
+</span>      <span class="p">.</span><span class="nf">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">))</span>     <span class="c1"># define schema for data retrieval
 </span>
 <span class="c1"># Write to Accumulo
-</span><span class="n">properties</span><span class="p">[</span><span class="s">'table'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'output_table'</span>
+</span><span class="n">properties</span><span class="p">[</span><span class="sh">'</span><span class="s">table</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="sh">'</span><span class="s">output_table</span><span class="sh">'</span>
 
 <span class="p">(</span><span class="n">df</span>
  <span class="p">.</span><span class="n">write</span>
- <span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="s">"com.microsoft.accumulo"</span><span class="p">)</span>
- <span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>
- <span class="p">.</span><span class="n">save</span><span class="p">())</span>
+ <span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">com.microsoft.accumulo</span><span class="sh">"</span><span class="p">)</span>
+ <span class="p">.</span><span class="nf">options</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>
+ <span class="p">.</span><span class="nf">save</span><span class="p">())</span>
 </code></pre></div></div>
 
 <p>See the <a href="https://github.com/microsoft/masc/blob/master/connector/examples/AccumuloSparkConnector.ipynb">demo notebook</a> for more examples.</p>
