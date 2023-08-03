@@ -333,7 +333,7 @@ overridden by using the `--local-wal-directories` option on the tool. It can be 
 **I am trying to start the manager after upgrading but the upgrade is aborting with the following message:**
   `org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.`
 
-You can use the admin fate command to delete completed FATE transactions using the following:
+For versions 2.1 and later, you can use the admin fate command to delete completed FATE transactions using the following:
 
 * Start tservers
 * Start shell
@@ -342,6 +342,11 @@ You can use the admin fate command to delete completed FATE transactions using t
 * Start managers once there are no more fate operations
 
 If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.
+
+Prior to 2.1, the same step apply, but the fate command is accessed with the Accumulo shell instead of the admin command.  The shell commands are as follows: 
+
+use `fate print` to list transactions
+use `fate delete` to delete completed transactions
 
 ## File Naming Conventions
 
