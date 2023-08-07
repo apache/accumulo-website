@@ -775,17 +775,22 @@ overridden by using the <code class="language-plaintext highlighter-rouge">--loc
 <p><strong>I am trying to start the manager after upgrading but the upgrade is aborting with the following message:</strong>
   <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.</code></p>
 
-<p>You can use the shell to delete completed FATE transactions using the following:</p>
+<p>For versions 2.1 and later, you can use the admin fate command to delete completed FATE transactions using the following:</p>
 
 <ul>
   <li>Start tservers</li>
   <li>Start shell</li>
-  <li>Run <code class="language-plaintext highlighter-rouge">fate print</code> to list all</li>
-  <li>If completed, just delete with <code class="language-plaintext highlighter-rouge">fate delete</code></li>
+  <li>Run <code class="language-plaintext highlighter-rouge">accumulo admin fate --print</code> to list all transactions</li>
+  <li>If the transactions have completed, just delete with them with <code class="language-plaintext highlighter-rouge">accumulo admin fate --delete TXID [TXID...]</code></li>
   <li>Start managers once there are no more fate operations</li>
 </ul>
 
 <p>If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.</p>
+
+<p>Prior to 2.1, the same steps apply, but the fate command is accessed with the Accumulo shell instead of the admin command.  The shell commands are as follows:</p>
+
+<p>use <code class="language-plaintext highlighter-rouge">fate print</code> to list transactions
+use <code class="language-plaintext highlighter-rouge">fate delete</code> to delete completed transactions</p>
 
 <h2 id="file-naming-conventions">File Naming Conventions</h2>
 
