@@ -343,7 +343,7 @@ For versions 2.1 and later, you can use the admin fate command to delete complet
 
 If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.
 
-Prior to 2.1, the same step apply, but the fate command is accessed with the Accumulo shell instead of the admin command.  The shell commands are as follows: 
+Prior to 2.1, the same steps apply, but the fate command is accessed with the Accumulo shell instead of the admin command.  The shell commands are as follows: 
 
 use `fate print` to list transactions
 use `fate delete` to delete completed transactions
