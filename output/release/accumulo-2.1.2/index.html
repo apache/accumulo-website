@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.3/dt-1.10.12/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 2.1.1</title>
+<title>Apache Accumulo 2.1.2</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -140,21 +140,26 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 2.1.1</h1>
+          <h1 class="title">Apache Accumulo 2.1.2</h1>
           
           
 
-<p>19 Jun 2023</p>
+<p>14 Aug 2023</p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
+        <li class="previous"><a href="/release/accumulo-2.1.1/">&laquo;&nbsp;Apache Accumulo 2.1.1</a></li>
       
     
       
-        <li class="next"><a href="/release/accumulo-2.1.2/">Apache Accumulo 2.1.2&nbsp;&raquo;</a></li>
+        <li class="next"><a href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
+
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
+  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.1/">the latest release notes</a>.</p>
+</div>
 
 
 
@@ -165,111 +170,102 @@
 
 <h2 id="about">About</h2>
 
-<p>Apache Accumulo 2.1.1 is a patch release of the 2.1.0 LTM line. It contains
-many bug fixes and minor enhancements, including a critical fix. This version
-supersedes 2.1.0. Users upgrading to 2.1 should upgrade directly to this
-version instead of 2.1.0.</p>
+<p>Apache Accumulo 2.1.2 is a patch release of the 2.1.0 LTM line. It contains
+bug fixes and minor enhancements. This version supersedes 2.1.1. Users
+upgrading to 2.1 should upgrade directly to this version instead of 2.1.1.</p>
 
-<p>Included here are some highlights of the most interesting bugs and features
-fixed in 2.1.1. Several trivial bugs were also fixed that related to the
-presentation of information on the monitor, or to avoid spammy/excessive
-logging, but are too numerous to list here. For the full set of bug fixes,
-please see the commit history or issue tracker.</p>
+<p>Included here are some highlights of the most interesting bugs fixed and features
+added in 2.1.2. For the full set of bug fixes, please see the commit history
+or issue tracker.</p>
 
 <p>NOTE: This 2.1 release also includes any applicable bug fixes and improvements
 that occurred in 1.10.3 and earlier.</p>
 
-<h3 id="critical-fixes">Critical Fixes</h3>
-
-<ul>
-  <li><a href="https://www.cve.org/CVERecord?id=CVE-2023-34340">CVE-2023-34340</a> Fixed a critical issue that improperly allowed a user under
-some conditions to authenticate to Accumulo using an invalid password.</li>
-</ul>
-
 <h3 id="notable-improvements">Notable Improvements</h3>
-
-<p>Improvements that add capabilities:</p>
-
-<ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3180">#3180</a> Enable users to provide per-volume Hadoop Filesystem
-configuration overrides via the Accumulo configuration. Hadoop Filesystem
-objects are configured by the standard Hadoop mechanisms (default
-configuration, core-site.xml, hdfs-site.xml, etc.), but these configuration
-files don’t allow for the same property to be specified with different values
-for different namespaces. This change allows users to specify different
-property values for different Accumulo volumes, which will be applied to the
-Hadoop Filesystem object created for each Accumulo volume</li>
-  <li><a href="https://github.com/apache/accumulo/issues/1169">#1169</a>, <a href="https://github.com/apache/accumulo/issues/3142">#3142</a> Add configuration option for users to select
-how the last location field is used, so users have better control over
-initial assignments on restarts</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3400">#3400</a> Inject environment injected into ContextClassLoaderFactory SPI
-so implementations can read and make use of Accumulo’s own configuration</li>
-</ul>
 
 <p>Improvements that affect performance:</p>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3175">#3175</a> Reset number of locks in SynchronousLoadingBlockCache from
-2017 back to 5003, the value that it was in 1.10. <a href="https://github.com/apache/accumulo/issues/3226">#3226</a> Also,
-modified the lock to be fair, which allows the different scan threads in the
-server to make progress in a more fair manner when they need to load a block
-into the cache</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3077">#3077</a>, <a href="https://github.com/apache/accumulo/issues/3079">#3079</a>, <a href="https://github.com/apache/accumulo/issues/3083">#3083</a>, <a href="https://github.com/apache/accumulo/issues/3123">#3123</a> Avoid filling
-OS page cache by calling <code class="language-plaintext highlighter-rouge">setDropBehind</code> on the FS data stream when
-performing likely one-time file accesses, as with WAL and compaction input
-and output files. This should allow files that might benefit more from
-caching to stay in the cache longer. <a href="https://github.com/apache/accumulo/issues/3083">#3083</a> and <a href="https://github.com/apache/accumulo/issues/3123">#3123</a>
-introduces new properties, table.compaction.major.output.drop.cache and
-table.compaction.minor.output.drop.cache, for dropping pages from the OS page
-cache for compaction output files. These changes will only have an impact on
-HDFS FileSystem implementations and operating systems that support the
-underlying OS system call. See associated issue, <a href="https://issues.apache.org/jira/browse/HDFS-16864">HDFS-16864</a>, that will
-improve the underlying implementation when resolved.</li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3499">#3499</a>, <a href="https://github.com/apache/accumulo/issues/3543">#3543</a> <a href="https://github.com/apache/accumulo/issues/3549">#3549</a> Made some optimizations around the processing of file
+references in the GC code.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3500">#3500</a>, <a href="https://github.com/apache/accumulo/issues/3509">#3509</a> TabletFile constructor was calling Path.getParent() which was spending
+a lot of time performing Path validation. Modified the constructor to reduce the calls to Path.getParent.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3541">#3541</a>, <a href="https://github.com/apache/accumulo/issues/3542">#3542</a> The TabletGroupWatcher threads in the Manager are responsible for tablet
+state and for making sure that tablets are balanced and assigned. The TabletGroupWatcher’s iterate over
+all of the tablets, then wait for 60s before beginning the next iteration. Backported a new property,
+MANAGER_TABLET_GROUP_WATCHER_INTERVAL, to make this wait time configurable.</p>
+  </li>
 </ul>
 
 <p>Improvements that help with administration:</p>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3445">#3445</a> Add emergency maintenance utility to edit properties in
-ZooKeeper while the Accumulo cluster is shut down</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3118">#3118</a> Added option to the <code class="language-plaintext highlighter-rouge">admin zoo-info-viewer</code> command to dump
-the ACLs on ZooKeeper nodes. This information can be used to fix znodes with
-incorrect ACLs during the upgrade process</li>
-</ul>
-
-<p>Other notable changes:</p>
-
-<ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3126">#3126</a> Remove unintentionally bundled htrace4 from our packaging;
-users will need to provide that for themselves if they require it on their
-classpath</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3436">#3436</a> Deprecate gc.trash.ignore property. The trash can be
-customized within Hadoop if one wishes to ignore it, or configure it to be
-ignored for only specific files (and this has been tested with recent
-versions of Hadoop); In version 3.0, this property will be removed, and it
-will no longer be possible to ignore the trash by changing this property</li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3678">#3678</a>, <a href="https://github.com/apache/accumulo/issues/3683">#3683</a> Added validation of property table.class.loader.context when it is set.
+If the context name is null, an empty string, results in an exception creating the classloader for the
+context, or if the resulting classloader is null, then an exception will be returned and the property
+will not be set.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3548">#3548</a>, <a href="https://github.com/apache/accumulo/issues/3561">#3561</a> Displayed Manager state prominently on the Monitor UI.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3383">#3383</a>, <a href="https://github.com/apache/accumulo/issues/3680">#3680</a> Prompt the user for confirmation when they attempt to set a deprecated
+property in the Shell as a way to get them to use the non-deprecated property.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3488">#3488</a>, <a href="https://github.com/apache/accumulo/issues/3612">#3612</a> Made tserver scans and compaction columns numerically sortable on the
+Monitor UI.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3233">#3233</a>, <a href="https://github.com/apache/accumulo/issues/3562">#3562</a> Added copy-properties option to createnamespace and createtable shell
+commands</p>
+  </li>
 </ul>
 
 <h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3134">#3134</a> Fixed Thrift issues due to incorrect setting of maxMessageSize</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3144">#3144</a>, <a href="https://github.com/apache/accumulo/issues/3150">#3150</a>, <a href="https://github.com/apache/accumulo/issues/3164">#3164</a> Fixed bugs in ScanServer that
-prevented a tablet from being scanned when some transient failures occurred</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3346">#3346</a>, <a href="https://github.com/apache/accumulo/issues/3366">#3366</a> Fixed tablet metadata verification task so it
-doesn’t unintentionally cause the server to halt</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3479">#3479</a> Fixed issue preventing servers from shutting down because they
-were still receiving assignments</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3492">#3492</a> Fixed a bug where bulk imports could cause compactions to hang</li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3674">#3674</a>, <a href="https://github.com/apache/accumulo/issues/3677">#3677</a>, <a href="https://github.com/apache/accumulo/issues/3685">#3685</a> An invalid context classloader property was preventing
+a minor compaction output file from being created, because the volume chooser class could not be loaded,
+which failed the minor compaction thread. Once the minor compaction thread is dead, it will prevent future minor compactions from starting, subsequently preventing the tablet from being closed normally. The fixes here
+include catching a broader range of exceptions in the minor compaction thread in an attempt to save it
+from dying and initiating a minor compaction before closing the compactable object in the tablet.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3630">#3630</a>, <a href="https://github.com/apache/accumulo/issues/3631">#3631</a> ClientContext incorrectly converting BatchWriter latency and timeout values</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3617">#3617</a>, <a href="https://github.com/apache/accumulo/issues/3622">#3622</a> Close LocalityGroupReader when IOException is thrown to release reference
+to a possibly corrupted stream in a cached block file.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3570">#3570</a>, <a href="https://github.com/apache/accumulo/issues/3571">#3571</a> Fix TabletGroupWatcher shutdown order</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3569">#3569</a>, <a href="https://github.com/apache/accumulo/issues/3579">#3579</a> <a href="https://github.com/apache/accumulo/issues/3644">#3644</a> Changes to ensure that scan sessions are cleaned up</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3553">#3553</a>, <a href="https://github.com/apache/accumulo/issues/3555">#3555</a> A failed user compaction would not retry and would hang</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/apache/accumulo/issues/3600">#3600</a> Normalized metric labels and structure</p>
+  </li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
 
 <p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
 
-<h2 id="211-github-project">2.1.1 GitHub Project</h2>
+<h2 id="212-github-project">2.1.2 GitHub Project</h2>
 
-<p><a href="https://github.com/apache/accumulo/projects/25">All tickets related to 2.1.1.</a></p>
+<p><a href="https://github.com/apache/accumulo/projects/29">All tickets related to 2.1.2.</a></p>
 
 
 
@@ -278,11 +274,11 @@ were still receiving assignments</li>
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pager">
       
-        <li class="previous"><a href="/release/accumulo-2.1.0/">&laquo;&nbsp;Apache Accumulo 2.1.0</a></li>
+        <li class="previous"><a href="/release/accumulo-2.1.1/">&laquo;&nbsp;Apache Accumulo 2.1.1</a></li>
       
     
       
-        <li class="next"><a href="/release/accumulo-2.1.2/">Apache Accumulo 2.1.2&nbsp;&raquo;</a></li>
+        <li class="next"><a href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
