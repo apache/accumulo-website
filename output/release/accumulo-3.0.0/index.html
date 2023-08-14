@@ -181,11 +181,27 @@ files or supplied on a per-process basis using the <code class="language-plainte
 <p>The replication feature was marked as deprecated in 2.0.0 and was removed in <a href="https://github.com/apache/accumulo/issues/3080">#3080</a>.
 TODO - Need to discuss what happens to the replication table</p>
 
+<h3 id="bulkimport-v1-was-removed">BulkImport v1 was removed</h3>
+
+<p>BulkImport v1 was removed in 3.0.0 (<a href="https://github.com/apache/accumulo/issues/3313">#3313</a>). Bulk Import v1 users should reference the
+2.0.0 <a href="https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api">bulk import release notes</a>.</p>
+
 <h3 id="filesystem-monitor-will-no-longer-stop-the-tabletserver">FileSystem monitor will no longer stop the TabletServer</h3>
 
 <p>In <a href="https://github.com/apache/accumulo/issues/1328">#1328</a> the <code class="language-plaintext highlighter-rouge">tserver.monitor.fs</code> property has been marked as deprecated
 and the background thread in the TabletServer was modified to <em>not</em> halt the TabletServer
 when one of the local disks becomes read-only.</p>
+
+<h3 id="garbagecollectionlogger-renamed-to-lowmemorydetector-is-no-longer-passive">GarbageCollectionLogger renamed to LowMemoryDetector, is no longer passive</h3>
+
+<p>The GarbageCollectionLogger would run in a Thread in the server components every 5 seconds
+and print a message to the log when the amount of free memory was less than 5% of the heap.
+<a href="https://github.com/apache/accumulo/issues/3161">#3161</a> renamed the class to LowMemoryDetector, adds new properties for the threshold,
+interval, and passivity. When operating in a passive mode, the LowMemoryDetector will log a
+message just like its predecessor. See the new GENERAL_LOW_MEM_*_PROTECTION properties for a
+description of the behavior change when these properties are enabled. <a href="https://github.com/apache/accumulo/issues/3288">#3288</a> added a
+new metric, accumulo.detected.low.memory, that reports a value of 1 when the server is low on
+memory.</p>
 
 <h3 id="other-notable-changes">Other Notable Changes</h3>
 
