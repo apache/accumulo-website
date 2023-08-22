@@ -71,12 +71,44 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 ## Current Releases
 
+{% assign linkVers = '3.0.0' %}
+### {{linkVers}} **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
+{: #latest }
+
+The {{linkVers}} release of Apache Accumulo&reg; is the latest bleeding edge
+release, containing the newest features, bug fixes, performance enhancements,
+and more that are expected to appear in a future LTM release. The linked 2.x
+documentation is still largely applicable to 3.x for now, except those items
+that were removed from 3.x. Updated documention specific for 3.x will be made
+available in a future update to this site.
+
+{% for srcbin in srcbinArray %}
+{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
+<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
+  <div class="col btn-group">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div><div class="col btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
+</div>
+{% endfor %}
+<div class="row btn-group-sm" style="margin: 20px">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+</div>
+
+
 {% assign linkVers = '2.1.2' %}
 ### {{linkVers}} **Latest**{: .label .label-primary} **LTM**{: .label .label-success}
 {: #latest }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
-current generation, containing the newest features, bug fixes, performance
+current stable generation, containing the newest bug fixes, performance
 enhancements, and more.
 
 {% for srcbin in srcbinArray %}
