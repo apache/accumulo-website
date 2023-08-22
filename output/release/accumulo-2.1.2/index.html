@@ -157,11 +157,6 @@
     </ul></nav>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="/release/accumulo-2.1.2/">the latest release notes</a>.</p>
-</div>
-
 
 
 <div class="alert alert-success" role="alert">
@@ -171,96 +166,72 @@
 
 <h2 id="about">About</h2>
 
-<p>Apache Accumulo 2.1.2 is a patch release of the 2.1.0 LTM line. It contains
-bug fixes and minor enhancements. This version supersedes 2.1.1. Users
-upgrading to 2.1 should upgrade directly to this version instead of 2.1.1.</p>
+<p>Apache Accumulo 2.1.2 is a patch release of the 2.1 LTM line. It contains bug
+fixes and minor enhancements. This version supersedes 2.1.1. Users upgrading to
+2.1 should upgrade directly to this version instead of 2.1.1.</p>
 
-<p>Included here are some highlights of the most interesting bugs fixed and features
-added in 2.1.2. For the full set of changes, please see the commit history
-or issue tracker.</p>
-
-<p>NOTE: This 2.1 release also includes any applicable bug fixes and improvements
-that occurred in 1.10.3 and earlier.</p>
+<p>Included here are some highlights of the most interesting bugs fixed and
+features added in 2.1.2. For the full set of changes, please see the commit
+history or issue tracker.</p>
 
 <h3 id="notable-improvements">Notable Improvements</h3>
 
 <p>Improvements that affect performance:</p>
 
 <ul>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3499">#3499</a>, <a href="https://github.com/apache/accumulo/issues/3543">#3543</a> <a href="https://github.com/apache/accumulo/issues/3549">#3549</a> Made some optimizations around the processing of file
-references in the GC code.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3500">#3500</a>, <a href="https://github.com/apache/accumulo/issues/3509">#3509</a> TabletFile constructor was calling Path.getParent() which was spending
-a lot of time performing Path validation. Modified the constructor to reduce the calls to Path.getParent.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3541">#3541</a>, <a href="https://github.com/apache/accumulo/issues/3542">#3542</a> The TabletGroupWatcher threads in the Manager are responsible for tablet
-state and for making sure that tablets are balanced and assigned. The TabletGroupWatcher’s iterate over
-all of the tablets, then wait for 60s before beginning the next iteration. Backported a new property,
-MANAGER_TABLET_GROUP_WATCHER_INTERVAL, to make this wait time configurable.</p>
-  </li>
+  <li><a href="https://github.com/apache/accumulo/issues/3499">#3499</a>, <a href="https://github.com/apache/accumulo/issues/3543">#3543</a>, <a href="https://github.com/apache/accumulo/issues/3549">#3549</a>, <a href="https://github.com/apache/accumulo/issues/3500">#3500</a>, <a href="https://github.com/apache/accumulo/issues/3509">#3509</a>
+Made some optimizations around the processing of file references in the
+accumulo-gc code, including optimizing a constructor in a class called
+<code class="language-plaintext highlighter-rouge">TabletFile</code> used to track file references.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3541">#3541</a>, <a href="https://github.com/apache/accumulo/issues/3542">#3542</a> Added a new property,
+<a href="/docs/2.x/configuration/server-properties#manager_tablet_watcher_interval">manager.tablet.watcher.interval</a>, to make the time to wait between
+scanning the metadata table for outstanding tablet actions (such as assigning
+tablets, etc.) to be configurable.</li>
 </ul>
 
 <p>Improvements that help with administration:</p>
 
 <ul>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3678">#3678</a>, <a href="https://github.com/apache/accumulo/issues/3683">#3683</a> Added validation of property table.class.loader.context when it is set.
-If the context name is null, an empty string, results in an exception creating the classloader for the
-context, or if the resulting classloader is null, then an exception will be returned and the property
-will not be set.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3548">#3548</a>, <a href="https://github.com/apache/accumulo/issues/3561">#3561</a> Added a banner to the manager page in the Monitor that displays the 
-manager state and goal state when they are not normal.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3383">#3383</a>, <a href="https://github.com/apache/accumulo/issues/3680">#3680</a> Prompt the user for confirmation when they attempt to set a deprecated
-property in the Shell as a way to get them to use the non-deprecated property.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3488">#3488</a>, <a href="https://github.com/apache/accumulo/issues/3612">#3612</a> Made tserver scans and compaction columns numerically sortable on the
-Monitor UI.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3233">#3233</a>, <a href="https://github.com/apache/accumulo/issues/3562">#3562</a> Added copy-properties option to createnamespace and createtable shell
-commands.</p>
-  </li>
+  <li><a href="https://github.com/apache/accumulo/issues/3678">#3678</a>, <a href="https://github.com/apache/accumulo/issues/3683">#3683</a> Added extra validation of property
+<a href="/docs/2.x/configuration/server-properties#table_class_loader_context">table.class.loader.context</a> at the time it is set, to prevent
+invalid contexts from being set on a table.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3548">#3548</a>, <a href="https://github.com/apache/accumulo/issues/3561">#3561</a> Added a banner to the manager page in the
+Monitor that displays the manager state and goal state when they are not
+normal.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3383">#3383</a>, <a href="https://github.com/apache/accumulo/issues/3680">#3680</a> Prompt the user for confirmation when they
+attempt to set a deprecated property in the Shell as a way to get them to use
+the non-deprecated property.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3233">#3233</a>, <a href="https://github.com/apache/accumulo/issues/3562">#3562</a> Add option to <code class="language-plaintext highlighter-rouge">--exclude-parent</code> to allow
+creating a table or namespace in the shell initialized with only the
+properties set on another table or namespace, but not those the other table
+or namespace were inheriting from their parent.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3600">#3600</a> Normalized metric labels and structure.</li>
 </ul>
 
 <h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
 
 <ul>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3674">#3674</a>, <a href="https://github.com/apache/accumulo/issues/3677">#3677</a>, <a href="https://github.com/apache/accumulo/issues/3685">#3685</a> An invalid context classloader property was preventing
-a minor compaction output file from being created, because the volume chooser class could not be loaded,
-which failed the minor compaction thread. Once the minor compaction thread is dead, it will prevent future minor compactions from starting, subsequently preventing the tablet from being closed normally. The fixes here
-include catching a broader range of exceptions in the minor compaction thread in an attempt to save it
-from dying and initiating a minor compaction before closing the compactable object in the tablet.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3630">#3630</a>, <a href="https://github.com/apache/accumulo/issues/3631">#3631</a> A bug where ClientContext was incorrectly converting BatchWriter
-latency and timeout values was fixed.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3617">#3617</a>, <a href="https://github.com/apache/accumulo/issues/3622">#3622</a> Close LocalityGroupReader when IOException is thrown to release reference
-to a possibly corrupted stream in a cached block file.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3570">#3570</a>, <a href="https://github.com/apache/accumulo/issues/3571">#3571</a> Fixed the TabletGroupWatcher shutdown order.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3569">#3569</a>, <a href="https://github.com/apache/accumulo/issues/3579">#3579</a> <a href="https://github.com/apache/accumulo/issues/3644">#3644</a> Changes to ensure that scan sessions are cleaned up.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3553">#3553</a>, <a href="https://github.com/apache/accumulo/issues/3555">#3555</a> A bug where a failed user compaction would not retry and would hang
-was fixed.</p>
-  </li>
-  <li>
-    <p><a href="https://github.com/apache/accumulo/issues/3600">#3600</a> Normalized metric labels and structure.</p>
-  </li>
+  <li><a href="https://github.com/apache/accumulo/issues/3488">#3488</a>, <a href="https://github.com/apache/accumulo/issues/3612">#3612</a> Fixed sorting of some columns on the monitor</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3674">#3674</a>, <a href="https://github.com/apache/accumulo/issues/3677">#3677</a>, <a href="https://github.com/apache/accumulo/issues/3685">#3685</a> Prevent an invalid table
+context and other errors from killing the minor compaction thread and
+preventing a tablet from being closed and shutting down normally.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3630">#3630</a>, <a href="https://github.com/apache/accumulo/issues/3631">#3631</a> Fix a bug where BatchWriter latency and
+timeout values were incorrectly converted to the wrong time unit..</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3617">#3617</a>, <a href="https://github.com/apache/accumulo/issues/3622">#3622</a> Close LocalityGroupReader when IOException is
+thrown to release reference to a possibly corrupted stream in a cached block
+file.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3570">#3570</a>, <a href="https://github.com/apache/accumulo/issues/3571">#3571</a> Fixed the TabletGroupWatcher shutdown order.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3569">#3569</a>, <a href="https://github.com/apache/accumulo/issues/3579">#3579</a> <a href="https://github.com/apache/accumulo/issues/3644">#3644</a> Changes to ensure that scan
+sessions are cleaned up.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3553">#3553</a>, <a href="https://github.com/apache/accumulo/issues/3555">#3555</a> A bug where a failed user compaction would not
+retry and would hang was fixed.</li>
+</ul>
+
+<h3 id="other-notable-changes">Other Notable Changes</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3550">#3550</a> The contents of the contrib directory have been moved to more
+appropriate locations for build-related resources</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
