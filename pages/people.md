@@ -109,6 +109,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Eugene Cheipesh     |                                                                   |                       |
 | Filipe Rodrigues    |                                                                   | [GMT][GMT]            |
 | Gary Singh          | [Sabre Engineering][SABRE]                                        | [ET][ET]              |
+| Hannah Pellon       | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
 | Harjit Singh        |                                                                   | [ET][ET]              |
 | Hasan Gürcan        |                                                                   | [CEST][CEST]          |
 | Hayden Marchant     |                                                                   |                       |
