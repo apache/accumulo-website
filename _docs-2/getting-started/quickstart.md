@@ -4,7 +4,7 @@ category: getting-started
 order: 1
 skip_doc_h1: true
 ---
-# User Manual (2.x)
+# User Manual (2.x and 3.x)
 
 Starting with Accumulo 2.0, the user manual now lives on the website as a series
 of web pages. Previously, it was one large pdf document that was only generated

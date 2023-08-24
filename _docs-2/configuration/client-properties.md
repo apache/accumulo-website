@@ -1,5 +1,5 @@
 ---
-title: Client Properties
+title: Client Properties (2.x)
 category: configuration
 order: 3
 ---

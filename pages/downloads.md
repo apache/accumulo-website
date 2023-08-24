@@ -99,7 +99,7 @@ available in a future update to this site.
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs3">Java API</a>
 </div>
 
 
