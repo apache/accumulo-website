@@ -10,9 +10,7 @@ Search results are limited to blog posts, release notes, and the 2.x documentati
     <form action="get" id="site_search">
       <div class="input-group">
         <input class="form-control" type="text" id="search_box" placeholder="Search for...">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">Search</button>
-        </span>
+        <button class="btn btn-secondary" type="submit">Search</button>
       </div>
     </form>
   </div>

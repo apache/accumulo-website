@@ -45,10 +45,10 @@ follow discussions as they happen.
 {: .table }
 | Name              | Description                                      | Read | Follow | Post |
 |-------------------|--------------------------------------------------|------|--------|------|
-| **user**          | General user questions, help, and announcements  | [<span class="glyphicon glyphicon-search"/> Archive][U_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][U_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][U_UN] | [<span class="glyphicon glyphicon-envelope"/> Post][U_P] |
-| **dev**           | Contributor discussions and development activity | [<span class="glyphicon glyphicon-search"/> Archive][D_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][D_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][D_UN] | [<span class="glyphicon glyphicon-envelope"/> Post][D_P] |
-| **commits**       | Code changes                                     | [<span class="glyphicon glyphicon-search"/> Archive][C_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][C_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][C_UN] | |
-| **notifications** | Automated notifications (GitHub, etc.)             | [<span class="glyphicon glyphicon-search"/> Archive][N_A] | [<span class="glyphicon glyphicon-plus"/> Subscribe][N_SU] [<span class="glyphicon glyphicon-remove"/> Unsubscribe][N_UN] | |
+| **user**          | General user questions, help, and announcements  | [<i class="fa-solid fa-magnifying-glass"></i> Archive][U_A] | [<i class="fa-solid fa-plus"></i> Subscribe][U_SU] [<i class="fa-solid fa-xmark"></i> Unsubscribe][U_UN] | [<i class="fa-solid fa-envelope"></i> Post][U_P] |
+| **dev**           | Contributor discussions and development activity | [<i class="fa-solid fa-magnifying-glass"></i> Archive][D_A] | [<i class="fa-solid fa-plus"></i> Subscribe][D_SU] [<i class="fa-solid fa-xmark"></i> Unsubscribe][D_UN] | [<i class="fa-solid fa-envelope"></i> Post][D_P] |
+| **commits**       | Code changes                                     | [<i class="fa-solid fa-magnifying-glass"></i> Archive][C_A] | [<i class="fa-solid fa-plus"></i> Subscribe][C_SU] [<i class="fa-solid fa-xmark"></i> Unsubscribe][C_UN] | |
+| **notifications** | Automated notifications (GitHub, etc.)             | [<i class="fa-solid fa-magnifying-glass"></i> Archive][N_A] | [<i class="fa-solid fa-plus"></i> Subscribe][N_SU] [<i class="fa-solid fa-xmark"></i> Unsubscribe][N_UN] | |
 
 ## Slack
 

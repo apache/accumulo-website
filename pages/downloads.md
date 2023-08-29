@@ -12,8 +12,8 @@ var updateLinks = function(mirror) {
 };
 
 var mirrorsCallback = function(json) {
-  var htmlContent = '<div class="row"><div class="col-md-3"><h5>Select an Apache download mirror:</h5></div>' +
-    '<div class="col-md-5"><select class="form-control" id="apache-mirror-select">';
+  var htmlContent = '<div class="row align-items-center mb-3"><div class="col-3"><h5>Select an Apache download mirror:</h5></div>' +
+    '<div class="col-5"><select class="form-select" id="apache-mirror-select">';  
   htmlContent += '<optgroup label="Preferred Mirror (based on location)">';
   htmlContent += '<option selected="selected">' + json.preferred + '</option>';
   htmlContent += '</optgroup>';
@@ -61,18 +61,18 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 {% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
 {% assign downloadsLink = 'https://downloads.apache.org' %}
-{% assign glyphSave = '&nbsp;<span class="glyphicon glyphicon-cloud-download"></span>' %}
-{% assign glyphLock = '&nbsp;<span class="glyphicon glyphicon-lock"></span>' %}
+{% assign glyphSave = '&nbsp;<i class="fa-solid fa-cloud-arrow-down"></i>' %}
+{% assign glyphLock = '&nbsp;<i class="fa-solid fa-lock"></i>' %}
 {% assign srcbinArray = 'src bin' | split: ' ' %}
 {% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
-{% assign btnSigStyle = 'class="btn btn-default" style="font-family: monospace"' %}
-{% assign btnHashStyle = 'class="btn btn-default" style="font-family: monospace"' %}
-{% assign btnDocStyle = 'class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
+{% assign btnSigStyle = 'class="btn btn-secondary" style="font-family: monospace"' %}
+{% assign btnHashStyle = 'class="btn btn-secondary" style="font-family: monospace"' %}
+{% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
 
 ## Current Releases
 
 {% assign linkVers = '3.0.0' %}
-### {{linkVers}} **Latest**{: .label .label-primary} **non-LTM**{: .label .label-warning}
+### {{linkVers}} **Latest**{: .badge .bg-primary} **non-LTM**{: .badge .bg-warning}
 {: #latest }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest bleeding edge
@@ -86,15 +86,14 @@ available in a future update to this site.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
+  <div class="col-auto btn-group">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  </div><div class="col btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
     <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
   </div>
 </div>
 {% endfor %}
-<div class="row btn-group-sm" style="margin: 20px">
+<div class="btn-group-sm" style="margin: 20px">
   <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
@@ -104,7 +103,7 @@ available in a future update to this site.
 
 
 {% assign linkVers = '2.1.2' %}
-### {{linkVers}} **Latest**{: .label .label-primary} **LTM**{: .label .label-success}
+### {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
 {: #latest }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
@@ -115,15 +114,14 @@ enhancements, and more.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
+  <div class="col-auto btn-group">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  </div><div class="col btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
     <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
   </div>
 </div>
 {% endfor %}
-<div class="row btn-group-sm" style="margin: 20px">
+<div class="btn-group-sm" style="margin: 20px">
   <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
@@ -133,7 +131,7 @@ enhancements, and more.
 
 
 {% assign linkVers = '1.10.3' %}
-### {{linkVers}} **Legacy**{: .label .label-default} **LTM**{: .label .label-success}
+### {{linkVers}} **Legacy**{: .badge .bg-secondary} **LTM**{: .badge .bg-success}
 {: #legacy }
 
 The most recent legacy (1.x) release of Apache Accumulo&reg; is version
@@ -145,15 +143,14 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
+  <div class="col-auto btn-group">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  </div><div class="col btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
     <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
   </div>
 </div>
 {% endfor %}
-<div class="row btn-group-sm" style="margin: 20px">
+<div class="btn-group-sm" style="margin: 20px">
   <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
   <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
   <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
@@ -162,12 +159,12 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 </div>
 
 
-## <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></small> Legend
+## <small><i class="fa-solid fa-circle-info" aria-hidden="true"></i></small> Legend
 {: #legend }
 
-**LTM**{: .label .label-success} / **non-LTM**{: .label .label-warning} indicates a [Long Term Maintenance][LTM] release or not
+**LTM**{: .badge .bg-success} / **non-LTM**{: .badge .bg-warning} indicates a [Long Term Maintenance][LTM] release or not
 
-**Latest**{: .label .label-primary} / **Legacy**{: .label .label-default} indicates the latest or previous generation
+**Latest**{: .badge .bg-primary} / **Legacy**{: .badge .bg-secondary} indicates the latest or previous generation
 
 
 ## Older releases
