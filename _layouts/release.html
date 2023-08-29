@@ -8,43 +8,43 @@ layout: default
     {% assign nextIndex = forloop.index0 | plus: 1 %}{% assign releaseNext = all_releases[nextIndex] %}
     {% capture prevPage %}
       {% if forloop.last or forloop.first != true %}
-        <li class="previous"><a href="{{ site.baseurl }}{{ releasePrev.url }}">&laquo;&nbsp;{{ releasePrev.title }}</a></li>
+        <li class="page-item"><a class="page-link" href="{{ site.baseurl }}{{ releasePrev.url }}">&laquo;&nbsp;{{ releasePrev.title }}</a></li>
       {% endif %}
     {% endcapture %}
     {% capture nextPage %}
       {% if forloop.first or forloop.last != true %}
-        <li class="next"><a href="{{ site.baseurl }}{{ releaseNext.url }}">{{ releaseNext.title }}&nbsp;&raquo;</a></li>
+        <li class="page-item"><a class="page-link" href="{{ site.baseurl }}{{ releaseNext.url }}">{{ releaseNext.title }}&nbsp;&raquo;</a></li>
       {% endif %}
     {% endcapture %}
   {% endif %}
 {% endfor %}
 <p>{{ page.date | date_to_string }}</p>
-<nav aria-label="Navigate Release Notes"><ul class="pager">{{ prevPage }}{{ nextPage }}</ul></nav>
+<nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">{{ prevPage }}{{ nextPage }}</ul></nav>
 
 {% if page.draft %}
 <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  <p>These are <strong>draft</strong> release notes for a future release of Accumulo!</p>
-  <p>Please view <a class="alert-link" href="{{ site.baseurl }}/release/accumulo-{{ site.latest_release }}/">the latest release notes</a>.</p>
+  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
+  Please view <a class="alert-link" href="{{ site.baseurl }}/release/accumulo-{{ site.latest_release }}/">the latest release notes</a>.
 </div>
 {% endif %}
 
 {% if page.archived_critical %}
 <div class="alert alert-danger" role="alert">
-  <p><strong>WARNING:</strong> This version of Accumulo has critical bugs fixed in newer versions.</p>
-  <p>Please check <a class="alert-link" href="{{ site.baseurl }}/release/">our release archive</a> for a newer version.</p>
+  <strong>WARNING:</strong> This version of Accumulo has critical bugs fixed in newer versions.<br>
+  Please check <a class="alert-link" href="{{ site.baseurl }}/release/">our release archive</a> for a newer version.
 </div>
 {% elsif page.archived %}
 <div class="alert alert-warning" role="alert">
-  <p>This version of Accumulo has been superceded by a newer version.</p>
-  <p>Please check <a class="alert-link" href="{{ site.baseurl }}/release/">our release archive</a> for a newer version.</p>
+  This version of Accumulo has been superceded by a newer version.<br>
+  Please check <a class="alert-link" href="{{ site.baseurl }}/release/">our release archive</a> for a newer version.
 </div>
 {% elsif page.LTM %}
 <div class="alert alert-success" role="alert">
-  <p>This version is a current <strong><a class="alert-link" href="{{ site.baseurl }}/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.</p>
+  This version is a current <strong><a class="alert-link" href="{{ site.baseurl }}/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.
 </div>
 {% else %}
 <div class="alert alert-warning" role="alert">
-  <p>This version is not a <a class="alert-link" href="{{ site.baseurl }}/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.</p>
+  This version is not a <a class="alert-link" href="{{ site.baseurl }}/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.
 </div>
 {% endif %}
 
@@ -53,4 +53,4 @@ layout: default
 <hr>
 
 <p><strong>View all releases in the <a href="{{ site.baseurl }}/release/">archive</a></strong></p>
-<nav aria-label="Navigate Release Notes"><ul class="pager">{{ prevPage }}{{ nextPage }}</ul></nav>
+<nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">{{ prevPage }}{{ nextPage }}</ul></nav>
