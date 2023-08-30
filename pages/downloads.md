@@ -85,20 +85,24 @@ available in a future update to this site.
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col-auto btn-group">
+<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group col-auto">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    <div class="btn-group">
+      <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+      <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    </div>
   </div>
 </div>
 {% endfor %}
-<div class="btn-group-sm" style="margin: 20px">
-  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs3">Java API</a>
+<div class="row" style="margin: 20px;">
+  <div class="btn-group-sm">
+    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+    <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs3">Java API</a>
+  </div>
 </div>
 
 
@@ -113,20 +117,24 @@ enhancements, and more.
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col-auto btn-group">
+<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group col-auto">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    <div class="btn-group">
+      <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+      <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    </div>
   </div>
 </div>
 {% endfor %}
-<div class="btn-group-sm" style="margin: 20px">
-  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+<div class="row" style="margin: 20px;">
+  <div class="btn-group-sm">
+    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+    <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
+  </div>
 </div>
 
 
@@ -142,20 +150,24 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col-auto btn-group">
+<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group col-auto">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    <div class="btn-group">
+      <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+      <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+    </div>
   </div>
 </div>
 {% endfor %}
-<div class="btn-group-sm" style="margin: 20px">
-  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
+<div class="row" style="margin: 20px;">
+  <div class="btn-group-sm">
+    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
+    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
+  </div>
 </div>
 
 
