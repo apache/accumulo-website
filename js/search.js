@@ -30,10 +30,9 @@ jQuery(function () {
       $search_status.html('No results found!');
       return;
     }
-    
+
     $search_status.html('Found ' + results.length + ' results for "' + query + '"');
     $search_results.empty();
-    $search_results.append('<tbody>');
     results.forEach(function (result) {
       var item = loaded_data[result.ref];
       var n = item.content.search(query) - 50
@@ -43,7 +42,6 @@ jQuery(function () {
       var appendString = '<tr><td><a href="' + item.url + '">' + item.title + '</a><td>' + item.content.substring(n, n + 100) + '</tr>';
       $search_results.append(appendString);
     });
-    $search_results.append('</tbody>');
 
   }
 });
