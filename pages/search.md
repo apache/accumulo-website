@@ -20,8 +20,7 @@ Search results are limited to blog posts, release notes, and the 2.x documentati
 
 <div id="search_status"></div>
 
-<table class="table table-striped" id="search_results"></table>
+<table class="table table-striped"><tbody id="search_results"></tbody></table>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/1.0.0/lunr.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
 <script src="/js/search.js"></script>
