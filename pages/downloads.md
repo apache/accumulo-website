@@ -61,8 +61,8 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 {% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
 {% assign downloadsLink = 'https://downloads.apache.org' %}
-{% assign glyphSave = '&nbsp;<i class="fa-solid fa-cloud-arrow-down"></i>' %}
-{% assign glyphLock = '&nbsp;<i class="fa-solid fa-lock"></i>' %}
+{% assign glyphSave = '&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span>' %}
+{% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
 {% assign srcbinArray = 'src bin' | split: ' ' %}
 {% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
 {% assign btnSigStyle = 'class="btn btn-secondary" style="font-family: monospace"' %}
@@ -159,7 +159,7 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 </div>
 
 
-## <small><i class="fa-solid fa-circle-info" aria-hidden="true"></i></small> Legend
+## <small><span class="fa-solid fa-circle-info" aria-hidden="true"></span></small> Legend
 {: #legend }
 
 **LTM**{: .badge .bg-success} / **non-LTM**{: .badge .bg-warning} indicates a [Long Term Maintenance][LTM] release or not
