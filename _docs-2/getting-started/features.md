@@ -314,8 +314,8 @@ performance.  It displays table sizes, ingest and query statistics, server
 load, and last-update information.  It also allows the user to view recent
 diagnostic logs and traces.
 
-<a class="thumbnail" href="/images/accumulo-monitor-1.png">
-<img src="/images/accumulo-monitor-1.png" alt="monitor overview"/>
+<a class="p-3 border rounded d-block" href="/images/accumulo-monitor-1.png">
+<img src="/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
 </a>
 
 ### Tracing
