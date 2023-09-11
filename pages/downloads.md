@@ -13,7 +13,7 @@ var updateLinks = function(mirror) {
 
 var mirrorsCallback = function(json) {
   var htmlContent = '<div class="row align-items-center mb-3"><div class="col-3"><h5>Select an Apache download mirror:</h5></div>' +
-    '<div class="col-5"><select class="form-select" id="apache-mirror-select">';  
+    '<div class="col-5"><select class="form-select" id="apache-mirror-select">';
   htmlContent += '<optgroup label="Preferred Mirror (based on location)">';
   htmlContent += '<option selected="selected">' + json.preferred + '</option>';
   htmlContent += '</optgroup>';
@@ -95,14 +95,12 @@ available in a future update to this site.
   </div>
 </div>
 {% endfor %}
-<div class="row" style="margin: 20px;">
-  <div class="btn-group-sm">
-    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
-    <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs3">Java API</a>
-  </div>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs3">Java API</a>
 </div>
 
 
@@ -127,14 +125,12 @@ enhancements, and more.
   </div>
 </div>
 {% endfor %}
-<div class="row" style="margin: 20px;">
-  <div class="btn-group-sm">
-    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
-    <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
-  </div>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x">Online Documentation</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/2.x/apidocs">Java API</a>
 </div>
 
 
@@ -160,14 +156,12 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
   </div>
 </div>
 {% endfor %}
-<div class="row" style="margin: 20px;">
-  <div class="btn-group-sm">
-    <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-    <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
-    <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
-  </div>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
 </div>
 
 
