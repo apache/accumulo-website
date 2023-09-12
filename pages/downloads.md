@@ -65,8 +65,8 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 {% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
 {% assign srcbinArray = 'src bin' | split: ' ' %}
 {% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
-{% assign btnSigStyle = 'class="btn btn-secondary" style="font-family: monospace"' %}
-{% assign btnHashStyle = 'class="btn btn-secondary" style="font-family: monospace"' %}
+{% assign btnSigStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
+{% assign btnHashStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
 {% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
 
 ## Current Releases
@@ -86,7 +86,7 @@ available in a future update to this site.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
-  <div class="btn-group">
+  <div class="btn-group me-2">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
@@ -116,7 +116,7 @@ enhancements, and more.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
-  <div class="btn-group">
+  <div class="btn-group me-2">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
@@ -147,7 +147,7 @@ The 1.10 release series will reach end-of-life on **November 1, 2023**.
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
-  <div class="btn-group">
+  <div class="btn-group me-2">
     <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
