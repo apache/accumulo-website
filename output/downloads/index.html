@@ -20,16 +20,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
 <title>Downloads</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
 <script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
 <script>
   // show location of canonical site if not currently on the canonical site
@@ -42,11 +42,11 @@
 
   $(function() {
     // decorate section headers with anchors
-    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    return $("h2, h3, h4, h5, h6").not(".accordion-header").each(function(i, el) {
       var $el, icon, id;
       $el = $(el);
       id = $el.attr('id');
-      icon = '<i class="fa-solid fa-link"></i>';
+      icon = '<span class="fa-solid fa-link"></span>';
       if (id) {
         return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
       }
@@ -63,67 +63,65 @@
 </head>
 <body style="padding-top: 100px">
 
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
-        /></a>
-    </div>
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbar-items">
-      <ul class="nav navbar-nav">
-        <li class="nav-link"><a href="/downloads">Download</a></li>
-        <li class="nav-link"><a href="/tour">Tour</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
-            <li><a href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
-            <li><a href="/release/">Archive</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
-            <li><a href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
-            <li><a href="/api">Public API</a></li>
-            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
-            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
-            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
-            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
-            <li><a href="/external-docs">External Docs</a></li>
-            <li><a href="/docs-archive/">Archive</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
           <ul class="dropdown-menu">
-            <li><a href="/contact-us">Contact Us</a></li>
-            <li><a href="/how-to-contribute">How To Contribute</a></li>
-            <li><a href="/people">People</a></li>
-            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
           </ul>
         </li>
-        <li class="nav-link"><a href="/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="https://www.apache.org">Apache Homepage <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/licenses/">License <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/security">Security <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa-solid fa-up-right-from-square"></i></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
           </ul>
         </li>
       </ul>
@@ -152,8 +150,8 @@ var updateLinks = function(mirror) {
 };
 
 var mirrorsCallback = function(json) {
-  var htmlContent = '<div class="row"><div class="col-md-3"><h5>Select an Apache download mirror:</h5></div>' +
-    '<div class="col-md-5"><select class="form-control" id="apache-mirror-select">';
+  var htmlContent = '<div class="row align-items-center mb-3"><div class="col-3"><h5>Select an Apache download mirror:</h5></div>' +
+    '<div class="col-5"><select class="form-select" id="apache-mirror-select">';
   htmlContent += '<optgroup label="Preferred Mirror (based on location)">';
   htmlContent += '<option selected="selected">' + json.preferred + '</option>';
   htmlContent += '</optgroup>';
@@ -201,7 +199,7 @@ $(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirr
 
 <h2 id="current-releases">Current Releases</h2>
 
-<h3 id="latest">3.0.0 <strong class="label label-primary">Latest</strong> <strong class="label label-warning">non-LTM</strong></h3>
+<h3 id="latest">3.0.0 <strong class="badge bg-primary">Latest</strong> <strong class="badge bg-warning">non-LTM</strong></h3>
 
 <p>The 3.0.0 release of Apache Accumulo® is the latest bleeding edge
 release, containing the newest features, bug fixes, performance enhancements,
@@ -210,102 +208,108 @@ documentation is still largely applicable to 3.x for now, except those items
 that were removed from 3.x. Updated documention specific for 3.x will be made
 available in a future update to this site.</p>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz" link-suffix="/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz">accumulo-3.0.0-src.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz" link-suffix="/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz">accumulo-3.0.0-src.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-src.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz" link-suffix="/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz">accumulo-3.0.0-bin.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz" link-suffix="/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz">accumulo-3.0.0-bin.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group-sm" style="margin: 20px">
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-3.0.0">Release Notes</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/3.0.0/README.md">README</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x">Online Documentation</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x/apidocs3">Java API</a>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-3.0.0">Release Notes</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/3.0.0/README.md">README</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x">Online Documentation</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x/apidocs3">Java API</a>
 </div>
 
-<h3 id="latest">2.1.2 <strong class="label label-primary">Latest</strong> <strong class="label label-success">LTM</strong></h3>
+<h3 id="latest">2.1.2 <strong class="badge bg-primary">Latest</strong> <strong class="badge bg-success">LTM</strong></h3>
 
 <p>The 2.1.2 release of Apache Accumulo® is the latest release on the
 current stable generation, containing the newest bug fixes, performance
 enhancements, and more.</p>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz" link-suffix="/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz">accumulo-2.1.2-src.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz" link-suffix="/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz">accumulo-2.1.2-src.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-src.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz" link-suffix="/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz">accumulo-2.1.2-bin.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz" link-suffix="/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz">accumulo-2.1.2-bin.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/2.1.2/accumulo-2.1.2-bin.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group-sm" style="margin: 20px">
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-2.1.2">Release Notes</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/2.1.2/README.md">README</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x">Online Documentation</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo-examples">Examples</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x/apidocs">Java API</a>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-2.1.2">Release Notes</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/2.1.2/README.md">README</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x">Online Documentation</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/docs/2.x/apidocs">Java API</a>
 </div>
 
-<h3 id="legacy">1.10.3 <strong class="label label-default">Legacy</strong> <strong class="label label-success">LTM</strong></h3>
+<h3 id="legacy">1.10.3 <strong class="badge bg-secondary">Legacy</strong> <strong class="badge bg-success">LTM</strong></h3>
 
 <p>The most recent legacy (1.x) release of Apache Accumulo® is version
 1.10.3.</p>
 
 <p>The 1.10 release series will reach end-of-life on <strong>November 1, 2023</strong>.</p>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz" link-suffix="/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz">accumulo-1.10.3-src.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz" link-suffix="/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz">accumulo-1.10.3-src.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-src.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group" style="margin-left: 20px; margin-bottom: 5px; display: block">
-  <div class="col btn-group">
-    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz" link-suffix="/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz">accumulo-1.10.3-bin.tar.gz&nbsp;<span class="glyphicon glyphicon-cloud-download"></span></a>
-  </div><div class="col btn-group">
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz.asc">ASC&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
-    <a class="btn btn-default" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz.sha512">SHA&nbsp;<span class="glyphicon glyphicon-lock"></span></a>
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a class="btn btn-primary" style="text-transform: none; font-family: monospace" href="https://www.apache.org/dyn/closer.lua/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz" link-suffix="/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz">accumulo-1.10.3-bin.tar.gz&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span></a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz.asc">ASC&nbsp;<span class="fa-solid fa-lock"></span></a>
+    <a class="btn btn-outline-secondary" style="font-family: monospace" href="https://downloads.apache.org/accumulo/1.10.3/accumulo-1.10.3-bin.tar.gz.sha512">SHA&nbsp;<span class="fa-solid fa-lock"></span></a>
   </div>
 </div>
 
-<div class="row btn-group-sm" style="margin: 20px">
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-1.10.3">Release Notes</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/1.10.3/README.md">README</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/accumulo_user_manual">User Manual</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/examples">Examples</a>
-  <a class="btn btn-default" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/apidocs">Java API</a>
+<div class="btn-group-sm" style="margin: 20px;">
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/release/accumulo-1.10.3">Release Notes</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="https://github.com/apache/accumulo/blob/rel/1.10.3/README.md">README</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/accumulo_user_manual">User Manual</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/examples">Examples</a>
+  <a class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px" href="/1.10/apidocs">Java API</a>
 </div>
 
-<h2 id="legend"><small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></small> Legend</h2>
+<h2 id="legend"><small><span class="fa-solid fa-circle-info" aria-hidden="true"></span></small> Legend</h2>
 
-<p><strong class="label label-success">LTM</strong> / <strong class="label label-warning">non-LTM</strong> indicates a <a href="/contributor/versioning.html#LTM" title="LTM Explained">Long Term Maintenance</a> release or not</p>
+<p><strong class="badge bg-success">LTM</strong> / <strong class="badge bg-warning">non-LTM</strong> indicates a <a href="/contributor/versioning.html#LTM" title="LTM Explained">Long Term Maintenance</a> release or not</p>
 
-<p><strong class="label label-primary">Latest</strong> / <strong class="label label-default">Legacy</strong> indicates the latest or previous generation</p>
+<p><strong class="badge bg-primary">Latest</strong> / <strong class="badge bg-secondary">Legacy</strong> indicates the latest or previous generation</p>
 
 <h2 id="older-releases">Older releases</h2>
 

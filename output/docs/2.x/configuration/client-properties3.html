@@ -20,16 +20,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
 <title>Accumulo Documentation - Client Properties (3.x)</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
 <script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
 <script>
   // show location of canonical site if not currently on the canonical site
@@ -42,11 +42,11 @@
 
   $(function() {
     // decorate section headers with anchors
-    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    return $("h2, h3, h4, h5, h6").not(".accordion-header").each(function(i, el) {
       var $el, icon, id;
       $el = $(el);
       id = $el.attr('id');
-      icon = '<i class="fa-solid fa-link"></i>';
+      icon = '<span class="fa-solid fa-link"></span>';
       if (id) {
         return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
       }
@@ -63,67 +63,65 @@
 </head>
 <body style="padding-top: 100px">
 
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
-        /></a>
-    </div>
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbar-items">
-      <ul class="nav navbar-nav">
-        <li class="nav-link"><a href="/downloads">Download</a></li>
-        <li class="nav-link"><a href="/tour">Tour</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
-            <li><a href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
-            <li><a href="/release/">Archive</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
-            <li><a href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
-            <li><a href="/api">Public API</a></li>
-            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
-            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
-            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
-            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
-            <li><a href="/external-docs">External Docs</a></li>
-            <li><a href="/docs-archive/">Archive</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
           <ul class="dropdown-menu">
-            <li><a href="/contact-us">Contact Us</a></li>
-            <li><a href="/how-to-contribute">How To Contribute</a></li>
-            <li><a href="/people">People</a></li>
-            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
           </ul>
         </li>
-        <li class="nav-link"><a href="/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="https://www.apache.org">Apache Homepage <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/licenses/">License <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/security">Security <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa-solid fa-up-right-from-square"></i></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
           </ul>
         </li>
       </ul>
@@ -143,8 +141,7 @@
           
           <div class="row">
   <div class="col-md-3">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
-      <div class="panel panel-default">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
       
       
       
@@ -156,33 +153,33 @@
           
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
                   Getting started
-                </a>
-              </h4>
-            </div>
-            <div id="collapsegetting-started" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/quickstart">Setup </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/design">Design </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/features">Features </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/clients">Accumulo Clients </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/shell">Accumulo Shell </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_design">Table Design </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/table_configuration">Table Configuration </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/getting-started/glossary">Glossary </a></div>
-                
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
               </div>
             </div>
           
@@ -200,33 +197,33 @@
           
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
                   Development
-                </a>
-              </h4>
-            </div>
-            <div id="collapsedevelopment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/iterators">Iterators </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/mapreduce">MapReduce </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/spark">Spark </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/development_tools">Development Tools </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/sampling">Sampling </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/summaries">Summary Statistics </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/proxy">Proxy </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest </a></div>
-                
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
               </div>
             </div>
           
@@ -252,31 +249,31 @@
           
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
                   Security
-                </a>
-              </h4>
-            </div>
-            <div id="collapsesecurity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/overview">Security Overview </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authentication">Authentication </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/permissions">Permissions </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/authorizations">Authorizations </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/wire-encryption">Wire Encryption </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/security/kerberos">Kerberos </a></div>
-                
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
               </div>
             </div>
           
@@ -288,29 +285,29 @@
           
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseconfiguration" aria-expanded="true" aria-controls="collapseconfiguration">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="true" aria-controls="collapseconfiguration">
                   Configuration
-                </a>
-              </h4>
-            </div>
-            <div id="collapseconfiguration" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/overview">Configuration Overview </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/files">Configuration Files </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/client-properties">Client Properties (2.x) </a></div>
-                
-                <div class="row doc-sidebar-link doc-sidebar-selected"><a href="/docs/2.x/configuration/client-properties3">Client Properties (3.x) </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties">Server Properties (2.x) </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/configuration/server-properties3">Server Properties (3.x) </a></div>
-                
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse show" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row selected"><a href="/docs/2.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
               </div>
             </div>
           
@@ -328,37 +325,37 @@
       
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
                   Administration
-                </a>
-              </h4>
-            </div>
-            <div id="collapseadministration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/fate">FATE </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/multivolume">Multi-Volume Installations </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/replication">Replication </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/caching">Caching </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/compaction">Compactions </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/scan-executors">Scan Executors </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/administration/erasure-coding">Erasure Coding </a></div>
-                
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
               </div>
             </div>
           
@@ -390,51 +387,50 @@
           
         
           
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
                   Troubleshooting
-                </a>
-              </h4>
-            </div>
-            <div id="collapsetroubleshooting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/basic">Basic Troubleshooting </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/advanced">Advanced Troubleshooting </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tools">Troubleshooting Tools </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/system-metadata-tables">System Metadata Tables </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/performance">Performance </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/tracing">Tracing </a></div>
-                
-                <div class="row doc-sidebar-link"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper </a></div>
-                
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/2.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
               </div>
             </div>
           
         
       
-      </div>
     </div>
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 2.x Documentation &nbsp;&gt;&gt;&nbsp; Configuration &nbsp;&gt;&gt;&nbsp; Client Properties (3.x)</p>
+    <p>Accumulo 2.x Documentation &gt;&gt; Configuration &gt;&gt; Client Properties (3.x)</p>
     
-
     
-    <div class="row">
-      <div class="col-md-10"><h1>Client Properties (3.x)</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/configuration/client-properties3.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Client Properties (3.x)</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-2/configuration/client-properties3.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
     </div>
     
-
     <!-- WARNING: Do not edit this file. It is a generated file that is copied from Accumulo build (from core/target/generated-docs) -->
 <!-- Generated by : org.apache.accumulo.core.conf.ClientConfigGenerate$Markdown -->
 
@@ -597,10 +593,11 @@
   </tbody>
 </table>
 
-
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/_docs-2/configuration/client-properties3.md" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-2/configuration/client-properties3.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
     </div>
   </div>
 </div>

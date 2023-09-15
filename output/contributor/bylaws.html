@@ -20,16 +20,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
 <title>Bylaws</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.13.6/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
 <script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
 <script>
   // show location of canonical site if not currently on the canonical site
@@ -42,11 +42,11 @@
 
   $(function() {
     // decorate section headers with anchors
-    return $("h2, h3, h4, h5, h6").each(function(i, el) {
+    return $("h2, h3, h4, h5, h6").not(".accordion-header").each(function(i, el) {
       var $el, icon, id;
       $el = $(el);
       id = $el.attr('id');
-      icon = '<i class="fa-solid fa-link"></i>';
+      icon = '<span class="fa-solid fa-link"></span>';
       if (id) {
         return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
       }
@@ -63,67 +63,65 @@
 </head>
 <body style="padding-top: 100px">
 
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/"><img id="nav-logo" alt="Apache Accumulo" class="img-responsive" src="/images/accumulo-logo.png" width="200"
-        /></a>
-    </div>
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbar-items">
-      <ul class="nav navbar-nav">
-        <li class="nav-link"><a href="/downloads">Download</a></li>
-        <li class="nav-link"><a href="/tour">Tour</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Releases<span class="caret"></span></a>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
-            <li><a href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
-            <li><a href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
-            <li><a href="/release/">Archive</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.3/">1.10.3 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
           <ul class="dropdown-menu">
-            <li><a href="/docs/2.x">User Manual (2.x)</a></li>
-            <li><a href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
-            <li><a href="/api">Public API</a></li>
-            <li><a href="/quickstart-1.x">Quickstart (1.x)</a></li>
-            <li><a href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
-            <li><a href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
-            <li><a href="/1.10/apidocs">Javadocs (1.10)</a></li>
-            <li><a href="/external-docs">External Docs</a></li>
-            <li><a href="/docs-archive/">Archive</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
           </ul>
         </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Community<span class="caret"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
           <ul class="dropdown-menu">
-            <li><a href="/contact-us">Contact Us</a></li>
-            <li><a href="/how-to-contribute">How To Contribute</a></li>
-            <li><a href="/people">People</a></li>
-            <li><a href="/related-projects">Related Projects</a></li>
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
           </ul>
         </li>
-        <li class="nav-link"><a href="/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/><span class="caret"></span></a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="https://www.apache.org">Apache Homepage <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/licenses/">License <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/sponsorship">Sponsorship <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/security">Security <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/thanks">Thanks <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <i class="fa-solid fa-up-right-from-square"></i></a></li>
-            <li><a href="https://www.apache.org/events/current-event.html">Current Event <i class="fa-solid fa-up-right-from-square"></i></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
           </ul>
         </li>
       </ul>
