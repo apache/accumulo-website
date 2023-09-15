@@ -17,8 +17,8 @@ The monitor can be viewed at:
 The Overview page (shown below) contains some summary information about the Accumulo instance and graphs
 displaying various metrics over time. These include ingest and scan performance and other useful measurements.
 
-<a class="thumbnail" href="{{ site.baseurl }}/images/accumulo-monitor-1.png">
-<img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" alt="monitor overview"/>
+<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo-monitor-1.png">
+<img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
 </a>
 
 The Manager Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
@@ -26,8 +26,8 @@ Metrics typically include number of entries (key/value pairs), ingest and query 
 The number of running scans, major and minor compactions are in the form _number_running_ (_number_queued_).
 Another important metric is hold time, which is the amount of time a tablet has been waiting but unable to flush its memory in a minor compaction.
 
-<a class="thumbnail" href="{{ site.baseurl }}/images/accumulo-monitor-2.png">
-<img src="{{ site.baseurl }}/images/accumulo-monitor-2.png" alt="monitor manager"/>
+<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo-monitor-2.png">
+<img src="{{ site.baseurl }}/images/accumulo-monitor-2.png" class="img-fluid rounded" alt="monitor manager"/>
 </a>
 
 The Server Activity page graphically displays tablet server status, with each server represented as a circle or square.

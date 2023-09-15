@@ -6,10 +6,10 @@ redirect_from:
   - /release_notes.html
 ---
 
-{% assign archived_btn = '<span class="label label-default"><a style="color: #ffffff; text-decoration: none" href="https://archive.apache.org/dist/accumulo/">Archive</a></span>' %}
-{% assign draft_btn = '<span class="label label-danger">&nbsp;DRAFT!&nbsp;</span>' %}
-{% assign ltm_btn = '<span class="label label-success"><a style="color: #ffffff; text-decoration: none" href="' | append: site.baseurl | append: '/contributor/versioning#LTM">&nbsp;&nbsp;LTM&nbsp;&nbsp;</a></span>' %}
-{% assign nonltm_btn = '<span class="label label-warning"><a style="color: #ffffff; text-decoration: none" href="' | append: site.baseurl | append: '/contributor/versioning#LTM">non-LTM</a></span>' %}
+{% assign archived_btn = '<a href="https://archive.apache.org/dist/accumulo/"><span class="badge bg-secondary">Archive</span></a>' %}
+{% assign draft_btn = '<span class="badge bg-danger">&nbsp;DRAFT!&nbsp;</span>' %}
+{% assign ltm_btn = '<a href="' | append: site.baseurl | append: '/contributor/versioning#LTM"><span class="badge bg-success">&nbsp;&nbsp;LTM&nbsp;&nbsp;</span></a>' %}
+{% assign nonltm_btn = '<a href="' | append: site.baseurl | append: '/contributor/versioning#LTM"><span class="badge bg-warning">non-LTM</span></a>' %}
 
 <div>
 {% assign all_releases = site.categories.release | sort: 'date' | reverse %}

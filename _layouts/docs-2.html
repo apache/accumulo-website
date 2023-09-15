@@ -5,51 +5,50 @@ skiph1fortitle: true
 
 <div class="row">
   <div class="col-md-3">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" data-spy="affix">
-      <div class="panel panel-default">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
       {% assign mydocs = site.docs-2 | group_by: 'category' %}
       {% assign categories = "getting-started,development,security,configuration,administration,troubleshooting" | split: "," %}
       {% for pcat in categories %}
         {% for dcat in mydocs %}
           {% if pcat == dcat.name %}
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ pcat }}" aria-expanded="{% if pcat == page.category %}true{% else %}false{% endif %}" aria-controls="collapse{{ pcat }}">
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="heading{{ pcat }}">
+                <button class="accordion-button {% if pcat != page.category %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ pcat }}" aria-expanded="{% if pcat == page.category %}true{% else %}false{% endif %}" aria-controls="collapse{{ pcat }}">
                   {{ pcat | capitalize | replace: "-", " " }}
-                </a>
-              </h4>
-            </div>
-            <div id="collapse{{pcat}}" class="panel-collapse collapse{% if pcat == page.category %} in{% endif %}" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                {% assign items = dcat.items | sort: 'order' %}
-                {% for item in items %}
-                <div class="row doc-sidebar-link{% if page.title == item.title %} doc-sidebar-selected{% endif %}"><a href="{{ item.url }}">{{ item.title }} </a></div>
-                {% endfor %}
+                </button>
+              </div>
+              <div id="collapse{{pcat}}" class="accordion-collapse collapse{% if pcat == page.category %} show{% endif %}" aria-labelledby="heading{{ pcat }}" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  {% assign items = dcat.items | sort: 'order' %}
+                  {% for item in items %}
+                    <div class="row{% if page.title == item.title %} selected{% endif %}"><a href="{{ item.url }}">{{ item.title }}</a></div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           {% endif %}
         {% endfor %}
       {% endfor %}
-      </div>
     </div>
   </div>
   <div class="col-md-9">
     {% if page.category %}
-    <p>Accumulo {{ page.version }} Documentation &nbsp;&gt;&gt;&nbsp; {{ page.category | capitalize | replace: "-", " " }} &nbsp;&gt;&gt;&nbsp; {{ page.title }}</p>
+    <p>Accumulo {{ page.version }} Documentation &gt;&gt; {{ page.category | capitalize | replace: "-", " " }} &gt;&gt; {{ page.title }}</p>
     {% endif %}
-
     {% unless page.skip_doc_h1 %}
-    <div class="row">
-      <div class="col-md-10"><h1>{{ page.title }}</h1></div>
-      <div class="col-md-2"><a class="pull-right" style="margin-top: 25px;" href="https://github.com/apache/accumulo-website/edit/main/{{ page.path }}" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>{{ page.title }}</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/{{ page.path }}" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
     </div>
     {% endunless %}
-
     {{ content }}
-
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-md-10"><strong>Find documentation for all releases in the <a href="{{ site.baseurl }}/docs-archive">archive</strong></div>
-      <div class="col-md-2"><a class="pull-right" href="https://github.com/apache/accumulo-website/edit/main/{{ page.path }}" role="button"><i class="glyphicon glyphicon-pencil"></i> <small>Edit this page</small></a></div>
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="{{ site.baseurl }}/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/{{ page.path }}" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
     </div>
   </div>
 </div>
