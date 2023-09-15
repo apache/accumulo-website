@@ -19,7 +19,7 @@ The **value** is where the actual data is stored. For brevity, we often refer to
 column as the family, qualifier, and visibility.
 
 Take a closer look at the Mutation object created in the first exercise:
-```commandline
+```java
 Mutation mutation1 = new Mutation("id0001");
 mutation1.put("hero","alias", "Batman");
 ```

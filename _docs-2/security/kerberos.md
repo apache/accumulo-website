@@ -208,7 +208,7 @@ existing users in the system; you will need to reassign user permissions based o
 prompted for a password you can just hit return, since it won't be used.
 3. Start the Accumulo cluster
 
-```
+```console
 $ accumulo-cluster stop
 ...
 $ accumulo init --reset-security
@@ -289,7 +289,7 @@ users with the system permission are allowed to obtain delegation tokens. It is 
 to configure confidentiality with SASL, using the `rpc.sasl.qop=auth-conf` configuration property, to
 ensure that prying eyes cannot view the `DelegationToken` as it passes over the network.
 
-```
+```console
 # Check a user's permissions
 admin@REALM@accumulo> userpermissions -u user@REALM
 
@@ -316,7 +316,7 @@ to authenticate with Accumulo, access HDFS, etc.
 
 The user can verify the state of their local credentials cache by using the command `klist`.
 
-```shell
+```console
 $ klist
 Ticket cache: FILE:/tmp/krb5cc_123
 Default principal: user@EXAMPLE.COM
@@ -349,7 +349,7 @@ interact with the system.
 While this example logs in via `kinit` with a password, any login method that caches Kerberos tickets
 should work.
 
-```shell
+```console
 $ kinit accumulo_admin@EXAMPLE.COM
 Password for accumulo_admin@EXAMPLE.COM: ******************************
 $ accumulo shell

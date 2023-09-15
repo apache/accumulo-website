@@ -8,14 +8,14 @@ Accumulo cluster you can use [fluo-uno] to set up a single node instance for use
 Once you have an instance up and running, start the Accumulo JShell interface by typing the command
 below. The '$' represents the system prompt.
 
-```commandline
+```shell
 $ accumulo jshell
 ```
 
 This will present you with a Java JShell interface with the required Accumulo libraries pre-loaded
 and a working Accumulo ```client``` object.
 
-```commandline
+```
 Preparing JShell for Apache Accumulo
 
 Use 'client' to interact with Accumulo
@@ -30,7 +30,7 @@ JShell has a few commands that can be helpful.
 
 `/imports` lists the currently loaded imports in the JShell session.
 
-```commandline
+```
 jshell> /imports
 |    import java.io.*
 |    import java.math.*
@@ -67,7 +67,7 @@ jshell> /imports
 
 `/vars` will display all currently defined variables.
 
-```commandline
+```
 jshell> /vars
 |    URL clientPropUrl = file:<path_to_accumulo_dir>/conf/accumulo-client.properties
 |    AccumuloClient client = org.apache.accumulo.core.clientImpl.ClientContext@7cbee484
@@ -83,7 +83,7 @@ jshell> /vars
 
 For example:
 
-```commandline
+```
 jshell> var x = 12;
 x ==> 12
 

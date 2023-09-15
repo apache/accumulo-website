@@ -15,7 +15,7 @@ For the tour, you will use the ```client``` provided by the JShell to perform th
 The properties used to create the client can be viewed in the file contained in the `clientPropUrl`
 variable.
 
-```commandline
+```
 jshell> /vars
 |    URL clientPropUrl = file:<path_to_accumulo-client.properties file>
 ```
@@ -23,7 +23,7 @@ jshell> /vars
 Let's start by using table operations to list the default tables and instance operations to get
 the instance ID.
 
-```commandline
+```
 jshell> client.tableOperations().list().forEach(System.out::println);
 accumulo.metadata
 accumulo.replication
@@ -32,7 +32,7 @@ accumulo.root
 
 Now let's retrieve the instance ID.
 
-```commandline
+```
 jshell> System.out.println(client.instanceOperations().getInstanceID());
 8b9839f7-cdc6-44ca-b527-43db45acc79f
 ```

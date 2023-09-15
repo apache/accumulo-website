@@ -6,13 +6,13 @@ Below is a solution to the exercise.
 
 Create a table called "GothamBatch".
 
-```commandline
+```
 jshell> client.tableOperations().create("GothamBatch");
 ```
 
 Generate 10,000 rows of villain data
 
-```commandline
+```
 jshell> try (BatchWriter writer = client.createBatchWriter("GothamBatch")) {
    ...>   for (int i = 0; i < 10_000; i++) {
    ...>     Mutation m = new Mutation(String.format("id%04d", i));
@@ -25,7 +25,7 @@ jshell> try (BatchWriter writer = client.createBatchWriter("GothamBatch")) {
 ```
 
 Create a BatchScanner with 5 query threads
-```commandline
+```
 jshell> try (BatchScanner batchScanner = client.createBatchScanner("GothamBatch", Authorizations.EMPTY, 5)) {
    ...>
    ...>   // Create a collection of 2 sample ranges and set it to the batchScanner

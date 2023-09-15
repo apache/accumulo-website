@@ -70,7 +70,7 @@ client.
 
 Constraints can be enabled by setting a table property as follows:
 
-```
+```console
 user@myinstance mytable> constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
 
 user@myinstance mytable> constraint -l
@@ -183,7 +183,7 @@ given date. The default is to return the one most recent version.
 The version policy can be changed by changing the VersioningIterator options for a
 table as follows:
 
-```
+```console
 user@myinstance mytable> config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
 
 user@myinstance mytable> config -t mytable -s table.iterator.minc.vers.opt.maxVersions=3
@@ -234,7 +234,7 @@ The AgeOff filter can be configured to remove data older than a certain date or 
 amount of time from the present. The following example sets a table to delete
 everything inserted over 30 seconds ago:
 
-```
+```console
 user@myinstance> createtable filtertest
 
 user@myinstance filtertest> setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -ageoff
@@ -307,7 +307,7 @@ The table would reflect only one aggregate value:
 
 Combiners can be enabled for a table using the setiter command in the shell. Below is an example.
 
-```
+```console
 root@a14 perDayCounts> setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
                        -class org.apache.accumulo.core.iterators.user.SummingCombiner
 TypedValueCombiner can interpret Values as a variety of number encodings
@@ -455,7 +455,7 @@ created, only the user that created the clone can read and write to it.
 In the following example we see that data inserted after the clone operation is
 not visible in the clone.
 
-```
+```console
 root@a14> createtable people
 
 root@a14 people> insert 890435 name last Doe
@@ -489,7 +489,7 @@ inserted into cic and its flushed, du shows the two tables still share 428M but
 cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
 that each table uses 428M.
 
-```
+```console
 root@a14> du ci
              428,482,573 [ci]
 

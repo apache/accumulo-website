@@ -28,34 +28,38 @@ and then display the following prompt:
 ## Basic Administration
 
 The `tables` command will list all existing tables.
-
-    root@myinstance> tables
-    accumulo.metadata
-    accumulo.root
+```console
+root@myinstance> tables
+accumulo.metadata
+accumulo.root
+```
 
 The `createtable` command creates a new table.
-
-    root@myinstance> createtable mytable
-    root@myinstance mytable> tables
-    accumulo.metadata
-    accumulo.root
-    mytable
+```console
+root@myinstance> createtable mytable
+root@myinstance mytable> tables
+accumulo.metadata
+accumulo.root
+mytable
+```
 
 The `deletetable` command deletes a table.
-
-    root@myinstance testtable> deletetable testtable
-    deletetable { testtable } (yes|no)? yes
-    Table: [testtable] has been deleted.
+```console
+root@myinstance testtable> deletetable testtable
+deletetable { testtable } (yes|no)? yes
+Table: [testtable] has been deleted.
+```
 
 The shell can be used to insert updates and scan tables. This is useful for inspecting tables.
+```console
+root@myinstance mytable> scan
 
-    root@myinstance mytable> scan
+root@myinstance mytable> insert row1 colf colq value1
+insert successful
 
-    root@myinstance mytable> insert row1 colf colq value1
-    insert successful
-
-    root@myinstance mytable> scan
-    row1 colf:colq [] value1
+root@myinstance mytable> scan
+row1 colf:colq [] value1
+```
 
 The value in brackets `[]` would be the visibility labels. Since none were used, this is empty for this row.
 You can use the `-st` option to scan to see the timestamp for the cell, too.
@@ -64,24 +68,25 @@ You can use the `-st` option to scan to see the timestamp for the cell, too.
 
 The `compact` command instructs Accumulo to schedule a compaction of the table during which
 files are consolidated and deleted entries are removed.
-
-    root@myinstance mytable> compact -t mytable
-    07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
+```console
+root@myinstance mytable> compact -t mytable
+07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
+```
 
 If needed, the compaction can be canceled using `compact --cancel -t mytable`.
 
 The `flush` command instructs Accumulo to write all entries currently in memory for a given table
 to disk.
-
-    root@myinstance mytable> flush -t mytable
-    07 16:14:19,351 [shell.Shell] INFO : Flush of table mytable
-    initiated...
+```console
+root@myinstance mytable> flush -t mytable
+07 16:14:19,351 [shell.Shell] INFO : Flush of table mytable initiated...
+```
 
 ## User Administration
 
 The Shell can be used to add, remove, and grant privileges to users.
 
-```
+```console
 root@myinstance mytable> createuser bob
 Enter new password for 'bob': *********
 Please confirm new password for 'bob': *********

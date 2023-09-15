@@ -24,7 +24,7 @@ The default permission handler is described below.
 
 Users can be granted permissions in the shell:
 
-```
+```console
 root@uno> grant System.CREATE_TABLE -s -u bob
 ```
 
@@ -38,7 +38,7 @@ client.securityOperations().grantSystem("bob", SystemPermission.CREATE_TABLE);
 
 Permissions can be listed for a user in the shell:
 
-```
+```console
 root@uno> userpermissions -u bob
 System permissions: System.CREATE_TABLE, System.DROP_TABLE
 
@@ -53,7 +53,7 @@ Table permissions (accumulo.root): Table.READ
 
 Permissions can be revoked for a user in the shell
 
-```
+```console
 root@uno> revoke System.CREATE_TABLE -s -u bob
 ```
 

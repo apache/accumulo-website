@@ -4,7 +4,7 @@ title: Ranges and Splits
 
 A [Range] is a specified group of `Key`s. There are many ways to create a `Range`.  Here are a few examples:
 
-```commandline
+```java
 Range r1 = new Range(startKey, endKey);  // Creates a range from startKey inclusive to endKey inclusive.
 Range r2 = new Range(row);               // Creates a range that covers an entire row.
 Range r3 = new Range(startRow, endRow);  // Creates a range from startRow inclusive to endRow inclusive.
@@ -13,7 +13,7 @@ Range r3 = new Range(startRow, endRow);  // Creates a range from startRow inclus
 A `Scanner` by default will scan all ```Key```'s in a table but this can be inefficient. It is a good practice to
 set a range on a Scanner.
 
-```commandline
+```java
 scanner.setRange(new Range("id0000", "id0010"));  // returns rows from id0000 to id0010
 ```
 

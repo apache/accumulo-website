@@ -8,7 +8,7 @@ aggregation operations on data during scans and during compactions.
 
 Let's begin by adding some data for our hero's recording recent crime-stopping statistics.
 
-```commandlne
+```
 jshell> client.tableOperations().create("GothamCrimeStats");
 
 jshell> Mutation mutation1 = new Mutation("id0001");
@@ -37,7 +37,7 @@ jshell> try (BatchWriter writer = client.createBatchWriter("GothamCrimeStats")) 
 
 Let's scan to see the data.
 
-```commandline
+```
 jshell> try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
    ...>   System.out.println("Gotham Police Department Crime Statistics:");
    ...>   for(Map.Entry<Key, Value> entry : scan) {
@@ -55,14 +55,14 @@ a set number of past entries to display). The iterator is named `vers`.
 
 To simplify, we will import some additional packages to save some typing.
 
-```commandline
+```
 jshell> import org.apache.accumulo.core.iterators.IteratorUtil.IteratorScope;
 jshell> client.tableOperations().removeIterator("GothamCrimeStats", "vers", EnumSet.allOf(IteratorScope.class));
 ```
 
 Now let's scan again.
 
-```commandline
+```
 jshell> try (ScannerBase scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
    ...>   System.out.println("Gotham Police Department Crime Statistics:");
    ...>   for(Map.Entry<Key, Value> entry : scan) {
@@ -85,7 +85,7 @@ You will now see ALL entries added to the table.
 Instead of seeing a daily history, let's instead keep a running total of captured villains.
 A `summingcombiner` can be used to accomplish this.
 
-```commandline
+```
 jshell> import org.apache.accumulo.core.iterators.user.SummingCombiner;
 jshell> import org.apache.accumulo.core.iterators.LongCombiner
 ```
@@ -94,7 +94,7 @@ Create an IteratorSetting object. Set the encoding type and indicate the columns
 Also, it is a good idea to check for any iterator conflicts prior to attaching the iterator to the
 table.
 
-```commandline
+```
 jshell> IteratorSetting scSetting = new IteratorSetting(30, "sum", SummingCombiner.class);
 jshell> LongCombiner.setEncodingType(scSetting, LongCombiner.Type.STRING);
 jshell> scSetting.addOption("columns", "hero:villainsCaptured");
@@ -104,7 +104,7 @@ jshell> client.tableOperations().attachIterator("GothamCrimeStats", scSetting);
 
 Let's scan again and see what results we get.
 
-```commandline
+```
 jshell> try ( org.apache.accumulo.core.client.Scanner scan = client.createScanner("GothamCrimeStats", Authorizations.EMPTY)) {
    ...>   for(Map.Entry<Key, Value> entry : scan) {
    ...>     System.out.printf("Key : %-52s  Value : %s\n", entry.getKey(), entry.getValue());
@@ -118,7 +118,7 @@ Key : id0002 hero:villainsCaptured [] 1654699186182 false   Value : 3
 
 Adding additional statistics will result in a continual update of the relevant statistic.
 
-```commandline
+```
 jshell> mutation1 = new Mutation("id0001");
 jshell> mutation1.put("hero", "villainsCaptured", "4");
 jshell> mutation2 = new Mutation("id0002");
