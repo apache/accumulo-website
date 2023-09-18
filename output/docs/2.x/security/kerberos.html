@@ -691,16 +691,16 @@ prompted for a password you can just hit return, since it won’t be used.</li>
   <li>Start the Accumulo cluster</li>
 </ol>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-cluster stop
-...
-$ accumulo init --reset-security
-Running against secured HDFS
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>accumulo-cluster stop
+<span class="c">...
+</span><span class="gp">$</span><span class="w"> </span>accumulo init <span class="nt">--reset-security</span>
+<span class="go">Running against secured HDFS
 Principal (user) to grant administrative privileges to : acculumo_admin@EXAMPLE.COM
 Enter initial password for accumulo_admin@EXAMPLE.COM (this may not be applicable for your security setup):
 Confirm initial password for accumulo_admin@EXAMPLE.COM:
-$ accumulo-cluster start
-...
-</code></pre></div></div>
+</span><span class="gp">$</span><span class="w"> </span>accumulo-cluster start
+<span class="c">...
+</span></code></pre></div></div>
 
 <h4 id="verifying-secure-access">Verifying secure access</h4>
 
@@ -768,11 +768,11 @@ users with the system permission are allowed to obtain delegation tokens. It is 
 to configure confidentiality with SASL, using the <code class="language-plaintext highlighter-rouge">rpc.sasl.qop=auth-conf</code> configuration property, to
 ensure that prying eyes cannot view the <code class="language-plaintext highlighter-rouge">DelegationToken</code> as it passes over the network.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Check a user's permissions
-admin@REALM@accumulo&gt; userpermissions -u user@REALM
-
-# Grant the DELEGATION_TOKEN system permission to a user
-admin@REALM@accumulo&gt; grant System.DELEGATION_TOKEN -s -u user@REALM
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">#</span><span class="w"> </span>Check a user<span class="s1">'s permissions
+</span><span class="gp">admin@REALM@accumulo&gt;</span><span class="w"> </span><span class="s1">userpermissions -u user@REALM
+</span><span class="go">
+</span><span class="gp">#</span><span class="w"> </span>Grant the DELEGATION_TOKEN system permission to a user
+<span class="gp">admin@REALM@accumulo&gt;</span><span class="w"> </span>grant System.DELEGATION_TOKEN <span class="nt">-s</span> <span class="nt">-u</span> user@REALM
 </code></pre></div></div>
 
 <h3 id="clients">Clients</h3>
@@ -793,14 +793,14 @@ to authenticate with Accumulo, access HDFS, etc.</p>
 
 <p>The user can verify the state of their local credentials cache by using the command <code class="language-plaintext highlighter-rouge">klist</code>.</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>klist
-Ticket cache: FILE:/tmp/krb5cc_123
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>klist
+<span class="go">Ticket cache: FILE:/tmp/krb5cc_123
 Default principal: user@EXAMPLE.COM
 
 Valid starting       Expires              Service principal
 01/07/2015 11:56:35  01/08/2015 11:56:35  krbtgt/EXAMPLE.COM@EXAMPLE.COM
-    renew <span class="k">until </span>01/14/2015 11:56:35
-</code></pre></div></div>
+    renew until 01/14/2015 11:56:35
+</span></code></pre></div></div>
 
 <h4 id="configuration">Configuration</h4>
 
@@ -827,31 +827,31 @@ interact with the system.</p>
 <p>While this example logs in via <code class="language-plaintext highlighter-rouge">kinit</code> with a password, any login method that caches Kerberos tickets
 should work.</p>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kinit accumulo_admin@EXAMPLE.COM
-Password <span class="k">for </span>accumulo_admin@EXAMPLE.COM: <span class="k">******************************</span>
-<span class="nv">$ </span>accumulo shell
-
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>kinit accumulo_admin@EXAMPLE.COM
+<span class="go">Password for accumulo_admin@EXAMPLE.COM: ******************************
+</span><span class="gp">$</span><span class="w"> </span>accumulo shell
+<span class="go">
 Shell - Apache Accumulo Interactive Shell
 -
 - version: 1.7.2
 - instance name: MYACCUMULO
-- instance <span class="nb">id</span>: 483b9038-889f-4b2d-b72b-dfa2bb5dbd07
+- instance id: 483b9038-889f-4b2d-b72b-dfa2bb5dbd07
 -
-- <span class="nb">type</span> <span class="s1">'help'</span> <span class="k">for </span>a list of available commands
+- type 'help' for a list of available commands
 -
-accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; userpermissions
-System permissions: System.GRANT, System.CREATE_TABLE, System.DROP_TABLE, System.ALTER_TABLE, System.CREATE_USER, System.DROP_USER, System.ALTER_USER, System.SYSTEM, System.CREATE_NAMESPACE, System.DROP_NAMESPACE, System.ALTER_NAMESPACE, System.OBTAIN_DELEGATION_TOKEN
+</span><span class="gp">accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt;</span><span class="w"> </span>userpermissions
+<span class="go">System permissions: System.GRANT, System.CREATE_TABLE, System.DROP_TABLE, System.ALTER_TABLE, System.CREATE_USER, System.DROP_USER, System.ALTER_USER, System.SYSTEM, System.CREATE_NAMESPACE, System.DROP_NAMESPACE, System.ALTER_NAMESPACE, System.OBTAIN_DELEGATION_TOKEN
 
-Namespace permissions <span class="o">(</span>accumulo<span class="o">)</span>: Namespace.READ, Namespace.ALTER_TABLE
+Namespace permissions (accumulo): Namespace.READ, Namespace.ALTER_TABLE
 
-Table permissions <span class="o">(</span>accumulo.metadata<span class="o">)</span>: Table.READ, Table.ALTER_TABLE
-Table permissions <span class="o">(</span>accumulo.replication<span class="o">)</span>: Table.READ
-Table permissions <span class="o">(</span>accumulo.root<span class="o">)</span>: Table.READ, Table.ALTER_TABLE
+Table permissions (accumulo.metadata): Table.READ, Table.ALTER_TABLE
+Table permissions (accumulo.replication): Table.READ
+Table permissions (accumulo.root): Table.READ, Table.ALTER_TABLE
 
-accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt; quit
-<span class="nv">$ </span>kdestroy
-<span class="err">$</span>
-</code></pre></div></div>
+</span><span class="gp">accumulo_admin@EXAMPLE.COM@MYACCUMULO&gt;</span><span class="w"> </span>quit
+<span class="gp">$</span><span class="w"> </span>kdestroy
+<span class="gp">$</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="delegationtokens-with-mapreduce">DelegationTokens with MapReduce</h4>
 

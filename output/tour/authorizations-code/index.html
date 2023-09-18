@@ -154,30 +154,30 @@
 <p>For this example, it is best to start with a clean slate. So, if the “GothamPD” table currently
 exists, let’s delete and begin fresh.</p>
 
-<pre><code class="language-commandline">client.tableOperations().delete("GothamPD");
-client.securityOperations().dropLocalUser("commissioner");
-</code></pre>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.tableOperations().delete("GothamPD");
+jshell&gt; client.securityOperations().dropLocalUser("commissioner");
+</code></pre></div></div>
 
 <p>Create a table called “GothamPD”.</p>
-<pre><code class="language-commandline">jshell&gt; client.tableOperations().create("GothamPD");
-</code></pre>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.tableOperations().create("GothamPD");
+</code></pre></div></div>
 <p>Create a “secretId” authorization &amp; visibility</p>
-<pre><code class="language-commandline">jshell&gt; String secretId = "secretId";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; String secretId = "secretId";
 secretId ==&gt; "secretId"
 jshell&gt; Authorizations auths = new Authorizations(secretId);
 auths ==&gt; secretId
 jshell&gt; ColumnVisibility colVis = new ColumnVisibility(secretId);
 colVis ==&gt; [secretId]
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a user with the “secretId” authorization and grant the commissioner read permissions on our table</p>
-<pre><code class="language-commandline">jshell&gt; client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
 jshell&gt; client.securityOperations().changeUserAuthorizations("commissioner", auths);
 jshell&gt; client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
-</code></pre>
+</code></pre></div></div>
 
 <p>Create three Mutation objects, securing the proper columns.</p>
-<pre><code class="language-commandline">jshell&gt; Mutation mutation1 = new Mutation("id0001");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; Mutation mutation1 = new Mutation("id0001");
 mutation1 ==&gt; org.apache.accumulo.core.data.Mutation@1
 jshell&gt; mutation1.put("hero", "alias", "Batman");
 jshell&gt; mutation1.put("hero", "name", colVis, "Bruce Wayne");
@@ -194,21 +194,21 @@ mutation3 ==&gt; org.apache.accumulo.core.data.Mutation@1
 jshell&gt; mutation3.put("villain", "alias", "Joker");
 jshell&gt; mutation3.put("villain", "name", "Unknown");
 jshell&gt; mutation3.put("villain", "wearsCape?", "false");
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a BatchWriter to the GothamPD table and add your mutations to it.
 Once the BatchWriter is closed the data will be available to scans.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
     ...&gt;   writer.addMutation(mutation1);
     ...&gt;   writer.addMutation(mutation2);
     ...&gt;   writer.addMutation(mutation3);
     ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>Now let’s scan.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
    ...&gt;   System.out.println("Gotham Police Department Persons of Interest:");
    ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
    ...&gt;     System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
@@ -222,14 +222,14 @@ Key : id0002 hero:wearsCape? [] 1654783465209 false       Value : true
 Key : id0003 villain:alias [] 1654783465209 false         Value : Joker
 Key : id0003 villain:name [] 1654783465209 false          Value : Unknown
 Key : id0003 villain:wearsCape? [] 1654783465209 false    Value : false
-</code></pre>
+</code></pre></div></div>
 
 <p>Note that the default root user can no longer see the name for the two hero’s since they are protected
 with the <code class="language-plaintext highlighter-rouge">secretId</code> authorization.</p>
 
 <p>Let’s add the <code class="language-plaintext highlighter-rouge">auths</code> authorization to the default root user and scan again.</p>
 
-<pre><code class="language-commandline"> jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", auths)) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", auths)) {
    ...&gt;    System.out.println("Gotham Police Department Persons of Interest:");
    ...&gt;      for (Map.Entry&lt;Key, Value&gt; entry : scan)
    ...&gt;        System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
@@ -254,14 +254,14 @@ Gotham Police Department Persons of Interest:
 |        at TabletScanClientService$Client.startScan (TabletScanClientService.java:89)
 |        at ThriftScanner.scan (ThriftScanner.java:483)
 |        ...
-</code></pre>
+</code></pre></div></div>
 
 <p>This results in an error since the root user doesn’t have the authorizations we tried to pass to the Scanner</p>
 
 <p>Now, create a second client for the commissioner user and output all the rows visible to them.
 Make sure to pass the proper authorizations.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties()).as("commissioner", "gordonrocks").build()) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (AccumuloClient commishClient = Accumulo.newClient().from(client.properties()).as("commissioner", "gordonrocks").build()) {
    ...&gt;   try (ScannerBase scan = commishClient.createScanner("GothamPD", auths)) {
    ...&gt;     System.out.println("Gotham Police Department Persons of Interest:");
    ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
@@ -269,11 +269,11 @@ Make sure to pass the proper authorizations.</p>
    ...&gt;     }
    ...&gt;   }
    ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>The solution above will print (timestamp will differ):</p>
 
-<pre><code class="language-commandline">Gotham Police Department Persons of Interest:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gotham Police Department Persons of Interest:
 Key : id0001 hero:alias [] 1654106385737 false            Value : Batman
 Key : id0001 hero:name [secretId] 1654106385737 false     Value : Bruce Wayne
 Key : id0001 hero:wearsCape? [] 1654106385737 false       Value : true
@@ -283,7 +283,7 @@ Key : id0002 hero:wearsCape? [] 1654106385737 false       Value : true
 Key : id0003 villain:alias [] 1654106385737 false         Value : Joker
 Key : id0003 villain:name [] 1654106385737 false          Value : Unknown
 Key : id0003 villain:wearsCape? [] 1654106385737 false    Value : false
-</code></pre>
+</code></pre></div></div>
 
 
 </div>

@@ -151,50 +151,50 @@
 <div id="tour-content">
   <p>Below is the solution for the complete exercise.</p>
 
-<pre><code class="language-commandline">jshell&gt; client.tableOperations().create("GothamPD");
-</code></pre>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.tableOperations().create("GothamPD");
+</code></pre></div></div>
 <p>Create a row for Batman</p>
-<pre><code class="language-commandline">jshell&gt; Mutation mutation1 = new Mutation("id0001");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; Mutation mutation1 = new Mutation("id0001");
 mutation1 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
 jshell&gt; mutation1.put("hero","alias", "Batman");
 jshell&gt; mutation1.put("hero","name", "Bruce Wayne");
 jshell&gt; mutation1.put("hero","wearsCape?", "true");
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a row for Robin</p>
-<pre><code class="language-commandline">jshell&gt; Mutation mutation2 = new Mutation("id0002");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; Mutation mutation2 = new Mutation("id0002");
 mutation2 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
 jshell&gt; mutation2.put("hero","alias", "Robin");
 jshell&gt; mutation2.put("hero","name", "Dick Grayson");
 jshell&gt; mutation2.put("hero","wearsCape?", "true");
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a row for Joker</p>
-<pre><code class="language-commandline">jshell&gt; Mutation mutation3 = new Mutation("id0003");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; Mutation mutation3 = new Mutation("id0003");
 mutation3 ==&gt; org.apache.accumulo.core.data.Mutation@1
 
 jshell&gt; mutation3.put("villain","alias", "Joker");
 jshell&gt; mutation3.put("villain","name", "Unknown");
 jshell&gt; mutation3.put("villain","wearsCape?", "false");
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a BatchWriter to the GothamPD table and add your mutations to it.
 Once the BatchWriter is closed by the try-with-resources, data will be available to scans.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
    ...&gt;   writer.addMutation(mutation1);
    ...&gt;   writer.addMutation(mutation2);
    ...&gt;   writer.addMutation(mutation3);
    ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>Read and print all rows of the “GothamPD” table. Try-with-resources will close for us.</p>
 
 <p>Note: A Scanner is an extension of <code class="language-plaintext highlighter-rouge">java.lang.Iterable</code> so it will traverse through the table.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
    ...&gt;   System.out.println("Gotham Police Department Persons of Interest:");
    ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
    ...&gt;     System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
@@ -210,7 +210,7 @@ Key : id0002 hero:wearsCape? [] 1511306370025 false       Value : true
 Key : id0003 villain:alias [] 1511306370025 false         Value : Joker
 Key : id0003 villain:name [] 1511306370025 false          Value : Unknown
 Key : id0003 villain:wearsCape? [] 1511306370025 false    Value : false
-</code></pre>
+</code></pre></div></div>
 <p>Timestamps will differ.</p>
 
 

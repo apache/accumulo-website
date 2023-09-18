@@ -497,12 +497,12 @@ client.</p>
 
 <p>Constraints can be enabled by setting a table property as follows:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; constraint -t mytable -a com.test.ExampleConstraint com.test.AnotherConstraint
-
-user@myinstance mytable&gt; constraint -l
-com.test.ExampleConstraint=1
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>constraint <span class="nt">-t</span> mytable <span class="nt">-a</span> com.test.ExampleConstraint com.test.AnotherConstraint
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>constraint <span class="nt">-l</span>
+<span class="go">com.test.ExampleConstraint=1
 com.test.AnotherConstraint=2
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>Currently, there are no general-purpose constraints provided with the Accumulo
 distribution. New constraints can be created by writing a Java class that implements
@@ -610,11 +610,11 @@ given date. The default is to return the one most recent version.</p>
 <p>The version policy can be changed by changing the VersioningIterator options for a
 table as follows:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; config -t mytable -s table.iterator.scan.vers.opt.maxVersions=3
-
-user@myinstance mytable&gt; config -t mytable -s table.iterator.minc.vers.opt.maxVersions=3
-
-user@myinstance mytable&gt; config -t mytable -s table.iterator.majc.vers.opt.maxVersions=3
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.scan.vers.opt.maxVersions<span class="o">=</span>3
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.minc.vers.opt.maxVersions<span class="o">=</span>3
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.majc.vers.opt.maxVersions<span class="o">=</span>3
 </code></pre></div></div>
 
 <p>When a table is created, by default it’s configured to use the
@@ -660,32 +660,32 @@ by writing a Java class that extends the <a href="https://static.javadoc.io/org.
 amount of time from the present. The following example sets a table to delete
 everything inserted over 30 seconds ago:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable filtertest
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance&gt;</span><span class="w"> </span>createtable filtertest
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>setiter <span class="nt">-t</span> filtertest <span class="nt">-scan</span> <span class="nt">-minc</span> <span class="nt">-majc</span> <span class="nt">-p</span> 10 <span class="nt">-n</span> myfilter <span class="nt">-ageoff</span>
+<span class="gp">AgeOffFilter removes entries with timestamps more than &lt;ttl&gt;</span><span class="w"> </span>milliseconds old
+<span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter negate, default <span class="nb">false</span>
+<span class="go">                keeps k/v that pass accept method, true rejects k/v that pass accept method:
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter ttl, <span class="nb">time </span>to
+<span class="go">                live (milliseconds): 30000
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter currentTime, <span class="k">if </span><span class="nb">set</span>,
+<span class="go">                use the given value as the absolute time in milliseconds as the current time of day:
 
-user@myinstance filtertest&gt; setiter -t filtertest -scan -minc -majc -p 10 -n myfilter -ageoff
-AgeOffFilter removes entries with timestamps more than &lt;ttl&gt; milliseconds old
-----------&gt; set org.apache.accumulo.core.iterators.user.AgeOffFilter parameter negate, default false
-                keeps k/v that pass accept method, true rejects k/v that pass accept method:
-----------&gt; set org.apache.accumulo.core.iterators.user.AgeOffFilter parameter ttl, time to
-                live (milliseconds): 30000
-----------&gt; set org.apache.accumulo.core.iterators.user.AgeOffFilter parameter currentTime, if set,
-                use the given value as the absolute time in milliseconds as the current time of day:
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w">
+</span><span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>insert foo a b c
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">foo a:b [] c
 
-user@myinstance filtertest&gt;
-
-user@myinstance filtertest&gt; scan
-
-user@myinstance filtertest&gt; insert foo a b c
-
-user@myinstance filtertest&gt; scan
-foo a:b [] c
-
-user@myinstance filtertest&gt; sleep 4
-
-user@myinstance filtertest&gt; scan
-
-user@myinstance filtertest&gt;
-</code></pre></div></div>
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span><span class="nb">sleep </span>4
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w">
+</span></code></pre></div></div>
 
 <p>To see the iterator settings for a table, use:</p>
 
@@ -735,25 +735,25 @@ rowID1  colfA  colqA     20100102   1
 
 <p>Combiners can be enabled for a table using the setiter command in the shell. Below is an example.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14 perDayCounts&gt; setiter -t perDayCounts -p 10 -scan -minc -majc -n daycount
-                       -class org.apache.accumulo.core.iterators.user.SummingCombiner
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>setiter <span class="nt">-t</span> perDayCounts <span class="nt">-p</span> 10 <span class="nt">-scan</span> <span class="nt">-minc</span> <span class="nt">-majc</span> <span class="nt">-n</span> daycount
+<span class="go">                       -class org.apache.accumulo.core.iterators.user.SummingCombiner
 TypedValueCombiner can interpret Values as a variety of number encodings
   (VLong, Long, or String) before combining
-----------&gt; set SummingCombiner parameter columns,
-            &lt;col fam&gt;[:&lt;col qual&gt;]{,&lt;col fam&gt;[:&lt;col qual&gt;]} : day
-----------&gt; set SummingCombiner parameter type, &lt;VARNUM|LONG|STRING&gt;: STRING
-
-root@a14 perDayCounts&gt; insert foo day 20080101 1
-root@a14 perDayCounts&gt; insert foo day 20080101 1
-root@a14 perDayCounts&gt; insert foo day 20080103 1
-root@a14 perDayCounts&gt; insert bar day 20080101 1
-root@a14 perDayCounts&gt; insert bar day 20080101 1
-
-root@a14 perDayCounts&gt; scan
-bar day:20080101 []    2
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>SummingCombiner parameter columns,
+<span class="gp">            &lt;col fam&gt;</span><span class="o">[</span>:&lt;col qual&gt;]<span class="o">{</span>,&lt;col fam&gt;[:&lt;col qual&gt;]<span class="o">}</span> : day
+<span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>SummingCombiner parameter <span class="nb">type</span>, &lt;VARNUM|LONG|STRING&gt;: STRING
+<span class="go">
+</span><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080103 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert bar day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert bar day 20080101 1
+<span class="go">
+</span><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>scan
+<span class="go">bar day:20080101 []    2
 foo day:20080101 []    2
 foo day:20080103 []    1
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>Accumulo includes some useful Combiners out of the box. To find these look in
 the <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.2/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.</p>
@@ -890,30 +890,30 @@ created, only the user that created the clone can read and write to it.</p>
 <p>In the following example we see that data inserted after the clone operation is
 not visible in the clone.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; createtable people
-
-root@a14 people&gt; insert 890435 name last Doe
-root@a14 people&gt; insert 890435 name first John
-
-root@a14 people&gt; clonetable people test
-
-root@a14 people&gt; insert 890436 name first Jane
-root@a14 people&gt; insert 890436 name last Doe
-
-root@a14 people&gt; scan
-890435 name:first []    John
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14&gt;</span><span class="w"> </span>createtable people
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890435 name last Doe
+<span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890435 name first John
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>clonetable people <span class="nb">test</span>
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890436 name first Jane
+<span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890436 name last Doe
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>scan
+<span class="go">890435 name:first []    John
 890435 name:last []    Doe
 890436 name:first []    Jane
 890436 name:last []    Doe
 
-root@a14 people&gt; table test
-
-root@a14 test&gt; scan
-890435 name:first []    John
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>table <span class="nb">test</span>
+<span class="go">
+</span><span class="gp">root@a14 test&gt;</span><span class="w"> </span>scan
+<span class="go">890435 name:first []    John
 890435 name:last []    Doe
 
-root@a14 test&gt;
-</code></pre></div></div>
+</span><span class="gp">root@a14 test&gt;</span><span class="w">
+</span></code></pre></div></div>
 
 <p>The du command in the shell shows how much space a table is using in HDFS.
 This command can also show how much overlapping space two cloned tables have in
@@ -923,37 +923,37 @@ inserted into cic and its flushed, du shows the two tables still share 428M but
 cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
 that each table uses 428M.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@a14&gt; du ci
-             428,482,573 [ci]
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14&gt;</span><span class="w"> </span><span class="nb">du </span>ci
+<span class="go">             428,482,573 [ci]
 
-root@a14&gt; clonetable ci cic
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span>clonetable ci cic
+<span class="go">
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci, cic]
 
-root@a14&gt; du ci cic
-             428,482,573 [ci, cic]
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span>table cic
+<span class="go">
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq1 v1
+<span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq2 v2
+<span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq3 v3
+<span class="go">
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>flush <span class="nt">-t</span> cic <span class="nt">-w</span>
+<span class="go">27 15:00:13,908 [shell.Shell] INFO : Flush of table cic completed.
 
-root@a14&gt; table cic
-
-root@a14 cic&gt; insert r1 cf1 cq1 v1
-root@a14 cic&gt; insert r1 cf1 cq2 v2
-root@a14 cic&gt; insert r1 cf1 cq3 v3
-
-root@a14 cic&gt; flush -t cic -w
-27 15:00:13,908 [shell.Shell] INFO : Flush of table cic completed.
-
-root@a14 cic&gt; du ci cic
-             428,482,573 [ci, cic]
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci, cic]
                      226 [cic]
 
-root@a14 cic&gt; compact -t cic -w
-27 15:00:35,871 [shell.Shell] INFO : Compacting table ...
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>compact <span class="nt">-t</span> cic <span class="nt">-w</span>
+<span class="go">27 15:00:35,871 [shell.Shell] INFO : Compacting table ...
 27 15:03:03,303 [shell.Shell] INFO : Compaction of table cic completed for given range
 
-root@a14 cic&gt; du ci cic
-             428,482,573 [ci]
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci]
              428,482,612 [cic]
 
-root@a14 cic&gt;
-</code></pre></div></div>
+</span><span class="gp">root@a14 cic&gt;</span><span class="w">
+</span></code></pre></div></div>
 
 <h2 id="exporting-tables">Exporting Tables</h2>
 

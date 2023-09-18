@@ -151,7 +151,7 @@
 <div id="tour-content">
   <p>Below is a solution to the exercise.</p>
 
-<pre><code class="language-commandline">jshell&gt; boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
    ...&gt;   try (ConditionalWriter writer = client.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
    ...&gt;     Condition condition = new Condition("location", "home");
    ...&gt;     if (expectedAddr != null) {
@@ -164,13 +164,13 @@
    ...&gt;     throw new RuntimeException();
    ...&gt;   }
    ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>The following output shows running the example with a conditional writer.
 Threads retry when conditional mutations are rejected.  The final address has
 all three modifications.</p>
 
-<pre><code class="language-commandline">jshell&gt; concurrent_writes()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; concurrent_writes()
 GothamPD table already exists...proceeding...
 Thread  52 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '1007 Mountain Dr, Gotham, New York'
 Thread  91 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '   1007 Mountain Dr, Gotham, NY  '
@@ -178,7 +178,7 @@ Thread  90 attempting change '   1007 Mountain Dr, Gotham, New York  ' -&gt; '  
 Thread  90 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, New York'
 Thread  91 attempting change '1007 Mountain Dr, Gotham, New York' -&gt; '1007 Mountain Dr, Gotham, NY'
 Final address : '1007 Mountain Dr, Gotham, NY'
-</code></pre>
+</code></pre></div></div>
 
 </div>
 

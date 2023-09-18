@@ -187,7 +187,7 @@ always makes the update, even when the value has changed since it was read.</p>
 
 <p>To simplify, we will create several small methods to illustrate the issue.</p>
 
-<pre><code class="language-commandline">jshell&gt; String getAddress(AccumuloClient client, String id)  {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; String getAddress(AccumuloClient client, String id)  {
     ...&gt;   try (org.apache.accumulo.core.client.Scanner scan = new IsolatedScanner(client.createScanner("GothamPD", Authorizations.EMPTY))) {
     ...&gt;     scan.setRange(Range.exact(id, "location", "home"));
     ...&gt;     for (Map.Entry&lt;Key, Value&gt; entry : scan) {
@@ -246,20 +246,20 @@ jshell&gt; void concurrent_writes() throws Exception {
    ...&gt; }
 |  created method concurrent_writes()
 
-</code></pre>
+</code></pre></div></div>
 
 <p>The following is one of a few possible outputs.  Notice that only the
 modification of <code class="language-plaintext highlighter-rouge">Drive</code> to <code class="language-plaintext highlighter-rouge">Dr</code> shows up in the final output.  The other
 modifications were lost.</p>
 
-<pre><code class="language-commandline">jshell&gt; concurrent_writes()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; concurrent_writes()
 GothamPD table already exists...proceeding...
 Thread  52 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '   1007 Mountain Drive, Gotham, NY  '
 Thread  38 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '1007 Mountain Drive, Gotham, New York'
 Thread  53 attempting change '   1007 Mountain Drive, Gotham, New York  ' -&gt; '   1007 Mountain Dr, Gotham, New York  '
 Final address : '   1007 Mountain Dr, Gotham, New York  '
 
-</code></pre>
+</code></pre></div></div>
 
 <p>To fix this example, make the following changes in <code class="language-plaintext highlighter-rouge">setAddress()</code> to use a
 ConditionalWriter.</p>

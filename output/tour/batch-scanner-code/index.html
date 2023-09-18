@@ -153,12 +153,12 @@
 
 <p>Create a table called “GothamBatch”.</p>
 
-<pre><code class="language-commandline">jshell&gt; client.tableOperations().create("GothamBatch");
-</code></pre>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.tableOperations().create("GothamBatch");
+</code></pre></div></div>
 
 <p>Generate 10,000 rows of villain data</p>
 
-<pre><code class="language-commandline">jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamBatch")) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamBatch")) {
    ...&gt;   for (int i = 0; i &lt; 10_000; i++) {
    ...&gt;     Mutation m = new Mutation(String.format("id%04d", i));
    ...&gt;     m.put("villain", "alias", "henchman" + i);
@@ -167,10 +167,10 @@
    ...&gt;    writer.addMutation(m);
    ...&gt;   }
    ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a BatchScanner with 5 query threads</p>
-<pre><code class="language-commandline">jshell&gt; try (BatchScanner batchScanner = client.createBatchScanner("GothamBatch", Authorizations.EMPTY, 5)) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (BatchScanner batchScanner = client.createBatchScanner("GothamBatch", Authorizations.EMPTY, 5)) {
    ...&gt;
    ...&gt;   // Create a collection of 2 sample ranges and set it to the batchScanner
    ...&gt;   List&lt;Range&gt; ranges = new ArrayList&lt;Range&gt;();
@@ -188,7 +188,7 @@
    ---&gt;   Double average = batchScanner.stream().map(Map.Entry::getValue).map(Value::toString).mapToLong(Long::valueOf).average().getAsDouble();
    ---&gt;   System.out.println("The average years of service of " + villianCount + " villians is " + average);
    ...&gt; }
-</code></pre>
+</code></pre></div></div>
 
 <p>Running the solution above should print output similar to below:</p>
 

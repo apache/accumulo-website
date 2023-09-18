@@ -168,7 +168,7 @@ the proper authorizations can read their names.</p>
 
 <p>Create a “secretId” authorization &amp; visibility.</p>
 
-<pre><code class="language-commandline">jshell&gt; String secretId = "secretId";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; String secretId = "secretId";
 secretId ==&gt; "secretId"
 
 jshell&gt; Authorizations auths = new Authorizations(secretId);
@@ -176,14 +176,14 @@ auths ==&gt; secretId
 
 jshell&gt; ColumnVisibility colVis = new ColumnVisibility(secretId);
 colVis ==&gt; [secretId]
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a user with the “secretId” authorization and grant read permissions on our table.</p>
 
-<pre><code class="language-commandline">jshell&gt; client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
 jshell&gt; client.securityOperations().changeUserAuthorizations("commissioner", auths);
 jshell&gt; client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);
-</code></pre>
+</code></pre></div></div>
 
 <p>The <a href="https://static.javadoc.io/org.apache.accumulo/accumulo-core/2.1.2/org/apache/accumulo/core/data/Mutation.html">Mutation</a> API allows you to set the <code class="language-plaintext highlighter-rouge">secretId</code> visibility on a column. Find the proper method for
 setting a column visibility in the Mutation API and modify the code so the <code class="language-plaintext highlighter-rouge">colVis</code> variable created

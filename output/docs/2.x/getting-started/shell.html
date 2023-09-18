@@ -457,38 +457,34 @@ root@myinstance&gt;
 <h2 id="basic-administration">Basic Administration</h2>
 
 <p>The <code class="language-plaintext highlighter-rouge">tables</code> command will list all existing tables.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; tables
-accumulo.metadata
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance&gt;</span><span class="w"> </span>tables
+<span class="go">accumulo.metadata
 accumulo.root
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>The <code class="language-plaintext highlighter-rouge">createtable</code> command creates a new table.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; createtable mytable
-root@myinstance mytable&gt; tables
-accumulo.metadata
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance&gt;</span><span class="w"> </span>createtable mytable
+<span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>tables
+<span class="go">accumulo.metadata
 accumulo.root
 mytable
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>The <code class="language-plaintext highlighter-rouge">deletetable</code> command deletes a table.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance testtable&gt; deletetable testtable
-deletetable { testtable } (yes|no)? yes
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance testtable&gt;</span><span class="w"> </span>deletetable testtable
+<span class="go">deletetable { testtable } (yes|no)? yes
 Table: [testtable] has been deleted.
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <p>The shell can be used to insert updates and scan tables. This is useful for inspecting tables.</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>scan
+<span class="go">
+</span><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>insert row1 colf colq value1
+<span class="go">insert successful
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance mytable&gt; scan
-
-root@myinstance mytable&gt; insert row1 colf colq value1
-insert successful
-
-root@myinstance mytable&gt; scan
-row1 colf:colq [] value1
-</code></pre></div></div>
+</span><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>scan
+<span class="go">row1 colf:colq [] value1
+</span></code></pre></div></div>
 
 <p>The value in brackets <code class="language-plaintext highlighter-rouge">[]</code> would be the visibility labels. Since none were used, this is empty for this row.
 You can use the <code class="language-plaintext highlighter-rouge">-st</code> option to scan to see the timestamp for the cell, too.</p>
@@ -497,51 +493,48 @@ You can use the <code class="language-plaintext highlighter-rouge">-st</code> op
 
 <p>The <code class="language-plaintext highlighter-rouge">compact</code> command instructs Accumulo to schedule a compaction of the table during which
 files are consolidated and deleted entries are removed.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance mytable&gt; compact -t mytable
-07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
-</code></pre></div></div>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>compact <span class="nt">-t</span> mytable
+<span class="go">07 16:13:53,201 [shell.Shell] INFO : Compaction of table mytable started for given range
+</span></code></pre></div></div>
 
 <p>If needed, the compaction can be canceled using <code class="language-plaintext highlighter-rouge">compact --cancel -t mytable</code>.</p>
 
 <p>The <code class="language-plaintext highlighter-rouge">flush</code> command instructs Accumulo to write all entries currently in memory for a given table
 to disk.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance mytable&gt; flush -t mytable
-07 16:14:19,351 [shell.Shell] INFO : Flush of table mytable
-initiated...
-</code></pre></div></div>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>flush <span class="nt">-t</span> mytable
+<span class="go">07 16:14:19,351 [shell.Shell] INFO : Flush of table mytable initiated...
+</span></code></pre></div></div>
 
 <h2 id="user-administration">User Administration</h2>
 
 <p>The Shell can be used to add, remove, and grant privileges to users.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance mytable&gt; createuser bob
-Enter new password for 'bob': *********
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>createuser bob
+<span class="go">Enter new password for 'bob': *********
 Please confirm new password for 'bob': *********
 
-root@myinstance mytable&gt; authenticate bob
-Enter current password for 'bob': *********
+</span><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>authenticate bob
+<span class="go">Enter current password for 'bob': *********
 Valid
 
-root@myinstance mytable&gt; grant System.CREATE_TABLE -s -u bob
+</span><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>grant System.CREATE_TABLE <span class="nt">-s</span> <span class="nt">-u</span> bob
+<span class="go">
+</span><span class="gp">root@myinstance mytable&gt;</span><span class="w"> </span>user bob
+<span class="go">Enter current password for 'bob': *********
 
-root@myinstance mytable&gt; user bob
-Enter current password for 'bob': *********
-
-bob@myinstance mytable&gt; userpermissions
-System permissions: System.CREATE_TABLE
+</span><span class="gp">bob@myinstance mytable&gt;</span><span class="w"> </span>userpermissions
+<span class="go">System permissions: System.CREATE_TABLE
 Table permissions (accumulo.metadata): Table.READ
 Table permissions (mytable): NONE
 
-bob@myinstance mytable&gt; createtable bobstable
+</span><span class="gp">bob@myinstance mytable&gt;</span><span class="w"> </span>createtable bobstable
+<span class="go">
+</span><span class="gp">bob@myinstance bobstable&gt;</span><span class="w">
+</span><span class="go">
+</span><span class="gp">bob@myinstance bobstable&gt;</span><span class="w"> </span>user root
+<span class="go">Enter current password for 'root': *********
 
-bob@myinstance bobstable&gt;
-
-bob@myinstance bobstable&gt; user root
-Enter current password for 'root': *********
-
-root@myinstance bobstable&gt; revoke System.CREATE_TABLE -s -u bob
+</span><span class="gp">root@myinstance bobstable&gt;</span><span class="w"> </span>revoke System.CREATE_TABLE <span class="nt">-s</span> <span class="nt">-u</span> bob
 </code></pre></div></div>
 
     <div class="row mt-4">

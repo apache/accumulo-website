@@ -158,29 +158,29 @@ key/value pairs.</p>
 <p>Let’s create a table called “GothamPD”.</p>
 
 <p>At the JShell prompt, enter the following:</p>
-<pre><code class="language-commandline">jshell&gt; client.tableOperations().create("GothamPD");
-</code></pre>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; client.tableOperations().create("GothamPD");
+</code></pre></div></div>
 
 <p>Accumulo uses Mutation objects to hold all changes to a row in a table. Each row has a unique row
 ID.</p>
 
-<pre><code class="language-commandline">jshell&gt; Mutation mutation1 = new Mutation("id0001");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; Mutation mutation1 = new Mutation("id0001");
 mutation1 ==&gt; org.apache.accumulo.core.data.Mutation@1
-</code></pre>
+</code></pre></div></div>
 
 <p>Create key/value pairs for Batman.  Put them in the “hero” family.</p>
-<pre><code class="language-commandline">jshell&gt; mutation1.put("hero","alias", "Batman");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; mutation1.put("hero","alias", "Batman");
 jshell&gt; mutation1.put("hero","name", "Bruce Wayne");
 jshell&gt; mutation1.put("hero","wearsCape?", "true");
-</code></pre>
+</code></pre></div></div>
 
 <p>Create a BatchWriter to the GothamPD table and add your mutation to it. Try-with-resources will
 close for us.</p>
 
-<pre><code class="language-commandline">jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
   ...&gt;    writer.addMutation(mutation1);
   ...&gt;  }
-</code></pre>
+</code></pre></div></div>
 <p>Read and print all rows of the “GothamPD” table.</p>
 
 <p>Note that within the JShell environment, references to Scanner are ambiguous since it matches both
@@ -189,7 +189,7 @@ be resolved by either using the fully qualified name for the Scanner, or more ea
 base class, <code class="language-plaintext highlighter-rouge">ScannerBase</code>, in place of <code class="language-plaintext highlighter-rouge">Scanner</code> (this should generally only be required when
 within the JShell environment).</p>
 
-<pre><code class="language-commandline">jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jshell&gt; try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
    ...&gt;   System.out.println("Gotham Police Department Persons of Interest:");
    ...&gt;   for(Map.Entry&lt;Key, Value&gt; entry : scan) {
    ...&gt;     System.out.printf("Key : %-50s  Value : %s\n", entry.getKey(), entry.getValue());
@@ -199,7 +199,7 @@ Gotham Police Department Persons of Interest:
 Key : id0001 hero:alias [] 1654274195071 false            Value : Batman
 Key : id0001 hero:name [] 1654274195071 false             Value : Bruce Wayne
 Key : id0001 hero:wearsCape? [] 1654274195071 false       Value : true
-</code></pre>
+</code></pre></div></div>
 
 <p>Be aware the timestamps will differ for you.</p>
 
