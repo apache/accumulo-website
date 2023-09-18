@@ -31,14 +31,14 @@ imports in a project using Accumulo.
 
 For 1.x:
 
-```regex
+```
 import\s+org\.apache\.accumulo\.(.*\.(impl|thrift|crypto)\..*|(?!(core\.(client|data|security)|minicluster)\.).*)
 ```
 
 For 2.0 and later, this can be simplified, because sub-packages not intended
 for public API were relocated, and also altered to include the new MapReduce module:
 
-```regex
+```
 import\s+org\.apache\.accumulo\.(?!(core\.(client|data|iterators|security)|minicluster|hadoop)\.).*
 ```
 

@@ -19,7 +19,7 @@ the proper authorizations can read their names.
 
 Create a "secretId" authorization & visibility.
 
-```commandline
+```
 jshell> String secretId = "secretId";
 secretId ==> "secretId"
 
@@ -32,7 +32,7 @@ colVis ==> [secretId]
 
 Create a user with the "secretId" authorization and grant read permissions on our table.
 
-```commandline
+```
 jshell> client.securityOperations().createLocalUser("commissioner", new PasswordToken("gordonrocks"));
 jshell> client.securityOperations().changeUserAuthorizations("commissioner", auths);
 jshell> client.securityOperations().grantTablePermission("commissioner", "GothamPD", TablePermission.READ);

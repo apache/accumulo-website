@@ -73,7 +73,7 @@ To configure a peer with the name `peer1` which is an Accumulo system with an in
 and a ZooKeeper quorum of `10.0.0.1,10.0.2.1,10.0.3.1`, invoke the following
 command in the shell.
 
-```
+```console
 root@accumulo_primary> config -s
 replication.peer.peer1=org.apache.accumulo.tserver.replication.AccumuloReplicaSystem,accumulo_peer,10.0.0.1,10.0.2.1,10.0.3.1
 ```
@@ -83,7 +83,7 @@ to use when authenticating with this peer. On our peer, we make a special user
 which has permission to write to the tables we want to replicate data into, "replication"
 with a password of "password". We then need to record this in the primary's configuration.
 
-```
+```console
 root@accumulo_primary> config -s replication.peer.user.peer1=replication
 root@accumulo_primary> config -s replication.peer.password.peer1=password
 ```
@@ -93,7 +93,7 @@ file per peer can be configured instead of a password. The provided keytabs must
 by the unix user running Accumulo. They keytab for a peer can be unique from the
 keytab used by Accumulo or any keytabs for other peers.
 
-```
+```console
 accumulo@EXAMPLE.COM@accumulo_primary> config -s replication.peer.user.peer1=replication@EXAMPLE.COM
 accumulo@EXAMPLE.COM@accumulo_primary> config -s replication.peer.keytab.peer1=/path/to/replication.keytab
 ```
@@ -107,7 +107,7 @@ cluster, this is a table ID. In this example, we want to enable replication on
 `my_table` and configure our peer `accumulo_peer` as a target, sending
 the data to the table with an ID of `2` in `accumulo_peer`.
 
-```
+```console
 root@accumulo_primary> config -t my_table -s table.replication=true
 root@accumulo_primary> config -t my_table -s table.replication.target.accumulo_peer=2
 ```
@@ -225,7 +225,7 @@ The rest of the configuration is dynamic and is best configured on the fly (in Z
 The next series of command are to be run on the peer system. Create a user account for the primary instance called
 "peer". The password for this account will need to be saved in the configuration on the primary
 
-```
+```console
 root@peer> createtable my_table
 root@peer> createuser peer
 root@peer> grant -t my_table -u peer Table.WRITE
@@ -241,7 +241,7 @@ Next, configure the primary instance.
 
 #### Set up the table
 
-```
+```console
 root@primary> createtable my_table
 ```
 
@@ -252,7 +252,7 @@ that we want to use, and the configuration for the [AccumuloReplicaSystem]. In t
 Instance name for `peer` and the ZooKeeper quorum string. The configuration key is of the form
 `replication.peer.$peer_name`.
 
-```
+```console
 root@primary> config -s replication.peer.peer=org.apache.accumulo.tserver.replication.AccumuloReplicaSystem,peer,$peer_zk_quorum
 ```
 
@@ -261,7 +261,7 @@ root@primary> config -s replication.peer.peer=org.apache.accumulo.tserver.replic
 We want to use that special username and password that we created on the peer, so we have a means to write data to
 the table that we want to replicate to. The configuration key is of the form "replication.peer.user.$peer_name".
 
-```
+```console
 root@primary> config -s replication.peer.user.peer=peer
 root@primary> config -s replication.peer.password.peer=peer
 ```
@@ -276,13 +276,13 @@ The configuration for the AccumuloReplicaSystem is the table ID for the table on
 want to replicate into. Be sure to use the correct value for $peer_table_id. The configuration key is of
 the form "table.replication.target.$peer_name".
 
-```
+```console
 root@primary> config -t my_table -s table.replication.target.peer=$peer_table_id
 ```
 
 Finally, we can enable replication on this table.
 
-```
+```console
 root@primary> config -t my_table -s table.replication=true
 ```
 

@@ -9,7 +9,7 @@ sorted order. A [BatchScanner] will retrieve multiple `Range`s of data using mul
 For this exercise, we need to generate a bunch of data to test BatchScanner.  Execute the code below
 to create our data set.
 
-```commandline
+```
 jshell> try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
    ...>   for (int i = 0; i < 10_000; i++) {
    ...>     Mutation m = new Mutation(String.format("id%04d", i));

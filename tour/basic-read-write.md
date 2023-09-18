@@ -11,20 +11,20 @@ Our next exercise shows how to write and read from a table.
 Let's create a table called "GothamPD".
 
 At the JShell prompt, enter the following:
-```commandline
+```
 jshell> client.tableOperations().create("GothamPD");
 ```
 
 Accumulo uses Mutation objects to hold all changes to a row in a table. Each row has a unique row
 ID.
 
-```commandline
+```
 jshell> Mutation mutation1 = new Mutation("id0001");
 mutation1 ==> org.apache.accumulo.core.data.Mutation@1
 ```
 
 Create key/value pairs for Batman.  Put them in the "hero" family.
-```commandline
+```
 jshell> mutation1.put("hero","alias", "Batman");
 jshell> mutation1.put("hero","name", "Bruce Wayne");
 jshell> mutation1.put("hero","wearsCape?", "true");
@@ -33,7 +33,7 @@ jshell> mutation1.put("hero","wearsCape?", "true");
 Create a BatchWriter to the GothamPD table and add your mutation to it. Try-with-resources will
 close for us.
 
-```commandline
+```
 jshell> try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
   ...>    writer.addMutation(mutation1);
   ...>  }
@@ -46,7 +46,7 @@ be resolved by either using the fully qualified name for the Scanner, or more ea
 base class, ```ScannerBase```, in place of ```Scanner``` (this should generally only be required when
 within the JShell environment).
 
-```commandline
+```
 jshell> try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
    ...>   System.out.println("Gotham Police Department Persons of Interest:");
    ...>   for(Map.Entry<Key, Value> entry : scan) {

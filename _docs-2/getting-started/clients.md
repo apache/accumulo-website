@@ -71,7 +71,7 @@ If an [accumulo-client.properties] file or a Java Properties object is used to c
 
 If a token class is used for `auth.type`, you can create a Base64 encoded token using the `accumulo create-token` command.
 
-```
+```console
 $ accumulo create-token
 Username (aka principal): root
 the password for the principal: ******
@@ -187,11 +187,11 @@ These levels are:
 Durability can be set in multiple ways:
 
 1. The default durability of all tables can be set using [table.durability].
-    ```
+    ```console
     root@uno> config -s table.durability=flush
     ```
 2. The default durability of a table can be overriden by setting [table.durability] for that table.
-    ```
+    ```console
     root@uno> config -t mytable -s table.durability=sync
     ```
 3. When creating an [AccumuloClient], the default durability can be overridden using `withBatchWriterConfig()`

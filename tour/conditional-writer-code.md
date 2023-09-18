@@ -4,7 +4,7 @@ title: Conditional Writer Code
 
 Below is a solution to the exercise.
 
-```commandline
+```
 jshell> boolean setAddress(AccumuloClient client, String id, String expectedAddr, String newAddr) {
    ...>   try (ConditionalWriter writer = client.createConditionalWriter("GothamPD", new ConditionalWriterConfig())) {
    ...>     Condition condition = new Condition("location", "home");
@@ -24,7 +24,7 @@ The following output shows running the example with a conditional writer.
 Threads retry when conditional mutations are rejected.  The final address has
 all three modifications.
 
-```commandline
+```
 jshell> concurrent_writes()
 GothamPD table already exists...proceeding...
 Thread  52 attempting change '   1007 Mountain Dr, Gotham, New York  ' -> '1007 Mountain Dr, Gotham, New York'

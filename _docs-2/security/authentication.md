@@ -26,7 +26,7 @@ a password.  This `root` user is used to create other users.
 
 Users can be created in the shell:
 
-```
+```console
 root@uno> createuser bob
 Enter new password for 'bob': ****
 Please confirm new password for 'bob': ****
@@ -45,7 +45,7 @@ or when they log in to the [Accumulo shell]({% durl getting-started/shell %}).
 
 Authentication can also be tested in the shell:
 
-```
+```console
 root@myinstance mytable> authenticate bob
 Enter current password for 'bob': ****
 Valid
@@ -61,7 +61,7 @@ boolean valid = client.securityOperations().authenticateUser("bob", new Password
 
 A user's password can be changed in the shell:
 
-```
+```console
 root@uno> passwd -u bob
 Enter current password for 'root': ******
 Enter new password for 'bob': ***
@@ -77,7 +77,7 @@ client.securityOperations().changeLocalUserPassword("bob", new PasswordToken("pa
 
 Users can be removed in the shell:
 
-```
+```console
 root@uno> dropuser bob
 dropuser { bob } (yes|no)? yes
 ```

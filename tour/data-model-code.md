@@ -4,11 +4,11 @@ title: Data Model Code
 
 Below is the solution for the complete exercise.
 
-```commandline
+```
 jshell> client.tableOperations().create("GothamPD");
 ```
 Create a row for Batman
-```commandline
+```
 jshell> Mutation mutation1 = new Mutation("id0001");
 mutation1 ==> org.apache.accumulo.core.data.Mutation@1
 
@@ -18,7 +18,7 @@ jshell> mutation1.put("hero","wearsCape?", "true");
 ```
 
 Create a row for Robin
-```commandline
+```
 jshell> Mutation mutation2 = new Mutation("id0002");
 mutation2 ==> org.apache.accumulo.core.data.Mutation@1
 
@@ -28,7 +28,7 @@ jshell> mutation2.put("hero","wearsCape?", "true");
 ```
 
 Create a row for Joker
-```commandline
+```
 jshell> Mutation mutation3 = new Mutation("id0003");
 mutation3 ==> org.apache.accumulo.core.data.Mutation@1
 
@@ -40,7 +40,7 @@ jshell> mutation3.put("villain","wearsCape?", "false");
 Create a BatchWriter to the GothamPD table and add your mutations to it.
 Once the BatchWriter is closed by the try-with-resources, data will be available to scans.
 
-```commandline
+```
 jshell> try (BatchWriter writer = client.createBatchWriter("GothamPD")) {
    ...>   writer.addMutation(mutation1);
    ...>   writer.addMutation(mutation2);
@@ -52,7 +52,7 @@ Read and print all rows of the "GothamPD" table. Try-with-resources will close f
 
 Note: A Scanner is an extension of ```java.lang.Iterable``` so it will traverse through the table.
 
-```commandline
+```
 jshell> try (ScannerBase scan = client.createScanner("GothamPD", Authorizations.EMPTY)) {
    ...>   System.out.println("Gotham Police Department Persons of Interest:");
    ...>     for (Map.Entry<Key, Value> entry : scan) {
