@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 3.0.0</title>
+<title>Apache Accumulo 2.1.3</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -139,114 +139,96 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 3.0.0</h1>
+          <h1 class="title">Apache Accumulo 2.1.3</h1>
           
           
 
-<p>21 Aug 2023</p>
+<p>20 Sep 2023</p>
 <nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-2.1.3/">&laquo;&nbsp;Apache Accumulo 2.1.3</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-2.1.2/">&laquo;&nbsp;Apache Accumulo 2.1.2</a></li>
       
     
+      
+        <li class="page-item"><a class="page-link" href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
 
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
+  Please view <a class="alert-link" href="/release/accumulo-2.1.2/">the latest release notes</a>.
+</div>
 
 
-<div class="alert alert-warning" role="alert">
-  This version is not a <a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.
+
+<div class="alert alert-success" role="alert">
+  This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.
 </div>
 
 
 <h2 id="about">About</h2>
 
-<p>Apache Accumulo 3.0.0 is a non-LTM major version release. While it
-primarily contains the 2.1 codebase, including all patches through
-2.1.2, it has also removed a substantial number of deprecated features
-and code, in an attempt to clean up several years of accrued technical
-debt, and lower the maintenance burden to make way for future
-improvements. It also contains a few other minor improvements.</p>
+<p>Apache Accumulo 2.1.3 is a patch release of the 2.1 LTM line. It contains bug
+fixes and minor enhancements. This version supersedes 2.1.2. Users upgrading to
+2.1 should upgrade directly to this version instead of 2.1.2.</p>
 
-<h2 id="notable-removals">Notable Removals</h2>
+<p>Included here are some highlights of the most interesting bugs fixed and
+features added in 2.1.3. For the full set of changes, please see the commit
+history or issue tracker.</p>
+
+<h3 id="notable-improvements">Notable Improvements</h3>
+
+<p>Improvements that affect performance:</p>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/1328">#1328</a> The FileSystem monitor has been removed and will no
-longer watch for problems with local file systems and self-terminate.
-System administrators are encouraged to use whatever systems health
-monitoring is appropriate for their deployments, rather than depend on
-Accumulo to monitor these.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/2443">#2443</a> The MapReduce APIs embedded in the accumulo-core module
-were removed. The separate <code class="language-plaintext highlighter-rouge">accumulo-hadoop-mapreduce</code> jar is their
-replacement.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3073">#3073</a> The legacy Connector and Instance client classes were removed.
-The AccumuloClient is their replacement.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3080">#3080</a> The cross-data center replication feature was removed without
-replacement due to lack of being maintained, having numerous outstanding
-unfixed issues with no volunteer to maintain it since it was deprecated, and
-substantial code complexity. The built-in replication table it used for
-tracking replication metadata will be removed on upgrade.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3114">#3114</a>, <a href="https://github.com/apache/accumulo/issues/3115">#3115</a>, <a href="https://github.com/apache/accumulo/issues/3116">#3116</a>, <a href="https://github.com/apache/accumulo/issues/3117">#3117</a> Removed
-deprecated VolumeChooser, TabletBalancer, Constraint, and other APIs, in
-favor of their SPI replacements.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3106">#3106</a> Remove deprecated configuration properties (see 2.1 property
-documentation for which ones were deprecated)</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3112">#3112</a> Remove CompactionStrategy class in favor of CompactionSelector
-and CompactionConfigurer.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3160">#3160</a> Remove upgrade code for versions prior to 2.1 (minimum version
-to upgrade from is now 2.1.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3192">#3192</a> Remove arguments to server processes, such as (<code class="language-plaintext highlighter-rouge">-a</code>, <code class="language-plaintext highlighter-rouge">-g</code>,
-<code class="language-plaintext highlighter-rouge">-q</code>, etc.) were removed in favor of configuration properties that can be
-specified in the Accumulo configuration files or supplied on a per-process
-basis using the <code class="language-plaintext highlighter-rouge">-o</code> argument. The provided cluster management reference
-scripts were updated in <a href="https://github.com/apache/accumulo/issues/3197">#3197</a> to use the <code class="language-plaintext highlighter-rouge">-o</code> method.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3136">#3136</a> Remove the built-in VFS classloader support. To use a custom
-classloader, users must now set the ContextClassLoaderFactory implementation
-in the properties. The default is now the URLContextClassLoaderFactory.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3318">#3318</a> Remove the old bulk import implementation, replaced by the new
-bulk import API added <a href="https://accumulo.apache.org/release/accumulo-2.0.0/#new-bulk-import-api">in 2.0.0</a>.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3265">#3265</a> Remove scan interpreter and scan formatter from the shell</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3361">#3361</a> Remove all remaining references to the old “master” service
-(renamed to “manager”).</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3360">#3360</a> Remove checks and code related to the old password hashing
-mechanism in Accumulo. This will discontinue warnings about users passwords
-that are still out of date. Instead, those outdated passwords will simply
-become invalid. If the user authenticated to Accumulo at any time prior to
-upgrading, their password will have been converted. So this only affects
-accounts that were never used with 2.1 at all. As mitigation, such users will
-be able to have their password reset by the root user. If the root user never
-authenticated (and neither had another admin user) while on 2.1 (very very
-unlikely), an administrator can reset the entire user database through the
-normal init step to reset security.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3378">#3378</a> Remove broken support for old map files. (RFiles have been in
-use for a long time, so this should not impact any users; if users had been
-trying to use map files, they would have found that they were broken anyway)</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3722">#3722</a> Adds parameter <a href="/docs/2.x/configuration/server-properties#general_filename_base_allocation">general.filename.base.allocation</a>, that allows the batch size
+for unique filename allocation in ZooKeeper to be configurable. In a system that requires large numbers
+of unique names, larger batch sizes can reduce ZooKeeper contention because more file names can be 
+reserved with a single ZooKeeper call.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3733">#3733</a> Avoid creating server side threads when failed writes are cancelled. In versions 2.1.2
+and earlier, the thrift close call creates a new thread to cancel the thrift session. With 2.1.3, an
+new thrift method is available to test if a session is reserved and deletes it if it is not reserved 
+without creating an additional thread.  If the new method is not available it falls back to the previous
+close method to preserve interoperability between 2.x versions.</li>
 </ul>
 
-<h2 id="notable-additions">Notable Additions</h2>
+<h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3088">#3088</a> New methods were added to compaction-related APIs to share
-information about the current tablet being compacted to user code</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3107">#3107</a> Decompose internal thrift services by function to make RPC
-functionality more modular by server instances</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3189">#3189</a> Standardized server lock data structure in ZooKeeper</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3206">#3206</a> Internal caches now use Caffeine instead of Guava’s Cache</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3161">#3161</a>, <a href="https://github.com/apache/accumulo/issues/3288">#3288</a> The internal service (renamed from
-GarbageCollectionLogger to LowMemoryDetector) that was previously used only
-to report low memory in servers, was made configurable to allow pausing
-certain operations like scanning, minor compactions, or major compactions,
-when memory is low. See the server properties for <code class="language-plaintext highlighter-rouge">general.low.mem.*</code>.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3721">#3721</a> Fixes issue with writes happening in a retry after batch writer was closed. This
+strengthens metadata consistency.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3749">#3749</a> Fixes issue where deleting a compaction pool with running compactions would
+leave the tserver in a bad state.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3748">#3748</a> Fixes bug where wal could remained locked if an exception occurred.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3747">#3747</a> Adds validation to prevent possible deadlock when acquiring wal locks.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3737">#3737</a> Use custom Transport to set Transport message and frame size. This fixes
+a bug where Accumulo would not change the max message size allowed.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/#608">##608</a>, <a href="https://github.com/apache/accumulo/issues/3755">#3755</a> Add validation to GC that checks that the scanner used by GC to determine
+candidates for deletion returned a complete row as a mitigation for <a href="https://github.com/apache/accumulo/issues/#608">##608</a> where
+garbage collector removes file that are referenced and in-use.</li>
+</ul>
+
+<h3 id="improvements-that-help-with-administration">Improvements that help with administration:</h3>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3697">#3697</a> Allow <code class="language-plaintext highlighter-rouge">ACCUMULO_JAVA_PREFIX</code> option in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> so it can be passed 
+as an array. This simplifies passing user options when starting Accumulo processes, for example
+<code class="language-plaintext highlighter-rouge">numactl</code> parameters.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3751">#3751</a> Added property <a href="/docs/2.x/configuration/server-properties#rpc_backlog">rpc.backlog</a> to configure backlog size for
+Thrift server sockets.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3745">#3745</a> Adds prefix to gc deletion log messages. This makes it easier to isolate the deletion
+actions of the garbage collector for analysis.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3724">#3724</a> Adds logging of transactions when metadata and in-memory differences are detected.</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
 
 <p>View the <a href="/docs/2.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance.</p>
 
-<h2 id="300-github-project">3.0.0 GitHub Project</h2>
+<h2 id="212-github-project">2.1.2 GitHub Project</h2>
 
-<p><a href="https://github.com/apache/accumulo/projects/11">All tickets related to 3.0.0.</a></p>
+<p><a href="https://github.com/apache/accumulo/projects/30">All tickets related to 2.1.3.</a></p>
 
 
 
@@ -255,9 +237,11 @@ when memory is low. See the server properties for <code class="language-plaintex
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-2.1.3/">&laquo;&nbsp;Apache Accumulo 2.1.3</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-2.1.2/">&laquo;&nbsp;Apache Accumulo 2.1.2</a></li>
       
     
+      
+        <li class="page-item"><a class="page-link" href="/release/accumulo-3.0.0/">Apache Accumulo 3.0.0&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
