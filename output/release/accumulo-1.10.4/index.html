@@ -25,7 +25,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
 <link href="/css/accumulo.css" rel="stylesheet" type="text/css">
 
-<title>Apache Accumulo 1.10.3</title>
+<title>Apache Accumulo 1.10.4</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -139,42 +139,53 @@
         </div>
         <div id="content">
           
-          <h1 class="title">Apache Accumulo 1.10.3</h1>
+          <h1 class="title">Apache Accumulo 1.10.4</h1>
           
           
 
-<p>13 Apr 2023</p>
+<p>13 Nov 2023</p>
 <nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.2/">&laquo;&nbsp;Apache Accumulo 1.10.2</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.3/">&laquo;&nbsp;Apache Accumulo 1.10.3</a></li>
       
     
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.4/">Apache Accumulo 1.10.4&nbsp;&raquo;</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-2.0.0-alpha-1/">Apache Accumulo 2.0.0-alpha-1&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
 
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
+  Please view <a class="alert-link" href="/release/accumulo-2.1.2/">the latest release notes</a>.
+</div>
 
 
-<div class="alert alert-success" role="alert">
-  This version is a current <strong><a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (LTM)</a></strong> release.
+
+<div class="alert alert-warning" role="alert">
+  This version of Accumulo has been superceded by a newer version.<br>
+  Please check <a class="alert-link" href="/release/">our release archive</a> for a newer version.
 </div>
 
 
 <h2 id="about">About</h2>
 
-<p>Apache Accumulo 1.10.3 is a bug fix release of the 1.10 LTM release line.</p>
+<p>Apache Accumulo 1.10.4 is the final bug fix release of the 1.10 LTM release
+line. As of this release, the 1.10 release line is now considered end-of-life.
+This means that any fixes that are applied because of a bug found in this
+version will not be applied and released as a new 1.10 patch version, but
+instead will be applied and released to the currently active release lines, if
+they apply to those versions.</p>
 
-<p>These release notes are highlights of the changes since 1.10.2. The full
+<p>These release notes are highlights of the changes since 1.10.3. The full
 detailed changes can be seen in the git history. If anything important is
 missing from this list, please <a href="/contact-us">contact</a> us to have it included.</p>
 
-<p>Users of 1.10.2 or earlier are encouraged to upgrade to 1.10.3, as this is a
-continuation of the 1.10 LTM release line with bug fixes and improvements, and
-it supersedes any prior 1.x version. Users are also encouraged to consider
-migrating to a 2.x version when one that is suitable for their needs becomes
-available.</p>
+<p>Users of any 1.10 version are encouraged to upgrade to the next LTM release,
+which is 2.1 at the time of this writing. This patch release is provided as a
+final release with all the patches the developers have made to 1.10, for
+anybody who must remain using 1.10, and who want to upgrade from an earlier 1.x
+version.</p>
 
 <h2 id="known-issues">Known Issues</h2>
 
@@ -184,31 +195,21 @@ This issue is applicable to all 1.10 versions.</p>
 
 <h2 id="major-improvements">Major Improvements</h2>
 
-<p>None</p>
+<ul>
+  <li><a href="https://github.com/apache/accumulo/issues/3391">#3391</a> Drop support for MapFile file formats as an alternative to
+RFile; the use of MapFiles was already broken, and had been for a long time.
+So this change was done to cause an explicit and detectable failure, rather
+than allow a silent one to occur if a MapFile was attempted to be used.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3703">#3703</a> Add verification checks to improve the reliability of the
+accumulo-gc, in order to ensure that a full row for a tablet was seen when a
+file deletion candidate is checked</li>
+</ul>
 
 <h3 id="other-improvements">Other Improvements</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/2708">#2708</a> Disabled merging minor-compactions by default</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3226">#3226</a> Change scan thread resource management to use a “fair”
-semaphore to avoid resource starvation in some situations</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3221">#3221</a>, <a href="https://github.com/apache/accumulo/issues/3249">#3249</a>, <a href="https://github.com/apache/accumulo/issues/3261">#3261</a> Improve some performance by
-improving split point calculations</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3276">#3276</a> Improve performance by optimizing internal data structures in
-frequently used Authorizations object</li>
-</ul>
-
-<h3 id="other-bug-fixes">Other Bug Fixes</h3>
-
-<ul>
-  <li><a href="https://github.com/apache/accumulo/issues/3069">#3069</a> Fix a minor bug with VFS on newer Java versions due to
-MIME-type changes</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3176">#3176</a> Fixed bug in client scanner code that was not using the
-correct timeout variable in some places</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3168">#3168</a> Fixed bug in TabletLocator that could cause the BatchScanner
-to return duplicate data</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3231">#3231</a>, <a href="https://github.com/apache/accumulo/issues/3235">#3235</a> Fix wait timeout logic when waiting for
-minimum number of available tservers during startup</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3300">#3300</a> Fix the documentation about iterator teardown in the user manual</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3343">#3343</a> Fix errors in the javadoc for Range</li>
 </ul>
 
 <h2 id="note-about-jdk-15">Note About JDK 15</h2>
@@ -220,9 +221,8 @@ applicable to all 1.10 releases.</p>
 <h2 id="useful-links">Useful Links</h2>
 
 <ul>
-  <li><a href="https://lists.apache.org/thread/zl8xoogzqnbcw75vcmvqmwlrf8djfcb5">Release VOTE email thread</a></li>
-  <li><a href="https://github.com/apache/accumulo/compare/rel/1.10.2...apache:rel/1.10.3">All Changes since 1.10.2</a></li>
-  <li><a href="https://github.com/apache/accumulo/issues?q=%20project%3Aapache%2Faccumulo%2F23">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
+  <li><a href="https://github.com/apache/accumulo/compare/rel/1.10.3...apache:rel/1.10.4">All Changes since 1.10.3</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues?q=%20project%3Aapache%2Faccumulo%2F27">GitHub</a> - List of issues tracked on GitHub corresponding to this release</li>
 </ul>
 
 
@@ -232,11 +232,11 @@ applicable to all 1.10 releases.</p>
 <p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
 <nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.2/">&laquo;&nbsp;Apache Accumulo 1.10.2</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.3/">&laquo;&nbsp;Apache Accumulo 1.10.3</a></li>
       
     
       
-        <li class="page-item"><a class="page-link" href="/release/accumulo-1.10.4/">Apache Accumulo 1.10.4&nbsp;&raquo;</a></li>
+        <li class="page-item"><a class="page-link" href="/release/accumulo-2.0.0-alpha-1/">Apache Accumulo 2.0.0-alpha-1&nbsp;&raquo;</a></li>
       
     </ul></nav>
 
