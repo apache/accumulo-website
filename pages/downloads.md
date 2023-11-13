@@ -134,14 +134,14 @@ enhancements, and more.
 </div>
 
 
-{% assign linkVers = '1.10.3' %}
+{% assign linkVers = '1.10.4' %}
 ### {{linkVers}} **Legacy**{: .badge .bg-secondary} **LTM**{: .badge .bg-success}
 {: #legacy }
 
 The most recent legacy (1.x) release of Apache Accumulo&reg; is version
-{{linkVers}}.
-
-The 1.10 release series will reach end-of-life on **November 1, 2023**.
+{{linkVers}}. This is the final release of the 1.10 series, which is now
+considered end-of-life. This means that code fixes that address bugs
+reported against this version will only be applied to future versions.
 
 {% for srcbin in srcbinArray %}
 {% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
