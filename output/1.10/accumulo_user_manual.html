@@ -1178,6 +1178,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_string">A.4.13. string</a></li>
 <li><a href="#_boolean">A.4.14. boolean</a></li>
 <li><a href="#_uri">A.4.15. uri</a></li>
+<li><a href="#_file_name_extension">A.4.16. file name extension</a></li>
 </ul>
 </li>
 </ul>
@@ -3587,12 +3588,17 @@ always see all intended data that is generated.</p>
 <div class="sect3">
 <h4 id="_teardown">7.7.2. Teardown</h4>
 <div class="paragraph">
-<p>As mentioned, instance of Iterators may be torn down inside of the server transparently. When a complex
-collection of iterators is performing some advanced functionality, they will not be torn down until a Key-Value
-pair is returned out of the "stack" of Iterators (and added into the batch of Key-Values to be returned
-to the caller). Being torn-down is equivalent to a new instance of the Iterator being creating and <code>deepCopy</code>
-being called on the new instance with the old instance provided as the argument to <code>deepCopy</code>. References
-to the old instance are removed and the object is lazily garbage collected by the JVM.</p>
+<p>Instances of iterators may be torn down inside the server transparently. When a complex collection
+of iterators is performing advanced functionality, they will not be torn down until a Key-Value pair
+is returned out of the "stack" of iterators (and added into the batch of Key-Values to be returned
+to the caller), or the iterator is yielded.</p>
+</div>
+<div class="paragraph">
+<p>When an iterator is torn down, the entire stack is dropped and no state is preserved. Only the last
+key returned (or the yielded position), original options, and seek range are retained. When the scan
+is continued, the iterator stack is rebuilt and re-initialized using the original options. The stack
+is then seeked with the original range, and the start key is replaced by the last key returned (or
+the yielded position), non-inclusive.</p>
 </div>
 </div>
 </div>
@@ -11825,7 +11831,7 @@ $HADOOP_PREFIX/share/hadoop/yarn/lib/jersey.*.jar,
 <p>Change the type of file a table writes</p>
 </div>
 <div class="paragraph">
-<p><em>Type:</em> STRING<br>
+<p><em>Type:</em> FILENAME_EXT<br>
 <em>Zookeeper Mutable:</em> yes<br>
 <em>Default Value:</em> <code>rf</code></p>
 </div>
@@ -12343,13 +12349,19 @@ An example is 'java.lang.String', rather than 'String'</p>
 <p>A valid URI</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_file_name_extension">A.4.16. file name extension</h4>
+<div class="paragraph">
+<p>One of the currently supported filename extensions for storing table data files. Currently, only rf is supported.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-04-07 16:16:54 -0400
+Last updated 2023-11-13 09:33:45 -0500
 </div>
 </div>
 </body>
