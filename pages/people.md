@@ -197,6 +197,15 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Wil Selwood         | [Satellite Applications Catapult][SACAT]                          | [GMT][GMT]/[BST][BST] |
 | Xiao Wang           | [Stevens Institute of Technology][SIT]                            | [ET][ET]              |
 
+## More
+
+Many people with a background working with Accumulo can also be found on
+various professional and social networking sites. One such group is the [Apache
+Accumulo Professionals][linkedin-group] group on Linked in. Membership in these
+groups is not in any way an endorsement of their qualifications from either the
+ASF or the Apache Accumulo PMC.
+
+[linkedin-group]: https://www.linkedin.com/groups/4554913/
 [github-contributors]: https://github.com/apache/accumulo/graphs/contributors
 [ANAVATION]: https://www.anavationllc.com
 [ANTHEMENG]: https://www.anthemengineering.com
