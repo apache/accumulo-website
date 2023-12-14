@@ -103,9 +103,8 @@ manually or run `accumulo-cluster create-config`.
 
 Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e. Manager, TabletServer, Garbage Collector) is configured by [log4j-service.properties] except for
-the Monitor which is configured by [log4j-monitor.properties]. All Accumulo commands (i.e `init`,
-`shell`, etc) are configured by [log4j.properties].
+(i.e. Manager, TabletServer, Garbage Collector) is configured by [log4j2-service.properties]. All Accumulo commands (i.e `init`,
+`shell`, etc) are configured by [log4j2.properties].
 
 ### Configure accumulo-env.sh
 
@@ -521,7 +520,7 @@ set by `ACCUMULO_LOG_DIR` in [accumulo-env.sh].
 
 Accumulo logs many user-initiated actions, and whether they succeeded or failed, to an slf4j logger
 named `org.apache.accumulo.audit`. This logger can be configured in the user's logging framework
-(such as log4j or logback). In the tarball, the configuration file `conf/log4j-service.properties`
+(such as log4j or logback). In the tarball, the configuration file `conf/log4j2-service.properties`
 demonstrates basic audit logging with example configuration options for log4j.
 
 ## Recovery
@@ -753,6 +752,7 @@ Please check the release notes for your Accumulo version or use the
 [monitor.port.log4j]: {% purl monitor.port.log4j %}
 [monitor.port.client]: {% purl monitor.port.client %}
 [tserver.port.client]: {% purl tserver.port.client %}
+[sserver.port.client]: {% purl sserver.port.client %}
 [gc.port.client]: {% purl gc.port.client %}
 [manager.port.client]: {% purl manager.port.client %}
 [trace.port.client]: {% purl trace.port.client %}
@@ -775,9 +775,9 @@ Please check the release notes for your Accumulo version or use the
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
 [monitor-host]: {% durl configuration/files#monitor %}
-[manager]: {% durl configuration/files#managers %}
-[tserver]: {% durl configuration/files#tservers %}
+[manager]: {% durl configuration/files#manager %}
+[tserver]: {% durl configuration/files#tserver %}
 [tracers]: {% durl configuration/files#tracers %}
-[log4j-service.properties]: {% durl configuration/files#log4j-serviceproperties %}
+[log4j2-service.properties]: {% durl configuration/files#log4j2-serviceproperties %}
 [log4j-monitor.properties]: {% durl configuration/files#log4j-monitorproperties %}
-[log4j.properties]: {% durl configuration/files#log4jproperties %}
+[log4j2.properties]: {% durl configuration/files#log4j2properties %}
