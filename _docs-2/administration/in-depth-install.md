@@ -37,7 +37,6 @@ their value in [accumulo.properties].
 |Port | Description | Property Name
 |-----|-------------|--------------
 |4445 | Shutdown Port (Accumulo MiniCluster) | n/a
-|4560 | Accumulo monitor (for centralized log display) | [monitor.port.log4j]
 |9132 | Accumulo Compaction Coordinator | [compaction.coordinator.port.client]
 |9133 | Accumulo Compactor | [compactor.port.client]
 |9995 | Accumulo HTTP monitor | [monitor.port.client]
@@ -749,7 +748,6 @@ Please check the release notes for your Accumulo version or use the
 [instance.volumes.replacements]: {% purl instance.volumes.replacements %}
 [instance.zookeeper.host]: {% purl instance.zookeeper.host %}
 [instance.secret]: {% purl instance.secret %}
-[monitor.port.log4j]: {% purl monitor.port.log4j %}
 [monitor.port.client]: {% purl monitor.port.client %}
 [tserver.port.client]: {% purl tserver.port.client %}
 [sserver.port.client]: {% purl sserver.port.client %}
