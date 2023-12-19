@@ -262,8 +262,10 @@ can vary, you should verify the contents of the file with a hexdump tool.
 Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS with the empty WAL for the 
 tserver / host pair with the following hdfs commands:
 
-    $ hdfs dfs -moveFromLocal [uuid].wal /user/accumulo/[uuid].wal
-    $ hdfs dfs -mv /user/accumulo/[uuid].wal /accumulo/wal/[tserver+port]/[uuid]
+```sh
+hdfs dfs -moveFromLocal "$UUID.wal" "/user/accumulo/$UUID.wal"
+hdfs dfs -mv "/user/accumulo/$UUID.wal" "/accumulo/wal/[tserver+port]/$UUID"
+```
 
 Note:
 - the `+` separator for port.
