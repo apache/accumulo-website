@@ -272,7 +272,7 @@ Note:
 - the wal file is the uuid, without an extension
 
 After the corrupt WAL file has been replaced, the system should automatically recover. It may be necessary to restart 
-the Accumulo Manager process as an exponential backup policy is used which could lead to a long wait before Accumulo 
+the Accumulo Manager process to reduce the recovery time, because an exponential backup policy is used which could lead to a long wait before Accumulo 
 will try to re-load the WAL file.
 
 ## Zookeeper Failures
