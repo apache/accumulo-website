@@ -476,11 +476,6 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
       <td>n/a</td>
     </tr>
     <tr>
-      <td>4560</td>
-      <td>Accumulo monitor (for centralized log display)</td>
-      <td><a href="/docs/2.x/configuration/server-properties#monitor_port_log4j">monitor.port.log4j</a></td>
-    </tr>
-    <tr>
       <td>9132</td>
       <td>Accumulo Compaction Coordinator</td>
       <td><a href="/docs/2.x/configuration/server-properties#compaction_coordinator_port_client">compaction.coordinator.port.client</a></td>
@@ -498,7 +493,7 @@ their value in <a href="/docs/2.x/configuration/files#accumuloproperties">accumu
     <tr>
       <td>9996</td>
       <td>Accumulo Scan Server</td>
-      <td>[sserver.port.client]</td>
+      <td><a href="/docs/2.x/configuration/server-properties#sserver_port_client">sserver.port.client</a></td>
     </tr>
     <tr>
       <td>9997</td>
@@ -592,9 +587,8 @@ manually or run <code class="language-plaintext highlighter-rouge">accumulo-clus
 
 <p>Logging is configured in <a href="/docs/2.x/configuration/files#accumulo-envsh">accumulo-env.sh</a> to use three log4j configuration files in <code class="language-plaintext highlighter-rouge">conf/</code>. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
-(i.e. Manager, TabletServer, Garbage Collector) is configured by <a href="/docs/2.x/configuration/files#log4j-serviceproperties">log4j-service.properties</a> except for
-the Monitor which is configured by <a href="/docs/2.x/configuration/files#log4j-monitorproperties">log4j-monitor.properties</a>. All Accumulo commands (i.e <code class="language-plaintext highlighter-rouge">init</code>,
-<code class="language-plaintext highlighter-rouge">shell</code>, etc) are configured by <a href="/docs/2.x/configuration/files#log4jproperties">log4j.properties</a>.</p>
+(i.e. Manager, TabletServer, Garbage Collector) is configured by <a href="/docs/2.x/configuration/files#log4j2-serviceproperties">log4j2-service.properties</a>. All Accumulo commands (i.e <code class="language-plaintext highlighter-rouge">init</code>,
+<code class="language-plaintext highlighter-rouge">shell</code>, etc) are configured by <a href="/docs/2.x/configuration/files#log4j2properties">log4j2.properties</a>.</p>
 
 <h3 id="configure-accumulo-envsh">Configure accumulo-env.sh</h3>
 
@@ -702,9 +696,9 @@ machine that will serve as the Accumulo manager:</p>
 
 <ol>
   <li>Run <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code> to create the <code class="language-plaintext highlighter-rouge">cluster.yaml</code> file.</li>
-  <li>Write the IP address or domain name of the Accumulo Manager to the <a href="/docs/2.x/configuration/files#managers">manager</a> section.</li>
+  <li>Write the IP address or domain name of the Accumulo Manager to the <a href="/docs/2.x/configuration/files#manager">manager</a> section.</li>
   <li>Write the IP addresses or domain name of the machines that will be TabletServers to the
-<a href="/docs/2.x/configuration/files#tservers">tserver</a> section.</li>
+<a href="/docs/2.x/configuration/files#tserver">tserver</a> section.</li>
 </ol>
 
 <p>Note that if using domain names rather than IP addresses, DNS must be configured
@@ -1007,7 +1001,7 @@ set by <code class="language-plaintext highlighter-rouge">ACCUMULO_LOG_DIR</code
 
 <p>Accumulo logs many user-initiated actions, and whether they succeeded or failed, to an slf4j logger
 named <code class="language-plaintext highlighter-rouge">org.apache.accumulo.audit</code>. This logger can be configured in the user’s logging framework
-(such as log4j or logback). In the tarball, the configuration file <code class="language-plaintext highlighter-rouge">conf/log4j-service.properties</code>
+(such as log4j or logback). In the tarball, the configuration file <code class="language-plaintext highlighter-rouge">conf/log4j2-service.properties</code>
 demonstrates basic audit logging with example configuration options for log4j.</p>
 
 <h2 id="recovery">Recovery</h2>
