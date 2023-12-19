@@ -249,10 +249,8 @@ metadata table!), the following process can be followed to create a valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
-```
-$ UUID=$(uuidgen); \
-echo -n -e '--- Log File Header (v4) ---U+1F47B$'"${UUID}"'\x00\x00\x00\x00' > "${UUID}".wal; \
-echo 'created: '"${UUID}"'.wal'
+```sh
+UUID=$(uuidgen); echo -n -e '--- Log File Header (v4) ---U+1F47B$'"$UUID"'\x00\x00\x00\x00' >"$UUID".wal
 ```
 
 The above creates a file with the text "--- Log File Header (v4) ---" a unicode character to flag no decryption 
