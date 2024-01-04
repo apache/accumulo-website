@@ -138,6 +138,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kartik Sethi        |                                                                   | [IST][IST-India]      |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
+| Kevin Rathbun       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
 | Kylian Meulin       |                                                                   | [GMT][GMT]/[BST][BST] |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
