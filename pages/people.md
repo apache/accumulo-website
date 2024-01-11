@@ -167,6 +167,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Philip Young        |                                                                   |                       |
 | Pushpinder Heer     | [Applied Technical Systems][ATSID]                                | [PT][PT]              |
 | Ravi Mutyala        | [Hortonworks][HORTONWORKS]                                        | [CT][CT]              |
+| Randeep Singh       |                                                                   | [ET][ET]              |
 | Richard Eggert II   | [MasterPeace Solutions, Ltd][MASTERPEACE]                         | [ET][ET]              |
 | Russell Carter Jr   | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Ryan Fishel         | [Cloudera][CLOUDERA]                                              |                       |
