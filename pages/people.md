@@ -166,6 +166,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Philip Young        |                                                                   |                       |
 | Pushpinder Heer     | [Applied Technical Systems][ATSID]                                | [PT][PT]              |
+| Randeep Singh       |                                                                   | [ET][ET]              |
 | Ravi Mutyala        | [Hortonworks][HORTONWORKS]                                        | [CT][CT]              |
 | Richard Eggert II   | [MasterPeace Solutions, Ltd][MASTERPEACE]                         | [ET][ET]              |
 | Russell Carter Jr   | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
