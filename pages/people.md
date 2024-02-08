@@ -83,6 +83,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Ali Mustafa         | [FAST-NU][FAST-NU]                                                | [PKT][PKT]            |
 | Amisha Sahu         |                                                                   | [IST][IST-India]      |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
+| Arbaaz Khan         | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Arshak Navruzyan    | [Argyle Data][ARGYLE]                                             |                       |
 | Ben Kelly           | [Microsoft][MICROSOFT]                                            | [GMT][GMT]/[IST][IST-Ireland] |
 | Ben Manes           |                                                                   | [PT][PT]              |
