@@ -72,7 +72,7 @@ For more information, see the [contributor guide](/contributors-guide/).
 [confluence]: https://cwiki.apache.org/confluence/display/ACCUMULO/Apache+Accumulo+Home
 [contact]: /contact-us/
 [a]: https://github.com/apache/accumulo
-[ac]: https://github.com/apache/accumulo/blob/main/CONTRIBUTING.md
+[ac]: https://github.com/apache/accumulo/blob/main/.github/CONTRIBUTING.md
 [ai]: https://github.com/apache/accumulo/issues
 [w]: https://github.com/apache/accumulo-website
 [wc]: https://github.com/apache/accumulo-website/blob/main/CONTRIBUTING.md
