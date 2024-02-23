@@ -18,9 +18,9 @@ You should familiarize yourself with the [Maven Build Lifecycle][lifecycle], as 
 
 To build from source (for example, to deploy):
 
-    mvn package -Passemble
+    mvn package
 
-This will create a file `accumulo-*-SNAPSHOT-dist.tar.gz` in the assemble/target directory. Optionally, append `-DskipTests` if you want to skip the build tests.
+This will create a file `accumulo-*-SNAPSHOT-bin.tar.gz` in the assemble/target directory. Optionally, append `-DskipTests` if you want to skip the build tests.
 
 To build your branch before submitting a pull request, you'll probably want to run some basic "sunny-day" integration tests to ensure you haven't made any grave errors, as well as `checkstyle` and `findbugs`:
 
