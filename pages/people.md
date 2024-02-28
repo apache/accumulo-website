@@ -24,7 +24,7 @@ $(function() {
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
-| alerman       | Adam Lerman                                       | [Applied Technology Group][ATG]        | [ET][ET] |
+| alerman       | Adam Lerman                                       | [RedDrum][REDDRUM]                     | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
@@ -153,7 +153,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Matthew Boehm       | [Novetta][NOVETTA]                                                | [ET][ET]              |
 | Matthew Dinep       | [Anavation, LLC] [ANAVATION]                                      | [ET][ET]              |
 | Matthew Kirkley     |                                                                   |                       |
-| Matthew Peterson    | [Applied Technology Group][ATG]                                   | [ET][ET]              |
+| Matthew Peterson    | [Tiber Technologies][TIBER]                                       | [ET][ET]              |
 | Max Jordan          |                                                                   |                       |
 | Michael Allen       | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Michael Berman      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
@@ -215,7 +215,6 @@ ASF or the Apache Accumulo PMC.
 [ARCUS]: http://www.arcus-research.com
 [ARGYLE]: https://mavenir.com
 [ASRC]: https://www.asrc.com
-[ATG]: https://www.atg-us.com
 [ATSID]: https://www.atsid.com
 [ATT]: https://www.att.com
 [BASISTECH]: https://www.basistech.com
@@ -245,6 +244,7 @@ ASF or the Apache Accumulo PMC.
 [PETERSON]: https://www.ptech-llc.com
 [PHEMI]: https://www.phemi.com
 [PRAXIS]: https://www.praxiseng.com
+[REDDRUM]: https://www.red-drum.com
 [SABRE]: https://www.sabre-eng.com
 [SACAT]: https://sa.catapult.org.uk
 [SENTINEL]: https://sentinel-corp.com
