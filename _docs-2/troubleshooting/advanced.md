@@ -249,21 +249,31 @@ metadata table!), the following process can be followed to create a valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
-    $ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' > empty.wal
+```sh
+UUID=$(uuidgen); echo -n -e '--- Log File Header (v4) ---U+1F47B$'"$UUID"'\x00\x00\x00\x00' >"$UUID".wal
+```
 
-The above creates a file with the text "--- Log File Header (v2) ---" and then
-four bytes. You should verify the contents of the file with a hexdump tool.
+This will create a file named `[uuid].wal` containing `--- Log File Header (v4) ---`, a unicode
+character to flag no decryption parameters, a UUID (the same as the file name), and then four bytes.
+You should modify this command to use a specific UUID if you need to replace a particular file with
+that UUID as its name. This command should work in most modern shells, but because shell features
+can vary, you should verify the contents of the file with a hexdump tool.
 
-Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
-with the empty WAL.
+Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS with the empty WAL for the 
+tserver / host pair with the following hdfs commands:
 
-    $ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
-    $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
+```sh
+hdfs dfs -moveFromLocal "$UUID.wal" "/user/accumulo/$UUID.wal"
+hdfs dfs -mv "/user/accumulo/$UUID.wal" "/accumulo/wal/[tserver+port]/$UUID"
+```
 
-After the corrupt WAL file has been replaced, the system should automatically recover.
-It may be necessary to restart the Accumulo Manager process as an exponential
-backup policy is used which could lead to a long wait before Accumulo will
-try to re-load the WAL file.
+Note:
+- the `+` separator for port.
+- the wal file is the uuid, without an extension
+
+After the corrupt WAL file has been replaced, the system should automatically recover. It may be necessary to restart 
+the Accumulo Manager process to reduce the recovery time, because an exponential backup policy is used which could lead to a long wait before Accumulo 
+will try to reload the WAL file.
 
 ## Zookeeper Failures
 
