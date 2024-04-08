@@ -14,7 +14,7 @@ If the compactor process does not return the memory to the OS, then we are stuck
 If the compactor processes return the memory to the OS, i.e. does not stay at the maximum 6G once they reach it, then we can oversubscribe the memory allowing us to run more compactor processes on that machine. 
 
 ## Findings
-All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS. Regardless of which GC is used, after an external compaction is done, most (but not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.
+All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS. Regardless of which GC is used, after an external compaction is done, most (but usually not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.
 
 [![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png){:width="800px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png)
 
@@ -22,9 +22,15 @@ The amount that is never released back to the OS appears to be minimal and may o
 
 [![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png){:width="800px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png)
 
-The roughly 100mb of unreturned memory is also present with Shenandoah GC with both Java 17 and Java 21 versions. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the example above was using ZGC with Java 21).
-These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.
-Another interesting finding was that the processes seem to use more memory when more is allocated. For example, setting 2gb versus 1gb of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1gb of heap space, the max heap space is not completely utilized. When allocated 2gb, compactions exceed 1gb of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5gb (when using ZGC with ZGeneration in Java 21, this maxes out around 1.7gb)). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9gb (for both Java 17 and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims. 
+From the JVM perspective (pictured above), all memory is returned (memory usage drops back down to Xms=256mb after garbage collection occurs).
+
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png){:width="800px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png)
+
+The roughly 100mb of unreturned memory is also present with Shenandoah GC in Java 17 and Java 21 but does not appear to be present with Java 11. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the example above was using ZGC with Java 21). These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.
+
+Another interesting finding was that the processes use more memory when more is allocated. These results were obtained from initiating a compaction of 700mb of data (see experiment.jsh script). For example, setting 2gb versus 1gb of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1gb of heap space, the max heap space is not completely utilized. When allocated 2gb, compactions exceed 1gb of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5gb and when using ZGC with ZGeneration in Java 21, this maxes out around 1.7gb). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9gb (for Java 11, 17, and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims. 
+
+Another difference found between the GCs tested was that Shenandoah GC often required two garbage collections to occur after a compaction completed to clean up the memory. Shenandoah GC would often only clean up about half of the unused memory on the first garbage collection. This was not the case with G1 GC or ZGC which cleaned up the majority of the memory on the first garbage collection.
 
 ## Test Setup
 
@@ -69,7 +75,7 @@ Accumulo 2.1 will be used for experimentation. Configuring accumulo to start com
    * `uno jshell experiment.jsh`
 5. Memory usage can be monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using gnuplot).
 Navigate to the "Monitor" tab of the compactor in VisualVM to see memory usage from JVM perspective.
-Follow the info given in mem_usage_script.sh to plot the memory usage from OS perspective.
+Follow the info given in the "OS Memory Data Collection Script" section to plot the memory usage from OS perspective.
 
 Helpful resources:
 * [External Compactions accumulo blog post](https://accumulo.apache.org/blog/2021/07/08/external-compactions.html)
@@ -152,61 +158,75 @@ After compactions have completed plot the data using gnuplot:
 
 ```bash
 gnuplot
-set title \"Resident Set Size (RSS) Memory usage\" 
-set xlabel \"Time\"
-set ylabel \"Mem usage in kilobytes\"
-plot \"output_mem_usage.log\" using (\$0*5):2 with lines title 'Mem usage'
+set title "Resident Set Size (RSS) Memory usage" 
+set xlabel "Time"
+set ylabel "Mem usage in kilobytes"
+plot "output_mem_usage.log" using ($0*5):2 with lines title 'Mem usage'
 ```
 
 ## Data
 
-### Java 11 G1 GC -Xmx1G -Xms265m
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM.png)
+Important Notes:
+- ZGC and G1PeriodicGCInterval are not available with Java 11 so couldn't be tested for
+- The only tests which used manual GC are those labeled as such
+- G1 GC is the default GC in Java 11, 17, and 21 (doesn't need to be specified in java args)
 
-### Java 11 G1 GC -Xmx1G -Xms265m with manual GC after each compaction
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manual.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manual.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manual.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manual.png)
+### Java 11 G1 GC with manual GC (via VisualVM) every minute. Java args: -Xmx1G -Xms256m
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png)
 
-### Java 17 G1 GC -Xmx1G -Xms265m -XX:G1PeriodicGCInterval=60000
+### Java 11 G1 GC with manual GC (via VisualVM) after each compaction. Java args: -Xmx1G -Xms256m
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png)
+
+### Java 11 G1 GC. Java args: -Xmx2G -Xms256
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png)
+
+### Java 11 Shenandoah GC. Java args: -Xmx2G -Xms256 -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png)
+
+### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000
 [![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png)
 [![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png)
 
-### Java 17 G1 GC -Xmx2G -Xms265m -XX:G1PeriodicGCInterval=60000
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png})
+### Java 17 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png)
 
-### Java 17 G1 GC -Xmx1G -Xms265m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png})
+### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png)
 
-### Java 17 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png})
+### Java 17 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png)
 
-### Java 17 Shenandoah GC -Xmx1G -Xms265m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png})
+### Java 17 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png)
 
-### Java 17 Shenandoah GC -Xmx2G -Xms265m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png})
+### Java 17 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png)
 
-### Java 21 G1 GC -Xmx2G -Xms265m -XX:G1PeriodicGCInterval=60000
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png})
+### Java 21 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png)
 
-### Java 21 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png})
+### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png)
 
-### Java 21 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png})
+### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png)
 
-### Java 21 Shenandoah GC -Xmx1G -Xms265m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png})
-### Java 21 Shenandoah GC -Xmx2G -Xms265m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png})
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png})
+### Java 21 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png)
+
+### Java 21 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png)
