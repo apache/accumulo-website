@@ -1,0 +1,212 @@
+---
+title: "Does a compactor process return memory to the OS?"
+author: Dominic Garguilo, Kevin Rathbun
+---
+
+## Goal
+We need to determine if, once a compactor process is finished using memory, will it give the unused memory back to the OS?
+
+### Why does it matter?
+There could be a scenario where the amount of memory on a machine limits the number of compactors that can be run. For example, on a machine with 32G of memory, if each compactor process uses 6G of memory, we can only "fit" 5 compactors on that machine (32/6=5.333). Since each compactor process only runs on a single core, we would only be utilizing 5 cores on that machine where we would like to be using as many as we can.
+
+If the compactor process does not return the memory to the OS, then we are stuck with only using the following number of compactor processes:
+`(total memory)/(memory per compactor)`.
+If the compactor processes return the memory to the OS, i.e. does not stay at the maximum 6G once they reach it, then we can oversubscribe the memory allowing us to run more compactor processes on that machine. 
+
+## Findings
+All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS. Regardless of which GC is used, after an external compaction is done, most (but not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.
+
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png){:width="800px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png)
+
+The amount that is never released back to the OS appears to be minimal and may only be present with G1 GC and Shenandoah GC. For example, from a Java 17 example using G1 GC pictured above, we see that the baseline OS memory usage before any compactions are done is a bit less than 400mb. We see that after a compaction is done and the garbage collection runs, this baseline settles at about 500mb. 
+
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png){:width="800px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png)
+
+The roughly 100mb of unreturned memory is also present with Shenandoah GC with both Java 17 and Java 21 versions. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the example above was using ZGC with Java 21).
+These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.
+Another interesting finding was that the processes seem to use more memory when more is allocated. For example, setting 2gb versus 1gb of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1gb of heap space, the max heap space is not completely utilized. When allocated 2gb, compactions exceed 1gb of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5gb (when using ZGC with ZGeneration in Java 21, this maxes out around 1.7gb)). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9gb (for both Java 17 and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims. 
+
+## Test Setup
+
+### Environment Prerequisites
+***Install gnuplot***
+
+This is used for plotting the memory usage of the compactor over time from the perspective of the OS
+
+1. `sudo apt install gnuplot`
+2. gnuplot can now be started with the command `gnuplot`
+
+***Install VisualVM***
+
+This is used for plotting the memory usage of the compactor over time from the perspective of the JVM
+
+1. download the zip from [visualvm.github.io](https://visualvm.github.io/)
+2. extract with `unzip visualvm_218.zip`
+3. Can now be started with the command `./path/to/visualvm_218/bin/visualvm`
+
+***Configure and start accumulo***
+
+Accumulo 2.1 will be used for experimentation. Configuring accumulo to start compactors:
+
+1. Uncomment lines in "install/accumulo-2.1.2/conf/cluster.yaml" regarding the compaction coordinator and compactor. Don't need q2 compactor. Will just be using q1. This allows these processes to start up.
+2. Configure the java args for the compactor process in "accumulo-env.sh." Line will be:
+   `compactor) JAVA_OPTS=('-Xmx256m' '-Xms256m' "${JAVA_OPTS[@]}") ;;`
+3. Start accumulo with `uno start accumulo`
+
+***Install java versions***
+
+1. Install the java versions you want to test (we used 11, 17 and 21). For example, to install Java 17:
+   1. `sudo apt install openjdk-17-jdk`
+   2. `sudo update-alternatives --config java` and select the version you want to use before starting your accumulo instance
+
+## Running the test
+
+1. Start accumulo with uno (after changing the mentioned configuration)
+   * `uno start accumulo`
+2. Open VisualVM and find the running compactor q1 process taking note of the PID
+3. Run mem_usage_script.sh, making sure to set the PID in the script to that of the compactors PID. This will collect data of memory usage of the compactor over time from the perspective of the OS. Let this continue to run while the script is running.
+4. Configure the external compaction script as desired and execute:
+   * `uno jshell experiment.jsh`
+5. Memory usage can be monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using gnuplot).
+Navigate to the "Monitor" tab of the compactor in VisualVM to see memory usage from JVM perspective.
+Follow the info given in mem_usage_script.sh to plot the memory usage from OS perspective.
+
+Helpful resources:
+* [External Compactions accumulo blog post](https://accumulo.apache.org/blog/2021/07/08/external-compactions.html)
+* [Z garbage collector heap size docs](https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector.html#GUID-8637B158-4F35-4E2D-8E7B-9DAEF15BB3CD)
+* [Generational Garbage Collection docs](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-collector-implementation.html#GUID-71D796B3-CBAB-4D80-B5C3-2620E45F6E5D)
+* [G1 garbage collector docs](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html#GUID-ED3AB6D3-FD9B-4447-9EDF-983ED2F7A573)
+* [Java 11 and memory release article](https://thomas.preissler.me/blog/2021/05/02/release-memory-back-to-the-os-with-java-11) 
+
+### External compaction test script
+***referred to as experiment.jsh in the test setup section***
+```java
+import org.apache.accumulo.core.conf.Property; 
+
+int dataSize = 35_000_000; 
+byte[] data = new byte[dataSize]; 
+Arrays.fill(data, (byte) 65); 
+String tableName = "testTable"; 
+
+void ingestAndCompact() throws Exception {
+   try { 
+       client.tableOperations().delete(tableName); 
+   } catch (TableNotFoundException e) { 
+       // ignore 
+   } 
+   
+   System.out.println("Creating table " + tableName); 
+   client.tableOperations().create(tableName); 
+   
+   // This is done to avoid system compactions, we want to initiate the compactions manually 
+   client.tableOperations().setProperty(tableName, Property.TABLE_MAJC_RATIO.getKey(), "1000"); 
+   // Configure for external compaction 
+   client.instanceOperations().setProperty("tserver.compaction.major.service.cs1.planner","org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner"); 
+   client.instanceOperations().setProperty("tserver.compaction.major.service.cs1.planner.opts.executors","[{\"name\":\"large\",\"type\":\"external\",\"queue\":\"q1\"}]"); 
+   
+   client.tableOperations().setProperty(tableName, "table.compaction.dispatcher", "org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher"); 
+   client.tableOperations().setProperty(tableName, "table.compaction.dispatcher.opts.service", "cs1"); 
+   
+   int numFiles = 20; 
+   
+   try (var writer = client.createBatchWriter(tableName)) { 
+       for (int i = 0; i < numFiles; i++) { 
+           Mutation mut = new Mutation("r" + i); 
+           mut.at().family("cf").qualifier("cq").put(data); 
+           writer.addMutation(mut); 
+           writer.flush();   
+   
+           System.out.println("Writing " + dataSize + " bytes to a single value"); 
+           client.tableOperations().flush(tableName, null, null, true); 
+       } 
+   }   
+   
+   System.out.println("Compacting table"); 
+   client.tableOperations().compact(tableName, new CompactionConfig().setWait(true)); 
+   System.out.println("Finished table compaction");
+} 
+
+ingestAndCompact(); 
+// Optionally sleep and ingestAndCompact() again, or just execute the script again.
+```
+
+### OS Memory Data Collection Script
+***referred to as mem_usage_script.sh in the test setup section***
+```bash
+#!/bin/bash 
+echo "usage: set PID in script to the compactor PID then run." 
+PID=xxxxx     # NOTE: Must set PID 
+echo "Tracking PID: $PID" 
+DURATION=3600 # for 1 hour 
+INTERVAL=5    # every 5 seconds 
+rm output_mem_usage.log 
+
+while [ $DURATION -gt 0 ]; do 
+    ps -o %mem,rss -p $PID | tail -n +2 >> output_mem_usage.log 
+    sleep $INTERVAL 
+    DURATION=$((DURATION - INTERVAL)) 
+done
+```
+
+After compactions have completed plot the data using gnuplot:
+
+```bash
+gnuplot
+set title \"Resident Set Size (RSS) Memory usage\" 
+set xlabel \"Time\"
+set ylabel \"Mem usage in kilobytes\"
+plot \"output_mem_usage.log\" using (\$0*5):2 with lines title 'Mem usage'
+```
+
+## Data
+
+### Java 11 G1 GC -Xmx1G -Xms265m
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM.png)
+
+### Java 11 G1 GC -Xmx1G -Xms265m with manual GC after each compaction
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manual.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manual.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manual.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manual.png)
+
+### Java 17 G1 GC -Xmx1G -Xms265m -XX:G1PeriodicGCInterval=60000
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png)
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png)
+
+### Java 17 G1 GC -Xmx2G -Xms265m -XX:G1PeriodicGCInterval=60000
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png})
+
+### Java 17 G1 GC -Xmx1G -Xms265m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png})
+
+### Java 17 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png})
+
+### Java 17 Shenandoah GC -Xmx1G -Xms265m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png})
+
+### Java 17 Shenandoah GC -Xmx2G -Xms265m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png})
+
+### Java 21 G1 GC -Xmx2G -Xms265m -XX:G1PeriodicGCInterval=60000
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png})
+
+### Java 21 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png})
+
+### Java 21 ZGC -Xmx2G -Xms265m -XX:+UseZGC -XX:ZUncommitDelay=120
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png})
+
+### Java 21 Shenandoah GC -Xmx1G -Xms265m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png})
+### Java 21 Shenandoah GC -Xmx2G -Xms265m -XX:+UseShenandoahGC
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png})
+[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png})
