@@ -175,64 +175,49 @@ All Experiments Performed:
 |     21       |                   |       |&#128504;|&#128504; |                               |                                   |      &#128504;      |            |                       |                   |
 
 ### Java 11 G1 GC with manual GC (via VisualVM) every minute. Java args: -Xmx1G -Xms256m
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png)
+{% include two_image_block.html image1="java_11_G1_x1_s256_OS_manualeverymin.png" image2="java_11_G1_x1_s256_VM_manualeverymin.png" %}
 
 ### Java 11 G1 GC with manual GC (via VisualVM) after each compaction. Java args: -Xmx1G -Xms256m
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png)
+{% include two_image_block.html image1="java_11_G1_x1_s256_OS_manualaftercomp.png" image2="java_11_G1_x1_s256_VM_manualaftercomp.png" %}
 
 ### Java 11 G1 GC. Java args: -Xmx2G -Xms256
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png)
+{% include two_image_block.html image1="java_11_G1_x2_s256_OS.png" image2="java_11_G1_x2_s256_VM.png" %}
 
 ### Java 11 Shenandoah GC. Java args: -Xmx2G -Xms256 -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png)
+{% include two_image_block.html image1="java_11_UseShenandoah_x2_s256_OS.png" image2="java_11_UseShenandoah_x2_s256_VM.png" %}
 
 ### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png)
+{% include two_image_block.html image1="java_17_G1_x1_s256_periodic60000_OS.png" image2="java_17_G1_x1_s256_periodic60000_VM.png" %}
 
 ### Java 17 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png)
+{% include two_image_block.html image1="java_17_G1_x2_s256_periodic60000_OS.png" image2="java_17_G1_x2_s256_periodic60000_VM.png" %}
 
 ### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png)
+{% include two_image_block.html image1="java_17_G1_x1_s256_periodic60000_concurrent_OS.png" image2="java_17_G1_x1_s256_periodic60000_concurrent_VM.png" %}
 
 ### Java 17 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png)
+{% include two_image_block.html image1="java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png" %}
 
 ### Java 17 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png)
+{% include two_image_block.html image1="java_17_shenandoah_x1_s256_UseShenandoah_OS.png" image2="java_17_shenandoah_x1_s256_UseShenandoah_VM.png" %}
 
 ### Java 17 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png)
+{% include two_image_block.html image1="java_17_shenandoah_x2_s256_UseShenandoah_OS.png" image2="java_17_shenandoah_x2_s256_UseShenandoah_VM.png" %}
 
 ### Java 21 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png)
+{% include two_image_block.html image1="java_21_G1_x2_s256_periodic60000_OS.png" image2="java_21_G1_x2_s256_periodic60000_VM.png" %}
 
 ### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png)
+{% include two_image_block.html image1="java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" image2="java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png" %}
 
 ### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png)
+{% include two_image_block.html image1="java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png" %}
 
 ### Java 21 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png)
+{% include two_image_block.html image1="java_21_shenandoah_x1_s256_UseShenandoah_OS.png" image2="java_21_shenandoah_x1_s256_UseShenandoah_VM.png" %}
 
 ### Java 21 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png)
-[![]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png){:width="500px"}]({{site.baseurl}}/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png)
+{% include two_image_block.html image1="java_21_shenandoah_x2_s256_UseShenandoah_OS.png" image2="java_21_shenandoah_x2_s256_UseShenandoah_VM.png" %}
 
 ## Conclusion
 All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS. Regardless of which GC is used, after an external compaction is done, most (but usually not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.
