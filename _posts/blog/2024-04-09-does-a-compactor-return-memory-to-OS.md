@@ -47,6 +47,7 @@ Accumulo 2.1 will be used for experimentation. Configuring accumulo to start com
 1. Install the java versions you want to test (we used 11, 17 and 21). For example, to install Java 17:
    1. `sudo apt install openjdk-17-jdk`
    2. `sudo update-alternatives --config java` and select the version you want to use before starting your accumulo instance
+   3. Ensure your `JAVA_HOME` is set to the correct version of java
 
 ## Running the test
 
