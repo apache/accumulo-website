@@ -4,8 +4,9 @@ author: Dominic Garguilo, Kevin Rathbun
 ---
 
 ## Goal
-We need to determine, once an Accumulo process is finished using memory, will the JVM release this unused memory back to the OS? To determine this, we will specifically be observing a Compactor process during out tests, but the findings should apply to any Accumulo Server process.
+The goal of the project was to determine if, once an Accumulo process is finished using memory, the JVM would release this unused memory back to the operating system. This was specifically observed in a Compactor process during the tests, but the findings should apply to any Accumulo Server process. We looked at the memory usage of the compactor process specifically to help understand if oversubscribing compactors on a machine is a viable option.
 
+As background information, it's important to note that modern JVMs are expected to release memory back to the operating system, rather than just growing from the initial heap size (-Xms) to the maximum heap size (-Xmx) and never releasing it. This behavior was introduced in Java 11 through the [JEP 346: Promptly Return Unused Committed Memory from G1](https://openjdk.org/jeps/346). This feature aims to improve the efficiency of memory usage by actively returning Java heap memory to the operating system when idle.
 ### Test Scenario
 There could be a scenario where the amount of memory on a machine limits the number of compactors that can be run. For example, on a machine with 32G of memory, if each compactor process uses 6G of memory, we can only "fit" 5 compactors on that machine (32/6=5.333). Since each compactor process only runs on a single core, we would only be utilizing 5 cores on that machine where we would like to be using as many as we can.
 
@@ -18,48 +19,53 @@ It should be noted that there is an inherent risk when oversubscribing processes
 ## Test Setup
 
 ### Environment Prerequisites
-***Install gnuplot***
 
-This is used for plotting the memory usage of the compactor over time from the perspective of the OS
+The machines used for testing were running Pop!_OS 22.04 a debian-based OS. The following package installation and usage steps may vary if one were try to repeat these steps.
+
+#### Install gnuplot
+
+This was used for plotting the memory usage of the compactor over time from the perspective of the OS
 
 1. `sudo apt install gnuplot`
-2. gnuplot can now be started with the command `gnuplot`
+2. gnuplot was started with the command `gnuplot`
 
-***Install VisualVM***
+#### Install VisualVM
 
-This is used for plotting the memory usage of the compactor over time from the perspective of the JVM
+This was used for plotting the memory usage of the compactor over time from the perspective of the JVM
 
-1. download the zip from [visualvm.github.io](https://visualvm.github.io/)
-2. extract with `unzip visualvm_218.zip`
-3. Can now be started with the command `./path/to/visualvm_218/bin/visualvm`
+1. Downloaded the zip from [visualvm.github.io](https://visualvm.github.io/)
+2. Extracted with `unzip visualvm_218.zip`
+3. VisualVM was started with the command `./path/to/visualvm_218/bin/visualvm`
 
-***Configure and start accumulo***
+#### Configure and start accumulo
 
-Accumulo 2.1 will be used for experimentation. Configuring accumulo to start compactors:
+Accumulo 2.1 was used for experimentation. To stand up a single node instance, [fluo-uno](https://github.com/apache/fluo-uno) was used. 
 
-1. Uncomment lines in "install/accumulo-2.1.2/conf/cluster.yaml" regarding the compaction coordinator and compactor. Don't need q2 compactor. Will just be using q1. This allows these processes to start up.
-2. Configure the java args for the compactor process in "accumulo-env.sh." Line will be:
+Steps taken to configure accumulo to start compactors:
+
+1. Uncommented lines in `fluo-uno/install/accumulo-2.1.2/conf/cluster.yaml` regarding the compaction coordinator and compactor q1. A single compactor process was used, q1. This allows the external compaction processes to start up.
+2. Configured the java args for the compactor process in "accumulo-env.sh." Line:
    `compactor) JAVA_OPTS=('-Xmx256m' '-Xms256m' "${JAVA_OPTS[@]}") ;;`
-3. Start accumulo with `uno start accumulo`
+3. Started accumulo with `uno start accumulo`
 
-***Install java versions***
+#### Install java versions
 
-1. Install the java versions you want to test (we used 11, 17 and 21). For example, to install Java 17:
+1. Installed java versions 11, 17 and 21. For example, Java 17 was installed with:
    1. `sudo apt install openjdk-17-jdk`
-   2. `sudo update-alternatives --config java` and select the version you want to use before starting your accumulo instance
-   3. Ensure your `JAVA_HOME` is set to the correct version of java
+   2. `sudo update-alternatives --config java` and select the intended version before starting the accumulo instance
+   3. Ensured `JAVA_HOME` was set to the intended version of java before each test run
 
 ## Running the test
 
-1. Start accumulo with uno (after changing the mentioned configuration)
+1. Started accumulo using [fluo-uno](https://github.com/apache/fluo-uno) (after changing the mentioned configuration)
    * `uno start accumulo`
-2. Open VisualVM and find the running compactor q1 process taking note of the PID
-3. Run mem_usage_script.sh, making sure to set the PID in the script to that of the compactors PID. This will collect data of memory usage of the compactor over time from the perspective of the OS. Let this continue to run while the script is running.
-4. Configure the external compaction script as desired and execute:
+2. Opened VisualVM and selected the running compactor q1 process taking note of the PID
+3. Ran mem_usage_script.sh, making sure to set the PID in the script to that of the compactors PID. This collected measurements of memory used by the compactor process over time from the perspective of the OS. We let this continue to run while the script was running.
+4. Configured the external compaction script as needed and executed:
    * `uno jshell experiment.jsh`
-5. Memory usage can be monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using gnuplot).
-Navigate to the "Monitor" tab of the compactor in VisualVM to see memory usage from JVM perspective.
-Follow the info given in the "OS Memory Data Collection Script" section to plot the memory usage from OS perspective.
+5. Memory usage was monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using our collection script).
+Navigated to the "Monitor" tab of the compactor in VisualVM to see the graph of memory usage from JVM perspective.
+Followed the info given in the [OS Memory Data Collection Script](#os-memory-data-collection-script) section to plot the memory usage from OS perspective.
 
 Helpful resources:
 * [External Compactions accumulo blog post](https://accumulo.apache.org/blog/2021/07/08/external-compactions.html)
