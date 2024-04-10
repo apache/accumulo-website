@@ -7,11 +7,11 @@ author: Dominic Garguilo, Kevin Rathbun
 We need to determine, once an Accumulo process is finished using memory, will the JVM release this unused memory back to the OS? To determine this, we will specifically be observing a Compactor process during out tests, but the findings should apply to any Accumulo Server process.
 
 ### Test Scenario
-There could be a scenario where the amount of memory on a machine limits the number of compactors that can be run. For example, on a machine with 32G of memory, if each compactor process uses 6G of memory, we can only "fit" 5 compactors on that machine (32/6=5.333). Since each compactor process only runs on a single core, we would only be utilizing 5 cores on that machine where we would like to be using as many as we can.
+There could be a scenario where the amount of memory on a machine limits the number of compactors that can be run. For example, on a machine with 32GB of memory, if each compactor process uses 6GB of memory, we can only "fit" 5 compactors on that machine (32/6=5.333). Since each compactor process only runs on a single core, we would only be utilizing 5 cores on that machine where we would like to be using as many as we can.
 
 If the compactor process does not return the memory to the OS, then we are stuck with only using the following number of compactor processes:
 `(total memory)/(memory per compactor)`.
-If the compactor processes return the memory to the OS, i.e. does not stay at the maximum 6G once they reach it, then we can oversubscribe the memory allowing us to run more compactor processes on that machine.
+If the compactor processes return the memory to the OS, i.e. does not stay at the maximum 6GB once they reach it, then we can oversubscribe the memory allowing us to run more compactor processes on that machine.
 
 It should be noted that there is an inherent risk when oversubscribing processes that the user must be willing to accept if they choose to do oversubscribe. In this case, there is the possibility that all compactors run at the same time which might use all the memory on the machine. This could cause one or more of the compactor processes to be killed by the OOM killer.
 
@@ -69,7 +69,11 @@ Helpful resources:
 * [Java 11 and memory release article](https://thomas.preissler.me/blog/2021/05/02/release-memory-back-to-the-os-with-java-11) 
 
 ### External compaction test script
+
+Initiates an external compaction of 700MB of data (20 files of size 35MB) on Compactor q1.
+
 ***referred to as experiment.jsh in the test setup section***
+
 ```java
 import org.apache.accumulo.core.conf.Property; 
 
@@ -121,11 +125,15 @@ ingestAndCompact();
 ```
 
 ### OS Memory Data Collection Script
+
+Tracks the Resident Set Size (RSS) of the given PID over time, outputting the data to output_mem_usage.log.
+Data is taken every 5 seconds for an hour or until stopped.
+
 ***referred to as mem_usage_script.sh in the test setup section***
+
 ```bash
 #!/bin/bash 
-echo "usage: set PID in script to the compactor PID then run." 
-PID=xxxxx     # NOTE: Must set PID 
+PID=$1 
 echo "Tracking PID: $PID" 
 DURATION=3600 # for 1 hour 
 INTERVAL=5    # every 5 seconds 
@@ -176,73 +184,73 @@ All Experiments Performed:
 |     21       |                   |       |&#128504;|&#128504; |                               |                                   |      &#128504;      |            |                       |                   |
 
 ### Java 11 G1 GC with manual GC (via VisualVM) every minute. Java args: -Xmx1G -Xms256m
-{% include two_image_block.html image1="java_11_G1_x1_s256_OS_manualeverymin.png" image2="java_11_G1_x1_s256_VM_manualeverymin.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png" image2="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 11 G1 GC with manual GC (via VisualVM) after each compaction. Java args: -Xmx1G -Xms256m
-{% include two_image_block.html image1="java_11_G1_x1_s256_OS_manualaftercomp.png" image2="java_11_G1_x1_s256_VM_manualaftercomp.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png" image2="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 11 G1 GC. Java args: -Xmx2G -Xms256
-{% include two_image_block.html image1="java_11_G1_x2_s256_OS.png" image2="java_11_G1_x2_s256_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png" image2="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 11 Shenandoah GC. Java args: -Xmx2G -Xms256 -XX:+UseShenandoahGC
-{% include two_image_block.html image1="java_11_UseShenandoah_x2_s256_OS.png" image2="java_11_UseShenandoah_x2_s256_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png" image2="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000
-{% include two_image_block.html image1="java_17_G1_x1_s256_periodic60000_OS.png" image2="java_17_G1_x1_s256_periodic60000_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png" image2="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
-{% include two_image_block.html image1="java_17_G1_x2_s256_periodic60000_OS.png" image2="java_17_G1_x2_s256_periodic60000_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png" image2="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent
-{% include two_image_block.html image1="java_17_G1_x1_s256_periodic60000_concurrent_OS.png" image2="java_17_G1_x1_s256_periodic60000_concurrent_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png" image2="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
-{% include two_image_block.html image1="java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
-{% include two_image_block.html image1="java_17_shenandoah_x1_s256_UseShenandoah_OS.png" image2="java_17_shenandoah_x1_s256_UseShenandoah_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png" image2="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 17 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
-{% include two_image_block.html image1="java_17_shenandoah_x2_s256_UseShenandoah_OS.png" image2="java_17_shenandoah_x2_s256_UseShenandoah_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png" image2="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 21 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000
-{% include two_image_block.html image1="java_21_G1_x2_s256_periodic60000_OS.png" image2="java_21_G1_x2_s256_periodic60000_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png" image2="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120
-{% include two_image_block.html image1="java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" image2="java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" image2="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120
-{% include two_image_block.html image1="java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png" image2="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 21 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC
-{% include two_image_block.html image1="java_21_shenandoah_x1_s256_UseShenandoah_OS.png" image2="java_21_shenandoah_x1_s256_UseShenandoah_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png" image2="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ### Java 21 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC
-{% include two_image_block.html image1="java_21_shenandoah_x2_s256_UseShenandoah_OS.png" image2="java_21_shenandoah_x2_s256_UseShenandoah_VM.png" %}
+{% include two_image_block.html image1="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png" image2="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png" alt-text1="Graph showing memory usage from the OS perspective" alt-text2="Graph showing memory usage from the JVM perspective" %}
 
 ## Conclusion
 All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS\*. Regardless of which GC is used, after an external compaction is done, most (but usually not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.
 
-The amount that is never released back to the OS appears to be minimal and may only be present with G1 GC and Shenandoah GC. In the following graph with Java 17 using G1 GC, we see that the baseline OS memory usage before any compactions are done is a bit less than 400mb. We see that after a compaction is done and the garbage collection runs, this baseline settles at about 500mb.
+The amount that is never released back to the OS appears to be minimal and may only be present with G1 GC and Shenandoah GC. In the following graph with Java 17 using G1 GC, we see that the baseline OS memory usage before any compactions are done is a bit less than 400MB. We see that after a compaction is done and the garbage collection runs, this baseline settles at about 500MB.
 
 <a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png">
    <img src="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective"/>
 </a>
 
-On the same test run, the JVM perspective (pictured in the graph below) shows that all memory is returned (memory usage drops back down to Xms=256mb after garbage collection occurs).
+On the same test run, the JVM perspective (pictured in the graph below) shows that all memory is returned (memory usage drops back down to Xms=256m after garbage collection occurs).
 
 <a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png">
    <img src="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective"/>
 </a>
 
-The roughly 100mb of unreturned memory is also present with Shenandoah GC in Java 17 and Java 21 but does not appear to be present with Java 11. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the graph below was from a run using ZGC with Java 21). These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.
+The roughly 100MB of unreturned memory is also present with Shenandoah GC in Java 17 and Java 21 but does not appear to be present with Java 11. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the graph below was from a run using ZGC with Java 21). These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.
 
 <a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png">
    <img src="{{ site.baseurl }}/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective"/>
 </a>
 
-Another interesting finding was that the processes use more memory when more is allocated. These results were obtained from initiating a compaction of 700mb of data (see experiment.jsh script). For example, setting 2gb versus 1gb of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1gb of heap space, the max heap space is not completely utilized. When allocated 2gb, compactions exceed 1gb of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5gb and when using ZGC with ZGeneration in Java 21, this maxes out around 1.7gb). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9gb (for Java 11, 17, and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims.
+Another interesting finding was that the processes use more memory when more is allocated. These results were obtained from initiating a compaction of 700MB of data (see experiment.jsh script). For example, setting 2GB versus 1GB of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1GB of heap space, the max heap space is not completely utilized. When allocated 2GB, compactions exceed 1GB of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5GB and when using ZGC with ZGeneration in Java 21, this maxes out around 1.7GB). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9GB (for Java 11, 17, and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims.
 
-Another difference found between the GCs tested was that Shenandoah GC sometimes required two garbage collections to occur after a compaction completed to clean up the memory. Based on our experiments, when a larger max heap size was allocated (2G vs 1G), the first garbage collection that occurred only cleaned up about half of the now unused memory, and another garbage collection had to occur for the rest to be cleaned up. This was not the case when 1G of max heap space was allocated (almost all of the unused memory was cleaned up on the first garbage collection, with the rest being cleaned up on the next garbage collection). G1 GC and ZGC always cleaned up the majority of the memory on the first garbage collection.
+Another difference found between the GCs tested was that Shenandoah GC sometimes required two garbage collections to occur after a compaction completed to clean up the memory. Based on our experiments, when a larger max heap size was allocated (2GB vs 1GB), the first garbage collection that occurred only cleaned up about half of the now unused memory, and another garbage collection had to occur for the rest to be cleaned up. This was not the case when 1GB of max heap space was allocated (almost all of the unused memory was cleaned up on the first garbage collection, with the rest being cleaned up on the next garbage collection). G1 GC and ZGC always cleaned up the majority of the memory on the first garbage collection.
 
 \*Note: When using the default GC (G1 GC), garbage collection does not automatically occur unless further garbage collection settings are specified (e.g., G1PeriodicGCInterval)
