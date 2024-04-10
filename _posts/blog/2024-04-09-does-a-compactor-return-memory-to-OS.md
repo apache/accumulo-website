@@ -60,7 +60,7 @@ Steps taken to configure accumulo to start compactors:
 1. Started accumulo using [fluo-uno](https://github.com/apache/fluo-uno) (after changing the mentioned configuration)
    * `uno start accumulo`
 2. Opened VisualVM and selected the running compactor q1 process taking note of the PID
-3. Ran mem_usage_script.sh, making sure to set the PID in the script to that of the compactors PID. This collected measurements of memory used by the compactor process over time from the perspective of the OS. We let this continue to run while the script was running.
+3. Ran `mem_usage_script.sh <compactor process PID>`. This collected measurements of memory used by the compactor process over time from the perspective of the OS. We let this continue to run while the compaction script was running.
 4. Configured the external compaction script as needed and executed:
    * `uno jshell experiment.jsh`
 5. Memory usage was monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using our collection script).
