@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css">
+<link href="/css/accumulo.css" rel="stylesheet" type="text/css">
+
+<title>Does a compactor process return memory to the OS?</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script>
+  // show location of canonical site if not currently on the canonical site
+  $(function() {
+    var host = window.location.host;
+    if (typeof host !== 'undefined' && host !== 'accumulo.apache.org') {
+      $('#non-canonical').show();
+    }
+  });
+
+  $(function() {
+    // decorate section headers with anchors
+    return $("h2, h3, h4, h5, h6").not(".accordion-header").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<span class="fa-solid fa-link"></span>';
+      if (id) {
+        return $el.append($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+  });
+
+  // fix sidebar width in documentation
+  $(function() {
+    var $affixElement = $('div[data-spy="affix"]');
+    $affixElement.width($affixElement.parent().width());
+  });
+</script>
+
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.2/">2.1.2 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Does a compactor process return memory to the OS?</h1>
+          
+          <p>
+<b>Author: </b>&nbsp;&nbsp;Dominic Garguilo, Kevin Rathbun<br>
+<b>Date: </b>&nbsp;&nbsp;09 Apr 2024<br>
+
+</p>
+
+<h2 id="goal">Goal</h2>
+<p>The goal of the project was to determine if, once an Accumulo process is finished using memory, the JVM would release this unused memory back to the operating system. This was specifically observed in a Compactor process during the tests, but the findings should apply to any Accumulo Server process. We looked at the memory usage of the compactor process specifically to help understand if oversubscribing compactors on a machine is a viable option.</p>
+
+<p>As background information, it’s important to note that modern JVMs are expected to release memory back to the operating system, rather than just growing from the initial heap size (-Xms) to the maximum heap size (-Xmx) and never releasing it. This behavior was introduced in Java 11 through the <a href="https://openjdk.org/jeps/346">JEP 346: Promptly Return Unused Committed Memory from G1</a>. This feature aims to improve the efficiency of memory usage by actively returning Java heap memory to the operating system when idle.</p>
+<h3 id="test-scenario">Test Scenario</h3>
+<p>There could be a scenario where the amount of memory on a machine limits the number of compactors that can be run. For example, on a machine with 32GB of memory, if each compactor process uses 6GB of memory, we can only “fit” 5 compactors on that machine (32/6=5.333). Since each compactor process only runs on a single core, we would only be utilizing 5 cores on that machine where we would like to be using as many as we can.</p>
+
+<p>If the compactor process does not return the memory to the OS, then we are stuck with only using the following number of compactor processes:
+<code class="language-plaintext highlighter-rouge">(total memory)/(memory per compactor)</code>.
+If the compactor processes return the memory to the OS, i.e. does not stay at the maximum 6GB once they reach it, then we can oversubscribe the memory allowing us to run more compactor processes on that machine.</p>
+
+<p>It should be noted that there is an inherent risk when oversubscribing processes that the user must be willing to accept if they choose to do oversubscribe. In this case, there is the possibility that all compactors run at the same time which might use all the memory on the machine. This could cause one or more of the compactor processes to be killed by the OOM killer.</p>
+
+<h2 id="test-setup">Test Setup</h2>
+
+<h3 id="environment-prerequisites">Environment Prerequisites</h3>
+
+<p>The machines used for testing were running Pop!_OS 22.04 a debian-based OS. The following package installation and usage steps may vary if one were try to repeat these steps.</p>
+
+<h4 id="install-gnuplot">Install gnuplot</h4>
+
+<p>This was used for plotting the memory usage of the compactor over time from the perspective of the OS</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">sudo apt install gnuplot</code></li>
+  <li>gnuplot was started with the command <code class="language-plaintext highlighter-rouge">gnuplot</code></li>
+</ol>
+
+<h4 id="install-visualvm">Install VisualVM</h4>
+
+<p>This was used for plotting the memory usage of the compactor over time from the perspective of the JVM</p>
+
+<ol>
+  <li>Downloaded the zip from <a href="https://visualvm.github.io/">visualvm.github.io</a></li>
+  <li>Extracted with <code class="language-plaintext highlighter-rouge">unzip visualvm_218.zip</code></li>
+  <li>VisualVM was started with the command <code class="language-plaintext highlighter-rouge">./path/to/visualvm_218/bin/visualvm</code></li>
+</ol>
+
+<h4 id="configure-and-start-accumulo">Configure and start accumulo</h4>
+
+<p>Accumulo 2.1 was used for experimentation. To stand up a single node instance, <a href="https://github.com/apache/fluo-uno">fluo-uno</a> was used.</p>
+
+<p>Steps taken to configure accumulo to start compactors:</p>
+
+<ol>
+  <li>Uncommented lines in <code class="language-plaintext highlighter-rouge">fluo-uno/install/accumulo-2.1.2/conf/cluster.yaml</code> regarding the compaction coordinator and compactor q1. A single compactor process was used, q1. This allows the external compaction processes to start up.</li>
+  <li>Configured the java args for the compactor process in “accumulo-env.sh.” Line:
+<code class="language-plaintext highlighter-rouge">compactor) JAVA_OPTS=('-Xmx256m' '-Xms256m' "${JAVA_OPTS[@]}") ;;</code></li>
+  <li>Started accumulo with <code class="language-plaintext highlighter-rouge">uno start accumulo</code></li>
+</ol>
+
+<h4 id="install-java-versions">Install java versions</h4>
+
+<ol>
+  <li>Installed java versions 11, 17 and 21. For example, Java 17 was installed with:
+    <ol>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt install openjdk-17-jdk</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo update-alternatives --config java</code> and select the intended version before starting the accumulo instance</li>
+      <li>Ensured <code class="language-plaintext highlighter-rouge">JAVA_HOME</code> was set to the intended version of java before each test run</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="running-the-test">Running the test</h2>
+
+<ol>
+  <li>Started accumulo using <a href="https://github.com/apache/fluo-uno">fluo-uno</a> (after changing the mentioned configuration)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">uno start accumulo</code></li>
+    </ul>
+  </li>
+  <li>Opened VisualVM and selected the running compactor q1 process taking note of the PID</li>
+  <li>Ran <code class="language-plaintext highlighter-rouge">mem_usage_script.sh &lt;compactor process PID&gt;</code>. This collected measurements of memory used by the compactor process over time from the perspective of the OS. We let this continue to run while the compaction script was running.</li>
+  <li>Configured the external compaction script as needed and executed:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">uno jshell experiment.jsh</code></li>
+    </ul>
+  </li>
+  <li>Memory usage was monitored from the perspective of the JVM (using VisualVM) and from the perspective of the OS (using our collection script).
+Navigated to the “Monitor” tab of the compactor in VisualVM to see the graph of memory usage from JVM perspective.
+Followed the info given in the <a href="#os-memory-data-collection-script">OS Memory Data Collection Script</a> section to plot the memory usage from OS perspective.</li>
+</ol>
+
+<p>Helpful resources:</p>
+<ul>
+  <li><a href="https://accumulo.apache.org/blog/2021/07/08/external-compactions.html">External Compactions accumulo blog post</a></li>
+  <li><a href="https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector.html#GUID-8637B158-4F35-4E2D-8E7B-9DAEF15BB3CD">Z garbage collector heap size docs</a></li>
+  <li><a href="https://docs.oracle.com/en/java/javase/21/gctuning/garbage-collector-implementation.html#GUID-71D796B3-CBAB-4D80-B5C3-2620E45F6E5D">Generational Garbage Collection docs</a></li>
+  <li><a href="https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html#GUID-ED3AB6D3-FD9B-4447-9EDF-983ED2F7A573">G1 garbage collector docs</a></li>
+  <li><a href="https://thomas.preissler.me/blog/2021/05/02/release-memory-back-to-the-os-with-java-11">Java 11 and memory release article</a></li>
+</ul>
+
+<h3 id="external-compaction-test-script">External compaction test script</h3>
+
+<p>Initiates an external compaction of 700MB of data (20 files of size 35MB) on Compactor q1.</p>
+
+<p><strong><em>referred to as experiment.jsh in the test setup section</em></strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">org.apache.accumulo.core.conf.Property</span><span class="o">;</span> 
+
+<span class="kt">int</span> <span class="n">dataSize</span> <span class="o">=</span> <span class="mi">35_000_000</span><span class="o">;</span> 
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">dataSize</span><span class="o">];</span> 
+<span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="mi">65</span><span class="o">);</span> 
+<span class="nc">String</span> <span class="n">tableName</span> <span class="o">=</span> <span class="s">"testTable"</span><span class="o">;</span> 
+
+<span class="kt">void</span> <span class="nf">ingestAndCompact</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+   <span class="k">try</span> <span class="o">{</span> 
+       <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">delete</span><span class="o">(</span><span class="n">tableName</span><span class="o">);</span> 
+   <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">TableNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> 
+       <span class="c1">// ignore </span>
+   <span class="o">}</span> 
+   
+   <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Creating table "</span> <span class="o">+</span> <span class="n">tableName</span><span class="o">);</span> 
+   <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="n">tableName</span><span class="o">);</span> 
+   
+   <span class="c1">// This is done to avoid system compactions, we want to initiate the compactions manually </span>
+   <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="n">tableName</span><span class="o">,</span> <span class="nc">Property</span><span class="o">.</span><span class="na">TABLE_MAJC_RATIO</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="s">"1000"</span><span class="o">);</span> 
+   <span class="c1">// Configure for external compaction </span>
+   <span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"tserver.compaction.major.service.cs1.planner"</span><span class="o">,</span><span class="s">"org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner"</span><span class="o">);</span> 
+   <span class="n">client</span><span class="o">.</span><span class="na">instanceOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"tserver.compaction.major.service.cs1.planner.opts.executors"</span><span class="o">,</span><span class="s">"[{\"name\":\"large\",\"type\":\"external\",\"queue\":\"q1\"}]"</span><span class="o">);</span> 
+   
+   <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="n">tableName</span><span class="o">,</span> <span class="s">"table.compaction.dispatcher"</span><span class="o">,</span> <span class="s">"org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher"</span><span class="o">);</span> 
+   <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="n">tableName</span><span class="o">,</span> <span class="s">"table.compaction.dispatcher.opts.service"</span><span class="o">,</span> <span class="s">"cs1"</span><span class="o">);</span> 
+   
+   <span class="kt">int</span> <span class="n">numFiles</span> <span class="o">=</span> <span class="mi">20</span><span class="o">;</span> 
+   
+   <span class="k">try</span> <span class="o">(</span><span class="kt">var</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">createBatchWriter</span><span class="o">(</span><span class="n">tableName</span><span class="o">))</span> <span class="o">{</span> 
+       <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numFiles</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span> 
+           <span class="nc">Mutation</span> <span class="n">mut</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mutation</span><span class="o">(</span><span class="s">"r"</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span> 
+           <span class="n">mut</span><span class="o">.</span><span class="na">at</span><span class="o">().</span><span class="na">family</span><span class="o">(</span><span class="s">"cf"</span><span class="o">).</span><span class="na">qualifier</span><span class="o">(</span><span class="s">"cq"</span><span class="o">).</span><span class="na">put</span><span class="o">(</span><span class="n">data</span><span class="o">);</span> 
+           <span class="n">writer</span><span class="o">.</span><span class="na">addMutation</span><span class="o">(</span><span class="n">mut</span><span class="o">);</span> 
+           <span class="n">writer</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>   
+   
+           <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Writing "</span> <span class="o">+</span> <span class="n">dataSize</span> <span class="o">+</span> <span class="s">" bytes to a single value"</span><span class="o">);</span> 
+           <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">flush</span><span class="o">(</span><span class="n">tableName</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span> 
+       <span class="o">}</span> 
+   <span class="o">}</span>   
+   
+   <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Compacting table"</span><span class="o">);</span> 
+   <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">compact</span><span class="o">(</span><span class="n">tableName</span><span class="o">,</span> <span class="k">new</span> <span class="nc">CompactionConfig</span><span class="o">().</span><span class="na">setWait</span><span class="o">(</span><span class="kc">true</span><span class="o">));</span> 
+   <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Finished table compaction"</span><span class="o">);</span>
+<span class="o">}</span> 
+
+<span class="n">ingestAndCompact</span><span class="o">();</span> 
+<span class="c1">// Optionally sleep and ingestAndCompact() again, or just execute the script again.</span>
+</code></pre></div></div>
+
+<h3 id="os-memory-data-collection-script">OS Memory Data Collection Script</h3>
+
+<p>Tracks the Resident Set Size (RSS) of the given PID over time, outputting the data to output_mem_usage.log.
+Data is taken every 5 seconds for an hour or until stopped.</p>
+
+<p><strong><em>referred to as mem_usage_script.sh in the test setup section</em></strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash </span>
+<span class="nv">PID</span><span class="o">=</span><span class="nv">$1</span> 
+<span class="nb">echo</span> <span class="s2">"Tracking PID: </span><span class="nv">$PID</span><span class="s2">"</span> 
+<span class="nv">DURATION</span><span class="o">=</span>3600 <span class="c"># for 1 hour </span>
+<span class="nv">INTERVAL</span><span class="o">=</span>5    <span class="c"># every 5 seconds </span>
+<span class="nb">rm </span>output_mem_usage.log 
+
+<span class="k">while</span> <span class="o">[</span> <span class="nv">$DURATION</span> <span class="nt">-gt</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">do 
+    </span>ps <span class="nt">-o</span> %mem,rss <span class="nt">-p</span> <span class="nv">$PID</span> | <span class="nb">tail</span> <span class="nt">-n</span> +2 <span class="o">&gt;&gt;</span> output_mem_usage.log 
+    <span class="nb">sleep</span> <span class="nv">$INTERVAL</span> 
+    <span class="nv">DURATION</span><span class="o">=</span><span class="k">$((</span>DURATION <span class="o">-</span> INTERVAL<span class="k">))</span> 
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>After compactions have completed plot the data using gnuplot:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gnuplot
+<span class="nb">set </span>title <span class="s2">"Resident Set Size (RSS) Memory usage"</span> 
+<span class="nb">set </span>xlabel <span class="s2">"Time"</span>
+<span class="nb">set </span>ylabel <span class="s2">"Mem usage in kilobytes"</span>
+plot <span class="s2">"output_mem_usage.log"</span> using <span class="o">(</span><span class="nv">$0</span><span class="k">*</span>5<span class="o">)</span>:2 with lines title <span class="s1">'Mem usage'</span>
+</code></pre></div></div>
+
+<h2 id="data">Data</h2>
+
+<p>Important Notes:</p>
+<ul>
+  <li>ZGC and G1PeriodicGCInterval are not available with Java 11, so couldn’t be tested for</li>
+  <li>ZGenerational for ZGC is only available in Java 21, so couldn’t be tested for in Java 17</li>
+  <li>G1 GC is the default GC in Java 11, 17, and 21 (doesn’t need to be specified in java args)</li>
+</ul>
+
+<p>All Experiments Performed:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Java Version</th>
+      <th>Manual Compaction</th>
+      <th>Xmx=1G</th>
+      <th>Xmx=2G</th>
+      <th>Xms=256m</th>
+      <th>XX:G1PeriodicGCInterval=60000</th>
+      <th>XX:-G1PeriodicGCInvokesConcurrent</th>
+      <th>XX:+UseShenandoahGC</th>
+      <th>XX:+UseZGC</th>
+      <th>XX:ZUncommitDelay=120</th>
+      <th>XX:+ZGenerational</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>11</td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td>🗸</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td>🗸</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="java-11-g1-gc-with-manual-gc-via-visualvm-every-minute-java-args--xmx1g--xms256m">Java 11 G1 GC with manual GC (via VisualVM) every minute. Java args: -Xmx1G -Xms256m</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png">
+	<img src="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualeverymin.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png">
+        <img src="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualeverymin.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-11-g1-gc-with-manual-gc-via-visualvm-after-each-compaction-java-args--xmx1g--xms256m">Java 11 G1 GC with manual GC (via VisualVM) after each compaction. Java args: -Xmx1G -Xms256m</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png">
+	<img src="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_OS_manualaftercomp.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png">
+        <img src="/images/blog/202404_compactor_memory/java_11_G1_x1_s256_VM_manualaftercomp.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-11-g1-gc-java-args--xmx2g--xms256">Java 11 G1 GC. Java args: -Xmx2G -Xms256</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_11_G1_x2_s256_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-11-shenandoah-gc-java-args--xmx2g--xms256--xxuseshenandoahgc">Java 11 Shenandoah GC. Java args: -Xmx2G -Xms256 -XX:+UseShenandoahGC</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_11_UseShenandoah_x2_s256_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-g1-gc-java-args--xmx1g--xms256m--xxg1periodicgcinterval60000">Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-g1-gc-java-args--xmx2g--xms256m--xxg1periodicgcinterval60000">Java 17 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_G1_x2_s256_periodic60000_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-g1-gc-java-args--xmx1g--xms256m--xxg1periodicgcinterval60000--xx-g1periodicgcinvokesconcurrent">Java 17 G1 GC. Java args: -Xmx1G -Xms256m -XX:G1PeriodicGCInterval=60000 -XX:-G1PeriodicGCInvokesConcurrent</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_concurrent_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-zgc-java-args--xmx2g--xms256m--xxusezgc--xxzuncommitdelay120">Java 17 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_ZGC_x2_s256_UseZGC_uncommit_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-shenandoah-gc-java-args--xmx1g--xms256m--xxuseshenandoahgc">Java 17 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_shenandoah_x1_s256_UseShenandoah_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-17-shenandoah-gc-java-args--xmx2g--xms256m--xxuseshenandoahgc">Java 17 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_17_shenandoah_x2_s256_UseShenandoah_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-21-g1-gc-java-args--xmx2g--xms256m--xxg1periodicgcinterval60000">Java 21 G1 GC. Java args: -Xmx2G -Xms256m -XX:G1PeriodicGCInterval=60000</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_21_G1_x2_s256_periodic60000_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-21-zgc-java-args--xmx2g--xms256m--xxusezgc--xxzgenerational--xxzuncommitdelay120">Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:+ZGenerational -XX:ZUncommitDelay=120</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-21-zgc-java-args--xmx2g--xms256m--xxusezgc--xxzuncommitdelay120">Java 21 ZGC. Java args: -Xmx2G -Xms256m -XX:+UseZGC -XX:ZUncommitDelay=120</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_uncommit_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-21-shenandoah-gc-java-args--xmx1g--xms256m--xxuseshenandoahgc">Java 21 Shenandoah GC. Java args: -Xmx1G -Xms256m -XX:+UseShenandoahGC</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_21_shenandoah_x1_s256_UseShenandoah_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h3 id="java-21-shenandoah-gc-java-args--xmx2g--xms256m--xxuseshenandoahgc">Java 21 Shenandoah GC. Java args: -Xmx2G -Xms256m -XX:+UseShenandoahGC</h3>
+<!-- creates a styled box with two images side by side -->
+<!-- accepts two URLs relative to the project root and two alt text strings -->
+<div class="p-3 border rounded d-flex">
+    <a href="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png">
+	<img src="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+    </a>
+    <a href="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png">
+        <img src="/images/blog/202404_compactor_memory/java_21_shenandoah_x2_s256_UseShenandoah_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+    </a>
+</div>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>All the garbage collectors tested (G1 GC, Shenandoah GC, and ZGC) and all the Java versions tested (11, 17, 21) will release memory that is no longer used by a compactor, back to the OS*. Regardless of which GC is used, after an external compaction is done, most (but usually not all) memory is eventually released back to the OS and all memory is released back to the JVM. Although a comparable amount of memory is returned to the OS in each case, the amount of time it takes for the memory to be returned and the amount of memory used during a compaction depends on which garbage collector is used and which parameters are set for the java process.</p>
+
+<p>The amount that is never released back to the OS appears to be minimal and may only be present with G1 GC and Shenandoah GC. In the following graph with Java 17 using G1 GC, we see that the baseline OS memory usage before any compactions are done is a bit less than 400MB. We see that after a compaction is done and the garbage collection runs, this baseline settles at about 500MB.</p>
+
+<p><a class="p-3 border rounded d-block" href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png">
+   <img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+</a></p>
+
+<p>On the same test run, the JVM perspective (pictured in the graph below) shows that all memory is returned (memory usage drops back down to Xms=256m after garbage collection occurs).</p>
+
+<p><a class="p-3 border rounded d-block" href="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png">
+   <img src="/images/blog/202404_compactor_memory/java_17_G1_x1_s256_periodic60000_VM.png" class="img-fluid rounded" alt="Graph showing memory usage from the JVM perspective" />
+</a></p>
+
+<p>The roughly 100MB of unreturned memory is also present with Shenandoah GC in Java 17 and Java 21 but does not appear to be present with Java 11. With ZGC, however, we see several runs where nearly all the memory used during a compaction is returned to the OS (the graph below was from a run using ZGC with Java 21). These findings regarding the unreturned memory may or may not be significant. They may also be the result of variance between runs. More testing would need to be done to confirm or deny these claims.</p>
+
+<p><a class="p-3 border rounded d-block" href="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png">
+   <img src="/images/blog/202404_compactor_memory/java_21_ZGC_x2_s256_UseZGC_generational_uncommit_OS.png" class="img-fluid rounded" alt="Graph showing memory usage from the OS perspective" />
+</a></p>
+
+<p>Another interesting finding was that the processes use more memory when more is allocated. These results were obtained from initiating a compaction of 700MB of data (see experiment.jsh script). For example, setting 2GB versus 1GB of max heap for the compactor process results in a higher peak memory usage. During a compaction, when only allocated 1GB of heap space, the max heap space is not completely utilized. When allocated 2GB, compactions exceed 1GB of heap space used. It appears that G1 GC and ZGC use the least amount of heap space during a compaction (maxing out around 1.5GB and when using ZGC with ZGeneration in Java 21, this maxes out around 1.7GB). Shenandoah GC appears to use the most heap space during a compaction with a max heap space around 1.9GB (for Java 11, 17, and 21). However, these differences might be due to differences between outside factors during runs and more testing may need to be done to confirm or deny these claims.</p>
+
+<p>Another difference found between the GCs tested was that Shenandoah GC sometimes required two garbage collections to occur after a compaction completed to clean up the memory. Based on our experiments, when a larger max heap size was allocated (2GB vs 1GB), the first garbage collection that occurred only cleaned up about half of the now unused memory, and another garbage collection had to occur for the rest to be cleaned up. This was not the case when 1GB of max heap space was allocated (almost all of the unused memory was cleaned up on the first garbage collection, with the rest being cleaned up on the next garbage collection). G1 GC and ZGC always cleaned up the majority of the memory on the first garbage collection.</p>
+
+<p>*Note: When using the default GC (G1 GC), garbage collection does not automatically occur unless further garbage collection settings are specified (e.g., G1PeriodicGCInterval)</p>
+
+
+<p><strong>View all posts in the <a href="/news">news archive</a></strong></p>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2024 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
