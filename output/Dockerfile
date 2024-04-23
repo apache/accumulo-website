@@ -31,4 +31,4 @@ ENV PORT=4000
 EXPOSE $PORT
 
 # Configure the default command to build from the mounted repository.
-CMD bundle exec jekyll serve --force-polling -H $HOST -P $PORT
+CMD bundle exec jekyll serve -H $HOST -P $PORT
