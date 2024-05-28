@@ -208,7 +208,7 @@ references to the file in the METADATA table and within the tablet server
 hosting the file can be resolved by Accumulo. An empty file can be created using
 the CreateEmpty utility:
 
-    $ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
+    $ accumulo create-empty --type RFILE /path/to/empty/file/empty.rf
 
 The process is to delete the corrupt file and then move the empty file into its
 place (The generated empty file can be copied and used multiple times if necessary and does not need
@@ -249,21 +249,18 @@ metadata table!), the following process can be followed to create a valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
-```
-$ UUID=$(uuidgen); \
-echo -n -e '--- Log File Header (v4) ---U+1F47B$'"${UUID}"'\x00\x00\x00\x00' > "${UUID}".wal; \
-echo 'created: '"${UUID}"'.wal'
-```
+The create-empty utility can be used to create an empty wal file.
 
-The above creates a file with the text "--- Log File Header (v4) ---" a unicode character to flag no decryption 
-parameters, a UUID and then four bytes. The file created will be `[uuid]`.wal and the name is echoed to the command
-line. You should verify the contents of the file with a hexdump tool.
+
+    $ accumulo create-empty --type WAL [filename]
+
+Note the create-empty utility default type (or specifying `--type RFILE` will create an empty rfile) 
 
 Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS with the empty WAL for the 
 tserver / host pair with the following hdfs commands:
 
-    $ hdfs dfs -moveFromLocal [uuid].wal /user/accumulo/[uuid].wal
-    $ hdfs dfs -mv /user/accumulo/[uuid].wal /accumulo/wal/[tserver+port]/[uuid]
+    $ hadoop fs –rm /accumulo/wal/[tserver+port]/[uuid]; \
+    hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/wal/[tserver+port]/[uuid]
 
 Note:
 - the `+` separator for port.
