@@ -130,6 +130,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jessica Seastrom    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jim Klucar          | [Splyt][SPLYT]                                                    | [ET][ET]              |
 | Joe Skora           |                                                                   |                       |
+| John Kucera         |                                                                   | [ET][ET]              |
 | John McNamee        |                                                                   |                       |
 | John Stoneham       |                                                                   | [ET][ET]              |
 | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
