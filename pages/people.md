@@ -57,7 +57,6 @@ $(function() {
 | shutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
-| vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 
 ## Committers Only (PMC Emeritus)
 
@@ -67,6 +66,7 @@ $(function() {
 | arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
 | knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]|
 | medined       | David Medinets                                    |                                        |          |
+| vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 
 ## Contributors
 
