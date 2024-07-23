@@ -5,146 +5,132 @@ redirect_from:
   - /governance/bylaws
 ---
 
-This is version 3 of the bylaws. Community work actively continues on the
-bylaws, and so key segments of them are subject to change.
+This is version 4 of our project's bylaws and is subject to change.
 
 # Introduction
 
-This document defines the bylaws under which the Apache Accumulo project
-operates. It defines the roles and responsibilities of the project, who may
-vote, how voting works, how conflicts are resolved, etc.
+Accumulo is a project of the [Apache Software Foundation (ASF)][foundation].
+More details about the Foundation can be found on its pages.
 
-Accumulo is a project of the [Apache Software Foundation][foundation]. The
-foundation holds the copyright on Apache code including the code in the
-Accumulo codebase. The [foundation FAQ][foundation-faq] explains the operation
-and background of the foundation.
-
-Accumulo is typical of Apache projects in that it operates under a set of
-principles, known collectively as the Apache Way. If you are new to Apache
+Accumulo is a typical ASF project, operating under a set of principles known
+collectively as [the Apache Way][thisistheway]. If you are new to ASF
 development, please refer to the [Incubator project][incubator] for more
-information on how Apache projects operate. Terms used at the ASF are defined
-in the [ASF glossary][glossary].
+information on how ASF projects operate.
+
+Terms used at the ASF are defined in the [ASF glossary][glossary].
+
+While this project generally follows standard procedures used by most projects
+across the ASF, the purpose of this document is to define bylaws that apply
+specifically to the Accumulo project. These bylaws establish ground rules for
+handling situations where either there is no standard procedure within the ASF,
+or where we've chosen to diverge from those procedures. If a situation is not
+covered by these bylaws, then it is assumed that we will follow standard
+procedures established by the Foundation. If standard procedures do not exist,
+then a decision should be made following a discussion on an appropriate mailing
+list for the project.
+
 
 # Roles and Responsibilities
 
-Apache projects define a set of roles with associated rights and
-responsibilities. These roles govern what tasks an individual may perform
-within the project. The roles are defined in the following sections.
+The roles in this project, and their associated responsibilities, are the
+standard roles defined within the Foundation's [own documents][how-it-works].
 
-## Users
-
-The most important participants in the project are people who use our software.
-The majority of our contributors start out as users and guide their development
-efforts from the user's perspective.
-
-Users contribute to the Apache projects by providing feedback to contributors
-in the form of bug reports and feature suggestions. As well, users participate
-in the Apache community by helping other users on mailing lists and user
-support forums.
-
-## Contributors
-
-All of the volunteers who are contributing time, code, documentation, or
-resources to the Accumulo project are considered contributors. A contributor
-that makes sustained, welcome contributions to the project may be invited to
-become a committer, though the exact timing of such invitations depends on many
-factors.
+This project establishes the following additional procedures for specific
+roles below.
 
 ## Committers
 
-The project's committers are responsible for the project's technical
-management. Committers have write access to the project's code repositories and
-may cast binding votes on any technical discussion regarding Accumulo.
-Committer access is by invitation only and must be approved by consensus
-approval of the active PMC members. Upon acceptance of the invitation to become
-a committer, it is the accepting member’s responsibility to update their status
-on the Accumulo web page accordingly.
+The Committer role is defined by [the Foundation][how-it-works]. Additional
+information can be found on the [Committers page][committer-faq].
 
-A committer is considered emeritus, meaning inactive, by their own declaration
-or by not reviewing patches or committing patches to the project for over six
-months. Emeritus members will be recognized by the PMC on the Accumulo web
-page, in honor of their past contributions. Emeritus members retain all voting
-and commit rights associated with their former designation and can move
-themselves out of emeritus status by sending an announcement of their return to
-the developer mailing list. It will be the returning member's responsibility to
-update their status on the web page accordingly.
+Upon acceptance of an invitation to become a committer, it is the accepting
+committer's responsibility to update their status on the Accumulo web page
+accordingly, and to make updates as needed.
 
-An emeritus committer’s commit access may be disabled as part of routine
-security. Access shall not be removed without notifying the committer, and
-access shall be maintained if the committer wishes to leave it active. A
-committer’s commit access shall be reactivated upon the committer’s request to
-the PMC.
+All committers should use their privileges carefully, and ask for help if they
+are uncertain about the risks of any action.
 
-All Apache committers are required to have a signed [Contributor License
-Agreement][icla] (CLA) on file with the Apache Software Foundation. Under the
-terms of the CLA that all committers must sign, a committer's primary
-responsibility is to ensure that all code committed to Apache Accumulo is
-licensed appropriately and meets those criteria set forth in the CLA (including
-both original works and patches committed on behalf of other contributors).
-There is a [Committer FAQ][committer-faq] which provides more details on the
-requirements for committers.
+In order to maintain a low barrier to entry, and to encourage project growth
+and diversity of perspectives, it is the custom of the Accumulo project to also
+invite each committer to become a member of its Project Management Committee
+(PMC). However, this is not a requirement and the current PMC may elect to only
+invite a contributor to become a committer without inviting them to become a
+PMC member, depending on the circumstances. If invited to both, invitees may
+also decline the invitation to the PMC role and only accept the committer role.
 
-It is the custom of the Accumulo project to also invite each committer to
-become a member of the Accumulo PMC.
+## Project Management Committee (PMC) Member
 
-## Project Management Committee
+The PMC Member role is defined by [the Foundation][how-it-works]. Additional
+information can be found in the [PMC Guide][pmc-guide].
 
-The role of the PMC, from a Foundation perspective, is [oversight][pmc-howto].
-The main role of the PMC is not code and not coding, but to ensure that all
-legal issues are addressed, that procedure is followed, and that each and every
-release is the product of the community as a whole. That is key to our
-litigation protection mechanisms.
+Some specific responsibilities of the PMC for Accumulo include:
 
-Secondly, the role of the PMC is to further the long-term development and
-health of the community as a whole, and to ensure that balanced and wide scale
-peer review and collaboration does happen. Within the ASF, we worry about any
-community which centers around a few individuals who are working virtually
-uncontested. We believe that this is detrimental to quality, stability, and
-robustness of both code and long term social structures.
-
-The responsibilities of the PMC include:
-
-* Deciding what is distributed as products of the Apache Accumulo project.
-* Maintaining the project's shared resources, including the code repository, mailing lists, and websites.
-* Protecting and ensuring proper use of Apache trademarks by the project and by other parties.
-* Speaking on behalf of the project.
-* Nominating new PMC members and committers.
-* Maintaining these bylaws and other guidelines of the project.
+* Voting on releases to determine what is distributed as a product of the Accumulo project
+* Maintaining the project's shared resources, including the code repository, mailing lists, and websites
+* Protecting ASF trademarks, including the Accumulo name and logo, and ensuring their proper use by others
+* Subscribing to the private mailing list and engaging in decisions and discussions
+* Speaking on behalf of the project
+* Nominating new PMC members and committers
+* Maintaining these bylaws and other guidelines of the project
 
 In particular, PMC members must understand both our project's criteria and ASF
-criteria for voting on a [release][release-management]. See the [PMC
-Guide][pmc-guide] for more information on PMC responsibilities.
+criteria for voting on a [release][release-management].
 
-Membership of the PMC is by invitation only and must be approved by a consensus
-approval of active PMC members. Upon acceptance of the invitation to become a
-PMC member, it is the accepting member’s responsibility to update their status
-on the Accumulo web page accordingly.
+Upon acceptance of an invitation to become a PMC member, it is the accepting
+member's responsibility to update their status on the Accumulo web page
+accordingly, and to make updates as needed.
 
-A PMC member is considered emeritus, meaning inactive, by their own declaration
-or by not contributing in any form to the project for over six months. Emeritus
-members will be recognized by the PMC on the Accumulo web page, in honor of
-their past contributions. Emeritus members retain all voting and commit rights
-associated with their former designation and can move themselves out of
-emeritus status by sending an announcement of their return to the developer
-mailing list. It will be the returning member's responsibility to update their
-status on the web page accordingly.
+Because the PMC is a role within the Foundation, changes to PMC membership
+follow criteria established by the board. In general, this means that the board
+chooses who gets added or removed from the PMC, but they may delegate that
+authority to existing PMC members or the PMC chair. However, it is this
+project's practice to collectively make decisions about PMC additions among the
+existing PMC members on the project's private mailing list. Accordingly, the
+existing PMC members will conduct a vote before inviting new PMC members, so
+long as that vote can be done without violating the board's current procedures.
+Depending on the current board procedures, this vote may be merely advisory.
+Additionally, no vote will be conducted without first being preceeded by a
+discussion period of at least 72 hours.
 
-The chair of the PMC is appointed by the ASF board. The chair is an office
-holder of the Apache Software Foundation (Vice President, Apache Accumulo) and
-has primary responsibility to the board for the management of the projects
-within the scope of the Accumulo PMC. The chair reports to the board quarterly
-on developments within the Accumulo project.
+PMC members may voluntarily resign from the PMC at any time by their own
+request, and following the appropriate procedures for PMC membership changes
+established by the board. These former members will be recognized as "Emeritus"
+PMC members on the Accumulo web site, in honor of their past contributions.
+Having resigned from the PMC role, these former members will no longer have any
+privileges of PMC membership, such as binding votes for releases or other
+project decisions. However, they will retain any committer privileges, and may
+retain access to the PMC's private mailing list. Emeritus PMC members, having
+voluntarily resigned, may request to rejoin the PMC and restore their
+privileges, without a vote of the existing PMC members, provided that all other
+procedures for PMC membership changes established by the board are followed.
 
-When the current chair of the PMC resigns, the PMC votes to recommend a new
-chair using consensus approval, but the decision must be ratified by the Apache
-board.
+## PMC Chair
 
-## Release Manager
+The chair of the PMC (PMC Chair) is appointed by the ASF board. The chair is an
+office holder of the Apache Software Foundation (Vice President, Apache
+Accumulo) and has primary responsibility to the board for the management of the
+projects within the scope of the Accumulo PMC. The chair reports to the board
+quarterly on developments within the Accumulo project.
+
+The current PMC members may at any time vote to recommend a new chair (such as
+when the current chair declares their desire to resign from the role), but the
+decision must be ratified by the Apache board before the recommended person can
+assume the role.
+
+In the event that the PMC Chair is delegated any special authority by the board
+to make decisions for the project, that they will first make a good faith
+effort to achieve consensus from the existing PMC members, and will act without
+such consensus only if necessary. For example, if the board delegates the
+authority to make additions to the PMC membership, the chair should follow the
+discussion and advisory vote procedure described in the previous section of
+these bylaws.
+
+# Releases
 
 The [ASF release process][release-pub] defines the [release
 manager][release-manager] as an individual responsible for shepherding a new
-project release. Any committer may serve as a release manager. The release
-manager for a release is chosen as part of the release plan.
+project release. Any committer may serve as a release manager by initiating a
+release candidate and starting a vote for a release.
 
 At a minimum, a release manager is responsible for packaging a release
 candidate for a vote and signing and publishing an approved release candidate.
@@ -154,8 +140,9 @@ An Accumulo release manager is also expected to:
 * ensure that required release testing is being conducted
 * track whether the release is on target for its expected release date
 * adjust release plan dates to reflect the latest estimates
-* determine if a re-plan may be needed and, if so, call a vote
-* call votes on release candidates
+* terminate a release vote by either withdrawing a release candidate from consideration, if needed
+* tally the votes and record the vote result after a release vote period has elapsed
+* ensure any post-release tasks are performed, such as updating the website and publishing artifacts
 
 Details on [making][making] and [verifying][verifying] a release are available
 on the Accumulo website.
@@ -163,10 +150,9 @@ on the Accumulo website.
 # Decision Making
 
 Within the Accumulo project, different types of decisions require different
-forms of approval. For example, the previous section describes several
-decisions which require 'consensus approval'. This section defines how voting
-is performed, the types of approvals, and which types of decision require which
-type of approval.
+forms of approval. For example, the previous section describes 'consensus' from
+the existing PMC members. Consensus in that case can be achieved through a
+[consensus approval vote][consensus].
 
 ## Voting
 
@@ -174,142 +160,68 @@ Decisions regarding the project are made by votes on the primary project
 development mailing list: dev@accumulo.apache.org. Where necessary, PMC voting
 may take place on the private Accumulo PMC mailing list:
 private@accumulo.apache.org. Votes are clearly indicated by a subject line
-starting with [VOTE]. A vote message may only pertain to a single item’s
-approval; multiple items should be separated into multiple messages. Voting is
-carried out by replying to the vote mail. A vote may take on one of four forms,
-defined below.
+starting with `[VOTE]`. After the vote period has elapsed, the initiator of the
+vote, or their designee, closes it by replying to the thread with the results
+of the vote. That result email should use the same subject line preceded by
+`[RESULT][VOTE]`. Voting is carried out by replying to the vote mail and
+continues until the vote is closed. If a vote thread becomes inactive and
+remains open for too long, without a response from the initiator, the PMC Chair
+may close the vote.
 
-{: .table }
-| Vote | Meaning |
-|------|---------|
-| +1   | *Yes*, *Agree*, or *The action should be performed*. In general, this vote also indicates a willingness on the behalf of the voter to *make it happen*. |
-| +0   | This vote indicates a willingness for the action under consideration to go ahead. The voter, however, will not be able to help.                         |
-| -0   | This vote indicates that the voter does not, in general, agree with the proposed action but is not concerned enough to prevent the action going ahead.  |
-| -1   | *No*, *Disagree*, or *The action should not be performed*. On issues where consensus is required, this vote counts as a veto. All vetoes must contain an explanation of why the veto is appropriate. Vetoes with no explanation are void. It may also be appropriate for a -1 vote to include an alternative course of action. |
+All participants in the Accumulo project are encouraged to vote. However, some
+votes are considered non-binding (such as votes from non-PMC members during a
+release vote). However, non-binding votes are still useful to gain insight into
+the community's view of the vote topic.
 
-All participants in the Accumulo project are encouraged to vote. For technical
-decisions, only the votes of active committers are binding. Non-binding votes
-are still useful for those with binding votes to understand the perception of
-an action across the wider Accumulo community. For PMC decisions, only the
-votes of active PMC members are binding.
+Each person gets only a single vote. You can change your vote by replying to
+the same vote thread to explain the change prior to the vote being closed.
 
-See the [voting page][voting] for more details on the mechanics of voting.
+For more information on how to vote, see the Foundation's page on
+[voting][voting].
+
+The Foundation defines voting criteria for procedural issues, code
+modifications, and releases. Most formal votes are going to be [consensus
+approval][consensus]. Release votes, however, follow [majority
+approval][majority]. Other decisions, when necessary, can often be made through
+[lazy consensus][lazy]. In the case of an objection for a lazy consensus vote,
+or the desire for explicit consensus, one can initiate a formal vote thread.
+
+All votes should last a minimum of 72 hours.
 
 ## Commit Then Review (CTR)
 
-Voting can also be applied to changes to the Accumulo codebase. Under the
-Commit Then Review policy, committers can make changes to the codebase without
-seeking approval beforehand, and the changes are assumed to be approved unless
-an objection is raised. Only if an objection is raised must a vote take place
-on the code change.
+Accumulo follows a commit-then-review (CTR) policy. This only means that it is
+not strictly a requirement to achieve consensus prior to committing code
+changes to the code repository. Committers can make changes to the codebase
+without seeking approval beforehand, and those changes are assumed to be
+approved unless an objection is raised afterwards. Only if an objection is
+raised must a vote take place on the code change.
 
-For some code changes, committers may wish to get feedback from the community
-before making the change. It is acceptable for a committer to seek approval
-before making a change if they so desire.
-
-## Approvals
-
-These are the types of approvals that can be sought. Different actions require
-different types of approvals.
-
-{: .table }
-| Approval&nbsp;Type                | Definition                                                                                       |
-|-----------------------------------|--------------------------------------------------------------------------------------------------|
-| Consensus Approval                | A consensus approval vote passes with 3 binding +1 votes and no binding vetoes.                  |
-| Majority Approval                 | A majority approval vote passes with 3 binding +1 votes and more binding +1 votes than -1 votes. |
-| Lazy Approval (or Lazy Consensus) | An action with lazy approval is implicitly allowed unless a -1 vote is received, at which time, depending on the type of action, either majority approval or consensus approval must be obtained. Lazy Approval can be either *stated* or *assumed*, as detailed on the [lazy consensus page][lazy]. |
-
-## Vetoes
-
-A valid, binding veto cannot be overruled. If a veto is cast, it must be
-accompanied by a valid reason explaining the veto. The validity of a veto, if
-challenged, can be confirmed by anyone who has a binding vote. This does not
-necessarily signify agreement with the veto, but merely that the veto is valid.
-
-If you disagree with a valid veto, you must lobby the person casting the veto
-to withdraw their veto. If a veto is not withdrawn, the action that has been
-vetoed must be reversed in a timely manner.
-
-## Actions
-
-This section describes the various actions which are undertaken within the
-project, the corresponding approval required for that action and those who have
-binding votes over the action. It also specifies the minimum length of time
-that a vote must remain open, measured in days. In general, votes should not be
-called at times when it is known that interested members of the project will be
-unavailable.
-
-For Code Change actions, a committer may choose to employ assumed or stated
-Lazy Approval under the [CTR][ctr] policy. Assumed Lazy Approval has no minimum
-length of time before the change can be made.
-
-{: .table }
-| Action                    | Description                                                                                                 | Approval                                              | Binding Votes      | Min. Length (days) |
-|---------------------------|-------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|--------------------|--------------------|
-| Code Change               | A change made to a codebase of the project. This includes source code, documentation, website content, etc. | Lazy approval, moving to consensus approval upon veto | Active committers  | 1                  |
-| Release Plan              | Defines the timetable and actions for an upcoming release. The plan also nominates a Release Manager.       | Lazy approval, moving to majority approval upon veto  | Active committers  | 3                  |
-| Release Plan Cancellation | Cancels an active release plan, due to a need to re-plan (e.g., discovery of a major issue).                | Majority approval                                     | Active committers  | 3                  |
-| Product Release           | Accepts or rejects a release candidate as an official release of the project.                               | Majority approval                                     | Active PMC members | 3                  |
-| Adoption of New Codebase  | When the codebase for an existing, released product is to be replaced with an alternative codebase. If such a vote fails to gain approval, the existing code base will continue. This also covers the creation of new sub-projects within the project. | Consensus approval | Active PMC members | 7 |
-| New Committer             | When a new committer is proposed for the project.                                                           | Consensus approval                                    | Active PMC members | 3                  |
-| New PMC Member            | When a committer is proposed for the PMC.                                                                   | Consensus approval                                    | Active PMC members | 3                  |
-| New PMC Chair             | When a new PMC chair is chosen to succeed an outgoing chair.                                                | Consensus approval                                    | Active PMC members | 3                  |
-| Modifying Bylaws          | Modifying this document.                                                                                    | Consensus approval                                    | Active PMC members | 7                  |
-
-No other voting actions are defined; all other actions should presume Lazy
-Approval (defaulting to Consensus Approval upon veto). If an action is voted on
-multiple times, or if a different approval type is desired, these bylaws should
-be amended to include the action.
-
-For the purposes of the "Adoption of New Codebase" action, the Accumulo
-codebase is defined as the Accumulo site content, primary project code, and all
-contributed code ("contribs") as they exist in their respective repositories.
-Adoption of a new codebase generally refers to the creation of a new contrib
-repository, but could cover, for example, a rework of the project site, or
-merging a contrib project into the primary codebase.
-
-Voting actions for the removal of a committer or PMC member are intentionally
-not defined. According to ASF rules, [committer status never
-expires][committer-terms] and [PMC members can only be removed with approval
-from the ASF Board][pmc-removal].
-
-# Release Plans
-
-The approval of a release plan begins the process of creating a new project
-release. The process ends when a release candidate is approved.
-
-An Accumulo release plan consists of at least the following:
-
-* a version number
-* a feature freeze date
-* a code freeze date
-* a release date
-* the choice of a release manager
-
-After feature freeze, new features should not be accepted for the release.
-After code freeze, only critical fixes should be accepted for the release. The
-release manager guides the decision on accepting changes.
-
-All dates in a plan are estimates, as unforeseen issues may require delays. The
-release manager may adjust dates as needed. In serious circumstances, the
-release manager may opt to call a re-plan vote.
+However, just because committers can do this, it does not mean it is a always a
+good idea. Committers are expected to use their privileges responsibly and to
+minimize risks. Therefore, it is often is a good idea for committers to seek
+feedback through code reviews from the community. Code reviews are our standard
+practice and strongly encouraged for anything non-trivial. They are also
+strongly encouraged for new committers, even if a change is trivial. If
+approval is bypassed, and a problem occurs, committers may be expected to
+answer questions about their commit in order to understand what went wrong and
+how to avoid problems in the future. So, committers should take care to not
+abuse the CTR policy, and to use it sparingly and in ways they can justify.
 
 
-[foundation]: https://www.apache.org/foundation
-[foundation-faq]: https://www.apache.org/foundation/faq
-[incubator]: https://incubator.apache.org
-[glossary]: https://www.apache.org/foundation/glossary
-[icla]: https://www.apache.org/licenses/icla.txt
 [committer-faq]: https://www.apache.org/dev/committers
-[pmc-howto]: https://www.apache.org/foundation/how-it-works.html#pmc
-[release-management]: https://www.apache.org/dev/release#management
-[pmc-guide]: https://www.apache.org/dev/pmc
-[release-pub]: https://www.apache.org/dev/release-publishing
-[release-manager]: https://www.apache.org/dev/release-publishing#release_manager
+[consensus]: https://www.apache.org/foundation/glossary#ConsensusApproval
+[foundation]: https://www.apache.org/foundation
+[glossary]: https://www.apache.org/foundation/glossary
+[how-it-works]: https://www.apache.org/foundation/how-it-works
+[incubator]: https://incubator.apache.org
+[lazy]: https://www.apache.org/foundation/glossary#LazyConsensus
+[majority]: https://www.apache.org/foundation/glossary#MajorityApproval
 [making]: {{ "/contributor/making-release" | relative_url }}
+[pmc-guide]: https://www.apache.org/dev/pmc
+[release-management]: https://www.apache.org/dev/release#management
+[release-manager]: https://www.apache.org/dev/release-publishing#release_manager
+[release-pub]: https://www.apache.org/dev/release-publishing
+[thisistheway]: https://www.apache.org/theapacheway
 [verifying]: {{ "/contributor/verifying-release" | relative_url }}
-[voting]: {{ "/contributor/voting" | relative_url }}
-[ctr]: #commit-then-review-ctr
-[committer-terms]: https://www.apache.org/dev/committers#committer-set-term
-[pmc-removal]: https://www.apache.org/dev/pmc#pmc-removal
-[lazy]: {{ "/contributor/lazyConsensus" | relative_url }}
+[voting]: https://www.apache.org/foundation/voting
