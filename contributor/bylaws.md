@@ -161,16 +161,16 @@ development mailing list: dev@accumulo.apache.org. Where necessary, PMC voting
 may take place on the private Accumulo PMC mailing list:
 private@accumulo.apache.org. Votes are clearly indicated by a subject line
 starting with `[VOTE]`. After the vote period has elapsed, the initiator of the
-vote, or their designee, closes it by replying to the thread with the results
-of the vote. That result email should use the same subject line preceded by
+vote, or their designee, closes it by replying to the thread with the vote results.
+ That result email should use the same subject line preceded by
 `[RESULT][VOTE]`. Voting is carried out by replying to the vote mail and
 continues until the vote is closed. If a vote thread becomes inactive and
 remains open for too long, without a response from the initiator, the PMC Chair
 may close the vote.
 
 All participants in the Accumulo project are encouraged to vote. However, some
-votes are considered non-binding (such as votes from non-PMC members during a
-release vote). However, non-binding votes are still useful to gain insight into
+votes are non-binding (such as votes from non-PMC members during a
+release vote). Non-binding votes are still useful to gain insight into
 the community's view of the vote topic.
 
 Each person gets only a single vote. You can change your vote by replying to
@@ -180,7 +180,7 @@ For more information on how to vote, see the Foundation's page on
 [voting][voting].
 
 The Foundation defines voting criteria for procedural issues, code
-modifications, and releases. Most formal votes are going to be [consensus
+modifications, and releases. Most formal votes will be [consensus
 approval][consensus]. Release votes, however, follow [majority
 approval][majority]. Other decisions, when necessary, can often be made through
 [lazy consensus][lazy]. In the case of an objection for a lazy consensus vote,
@@ -190,9 +190,8 @@ All votes should last a minimum of 72 hours.
 
 ## Commit Then Review (CTR)
 
-Accumulo follows a commit-then-review (CTR) policy. This only means that it is
-not strictly a requirement to achieve consensus prior to committing code
-changes to the code repository. Committers can make changes to the codebase
+Accumulo follows a commit-then-review (CTR) policy. This means that consensus
+is not required prior to committing. Committers can make changes to the codebase
 without seeking approval beforehand, and those changes are assumed to be
 approved unless an objection is raised afterwards. Only if an objection is
 raised must a vote take place on the code change.
