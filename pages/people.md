@@ -44,6 +44,7 @@ $(function() {
 | jmanno        | [Jeffrey Manno](https://github.com/Manno15)       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
+| krathbun      | [Kevin Rathbun](https://github.com/kevinrr888)    | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | kturner       | [Keith Turner](https://github.com/keith-turner)   | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | lstavarez     | [Luis Tavarez](https://github.com/lstav)          |                                        | [ET][ET] |
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
@@ -140,7 +141,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Kartik Sethi        |                                                                   | [IST][IST-India]      |
 | Kenneth McFarland   |                                                                   | [PT][PT]              |
 | Kevin Faro          | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
-| Kevin Rathbun       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Kyle Van Gilson     |                                                                   |                       |
 | Kylian Meulin       |                                                                   | [GMT][GMT]/[BST][BST] |
 | Laura Peaslee       | [Objective Solutions, Inc.][OBJECTIVE]                            | [ET][ET]              |
