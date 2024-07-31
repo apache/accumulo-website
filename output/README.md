@@ -157,6 +157,11 @@ Changes pushed to our `main` branch will automatically trigger Jekyll to
 build our site from that branch and push the result to our `asf-site`
 branch, where they will be served on [our production site][production].
 
+If changes fail to be pushed to the `asf-site` branch then the buildbot build
+logs should be checked for failures.
+
+[Buildbot jekyll_websites](https://ci2.apache.org/#/builders/7)
+
 [Bundler]: https://bundler.io/
 [Jekyll]: https://jekyllrb.com/
 [Liquid]: https://jekyllrb.com/docs/liquid/
