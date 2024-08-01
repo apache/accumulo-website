@@ -162,7 +162,7 @@ for unique filename allocation in ZooKeeper to be configurable. In a system that
 of unique names, larger batch sizes can reduce ZooKeeper contention because more file names can be
 reserved with a single ZooKeeper call.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3733">#3733</a> Avoid creating server side threads when failed writes are cancelled. In versions 2.1.2
-and earlier, the thrift close call creates a new thread to cancel the thrift session. With 2.1.3, an
+and earlier, the thrift close call creates a new thread to cancel the thrift session. With 2.1.3, a
 new thrift method is available to test if a session is reserved and deletes it if it is not reserved
 without creating an additional thread.  If the new method is not available it falls back to the previous
 close method to preserve interoperability between 2.x versions.</li>
@@ -171,14 +171,16 @@ to remove candidates that have active tablet file references. This is expected t
 subsequent GC Runs.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3756">#3756</a> Added new RPC named cancelUpdate that reduces the amount of threads waiting to close failed
 batch write sessions.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4682">#4682</a> Changed the ScanServer ref format to sort by UUID to increase performance</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4536">#4536</a> Created ScanServerSelector that tries to use scan servers on the same host to leverage
+  <li><a href="https://github.com/apache/accumulo/issues/4682">#4682</a> Changed the ScanServer file reference format in the metadata table to sort by UUID to increase performance.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4536">#4536</a> Created alternate ScanServerSelector implementation that tries to use scan servers on the same host to leverage
 shared off-heap-cache usage.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4544">#4544</a> Made scan servers refresh cached list of tablet files before expiration. Added new property
 <a href="/docs/2.x/configuration/server-properties#sserver_cache_metadata_refresh_percent">sserver.cache.metadata.refresh.percent</a> to control when refresh happens.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3813">#3813</a> Made compactors use cached address for compaction coordinator when getting next compaction job.
 This lowers load on zookeeper when running many compactors.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3706">#3706</a> Avoid unnescessary copying of hadoop config that was causing Accumulo GC slowdown.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4709">#4709</a> Modified Manager balancer code such that the root, metadata, and user tables will be balanced
+separately, and in that order. For example, balancing for user tables will not occur while the metadata table is unbalanced.</li>
 </ul>
 
 <h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
@@ -198,7 +200,7 @@ garbage collector removes file that are referenced and in-use.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3744">#3744</a> Fixed bug regarding improperly created GCRun logger name.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3737">#3737</a> Adds a custom Transport Factory to set transport message and frame size to avoid infinite loops
 as described in <a href="https://github.com/apache/accumulo/issues/3731">#3731</a>.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3750">#3750</a> Fixed issue when deleting a compaction thread pool would leave tablets in a bad state.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/3750">#3750</a> Fixed issue when deleting a compaction thread pool that would leave tablets in a bad state.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4117">#4117</a> Fixed a bug in compaction properties where the replacement <code class="language-plaintext highlighter-rouge">maxOpen</code> property was being
 ignored in favor of the deprecated <code class="language-plaintext highlighter-rouge">open.max</code> property.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4681">#4681</a> Stopped listing all compactors in each compactor to reduce load on Zookeeper.</li>
@@ -208,17 +210,18 @@ property <a href="/docs/2.x/configuration/server-properties#rpc_message_size_max
 <code class="language-plaintext highlighter-rouge">compactor.message.size.max</code>,<code class="language-plaintext highlighter-rouge">compaction.coordinator.message.size.max</code>.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3966">#3966</a> Changed the default value of the the property <a href="/docs/2.x/configuration/server-properties#table_majc_compaction_strategy">table.majc.compaction.strategy</a>
 to empty string to fix a compatibility bug with old and new compaction plugins.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4554">#4554</a>  Fixed a race condtion that could cause duplicate compactions to run.  While harmless in
+  <li><a href="https://github.com/apache/accumulo/issues/4554">#4554</a>  Fixed a race condition that could cause duplicate compactions to run. While harmless in
 terms of data, the duplicate compactions could waste significant compute resources.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4127">#4127</a> Updated new compaction plugins to honor <a href="/docs/2.x/configuration/server-properties#table_file_max">table.file.max</a> property.  Implemented
+  <li><a href="https://github.com/apache/accumulo/issues/4127">#4127</a> Updated new compaction plugins to honor <a href="/docs/2.x/configuration/server-properties#table_file_max">table.file.max</a> property. Implemented
 a much more efficient algorithm than old compaction plugins had for this property.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4485">#4485</a> Interrupt compactions on tablet unload.  This prevents long running compactions from blocking
+  <li><a href="https://github.com/apache/accumulo/issues/4485">#4485</a> Interrupt compactions on tablet unload. This prevents long running compactions from blocking
 tablet migration.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3512">#3512</a> Fixed issue with improperly cleaned up scans preventing metadata tablet unload.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4456">#4456</a> Setting empty property value no longer deletes property</li>
   <li><a href="https://github.com/apache/accumulo/issues/4000">#4000</a> Fixed bug that could cause bulk import to lose files when errors happened in the tablet server.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4462">#4462</a> Fixed bug that prevented listing Fate operations in some situations.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4573">#4573</a> Modified CredentialProviderToken to no longer store password in serialized form.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4684">#4684</a> Fixed an issue that was causing table creation to get progressively slower when creating a lot of tables.</li>
 </ul>
 
 <h3 id="improvements-that-help-with-administration">Improvements that help with administration:</h3>
@@ -232,7 +235,7 @@ Thrift server sockets.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3745">#3745</a> Adds prefix to gc deletion log messages. This makes it easier to isolate the deletion
 actions of the garbage collector for analysis.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3724">#3724</a> Adds logging of transactions when metadata and in-memory differences are detected.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3725">#3725</a> Changed the gc batch size from bytes to memory percentage value.  Modified default value of
+  <li><a href="https://github.com/apache/accumulo/issues/3725">#3725</a> Changed the gc batch size from bytes to memory percentage value. Modified default value of
 property <a href="/docs/2.x/configuration/server-properties#gc_candidate_batch_size">gc.candidate.batch.size</a>.</li>
   <li><a href="https://github.com/apache/accumulo/issues/3684">#3684</a> Consolidated y/n prompts in the shell. Users can now exit out of multi-table delete operations
 without accepting prompts for each one.</li>
@@ -243,15 +246,20 @@ without accepting prompts for each one.</li>
 to be used at the same time.  Updated documentation on the property <a href="/docs/2.x/configuration/server-properties#general_micrometer_factory">general.micrometer.factory</a></li>
   <li><a href="https://github.com/apache/accumulo/issues/4622">#4622</a> Added compactor busy and server idle metrics <a href="https://github.com/apache/accumulo/issues/4740">#4740</a> to allow for proper scale-in operations.
 Added property <a href="/docs/2.x/configuration/server-properties#general_metrics_process_idle">general.metrics.process.idle</a> to configure idle time for metrics.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3927">#3927</a> Added a new JSON property type that validates the value is json.  Updated the properties
+  <li><a href="https://github.com/apache/accumulo/issues/3927">#3927</a> Added a new JSON property type that validates the value is json. Updated the properties
 <a href="/docs/2.x/configuration/server-properties#monitor_resources_external">monitor.resources.external</a> and <a href="/docs/2.x/configuration/server-properties#tserver_compaction_major_service_meta_planner_opts_executors">tserver.compaction.major.service.meta.planner.opts.executors</a> to use this new type.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4223">#4223</a> Added properties <a href="/docs/2.x/configuration/server-properties#compactor_wait_time_job_min">compactor.wait.time.job.min</a> and <a href="/docs/2.x/configuration/server-properties#compactor_wait_time_job_max">compactor.wait.time.job.max</a> to
 control the min and max times compactors use when polling for work.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/3998">#3998</a> Added instance name tag to metrics.  This is useful for the case when metrics from multiple Accumulo instances
+  <li><a href="https://github.com/apache/accumulo/issues/3998">#3998</a> Added instance name tag to metrics. This is useful for the case when metrics from multiple Accumulo instances
 are flowing into a single metrics system.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4763">#4763</a> Improved the accumulo-cluster script and cluster.yaml file for the use case of starting and stopping specific
 groups of compactors and scan servers.</li>
   <li><a href="https://github.com/apache/accumulo/issues/4487">#4487</a> Scan server properties can now be set in the shell.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4768">#4768</a> Modified thread pool names so that the user will be able to easily find their location in the source code
+when looking at thread pool metrics. This change affects the thread names in the output of a jstack on the process.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4470">#4470</a> Added new metrics to indicate how many migrations are remaining.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4558">#4558</a> Added a log message in the Manager when it has been waiting over 15 minutes for a tablet to unload.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4495">#4495</a> Added <code class="language-plaintext highlighter-rouge">accumulo admin serviceStatus</code> command to quickly get system process status from the command line.</li>
 </ul>
 
 <h2 id="upgrading">Upgrading</h2>
