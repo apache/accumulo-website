@@ -30,6 +30,8 @@ Any questions/ideas don't hesitate to [contact us][contact].
 | [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data |
 | [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
 | [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
+| [Classloaders][c]  | [Issues][ci]                   | Apache Accumulo Classloader Extras |
+| [Access][aa]       | [Issues][aai]                  | Apache Accumulo Access Control Library |
 
 ## Example Contribution workflow
 
@@ -93,6 +95,10 @@ For more information, see the [contributor guide](/contributors-guide/).
 [pi]: https://github.com/apache/accumulo-proxy/issues
 [m]: https://github.com/apache/accumulo-maven-plugin
 [mi]: https://github.com/apache/accumulo-maven-plugin/issues
+[c]: https://github.com/apache/accumulo-classloaders
+[ci]: https://github.com/apache/accumulo-classloaders/issues
+[aa]: https://github.com/apache/accumulo-access
+[aai]: https://github.com/apache/accumulo-access/issues
 [github-join]: https://github.com/join
 [GitHub]: https://github.com/apache/accumulo/pulls
 [Jenkins]: https://builds.apache.org/view/A/view/Accumulo
