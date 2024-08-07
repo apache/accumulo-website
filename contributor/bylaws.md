@@ -13,7 +13,7 @@ Accumulo is a project of the [Apache Software Foundation (ASF)][foundation].
 More details about the Foundation can be found on its pages.
 
 Accumulo is a typical ASF project, operating under a set of principles known
-collectively as [the Apache Way][thisistheway]. If you are new to ASF
+collectively as [The Apache Way][thisistheway]. If you are new to ASF
 development, please refer to the [Incubator project][incubator] for more
 information on how ASF projects operate.
 
