@@ -196,7 +196,7 @@ codebase without seeking approval beforehand, and those changes are assumed to
 be approved unless an objection is raised afterwards. Only if an objection is
 raised must a vote take place on the code change.
 
-However, just because committers can do this, it does not mean it is a always a
+However, just because committers can do this, it does not mean it is always a
 good idea. Committers are expected to use their privileges responsibly and to
 minimize risks. Therefore, it is often is a good idea for committers to seek
 feedback through code reviews from the community. Code reviews are our standard
