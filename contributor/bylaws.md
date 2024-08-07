@@ -89,7 +89,7 @@ existing PMC members on the project's private mailing list. Accordingly, the
 existing PMC members will conduct a vote before inviting new PMC members, so
 long as that vote can be done without violating the board's current procedures.
 Depending on the current board procedures, this vote may be merely advisory.
-Additionally, no vote will be conducted without first being preceeded by a
+Additionally, no vote will be conducted without first being preceded by a
 discussion period of at least 72 hours.
 
 PMC members may voluntarily resign from the PMC at any time by their own
