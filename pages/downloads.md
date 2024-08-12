@@ -104,7 +104,7 @@ available in a future update to this site.
 </div>
 
 
-{% assign linkVers = '2.1.2' %}
+{% assign linkVers = '2.1.3' %}
 ### {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
 {: #latest }
 
