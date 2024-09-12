@@ -11,519 +11,464 @@ Below are the metrics used to monitor various components of Accumulo.
 
 ## General Server Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.detected.low.memory
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Reports 1 when process memory usage is above threshold, 0 when memory is okay.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.server.idle
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Indicates if the server is idle or not. The value will be 1 when idle and 0 when not idle.
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Compactor Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.compactor.entries.read
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of entries read by all threads performing compactions.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.compactor.entries.written
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of entries written by all threads performing compactions.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.compactor.majc.stuck
-
-**Type:** LONG_TASK_TIMER
-
+**Type:** LONG_TASK_TIMER  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Fate Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.fate.errors
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.fate.ops
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Tracks all the current FATE ops in any state.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.fate.ops.activity
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.fate.ops.in.progress.by.type
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Number of FATE operations in progress. The type is designated by the `op.type` tag.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.fate.tx
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** The state is now in a tag (e.g., state=new, state=in.progress, state=failed, etc.).
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Garbage Collection Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.gc.candidates
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.deleted
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.errors
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.finished
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.in.use
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.post.op.duration
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.run.cycle
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.started
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.candidates
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.deleted
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.errors
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.finished
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.in.use
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.gc.wal.started
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Tablet Server Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.majc.paused
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.majc.queued
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** The compaction service information is in a tag: `id={i|e}_{compactionServiceName}_{executor_name}`.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.majc.running
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** The compaction service information is in a tag: `id={i|e}_{compactionServiceName}_{executor_name}`.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.minc.paused
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.minc.queued
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.compactions.minc.running
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.entries
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.entries.mem
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.hold
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.ingest.bytes
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Prior to 2.1.0 this metric was reported as a rate, it is now the count and the rate can be derived.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.ingest.mutations
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Prior to 2.1.0 this metric was reported as a rate, it is now the count and the rate can be derived.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.majc.queued
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.majc.running
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.majc.stuck
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.minc.queued
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.minc.running
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.minc.total
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.tablets.assignments.warning
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.tablets.files
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.tablets.online
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.tablets.opening
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.tablets.unopened
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.updates.commit
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.updates.commit.prep
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.updates.error
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Type is stored in a tag (e.g., type=permission, type=unknown.tablet, type=constraint.violation).
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.updates.mutation.arrays.size
-
-**Type:** DISTRIBUTION_SUMMARY
-
+**Type:** DISTRIBUTION_SUMMARY  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tserver.updates.walog.write
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Scan Server Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.scan.busy.timeout.count
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** Count of the scans where a busy timeout happened.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.close
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.continue
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.files.open
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.paused.for.memory
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.queries
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.query.results
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Prior to 2.1.0 this metric was reported as a rate, it is now the count and the rate can be derived.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.query.results.bytes
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Prior to 2.1.0 this metric was reported as a rate, it is now the count and the rate can be derived.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.query.scanned.entries
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** Prior to 2.1.0 this metric was reported as a rate, it is now the count and the rate can be derived.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.reservation.conflict.count
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.reservation.total.timer
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** Time to reserve a tablet's files for scan.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.reservation.writeout.timer
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** Time to write out a tablets file reservations for scan
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.result
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.return.early.for.memory
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.start
-
-**Type:** COUNTER
-
+**Type:** COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.tablet.metadata.cache
-
-**Type:** CACHE
-
+**Type:** CACHE  
 **Description:** Scan server tablet cache metrics.
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.times
-
-**Type:** TIMER
-
+**Type:** TIMER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.yields
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.scan.zombie.threads
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Thrift Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.thrift.execute
-
-**Type:** DISTRIBUTION_SUMMARY
-
+**Type:** DISTRIBUTION_SUMMARY  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.thrift.idle
-
-**Type:** DISTRIBUTION_SUMMARY
-
+**Type:** DISTRIBUTION_SUMMARY  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Block Cache Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.data.evictioncount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.data.hitcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.data.requestcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.index.evictioncount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.index.hitcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.index.requestcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.summary.evictioncount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.summary.hitcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
-
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.blockcache.summary.requestcount
-
-**Type:** FUNCTION_COUNTER
-
+**Type:** FUNCTION_COUNTER  
 **Description:** 
+</div>
+{::options parse_block_html="false" /}
 
 
 ## Manager Metrics
 
+{::options parse_block_html="true" /}
+<div markdown="1" class="metric-section">
 ### accumulo.manager.balancer.migrations.needed
-
-**Type:** GAUGE
-
+**Type:** GAUGE  
 **Description:** The number of migrations that need to complete before the system is balanced.
+</div>
+{::options parse_block_html="false" /}
 
