@@ -164,6 +164,24 @@ reported against this version will only be applied to future versions.
   <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
 </div>
 
+{% assign linkVers = '1.0.0-beta' %}
+### Accumulo Access {{linkVers}} **Latest**{: .badge .bg-primary}
+
+The Accumulo Access library provides the same functionality, semantics, and syntax as the
+Accumulo ColumnVisibility and VisibilityEvaluator classes in a standalone java library
+that can be used separately from Accumulo.
+
+{% assign lnkFile = 'accumulo-access-' | append: linkVers | append: '-' | append: 'source-release' | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/accumulo-access/' | append: linkVers | append: '/' | append: lnkFile %}
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div>
+  <div class="btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
+</div>
 
 ## <small><span class="fa-solid fa-circle-info" aria-hidden="true"></span></small> Legend
 {: #legend }
