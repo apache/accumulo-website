@@ -72,8 +72,8 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 ## Current Releases
 
 {% assign linkVers = '3.0.0' %}
-### {{linkVers}} **Latest**{: .badge .bg-primary} **non-LTM**{: .badge .bg-warning}
-{: #latest }
+### Accumulo {{linkVers}} **non-LTM**{: .badge .bg-warning}
+{: #accumulo-nonltm }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest bleeding edge
 release, containing the newest features, bug fixes, performance enhancements,
@@ -105,8 +105,8 @@ available in a future update to this site.
 
 
 {% assign linkVers = '2.1.3' %}
-### {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
-{: #latest }
+### Accumulo {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
+{: #accumulo-latest-ltm }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
 current stable generation, containing the newest bug fixes, performance
@@ -134,38 +134,9 @@ enhancements, and more.
 </div>
 
 
-{% assign linkVers = '1.10.4' %}
-### {{linkVers}} **Legacy**{: .badge .bg-secondary} **LTM**{: .badge .bg-success}
-{: #legacy }
-
-The most recent legacy (1.x) release of Apache Accumulo&reg; is version
-{{linkVers}}. This is the final release of the 1.10 series, which is now
-considered end-of-life. This means that code fixes that address bugs
-reported against this version will only be applied to future versions.
-
-{% for srcbin in srcbinArray %}
-{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
-{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
-<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
-  <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
-  </div>
-  <div class="btn-group">
-    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
-    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
-  </div>
-</div>
-{% endfor %}
-<div class="btn-group-sm" style="margin: 20px;">
-  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
-</div>
-
 {% assign linkVers = '1.0.0-beta' %}
-### Accumulo Access {{linkVers}} **Latest**{: .badge .bg-primary}
+### Accumulo Access {{linkVers}}
+{: #accumulo-access }
 
 The Accumulo Access library provides the same functionality, semantics, and syntax as the
 Accumulo ColumnVisibility and VisibilityEvaluator classes in a standalone java library
@@ -188,7 +159,7 @@ that can be used separately from Accumulo.
 
 **LTM**{: .badge .bg-success} / **non-LTM**{: .badge .bg-warning} indicates a [Long Term Maintenance][LTM] release or not
 
-**Latest**{: .badge .bg-primary} / **Legacy**{: .badge .bg-secondary} indicates the latest or previous generation
+**Latest**{: .badge .bg-primary} / **Legacy**{: .badge .bg-secondary} indicates the latest or previous generation when two LTM releases are being concurrently maintained
 
 
 ## Older releases
