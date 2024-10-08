@@ -6,10 +6,90 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 27 Sep 2024 19:24:44 +0000</pubDate>
-    <lastBuildDate>Fri, 27 Sep 2024 19:24:44 +0000</lastBuildDate>
+    <pubDate>Tue, 08 Oct 2024 11:01:33 +0000</pubDate>
+    <lastBuildDate>Tue, 08 Oct 2024 11:01:33 +0000</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
     
+    
+      <item>
+        <title>Accumulo 4.0 Feature Preview</title>
+        <description>&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;In version 2.1, we introduced two new optional and experimental features, &lt;a href=&quot;https://accumulo.apache.org/blog/2021/07/08/external-compactions.html&quot;&gt;External Compactions&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/accumulo/pull/2665&quot;&gt;ScanServers&lt;/a&gt;. The External Compactions feature included two new server processes, the CompactionCoordinator and the Compactor. Using these new processes and their related configurations allows the user to perform major compactions on Tablets external to the TabletServer process. The configuration in 2.1 allows the user to define different “queues” for the External Compactions and to assign a “queue” to the Compactor process when it’s started. This provides the user with some capability to define the resources for different classes of compactions (see the referenced blog post for examples). External Compactions may provide lower latency for major compactions because major compactions that run in the TabletServer may queue up when all of the major compaction threads are busy.&lt;/p&gt;
+
+&lt;p&gt;The ScanServers feature included one new server process, the ScanServer, which allows users to execute scans against a Tablet external to the TabletServer. Because the ScanServer does not have access to the in-memory mutations within the TabletServer, we introduced a consistency level setting on the Scanner and BatchScanner where scans with the “immediate” consistency setting (default) would be sent to the TabletServer only and scans with the “eventual” consistency setting would be sent to a ScanServer. ScanServers can provide better allocation of resources against the current workload because many ScanServers can be used to scan the same Tablet, and a single ScanServer can be used to scan different versions of the Tablet. Immediate consistency scans are sent to the hosting TabletServer where they could possibly queue up, where eventual consistency scans can be serviced by many ScanServers at the cost of not seeing the most recent data (this time delta is configurable). ScanServer processes can be started with a group name which can be used in the client configuration such that eventual scans of a particular type can be sent to a specific group of ScanServer processes.&lt;/p&gt;
+
+&lt;h2 id=&quot;new-for-40&quot;&gt;New For 4.0&lt;/h2&gt;
+
+&lt;p&gt;The features in version 4.0 are intended to make running Accumulo in a cloud environment more cost-efficient by building on the optional and experimental features added in version 2.1. Prior to version 4.0, running an Accumulo instance required enough compute resources to host enough TabletServers to support the ingest, query, and Tablet maintenance (compact, split, merge, etc.) workload as Accumulo was originally designed to keep all Tablets immediately accessible all the time. Version 4.0 allows the user more flexibility in how they deploy Accumulo server processes and how they interact with their data. Below we introduce the high-level features/changes included in version 4.0.&lt;/p&gt;
+
+&lt;h3 id=&quot;on-demand-tablets&quot;&gt;On-Demand Tablets&lt;/h3&gt;
+
+&lt;p&gt;On an upgrade to Accumulo 4.0, the upgrade code will assign all Tablets (except for the root and metadata tables) with an availability setting of ONDEMAND. What this means is that the Tablet is not assigned and hosted by a TabletServer by default. If an operation is performed that requires a Tablet to be hosted by a TabletServer, then the operation will wait for the Tablet to be assigned and hosted. This setting can be changed and checked using the Shell commands &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;setavailability&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;getavailability&lt;/code&gt;, respectively. When a configurable amount of time has passed where the Tablet has been unused, then it will be unloaded. Other valid availability values are HOSTED, which means that the Tablet will always be hosted (the default in earlier versions of Accumulo), and UNHOSTED, which means that the Tablet will never be hosted.&lt;/p&gt;
+
+&lt;p&gt;User operations that would require a Tablet to be hosted are live ingest and immediate consistency scans. Users can still interact with data in unhosted tablets via bulk import and eventual consistency scans, and users can still perform tablet maintenance operations on unhosted tablets. The root and metadata tables have an availability value of HOSTED, which cannot be changed by the user. If your application only performs eventual scans and bulk imports, then only one TabletServer is required with the sole purpose of hosting the root and metadata tables.&lt;/p&gt;
+
+&lt;p&gt;Because Tablets are now optionally hosted in a TabletServer, the implementation of all the Tablet maintenance functions had to be moved out of the TabletServer and re-implemented. Split, Merge, and other metadata-only operations were re-implemented as Fate operations in the Manager.&lt;/p&gt;
+
+&lt;h3 id=&quot;external-compactions-only&quot;&gt;External Compactions Only&lt;/h3&gt;
+
+&lt;p&gt;If a Tablet is not hosted, and the user is bulk importing to it, this could trigger the need for a major compaction. Hosting the Tablet just for the purpose of compacting it will cause churn on the cluster as the balancer may move Tablets around. This led to the decision to move all major compactions to the External Compactions feature. In 4.0, the CompactionCoordinator component was merged into the Manager process, so manually running the CompactionCoordinator process is no longer required. Running at least one Compactor is required to perform major compactions on the root and metadata tables.&lt;/p&gt;
+
+&lt;h3 id=&quot;resource-groups&quot;&gt;Resource Groups&lt;/h3&gt;
+
+&lt;p&gt;In version 4.0 a new group property can be supplied to the Compactor, ScanServer, and TabletServer processes (this replaces the “queue” property mentioned previously for Compactors). If not specified, the default group is used. These properties allow the user to create groups of processes with the same name that can be used to host Tablets, execute major compactions, and perform eventual scans. For example, application A may have requirements that dictate the need for immediate access to Tablet data and application B may have requirements that do not require immediate access to data. You would not want to host Tablets for these applications’ tables in the same set of TabletServers as the loading and unloading of application B’s Tablets would cause churn when balancing. Instead, you would likely want to create two sets of TabletServers, groups appA and appB, where their respective tables can be hosted. The number of TabletServers in the appA group would likely be static, and the number of TabletServers in the appB group can scale as demand requires.&lt;/p&gt;
+
+&lt;h3 id=&quot;increased-visibility&quot;&gt;Increased Visibility&lt;/h3&gt;
+
+&lt;p&gt;Speaking of scaling, in version 4.0 we are emitting more metrics that can be used to determine when and how a resource needs to be scaled. The resource group and application name tags can be used to identify the group and type of resource that needs to be scaled. The metric name and value can be used to determine how the resource needs to be scaled. For example, if the value for metric &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.compactor.queue.jobs.queued&lt;/code&gt; is increasing, you likely need more Compactor resources. Likewise, if the value for metric &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.tserver.compactions.minc.queued&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo.tserver.hold&lt;/code&gt; is increasing, then you might need to start more TabletServers.&lt;/p&gt;
+
+&lt;h2 id=&quot;possible-deployment-scenarios&quot;&gt;Possible Deployment Scenarios&lt;/h2&gt;
+
+&lt;p&gt;With the new features described above, many possible deployment scenarios are possible. We highlight a few of them below.&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario-1&quot;&gt;Scenario 1&lt;/h3&gt;
+
+&lt;p&gt;The diagram below depicts the simplest deployment where all tables operate within the default group of resources. There are no ScanServers, so only immediate scans are available. Tablets for all tables are assigned, hosted, and balanced within the same set of TabletServers. Major compactions for all tablets are executed within the same set of Compactors.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202409_accumulo4/AccumuloDeployment1.png&quot; alt=&quot;Scenario1&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario-2&quot;&gt;Scenario 2&lt;/h3&gt;
+
+&lt;p&gt;The diagram below depicts a slightly more complicated deployment where ScanServers are also being used to support eventual scans against Tablets.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202409_accumulo4/AccumuloDeployment2.png&quot; alt=&quot;Scenario2&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario-3&quot;&gt;Scenario 3&lt;/h3&gt;
+
+&lt;p&gt;The diagram below depicts a deployment where multiple compactor groups are configured in the default resource group. The compaction configuration enables the user, for example, to send compactions to different groups based on the sum of the input file sizes. In this example we have two additional Compactor groups, default-small and default-large, that can be configured for some user tables. The Compactor group in the default resource group would be used for all other tables.  See the &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/core/src/main/java/org/apache/accumulo/core/spi/compaction/RatioBasedCompactionPlanner.java&quot;&gt;RatioBasedCompactionPlanner&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202409_accumulo4/AccumuloDeployment3.png&quot; alt=&quot;Scenario3&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario-4&quot;&gt;Scenario 4&lt;/h3&gt;
+
+&lt;p&gt;The diagram below depicts a scenario where a second resource group, app1, has been created to service Tablets for Tables associated with a particular application. The application can perform eventual and immediate consistent scans, and performs live ingest into the Tables, so it needs both ScanServers and TabletServers. The user would configure their application to perform eventual scans using the instructions in the ScanServer blog post, configure major compactions to run in the app1 Compactor group using the instructions in the RatioBasedCompactionPlanner, and would configure the associated tables with the property table.custom.assignment.group=app1.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202409_accumulo4/AccumuloDeployment4.png&quot; alt=&quot;Scenario4&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario-5&quot;&gt;Scenario 5&lt;/h3&gt;
+
+&lt;p&gt;The diagram below is a slight modification to the prior scenario that shows the same app1 resource group, but without TabletServers. In this situation the associated application is only performing bulk imports and eventual scans on table data.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/202409_accumulo4/AccumuloDeployment5.png&quot; alt=&quot;Scenario5&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;current-state-and-path-forward&quot;&gt;Current State and Path Forward&lt;/h2&gt;
+
+&lt;p&gt;Version 4.0.0-SNAPSHOT has been merged into the main branch. We have added over 100 new integration tests and all of the old and new tests are passing. We are planning on performing testing at increasing scales to determine what other architectural changes are needed. For example, we have discussed the possibility of needing to run multiple active Manager processes as the Manager is now responsible for performing more functions (CompactionCoordinator, more Fate operations, etc.).&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 07 Oct 2024 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/blog/2024/10/07/accumulo4-preview.html</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/blog/2024/10/07/accumulo4-preview.html</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
     
       <item>
         <title>Apache Accumulo 2.1.3</title>
@@ -1869,80 +1949,6 @@ general.opentelemetry.enabled=true
         
         
         <category>blog</category>
-        
-      </item>
-    
-      <item>
-        <title>Apache Accumulo 1.10.2</title>
-        <description>&lt;h2 id=&quot;about&quot;&gt;About&lt;/h2&gt;
-
-&lt;p&gt;Apache Accumulo 1.10.2 is a bug fix release of the 1.10 LTM release line.&lt;/p&gt;
-
-&lt;p&gt;These release notes are highlights of the changes since 1.10.1. The full
-detailed changes can be seen in the git history. If anything important is
-missing from this list, please &lt;a href=&quot;/contact-us&quot;&gt;contact&lt;/a&gt; us to have it included.&lt;/p&gt;
-
-&lt;p&gt;Users of 1.10.1 or earlier are encouraged to upgrade to 1.10.2, as this is a
-continuation of the 1.10 LTM release line with bug fixes and improvements, and
-it supersedes any prior 1.x version. Users are also encouraged to consider
-migrating to a 2.x version when one that is suitable for their needs becomes
-available.&lt;/p&gt;
-
-&lt;h2 id=&quot;known-issues&quot;&gt;Known Issues&lt;/h2&gt;
-
-&lt;p&gt;Apache Commons VFS was upgraded in &lt;a href=&quot;https://github.com/apache/accumulo/issues/1295&quot;&gt;#1295&lt;/a&gt; and some users have reported
-issues similar to &lt;a href=&quot;https://issues.apache.org/jira/projects/VFS/issues/VFS-683&quot;&gt;VFS-683&lt;/a&gt;. Possible solutions are discussed in &lt;a href=&quot;https://github.com/apache/accumulo/issues/2775&quot;&gt;#2775&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;major-improvements&quot;&gt;Major Improvements&lt;/h2&gt;
-
-&lt;p&gt;This release bundles &lt;a href=&quot;https://reload4j.qos.ch/&quot;&gt;reload4j&lt;/a&gt; (&lt;a href=&quot;https://github.com/apache/accumulo/issues/2458&quot;&gt;#2458&lt;/a&gt;) in
-the convenience binary and uses that instead of log4j 1.2. This is to make it
-easier for users to avoid the many CVEs that apply to log4j 1.2, which is no
-longer being maintained. Accumulo 2.x versions will have already switched to
-use the latest log4j 2. However, doing so required making some breaking API
-changes and other substantial changes, so that can’t be done for Accumulo 1.10.
-Using reload4j instead, was deemed to be a viable interim solution until
-Accumulo 2.x.&lt;/p&gt;
-
-&lt;h3 id=&quot;other-improvements&quot;&gt;Other Improvements&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1808&quot;&gt;#1808&lt;/a&gt; Re-throw exceptions in threads instead of merely logging them&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1863&quot;&gt;#1863&lt;/a&gt; Avoid unnecessory redundant log sorting&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1917&quot;&gt;#1917&lt;/a&gt; Ensure RFileWriterBuilder API validates filenames&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/2006&quot;&gt;#2006&lt;/a&gt; Detect system config changes in HostRegexTableLoadBalancer without restarting master&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/2464&quot;&gt;#2464&lt;/a&gt; Apply timeout to socket.connect()&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;other-bug-fixes&quot;&gt;Other Bug Fixes&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1775&quot;&gt;#1775&lt;/a&gt; Ensure monitor reports a dead tserver when it is killed&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/1858&quot;&gt;#1858&lt;/a&gt; Fix a bug in the monitor graphs due to use of int instead of long&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/2370&quot;&gt;#2370&lt;/a&gt; Fix bug in getsplits command in the shell&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;note-about-jdk-15&quot;&gt;Note About JDK 15&lt;/h2&gt;
-
-&lt;p&gt;See the note in the 1.10.1 release notes about the use of JDK 15 or later, as
-the information pertaining to the use of the CMS garbage collector remains
-applicable to this version.&lt;/p&gt;
-
-&lt;h2 id=&quot;useful-links&quot;&gt;Useful Links&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://lists.apache.org/thread/bq424vnov27nwnkb471oxg5nd7m6xwn9&quot;&gt;Release VOTE email thread&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/compare/rel/1.10.1...apache:rel/1.10.2&quot;&gt;All Changes since 1.10.1&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/milestone/9&quot;&gt;All tickets related to this release&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        <pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/release/accumulo-1.10.2/</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-1.10.2/</guid>
-        
-        
-        <category>release</category>
         
       </item>
     
