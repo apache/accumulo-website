@@ -39,7 +39,7 @@ local [accumulo.properties] on start up so processes must be restarted to apply 
 in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.
 
 Site configuration can be overriden when starting an Accumulo process on the command line (by using the `-o` option):
-```
+```bash
 accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
 ```
 Overriding properties is useful if you can't change [accumulo.properties]. It's done when [running Accumulo using Docker](https://github.com/apache/accumulo-docker).
@@ -51,7 +51,9 @@ in their description on the [server properties] page. System configuration will 
 settings take effect immediately, some require a restart of the process which is indicated in the **zk mutable** section of their description. System configuration can be set using
 the following shell command:
 
-    config -s PROPERTY=VALUE
+```console
+config -s PROPERTY=VALUE
+```
 
 They can also be set using {% jlink org.apache.accumulo.core.client.admin.InstanceOperations %} in the Java API:
 
@@ -68,14 +70,16 @@ client.instanceOperations().modifyProperties(properties -> {
   properties.put("table.bloom.error.rate", "0.75");
   properties.put("table.bloom.size", "128000");
 });
-
 ```
+
 ### Namespace
 
 Namespace configuration refers to [table.* properties] set for a certain table namespace (i.e. group of tables). These settings are stored in ZooKeeper. Namespace configuration
 will override System configuration and can be set using the following shell command:
 
-    config -ns NAMESPACE -s PROPERTY=VALUE
+```console
+config -ns NAMESPACE -s PROPERTY=VALUE
+```
 
 It can also be set using {% jlink org.apache.accumulo.core.client.admin.NamespaceOperations %} in the Java API:
 
@@ -92,12 +96,15 @@ client.namespaceOperations().modifyProperties("mynamespace", properties -> {
         properties.put("table.bloom.error.rate", "0.75");
         properties.put("table.bloom.size", "128000");
         });
+```
 
 ### Table
 
 Table configuration refers to [table.* properties] set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:
 
-    config -t TABLE -s PROPERTY=VALUE
+```console
+config -t TABLE -s PROPERTY=VALUE
+```
 
 They can also be set using {% jlink org.apache.accumulo.core.client.admin.TableOperations %} in the Java API:
 
