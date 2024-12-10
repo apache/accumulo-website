@@ -442,7 +442,7 @@ local <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.proper
 in their description. Setting properties in accumulo.properties allows you to configure tablet servers with different settings.</p>
 
 <p>Site configuration can be overriden when starting an Accumulo process on the command line (by using the <code class="language-plaintext highlighter-rouge">-o</code> option):</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver -o instance.secret=mysecret -o instance.zookeeper.host=localhost:2181
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo tserver <span class="nt">-o</span> instance.secret<span class="o">=</span>mysecret <span class="nt">-o</span> instance.zookeeper.host<span class="o">=</span>localhost:2181
 </code></pre></div></div>
 <p>Overriding properties is useful if you can’t change <a href="/docs/2.x/configuration/files#accumuloproperties">accumulo.properties</a>. It’s done when <a href="https://github.com/apache/accumulo-docker">running Accumulo using Docker</a>.</p>
 
@@ -453,8 +453,8 @@ in their description on the <a href="/docs/2.x/configuration/server-properties">
 settings take effect immediately, some require a restart of the process which is indicated in the <strong>zk mutable</strong> section of their description. System configuration can be set using
 the following shell command:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s PROPERTY=VALUE
-</code></pre></div></div>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">config -s PROPERTY=VALUE
+</span></code></pre></div></div>
 
 <p>They can also be set using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/admin/InstanceOperations.html">InstanceOperations</a> in the Java API:</p>
 
@@ -469,15 +469,15 @@ the following shell command:</p>
   <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
   <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
 <span class="o">});</span>
-
 </code></pre></div></div>
+
 <h3 id="namespace">Namespace</h3>
 
 <p>Namespace configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table namespace (i.e. group of tables). These settings are stored in ZooKeeper. Namespace configuration
 will override System configuration and can be set using the following shell command:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -ns NAMESPACE -s PROPERTY=VALUE
-</code></pre></div></div>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">config -ns NAMESPACE -s PROPERTY=VALUE
+</span></code></pre></div></div>
 
 <p>It can also be set using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/admin/NamespaceOperations.html">NamespaceOperations</a> in the Java API:</p>
 
@@ -492,17 +492,18 @@ will override System configuration and can be set using the following shell comm
         <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
         <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
         <span class="o">});</span>
+</code></pre></div></div>
 
-<span class="err">###</span> <span class="nc">Table</span>
+<h3 id="table">Table</h3>
 
-<span class="nc">Table</span> <span class="n">configuration</span> <span class="n">refers</span> <span class="n">to</span> <span class="o">[</span><span class="n">table</span><span class="o">.*</span> <span class="n">properties</span><span class="o">]</span> <span class="n">set</span> <span class="k">for</span> <span class="n">a</span> <span class="n">certain</span> <span class="n">table</span><span class="o">.</span> <span class="nc">These</span> <span class="n">settings</span> <span class="n">are</span> <span class="n">stored</span> <span class="n">in</span> <span class="nc">ZooKeeper</span> <span class="n">and</span> <span class="n">can</span> <span class="n">be</span> <span class="n">set</span> <span class="n">using</span> <span class="n">the</span> <span class="n">following</span> <span class="n">shell</span> <span class="nl">command:</span>
+<p>Table configuration refers to <a href="/docs/2.x/configuration/server-properties#table_prefix">table.* properties</a> set for a certain table. These settings are stored in ZooKeeper and can be set using the following shell command:</p>
 
-    <span class="n">config</span> <span class="o">-</span><span class="n">t</span> <span class="no">TABLE</span> <span class="o">-</span><span class="n">s</span> <span class="no">PROPERTY</span><span class="o">=</span><span class="no">VALUE</span>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">config -t TABLE -s PROPERTY=VALUE
+</span></code></pre></div></div>
 
-<span class="nc">They</span> <span class="n">can</span> <span class="n">also</span> <span class="n">be</span> <span class="n">set</span> <span class="n">using</span> <span class="o">[</span><span class="nc">TableOperations</span><span class="o">](</span><span class="nl">https:</span><span class="c1">//www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/admin/TableOperations.html) in the Java API:</span>
+<p>They can also be set using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/admin/TableOperations.html">TableOperations</a> in the Java API:</p>
 
-<span class="err">```</span><span class="n">java</span>
-<span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="s">"table.durability"</span><span class="o">,</span> <span class="s">"log"</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>The java api also supports adding, modifying and removing multiple properties in a single operation:</p>
