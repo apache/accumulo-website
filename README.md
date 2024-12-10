@@ -28,7 +28,7 @@ The source for these tags is at [\_plugins/links.rb](_plugins/links.rb).
 
 ### Updating Property Documentation for Releases
 
-Building Accumulo  generates `server-properties*.md` and `client-properties*.md`.
+Building Accumulo  generates `server-properties*.md`, `client-properties*.md` and `metrics*.md`.
 To regenerate these, do the following.
 
 ```bash
