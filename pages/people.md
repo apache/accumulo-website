@@ -24,7 +24,7 @@ $(function() {
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
-| alerman       | Adam Lerman                                       | [RedDrum][REDDRUM]                     | [ET][ET] |
+| alerman       | Adam Lerman                                       | [Red Drum][REDDRUM]                     | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
