@@ -4,6 +4,48 @@ category: administration
 order: 7
 ---
 
+## Changes to the upgrade process
+
+In upgrade notes for prior releases we have advised that users should ensure that no FATE
+transactions exist (see `Upgrading from 1.10 or 2.0 to 2.1` below). This is due to the
+fact that the internal serialization of FATE transactions is not guaranteed to be
+compatible between versions. Accumulo never provided any tooling around the upgrade process
+and left it up the user, which can cause problems if older versions of FATE transactions
+exist and the user already deployed the new version of software. The user would have to
+re-install the old version of software to remove the FATE transactions.
+
+Starting with Accumulo 4.0 we are modifying the upgrade process steps in an attempt to
+make it easier for the user to validate their instance is ready for upgrade. In earlier
+versions the upgrade process would start when the user started the instance with the
+new version of software. The process ran entirely in the Manager and it was the users
+responsibility to read the upgrade notes to perform any necessary pre-upgrade steps.
+
+The new upgrade process introduces a new `accumulo upgrade` command which will be used
+after shutting down the instance with the old version of software and before starting
+the instance with the new version of software. The `upgrade` command has two options,
+`--prepare` and `--start`. `--prepare` is designed to be executed by the user after shutting
+down the instance. This option will check that the Manager is down, validate that there
+are no existing FATE transactions, remove all of the server locks in ZooKeeper, and place
+a node in ZooKeeper that will prevent server processes from being started again. If there
+are FATE transactions, the command will fail giving the user the opportunity to clean them
+up. The `--prepare` option can then be run again.
+
+The `--start` option is designed to be executed by the user before starting the instance
+with the newer version of software. The `--start` option will perform any necessary pre-upgrade
+validation, any changes that are necessary for the new version of software to start, seed
+an upgrade progress tracker node in ZooKeeper, and then finally remove the node in ZooKeeper
+created by the `--prepare` step so that the server processes can be started. If the user did
+not run the `--prepare` step with the older version of software, then the `--start` option
+will fail unless the `--force` option is used. Running `--start` with the `--force` option
+will perform the same checks that `--prepare` executes, but if FATE transactions are found
+then the user will need to remove them using the older version of software. Once the `--start`
+option completes, then the user can start the server processes to complete the upgrade
+process. The user will want to check the contents of the Manager log to observe the progress
+of the upgrade.
+
+The `accumulo upgrade --prepare` command will be included with the 2.1.4 and 3.1.0 releases
+to assist users in upgrading to the 4.0 release.
+
 ## Upgrading from 1.10 or 2.0 to 2.1
 
 Please read these directions in their entirety before beginning. Please [contact] us with any
