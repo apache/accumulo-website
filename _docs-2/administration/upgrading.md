@@ -32,7 +32,7 @@ up. The `--prepare` option can then be run again.
 
 The `--start` option is designed to be executed by the user before starting the instance
 with the newer version of software. The `--start` option will perform any necessary pre-upgrade
-validation, any changes that are necessary for the new version of software to start, seed
+validation, make any changes that are necessary for the new version of software to start, seed
 an upgrade progress tracker node in ZooKeeper, and then finally remove the node in ZooKeeper
 created by the `--prepare` step so that the server processes can be started. If the user did
 not run the `--prepare` step with the older version of software, then the `--start` option
