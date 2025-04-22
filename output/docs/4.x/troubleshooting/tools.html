@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Troubleshooting Tools</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse show" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Troubleshooting &gt;&gt; Troubleshooting Tools</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Troubleshooting Tools</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/troubleshooting/tools.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <p>The <code class="language-plaintext highlighter-rouge">accumulo</code> command can be used to run various tools and classes from the command line.</p>
+
+<h2 id="rfileinfo">RFileInfo</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">rfile-info</code> tool will examine an Accumulo storage file and print out basic metadata.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info /accumulo/tables/1/default_tablet/A000000n.rf
+2013-07-16 08:17:14,778 [util.NativeCodeLoader] INFO : Loaded the native-hadoop library
+Locality group         : &lt;DEFAULT&gt;
+        Start block          : 0
+        Num   blocks         : 1
+        Index level 0        : 62 bytes  1 blocks
+        First key            : 288be9ab4052fe9e span:34078a86a723e5d3:3da450f02108ced5 [] 1373373521623 false
+        Last key             : start:13fc375709e id:615f5ee2dd822d7a [] 1373373821660 false
+        Num entries          : 466
+        Column families      : [waitForCommits, start, md major compactor 1, md major compactor 2, md major compactor 3,
+                                 bringOnline, prep, md major compactor 4, md major compactor 5, md root major compactor 3,
+                                 minorCompaction, wal, compactFiles, md root major compactor 4, md root major compactor 1,
+                                 md root major compactor 2, compact, id, client:update, span, update, commit, write,
+                                 majorCompaction]
+
+Meta block     : BCFile.index
+      Raw size             : 4 bytes
+      Compressed size      : 12 bytes
+      Compression type     : gz
+
+Meta block     : RFile.index
+      Raw size             : 780 bytes
+      Compressed size      : 344 bytes
+      Compression type     : gz
+</code></pre></div></div>
+
+<p>When trying to diagnose problems related to key size, the <code class="language-plaintext highlighter-rouge">rfile-info</code> tool can provide a histogram of the individual key sizes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --histogram /accumulo/tables/1/default_tablet/A000000n.rf
+...
+Up to size      count      %-age
+         10 :        222  28.23%
+        100 :        244  71.77%
+       1000 :          0   0.00%
+      10000 :          0   0.00%
+     100000 :          0   0.00%
+    1000000 :          0   0.00%
+   10000000 :          0   0.00%
+  100000000 :          0   0.00%
+ 1000000000 :          0   0.00%
+10000000000 :          0   0.00%
+</code></pre></div></div>
+
+<p>Likewise, <code class="language-plaintext highlighter-rouge">rfile-info</code> will dump the key-value pairs and show you the contents of the RFile:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info --dump /accumulo/tables/1/default_tablet/A000000n.rf
+row columnFamily:columnQualifier [visibility] timestamp deleteFlag -&gt; Value
+...
+</code></pre></div></div>
+
+<h3 id="encrypted-files">Encrypted Files</h3>
+
+<p>To examine an encrypted rfile the necessary encryption properties must be provided to the utility. To do this
+the <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file can be copied, the necessary encryption parameters added, and then the properties file can
+be passed to the utility with the <code class="language-plaintext highlighter-rouge">-p</code> argument.</p>
+
+<p>For example, if using <code class="language-plaintext highlighter-rouge">PerTableCryptoServiceFactory</code> and the <code class="language-plaintext highlighter-rouge">AESCryptoService</code>, you would need the following properties in
+your accumulo.properties file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.custom.crypto.key.uri=&lt;path-to-key&gt;/data-encryption.key
+instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.PerTableCryptoServiceFactory
+table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo rfile-info hdfs://localhost:8020/accumulo/tables/1/default_tablet/F0000001.rf -p &lt;path-to-properties&gt;/accumulo.properties
+Reading file: hdfs://localhost:8020/accumulo/tables/1/default_tablet/F0000001.rf
+Encrypted with Params: ...
+...
+RFile Version            : 8
+
+Locality group           : &lt;DEFAULT&gt;
+      Num   blocks           : 1
+      Index level 0          : 37 bytes  1 blocks
+      ...
+
+Meta block     : BCFile.index
+      Raw size             : 4 bytes
+      ...
+
+Meta block     : RFile.index
+      Raw size             : 121 bytes
+      ...
+...
+</code></pre></div></div>
+
+<h2 id="getmanagerstats">GetManagerStats</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">GetManagerStats</code> tool can be used to retrieve Accumulo state and statistics:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.test.GetManagerStats | grep Load
+ OS Load Average: 0.27
+</code></pre></div></div>
+
+<h2 id="findofflinetablets">FindOfflineTablets</h2>
+
+<p>If the Accumulo monitor shows an offline tablet, use <code class="language-plaintext highlighter-rouge">FindOfflineTablets</code> to find out which
+tablet it is.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.FindOfflineTablets
+2&lt;&lt;@(null,null,localhost:9997) is UNASSIGNED  #walogs:2
+</code></pre></div></div>
+
+<p>Here’s what the output means:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">2&lt;&lt;</code> -
+  This is the tablet from (-inf, pass:[+]inf) for the
+  table with id 2.  The command <code class="language-plaintext highlighter-rouge">tables -l</code> in the shell will show table ids for
+  tables.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">@(null, null, localhost:9997)</code> -
+  Location information.  The
+  format is <code class="language-plaintext highlighter-rouge">@(assigned, hosted, last)</code>.  In this case, the
+  tablet has not been assigned, is not hosted anywhere, and was once
+  hosted on localhost.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">#walogs:2</code> -
+   The number of write-ahead logs that this tablet requires for recovery.</p>
+  </li>
+</ul>
+
+<p>An unassigned tablet with write-ahead logs is probably waiting for
+logs to be sorted for efficient recovery.</p>
+
+<h2 id="checkformetadataproblems">CheckForMetadataProblems</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">CheckForMetadataProblems</code> tool can be used to make sure metadata
+tables are up and consistent. It will verify the start/end of
+every tablet matches, and the start and stop for the table is empty:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.CheckForMetadataProblems -u root --password
+Enter the connection password:
+Checking tables whose metadata is found in: accumulo.root (+r)
+...All is well for table accumulo.metadata (!0)
+No problems found in accumulo.root (+r)
+
+Checking tables whose metadata is found in: accumulo.metadata (!0)
+...All is well for table accumulo.replication (+rep)
+...All is well for table trace (1)
+No problems found in accumulo.metadata (!0)
+</code></pre></div></div>
+
+<h2 id="removeentriesformissingfiles">RemoveEntriesForMissingFiles</h2>
+
+<p>If your Hadoop cluster has a lost a file due to a NameNode failure, you can remove
+the file reference using <code class="language-plaintext highlighter-rouge">RemoveEntriesForMissingFiles</code>. It will check every file reference
+and ensure that the file exists in HDFS.  Optionally, it will remove the reference:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.server.util.RemoveEntriesForMissingFiles -u root --password
+Enter the connection password:
+2013-07-16 13:10:57,293 [util.RemoveEntriesForMissingFiles] INFO : File /accumulo/tables/2/default_tablet/F0000005.rf
+ is missing
+2013-07-16 13:10:57,296 [util.RemoveEntriesForMissingFiles] INFO : 1 files of 3 missing
+</code></pre></div></div>
+
+<h2 id="changesecret-new-in-21">ChangeSecret (new in 2.1)</h2>
+
+<p>Changes the unique secret given to the instance that all servers must know. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.
+Note that Accumulo must be shut down to run this utility.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin changeSecret
+Old secret:
+New secret:
+New instance id is 6e7f416b-c578-45df-8016-c9bc6b400e13
+Be sure to put your new secret in accumulo.properties
+</code></pre></div></div>
+
+<h2 id="deletezooinstance-new-in-21">DeleteZooInstance (new in 2.1)</h2>
+
+<p>Deletes specific a specific instance name or id from zookeeper or cleans up all old instances. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<p>To delete a specific instance use <code class="language-plaintext highlighter-rouge">-i</code> or <code class="language-plaintext highlighter-rouge">--instance</code> flags.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -i instance1
+Deleted instance: instance1
+</code></pre></div></div>
+
+<p>If you try to delete the current instance a warning prompt will be displayed.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -i uno
+Warning: This is the current instance, are you sure? (yes|no): no
+Instance deletion of 'uno' cancelled.
+
+$ accumulo admin deleteZooInstance -i uno
+Warning: This is the current instance, are you sure? (yes|no): yes
+Deleted instance: instance1
+</code></pre></div></div>
+
+<p>If you have entries in zookeeper for old instances that you no longer need, use the <code class="language-plaintext highlighter-rouge">-c</code> or <code class="language-plaintext highlighter-rouge">--clean</code> flags.
+This command will not delete the instance pointed to by the local <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin deleteZooInstance -c
+Deleted instance: instance1
+Deleted instance: instance2
+</code></pre></div></div>
+
+<h2 id="accumulo-util-dump-zoo">accumulo-util dump-zoo</h2>
+
+<p>To view the contents of ZooKeeper, run the following command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo
+</code></pre></div></div>
+
+<p>It can also be run using the <code class="language-plaintext highlighter-rouge">accumulo</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo dump-zoo
+</code></pre></div></div>
+
+<p>If you would like to backup ZooKeeper, run the following command to write its contents as XML to file.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo-util dump-zoo --xml --root /accumulo &gt;dump.xml
+</code></pre></div></div>
+
+<h2 id="restorezookeeper">RestoreZookeeper</h2>
+
+<p>An XML dump file can be later used to restore ZooKeeper. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin restoreZoo --overwrite &lt; dump.xml
+</code></pre></div></div>
+
+<p>This command overwrites ZooKeeper so take care when using it. This is also why it cannot be called using <code class="language-plaintext highlighter-rouge">accumulo-util</code>.</p>
+
+<h2 id="tabletserverlocks-new-in-21">TabletServerLocks (new in 2.1)</h2>
+
+<p>List or delete Tablet Server locks. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin locks
+    localhost:9997 TSERV_CLIENT=localhost:9997
+
+$ accumulo admin locks -delete localhost:9997
+
+$ accumulo admin locks
+    localhost:9997             &lt;none&gt;
+</code></pre></div></div>
+
+<h2 id="verifytabletassignments-new-in-21">VerifyTabletAssignments (new in 2.1)</h2>
+
+<p>Verify all tablets are assigned to tablet servers. The utility can be run using the <code class="language-plaintext highlighter-rouge">accumulo admin</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin verifyTabletAssigns
+Checking table accumulo.metadata
+Checking table accumulo.replication
+Tablet +rep&lt;&lt; has no location
+Checking table accumulo.root
+Checking table t1
+Checking table t2
+Checking table t3
+
+$ accumulo admin verifyTabletAssigns -v
+Checking table accumulo.metadata
+Tablet !0;~&lt; is located at localhost:9997
+Tablet !0&lt;;~ is located at localhost:9997
+Checking table accumulo.replication
+Tablet +rep&lt;&lt; has no location
+Checking table accumulo.root
+Tablet +r&lt;&lt; is located at localhost:9997
+Checking table t1
+Tablet 1&lt;&lt; is located at localhost:9997
+Checking table t2
+Tablet 2&lt;&lt; is located at localhost:9997
+Checking table t3
+Tablet 3&lt;&lt; is located at localhost:9997
+</code></pre></div></div>
+
+<h2 id="zoo-info-viewer-new-in-21">zoo-info-viewer (new in 2.1)</h2>
+
+<p>View Accumulo information stored in ZooKeeper in a human-readable format.  The utility can be run without an Accumulo
+instance. If an instance id or name is not provided on the command line, the instance will be read from
+HDFS, otherwise only a running ZooKeeper instance is required to run the command.</p>
+
+<p>To run the command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer [mode-options] [--outfile filename]
+
+mode options:
+--print-instances
+--print-id-map
+--print-props [--system] [-ns | --namespaces list] [-t | --tables list]
+--print-acls
+</code></pre></div></div>
+
+<h2 id="mode-print-instances">mode: print instances</h2>
+<p>The instance name(s) and instance id(s) are stored in ZooKeeper. To see the available name to id mapping run:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-instances
+
+-----------------------------------------------
+Report Time: 2022-05-31T21:07:19.673258Z
+-----------------------------------------------
+Instances (Instance Name, Instance ID)
+test_a=1111465d-b7bb-42c2-919b-111111111111
+test_b=2222465d-b7bb-42c2-919b-222222222222
+uno=9cc9465d-b7bb-42c2-919b-ddf74b610c82
+
+-----------------------------------------------
+</code></pre></div></div>
+
+<h2 id="mode-print-id-map">mode: print id-map</h2>
+<p>If a shell is not available or convenient, the zoo-info-viewer can provide the same
+information as the <code class="language-plaintext highlighter-rouge">namespaces -l</code> and <code class="language-plaintext highlighter-rouge">tables -l</code> commands. Note, the zoo-info-viewer output is
+sorted by the id.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-id-map
+-----------------------------------------------
+Report Time: 2022-05-25T19:33:42.079969Z
+-----------------------------------------------
+ID Mapping (id =&gt; name) for instance: 8f006afd-8673-4a5a-b940-60405755197f
+Namespace ids:
++accumulo =&gt;                 accumulo
++default  =&gt;                       ""
+1         =&gt;               ns_sample1
+
+Table ids:
+!0        =&gt;        accumulo.metadata
++r        =&gt;            accumulo.root
++rep      =&gt;     accumulo.replication
+2         =&gt;          ns_sample1.tbl1
+3         =&gt;                     tbl2
+
+-----------------------------------------------
+</code></pre></div></div>
+
+<h2 id="mode-print-property-mappings">mode: print property mappings</h2>
+
+<p>With Accumulo version 2.1, the storage of properties in ZooKeeper has changed and the properties are not directly
+readable with the ZooKeeper zkCli utility.  The properties can be listed in an Accumulo shell with the <code class="language-plaintext highlighter-rouge">config</code> command.
+However, if a shell is not available, this utility <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> can be used instead.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> option <code class="language-plaintext highlighter-rouge">--print-props</code> with no other options will print all the configuration properties
+for system, namespaces and tables.  The <code class="language-plaintext highlighter-rouge">print-props</code> can be filtered the with additional options, <code class="language-plaintext highlighter-rouge">--system</code> will print
+the system configuration, <code class="language-plaintext highlighter-rouge">-ns</code> or <code class="language-plaintext highlighter-rouge">--namespaces</code> expects a list of the namespace names,
+<code class="language-plaintext highlighter-rouge">-t</code> or <code class="language-plaintext highlighter-rouge">--tables</code> expects a list of table names included in the output.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer  --print-props
+
+-----------------------------------------------
+Report Time: 2022-05-31T21:18:11.562867Z
+-----------------------------------------------
+ZooKeeper properties for instance ID: 9cc9465d-b7bb-42c2-919b-ddf74b610c82
+
+Name: System, Data Version:0, Data Timestamp: 2022-05-31T15:51:52.772265Z:
+-- none --
+
+Namespace:
+Name: , Data Version:0, Data Timestamp: 2022-05-31T15:51:53.015613Z:
+-- none --
+
+Name: accumulo, Data Version:0, Data Timestamp: 2022-05-31T15:51:53.034172Z:
+-- none --
+
+Name: ns1, Data Version:0, Data Timestamp: 2022-05-31T21:17:22.927165Z:
+-- none --
+
+Tables:
+Name: accumulo.metadata, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.511811Z:
+table.cache.block.enable=true
+table.cache.index.enable=true
+...
+
+Name: accumulo.replication, Data Version:1, Data Timestamp: 2022-05-31T15:51:53.516346Z:
+table.formatter=org.apache.accumulo.server.replication.StatusFormatter
+table.group.repl=repl
+...
+
+Name: accumulo.root, Data Version:2, Data Timestamp: 2022-05-31T15:51:53.501174Z:
+table.cache.block.enable=true
+table.cache.index.enable=true
+...
+
+Name: ns1.tbl1, Data Version:1, Data Timestamp: 2022-05-31T21:17:41.111836Z:
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+...
+
+Name: tbl3, Data Version:1, Data Timestamp: 2022-05-31T21:17:54.083044Z:
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+...
+-----------------------------------------------
+</code></pre></div></div>
+
+<h2 id="mode-print-acls-new-in-211">mode: print ACLs (new in 2.1.1)</h2>
+
+<p>With 2.1.1, the <code class="language-plaintext highlighter-rouge">zoo-info-viewer</code> option <code class="language-plaintext highlighter-rouge">--print-acls</code> will print the ZooKeeper ACLs for all nodes under
+the <code class="language-plaintext highlighter-rouge">/accumulo/INSTANCE_ID]</code> path.</p>
+
+<p>See <a href="/docs/4.x/troubleshooting/zookeeper">troubleshooting ZooKeeper</a> for more information on the tool output and expected ACLs.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-info-viewer --print-acls
+
+-----------------------------------------------
+Report Time: 2023-01-27T23:00:26.079546Z
+-----------------------------------------------
+Output format:
+ACCUMULO_PERM:OTHER_PERM path user_acls...
+
+ZooKeeper acls for instance ID: f491223b-1413-494e-b75a-c2ca018db00f
+
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/bulk_failed_copyq/locks cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/compactors cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/config cdrwa:accumulo
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/coordinators cdrwa:accumulo, r:anyone
+...
+ERROR_ACCUMULO_MISSING_SOME:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/users/root/Namespaces r:accumulo, r:anyone
+...
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/643b14db-b929-4570-b226-620bc5ac85ff cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/wals/localhost:9997[100003d35cc0004]/ad26be2a-dc52-4e0e-8e78-8fc8c3323d51 cdrwa:accumulo, r:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances cdrwa:anyone
+ACCUMULO_OKAY:NOT_PRIVATE /accumulo/instances/uno cdrwa:accumulo, r:anyone
+
+</code></pre></div></div>
+
+<h2 id="zoo-prop-editor-new-in-211">zoo-prop-editor (new in 2.1.1)</h2>
+
+<p>The zoo-prop-editor tool provides an emergency capability to update properties stored in ZooKeeper without a
+running Accumulo instance. Only ZooKeeper and Hadoop are required to be available to use the tool.  With 
+Accumulo 2.1, properties are stored in single ZooKeeper config nodes for the system, each namespace and
+each table. The properties are stored compressed and cannot be directly edited using the ZooKeeper command 
+lines tools like <code class="language-plaintext highlighter-rouge">zkCli.sh</code></p>
+
+<p>This tool is provided for a situation if invalid properties were set by the user that prevent the instance 
+from running or if running the instance would lead to an unacceptable outcome. Users should prefer using the 
+Accumulo shell to edit properties if at all possible. Alternatively, properties can be also be viewed using 
+the zoo-info-viewer (it also does not need a running Accumulo instance).</p>
+
+<p>The zoo-prop-editor follows a similar command format of the shell <code class="language-plaintext highlighter-rouge">config</code> command. If a namespace or table 
+is not specified, the tool assumes the system properties. If set or delete option is not provided, the tool 
+prints the current properties.</p>
+
+<p>The tool displays only the properties stored in a single ZooKeeper config node. It <strong>does not</strong> provide the 
+property hierarchy (default -&gt; system -&gt; namespace -&gt; table) that is available with the shell <code class="language-plaintext highlighter-rouge">config</code> command.</p>
+
+<p>The output includes property metadata that is prefixed with <code class="language-plaintext highlighter-rouge">:</code> to support filtering with <code class="language-plaintext highlighter-rouge">grep -v :</code> to suppress 
+those lines if desired when piping the output to follow on commands.</p>
+
+<p>For example, to view the current system config node properties (no properties are set in this example)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-prop-editor
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: SYSTEM
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/config
+: Name: system
+: Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Data version: 0
+: Timestamp: 2023-06-12T21:52:15.727028Z
+</code></pre></div></div>
+<p>For example, to view the properties for table <code class="language-plaintext highlighter-rouge">ns1.tbl1</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo zoo-prop-editor -t ns1.tbl1
+: Instance name: uno
+: Instance Id: e715caf8-f576-4b5d-871a-d47add90b7ba
+: Property scope: TABLE
+: ZooKeeper path: /accumulo/e715caf8-f576-4b5d-871a-d47add90b7ba/tables/2/config
+: Name: ns1.tbl1
+: Id: 2
+: Data version: 1
+: Timestamp: 2023-06-12T21:54:31.817473Z
+table.constraint.1=org.apache.accumulo.core.data.constraints.DefaultKeySizeConstraint
+table.iterator.majc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.majc.vers.opt.maxVersions=1
+table.iterator.minc.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.minc.vers.opt.maxVersions=1
+table.iterator.scan.vers=20,org.apache.accumulo.core.iterators.user.VersioningIterator
+table.iterator.scan.vers.opt.maxVersions=1
+
+</code></pre></div></div>
+<p>To set a property, use the <code class="language-plaintext highlighter-rouge">-s</code> or <code class="language-plaintext highlighter-rouge">--set</code> option. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ zoo-prop-editor -t ns1.tbl1 -s table.bloom.enabled=false
+</code></pre></div></div>
+
+<p>To delete a property, use the <code class="language-plaintext highlighter-rouge">-d</code> or <code class="language-plaintext highlighter-rouge">--delete</code> option. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ zoo-prop-editor -t ns1.tbl1 -d table.bloom.enabled
+</code></pre></div></div>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/troubleshooting/tools.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

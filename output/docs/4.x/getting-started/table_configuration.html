@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Table Configuration</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="true" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse show" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Getting started &gt;&gt; Table Configuration</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Table Configuration</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/getting-started/table_configuration.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <p>Accumulo tables have a few options that can be configured to alter the default
+behavior of Accumulo as well as improve performance based on the data stored.
+These include locality groups, constraints, bloom filters, iterators, and block
+cache.  See the <a href="/docs/4.x/configuration/server-properties">server properties</a> documentation for a complete list of available
+configuration options.</p>
+
+<h2 id="locality-groups">Locality Groups</h2>
+
+<p>Accumulo supports storing sets of column families separately on disk to allow
+clients to efficiently scan over columns that are frequently used together and to avoid
+scanning over column families that are not requested. After a locality group is set,
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/Scanner.html">Scanner</a> and <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> operations will automatically take advantage of them
+whenever the fetchColumnFamilies() method is used.</p>
+
+<p>By default, tables place all column families into the same <code class="language-plaintext highlighter-rouge">default</code> locality group.
+Additional locality groups can be configured at any time via the shell or
+programmatically as follows:</p>
+
+<h3 id="managing-locality-groups-via-the-shell">Managing Locality Groups via the Shell</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setgroups &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}{ &lt;group&gt;=&lt;col fam&gt;{,&lt;col fam&gt;}}
+    [-?] -t &lt;table&gt;
+
+user@myinstance mytable&gt; setgroups group_one=colf1,colf2 -t mytable
+
+user@myinstance mytable&gt; getgroups -t mytable
+</code></pre></div></div>
+
+<h3 id="managing-locality-groups-via-the-client-api">Managing Locality Groups via the Client API</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AccumuloClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">Accumulo</span><span class="o">.</span><span class="na">newClient</span><span class="o">()</span>
+                          <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="s">"/path/to/accumulo-client.properties"</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+
+<span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;</span> <span class="n">localityGroups</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;();</span>
+
+<span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">metadataColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;();</span>
+<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"domain"</span><span class="o">));</span>
+<span class="n">metadataColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"link"</span><span class="o">));</span>
+
+<span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;</span> <span class="n">contentColumns</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;();</span>
+<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"body"</span><span class="o">));</span>
+<span class="n">contentColumns</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="s">"images"</span><span class="o">));</span>
+
+<span class="n">localityGroups</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"metadata"</span><span class="o">,</span> <span class="n">metadataColumns</span><span class="o">);</span>
+<span class="n">localityGroups</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"content"</span><span class="o">,</span> <span class="n">contentColumns</span><span class="o">);</span>
+
+<span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">setLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">,</span> <span class="n">localityGroups</span><span class="o">);</span>
+
+<span class="c1">// existing locality groups can be obtained as follows</span>
+<span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">&gt;&gt;</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">getLocalityGroups</span><span class="o">(</span><span class="s">"mytable"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>The assignment of Column Families to Locality Groups can be changed at any time. The
+physical movement of column families into their new locality groups takes place via
+the periodic <a href="#compaction">major compaction</a> process that takes place continuously in the
+background or manually using the <code class="language-plaintext highlighter-rouge">compact</code> command in the shell.</p>
+
+<h2 id="constraints">Constraints</h2>
+
+<p>Accumulo supports constraints applied on mutations at insert time. This can be
+used to disallow certain inserts according to a user defined policy. Any mutation
+that fails to meet the requirements of the constraint is rejected and sent back to the
+client.</p>
+
+<p>Constraints can be enabled by setting a table property as follows:</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>constraint <span class="nt">-t</span> mytable <span class="nt">-a</span> com.test.ExampleConstraint com.test.AnotherConstraint
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>constraint <span class="nt">-l</span>
+<span class="go">com.test.ExampleConstraint=1
+com.test.AnotherConstraint=2
+</span></code></pre></div></div>
+
+<p>Currently, there are no general-purpose constraints provided with the Accumulo
+distribution. New constraints can be created by writing a Java class that implements
+the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a> interface.</p>
+
+<p>To deploy a new constraint, create a jar file containing a class implementing <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/constraints/Constraint.html">Constraint</a>
+and place it in the <code class="language-plaintext highlighter-rouge">lib/</code> directory of the Accumulo installation. New
+constraint jars can be added to Accumulo and enabled without restarting but any
+change to an existing constraint class requires Accumulo to be restarted.</p>
+
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/main/docs/constraints.md">constraints examples</a> for example code.</p>
+
+<h2 id="bloom-filters">Bloom Filters</h2>
+
+<p>As mutations are applied to an Accumulo table, several files are created per tablet. If
+bloom filters are enabled, Accumulo will create and load a small data structure into
+memory to determine whether a file contains a given key before opening the file.
+This can speed up lookups considerably. Bloom filters can be enabled on a table by
+setting the <a href="/docs/4.x/configuration/server-properties#table_bloom_enabled">table.bloom.enabled</a> property to <code class="language-plaintext highlighter-rouge">true</code> in the shell:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; config -t mytable -s table.bloom.enabled=true
+</code></pre></div></div>
+
+<p>The <a href="https://github.com/apache/accumulo-examples/blob/main/docs/bloom.md">bloom filter examples</a> contains an extensive example of using Bloom Filters.</p>
+
+<h2 id="iterators">Iterators</h2>
+
+<p>Iterators provide a modular mechanism for adding functionality to be executed by
+TabletServers when scanning or compacting data. This allows users to efficiently
+summarize, filter, and aggregate data. In fact, the built-in features of cell-level
+security and column fetching are implemented using Iterators.
+Some useful Iterators are provided with Accumulo and can be found in the
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.
+In each case, any custom Iterators must be included in Accumulo’s classpath,
+typically by including a jar in <code class="language-plaintext highlighter-rouge">lib/</code> or <code class="language-plaintext highlighter-rouge">lib/ext/</code>, although the VFS classloader
+allows for classpath manipulation using a variety of schemes including URLs and HDFS URIs.</p>
+
+<h3 id="setting-iterators-via-the-shell">Setting Iterators via the Shell</h3>
+
+<p>Iterators can be configured on a table at scan, minor compaction and/or major
+compaction scopes. If the Iterator implements the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface, the
+setiter command can be used which will interactively prompt the user to provide
+values for the given necessary options.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: setiter [-?] -ageoff | -agg | -class &lt;name&gt; | -regex |
+    -reqvis | -vers   [-majc] [-minc] [-n &lt;itername&gt;] -p &lt;pri&gt;
+    [-scan] [-t &lt;table&gt;]
+
+user@myinstance mytable&gt; setiter -t mytable -scan -p 15 -n myiter -class com.company.MyIterator
+</code></pre></div></div>
+
+<p>The config command can always be used to manually configure iterators which is useful
+in cases where the Iterator does not implement the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/OptionDescriber.html">OptionDescriber</a> interface.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -t mytable -s table.iterator.scan.myiter=15,com.company.MyIterator
+config -t mytable -s table.iterator.minc.myiter=15,com.company.MyIterator
+config -t mytable -s table.iterator.majc.myiter=15,com.company.MyIterator
+config -t mytable -s table.iterator.scan.myiter.opt.myoptionname=myoptionvalue
+config -t mytable -s table.iterator.minc.myiter.opt.myoptionname=myoptionvalue
+config -t mytable -s table.iterator.majc.myiter.opt.myoptionname=myoptionvalue
+</code></pre></div></div>
+
+<p>Typically, a table will have multiple iterators. Accumulo configures a set of
+system level iterators for each table. These iterators provide core
+functionality like visibility label filtering and may not be removed by
+users. User level iterators are applied in the order of their priority.
+Priority is a user configured integer; iterators with lower numbers go first,
+passing the results of their iteration on to the other iterators up the
+stack.</p>
+
+<h3 id="setting-iterators-programmatically">Setting Iterators Programmatically</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="k">new</span> <span class="nc">IteratorSetting</span><span class="o">(</span>
+    <span class="mi">15</span><span class="o">,</span> <span class="c1">// priority</span>
+    <span class="s">"myiter"</span><span class="o">,</span> <span class="c1">// name this iterator</span>
+    <span class="s">"com.company.MyIterator"</span> <span class="c1">// class name</span>
+<span class="o">));</span>
+</code></pre></div></div>
+
+<p>Some iterators take additional parameters from client code, as in the following
+example:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">IteratorSetting</span> <span class="n">iter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IteratorSetting</span><span class="o">(...);</span>
+<span class="n">iter</span><span class="o">.</span><span class="na">addOption</span><span class="o">(</span><span class="s">"myoptionname"</span><span class="o">,</span> <span class="s">"myoptionvalue"</span><span class="o">);</span>
+<span class="n">scanner</span><span class="o">.</span><span class="na">addIterator</span><span class="o">(</span><span class="n">iter</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>Tables support separate Iterator settings to be applied at scan time, upon minor
+compaction and upon major compaction. For most uses, tables will have identical
+iterator settings for all three to avoid inconsistent results.</p>
+
+<h3 id="versioning-iterators-and-timestamps">Versioning Iterators and Timestamps</h3>
+
+<p>Accumulo provides the capability to manage versioned data through the use of
+timestamps within the Key. If a timestamp is not specified in the key created by the
+client then the system will set the timestamp to the current time. Two keys with
+identical rowIDs and columns but different timestamps are considered two versions
+of the same key. If two inserts are made into Accumulo with the same rowID,
+column, and timestamp, then the behavior is non-deterministic.</p>
+
+<p>Timestamps are sorted in descending order, so the most recent data comes first.
+Accumulo can be configured to return the top k versions, or versions later than a
+given date. The default is to return the one most recent version.</p>
+
+<p>The version policy can be changed by changing the VersioningIterator options for a
+table as follows:</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.scan.vers.opt.maxVersions<span class="o">=</span>3
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.minc.vers.opt.maxVersions<span class="o">=</span>3
+<span class="go">
+</span><span class="gp">user@myinstance mytable&gt;</span><span class="w"> </span>config <span class="nt">-t</span> mytable <span class="nt">-s</span> table.iterator.majc.vers.opt.maxVersions<span class="o">=</span>3
+</code></pre></div></div>
+
+<p>When a table is created, by default it’s configured to use the
+VersioningIterator and keep one version. A table can be created without the
+VersioningIterator with the -ndi option in the shell. Also, the Java API
+has the following method</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">limitVersion</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h4 id="logical-time">Logical Time</h4>
+
+<p>Accumulo 1.2 introduces the concept of logical time. This ensures that timestamps
+set by Accumulo always move forward. This helps avoid problems caused by
+TabletServers that have different time settings. The per tablet counter gives unique
+one up time stamps on a per-mutation basis. When using time in milliseconds, if
+two things arrive within the same millisecond then both receive the same
+timestamp. When using time in milliseconds, Accumulo set times will still
+always move forward and never backwards.</p>
+
+<p>A table can be configured to use logical timestamps at creation time as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance&gt; createtable -tl logical
+</code></pre></div></div>
+
+<h4 id="deletes">Deletes</h4>
+
+<p>Deletes are special keys in Accumulo that get sorted along will all the other data.
+When a delete key is inserted, Accumulo will not show anything that has a
+timestamp less than or equal to the delete key. During major compaction, any keys
+older than a delete key are omitted from the new file created, and the omitted keys
+are removed from disk as part of the regular garbage collection process.</p>
+
+<h3 id="filters">Filters</h3>
+
+<p>When scanning over a set of key-value pairs it is possible to apply an arbitrary
+filtering policy through the use of a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/Filter.html">Filter</a>. Filters are types of iterators that return
+only key-value pairs that satisfy the filter logic. Accumulo has a few built-in filters
+that can be configured on any table: AgeOff, ColumnAgeOff, Timestamp, NoVis, and RegEx. More can be added
+by writing a Java class that extends the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/Filter.html">Filter</a> class.</p>
+
+<p>The AgeOff filter can be configured to remove data older than a certain date or a fixed
+amount of time from the present. The following example sets a table to delete
+everything inserted over 30 seconds ago:</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">user@myinstance&gt;</span><span class="w"> </span>createtable filtertest
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>setiter <span class="nt">-t</span> filtertest <span class="nt">-scan</span> <span class="nt">-minc</span> <span class="nt">-majc</span> <span class="nt">-p</span> 10 <span class="nt">-n</span> myfilter <span class="nt">-ageoff</span>
+<span class="gp">AgeOffFilter removes entries with timestamps more than &lt;ttl&gt;</span><span class="w"> </span>milliseconds old
+<span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter negate, default <span class="nb">false</span>
+<span class="go">                keeps k/v that pass accept method, true rejects k/v that pass accept method:
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter ttl, <span class="nb">time </span>to
+<span class="go">                live (milliseconds): 30000
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>org.apache.accumulo.core.iterators.user.AgeOffFilter parameter currentTime, <span class="k">if </span><span class="nb">set</span>,
+<span class="go">                use the given value as the absolute time in milliseconds as the current time of day:
+
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w">
+</span><span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>insert foo a b c
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">foo a:b [] c
+
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span><span class="nb">sleep </span>4
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w"> </span>scan
+<span class="go">
+</span><span class="gp">user@myinstance filtertest&gt;</span><span class="w">
+</span></code></pre></div></div>
+
+<p>To see the iterator settings for a table, use:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@example filtertest&gt; config -t filtertest -f iterator
+---------+---------------------------------------------+------------------
+SCOPE    | NAME                                        | VALUE
+---------+---------------------------------------------+------------------
+table    | table.iterator.majc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.majc.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.majc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+table    | table.iterator.majc.vers.opt.maxVersions .. | 1
+table    | table.iterator.minc.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.minc.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.minc.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+table    | table.iterator.minc.vers.opt.maxVersions .. | 1
+table    | table.iterator.scan.myfilter .............. | 10,org.apache.accumulo.core.iterators.user.AgeOffFilter
+table    | table.iterator.scan.myfilter.opt.ttl ...... | 30000
+table    | table.iterator.scan.vers .................. | 20,org.apache.accumulo.core.iterators.VersioningIterator
+table    | table.iterator.scan.vers.opt.maxVersions .. | 1
+---------+---------------------------------------------+------------------
+</code></pre></div></div>
+
+<h3 id="combiners">Combiners</h3>
+
+<p>Accumulo supports on the fly lazy aggregation of data using Combiners. Aggregation is
+done at compaction and scan time. No lookup is done at insert time, which` greatly
+speeds up ingest.</p>
+
+<p>Accumulo allows Combiners to be configured on tables and column
+families. When a Combiner is set it is applied across the values
+associated with any keys that share rowID, column family, and column qualifier.
+This is similar to the reduce step in MapReduce, which applied some function to all
+the values associated with a particular key.</p>
+
+<p>For example, if a summing combiner were configured on a table and the following
+mutations were inserted:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Row     Family Qualifier Timestamp  Value
+rowID1  colfA  colqA     20100101   1
+rowID1  colfA  colqA     20100102   1
+</code></pre></div></div>
+
+<p>The table would reflect only one aggregate value:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rowID1  colfA  colqA     -          2
+</code></pre></div></div>
+
+<p>Combiners can be enabled for a table using the setiter command in the shell. Below is an example.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>setiter <span class="nt">-t</span> perDayCounts <span class="nt">-p</span> 10 <span class="nt">-scan</span> <span class="nt">-minc</span> <span class="nt">-majc</span> <span class="nt">-n</span> daycount
+<span class="go">                       -class org.apache.accumulo.core.iterators.user.SummingCombiner
+TypedValueCombiner can interpret Values as a variety of number encodings
+  (VLong, Long, or String) before combining
+</span><span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>SummingCombiner parameter columns,
+<span class="gp">            &lt;col fam&gt;</span><span class="o">[</span>:&lt;col qual&gt;]<span class="o">{</span>,&lt;col fam&gt;[:&lt;col qual&gt;]<span class="o">}</span> : day
+<span class="gp">----------&gt;</span><span class="w"> </span><span class="nb">set </span>SummingCombiner parameter <span class="nb">type</span>, &lt;VARNUM|LONG|STRING&gt;: STRING
+<span class="go">
+</span><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert foo day 20080103 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert bar day 20080101 1
+<span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>insert bar day 20080101 1
+<span class="go">
+</span><span class="gp">root@a14 perDayCounts&gt;</span><span class="w"> </span>scan
+<span class="go">bar day:20080101 []    2
+foo day:20080101 []    2
+foo day:20080103 []    1
+</span></code></pre></div></div>
+
+<p>Accumulo includes some useful Combiners out of the box. To find these look in
+the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/user/package-summary.html">org.apache.accumulo.core.iterators.user</a> package.</p>
+
+<p>Additional Combiners can be added by creating a Java class that extends
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> and adding a jar containing that class to Accumulo’s <code class="language-plaintext highlighter-rouge">lib/ext</code> directory.</p>
+
+<p>See the <a href="https://github.com/apache/accumulo-examples/blob/main/docs/combiner.md">combiner example</a> for example code.</p>
+
+<h2 id="block-cache">Block Cache</h2>
+
+<p>A Block Cache can be enabled on tables to limit reads from disk which can result
+in reduced read latency. Read the <a href="/docs/4.x/administration/caching">Caching</a> documentation to learn more.</p>
+
+<h2 id="compaction">Compaction</h2>
+
+<p>See <a href="/docs/4.x/administration/compaction">compaction </a></p>
+<h2 id="pre-splitting-tables">Pre-splitting tables</h2>
+
+<p>Accumulo will balance and distribute tables across servers. Before a
+table gets large, it will be maintained as a single tablet on a single
+server. This limits the speed at which data can be added or queried
+to the speed of a single node. To improve performance when a table
+is new, or small, you can add split points and generate new tablets.</p>
+
+<p>In the shell:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; createtable newTable
+root@myinstance&gt; addsplits -t newTable g n t
+</code></pre></div></div>
+
+<p>This will create a new table with 4 tablets. The table will be split
+on the letters <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">n</code>, and <code class="language-plaintext highlighter-rouge">t</code> which will work nicely if the
+row data start with lower-case alphabetic characters. If your row
+data includes binary information or numeric information, or if the
+distribution of the row information is not flat, then you would pick
+different split points. Now ingest and query can proceed on 4 nodes
+which can improve performance.</p>
+
+<h2 id="merging-tablets">Merging tablets</h2>
+
+<p>Over time, a table can get very large, so large that it has hundreds
+of thousands of split points. Once there are enough tablets to spread
+a table across the entire cluster, additional splits may not improve
+performance, and may create unnecessary bookkeeping. The distribution
+of data may change over time. For example, if row data contains date
+information, and data is continually added and removed to maintain a
+window of current information, tablets for older rows may be empty.</p>
+
+<p>Accumulo supports tablet merging, which can be used to reduce
+the number of split points. The following command will merge all rows
+from <code class="language-plaintext highlighter-rouge">A</code> to <code class="language-plaintext highlighter-rouge">Z</code> into a single tablet:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s A -e Z
+</code></pre></div></div>
+
+<p>If the result of a merge produces a tablet that is larger than the
+configured split size, the tablet may be split by the tablet server.
+Be sure to increase your tablet size prior to any merges if the goal
+is to have larger tablets:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=2G
+</code></pre></div></div>
+
+<p>In order to merge small tablets, you can ask Accumulo to merge
+sections of a table smaller than a given size.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M
+</code></pre></div></div>
+
+<p>By default, small tablets will not be merged into tablets that are
+already larger than the given size. This can leave isolated small
+tablets. To force small tablets to be merged into larger tablets use
+the <code class="language-plaintext highlighter-rouge">--force</code> option:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; merge -t myTable -s 100M --force
+</code></pre></div></div>
+
+<p>Merging away small tablets works on one section at a time. If your
+table contains many sections of small split points, or you are
+attempting to change the split size of the entire table, it will be
+faster to set the split point and merge the entire table:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; config -t myTable -s table.split.threshold=256M
+root@myinstance&gt; merge -t myTable
+</code></pre></div></div>
+
+<h2 id="delete-range">Delete Range</h2>
+
+<p>Consider an indexing scheme that uses date information in each row.
+For example <code class="language-plaintext highlighter-rouge">20110823-15:20:25.013</code> might be a row that specifies a
+date and time. In some cases, we might like to delete rows based on
+this date, say to remove all the data older than the current year.
+Accumulo supports a delete range operation which efficiently
+removes data between two rows. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -s 2010 -e 2011
+</code></pre></div></div>
+
+<p>This will delete all rows starting with <code class="language-plaintext highlighter-rouge">2010</code> and it will stop at
+any row starting <code class="language-plaintext highlighter-rouge">2011</code>. You can delete any data prior to 2011
+with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@myinstance&gt; deleterange -t myTable -e 2011 --force
+</code></pre></div></div>
+
+<p>The shell will not allow you to delete an unbounded range (no start)
+unless you provide the <code class="language-plaintext highlighter-rouge">--force</code> option.</p>
+
+<p>Range deletion is implemented using splits at the given start/end
+positions, and will affect the number of splits in the table.</p>
+
+<h2 id="cloning-tables">Cloning Tables</h2>
+
+<p>A new table can be created that points to an existing table’s data. This is a
+very quick metadata operation, no data is actually copied. The cloned table
+and the source table can change independently after the clone operation. One
+use case for this feature is testing. For example to test a new filtering
+iterator, clone the table, add the filter to the clone, and force a major
+compaction. To perform a test on less data, clone a table and then use delete
+range to efficiently remove a lot of data from the clone. Another use case is
+generating a snapshot to guard against human error. To create a snapshot,
+clone a table and then disable write permissions on the clone.</p>
+
+<p>The clone operation will point to the source table’s files. This is why the
+flush option is present and is enabled by default in the shell. If the flush
+option is not enabled, then any data the source table currently has in memory
+will not exist in the clone.</p>
+
+<p>A cloned table copies the configuration of the source table. However, the
+permissions of the source table are not copied to the clone. After a clone is
+created, only the user that created the clone can read and write to it.</p>
+
+<p>In the following example we see that data inserted after the clone operation is
+not visible in the clone.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14&gt;</span><span class="w"> </span>createtable people
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890435 name last Doe
+<span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890435 name first John
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>clonetable people <span class="nb">test</span>
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890436 name first Jane
+<span class="gp">root@a14 people&gt;</span><span class="w"> </span>insert 890436 name last Doe
+<span class="go">
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>scan
+<span class="go">890435 name:first []    John
+890435 name:last []    Doe
+890436 name:first []    Jane
+890436 name:last []    Doe
+
+</span><span class="gp">root@a14 people&gt;</span><span class="w"> </span>table <span class="nb">test</span>
+<span class="go">
+</span><span class="gp">root@a14 test&gt;</span><span class="w"> </span>scan
+<span class="go">890435 name:first []    John
+890435 name:last []    Doe
+
+</span><span class="gp">root@a14 test&gt;</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The du command in the shell shows how much space a table is using in HDFS.
+This command can also show how much overlapping space two cloned tables have in
+HDFS. In the example below du shows table ci is using 428M. Then ci is cloned
+to cic and du shows that both tables share 428M. After three entries are
+inserted into cic and its flushed, du shows the two tables still share 428M but
+cic has 226 bytes to itself. Finally, table cic is compacted and then du shows
+that each table uses 428M.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">root@a14&gt;</span><span class="w"> </span><span class="nb">du </span>ci
+<span class="go">             428,482,573 [ci]
+
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span>clonetable ci cic
+<span class="go">
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci, cic]
+
+</span><span class="gp">root@a14&gt;</span><span class="w"> </span>table cic
+<span class="go">
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq1 v1
+<span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq2 v2
+<span class="gp">root@a14 cic&gt;</span><span class="w"> </span>insert r1 cf1 cq3 v3
+<span class="go">
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>flush <span class="nt">-t</span> cic <span class="nt">-w</span>
+<span class="go">27 15:00:13,908 [shell.Shell] INFO : Flush of table cic completed.
+
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci, cic]
+                     226 [cic]
+
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span>compact <span class="nt">-t</span> cic <span class="nt">-w</span>
+<span class="go">27 15:00:35,871 [shell.Shell] INFO : Compacting table ...
+27 15:03:03,303 [shell.Shell] INFO : Compaction of table cic completed for given range
+
+</span><span class="gp">root@a14 cic&gt;</span><span class="w"> </span><span class="nb">du </span>ci cic
+<span class="go">             428,482,573 [ci]
+             428,482,612 [cic]
+
+</span><span class="gp">root@a14 cic&gt;</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="exporting-tables">Exporting Tables</h2>
+
+<p>Accumulo supports exporting tables for the purpose of copying tables to another
+cluster. Exporting and importing tables preserves the tables’ configuration,
+splits, and logical time. Tables are exported and then copied via the hadoop
+<code class="language-plaintext highlighter-rouge">distcp</code> command. To export a table, it must be offline and stay offline while
+<code class="language-plaintext highlighter-rouge">distcp</code> runs. Staying offline prevents files from being deleted during the process.
+An easy way to take a table offline without interrupting access is to clone it
+and take the clone offline.</p>
+
+<h3 id="table-importexport-example">Table Import/Export Example</h3>
+
+<p>The following example demonstrates Accumulo’s mechanism for exporting and
+importing tables.</p>
+
+<p>The shell session below illustrates creating a table, inserting data, and
+exporting the table.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; createtable table1
+root@test15 table1&gt; insert a cf1 cq1 v1
+root@test15 table1&gt; insert h cf1 cq1 v2
+root@test15 table1&gt; insert z cf1 cq1 v3
+root@test15 table1&gt; insert z cf1 cq2 v4
+root@test15 table1&gt; addsplits -t table1 b r
+root@test15 table1&gt; scan
+a cf1:cq1 []    v1
+h cf1:cq1 []    v2
+z cf1:cq1 []    v3
+z cf1:cq2 []    v4
+root@test15&gt; config -t table1 -s table.split.threshold=100M
+root@test15 table1&gt; clonetable table1 table1_exp
+root@test15 table1&gt; offline table1_exp
+root@test15 table1&gt; exporttable -t table1_exp /tmp/table1_export
+root@test15 table1&gt; quit
+</code></pre></div></div>
+
+<p>After executing the export command, a few files are created in the hdfs dir.
+One of the files is a list of files to distcp as shown below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -ls /tmp/table1_export
+Found 2 items
+-rw-r--r--   3 user supergroup        162 2012-07-25 09:56 /tmp/table1_export/distcp.txt
+-rw-r--r--   3 user supergroup        821 2012-07-25 09:56 /tmp/table1_export/exportMetadata.zip
+$ hadoop fs -cat /tmp/table1_export/distcp.txt
+hdfs://n1.example.com:6093/accumulo/tables/3/default_tablet/F0000000.rf
+hdfs://n1.example.com:6093/tmp/table1_export/exportMetadata.zip
+</code></pre></div></div>
+
+<p>Before the table can be imported, it must be copied using <code class="language-plaintext highlighter-rouge">distcp</code>. After the
+<code class="language-plaintext highlighter-rouge">distcp</code> completes, the cloned table may be deleted.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop distcp -f /tmp/table1_export/distcp.txt /tmp/table1_export_dest
+</code></pre></div></div>
+
+<p>The Accumulo shell session below shows importing the table and inspecting it.
+The data, splits, config, and logical time information for the table were
+preserved.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@test15&gt; importtable table1_copy /tmp/table1_export_dest
+root@test15&gt; table table1_copy
+root@test15 table1_copy&gt; scan
+a cf1:cq1 []    v1
+h cf1:cq1 []    v2
+z cf1:cq1 []    v3
+z cf1:cq2 []    v4
+root@test15 table1_copy&gt; getsplits -t table1_copy
+b
+r
+root@test15&gt; config -t table1_copy -f split
+---------+--------------------------+-------------------------------------------
+SCOPE    | NAME                     | VALUE
+---------+--------------------------+-------------------------------------------
+default  | table.split.threshold .. | 1G
+table    |    @override ........... | 100M
+---------+--------------------------+-------------------------------------------
+root@test15&gt; tables -l
+accumulo.metadata    =&gt;        !0
+accumulo.root        =&gt;        +r
+table1_copy          =&gt;         5
+trace                =&gt;         1
+root@test15 table1_copy&gt; scan -t accumulo.metadata -b 5 -c srv:time
+5;b srv:time []    M1343224500467
+5;r srv:time []    M1343224500467
+5&lt; srv:time []    M1343224500467
+</code></pre></div></div>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/getting-started/table_configuration.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

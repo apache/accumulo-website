@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Monitoring &amp; Metrics</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse show" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Monitoring & Metrics</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Monitoring & Metrics</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/monitoring-metrics.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <h2 id="monitoring">Monitoring</h2>
+
+<h3 id="accumulo-monitor">Accumulo Monitor</h3>
+
+<p>The Accumulo Monitor provides a web UI with information on the health and status of Accumulo.</p>
+
+<p>The monitor can be viewed at:</p>
+<ul>
+  <li><a href="http://localhost:9995">http://localhost:9995</a> - if Accumulo is running locally (for development)</li>
+  <li><code class="language-plaintext highlighter-rouge">http://&lt;MONITOR_HOST&gt;:9995/</code> - if Accumulo is running on a cluster</li>
+</ul>
+
+<p>The Overview page (shown below) contains some summary information about the Accumulo instance and graphs
+displaying various metrics over time. These include ingest and scan performance and other useful measurements.</p>
+
+<p><a class="p-3 border rounded d-block" href="/images/accumulo-monitor-1.png">
+<img src="/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview" />
+</a></p>
+
+<p>The Manager Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
+Metrics typically include number of entries (key/value pairs), ingest and query rates.
+The number of running scans, major and minor compactions are in the form <em>number_running</em> (<em>number_queued</em>).
+Another important metric is hold time, which is the amount of time a tablet has been waiting but unable to flush its memory in a minor compaction.</p>
+
+<p><a class="p-3 border rounded d-block" href="/images/accumulo-monitor-2.png">
+<img src="/images/accumulo-monitor-2.png" class="img-fluid rounded" alt="monitor manager" />
+</a></p>
+
+<p>The Server Activity page graphically displays tablet server status, with each server represented as a circle or square.
+Different metrics may be assigned to the nodes’ color and speed of oscillation.
+The Overall Avg metric is only used on the Server Activity page, and represents the average of all the other metrics (after normalization).
+Similarly, the Overall Max metric picks the metric with the maximum normalized value.</p>
+
+<p>The Garbage Collector page displays a list of garbage collection cycles, the number of files found of each type (including deletion candidates in use and files actually deleted), and the length of the deletion cycle.
+The Traces page displays data for recent traces performed (see the following section for information on <a href="/docs/4.x/troubleshooting/tracing">tracing</a>).
+The Recent Logs page displays warning and error logs forwarded to the monitor from all Accumulo processes.
+Also, the XML and JSON links provide metrics in XML and JSON formats, respectively.</p>
+
+<p>The Accumulo monitor does a best-effort to not display any sensitive information to users; however,
+the monitor is intended to be a tool used with care. It is not a production-grade webservice. It is
+a good idea to whitelist access to the monitor via an authentication proxy or firewall. It
+is strongly recommended that the Monitor is not exposed to any publicly-accessible networks.</p>
+
+<p>Things highlighted in yellow may be in need of attention.
+If anything is highlighted in red on the monitor page, it is something that definitely needs attention.</p>
+
+<h3 id="ssl">SSL</h3>
+
+<p>SSL may be enabled for the monitor page by setting the following properties in the <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file:</p>
+
+<ul>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_keyStore">monitor.ssl.keyStore</a></li>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_keyStorePassword">monitor.ssl.keyStorePassword</a></li>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_trustStore">monitor.ssl.trustStore</a></li>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_trustStorePassword">monitor.ssl.trustStorePassword</a></li>
+</ul>
+
+<p>If the Accumulo conf directory has been configured (in particular the <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> file must be set up), the
+<code class="language-plaintext highlighter-rouge">accumulo-util gen-monitor-cert</code> command can be used to create the keystore and truststore files with random passwords. The command
+will print out the properties that need to be added to the <code class="language-plaintext highlighter-rouge">accumulo.properties</code> file. The stores can also be generated manually with the
+Java <code class="language-plaintext highlighter-rouge">keytool</code> command, whose usage can be seen in the <code class="language-plaintext highlighter-rouge">accumulo-util</code> script.</p>
+
+<p>If desired, the SSL ciphers allowed for connections can be controlled via the following properties in <code class="language-plaintext highlighter-rouge">accumulo.properties</code>:</p>
+
+<ul>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_include_ciphers">monitor.ssl.include.ciphers</a></li>
+  <li><a href="/docs/4.x/configuration/server-properties#monitor_ssl_exclude_ciphers">monitor.ssl.exclude.ciphers</a></li>
+</ul>
+
+<p>If SSL is enabled, the monitor URL can only be accessed via https.
+This also allows you to access the Accumulo shell through the monitor page.
+The left navigation bar will have a new link to Shell.
+An Accumulo user name and password must be entered for access to the shell.</p>
+
+<h2 id="metrics">Metrics</h2>
+
+<p>Accumulo can emit metrics using the <a href="https://micrometer.io/">Micrometer</a> library. Support for the Hadoop Metrics2 framework was removed in version 2.1.0.</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Micrometer supports sending metrics to multiple monitoring systems. A Metrics sink in Micrometer is called a
+Meter Registry. To enable this feature you need to set the property <a href="/docs/4.x/configuration/server-properties#general_micrometer_enabled">general.micrometer.enabled</a> to <code class="language-plaintext highlighter-rouge">true</code> and
+optionally set <a href="/docs/4.x/configuration/server-properties#general_micrometer_jvm_metrics_enabled">general.micrometer.jvm.metrics.enabled</a> to <code class="language-plaintext highlighter-rouge">true</code> to include <a href="https://micrometer.io/docs/ref/jvm">jvm</a> metrics. Accumulo provides a
+mechanism for the user to specify which Meter Registry it should use with the property <a href="/docs/4.x/configuration/server-properties#general_micrometer_factory">general.micrometer.factory</a>.
+The value for this property should be the name of a class that implements
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/metrics/MeterRegistryFactory.html">MeterRegistryFactory</a>.</p>
+
+<p>Each server process should have log messages from the org.apache.accumulo.core.metrics.MetricsUtil class that details
+whether or not metrics are enabled and which MeterRegistryFactory class has been configured. Be sure to check the
+Accumulo processes log files when debugging missing metrics output.</p>
+
+<h3 id="metric-names">Metric Names</h3>
+
+<p>See the javadoc for <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/metrics/MetricsProducer.html">MetricsProducer</a> for a list of metric names that will be
+emitted and a mapping to their prior names when Accumulo was using Hadoop Metrics2.</p>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/monitoring-metrics.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

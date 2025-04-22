@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Upgrading Accumulo</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse show" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Upgrading Accumulo</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Upgrading Accumulo</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/upgrading.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <h2 id="changes-to-the-upgrade-process">Changes to the upgrade process</h2>
+
+<p>In upgrade notes for prior releases we have advised that users should ensure that no FATE
+transactions exist (see <code class="language-plaintext highlighter-rouge">Upgrading from 1.10 or 2.0 to 2.1</code> below). This is due to the
+fact that the internal serialization of FATE transactions is not guaranteed to be
+compatible between versions. Accumulo never provided any tooling around the upgrade process
+and left it up the user, which can cause problems if older versions of FATE transactions
+exist and the user already deployed the new version of software. The user would have to
+re-install the old version of software to remove the FATE transactions.</p>
+
+<p>Starting with Accumulo 4.0 we are modifying the upgrade process steps in an attempt to
+make it easier for the user to validate their instance is ready for upgrade. In earlier
+versions the upgrade process would start when the user started the instance with the
+new version of software. The process ran entirely in the Manager and it was the users
+responsibility to read the upgrade notes to perform any necessary pre-upgrade steps.</p>
+
+<p>The new upgrade process introduces a new <code class="language-plaintext highlighter-rouge">accumulo upgrade</code> command which will be used
+after shutting down the instance with the old version of software and before starting
+the instance with the new version of software. The <code class="language-plaintext highlighter-rouge">upgrade</code> command has two options,
+<code class="language-plaintext highlighter-rouge">--prepare</code> and <code class="language-plaintext highlighter-rouge">--start</code>. <code class="language-plaintext highlighter-rouge">--prepare</code> is designed to be executed by the user after shutting
+down the instance. This option will check that the Manager is down, validate that there
+are no existing FATE transactions, remove all of the server locks in ZooKeeper, and place
+a node in ZooKeeper that will prevent server processes from being started again. If there
+are FATE transactions, the command will fail giving the user the opportunity to clean them
+up. The <code class="language-plaintext highlighter-rouge">--prepare</code> option can then be run again.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--start</code> option is designed to be executed by the user before starting the instance
+with the newer version of software. The <code class="language-plaintext highlighter-rouge">--start</code> option will perform any necessary pre-upgrade
+validation, make any changes that are necessary for the new version of software to start, seed
+an upgrade progress tracker node in ZooKeeper, and then finally remove the node in ZooKeeper
+created by the <code class="language-plaintext highlighter-rouge">--prepare</code> step so that the server processes can be started. If the user did
+not run the <code class="language-plaintext highlighter-rouge">--prepare</code> step with the older version of software, then the <code class="language-plaintext highlighter-rouge">--start</code> option
+will fail unless the <code class="language-plaintext highlighter-rouge">--force</code> option is used. Running <code class="language-plaintext highlighter-rouge">--start</code> with the <code class="language-plaintext highlighter-rouge">--force</code> option
+will perform the same checks that <code class="language-plaintext highlighter-rouge">--prepare</code> executes, but if FATE transactions are found
+then the user will need to remove them using the older version of software. Once the <code class="language-plaintext highlighter-rouge">--start</code>
+option completes, then the user can start the server processes to complete the upgrade
+process. The user will want to check the contents of the Manager log to observe the progress
+of the upgrade.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">accumulo upgrade --prepare</code> command will be included with the 2.1.4 and 3.1.0 releases
+to assist users in upgrading to the 4.0 release.</p>
+
+<h2 id="upgrading-from-110-or-20-to-21">Upgrading from 1.10 or 2.0 to 2.1</h2>
+
+<p>Please read these directions in their entirety before beginning. Please <a href="/contact-us">contact</a> us with any
+questions you have about this process.</p>
+
+<p><strong>IMPORTANT!</strong> Before running any Accumulo 2.1 upgrade utilities or services, you will need to
+upgrade to Java 11, Hadoop 3, and at least ZooKeeper 3.5 (at least 3.8 was current at the time of
+this writing and is recommended).</p>
+
+<p>The basic upgrade sequence is:</p>
+
+<ul>
+  <li>upgrade to at least Accumulo 1.10 first (if necessary)</li>
+  <li>stop Accumulo 1.10 or 2.0</li>
+  <li>prepare your installation of Accumulo 2.1 through whatever means you obtain the binaries and
+configure it in your environment</li>
+  <li>start ZooKeeper and HDFS.</li>
+  <li>(optional - but recommended) create a ZooKeeper snapshot</li>
+  <li>(optional - but recommended) validate the ZooKeeper ACLs. See <a href="/docs/4.x/troubleshooting/zookeeper#zookeeper-acls">ZooKeeper ACLs</a></li>
+  <li>(required if not using the provided scripts to start 2.1) run the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility</li>
+  <li>(optional) run the pre-upgrade utility to convert the configuration in ZooKeeper</li>
+  <li>start Accumulo 2.1 for the first time to complete the upgrade</li>
+</ul>
+
+<p><strong>IMPORTANT!</strong> before starting any upgrade process you need to make sure there are no outstanding
+FATE transactions. This includes transactions that have completed with <code class="language-plaintext highlighter-rouge">SUCCESS</code> or <code class="language-plaintext highlighter-rouge">FAILED</code> but
+have not been removed by the automatic clean-up process. This is required because the internal
+serialization of FATE transactions is not guaranteed to be compatible between versions, so <em>ANY</em>
+FATE transaction that is present will fail the upgrade. Procedures to manage FATE transactions,
+including commands to fail and delete transactions, are included in the <a href="/docs/4.x/administration/fate#administration">FATE Administration
+documentation</a>.</p>
+
+<p>Two significant changes occurred in 2.1 that are particularly important to note for upgrades:</p>
+
+<ol>
+  <li>properties and services that referenced <code class="language-plaintext highlighter-rouge">master</code> are renamed <code class="language-plaintext highlighter-rouge">manager</code> and</li>
+  <li>the internal property storage format in ZooKeeper has changed - instead of each table, namespace,
+and the system configuration using separate ZooKeeper nodes for each of their properties, they
+each now use only a single ZooKeeper node for all of their respective properties.</li>
+</ol>
+
+<p>Details on renaming the properties and the ZooKeeper property conversion are provided in the
+following sections. Additional information on configuring 2.1 is <a href="/docs/4.x/administration/in-depth-install">available here</a>.</p>
+
+<h3 id="create-zookeeper-snapshot-optional---but-recommended">Create ZooKeeper snapshot (optional - but recommended)</h3>
+
+<p>Before upgrading to 2.1, it is suggested that you create a snapshot of the current ZooKeeper
+contents to be a backup in case issues occur and you need to rollback. There are no provisions to
+roll back to a previous Accumulo version once an upgrade process has been completed other than
+restoring from a snapshot of ZooKeeper.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo dump-zoo --xml --root /accumulo | tee PATH_TO_SNAPSHOT
+</code></pre></div></div>
+
+<p>If you need to restore from the ZooKeeper snapshot see <a href="/docs/4.x/troubleshooting/tools#restorezookeeper">these instructions</a>.</p>
+
+<h3 id="rename-master-properties-config-files-and-script-references">Rename master Properties, Config Files, and Script References</h3>
+
+<p>It is strongly recommended as a part of the upgrade to rename any properties in
+<code class="language-plaintext highlighter-rouge">accumulo.properties</code> (or properties specified on the command line) starting with <code class="language-plaintext highlighter-rouge">master.</code> to use
+the equivalent property starting with <code class="language-plaintext highlighter-rouge">manager.</code> instead, as the old properties will not be
+available in subsequent major releases. This version may log or display warnings if older properties
+are observed.</p>
+
+<p>Any reference to <code class="language-plaintext highlighter-rouge">master</code> in other scripts (e.g., invoking <code class="language-plaintext highlighter-rouge">accumulo-service master</code> from an init
+script) should be renamed to <code class="language-plaintext highlighter-rouge">manager</code> (for example, <code class="language-plaintext highlighter-rouge">accumulo-service manager</code>).</p>
+
+<p>If the manager is not started using the provided <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> or <code class="language-plaintext highlighter-rouge">accumulo-service</code> scripts,
+then a one-time upgrade step will need to be performed. Run the <code class="language-plaintext highlighter-rouge">RenameMasterDirInZK</code> utility after
+installing 2.1 but before starting it.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>${ACCUMULO_HOME}/bin/accumulo org.apache.accumulo.manager.upgrade.RenameMasterDirInZK
+</code></pre></div></div>
+
+<h3 id="pre-upgrade-the-property-storage-in-zookeeper-optional">Pre-Upgrade the property storage in ZooKeeper (optional)</h3>
+
+<p>As mentioned above, the property storage in ZooKeeper has changed from many nodes per table,
+namespace, and the system configuration, to just a single node for each of those. Upgrading to use
+the new format does happen automatically when Accumulo 2.1 servers start up. However, you can
+optionally choose to convert them using a pre-upgrade step with the following command line utility.</p>
+
+<p>The property conversion can be done using a command line utility or it will occur automatically when
+the manager is started for the first time. Using the command line utility is optional, but may
+provide more flexibility in handling issues if they were to occur. With ZooKeeper running, the
+command to convert the properties is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo config-upgrade
+</code></pre></div></div>
+
+<p>The utility will print messages about its progress as it converts them.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2022-11-03T14:35:44,596 [conf.SiteConfiguration] INFO : Found Accumulo configuration on classpath at /opt/fluo-uno/install/accumulo-3.0.0-SNAPSHOT/conf/accumulo.properties
+2022-11-03T14:35:45,511 [util.ConfigPropertyUpgrader] INFO : Upgrade system config properties for a1518a8b-f007-41ee-af2c-5cc760abe7fd
+2022-11-03T14:35:45,675 [util.ConfigTransformer] INFO : property transform for SystemPropKey{InstanceId=a1518a8b-f007-41ee-af2c-5cc760abe7fd'} took 29ms ms, delete count: 1, error count: 0
+2022-11-03T14:35:45,683 [util.ConfigPropertyUpgrader] INFO : Upgrading namespace +accumulo base path: /accumulo/a1518a8b-f007-41ee-af2c-5cc760abe7fd/namespaces/+accumulo/conf
+...
+2022-11-03T14:35:45,737 [util.ConfigPropertyUpgrader] INFO : Upgrading table !0 base path: /accumulo/a1518a8b-f007-41ee-af2c-5cc760abe7fd/tables/!0/conf
+2022-11-03T14:35:45,813 [util.ConfigTransformer] INFO : property transform for TablePropKey{TableId=!0'} took 72ms ms, delete count: 26, error count: 0
+...
+</code></pre></div></div>
+
+<p>If the upgrade utility is not used, similar messages will print to the server logs when 2.1 starts.</p>
+
+<p>When the property conversion is complete, you can verify the configuration using the
+<a href="/docs/4.x//troubleshooting/tools#zoo-info-viewer-new-in-21">zoo-info-viewer</a> utility (new in 2.1)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo zoo-info-viewer  --print-props
+</code></pre></div></div>
+
+<h3 id="create-new-cluster-configuration-file">Create new cluster configuration file</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script now uses a single file that defines the location of the managers,
+tservers, etc. You can create this file using the command <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code>. You will
+then need to transfer the contents of the current individual files to this new consolidated file.</p>
+
+<h3 id="encrypted-instances">Encrypted Instances</h3>
+
+<p><strong>Warning</strong>: Upgrading a previously encrypted instance with the experimental encryption properties
+is not supported as the implementation and properties have changed. You may be able to disable
+encryption and compact your files without encryption, in order to upgrade. Encryption remains an
+experimental feature, and may change between versions. It should be used with care. If you need
+help, consider reaching out to our mailing list.</p>
+
+<h2 id="upgrading-from-18910-to-20">Upgrading from 1.8/9/10 to 2.0</h2>
+
+<p>Follow the steps below to upgrade your Accumulo instance and client to 2.0.</p>
+
+<h3 id="upgrade-accumulo-instance">Upgrade Accumulo instance</h3>
+
+<p><strong>IMPORTANT!</strong> Before upgrading to Accumulo 2.0, you will need to upgrade to Java 8 and Hadoop 3.x.</p>
+
+<p>Upgrading to Accumulo 2.0 is done by stopping Accumulo 1.8/9 and starting Accumulo 2.0.</p>
+
+<p>Before stopping Accumulo 1.8/9, install Accumulo 2.0 and configure it by following the <a href="/docs/4.x/getting-started/quickstart">2.0 quick start</a>.</p>
+
+<p>There are several changes to scripts and configuration in 2.0 so be careful when using configuration or automated setup designed for 1.8/9.
+Below are some changes in 2.0 that you should be aware of:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">accumulo.properties</code> has replaced <code class="language-plaintext highlighter-rouge">accumulo-site.xml</code>. You can either convert <code class="language-plaintext highlighter-rouge">accumulo-site.xml</code> by hand
+from XML to properties or use the following Accumulo command.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
+</code></pre></div>    </div>
+  </li>
+  <li>The following <a href="/docs/4.x/configuration/server-properties">server properties</a> were deprecated for 2.0:
+    <ul>
+      <li><a href="/docs/4.x/configuration/server-properties#general_classpaths">general.classpaths</a></li>
+      <li><a href="/docs/4.x/configuration/server-properties#tserver_metadata_readahead_concurrent_max">tserver.metadata.readahead.concurrent.max</a></li>
+      <li><a href="/docs/4.x/configuration/server-properties#tserver_readahead_concurrent_max">tserver.readahead.concurrent.max</a></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-client.properties</code> has replaced <code class="language-plaintext highlighter-rouge">client.conf</code>. The <a href="/docs/4.x/configuration/client-properties">client properties</a>
+in the new file are different so take care when customizing.</li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script has replaced the <code class="language-plaintext highlighter-rouge">start-all.sh</code> &amp; <code class="language-plaintext highlighter-rouge">stop-all.sh</code> scripts.
+    <ul>
+      <li>Default host files (i.e <code class="language-plaintext highlighter-rouge">masters</code>, <code class="language-plaintext highlighter-rouge">monitor</code>, <code class="language-plaintext highlighter-rouge">gc</code>) are no longer in <code class="language-plaintext highlighter-rouge">conf/</code> directory of tarball but can be created using <code class="language-plaintext highlighter-rouge">accumulo-cluster create-config</code></li>
+      <li>Tablet server hosts must be listed in a <code class="language-plaintext highlighter-rouge">tservers</code> file instead of a <code class="language-plaintext highlighter-rouge">slaves</code> file. To minimize confusion, Accumulo will not start if the old <code class="language-plaintext highlighter-rouge">slaves</code> file is present.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-service</code> script can be used to start/stop Accumulo services (i.e master, tablet server, monitor) on a single node.
+    <ul>
+      <li>Can be used even if Accumulo was started using <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> script.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> constructs environment variables (such as <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> and <code class="language-plaintext highlighter-rouge">CLASSPATH</code>) used when running Accumulo processes
+    <ul>
+      <li>This file was used in Accumulo 1.x but has changed significantly for 2.0</li>
+      <li>Environment variables (such as <code class="language-plaintext highlighter-rouge">$cmd</code>, <code class="language-plaintext highlighter-rouge">$bin</code>, <code class="language-plaintext highlighter-rouge">$conf</code>) are set before <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> is loaded and can be used to customize environment.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">JAVA_OPTS</code> variable is constructed in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> to pass command line arguments to the <code class="language-plaintext highlighter-rouge">java</code> command that the starts Accumulo processes
+(i.e. <code class="language-plaintext highlighter-rouge">java $JAVA_OPTS main.class.for.$cmd</code>).</li>
+      <li>The <code class="language-plaintext highlighter-rouge">CLASSPATH</code> variable sets the Java classpath used when running Accumulo processes. It can be modified to upgrade dependencies or use vendor-specific
+distributions of Hadoop.</li>
+    </ul>
+  </li>
+  <li>Logging is configured in <code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> for Accumulo processes. The following log4j configuration files in the <code class="language-plaintext highlighter-rouge">conf/</code> directory will be used if
+<code class="language-plaintext highlighter-rouge">accumulo-env.sh</code> is not modified. These files can be modified to turn on/off logging for Accumulo processes:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">log4j-service.properties</code> for all Accumulo services (except monitor)</li>
+      <li><code class="language-plaintext highlighter-rouge">logj4-monitor.properties</code> for Accumulo monitor</li>
+      <li><code class="language-plaintext highlighter-rouge">log4j.properties</code> for Accumulo clients and commands</li>
+    </ul>
+  </li>
+  <li>MapReduce jobs that read/write from Accumulo <a href="/docs/4.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">must configure their dependencies differently</a>.</li>
+  <li>Run the command <code class="language-plaintext highlighter-rouge">accumulo shell</code> to access the shell using configuration in <code class="language-plaintext highlighter-rouge">conf/accumulo-client.properties</code></li>
+</ul>
+
+<p>When your Accumulo 2.0 installation is properly configured, stop Accumulo 1.8/9 and start Accumulo 2.0:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./accumulo-1.9.3/bin/stop-all.sh
+./accumulo-2.0.1/bin/accumulo-cluster start
+</code></pre></div></div>
+<p>It is recommended that users test this upgrade on development or test clusters before attempting it on production clusters.</p>
+
+<h3 id="upgrade-accumulo-clients">Upgrade Accumulo clients</h3>
+
+<p>There several client API changes in 2.0. In most cases, new API was introduced and the old API was only deprecated. While it is recommended
+that users start using the new API, the old API will continue to be supported through 2.x.</p>
+
+<p>Below is a list of client API changes that users are required to make for 2.0:</p>
+
+<ul>
+  <li>Update your pom.xml use Accumulo 2.0. Also, update any Hadoop &amp; ZooKeeper dependencies in your pom.xml to match the versions running on your cluster.
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.apache.accumulo<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>accumulo-core<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>ClientConfiguration objects can no longer be created using <code class="language-plaintext highlighter-rouge">new ClientConfiguration()</code>.
+    <ul>
+      <li>Use <code class="language-plaintext highlighter-rouge">ClientConfiguration.create()</code> instead</li>
+    </ul>
+  </li>
+  <li>Some API deprecated in 1.x releases was dropped</li>
+  <li>Aggregators have been removed</li>
+</ul>
+
+<p>Below is a list of recommended client API changes:</p>
+
+<ul>
+  <li>The API for <a href="/docs/4.x/getting-started/clients#creating-an-accumulo-client">creating Accumulo clients</a> has changed in 2.0.
+    <ul>
+      <li>The old API using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/ZooKeeperInstance.html">ZooKeeperInstance</a>, <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/Connector.html">Connector</a>, <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/Instance.html">Instance</a>, and <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/ClientConfiguration.html">ClientConfiguration</a> has been deprecated.</li>
+      <li><a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/Connector.html">Connector</a> objects can be created from an <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/AccumuloClient.html">AccumuloClient</a> object using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/Connector.html#from-org.apache.accumulo.core.client.AccumuloClient-">Connector.from()</a></li>
+    </ul>
+  </li>
+  <li>Accumulo’s <a href="/docs/4.x/development/mapreduce">MapReduce API</a> has changed in 2.0.
+    <ul>
+      <li>A new API has been introduced in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.hadoop</code> package of the <code class="language-plaintext highlighter-rouge">accumulo-hadoop-mapreduce</code> jar.</li>
+      <li>The old API in the <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client</code> package of the <code class="language-plaintext highlighter-rouge">accumulo-core</code> has been deprecated and will
+eventually be removed.</li>
+      <li>For both the old and new API, you must <a href="/docs/4.x/development/mapreduce#configure-dependencies-for-your-mapreduce-job">configure dependencies differently</a>
+when creating your MapReduce job.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="upgrading-from-17-to-18">Upgrading from 1.7 to 1.8</h2>
+
+<p>Upgrades from 1.7 to 1.8 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.7, perform the Accumulo upgrade to 1.8, and then start 1.8. Like previous versions, after 1.8 is started on a 1.7 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.7. Upgrades are still one way. Upgrades from versions prior to 1.7 to 1.8 should follow the below path to 1.7 and then perform the upgrade to 1.8 – direct upgrades to 1.8 for versions other than 1.7 are untested.</p>
+
+<p>Existing configuration files from 1.7 should be compared against the examples provided in 1.8. The 1.7 configuration files should all function with 1.8 code, but you will likely want to include changes found in the 1.8.0 release notes and these release notes for 1.8.1.</p>
+
+<p>For upgrades from prior to 1.7, follow the upgrade instructions to 1.7 first.</p>
+
+<h2 id="upgrading-from-17x-to-17y">Upgrading from 1.7.x to 1.7.y</h2>
+
+<p>The recommended way to upgrade from a prior 1.7.x release is to stop Accumulo, upgrade to 1.7.y and then start 1.7.y.</p>
+
+<p>When upgrading, there is a known issue if the upgrade fails due to outstanding <a href="/1.7/accumulo_user_manual.html#_fault_tolerant_executor_fate">FATE</a> operations, see <a href="https://issues.apache.org/jira/browse/ACCUMULO-4496">ACCUMULO-4496</a> The workaround if this situation is encountered:</p>
+
+<ul>
+  <li>Start tservers</li>
+  <li>Start shell</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">fate print</code> to list all</li>
+  <li>If completed, just delete with <code class="language-plaintext highlighter-rouge">fate delete</code></li>
+  <li>Start masters once there are no more fate operations</li>
+</ul>
+
+<p>If any of the FATE operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version. When performing an upgrade between major versions, the upgrade is one-way, therefore it is important that you do not have any outstanding FATE operations before starting the upgrade.</p>
+
+<h2 id="upgrading-from-16-to-17">Upgrading from 1.6 to 1.7</h2>
+
+<p>Upgrades from 1.6 to 1.7 are possible with little effort as no changes were made at the data layer and RPC changes were made in a backwards-compatible way. The recommended way is to stop Accumulo 1.6, perform the Accumulo upgrade to 1.7, and then start 1.7. Like previous versions, after 1.7.0 is started on a 1.6 instance, a one-time upgrade will happen by the Master which will prevent a downgrade back to 1.6. Upgrades are still one way. Upgrades from versions prior to 1.6 to 1.7 should follow the below path to 1.6 and then perform the upgrade to 1.7 – direct upgrades to 1.7 for versions other than 1.6 are untested.</p>
+
+<p>After upgrading to 1.7.0, users will notice the addition of a replication table in the accumulo namespace. This table is created and put offline to avoid any additional maintenance if the data-center replication feature is not in use.</p>
+
+<p>Existing configuration files from 1.6 should be compared against the examples provided in 1.7. The 1.6 configuration files should all function with 1.7 code, but you will likely want to include a new file (hadoop-metrics2-accumulo.properties) to enable the new metrics subsystem. Read the section on Hadoop Metrics2 in the Administration chapter of the Accumulo User Manual.</p>
+
+<p>For each of the other new features, new configuration properties exist to support the feature. Refer to the added sections in the User Manual for the feature for information on how to properly configure and use the new functionality.</p>
+
+<h2 id="upgrading-from-15-to-16">Upgrading from 1.5 to 1.6</h2>
+
+<p>This happens automatically the first time Accumulo 1.6 is started.</p>
+
+<p>If your instance previously upgraded from 1.4 to 1.5, you must verify that your
+1.5 instance has no outstanding local write ahead logs. You can do this by ensuring
+either:</p>
+
+<ul>
+  <li>All of your tables are online and the Monitor shows all tablets hosted</li>
+  <li>The directory for write ahead logs (logger.dir.walog) from 1.4 has no files remaining
+  on any tablet server / logger hosts</li>
+</ul>
+
+<p>To upgrade from 1.5 to 1.6 you must:</p>
+
+<ul>
+  <li>Verify that there are no outstanding FATE operations
+    <ul>
+      <li>Under 1.5 you can list what’s in FATE by running
+<code class="language-plaintext highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+      <li>Note that operations in any state will prevent an upgrade. It is safe
+to delete operations with status SUCCESSFUL. For others, you should restart
+your 1.5 cluster and allow them to finish.</li>
+    </ul>
+  </li>
+  <li>Stop the 1.5 instance.</li>
+  <li>Configure 1.6 to use the hdfs directory and zookeepers that 1.5 was using.</li>
+  <li>Copy other 1.5 configuration options as needed.</li>
+  <li>Start Accumulo 1.6.</li>
+</ul>
+
+<p>The upgrade process must make changes to Accumulo’s internal state in both ZooKeeper and
+  the table metadata. This process may take some time if Tablet Servers have to go through
+  recovery. During this time, the Monitor will claim that the Master is down and some
+  services may send the Monitor log messages about failure to communicate with each other.
+  These messages are safe to ignore. If you need detail on the upgrade’s progress you should
+  view the local logs on the Tablet Servers and active Master.</p>
+
+<h2 id="upgrading-from-14-to-16">Upgrading from 1.4 to 1.6</h2>
+
+<p>To upgrade from 1.4 to 1.6 you must perform a manual initial step.</p>
+
+<p>Prior to upgrading you must:</p>
+
+<ul>
+  <li>Verify that there are no outstanding FATE operations
+    <ul>
+      <li>Under 1.4 you can list what’s in FATE by running <code class="language-plaintext highlighter-rouge">$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.server.fate.Admin print</code></li>
+      <li>Note that operations in any state will prevent an upgrade. It is safe to delete operations with status SUCCESSFUL. For others,
+  you should restart your 1.4 cluster and allow them to finish.</li>
+    </ul>
+  </li>
+  <li>Stop the 1.4 instance.</li>
+  <li>Configure 1.6 to use the hdfs directory, walog directories, and zookeepers that 1.4 was using.</li>
+  <li>Copy other 1.4 configuration options as needed.</li>
+</ul>
+
+<p>Prior to starting the 1.6 instance you will need to run the LocalWALRecovery tool on each node that previously ran an instance of the Logger role.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+</code></pre></div></div>
+
+<p>The recovery tool will rewrite the 1.4 write ahead logs into a format that 1.6 can read. After this step has completed on all nodes, start the 1.6 cluster to continue the upgrade.</p>
+
+<p>The upgrade process must make changes to Accumulo’s internal state in both ZooKeeper and the table metadata. This process may take some time if Tablet Servers have to go through recovery. During this time, the Monitor will claim that the Master is down and some services may send the Monitor log messages about failure to communicate with each other. While the upgrade is in progress, the Garbage Collector may complain about invalid paths. The Master may also complain about failure to create the trace table because it already exists. These messages are safe to ignore. If other error messages occur, you should seek out support before continuing to use Accumulo. If you need detail on the upgrade’s progress you should view the local logs on the Tablet Servers and active Master.</p>
+
+<p>Note that the LocalWALRecovery tool does not delete the local files. Once you confirm that 1.6 is successfully running, you should delete these files on the local filesystem.</p>
+
+<h2 id="upgrading-from-14-to-15">Upgrading from 1.4 to 1.5</h2>
+
+<p>This happens automatically the first time Accumulo 1.5 is started.</p>
+
+<ul>
+  <li>Stop the 1.4 instance.</li>
+  <li>Configure 1.5 to use the hdfs directory, walog directories, and zookeepers
+that 1.4 was using.</li>
+  <li>Copy other 1.4 configuration options as needed.</li>
+  <li>Start Accumulo 1.5.</li>
+</ul>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/upgrading.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

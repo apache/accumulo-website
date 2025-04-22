@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Erasure Coding</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse show" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Erasure Coding</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Erasure Coding</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/erasure-coding.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <p>With the release of version 3.0.0, Hadoop introduced the use of <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html">Erasure Coding</a>
+(EC) in HDFS.  By default HDFS achieves durability via block replication.
+Usually the replication count is 3, resulting in a storage overhead of 200%.
+Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much
+like RAID 5 or 6…for <em>k</em> blocks of data, <em>m</em> blocks of parity data are generated,
+from which the original data can be recovered in the event of disk or node
+failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3,
+where 6 data blocks produce 3 parity blocks, an overhead of only 50%.  In
+addition to doubling the available disk space, RS-6-3 is also more fault
+tolerant…a loss of 3 data blocks can be tolerated, whereas triple replication
+can only sustain a loss of two.</p>
+
+<p>To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop
+with support for Intel’s ISA-L library. Instructions for doing this can be found
+<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Enable_Intel_ISA-L">here</a></p>
+
+<h3 id="important-warning">Important Warning</h3>
+<p>As noted
+<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations">here</a>,
+the current EC implementation does not support <code class="language-plaintext highlighter-rouge">hflush()</code> and <code class="language-plaintext highlighter-rouge">hsync()</code>. These
+functions are no-ops, which means that EC coded files are not guaranteed to
+be written to disk after a sync or flush.  For this reason, <strong>EC should never
+be used for the Accumulo write-ahead logs.  Data loss may, and most likely will,
+occur.</strong> It is also recommended that tables in the <code class="language-plaintext highlighter-rouge">accumulo</code> namespace (<code class="language-plaintext highlighter-rouge">root</code> and
+<code class="language-plaintext highlighter-rouge">metadata</code> for example) continue to use replication.</p>
+
+<h3 id="ec-and-threads">EC and Threads</h3>
+<p>Due to the striped nature of an EC encoded file, an EC enabled HDFS client is threaded.
+This becomes an issue when an Accumulo client or service is configured to use multiple
+threads to read or write to HDFS, and becomes especially problematic when doing bulk
+imports. By default, Accumulo will use eight times the number of cores on the client
+machine to scan the files to be imported and map them to tablet files. Each thread
+created to scan the input files will create on the order of <em>k</em> threads to perform
+parallel I/O. RS-10-4 on a 16 core machine, for instance, will spawn over a thousand
+threads to perform this operation. If sufficient memory is not available, this operation
+will fail without providing a meaningful error message to the user.  This particular
+problem can be ameliorated by setting the <code class="language-plaintext highlighter-rouge">bulk.threads</code> client property to <code class="language-plaintext highlighter-rouge">1C</code> (i.e.
+one thread per core), down from the default of <code class="language-plaintext highlighter-rouge">8C</code>.  Similar care should be taken
+when setting other thread limits.</p>
+
+<h3 id="hdfs-ec-command">HDFS ec Command</h3>
+<p>Encoding policy in HDFS is set at the directory level, with children inheriting
+policies from their parents if not explicitly set.  The encoding policy for a directory
+can be manipulated via the <code class="language-plaintext highlighter-rouge">hdfs ec</code> command, documented
+<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Administrative_commands">here</a>.</p>
+
+<p>The first step is to determine which policies are configured for your HDFS instance.
+This is done via the <code class="language-plaintext highlighter-rouge">-listPolicies</code> command.  The following listing shows that there
+are 5 configured policies, of which only 3 (RS-10-4-1024k, RS-6-3-1024k, and RS-6-3-64k)
+are enabled for use.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -listPolicies
+Erasure Coding Policies:
+ErasureCodingPolicy=[Name=RS-10-4-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=10, numParityUnits=4]], CellSize=1048576, Id=5], State=ENABLED
+ErasureCodingPolicy=[Name=RS-6-3-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=1], State=ENABLED
+ErasureCodingPolicy=[Name=RS-6-3-64k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3, options=]], CellSize=65536, Id=65], State=ENABLED
+ErasureCodingPolicy=[Name=RS-LEGACY-6-3-1024k, Schema=[ECSchema=[Codec=rs-legacy, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=3], State=DISABLED
+ErasureCodingPolicy=[Name=XOR-2-1-1024k, Schema=[ECSchema=[Codec=xor, numDataUnits=2, numParityUnits=1]], CellSize=1048576, Id=4], State=DISABLED
+</code></pre></div></div>
+
+<p>To set the encoding policy for a directory, use the <code class="language-plaintext highlighter-rouge">-setPolicy</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -mkdir foo
+$ hdfs ec -setPolicy -policy RS-6-3-64k -path foo
+Set RS-6-3-64k erasure coding policy on foo
+</code></pre></div></div>
+
+<p>To get the encoding policy for a directory, use the <code class="language-plaintext highlighter-rouge">-getPolicy</code> command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -getPolicy -path foo
+RS-6-3-64k
+</code></pre></div></div>
+
+<p>New directories created under <code class="language-plaintext highlighter-rouge">foo</code> will inherit the EC policy.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -mkdir foo/bar
+$ hdfs ec -getPolicy -path foo/bar
+RS-6-3-64k
+</code></pre></div></div>
+
+<p>And changing the policy for a parent will also change its children.  The <code class="language-plaintext highlighter-rouge">-setPolicy</code>
+command here issues a warning that existing files will not be converted. To
+switch the policy for an existing file, you must create a new file (through
+a copy, for instance).  For Accumulo, if you change the encoding policy for
+a table’s directories, you would then have to perform a major compaction on
+the table to convert the table’s RFiles to the desired encoding.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -setPolicy -policy RS-6-3-1024k -path foo
+Set RS-6-3-1024k erasure coding policy on foo
+Warning: setting erasure coding policy on a non-empty directory will not automatically convert existing files to RS-6-3-1024k erasure coding policy
+$ hdfs ec -getPolicy -path foo
+RS-6-3-1024k
+$ hdfs ec -getPolicy -path foo/bar
+RS-6-3-1024k
+</code></pre></div></div>
+
+<h3 id="configuring-ec-for-a-new-instance">Configuring EC for a New Instance</h3>
+<p>If you wish to create a new instance with a single encoding policy for all tables,
+you simply need to change the encoding policy on the <code class="language-plaintext highlighter-rouge">tables</code> directory after
+running <code class="language-plaintext highlighter-rouge">accumulo init</code> (see
+<a href="/docs/4.x/getting-started/quickstart#initialization">Quick Start</a> guide).  To
+keep the tables in the <code class="language-plaintext highlighter-rouge">accumulo</code> namespace using replication, you
+would then need to manually change them back to using replication.  Assuming
+Accumulo is configured to use <code class="language-plaintext highlighter-rouge">/accumulo</code> as its root, you would do the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables
+Set RS-6-3-64k erasure coding policy on /accumulo/tables
+$ hdfs ec -setPolicy -replicate -path /accumulo/tables/\!0
+Set replication erasure coding policy on /accumulo/tables/!0
+$ hdfs ec -setPolicy -replicate -path /accumulo/tables/+r
+Set replication erasure coding policy on /accumulo/tables/+r
+$ hdfs ec -setPolicy -replicate -path /accumulo/tables/+rep
+Set replication erasure coding policy on /accumulo/tables/+rep
+</code></pre></div></div>
+
+<p>Check that the policies are set correctly:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -getPolicy -path /accumulo/tables
+RS-6-3-64k
+$ hdfs ec -getPolicy -path /accumulo/tables/\!0
+The erasure coding policy of /accumulo/tables/!0 is unspecified
+</code></pre></div></div>
+
+<p>Any directories subsequently created under <code class="language-plaintext highlighter-rouge">/accumulo/tables</code> will
+be erasure coded.</p>
+
+<h3 id="configuring-ec-for-an-existing-instance">Configuring EC for an Existing Instance</h3>
+<p>For an existing installation, the instructions are the same, but with the
+caveat that changing the encoding policy for an existing directory will not
+change the files within the directory. Converting existing tables to EC
+requires a major compaction to complete the process.  For instance, to
+convert <code class="language-plaintext highlighter-rouge">test.table1</code> to RS-6-3-64k, you would first find the table ID
+via the accumulo shell, use <code class="language-plaintext highlighter-rouge">hdfs ec</code> to change the encoding for the
+directory <code class="language-plaintext highlighter-rouge">/accumulo/tables/&lt;tableID&gt;</code>, and then compact the table.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo shell
+user@instance&gt; tables -l
+accumulo.metadata    =&gt;        !0
+accumulo.replication =&gt;      +rep
+accumulo.root        =&gt;        +r
+test.table1          =&gt;         3
+test.table2          =&gt;         4
+test.table3          =&gt;         5
+trace                =&gt;         1
+user@instance&gt; quit
+$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables/3
+Set RS-6-3-64k erasure coding policy on /accumulo/tables/3
+$ accumulo shell
+user@instance&gt; compact -t test.table1
+</code></pre></div></div>
+
+<h3 id="defining-custom-ec-policies">Defining Custom EC Policies</h3>
+<p>Hadoop by default will enable only a single EC policy, which is
+determined by the value of the <code class="language-plaintext highlighter-rouge">dfs.namenode.ec.system.default.policy</code>
+configuration setting.  To enable an existing policy, use the <code class="language-plaintext highlighter-rouge">hdfs ec -enablePolicy</code>
+command.  To define custom policies, you must first edit the
+<code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> file found in the Hadoop configuration directory,
+and then run the <code class="language-plaintext highlighter-rouge">hdfs ec -addPolicies</code> command.  For example, to add
+RS-6-3-64k as a policy, you first edit <code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> and add
+the following:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;configuration&gt;</span>
+<span class="nt">&lt;layoutversion&gt;</span>1<span class="nt">&lt;/layoutversion&gt;</span>
+<span class="nt">&lt;schemas&gt;</span>
+  <span class="c">&lt;!-- schema id is only used to reference internally in this document --&gt;</span>
+  <span class="nt">&lt;schema</span> <span class="na">id=</span><span class="s">"RSk6m3"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;codec&gt;</span>rs<span class="nt">&lt;/codec&gt;</span>
+    <span class="nt">&lt;k&gt;</span>6<span class="nt">&lt;/k&gt;</span>
+    <span class="nt">&lt;m&gt;</span>3<span class="nt">&lt;/m&gt;</span>
+    <span class="nt">&lt;options&gt;</span> <span class="nt">&lt;/options&gt;</span>
+  <span class="nt">&lt;/schema&gt;</span>
+<span class="nt">&lt;/schemas&gt;</span>
+<span class="nt">&lt;policies&gt;</span>
+  <span class="nt">&lt;policy&gt;</span>
+    <span class="nt">&lt;schema&gt;</span>RSk6m3<span class="nt">&lt;/schema&gt;</span>
+    <span class="nt">&lt;cellsize&gt;</span>65536<span class="nt">&lt;/cellsize&gt;</span>
+  <span class="nt">&lt;/policy&gt;</span>
+<span class="nt">&lt;/policies&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre></div></div>
+<p>Here the schema “RSk6m3” defines a Reed-Solomon encoding with <em>k</em>=6
+data blocks and <em>m</em>=3 parity blocks.  This schema is then used to define
+a policy that uses RS-6-3 encoding with a stripe size of 64k.  To add
+this policy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -addPolicies -policyFile /hadoop/etc/hadoop/user_ec_policies.xml
+2019-11-19 15:35:23,703 INFO util.ECPolicyLoader: Loading EC policy file /hadoop/etc/hadoop/user_ec_policies.xml
+Add ErasureCodingPolicy RS-6-3-64k succeed.
+</code></pre></div></div>
+
+<p>To enable the policy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -enablePolicy -policy RS-6-3-64k
+Erasure coding policy RS-6-3-64k is enabled
+</code></pre></div></div>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/erasure-coding.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

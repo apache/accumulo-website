@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Compactions</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="true" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse show" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="false" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Compactions</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Compactions</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/compaction.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <p>In Accumulo each tablet has a list of files associated with it.  As data is
+written to Accumulo it is buffered in memory. The data buffered in memory is
+eventually written to files in DFS on a per-tablet basis. Files can also be
+added to tablets directly by bulk import. In the background tablet servers run
+major compactions to merge multiple files into one. The tablet server has to
+decide which tablets to compact and which files within a tablet to compact.</p>
+
+<p>Within each tablet server there are one or more user configurable Compaction
+Services that compact tablets.  Compaction Services can be configured with
+one or more named queues, which may use internal executors or external executors.
+An internal executor will be configured with some sized threshold and number of
+threads in which to compact files. An external executor is configured only with
+the name of an external queue.</p>
+
+<p>Each Accumulo table has a user configurable Compaction Dispatcher that decides
+which compaction services that table will use.  Accumulo generates metrics for
+each compaction service which enable users to adjust compaction service settings
+based on actual activity.</p>
+
+<p>Each compaction service has a compaction planner that decides which files to
+compact.  The default compaction planner uses the table property <a href="/docs/4.x/configuration/server-properties#table_compaction_major_ratio">table.compaction.major.ratio</a> to decide which files to compact.  The
+compaction ratio is real number &gt;= 1.0.  Assume LFS is the size of the largest
+file in a set, CR is the compaction ratio,  and FSS is the sum of file sizes in
+a set. The default planner looks for file sets where LFS*CR &lt;= FSS.  By only
+compacting sets of files that meet this requirement the amount of work done by
+compactions is O(N * log<sub>CR</sub>(N)).  Increasing the ratio will
+result in less compaction work and more files per tablet.  More files per
+tablet means higher query latency. So adjusting this ratio is a trade-off
+between ingest and query performance.</p>
+
+<p>When CR=1.0 this will result in a goal of a single per file tablet, but the
+amount of work is O(N<sup>2</sup>) so 1.0 should be used with caution.  For
+example if a tablet has a 1G file and 1M file is added, then a compaction of
+the 1G and 1M file would be queued.</p>
+
+<p>Compaction services and dispatchers were introduced in Accumulo 2.1, so much
+of this documentation only applies to Accumulo 2.1 and later.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Below are some Accumulo shell commands that do the following :</p>
+
+<ul>
+  <li>Create a compaction service named <code class="language-plaintext highlighter-rouge">cs1</code> that has three executors.  The first executor named <code class="language-plaintext highlighter-rouge">small</code> has 8 threads and runs compactions less than 16M.  The second executor <code class="language-plaintext highlighter-rouge">medium</code> runs compactions less than 128M with 4 threads.  The last executor <code class="language-plaintext highlighter-rouge">large</code> runs all other compactions.</li>
+  <li>Create a compaction service named <code class="language-plaintext highlighter-rouge">cs2</code> that has three executors.  It has similar config to <code class="language-plaintext highlighter-rouge">cs1</code>, but its executors have fewer threads. Limits total I/O of all compactions within the service to 40MB/s.</li>
+  <li>Configure table <code class="language-plaintext highlighter-rouge">ci</code> to use compaction service <code class="language-plaintext highlighter-rouge">cs1</code> for system compactions and service <code class="language-plaintext highlighter-rouge">cs2</code> for user compactions.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
+config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":8},{"name":"medium","type":"internal","maxSize":"128M","numThreads":4},{"name":"large","type":"internal","numThreads":2}]'
+config -s tserver.compaction.major.service.cs2.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
+config -s 'tserver.compaction.major.service.cs2.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":4},{"name":"medium","type":"internal","maxSize":"128M","numThreads":2},{"name":"large","type":"internal","numThreads":1}]'
+config -s tserver.compaction.major.service.cs2.rate.limit=40M
+config -t ci -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
+config -t ci -s table.compaction.dispatcher.opts.service=cs1
+config -t ci -s table.compaction.dispatcher.opts.service.user=cs2
+</code></pre></div></div>
+
+<p>For more information see the javadoc for <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/spi/compaction/package-summary.html">compaction</a>,
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">DefaultCompactionPlanner</a> and
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/spi/compaction/SimpleCompactionDispatcher.html">SimpleCompactionDispatcher</a></p>
+
+<p>The names of the compaction services and executors are used for logging and metrics.</p>
+
+<h2 id="external-compactions">External Compactions</h2>
+
+<p>In Accumulo 2.1 we introduced a new optional feature that allows compactions to run
+outside of the Tablet Server.  External compactions introduces two new server processes
+in an Accumulo deployment:</p>
+
+<ul>
+  <li>
+    <p><em>Compactor</em>: Accumulo process that runs external compactions and is started with the name of a queue for which it will perform compactions.  In a typical deployment there will be many of these processes running, some for queue A, queue B, etc.  This process will only run a single compaction at a time and will communicate with the Compaction Coordinator to get a compaction job and report its status.</p>
+  </li>
+  <li>
+    <p><em>Compaction Coordinator</em>: a process that manages the compaction queues for all external compactions in the system and assigns compaction tasks to Compactors. In a typical deployment there will be one instance of this process in use at a time with a backup process waiting to become primary (much like the primary and secondary manager processes). This process communicates with the TabletServers to get external compaction job information and report back their status.</p>
+  </li>
+</ul>
+
+<h3 id="starting-the-components">Starting the Components</h3>
+
+<p>The CompactionCoordinator and Compactor components are started in the same manner as the other Accumulo services.</p>
+
+<p>To start a CompactionCoordinator:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo compaction-coordinator &amp;
+</code></pre></div></div>
+
+<p>To start a Compactor:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo compactor -q &lt;queueName&gt;
+</code></pre></div></div>
+
+<h3 id="configuration-1">Configuration</h3>
+
+<p>Configuration for external compactions is very similar to the internal compaction example above.
+In the example below we create a Compaction Service <code class="language-plaintext highlighter-rouge">cs1</code> and configure it with a queue
+named <code class="language-plaintext highlighter-rouge">DCQ1</code>. We then define the Compaction Dispatcher on table <code class="language-plaintext highlighter-rouge">testTable</code> and configure the
+table to use the <code class="language-plaintext highlighter-rouge">cs1</code> Compaction Service for planning and executing all compactions.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s tserver.compaction.major.service.cs1.planner=org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner
+config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"all","type":"external","queue":"DCQ1"}]'
+config -t testTable -s table.compaction.dispatcher=org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher
+config -t testTable -s table.compaction.dispatcher.opts.service=cs1
+</code></pre></div></div>
+
+<p>Note that you can mix internal and external options, for example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config -s 'tserver.compaction.major.service.cs1.planner.opts.executors=[{"name":"small","type":"internal","maxSize":"16M","numThreads":8},{"name":"medium","type":"internal","maxSize":"128M","numThreads":4},{"name":"large","type":"external","queue":"LargeQ"}]'
+</code></pre></div></div>
+
+<h3 id="overview">Overview</h3>
+
+<p>The CompactionCoordinator is responsible for managing the global external compaction work queue. For each external compaction queue, the tablet server will maintain an in memory priority queue of the tablets loaded on it that require external compactions. The coordinator polls all tservers to get summary information about their external compaction queues to combine the summary information to determine which tablet server to contact next to get work.  The coordinator does not maintain per tablet information, it only maintains enough information to allow it to know which tablet server to contact next for a given queue.  The tablet server will then know what specific tablet in that queue needs to compact.</p>
+
+<p>When a Compactor is free to perform work, it asks the CompactionCoordinator for the next compaction job. The CompactionCoordinator contacts the next TabletServer that has the highest priority for the Compactor’s queue. The TabletServer returns the information necessary for the compaction to occur to the CompactionCoordinator, which is passed on to the Compactor. The Compaction Coordinator maintains an in-memory list of running compactions and also inserts an entry into the metadata table for the tablet to denote that an external compaction is running. When the Compactor has finished the compaction, it notifies the CompactionCoordinator which inserts an entry into the metadata table to denote that the external compaction completed and it attempts to notify the TabletServer. If successful, the TabletServer commits the major compaction. If the TabletServer is down, or the Tablet has become hosted on a different TabletServer, then the CompactionCoordinator will fail to notify the TabletServer, but the metadata table entries will remain. The major compaction will be committed in the future by the TabletServer hosting the Tablet.</p>
+
+<p>External compactions handle faults and major system events in Accumulo. When a compactor process dies this will be detected and any files it had reserved in a tablet will be unreserved.  When a tserver dies, this will not impact any external compactions running on behalf of tablets that tserver was hosting.  The case of tablets not being hosted on a tserver when an external compaction tries to commit is also handled.  Tablets being deleted (by split, merge, or table deletion) will cause any associated running external compactions to be canceled.  When a user initiated compaction is canceled, any external compactions running as part of that will be canceled.</p>
+
+<h3 id="external-compaction-in-action">External Compaction in Action</h3>
+
+<p>Below are some examples of log entries and metadata table entries for external compactions. First, here are some metadata entries for table <code class="language-plaintext highlighter-rouge">2</code> . You can see that there are three files of different sizes (file size and number of entries are stored in the value portion of the metadata table rows with the “file” column qualifier).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 113
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325648093
+2&lt; ~tab:~pr []  \x00
+</code></pre></div></div>
+
+<p>Below are excerpts from the TabletServer, CompactionCoordinator, Compactor logs and metadata table. I have merged the logs in time order to make it easier to see what is happening.</p>
+
+<p>In the logs below the Compactor requested a compaction job from the Coordinator with an ExternalCompactionId of <code class="language-plaintext highlighter-rouge">de6afc1d-64ae-4abf-8bce-02ec0a79aa6c</code>. The Coordinator knew that TabletServer <code class="language-plaintext highlighter-rouge">localhost:9997</code> had a Tablet that needed compacting and contacted it to get the details. The CompactionManager, a component
+running in the TabletServer, returned the information to the Coordinator. The Coordinator then updates the metadata table (below the logs) for the external compaction and returns the information to the Compactor:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2021-04-13T14:54:10,580 [compactor.Compactor] INFO : Attempting to get next job, eci = ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
+2021-04-13T14:54:10,580 [coordinator.CompactionCoordinator] DEBUG: getCompactionJob called for queue DCQ1 by compactor localhost:9101
+2021-04-13T14:54:10,580 [coordinator.CompactionCoordinator] DEBUG: Found tserver localhost:9997 with priority 288230376151711747 compaction for queue DCQ1
+2021-04-13T14:54:10,580 [coordinator.CompactionCoordinator] DEBUG: Getting compaction for queue DCQ1 from tserver localhost:9997
+2021-04-13T14:54:10,581 [compactions.CompactionManager] DEBUG: Attempting to reserve external compaction, queue:DCQ1 priority:288230376151711747 compactor:localhost:9101
+2021-04-13T14:54:10,596 [compactions.CompactionManager] DEBUG: Reserved external compaction ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
+2021-04-13T14:54:10,596 [coordinator.CompactionCoordinator] DEBUG: Returning external job ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c to localhost:9101
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 113
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325648093
+2&lt; ~tab:~pr []  \x00
+</code></pre></div></div>
+
+<p>Next, the Compactor runs the compaction successfully and reports the status back to the Coordinator. The Coordinator inserts a final state marker into the metadata table (below the logs).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2021-04-13T14:54:11,597 [compactor.Compactor] INFO : Received next compaction job: TExternalCompactionJob(externalCompactionId:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, extent:TKeyExtent(table:32, endRow:null, prevEndRow:null), files:[In
+putFile(metadataFileEntry:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf, size:0, entries:0, timestamp:0), InputFile(metadataFileEntry:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf, size:0, entries
+:0, timestamp:0)], priority:3, readRate:0, writeRate:0, iteratorSettings:IteratorConfig(iterators:[]), type:FULL, reason:USER, outputFile:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp, propagateDeletes:false, kind
+:USER)
+2021-04-13T14:54:11,598 [compactor.Compactor] INFO : Starting up compaction runnable for job: TExternalCompactionJob(externalCompactionId:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, extent:TKeyExtent(table:32, endRow:null, prevEndRow:null)
+, files:[InputFile(metadataFileEntry:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf, size:0, entries:0, timestamp:0), InputFile(metadataFileEntry:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf, size
+:0, entries:0, timestamp:0)], priority:3, readRate:0, writeRate:0, iteratorSettings:IteratorConfig(iterators:[]), type:FULL, reason:USER, outputFile:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp, propagateDeletes:
+false, kind:USER)
+2021-04-13T14:54:11,599 [compactor.Compactor] INFO : CompactionCoordinator address is: localhost:9100
+2021-04-13T14:54:11,599 [coordinator.CompactionCoordinator] INFO : Compaction status update, id: ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, timestamp: 1618325651599, state: STARTED, message: Compaction started
+2021-04-13T14:54:12,601 [compactor.Compactor] INFO : Starting compactor
+2021-04-13T14:54:12,601 [compactor.Compactor] INFO : Progress checks will occur every 1 seconds
+2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'read_rate_limiter': 69,672 of 0 permits/second
+2021-04-13T14:54:12,718 [ratelimit.SharedRateLimiterFactory] DEBUG: RateLimiter 'write_rate_limiter': 45,120 of 0 permits/second
+2021-04-13T14:54:13,179 [compactor.Compactor] INFO : Compaction completed successfully ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
+2021-04-13T14:54:13,180 [compactor.Compactor] INFO : CompactionCoordinator address is: localhost:9100
+2021-04-13T14:54:13,181 [coordinator.CompactionCoordinator] INFO : Compaction status update, id: ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, timestamp: 1618325653180, state: SUCCEEDED, message: Compaction completed successfully
+2021-04-13T14:54:14,182 [compactor.Compactor] INFO : Compaction thread finished.
+2021-04-13T14:54:14,182 [compactor.Compactor] INFO : Updating coordinator with compaction completion.
+2021-04-13T14:54:14,184 [coordinator.CompactionCoordinator] INFO : Compaction completed, id: ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c, stats: CompactionStats(entriesRead:100000, entriesWritten:100000, fileSize:12354)
+2021-04-13T14:54:14,185 [coordinator.CompactionFinalizer] INFO : Writing completed external compaction to metadata table: {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
+2021-04-13T14:54:14,223 [coordinator.CompactionFinalizer] INFO : Queueing tserver notification for completed external compaction: {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
+2021-04-13T14:54:14,290 [coordinator.CompactionFinalizer] INFO : Notifying tserver localhost:9997[10000bf4e0a0004] that compaction {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000} has finished.
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; ecomp:ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c []   {"inputs":["hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf","hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf"],"tmp":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf_tmp","dest":"hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf","compactor":"localhost:9101","kind":"USER","executorId":"DCQ1","priority":288230376151711747}
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A0000047.rf []   12330,99000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F0000048.rf []   1196,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   111
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 114
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325653080
+2&lt; ~tab:~pr []  \x00
+~ecompECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c : []    {"extent":{"tableId":"2"},"state":"FINISHED","fileSize":12354,"entries":100000}
+</code></pre></div></div>
+
+<p>Finally, the TabletServer commits the compaction.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2021-04-13T14:54:14,290 [tablet.CompactableImpl] DEBUG: Attempting to commit external compaction ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
+2021-04-13T14:54:14,325 [tablet.files] DEBUG: Compacted 2&lt;&lt; for USER created hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf from [A0000047.rf, F0000048.rf]
+2021-04-13T14:54:14,326 [tablet.CompactableImpl] DEBUG: Completed commit of external compaction ECID:de6afc1d-64ae-4abf-8bce-02ec0a79aa6c
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/A000004k.rf []   12354,100000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004j.rf []   1302,1000
+2&lt; file:hdfs://localhost:8020/accumulo/tables/2/default_tablet/F000004l.rf []   841,1000
+2&lt; last:10000bf4e0a0004 []  localhost:9997
+2&lt; loc:10000bf4e0a0004 []   localhost:9997
+2&lt; srv:compact []   112
+2&lt; srv:dir []   default_tablet
+2&lt; srv:flush [] 114
+2&lt; srv:lock []  tservers/localhost:9997/zlock#1950397a-b2ca-4685-b70b-67ae3cd578b9#0000000000$10000bf4e0a0004
+2&lt; srv:time []  M1618325653080
+2&lt; ~tab:~pr []  \x00
+</code></pre></div></div>
+
+<h2 id="logging">Logging</h2>
+
+<p>The names of compaction services and executors are used in logging.  The log
+messages below are from a tserver with the configuration above with data being
+written to the ci table.  Also, a compaction of the table was forced from the
+shell.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2020-06-25T16:34:31,669 [tablet.files] DEBUG: Compacting 3;667;6 on cs1.small for SYSTEM from [C00001cm.rf, C00001a7.rf, F00001db.rf] size 15 MB
+2020-06-25T16:34:45,165 [tablet.files] DEBUG: Compacted 3;667;6 for SYSTEM created hdfs://localhost:8020/accumulo/tables/3/t-000006f/C00001de.rf from [C00001cm.rf, C00001a7.rf, F00001db.rf]
+2020-06-25T16:35:01,965 [tablet.files] DEBUG: Compacting 3;667;6 on cs1.medium for SYSTEM from [C00001de.rf, A000017v.rf, F00001e7.rf] size 33 MB
+2020-06-25T16:35:11,686 [tablet.files] DEBUG: Compacted 3;667;6 for SYSTEM created hdfs://localhost:8020/accumulo/tables/3/t-000006f/A00001er.rf from [C00001de.rf, A000017v.rf, F00001e7.rf]
+2020-06-25T16:37:12,521 [tablet.files] DEBUG: Compacting 3;667;6 on cs2.medium for USER from [F00001f8.rf, A00001er.rf] size 35 MB config []
+2020-06-25T16:37:17,917 [tablet.files] DEBUG: Compacted 3;667;6 for USER created hdfs://localhost:8020/accumulo/tables/3/t-000006f/A00001fr.rf from [F00001f8.rf, A00001er.rf]
+</code></pre></div></div>
+
+<h2 id="metrics">Metrics</h2>
+
+<p>The numbers of major and minor compactions running and queued is visible on the
+Accumulo monitor page. This allows you to see if compactions are backing up
+and adjustments to the above settings are needed. When adjusting the number of
+threads available for compactions, consider the number of cores and other tasks
+running on the nodes.</p>
+
+<p>The numbers displayed on the Accumulo monitor are an aggregate of all
+compaction services and executors.  Accumulo emits metrics about the number of
+compactions queued and running on each compaction executor.  Accumulo also
+emits metrics about the number of files per tablets.  These metrics can be used
+to guide adjusting compaction ratios and compaction service configurations to ensure
+tablets do not have to many files.</p>
+
+<p>For example if metrics show that some compaction executors within a compaction
+service are under utilized while others are over utilized, then the
+configuration for compaction service may need to be adjusted.  If the metrics
+show that all compaction executors are fully utilized for long periods then
+maybe the compaction ratio on a table needs to be increased.</p>
+
+<h2 id="user-compactions">User compactions</h2>
+
+<p>Compactions can be initiated manually for a table. To initiate a minor
+compaction, use the <code class="language-plaintext highlighter-rouge">flush</code> command in the shell. To initiate a major compaction,
+use the <code class="language-plaintext highlighter-rouge">compact</code> command in the shell:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@myinstance mytable&gt; compact -t mytable
+</code></pre></div></div>
+
+<p>If needed, the compaction can be canceled using <code class="language-plaintext highlighter-rouge">compact --cancel -t mytable</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">compact</code> command will compact all tablets in a table to one file. Even tablets
+with one file are compacted. This is useful for the case where a major compaction
+filter is configured for a table. In 1.4, the ability to compact a range of a table
+was added. To use this feature specify start and stop rows for the compact command.
+This will only compact tablets that overlap the given row range.</p>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/compaction.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

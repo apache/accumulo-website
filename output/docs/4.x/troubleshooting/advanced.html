@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Accumulo Documentation - Advanced Troubleshooting</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  This is a <strong>draft</strong> user guide for a future release of Accumulo 4.0.0!<br>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="accordion sticky-top" id="myAccordion" style="top: 100px;">
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headinggetting-started">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsegetting-started" aria-expanded="false" aria-controls="collapsegetting-started">
+                  Getting started
+                </button>
+              </div>
+              <div id="collapsegetting-started" class="accordion-collapse collapse" aria-labelledby="headinggetting-started" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/quickstart">Setup</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/design">Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/features">Features</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/clients">Accumulo Clients</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/shell">Accumulo Shell</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_design">Table Design</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/table_configuration">Table Configuration</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/getting-started/glossary">Glossary</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingdevelopment">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedevelopment" aria-expanded="false" aria-controls="collapsedevelopment">
+                  Development
+                </button>
+              </div>
+              <div id="collapsedevelopment" class="accordion-collapse collapse" aria-labelledby="headingdevelopment" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/development/iterators">Iterators</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/mapreduce">MapReduce</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/spark">Spark</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/development_tools">Development Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/sampling">Sampling</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/summaries">Summary Statistics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/proxy">Proxy</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/development/high_speed_ingest">High-Speed Ingest</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingsecurity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesecurity" aria-expanded="false" aria-controls="collapsesecurity">
+                  Security
+                </button>
+              </div>
+              <div id="collapsesecurity" class="accordion-collapse collapse" aria-labelledby="headingsecurity" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/security/overview">Security Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authentication">Authentication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/permissions">Permissions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/authorizations">Authorizations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/on-disk-encryption">On Disk Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/wire-encryption">Wire Encryption</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/security/kerberos">Kerberos</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+      
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingconfiguration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseconfiguration" aria-expanded="false" aria-controls="collapseconfiguration">
+                  Configuration
+                </button>
+              </div>
+              <div id="collapseconfiguration" class="accordion-collapse collapse" aria-labelledby="headingconfiguration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/overview">Configuration Overview</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/files">Configuration Files</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties">Client Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/client-properties3">Client Properties (3.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties">Server Properties (2.x)</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/configuration/server-properties3">Server Properties (3.x)</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingadministration">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseadministration" aria-expanded="false" aria-controls="collapseadministration">
+                  Administration
+                </button>
+              </div>
+              <div id="collapseadministration" class="accordion-collapse collapse" aria-labelledby="headingadministration" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/administration/in-depth-install">In-depth Installation</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/monitoring-metrics">Monitoring & Metrics</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/fate">FATE</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="accordion-item">
+              <div class="accordion-header fs-5 fw-bold" id="headingtroubleshooting">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapsetroubleshooting" aria-expanded="true" aria-controls="collapsetroubleshooting">
+                  Troubleshooting
+                </button>
+              </div>
+              <div id="collapsetroubleshooting" class="accordion-collapse collapse show" aria-labelledby="headingtroubleshooting" data-bs-parent="#myAccordion">
+                <div class="accordion-body">
+                  
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/basic">Basic Troubleshooting</a></div>
+                  
+                    <div class="row selected"><a href="/docs/4.x/troubleshooting/advanced">Advanced Troubleshooting</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tools">Troubleshooting Tools</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/system-metadata-tables">System Metadata Tables</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/performance">Performance</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/tracing">Tracing</a></div>
+                  
+                    <div class="row"><a href="/docs/4.x/troubleshooting/zookeeper">ZooKeeper</a></div>
+                  
+                </div>
+              </div>
+            </div>
+          
+        
+      
+    </div>
+  </div>
+  <div class="col-md-9">
+    
+    <p>Accumulo 4.x Documentation &gt;&gt; Troubleshooting &gt;&gt; Advanced Troubleshooting</p>
+    
+    
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <h1>Advanced Troubleshooting</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/troubleshooting/advanced.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+    
+    <h2 id="tablet-server-locks">Tablet server locks</h2>
+
+<p><strong>My tablet server lost its lock.  Why?</strong></p>
+
+<p>The primary reason a tablet server loses its lock is that it has been pushed into swap.</p>
+
+<p>A large java program (like the tablet server) may have a large portion
+of its memory image unused.  The operating system will favor pushing
+this allocated, but unused memory into swap so that the memory can be
+re-used as a disk buffer.  When the java virtual machine decides to
+access this memory, the OS will begin flushing disk buffers to return that
+memory to the VM.  This can cause the entire process to block long
+enough for the zookeeper lock to be lost.</p>
+
+<p>Configure your system to reduce the kernel parameter <em>swappiness</em> from the default (60) to zero.</p>
+
+<p><strong>My tablet server lost its lock, and I have already set swappiness to zero.  Why?</strong></p>
+
+<p>Be careful not to over-subscribe memory.  This can be easy to do if
+your accumulo processes run on the same nodes as hadoop’s map-reduce
+framework.  Remember to add up:</p>
+
+<ul>
+  <li>size of the JVM for the tablet server</li>
+  <li>size of the in-memory map, if using the native map implementation</li>
+  <li>size of the JVM for the data node</li>
+  <li>size of the JVM for the task tracker</li>
+  <li>size of the JVM times the maximum number of mappers and reducers</li>
+  <li>size of the kernel and any support processes</li>
+</ul>
+
+<p>If a 16G node can run 2 mappers and 2 reducers, and each can be 2G,
+then there is only 8G for the data node, tserver, task tracker and OS.</p>
+
+<p>Reduce the memory footprint of each component until it fits comfortably.</p>
+
+<p><strong>My tablet server lost its lock, swappiness is zero, and my node has lots of unused memory!</strong></p>
+
+<p>The JVM memory garbage collector may fall behind and cause a
+“stop-the-world” garbage collection. On a large memory virtual
+machine, this collection can take a long time.  This happens more
+frequently when the JVM is getting low on free memory.  Check the logs
+of the tablet server.  You will see lines like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2013-06-20 13:43:20,607 [tabletserver.TabletServer] DEBUG: gc ParNew=0.00(+0.00) secs
+    ConcurrentMarkSweep=0.00(+0.00) secs freemem=1,868,325,952(+1,868,325,952) totalmem=2,040,135,680
+</code></pre></div></div>
+
+<p>When <code class="language-plaintext highlighter-rouge">freemem</code> becomes small relative to the amount of memory
+needed, the JVM will spend more time finding free memory than
+performing work.  This can cause long delays in sending keep-alive
+messages to zookeeper.</p>
+
+<p>Ensure the tablet server JVM is not running low on memory.</p>
+
+<p><strong>I’m seeing errors in tablet server logs that include the words “MutationsRejectedException” and “# constraint violations: 1”. Moments after that the server died.</strong></p>
+
+<p>The error you are seeing is part of a failing tablet server scenario.
+This is a bit complicated, so name two of your tablet servers A and B.</p>
+
+<p>Tablet server A is hosting a tablet, let’s call it a-tablet.</p>
+
+<p>Tablet server B is hosting a metadata tablet, let’s call it m-tablet.</p>
+
+<p>m-tablet records the information about a-tablet, for example, the names of the files it is using to store data.</p>
+
+<p>When A ingests some data, it eventually flushes the updates from memory to a file.</p>
+
+<p>Tablet server A then writes this new information to m-tablet, on Tablet server B.</p>
+
+<p>Here’s a likely failure scenario:</p>
+
+<p>Tablet server A does not have enough memory for all the processes running on it.
+The operating system sees a large chunk of the tablet server being unused, and swaps it out to disk to make room for other processes.
+Tablet server A does a java memory garbage collection, which causes it to start using all the memory allocated to it.
+As the server starts pulling data from swap, it runs very slowly.
+It fails to send the keep-alive messages to zookeeper in a timely fashion, and it looses its zookeeper session.</p>
+
+<p>But, it’s running so slowly, that it takes a moment to realize it should no longer be hosting tablets.</p>
+
+<p>The thread that is flushing a-tablet memory attempts to update m-tablet with the new file information.</p>
+
+<p>Fortunately there’s a constraint on m-tablet.
+Mutations to the metadata table must contain a valid zookeeper session.
+This prevents tablet server A from making updates to m-tablet when it no long has the right to host the tablet.</p>
+
+<p>The “MutationsRejectedException” error is from tablet server A making an update to tablet server B’s m-tablet.
+It’s getting a constraint violation: tablet server A has lost its zookeeper session, and will fail momentarily.</p>
+
+<p>Ensure that memory is not over-allocated.  Monitor swap usage, or turn swap off.</p>
+
+<p><strong>My accumulo client is getting a MutationsRejectedException. The monitor is displaying “No Such SessionID” errors.</strong></p>
+
+<p>When your client starts sending mutations to accumulo, it creates a session. Once the session is created,
+mutations are streamed to accumulo, without acknowledgement, against this session.  Once the client is done,
+it will close the session, and get an acknowledgement.</p>
+
+<p>If the client fails to communicate with accumulo, it will release the session, assuming that the client has died.
+If the client then attempts to send more mutations against the session, you will see “No Such SessionID” errors on
+the server, and MutationRejectedExceptions in the client.</p>
+
+<p>The client library should be either actively using the connection to the tablet servers,
+or closing the connection and sessions. If the session times out, something is causing your client
+to pause.</p>
+
+<p>The most frequent source of these pauses are java garbage collection pauses
+due to the JVM running out of memory, or being swapped out to disk.</p>
+
+<p>Ensure your client has adequate memory and is not being swapped out to disk.</p>
+
+<h2 id="hdfs-failures">HDFS Failures</h2>
+
+<p><strong>I had disastrous HDFS failure.  After bringing everything back up, several tablets refuse to go online.</strong></p>
+
+<p>Data written to tablets is written into memory before being written into indexed files.  In case the server
+is lost before the data is saved into an indexed file, all data stored in memory is first written into a
+write-ahead log (WAL).  When a tablet is re-assigned to a new tablet server, the write-ahead logs are read to
+recover any mutations that were in memory when the tablet was last hosted.</p>
+
+<p>If a write-ahead log cannot be read, then the tablet is not re-assigned.  All it takes is for one of
+the blocks in the write-ahead log to be missing.  This is unlikely unless multiple data nodes in HDFS have been
+lost.</p>
+
+<p>Get the WAL files online and healthy.  Restore any data nodes that may be down.</p>
+
+<p><strong>How do find out which tablets are offline?</strong></p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">accumulo admin checkTablets</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo admin checkTablets
+</code></pre></div></div>
+
+<p><strong>I lost three data nodes, and I’m missing blocks in a WAL.  I don’t care about data loss, how
+can I get those tablets online?</strong></p>
+
+<p>See the <a href="/docs/4.x/troubleshooting/system-metadata-tables">system metadata table page</a> which shows a typical metadata table listing.
+The entries with a column family of <code class="language-plaintext highlighter-rouge">log</code> are references to the WAL for that tablet.
+If you know what WAL is bad, you can find all the references with a grep in the shell:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; grep 0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
+3&lt; log:127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995 []    127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995|6
+</code></pre></div></div>
+
+<p>You can remove the WAL references in the metadata table.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; grant -u root Table.WRITE -t accumulo.metadata
+shell&gt; delete 3&lt; log 127.0.0.1+9997/0cb7ce52-ac46-4bf7-ae1d-acdcfaa97995
+</code></pre></div></div>
+
+<p>Note: the colon (<code class="language-plaintext highlighter-rouge">:</code>) is omitted when specifying the <em>row cf cq</em> for the delete command.</p>
+
+<p>The manager will automatically discover the tablet no longer has a bad WAL reference and will
+assign the tablet.  You will need to remove the reference from all the tablets to get them
+online.</p>
+
+<p><strong>The metadata (or root) table has references to a corrupt WAL.</strong></p>
+
+<p>This is a much more serious state, since losing updates to the metadata table will result
+in references to old files which may not exist, or lost references to new files, resulting
+in tablets that cannot be read, or large amounts of data loss.</p>
+
+<p>The best hope is to restore the WAL by fixing HDFS data nodes and bringing the data back online.
+If this is not possible, the best approach is to re-create the instance and bulk import all files from
+the old instance into a new tables.</p>
+
+<p>A complete set of instructions for doing this is outside the scope of this guide,
+but the basic approach is:</p>
+
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">tables -l</code> in the shell to discover the table name to table id mapping</li>
+  <li>Stop all accumulo processes on all nodes</li>
+  <li>Move the accumulo directory in HDFS out of the way:
+     $ hadoop fs -mv /accumulo /corrupt</li>
+  <li>Re-initialize accumulo</li>
+  <li>Recreate tables, users and permissions</li>
+  <li>Import the directories under <code class="language-plaintext highlighter-rouge">/corrupt/tables/&lt;id&gt;</code> into the new instance</li>
+</ul>
+
+<p><strong>One or more HDFS Files under /accumulo/tables are corrupt</strong></p>
+
+<p>Accumulo maintains multiple references into the tablet files in the metadata
+tables and within the tablet server hosting the file, this makes it difficult to
+reliably just remove those references.</p>
+
+<p>The directory structure in HDFS for tables will follow the general structure:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/accumulo
+/accumulo/tables/
+/accumulo/tables/!0
+/accumulo/tables/!0/default_tablet/A000001.rf
+/accumulo/tables/!0/t-00001/A000002.rf
+/accumulo/tables/1
+/accumulo/tables/1/default_tablet/A000003.rf
+/accumulo/tables/1/t-00001/A000004.rf
+/accumulo/tables/1/t-00001/A000005.rf
+/accumulo/tables/2/default_tablet/A000006.rf
+/accumulo/tables/2/t-00001/A000007.rf
+</code></pre></div></div>
+
+<p>If files under <code class="language-plaintext highlighter-rouge">/accumulo/tables</code> are corrupt, the best course of action is to
+recover those files in hdfs see the section on HDFS. Once these recovery efforts
+have been exhausted, the next step depends on where the missing file(s) are
+located. Different actions are required when the bad files are in Accumulo data
+table files or if they are metadata table files.</p>
+
+<p><em>Data File Corruption</em></p>
+
+<p>When an Accumulo data file is corrupt, the most reliable way to restore Accumulo
+operations is to replace the missing file with an ``empty’’ file so that
+references to the file in the METADATA table and within the tablet server
+hosting the file can be resolved by Accumulo. An empty file can be created using
+the CreateEmpty utility:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
+</code></pre></div></div>
+
+<p>The process is to delete the corrupt file and then move the empty file into its
+place (The generated empty file can be copied and used multiple times if necessary and does not need
+to be regenerated each time)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs –rm /accumulo/tables/corrupt/file/thename.rf; \
+hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/tables/corrupt/file/thename.rf
+</code></pre></div></div>
+
+<p><em>Metadata File Corruption</em></p>
+
+<p>If the corrupt files are metadata files, read the <a href="/docs/4.x/troubleshooting/system-metadata-tables">system metadata tables</a>
+(under the path <code class="language-plaintext highlighter-rouge">/accumulo/tables/!0</code>). Then, you will need to rebuild
+the metadata table by initializing a new instance of Accumulo and then importing
+all of the existing data into the new instance.  This is the same procedure as
+recovering from a zookeeper failure (see next section), except that
+you will have the benefit of having the existing user and table authorizations
+that are maintained in zookeeper.</p>
+
+<p>You can use the DumpZookeeper utility to save this information for reference
+before creating the new instance.  You will not be able to use RestoreZookeeper
+because the table names and references are likely to be different between the
+original and the new instances, but it can serve as a reference.</p>
+
+<p>If the files cannot be recovered, replace corrupt data files with an empty
+rfiles to allow references in the metadata table and in the tablet servers to be
+resolved. Rebuild the metadata table if the corrupt files are metadata files.</p>
+
+<p><em>Write-Ahead Log(WAL) File Corruption</em></p>
+
+<p>In certain versions of Accumulo, a corrupt WAL file (caused by HDFS corruption
+or a bug in Accumulo that created the file) can block the successful recovery
+of one to many Tablets. Accumulo can be stuck in a loop trying to recover the
+WAL file, never being able to succeed.</p>
+
+<p>In the cases where the WAL file’s original contents are unrecoverable or some degree
+of data loss is acceptable (beware if the WAL file contains updates to the Accumulo
+metadata table!), the following process can be followed to create a valid, empty
+WAL file. Run the following commands as the Accumulo unix user (to ensure that
+the proper file permissions in HDFS)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' &gt; empty.wal
+</code></pre></div></div>
+
+<p>The above creates a file with the text “— Log File Header (v2) —” and then
+four bytes. You should verify the contents of the file with a hexdump tool.</p>
+
+<p>Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
+with the empty WAL.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
+$ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
+</code></pre></div></div>
+
+<p>After the corrupt WAL file has been replaced, the system should automatically recover.
+It may be necessary to restart the Accumulo Manager process as an exponential
+backup policy is used which could lead to a long wait before Accumulo will
+try to re-load the WAL file.</p>
+
+<h2 id="zookeeper-failures">Zookeeper Failures</h2>
+
+<p><strong>I lost my ZooKeeper quorum (hardware failure), but HDFS is still intact. How can I recover my Accumulo instance?</strong></p>
+
+<p>ZooKeeper, in addition to its lock-service capabilities, also serves to bootstrap an Accumulo
+instance from some location in HDFS. It contains the pointers to the root tablet in HDFS which
+is then used to load the Accumulo metadata tablets, which then loads all user tables. ZooKeeper
+also stores all namespace and table configuration, the user database, the mapping of table IDs to
+table names, and more across Accumulo restarts.</p>
+
+<p>Presently, the only way to recover such an instance is to initialize a new instance and import all
+of the old data into the new instance. The easiest way to tackle this problem is to first recreate
+the mapping of table ID to table name and then recreate each of those tables in the new instance.
+Set any necessary configuration on the new tables and add some split points to the tables to close
+the gap between how many splits the old table had and no splits.</p>
+
+<p>The directory structure in HDFS for tables will follow the general structure:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/accumulo
+/accumulo/tables/
+/accumulo/tables/1
+/accumulo/tables/1/default_tablet/A000001.rf
+/accumulo/tables/1/t-00001/A000002.rf
+/accumulo/tables/1/t-00001/A000003.rf
+/accumulo/tables/2/default_tablet/A000004.rf
+/accumulo/tables/2/t-00001/A000005.rf
+</code></pre></div></div>
+
+<p>For each table, make a new directory that you can move (or copy if you have the HDFS space to do so)
+all of the rfiles for a given table into. For example, to process the table with an ID of <code class="language-plaintext highlighter-rouge">1</code>, make a new directory,
+say <code class="language-plaintext highlighter-rouge">/new-table-1</code> and then copy all files from <code class="language-plaintext highlighter-rouge">/accumulo/tables/1/\*/*.rf</code> into that directory. Additionally,
+make a directory, <code class="language-plaintext highlighter-rouge">/new-table-1-failures</code>, for any failures during the import process. Then, issue the import
+command using the Accumulo shell into the new table, telling Accumulo to not re-set the timestamp:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@instance new_table&gt; importdirectory /new-table-1 /new-table-1-failures false
+</code></pre></div></div>
+
+<p>Any RFiles which were failed to be loaded will be placed in <code class="language-plaintext highlighter-rouge">/new-table-1-failures</code>. Rfiles that were successfully
+imported will no longer exist in <code class="language-plaintext highlighter-rouge">/new-table-1</code>. For failures, move them back to the import directory and retry
+the <code class="language-plaintext highlighter-rouge">importdirectory</code> command.</p>
+
+<p>It is <em>extremely</em> important to note that this approach may introduce stale data back into
+the tables. For a few reasons, RFiles may exist in the table directory which are candidates for deletion but have
+not yet been deleted. Additionally, deleted data which was not compacted away, but still exists in write-ahead logs if
+the original instance was somehow recoverable, will be re-introduced in the new instance. Table splits and merges
+(which also include the deleteRows API call on TableOperations, are also vulnerable to this problem. This process should
+<em>not</em> be used if these are unacceptable risks. It is possible to try to re-create a view of the <code class="language-plaintext highlighter-rouge">accumulo.metadata</code>
+table to prune out files that are candidates for deletion, but this is a difficult task that also may not be entirely accurate.</p>
+
+<p>Likewise, it is also possible that data loss may occur from write-ahead log (WAL) files which existed on the old table but
+were not minor-compacted into an RFile. Again, it may be possible to reconstruct the state of these WAL files to
+replay data not yet in an RFile; however, this is a difficult task and is not implemented in any automated fashion.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">importdirectory</code> shell command can be used to import RFiles from the old instance into a newly created instance,
+but extreme care should go into the decision to do this as it may result in reintroduction of stale data or the
+omission of new data.</p>
+
+<h2 id="upgrade-issues">Upgrade Issues</h2>
+
+<p><strong>I upgraded from 1.4 to 1.5 to 1.6 but still have some WAL files on local disk. Do I have any way to recover them?</strong></p>
+
+<p>Yes, you can recover them by running the LocalWALRecovery utility (not available in 1.8 and later) on each node that needs recovery performed. The utility
+will default to using the directory specified by <code class="language-plaintext highlighter-rouge">logger.dir.walog</code> in your configuration, or can be
+overridden by using the <code class="language-plaintext highlighter-rouge">--local-wal-directories</code> option on the tool. It can be invoked as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accumulo org.apache.accumulo.tserver.log.LocalWALRecovery
+</code></pre></div></div>
+
+<p><strong>I am trying to start the manager after upgrading but the upgrade is aborting with the following message:</strong>
+  <code class="language-plaintext highlighter-rouge">org.apache.accumulo.core.client.AccumuloException: Aborting upgrade because there are outstanding FATE transactions from a previous Accumulo version.</code></p>
+
+<p>For versions 2.1 and later, you can use the admin fate command to delete completed FATE transactions using the following:</p>
+
+<ul>
+  <li>Start tservers</li>
+  <li>Start shell</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">accumulo admin fate --print</code> to list all transactions</li>
+  <li>If the transactions have completed, just delete with them with <code class="language-plaintext highlighter-rouge">accumulo admin fate --delete TXID [TXID...]</code></li>
+  <li>Start managers once there are no more fate operations</li>
+</ul>
+
+<p>If any of the operations are not complete, you should rollback the upgrade and troubleshoot completing them with your prior version.</p>
+
+<p>Prior to 2.1, the same steps apply, but the fate command is accessed with the Accumulo shell instead of the admin command.  The shell commands are as follows:</p>
+
+<p>use <code class="language-plaintext highlighter-rouge">fate print</code> to list transactions
+use <code class="language-plaintext highlighter-rouge">fate delete</code> to delete completed transactions</p>
+
+<h2 id="file-naming-conventions">File Naming Conventions</h2>
+
+<p><strong>Why are files named like they are? Why do some start with <code class="language-plaintext highlighter-rouge">C</code> and others with <code class="language-plaintext highlighter-rouge">F</code>?</strong></p>
+
+<p>The file names give you a basic idea for the source of the file.</p>
+
+<p>The base of the filename is a base-36 unique number. All filenames in accumulo are coordinated
+with a counter in zookeeper, so they are always unique, which is useful for debugging.</p>
+
+<p>The leading letter gives you an idea of how the file was created:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">F</code> - Flush: entries in memory were written to a file (Minor Compaction)</li>
+  <li><code class="language-plaintext highlighter-rouge">M</code> - Merging compaction: entries in memory were combined with the smallest file to create one new file</li>
+  <li><code class="language-plaintext highlighter-rouge">C</code> - Several files, but not all files, were combined to produce this file (Major Compaction)</li>
+  <li><code class="language-plaintext highlighter-rouge">A</code> - All files were compacted, delete entries were dropped</li>
+  <li><code class="language-plaintext highlighter-rouge">I</code> - Bulk import, complete, sorted index files. Always in a directory starting with <code class="language-plaintext highlighter-rouge">b-</code></li>
+</ul>
+
+<p>This simple file naming convention allows you to see the basic structure of the files from just
+their filenames, and reason about what should be happening to them next, just
+by scanning their entries in the metadata tables.</p>
+
+<p>For example, if you see multiple files with <code class="language-plaintext highlighter-rouge">M</code> prefixes, the tablet is, or was, up against its
+maximum file limit, so it began merging memory updates with files to keep the file count reasonable.  This
+slows down ingest performance, so knowing there are many files like this tells you that the system
+is struggling to keep up with ingest vs the compaction strategy which reduces the number of files.</p>
+
+<h2 id="hdfs-decommissioning-issues">HDFS Decommissioning Issues</h2>
+
+<p><strong>My Hadoop DataNode is hung for hours trying to decommission.</strong></p>
+
+<p>Write Ahead Logs stay open until they hit the size threshold, which could be many hours or days in some cases. These open files will prevent a DN from finishing its decommissioning process (HDFS-3599) in some versions of Hadoop 2. If you stop the DN, then the WALog file will not be closed and you could lose data. To work around this issue, we now close WALogs on a time period specified by the property <code class="language-plaintext highlighter-rouge">tserver.walog.max.age</code> with a default period of 24 hours.</p>
+
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-between">
+        <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/troubleshooting/advanced.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2025 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
