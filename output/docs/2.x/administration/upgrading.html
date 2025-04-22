@@ -405,7 +405,49 @@
       </div>
     </div>
     
-    <h2 id="upgrading-from-110-or-20-to-21">Upgrading from 1.10 or 2.0 to 2.1</h2>
+    <h2 id="changes-to-the-upgrade-process">Changes to the upgrade process</h2>
+
+<p>In upgrade notes for prior releases we have advised that users should ensure that no FATE
+transactions exist (see <code class="language-plaintext highlighter-rouge">Upgrading from 1.10 or 2.0 to 2.1</code> below). This is due to the
+fact that the internal serialization of FATE transactions is not guaranteed to be
+compatible between versions. Accumulo never provided any tooling around the upgrade process
+and left it up the user, which can cause problems if older versions of FATE transactions
+exist and the user already deployed the new version of software. The user would have to
+re-install the old version of software to remove the FATE transactions.</p>
+
+<p>Starting with Accumulo 4.0 we are modifying the upgrade process steps in an attempt to
+make it easier for the user to validate their instance is ready for upgrade. In earlier
+versions the upgrade process would start when the user started the instance with the
+new version of software. The process ran entirely in the Manager and it was the users
+responsibility to read the upgrade notes to perform any necessary pre-upgrade steps.</p>
+
+<p>The new upgrade process introduces a new <code class="language-plaintext highlighter-rouge">accumulo upgrade</code> command which will be used
+after shutting down the instance with the old version of software and before starting
+the instance with the new version of software. The <code class="language-plaintext highlighter-rouge">upgrade</code> command has two options,
+<code class="language-plaintext highlighter-rouge">--prepare</code> and <code class="language-plaintext highlighter-rouge">--start</code>. <code class="language-plaintext highlighter-rouge">--prepare</code> is designed to be executed by the user after shutting
+down the instance. This option will check that the Manager is down, validate that there
+are no existing FATE transactions, remove all of the server locks in ZooKeeper, and place
+a node in ZooKeeper that will prevent server processes from being started again. If there
+are FATE transactions, the command will fail giving the user the opportunity to clean them
+up. The <code class="language-plaintext highlighter-rouge">--prepare</code> option can then be run again.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--start</code> option is designed to be executed by the user before starting the instance
+with the newer version of software. The <code class="language-plaintext highlighter-rouge">--start</code> option will perform any necessary pre-upgrade
+validation, make any changes that are necessary for the new version of software to start, seed
+an upgrade progress tracker node in ZooKeeper, and then finally remove the node in ZooKeeper
+created by the <code class="language-plaintext highlighter-rouge">--prepare</code> step so that the server processes can be started. If the user did
+not run the <code class="language-plaintext highlighter-rouge">--prepare</code> step with the older version of software, then the <code class="language-plaintext highlighter-rouge">--start</code> option
+will fail unless the <code class="language-plaintext highlighter-rouge">--force</code> option is used. Running <code class="language-plaintext highlighter-rouge">--start</code> with the <code class="language-plaintext highlighter-rouge">--force</code> option
+will perform the same checks that <code class="language-plaintext highlighter-rouge">--prepare</code> executes, but if FATE transactions are found
+then the user will need to remove them using the older version of software. Once the <code class="language-plaintext highlighter-rouge">--start</code>
+option completes, then the user can start the server processes to complete the upgrade
+process. The user will want to check the contents of the Manager log to observe the progress
+of the upgrade.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">accumulo upgrade --prepare</code> command will be included with the 2.1.4 and 3.1.0 releases
+to assist users in upgrading to the 4.0 release.</p>
+
+<h2 id="upgrading-from-110-or-20-to-21">Upgrading from 1.10 or 2.0 to 2.1</h2>
 
 <p>Please read these directions in their entirety before beginning. Please <a href="/contact-us">contact</a> us with any
 questions you have about this process.</p>
