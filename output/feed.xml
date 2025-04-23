@@ -6,8 +6,8 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 23 Apr 2025 12:16:08 +0000</pubDate>
-    <lastBuildDate>Wed, 23 Apr 2025 12:16:08 +0000</lastBuildDate>
+    <pubDate>Wed, 23 Apr 2025 17:42:14 +0000</pubDate>
+    <lastBuildDate>Wed, 23 Apr 2025 17:42:14 +0000</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
     
     
@@ -1883,7 +1883,9 @@ general.micrometer.factory=org.apache.accumulo.test.metrics.TestStatsDRegistryFa
   &lt;li&gt;Log into Grafana (http://localhost:3003/) using the default credentials (root/root). Click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Home&lt;/code&gt; icon at the top, then click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Accumulo Micrometer Test Dashboard&lt;/code&gt;. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot; alt=&quot;Grafana Screenshot&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&quot;p-3 border rounded d-block&quot; href=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot;&gt;
+   &lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot; class=&quot;img-fluid rounded&quot; alt=&quot;Grafana Screenshot&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;tracing&quot;&gt;Tracing&lt;/h1&gt;
 
@@ -1911,6 +1913,8 @@ general.opentelemetry.enabled=true
     &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# OpenTelemetry settings
 general.opentelemetry.enabled=true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If you are using Accumulo 2.1.4 or newer, skip steps 5-6 below and follow the updated instructions in the &lt;a href=&quot;#updated-configuration-with-newer-versions-of-opentelemetry&quot;&gt;Updated Configuration with Newer Versions of OpenTelemetry&lt;/a&gt; section.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;Configure the OpenTelemetry JavaAgent in accumulo-env.sh by uncommenting the following and updating the path to the java agent jar:
     &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ## Optionally setup OpenTelemetry SDK AutoConfigure
@@ -1941,7 +1945,35 @@ general.opentelemetry.enabled=true
   &lt;li&gt;View traces in Jaeger UI at http://localhost:16686. You can select the service name on the left panel and click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Find Traces&lt;/code&gt; to view the trace information. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot; alt=&quot;Jaeger Screenshot&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&quot;p-3 border rounded d-block&quot; href=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot;&gt;
+   &lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot; class=&quot;img-fluid rounded&quot; alt=&quot;Jaeger Screenshot&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;updated-configuration-with-newer-versions-of-opentelemetry&quot;&gt;Updated Configuration with Newer Versions of OpenTelemetry&lt;/h2&gt;
+
+&lt;p&gt;The original tracing example above was written for Accumulo 2.1.0 which uses OpenTelemetry 1.19.0. Accumulo 2.1.4 has been updated to use OpenTelemetry 1.48.0, which requires different configuration. When working with Accumulo 2.1.4 or any deployment using OpenTelemetry 1.48.0 or newer, use OTLP (OpenTelemetry Protocol) instead of the direct Jaeger exporter.&lt;/p&gt;
+
+&lt;p&gt;Follow steps 1–4 from the &lt;a href=&quot;#tracing-example&quot;&gt;Tracing Example&lt;/a&gt; section, then use these updated steps in place of steps 5-6:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Configure the OpenTelemetry JavaAgent in accumulo-env.sh with OTLP export:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-Dotel.traces.exporter=otlp'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.exporter.otlp.endpoint=http://localhost:4317'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.metrics.exporter=none'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.logs.exporter=none'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-javaagent:path/to/opentelemetry-javaagent.jar'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Start Jaeger with OTLP support:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; jaeger &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 16686:16686 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 4317:4317 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 4318:4318 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 5778:5778 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9411:9411 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  jaegertracing/jaeger:2.3.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;After completing these updated steps, continue with steps 7-8 from the original instructions to view traces in Jaeger.&lt;/p&gt;
 </description>
         <pubDate>Wed, 22 Jun 2022 00:00:00 +0000</pubDate>
         <link>https://accumulo.apache.org/blog/2022/06/22/2.1.0-metrics-and-tracing.html</link>
