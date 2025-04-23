@@ -1,5 +1,5 @@
 ---
-title: Client Properties (2.x)
+title: Client Properties (4.x)
 category: configuration
 order: 3
 ---
@@ -35,5 +35,3 @@ Below are properties set in `accumulo-client.properties` that configure [Accumul
 | <a name="sasl_enabled" class="prop"></a> sasl.enabled | false |  | Enable SASL for client RPC |
 | <a name="sasl_kerberos_server_primary" class="prop"></a> sasl.kerberos.server.primary | accumulo |  | Kerberos principal/primary that Accumulo servers use to login |
 | <a name="sasl_qop" class="prop"></a> sasl.qop | auth |  | SASL quality of protection. Valid values are 'auth', 'auth-int', and 'auth-conf' |
-| <a name="trace_span_receivers" class="prop"></a> trace.span.receivers | org.apache.accumulo.tracer.ZooTraceClient |  | A list of span receiver classes to send trace spans |
-| <a name="trace_zookeeper_path" class="prop"></a> trace.zookeeper.path | /tracers | 2.0.0 | The zookeeper node where tracers are registered |
