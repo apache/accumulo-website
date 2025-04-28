@@ -26,7 +26,7 @@
 <link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
 <link rel="stylesheet" type="text/css" href="/css/accumulo.css">
 
-<title>Accumulo Documentation - Erasure Coding</title>
+<title>Accumulo Documentation - Merging</title>
 
 <script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
 <script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
@@ -325,13 +325,13 @@
                   
                     <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
                   
-                    <div class="row"><a href="/docs/4.x/administration/merging">Merging</a></div>
+                    <div class="row selected"><a href="/docs/4.x/administration/merging">Merging</a></div>
                   
                     <div class="row"><a href="/docs/4.x/administration/upgrading">Upgrading Accumulo</a></div>
                   
                     <div class="row"><a href="/docs/4.x/administration/scan-executors">Scan Executors</a></div>
                   
-                    <div class="row selected"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
+                    <div class="row"><a href="/docs/4.x/administration/erasure-coding">Erasure Coding</a></div>
                   
                 </div>
               </div>
@@ -399,217 +399,117 @@
   </div>
   <div class="col-md-9">
     
-    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Erasure Coding</p>
+    <p>Accumulo 4.x Documentation &gt;&gt; Administration &gt;&gt; Merging</p>
     
     
     <div class="row mt-4">
       <div class="col-md-12 d-flex justify-content-between">
-        <h1>Erasure Coding</h1>
-        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/erasure-coding.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+        <h1>Merging</h1>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/merging.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
       </div>
     </div>
     
-    <p>With the release of version 3.0.0, Hadoop introduced the use of <a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html">Erasure Coding</a>
-(EC) in HDFS.  By default HDFS achieves durability via block replication.
-Usually the replication count is 3, resulting in a storage overhead of 200%.
-Hadoop 3 introduced EC as a better way to achieve durability. EC behaves much
-like RAID 5 or 6…for <em>k</em> blocks of data, <em>m</em> blocks of parity data are generated,
-from which the original data can be recovered in the event of disk or node
-failures (erasures, in EC parlance).  A typical EC scheme is Reed-Solomon 6-3,
-where 6 data blocks produce 3 parity blocks, an overhead of only 50%.  In
-addition to doubling the available disk space, RS-6-3 is also more fault
-tolerant…a loss of 3 data blocks can be tolerated, whereas triple replication
-can only sustain a loss of two.</p>
+    <p>Accumulo 4.0 has improved tablet merging support, including:</p>
 
-<p>To use EC with Accumulo, it is highly recommended that you first rebuild Hadoop
-with support for Intel’s ISA-L library. Instructions for doing this can be found
-<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Enable_Intel_ISA-L">here</a></p>
+<ul>
+  <li>Merging no longer requires “chop” compactions.</li>
+  <li>Merging is now managed by FATE</li>
+  <li>Accumulo now supports auto merging of tablets.</li>
+</ul>
 
-<h3 id="important-warning">Important Warning</h3>
-<p>As noted
-<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Limitations">here</a>,
-the current EC implementation does not support <code class="language-plaintext highlighter-rouge">hflush()</code> and <code class="language-plaintext highlighter-rouge">hsync()</code>. These
-functions are no-ops, which means that EC coded files are not guaranteed to
-be written to disk after a sync or flush.  For this reason, <strong>EC should never
-be used for the Accumulo write-ahead logs.  Data loss may, and most likely will,
-occur.</strong> It is also recommended that tables in the <code class="language-plaintext highlighter-rouge">accumulo</code> namespace (<code class="language-plaintext highlighter-rouge">root</code> and
-<code class="language-plaintext highlighter-rouge">metadata</code> for example) continue to use replication.</p>
+<h2 id="new-merge-design">New Merge Design</h2>
 
-<h3 id="ec-and-threads">EC and Threads</h3>
-<p>Due to the striped nature of an EC encoded file, an EC enabled HDFS client is threaded.
-This becomes an issue when an Accumulo client or service is configured to use multiple
-threads to read or write to HDFS, and becomes especially problematic when doing bulk
-imports. By default, Accumulo will use eight times the number of cores on the client
-machine to scan the files to be imported and map them to tablet files. Each thread
-created to scan the input files will create on the order of <em>k</em> threads to perform
-parallel I/O. RS-10-4 on a 16 core machine, for instance, will spawn over a thousand
-threads to perform this operation. If sufficient memory is not available, this operation
-will fail without providing a meaningful error message to the user.  This particular
-problem can be ameliorated by setting the <code class="language-plaintext highlighter-rouge">bulk.threads</code> client property to <code class="language-plaintext highlighter-rouge">1C</code> (i.e.
-one thread per core), down from the default of <code class="language-plaintext highlighter-rouge">8C</code>.  Similar care should be taken
-when setting other thread limits.</p>
+<p>Merge used to be a slow operation because tablets had to be compacted before merging. This was necessary because Rfiles may contain data outside the tablet range and this data needed to be removed.
+The updated merge algorithm works by “fencing” the RFiles in a tablet by the valid range. This operation is a fast metadata operation and the valid range of a file is now inserted into the file column. 
+Scans will only return data in the specified range so compactions are no longer required. The normal system compaction process will eventually remove the data outside the range.</p>
 
-<h3 id="hdfs-ec-command">HDFS ec Command</h3>
-<p>Encoding policy in HDFS is set at the directory level, with children inheriting
-policies from their parents if not explicitly set.  The encoding policy for a directory
-can be manipulated via the <code class="language-plaintext highlighter-rouge">hdfs ec</code> command, documented
-<a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html#Administrative_commands">here</a>.</p>
+<h2 id="auto-merge">Auto Merge</h2>
 
-<p>The first step is to determine which policies are configured for your HDFS instance.
-This is done via the <code class="language-plaintext highlighter-rouge">-listPolicies</code> command.  The following listing shows that there
-are 5 configured policies, of which only 3 (RS-10-4-1024k, RS-6-3-1024k, and RS-6-3-64k)
-are enabled for use.</p>
+<p>Accumulo supports auto merging tablets that are below a certain threshold, similar to splitting tablets that are above a threshold.
+The manager runs a task that periodically looks for ranges of tablets that can be merged. For a range of tablets to be eligible to be merged the following must be true:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -listPolicies
-Erasure Coding Policies:
-ErasureCodingPolicy=[Name=RS-10-4-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=10, numParityUnits=4]], CellSize=1048576, Id=5], State=ENABLED
-ErasureCodingPolicy=[Name=RS-6-3-1024k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=1], State=ENABLED
-ErasureCodingPolicy=[Name=RS-6-3-64k, Schema=[ECSchema=[Codec=rs, numDataUnits=6, numParityUnits=3, options=]], CellSize=65536, Id=65], State=ENABLED
-ErasureCodingPolicy=[Name=RS-LEGACY-6-3-1024k, Schema=[ECSchema=[Codec=rs-legacy, numDataUnits=6, numParityUnits=3]], CellSize=1048576, Id=3], State=DISABLED
-ErasureCodingPolicy=[Name=XOR-2-1-1024k, Schema=[ECSchema=[Codec=xor, numDataUnits=2, numParityUnits=1]], CellSize=1048576, Id=4], State=DISABLED
+<ol>
+  <li>All tablets in the range must be marked as eligible to be merged using the per tablet <code class="language-plaintext highlighter-rouge">TabletMergeability</code> setting. (more below)</li>
+  <li>The combined files must be less than <code class="language-plaintext highlighter-rouge">table.merge.file.max</code></li>
+  <li>The total size must be less than <code class="language-plaintext highlighter-rouge">table.mergeability.threshold</code>. This is defined as the combined size of RFiles as a percentage of the split threshold</li>
+</ol>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The following properties are used to configure merging:.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">manager.tablet.mergeability.interval</code> - Time to wait between scanning tables to identify ranges of tablets that can be auto-merged (default is <code class="language-plaintext highlighter-rouge">24h</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">table.mergeability.threshold</code> - A range of tablets are eligible for automatic merging until the combined size of RFiles reaches this percentage of the split threshold. (default is <code class="language-plaintext highlighter-rouge">.25</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">table.merge.file.max</code> - The maximum number of files that a merge operation will process (default is <code class="language-plaintext highlighter-rouge">10000</code>). This property also applies to merges through the API as well.</li>
+</ul>
+
+<h2 id="tablet-mergeability">Tablet Mergeability</h2>
+
+<p>Each tablet can be marked individually with a value to indicate if/when it can be auto merged by the system.
+The following are the possible settings:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">NEVER</code> - Tablets are never eligible for automatic merging</li>
+  <li><code class="language-plaintext highlighter-rouge">ALWAYS</code> - Tablets are always eligible for automatic merging</li>
+  <li><code class="language-plaintext highlighter-rouge">DELAY</code> - Tablets are eligible to be merged after the configured delay, relative to the Manager time.</li>
+</ul>
+
+<h3 id="tablet-mergeability-defaults">Tablet Mergeability Defaults</h3>
+
+<ul>
+  <li>System generated splits - Defaults to <code class="language-plaintext highlighter-rouge">ALWAYS</code> mergeable. Any system created tablets are always eligible to be merged.</li>
+  <li>User added splits - Defaults to <code class="language-plaintext highlighter-rouge">NEVER</code> mergeable if not specified.</li>
+</ul>
+
+<h3 id="upgrade">Upgrade</h3>
+
+<p>During upgrade all existing tablets will be marked with a default of <code class="language-plaintext highlighter-rouge">NEVER</code> for the TabletMergeability column to preserve
+the previous behavior. Only new tablets that are generated by system splits will be marked as <code class="language-plaintext highlighter-rouge">ALWAYS</code>.</p>
+
+<h3 id="configuring-tablets-with-the--api">Configuring Tablets with the  API</h3>
+
+<h4 id="addingupdating-splits">Adding/updating splits</h4>
+
+<p>There is a new <code class="language-plaintext highlighter-rouge">putSplits()</code> method that takes a map of splits and mergeability settings and will either create those splits or update existing with the settings.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Adding splits or updating existing splits</span>
+<span class="nc">String</span> <span class="n">tableName</span> <span class="o">=</span> <span class="s">"table"</span><span class="o">;</span>
+<span class="nc">SortedMap</span><span class="o">&lt;</span><span class="nc">Text</span><span class="o">,</span><span class="nc">TabletMergeability</span><span class="o">&gt;</span> <span class="n">splits</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;&gt;();</span>
+<span class="c1">// Mark each split with its mergeability setting</span>
+<span class="n">splits</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%09d"</span><span class="o">,</span> <span class="mi">333</span><span class="o">)),</span> <span class="nc">TabletMergeability</span><span class="o">.</span><span class="na">always</span><span class="o">());</span>
+<span class="n">splits</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%09d"</span><span class="o">,</span> <span class="mi">444</span><span class="o">)),</span> <span class="nc">TabletMergeability</span><span class="o">.</span><span class="na">always</span><span class="o">());</span>
+<span class="n">splits</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%09d"</span><span class="o">,</span> <span class="mi">666</span><span class="o">)),</span> <span class="nc">TabletMergeability</span><span class="o">.</span><span class="na">never</span><span class="o">());</span>
+<span class="n">splits</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="k">new</span> <span class="nc">Text</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"%09d"</span><span class="o">,</span> <span class="mi">999</span><span class="o">)),</span>
+  <span class="nc">TabletMergeability</span><span class="o">.</span><span class="na">after</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofDays</span><span class="o">(</span><span class="mi">1</span><span class="o">)));</span>
+<span class="c1">// add or update splits</span>
+<span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">putSplits</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="n">splits</span><span class="o">);</span>
 </code></pre></div></div>
 
-<p>To set the encoding policy for a directory, use the <code class="language-plaintext highlighter-rouge">-setPolicy</code> command.</p>
+<p><code class="language-plaintext highlighter-rouge">TabletInformation</code> contains information describing the current mergeability state inside <code class="language-plaintext highlighter-rouge">TabletMergeAbilityInfo</code>.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -mkdir foo
-$ hdfs ec -setPolicy -policy RS-6-3-64k -path foo
-Set RS-6-3-64k erasure coding policy on foo
+<h4 id="listing-tabletmergeabilityinfo">Listing TabletMergeabilityInfo</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">TabletInformation</span><span class="o">&gt;</span> <span class="n">tabletInfo</span> <span class="o">=</span>
+        <span class="n">client</span><span class="o">.</span><span class="na">tableOperations</span><span class="o">().</span><span class="na">getTabletInformation</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Range</span><span class="o">()))</span> <span class="o">{</span>
+        <span class="n">tabletInfo</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">ti</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="nc">TabletMergeabilityInfo</span> <span class="n">tmi</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="na">getTabletMergeabilityInfo</span><span class="o">();</span>
+    <span class="c1">// Some examples of the API usage</span>
+    <span class="c1">// Gets the optional delay that is configured</span>
+    <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Duration</span><span class="o">&gt;</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">tmi</span><span class="o">.</span><span class="na">getDelay</span><span class="o">();</span>
+    <span class="c1">// If the tablet is currently eligilbe for merging</span>
+    <span class="kt">boolean</span> <span class="n">mergeable</span> <span class="o">=</span> <span class="n">tmi</span><span class="o">.</span><span class="na">isMergeable</span><span class="o">();</span>
+    <span class="c1">// Optional estimated elapsed time since the delay was set</span>
+    <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Duration</span><span class="o">&gt;</span> <span class="n">elapsed</span> <span class="o">=</span> <span class="n">tmi</span><span class="o">.</span><span class="na">getElapsed</span><span class="o">();</span>
+    <span class="c1">// Optional estimated remaining time before the tablet is eligible for merging</span>
+    <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Duration</span><span class="o">&gt;</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">tmi</span><span class="o">.</span><span class="na">getRemaining</span><span class="o">();</span>
+  <span class="o">});</span>
+<span class="o">}</span>
 </code></pre></div></div>
-
-<p>To get the encoding policy for a directory, use the <code class="language-plaintext highlighter-rouge">-getPolicy</code> command.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -getPolicy -path foo
-RS-6-3-64k
-</code></pre></div></div>
-
-<p>New directories created under <code class="language-plaintext highlighter-rouge">foo</code> will inherit the EC policy.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hadoop fs -mkdir foo/bar
-$ hdfs ec -getPolicy -path foo/bar
-RS-6-3-64k
-</code></pre></div></div>
-
-<p>And changing the policy for a parent will also change its children.  The <code class="language-plaintext highlighter-rouge">-setPolicy</code>
-command here issues a warning that existing files will not be converted. To
-switch the policy for an existing file, you must create a new file (through
-a copy, for instance).  For Accumulo, if you change the encoding policy for
-a table’s directories, you would then have to perform a major compaction on
-the table to convert the table’s RFiles to the desired encoding.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -setPolicy -policy RS-6-3-1024k -path foo
-Set RS-6-3-1024k erasure coding policy on foo
-Warning: setting erasure coding policy on a non-empty directory will not automatically convert existing files to RS-6-3-1024k erasure coding policy
-$ hdfs ec -getPolicy -path foo
-RS-6-3-1024k
-$ hdfs ec -getPolicy -path foo/bar
-RS-6-3-1024k
-</code></pre></div></div>
-
-<h3 id="configuring-ec-for-a-new-instance">Configuring EC for a New Instance</h3>
-<p>If you wish to create a new instance with a single encoding policy for all tables,
-you simply need to change the encoding policy on the <code class="language-plaintext highlighter-rouge">tables</code> directory after
-running <code class="language-plaintext highlighter-rouge">accumulo init</code> (see
-<a href="/docs/4.x/getting-started/quickstart#initialization">Quick Start</a> guide).  To
-keep the tables in the <code class="language-plaintext highlighter-rouge">accumulo</code> namespace using replication, you
-would then need to manually change them back to using replication.  Assuming
-Accumulo is configured to use <code class="language-plaintext highlighter-rouge">/accumulo</code> as its root, you would do the following:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables
-Set RS-6-3-64k erasure coding policy on /accumulo/tables
-$ hdfs ec -setPolicy -replicate -path /accumulo/tables/\!0
-Set replication erasure coding policy on /accumulo/tables/!0
-$ hdfs ec -setPolicy -replicate -path /accumulo/tables/+r
-Set replication erasure coding policy on /accumulo/tables/+r
-$ hdfs ec -setPolicy -replicate -path /accumulo/tables/+rep
-Set replication erasure coding policy on /accumulo/tables/+rep
-</code></pre></div></div>
-
-<p>Check that the policies are set correctly:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -getPolicy -path /accumulo/tables
-RS-6-3-64k
-$ hdfs ec -getPolicy -path /accumulo/tables/\!0
-The erasure coding policy of /accumulo/tables/!0 is unspecified
-</code></pre></div></div>
-
-<p>Any directories subsequently created under <code class="language-plaintext highlighter-rouge">/accumulo/tables</code> will
-be erasure coded.</p>
-
-<h3 id="configuring-ec-for-an-existing-instance">Configuring EC for an Existing Instance</h3>
-<p>For an existing installation, the instructions are the same, but with the
-caveat that changing the encoding policy for an existing directory will not
-change the files within the directory. Converting existing tables to EC
-requires a major compaction to complete the process.  For instance, to
-convert <code class="language-plaintext highlighter-rouge">test.table1</code> to RS-6-3-64k, you would first find the table ID
-via the accumulo shell, use <code class="language-plaintext highlighter-rouge">hdfs ec</code> to change the encoding for the
-directory <code class="language-plaintext highlighter-rouge">/accumulo/tables/&lt;tableID&gt;</code>, and then compact the table.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ accumulo shell
-user@instance&gt; tables -l
-accumulo.metadata    =&gt;        !0
-accumulo.replication =&gt;      +rep
-accumulo.root        =&gt;        +r
-test.table1          =&gt;         3
-test.table2          =&gt;         4
-test.table3          =&gt;         5
-trace                =&gt;         1
-user@instance&gt; quit
-$ hdfs ec -setPolicy -policy RS-6-3-64k -path /accumulo/tables/3
-Set RS-6-3-64k erasure coding policy on /accumulo/tables/3
-$ accumulo shell
-user@instance&gt; compact -t test.table1
-</code></pre></div></div>
-
-<h3 id="defining-custom-ec-policies">Defining Custom EC Policies</h3>
-<p>Hadoop by default will enable only a single EC policy, which is
-determined by the value of the <code class="language-plaintext highlighter-rouge">dfs.namenode.ec.system.default.policy</code>
-configuration setting.  To enable an existing policy, use the <code class="language-plaintext highlighter-rouge">hdfs ec -enablePolicy</code>
-command.  To define custom policies, you must first edit the
-<code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> file found in the Hadoop configuration directory,
-and then run the <code class="language-plaintext highlighter-rouge">hdfs ec -addPolicies</code> command.  For example, to add
-RS-6-3-64k as a policy, you first edit <code class="language-plaintext highlighter-rouge">user_ec_policies.xml</code> and add
-the following:</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;configuration&gt;</span>
-<span class="nt">&lt;layoutversion&gt;</span>1<span class="nt">&lt;/layoutversion&gt;</span>
-<span class="nt">&lt;schemas&gt;</span>
-  <span class="c">&lt;!-- schema id is only used to reference internally in this document --&gt;</span>
-  <span class="nt">&lt;schema</span> <span class="na">id=</span><span class="s">"RSk6m3"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;codec&gt;</span>rs<span class="nt">&lt;/codec&gt;</span>
-    <span class="nt">&lt;k&gt;</span>6<span class="nt">&lt;/k&gt;</span>
-    <span class="nt">&lt;m&gt;</span>3<span class="nt">&lt;/m&gt;</span>
-    <span class="nt">&lt;options&gt;</span> <span class="nt">&lt;/options&gt;</span>
-  <span class="nt">&lt;/schema&gt;</span>
-<span class="nt">&lt;/schemas&gt;</span>
-<span class="nt">&lt;policies&gt;</span>
-  <span class="nt">&lt;policy&gt;</span>
-    <span class="nt">&lt;schema&gt;</span>RSk6m3<span class="nt">&lt;/schema&gt;</span>
-    <span class="nt">&lt;cellsize&gt;</span>65536<span class="nt">&lt;/cellsize&gt;</span>
-  <span class="nt">&lt;/policy&gt;</span>
-<span class="nt">&lt;/policies&gt;</span>
-<span class="nt">&lt;/configuration&gt;</span>
-</code></pre></div></div>
-<p>Here the schema “RSk6m3” defines a Reed-Solomon encoding with <em>k</em>=6
-data blocks and <em>m</em>=3 parity blocks.  This schema is then used to define
-a policy that uses RS-6-3 encoding with a stripe size of 64k.  To add
-this policy:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -addPolicies -policyFile /hadoop/etc/hadoop/user_ec_policies.xml
-2019-11-19 15:35:23,703 INFO util.ECPolicyLoader: Loading EC policy file /hadoop/etc/hadoop/user_ec_policies.xml
-Add ErasureCodingPolicy RS-6-3-64k succeed.
-</code></pre></div></div>
-
-<p>To enable the policy:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hdfs ec -enablePolicy -policy RS-6-3-64k
-Erasure coding policy RS-6-3-64k is enabled
-</code></pre></div></div>
-
 
     <div class="row mt-4">
       <div class="col-md-12 d-flex justify-content-between">
         <strong>Find documentation for all releases in the <a href="/docs-archive">archive</strong>
-        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/erasure-coding.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
+        <a href="https://github.com/apache/accumulo-website/edit/main/_docs-4/administration/merging.md" role="button"><span class="fa-solid fa-pen-to-square"></span> <small>Edit this page</small></a>
       </div>
     </div>
   </div>
