@@ -110,10 +110,6 @@ Jekyll will print a local URL where the site can be viewed (usually,
 ### Testing using Docker environment 
 
 A containerized development environment can be built using the local
-Dockerfile.
-
-
-A containerized development environment can be built using the local
 Dockerfile. You can build it with the following command:
 
 ```bash
@@ -123,7 +119,8 @@ docker build -t webdev .
 This action will produce a `webdev` image, with all the website's build
 prerequisites preinstalled. When a container is run from this image, it
 will perform a `jekyll serve` command with the polling option enabled,
-so that changes you make locally will be immediately reflected.
+so that changes you make locally will be immediately reflected after
+reloading the page in your browser.
 
 When you run a container using the webdev image, your current working
 directory will be mounted, so that any changes made by the build inside
@@ -137,19 +134,21 @@ docker run -d -v "$PWD":/mnt/workdir -p 4000:4000 webdev
 While this container is running, you will be able to review the rendered website
 in your local browser at [http://127.0.0.1:4000/](http://127.0.0.1:4000/).
 
-
 Shell access can be obtained by overriding the default container command.
 
 This is useful for adding new gems, or modifying the Gemfile.lock for updating
 existing dependencies.
 
-When using shell access the local directory must be mounted to ensure
+When using shell access, the local directory must be mounted to ensure
 the Gemfile and Gemfile.lock updates are reflected in your local
 environment so you can create a commit and submit a PR.
 
 ```bash
 docker run -v "$PWD":/mnt/workdir -it webdev /bin/bash
 ```
+
+You may need to manually delete the `_site` or `.jekyll-cache` directories if
+they already exist and are causing issues with the build.
 
 ## Publishing
 
