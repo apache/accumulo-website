@@ -4,7 +4,7 @@
 
 FROM ruby:3.2.2-slim-bullseye AS base
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt update && apt install -y --no-install-recommends \
     build-essential \
     git \
     curl \
@@ -26,8 +26,8 @@ RUN gem update --system \
   && bundle install \
   && gem cleanup
 
-ENV HOST=0.0.0.0 \
-    PORT=4000
+ENV HOST=0.0.0.0
+ENV PORT=4000
 
 EXPOSE $PORT
 
