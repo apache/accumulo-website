@@ -116,6 +116,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Hasan Gürcan        |                                                                   | [CEST][CEST]          |
 | Hayden Marchant     |                                                                   |                       |
 | Hung Pham           | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
+| Imirie Billey       | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Jacob Meisler       | [Booz Allen Hamilton][BOOZ]                                       | [ET][ET]              |
 | James Fiori         | [Flywheel Data][FLYWHEEL]                                         | [ET][ET]              |
 | Jared R.            |                                                                   |                       |
