@@ -59,15 +59,15 @@ $(function() {
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
 
-## Committers Only (PMC Emeritus)
+## Committers Only
 
-{: .table .table-striped .committers #pmc-emeritus}
-| apache id     | name                                              | organization                           | timezone |
-|---------------|---------------------------------------------------|----------------------------------------|----------|
-| arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] |
-| knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]|
-| medined       | David Medinets                                    |                                        |          |
-| vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] |
+{: .table .table-striped .committers #committers}
+| apache id     | name                                              | organization                           | timezone | PMC Emeritus |
+|---------------|---------------------------------------------------|----------------------------------------|----------|--------------|
+| arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] | &#x2713;     |
+| knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]| &#x2713;     |
+| medined       | David Medinets                                    |                                        |          | &#x2713;     |
+| vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] | &#x2713;     |
 
 ## Contributors
 
