@@ -65,6 +65,7 @@ $(function() {
 | apache id     | name                                              | organization                           | timezone | PMC Emeritus |
 |---------------|---------------------------------------------------|----------------------------------------|----------|--------------|
 | arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] | &#x2713;     |
+| jkucera       | John Kucera                                       |                                        | [ET][ET] |              |
 | knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]| &#x2713;     |
 | medined       | David Medinets                                    |                                        |          | &#x2713;     |
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] | &#x2713;     |
@@ -132,7 +133,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Jessica Seastrom    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Jim Klucar          | [Splyt][SPLYT]                                                    | [ET][ET]              |
 | Joe Skora           |                                                                   |                       |
-| John Kucera         |                                                                   | [ET][ET]              |
 | John McNamee        |                                                                   |                       |
 | John Stoneham       |                                                                   | [ET][ET]              |
 | Jonathan M. Hsieh   | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
