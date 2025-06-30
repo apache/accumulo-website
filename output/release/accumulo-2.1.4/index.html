@@ -171,7 +171,10 @@ their lock in ZooKeeper.</li>
 shutting down an instance in preparation for an upgrade. This will check that no Fate
 transactions exist, delete any ZooKeeper locks for server processes, and prohibit any
 server processes from being started.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/4898">#4898</a> New way to compute bulk load plans (TODO: Needs text)</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4898">#4898</a> New way to compute bulk load plans.  This adds two new APIs for computing
+which tablets should load a rfile.  APIs were also added to serialize, deserialize, and
+merge load plans.  These primitives provide building blocks for doing distributed
+computation of load plans over a set of rfiles.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5169">#5169</a> <a href="https://github.com/apache/accumulo/issues/5170">#5170</a> The TabletServer will halt itself when a walog write or
 minc failure occurs and the TabletServer lock is not held in ZooKeeper.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5145">#5145</a> <a href="https://github.com/apache/accumulo/issues/5132">#5132</a> The Manager and TabletServer processes now have a background
@@ -181,9 +184,10 @@ on a Watcher to notify the process that the lock has been lost can be a problem 
 fact that there is a single thread in the ZooKeeper client that fires Watcher events. If the
 thread is currently waiting on a hung Watcher, then subsequent Watcher events will not fire
 and could leave the server running without a lock.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/5174">#5174</a> Improvements to the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> and <code class="language-plaintext highlighter-rouge">accumulo-service</code> scripts have been
-backported from the main branch. This includes syntax changes. Users should review the scripts
-for changes that may effect them.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5174">#5174</a> <a href="https://github.com/apache/accumulo/issues/5035">#5035</a> <a href="https://github.com/apache/accumulo/issues/5502">#5502</a> <a href="https://github.com/apache/accumulo/issues/5439">#5439</a> Many improvements
+to the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> and <code class="language-plaintext highlighter-rouge">accumulo-service</code> scripts have been backported
+from the main branch. This includes syntax changes. Users should review the
+scripts for changes that may effect them.</li>
 </ul>
 
 <h3 id="configuration-improvements">Configuration Improvements</h3>
@@ -195,6 +199,12 @@ for changes that may effect them.</li>
 deleting write-ahead logs and recovery files.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5341">#5341</a> Created an optimization in Bulk Import v2 to enable faster processing of bulk import files
 when loading into a sparse set of tablets in a large table. See new table property <code class="language-plaintext highlighter-rouge">table.bulk.metadata.skip.distance</code>.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5628">#5628</a> <a href="https://github.com/apache/accumulo/issues/5627">#5627</a> Made the number of threads the manager uses to
+scan the metadata to find tablets that need attention configurable.  This
+scan uses iterators that can have a large set of options, added a property to
+optionally compress these iterator options.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5633">#5633</a> Added a new property for server processes advertise address
+allowing different bind and advertise addresses.</li>
 </ul>
 
 <h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
@@ -212,6 +222,10 @@ of always showing zero.</li>
 Compactor process being passed in the parameter. This has been fixed.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5445">#5445</a> The <code class="language-plaintext highlighter-rouge">cf</code> and <code class="language-plaintext highlighter-rouge">cq</code> options for the DeleteMany and Grep shell commands were not being
 handled properly.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5570">#5570</a> Fixed race condition where an external compaction would be forgotten with its files
+indefinitely reserved for a compaction that is no longer running.  This condition would continue until
+the tablet server hosting the tablet was restarted.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5543">#5543</a> <a href="https://github.com/apache/accumulo/issues/5552">#5552</a> <a href="https://github.com/apache/accumulo/issues/5543">#5543</a> Fixed multiple bugs that could destabilize external compactions.</li>
 </ul>
 
 <h3 id="metrics-improvements">Metrics Improvements</h3>
