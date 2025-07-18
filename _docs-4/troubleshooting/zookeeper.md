@@ -7,7 +7,7 @@ order: 7
 
 Accumulo requires full access to nodes in ZooKeeper under the /accumulo path.  The ACLs can be examined using the
 ZooKeeper cli `getAcl` and modified with `setAcl` commands.  With 2.1.1, the zoo-info-viewer utility has an option
-that will print all of the ACLs for the nodes under `/accumulo/[INSTANCE_ID]` (See [zoo-info-viewer]).  
+that will print all of the ACLs for the nodes under `/accumulo/[INSTANCE_ID]` (See [zoo-info-viewer --print-acls]).  
 To run the utility, only ZooKeeper needs to be running. If hdfs is running, the instance id can be read from hdfs, 
 or it can be entered with the zoo-info-viewer command --instanceId option.  Accumulo management processes 
 *do not* need to be running. This allows checking the ACLs before starting an upgrade.
@@ -28,7 +28,7 @@ The utility prints out a line for each znode that contains two fields related to
 Nodes marked with `ERROR_ACCUMULO_MISSING_SOME` shows that Accumulo does not have `cdrwa` permissions.
 Without full permissions, the upgrade will fail checks. The node permissions need to be corrected with the ZooKeeper
 `setAcl` command.  If you do not have sufficient permissions to change the ACLs on a node, see the section 
-below, [ACL errors during upgrade]({% durl troubleshooting/zookeeper/ACL#errors#during#upgrade %}).
+below, [ACL errors during upgrade](#acl-errors-during-upgrade).
 
 Most Accumulo nodes do not contain sensitive data. Allowing unauthenticated ZooKeeper client(s) to read values is 
 not unusual in typical deployments. The exception to a permissive read policy are the nodes that store configuration 
@@ -60,5 +60,6 @@ Manual intervention is required in the event that an upgrade fails due to unexpe
     6. Then, correct the ACL on the znode using the command `setAcl -R <path> world:anyone:r,auth:accumulo:cdrwa`
 
 [option]: https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperAdmin.html#sc_authOptions
-[tools-info-viewer]: {% durl troubleshooting/tools#mode-print-ACLs %}
+[zoo-info-viewer --print-acls]: {% durl troubleshooting/tools#mode-print-acls-new-in-211 %}
+[zoo-info-viewer]: {% durl troubleshooting/tools#zoo-info-viewer-new-in-21 %}
 
