@@ -413,7 +413,7 @@
 
 <p>Accumulo requires full access to nodes in ZooKeeper under the /accumulo path.  The ACLs can be examined using the
 ZooKeeper cli <code class="language-plaintext highlighter-rouge">getAcl</code> and modified with <code class="language-plaintext highlighter-rouge">setAcl</code> commands.  With 2.1.1, the zoo-info-viewer utility has an option
-that will print all of the ACLs for the nodes under <code class="language-plaintext highlighter-rouge">/accumulo/[INSTANCE_ID]</code> (See [zoo-info-viewer]).<br />
+that will print all of the ACLs for the nodes under <code class="language-plaintext highlighter-rouge">/accumulo/[INSTANCE_ID]</code> (See <a href="/docs/4.x/troubleshooting/tools#mode-print-acls-new-in-211">zoo-info-viewer –print-acls</a>).<br />
 To run the utility, only ZooKeeper needs to be running. If hdfs is running, the instance id can be read from hdfs, 
 or it can be entered with the zoo-info-viewer command –instanceId option.  Accumulo management processes 
 <em>do not</em> need to be running. This allows checking the ACLs before starting an upgrade.</p>
@@ -421,7 +421,7 @@ or it can be entered with the zoo-info-viewer command –instanceId option.  Acc
 <p>The utility also prints the same permissions and user strings as the ZooKeeper cli getAcl command, so you can
 fully evaluate the permissions in the context of your needs.</p>
 
-<p>Sample output (See the [zoo-info-viewer] tools documentation for a more complete sample):</p>
+<p>Sample output (See the <a href="/docs/4.x/troubleshooting/tools#zoo-info-viewer-new-in-21">zoo-info-viewer</a> tools documentation for a more complete sample):</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ACCUMULO_OKAY:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f cdrwa:accumulo, r:anyone
 ACCUMULO_OKAY:PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/config cdrwa:accumulo
 ERROR_ACCUMULO_MISSING_SOME:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca018db00f/users/root/Namespaces r:accumulo, r:anyone
@@ -435,7 +435,7 @@ ERROR_ACCUMULO_MISSING_SOME:NOT_PRIVATE /accumulo/f491223b-1413-494e-b75a-c2ca01
 <p>Nodes marked with <code class="language-plaintext highlighter-rouge">ERROR_ACCUMULO_MISSING_SOME</code> shows that Accumulo does not have <code class="language-plaintext highlighter-rouge">cdrwa</code> permissions.
 Without full permissions, the upgrade will fail checks. The node permissions need to be corrected with the ZooKeeper
 <code class="language-plaintext highlighter-rouge">setAcl</code> command.  If you do not have sufficient permissions to change the ACLs on a node, see the section 
-below, <a href="/docs/4.x/troubleshooting/zookeeper/ACL#errors#during#upgrade">ACL errors during upgrade</a>.</p>
+below, <a href="#acl-errors-during-upgrade">ACL errors during upgrade</a>.</p>
 
 <p>Most Accumulo nodes do not contain sensitive data. Allowing unauthenticated ZooKeeper client(s) to read values is 
 not unusual in typical deployments. The exception to a permissive read policy are the nodes that store configuration 
@@ -445,7 +445,7 @@ restricted to authenticated Accumulo clients.  The tool will mark those nodes as
 <p>Allowing users other than authenticated Accumulo clients to write or modify nodes is not recommended.</p>
 
 <p>The utility also prints the same permissions and user strings as the ZooKeeper cli getAcl command, so you can 
-fully evaluate the permissions in the context of your needs.  See the [zoo-info-viewer] tools documentation 
+fully evaluate the permissions in the context of your needs.  See the <a href="/docs/4.x/troubleshooting/tools#zoo-info-viewer-new-in-21">zoo-info-viewer</a> tools documentation 
 for sample output.</p>
 
 <h2 id="acl-errors-during-upgrade">ACL errors during upgrade</h2>
