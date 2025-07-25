@@ -262,6 +262,62 @@ have more files than the maximum number of files per tablet.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5400">#5400</a> Modified AESCryptoService to prevent the creation of overlapping streams.</li>
 </ul>
 
+<h3 id="semver-violations">Semver violations</h3>
+
+<p>The following are changes since 2.1.3 that violate semver.  Writing code that
+uses these new methods will make it incompatible with 2.1.3 and earlier.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Changes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>o.a.a.core.client.admin.InstanceOperations</td>
+      <td>added <code class="language-plaintext highlighter-rouge">Set&lt;String&gt; getCompactors()</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.client.admin.compaction.CompactionConfigurer.InitParameters</td>
+      <td>added <code class="language-plaintext highlighter-rouge">TabletId getTabletId()</code> and <code class="language-plaintext highlighter-rouge">URI getOutputFile()</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.client.rfile.RFile.WriterOptions</td>
+      <td>added <code class="language-plaintext highlighter-rouge">WriterOptions withSplitResolver(LoadPlan.SplitResolver splitResolver)</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.data.LoadPlan</td>
+      <td>added <code class="language-plaintext highlighter-rouge">String toJson()</code>, <code class="language-plaintext highlighter-rouge">LoadPlan fromJson(String json)</code>, <code class="language-plaintext highlighter-rouge">LoadPlan compute(...)</code>, <code class="language-plaintext highlighter-rouge">interface SplitResolver</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.data.TabletId</td>
+      <td>added <code class="language-plaintext highlighter-rouge">of(TableId tableId, String endRow, String prevEndRow)</code> and also added <code class="language-plaintext highlighter-rouge">Text</code> and <code class="language-plaintext highlighter-rouge">byte[]</code> versions</td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.iterators.IteratorEnvironment</td>
+      <td>removed default methods that threw UnsupportedOperationException</td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.spi.balancer.DoNothingBalancer</td>
+      <td>This entire class was added</td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.spi.balancer.TabletBalancer.BalanceParameters</td>
+      <td>added <code class="language-plaintext highlighter-rouge">String partitionName()</code>, <code class="language-plaintext highlighter-rouge">Map&lt;String,TableId&gt; getTablesToBalance()</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.spi.compaction.CompactionPlanner.PlanningParameters</td>
+      <td>added <code class="language-plaintext highlighter-rouge">NamespaceId getNamespaceId()</code> and <code class="language-plaintext highlighter-rouge">TabletId getTabletId()</code></td>
+    </tr>
+    <tr>
+      <td>o.a.a.core.spi.compaction.DefaultCompactionPlanner</td>
+      <td>added a new configuration option <code class="language-plaintext highlighter-rouge">tserver.compaction.major.service.&lt;service&gt;.opts.lowestRatio</code></td>
+    </tr>
+  </tbody>
+</table>
+
 <h2 id="requirements">Requirements</h2>
 
 <p>Accumulo 2.1.4 now requires JDK 17 to build, but still supports Java 11 runtime.</p>
