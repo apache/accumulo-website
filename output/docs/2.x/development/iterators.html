@@ -52,7 +52,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.4/">2.1.4 (Latest LTM)</a></li>
             <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
             <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
@@ -405,7 +405,7 @@
       </div>
     </div>
     
-    <p>Accumulo <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterators</a>, commonly referred to as <strong>Iterators</strong> for short, are server-side programming constructs
+    <p>Accumulo <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterators</a>, commonly referred to as <strong>Iterators</strong> for short, are server-side programming constructs
 that allow users to implement custom retrieval or computational purpose within Accumulo TabletServers.  The name rightly
 brings forward similarities to the Java Iterator interface; however, Accumulo Iterators are more complex than Java
 Iterators. Notably, in addition to the expected methods to retrieve the current element and advance to the next element
@@ -427,7 +427,7 @@ TabletServer. It is common to place a JAR file which contains the Iterator in <c
 
 <h2 id="interface">Interface</h2>
 
-<p>A normal implementation of the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> defines functionality for the following methods:</p>
+<p>A normal implementation of the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> defines functionality for the following methods:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="nc">SortedKeyValueIterator</span><span class="o">&lt;</span><span class="nc">Key</span><span class="o">,</span><span class="nc">Value</span><span class="o">&gt;</span> <span class="n">source</span><span class="o">,</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">options</span><span class="o">,</span> <span class="nc">IteratorEnvironment</span> <span class="n">env</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">;</span>
 
@@ -457,7 +457,7 @@ These options allow for Iterators to dynamically configure themselves on the fly
 (a Scan or Compaction), the Map will be empty. An example of a configuration item for an Iterator could be a pattern used to filter
 Key-Value pairs in a regular expression Iterator.</p>
 
-<p>The third argument, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/IteratorEnvironment.html">IteratorEnvironment</a>, is a special object which provides information to this Iterator about the
+<p>The third argument, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/IteratorEnvironment.html">IteratorEnvironment</a>, is a special object which provides information to this Iterator about the
 context in which it was invoked. Commonly, this information is not necessary to inspect. For example, if an Iterator
 knows that it is running in the context of a full-major compaction (reading all of the data) as opposed to a user scan
 (which may strongly limit the number of columns), the Iterator might make different algorithmic decisions in an attempt to
@@ -467,7 +467,7 @@ optimize itself.</p>
 
 <p>The purpose of the seek method is to advance the stream of Key-Value pairs to a certain point in the iteration (the Accumulo table). It is common that before
 the implementation of this method returns some additional processing is performed which may further advance the current
-position past the <code class="language-plaintext highlighter-rouge">startKey</code> of the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a>. This, however, is dependent on the functionality the iterator provides. For
+position past the <code class="language-plaintext highlighter-rouge">startKey</code> of the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a>. This, however, is dependent on the functionality the iterator provides. For
 example, a filtering iterator would consume a number Key-Value pairs which do not meet its criteria before <code class="language-plaintext highlighter-rouge">seek</code>
 returns. The important condition for <code class="language-plaintext highlighter-rouge">seek</code> to meet is that this Iterator should be ready to return the first Key-Value
 pair, or none if no such pair is available, when the method returns. The Key-Value pair would be returned by <code class="language-plaintext highlighter-rouge">getTopKey</code>
@@ -476,9 +476,9 @@ a Key-Value pair to return.</p>
 
 <p>The arguments passed to seek are as follows:</p>
 
-<p>The TabletServer first provides a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a>, an object which defines some collection of Accumulo <code class="language-plaintext highlighter-rouge">Key</code>s, which defines the
-Key-Value pairs that this Iterator should return. Each <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> has a <code class="language-plaintext highlighter-rouge">startKey</code> and <code class="language-plaintext highlighter-rouge">endKey</code> with an inclusive flag for
-both. While this Range is often similar to the Range(s) set by the client on a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a>, it is not
+<p>The TabletServer first provides a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a>, an object which defines some collection of Accumulo <code class="language-plaintext highlighter-rouge">Key</code>s, which defines the
+Key-Value pairs that this Iterator should return. Each <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> has a <code class="language-plaintext highlighter-rouge">startKey</code> and <code class="language-plaintext highlighter-rouge">endKey</code> with an inclusive flag for
+both. While this Range is often similar to the Range(s) set by the client on a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a>, it is not
 guaranteed to be a Range that the client set. Accumulo will split up larger ranges and group them together based on
 Tablet boundaries per TabletServer. Iterators should not attempt to implement any custom logic based on the Range(s)
 provided to <code class="language-plaintext highlighter-rouge">seek</code> and Iterators should not return any Keys that fall outside of the provided Range.</p>
@@ -489,14 +489,14 @@ should be treated as an inclusion collection (true) or an exclusion collection (
 
 <p>It is likely that all implementations of <code class="language-plaintext highlighter-rouge">seek</code> will first make a call to the <code class="language-plaintext highlighter-rouge">seek</code> method on the
 “source” Iterator that was provided in the <code class="language-plaintext highlighter-rouge">init</code> method. The collection of column families and
-the boolean <code class="language-plaintext highlighter-rouge">include</code> argument should be passed down as well as the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a>. Somewhat commonly, the Iterator will
+the boolean <code class="language-plaintext highlighter-rouge">include</code> argument should be passed down as well as the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a>. Somewhat commonly, the Iterator will
 also implement some sort of additional logic to find or compute the first Key-Value pair in the provided
 Range. For example, a regular expression Iterator would consume all records which do not match the given
 pattern before returning from <code class="language-plaintext highlighter-rouge">seek</code>.</p>
 
-<p>It is important to retain the original <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> passed to this method to know when this Iterator should stop
-reading more Key-Value pairs. Ignoring this typically does not affect scans from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/Scanner.html">Scanner</a>, but it
-will result in duplicate keys emitting from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> if the scanned table has more than one tablet.
+<p>It is important to retain the original <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> passed to this method to know when this Iterator should stop
+reading more Key-Value pairs. Ignoring this typically does not affect scans from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/Scanner.html">Scanner</a>, but it
+will result in duplicate keys emitting from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> if the scanned table has more than one tablet.
 Best practice is to never emit entries outside the seek range.</p>
 
 <h3 id="next">next</h3>
@@ -546,12 +546,12 @@ returned from <code class="language-plaintext highlighter-rouge">getTopKey</code
 Implementations of this method should return a new object of the same type as the Accumulo Iterator
 instance it was called on. Any internal state from the instance <code class="language-plaintext highlighter-rouge">deepCopy</code> was called
 on should be carried over to the returned copy. The returned copy should be ready to have
-<code class="language-plaintext highlighter-rouge">seek</code> called on it. The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> interface guarantees that <code class="language-plaintext highlighter-rouge">init</code> will be called on
+<code class="language-plaintext highlighter-rouge">seek</code> called on it. The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> interface guarantees that <code class="language-plaintext highlighter-rouge">init</code> will be called on
 an iterator before <code class="language-plaintext highlighter-rouge">deepCopy</code> and that <code class="language-plaintext highlighter-rouge">init</code> will not be called on the iterator returned by
 <code class="language-plaintext highlighter-rouge">deepCopy</code>.</p>
 
 <p>Typically, implementations of <code class="language-plaintext highlighter-rouge">deepCopy</code> call a copy-constructor which will initialize
-internal data structures. As with <code class="language-plaintext highlighter-rouge">seek</code>, it is common for the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/IteratorEnvironment.html">IteratorEnvironment</a>
+internal data structures. As with <code class="language-plaintext highlighter-rouge">seek</code>, it is common for the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/IteratorEnvironment.html">IteratorEnvironment</a>
 argument to be ignored as most Iterator implementations can be written without the explicit
 information the environment provides.</p>
 
@@ -660,18 +660,18 @@ next possible row.</p>
 <h2 id="abstract-iterators">Abstract Iterators</h2>
 
 <p>A number of Abstract implementations of Iterators are provided to allow for faster creation
-of common patterns. The most commonly used abstract implementations are the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Filter.html">Filter</a> and
-<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> classes. When possible these classes should be used instead as they have been
+of common patterns. The most commonly used abstract implementations are the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Filter.html">Filter</a> and
+<a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> classes. When possible these classes should be used instead as they have been
 thoroughly tested inside Accumulo itself.</p>
 
 <h3 id="filter">Filter</h3>
 
-<p>The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Filter.html">Filter</a> abstract Iterator provides a very simple implementation which allows implementations
+<p>The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Filter.html">Filter</a> abstract Iterator provides a very simple implementation which allows implementations
 to define whether or not a Key-Value pair should be returned via an <code class="language-plaintext highlighter-rouge">accept(Key, Value)</code> method.</p>
 
 <p>Filters are extremely simple to implement; however, when the implementation is filtering a
 large percentage of Key-Value pairs with respect to the total number of pairs examined,
-it can be very inefficient. For example, if a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Filter.html">Filter</a> implementation can determine after examining
+it can be very inefficient. For example, if a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Filter.html">Filter</a> implementation can determine after examining
 part of the row that no other pairs in this row will be accepted, there is no mechanism to
 efficiently skip the remaining Key-Value pairs. Concretely, take a row which is comprised of
 1000 Key-Value pairs. After examining the first 10 Key-Value pairs, it is determined
@@ -680,30 +680,30 @@ remaining 990 Key-Value pairs in this row. Another way to express this deficienc
 Filters have no means to leverage the <code class="language-plaintext highlighter-rouge">seek</code> method to efficiently skip large portions
 of Key-Value pairs.</p>
 
-<p>As such, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Filter.html">Filter</a> class functions well for filtering small amounts of data, but is
+<p>As such, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Filter.html">Filter</a> class functions well for filtering small amounts of data, but is
 inefficient for filtering large amounts of data. The decision to use a Filter strongly
 depends on the use case and distribution of data being filtered.</p>
 
 <h3 id="combiner">Combiner</h3>
 
-<p>The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> class is another common abstract Iterator. Similar to the <code class="language-plaintext highlighter-rouge">Combiner</code> interface
+<p>The <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> class is another common abstract Iterator. Similar to the <code class="language-plaintext highlighter-rouge">Combiner</code> interface
 define in Hadoop’s MapReduce framework, implementations of this abstract class reduce
 multiple Values for different versions of a Key (Keys which only differ by timestamps) into one Key-Value pair.
 Combiners provide a simple way to implement common operations like summation and
 aggregation without the need to implement the entire Accumulo Iterator interface.</p>
 
-<p>One important consideration when choosing to design a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> is that the “reduction” operation
+<p>One important consideration when choosing to design a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> is that the “reduction” operation
 is often best represented when it is associative and commutative. Operations which do not meet
 these criteria can be implemented; however, the implementation can be difficult.</p>
 
-<p>A second consideration is that a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> is not guaranteed to see every Key-Value pair
+<p>A second consideration is that a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> is not guaranteed to see every Key-Value pair
 which differ only by timestamp every time it is invoked. For example, if there are 5 Key-Value
 pairs in a table which only differ by the timestamps 1, 2, 3, 4, and 5, it is not guaranteed that
 every invocation of the Combiner will see 5 timestamps. One invocation might see the Values for
 Keys with timestamp 1 and 4, while another invocation might see the Values for Keys with the
 timestamps 1, 2, 4 and 5.</p>
 
-<p>Finally, when configuring an Accumulo table to use a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a>, be sure to disable the Versioning Iterator or set the
+<p>Finally, when configuring an Accumulo table to use a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a>, be sure to disable the Versioning Iterator or set the
 Combiner at a priority less than the Combiner (the Versioning Iterator is added at a priority of 20 by default). The
 Versioning Iterator will filter out multiple Key-Value pairs that differ only by timestamp and return only the Key-Value
 pair that has the largest timestamp.</p>
@@ -711,7 +711,7 @@ pair that has the largest timestamp.</p>
 <h4 id="combiner-applications">Combiner Applications</h4>
 
 <p>Many applications can benefit from the ability to aggregate values across common
-keys. This can be done via <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> iterators and is similar to the Reduce step in
+keys. This can be done via <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> iterators and is similar to the Reduce step in
 MapReduce. This provides the ability to define online, incrementally updated
 analytics without the overhead or latency associated with batch-oriented
 MapReduce jobs.</p>
@@ -736,15 +736,15 @@ combining iterator.</p>
 
 <h2 id="best-practices">Best practices</h2>
 
-<p>Because of the flexibility that the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> interface provides, it doesn’t directly disallow
+<p>Because of the flexibility that the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/SortedKeyValueIterator.html">SortedKeyValueIterator</a> interface provides, it doesn’t directly disallow
 many implementations which are poor design decisions. The following are some common recommendations to
 follow and pitfalls to avoid in Iterator implementations.</p>
 
 <h4 id="avoid-special-logic-encoded-in-ranges">Avoid special logic encoded in Ranges</h4>
 
-<p>Commonly, granular Ranges that a client passes to an Iterator from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are unmodified.
-If a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
-<code class="language-plaintext highlighter-rouge">seek</code> method. However, there is no guarantee that the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> will remain unaltered from client to server. As such, Iterators
+<p>Commonly, granular Ranges that a client passes to an Iterator from a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/Scanner.html">Scanner</a> or <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/BatchScanner.html">BatchScanner</a> are unmodified.
+If a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> falls within the boundaries of a Tablet, an Iterator will often see that same Range in the
+<code class="language-plaintext highlighter-rouge">seek</code> method. However, there is no guarantee that the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> will remain unaltered from client to server. As such, Iterators
 should <em>never</em> make assumptions about the current state/context based on the Range.</p>
 
 <p>The common failure condition is referred to as a “re-seek”. In the context of a Scan, TabletServers construct the
@@ -762,31 +762,31 @@ non-inclusive.</p>
 By <code class="language-plaintext highlighter-rouge">seek</code>‘ing when it is known that there is a collection of Key-Value pairs which can be ignored can
 greatly increase the speed of a scan as many Key-Value pairs do not have to be deserialized and processed.</p>
 
-<p>While the <code class="language-plaintext highlighter-rouge">seek</code> method provides the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> that should be used to <code class="language-plaintext highlighter-rouge">seek</code> the underlying source Iterator,
+<p>While the <code class="language-plaintext highlighter-rouge">seek</code> method provides the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> that should be used to <code class="language-plaintext highlighter-rouge">seek</code> the underlying source Iterator,
 there is no guarantee that the implementing Iterator uses that Range to perform the <code class="language-plaintext highlighter-rouge">seek</code> on its
 “source” Iterator. As such, it is possible to seek to any Range and the interface has no assertions
 to prevent this from happening.</p>
 
 <p>Since Iterators are allowed to <code class="language-plaintext highlighter-rouge">seek</code> to arbitrary Keys, it also allows Iterators to create infinite loops
-inside Scans that will repeatedly read the same data without end. If an arbitrary <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> is constructed, it should
+inside Scans that will repeatedly read the same data without end. If an arbitrary <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> is constructed, it should
 construct a completely new Range as it allows for bugs to be introduced which will break Accumulo.</p>
 
 <p>Thus, <code class="language-plaintext highlighter-rouge">seek</code>’s should always be thought of as making “forward progress” in the view of the total iteration. The
-<code class="language-plaintext highlighter-rouge">startKey</code> of a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Range.html">Range</a> should always be greater than the current Key seen by the Iterator while the <code class="language-plaintext highlighter-rouge">endKey</code> of the
+<code class="language-plaintext highlighter-rouge">startKey</code> of a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Range.html">Range</a> should always be greater than the current Key seen by the Iterator while the <code class="language-plaintext highlighter-rouge">endKey</code> of the
 Range should always retain the original <code class="language-plaintext highlighter-rouge">endKey</code> (and <code class="language-plaintext highlighter-rouge">endKey</code> inclusivity) of the last Range seen by your
 Iterator’s implementation of seek.</p>
 
 <h3 id="take-caution-in-constructing-new-data-in-an-iterator">Take caution in constructing new data in an Iterator</h3>
 
-<p>Implementations of Iterator might be tempted to open <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/BatchWriter.html">BatchWriters</a> inside of an Iterator as a means
+<p>Implementations of Iterator might be tempted to open <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/BatchWriter.html">BatchWriters</a> inside of an Iterator as a means
 to implement triggers for writing additional data outside of their client application. The lifecycle of an Iterator
 is <em>not</em> managed in such a way that guarantees that this is safe nor efficient. Specifically, there
 is no way to guarantee that the internal ThreadPool inside of the BatchWriter is closed (and the thread(s)
-are reaped) without calling the close() method. <code class="language-plaintext highlighter-rouge">close</code>‘ing and recreating a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a> after every
+are reaped) without calling the close() method. <code class="language-plaintext highlighter-rouge">close</code>‘ing and recreating a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/BatchWriter.html">BatchWriter</a> after every
 Key-Value pair is also prohibitively performance limiting to be considered an option.</p>
 
 <p>The only safe way to generate additional data in an Iterator is to alter the current Key-Value pair.
-For example, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/user/WholeRowIterator.html">WholeRowIterator</a> serializes the all of the Key-Values pairs that fall within each
+For example, the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/user/WholeRowIterator.html">WholeRowIterator</a> serializes the all of the Key-Values pairs that fall within each
 row. A safe way to generate more data in an Iterator would be to construct an Iterator that is
 “higher” (at a larger priority) than the WholeRowIterator, that is, the Iterator receives the Key-Value pairs which are
 a serialization of many Key-Value pairs. The custom Iterator could deserialize the pairs, compute
@@ -825,7 +825,7 @@ to make different assertions than those who only operate at scan time. Iterators
 Iterators will not necessarily see all of the Key-Value pairs in ever invocation. Because compactions often do not rewrite
 all files (only a subset of them), it is possible that the logic take this into consideration.</p>
 
-<p>For example, a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> that runs over data at during compactions, might not see all of the values for a given Key. The
+<p>For example, a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/iterators/Combiner.html">Combiner</a> that runs over data at during compactions, might not see all of the values for a given Key. The
 Combiner must recognize this and not perform any function that would be incorrect due
 to the missing values.</p>
 

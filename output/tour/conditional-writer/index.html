@@ -52,7 +52,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.4/">2.1.4 (Latest LTM)</a></li>
             <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
             <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
@@ -140,7 +140,7 @@ of how this can go wrong.</p>
 
 <p>In this situation the changes made by User 1 are lost, ending up with <code class="language-plaintext highlighter-rouge">1007
 Mountain Drive, Gotham, NY</code> instead of <code class="language-plaintext highlighter-rouge">1007 Mountain Dr, Gotham, New York</code>.  To
-correctly handle this, Accumulo offers the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.  The
+correctly handle this, Accumulo offers the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.html">ConditionalWriter</a>.  The
 ConditionalWriter atomically checks conditions on a row and only applies a
 mutation when all conditions are satisfied.</p>
 
@@ -239,11 +239,11 @@ Final address : '   1007 Mountain Dr, Gotham, New York  '
 ConditionalWriter.</p>
 
 <ul>
-  <li>Call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/Connector.html#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig-">createConditionalWriter</a> instead of creating a batch writer</li>
-  <li>Create a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Condition.html">Condition</a> for the column ‘location:home’.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is not null, then call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/Condition.html#setValue-java.lang.CharSequence-">setValue</a> passing <code class="language-plaintext highlighter-rouge">expectedAddr</code>.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.</li>
-  <li>Replace Mutation with a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/data/ConditionalMutation.html">ConditionalMutation</a> and pass the condition to its constructor.</li>
-  <li>Call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> passing it the conditional mutation.</li>
-  <li>Return <code class="language-plaintext highlighter-rouge">true</code> if <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus--">getStatus</a> from the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.Result.html">Result</a> returned by <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> is <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED">ACCEPTED</a>.</li>
+  <li>Call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/Connector.html#createConditionalWriter-java.lang.String-org.apache.accumulo.core.client.ConditionalWriterConfig-">createConditionalWriter</a> instead of creating a batch writer</li>
+  <li>Create a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Condition.html">Condition</a> for the column ‘location:home’.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is not null, then call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/Condition.html#setValue-java.lang.CharSequence-">setValue</a> passing <code class="language-plaintext highlighter-rouge">expectedAddr</code>.  If <code class="language-plaintext highlighter-rouge">expectedAddr</code> is null, then do nothing else with the condition. A condition with no value means that column is expected to be absent.</li>
+  <li>Replace Mutation with a <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/data/ConditionalMutation.html">ConditionalMutation</a> and pass the condition to its constructor.</li>
+  <li>Call <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> passing it the conditional mutation.</li>
+  <li>Return <code class="language-plaintext highlighter-rouge">true</code> if <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.Result.html#getStatus--">getStatus</a> from the <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.Result.html">Result</a> returned by <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.html#write-org.apache.accumulo.core.data.ConditionalMutation-">write</a> is <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/ConditionalWriter.Status.html#ACCEPTED">ACCEPTED</a>.</li>
 </ul>
 
 

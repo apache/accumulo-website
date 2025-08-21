@@ -52,7 +52,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a class="dropdown-item" href="/release/accumulo-2.1.3/">2.1.3 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.4/">2.1.4 (Latest LTM)</a></li>
             <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
             <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
@@ -117,7 +117,7 @@
           
           
 
-<p>08 Apr 2025</p>
+<p>20 Aug 2025</p>
 <nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
       
         <li class="page-item"><a class="page-link" href="/release/accumulo-2.1.3/">&laquo;&nbsp;Apache Accumulo 2.1.3</a></li>
@@ -128,11 +128,6 @@
       
     </ul></nav>
 
-
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
-  Please view <a class="alert-link" href="/release/accumulo-2.1.3/">the latest release notes</a>.
-</div>
 
 
 
@@ -187,14 +182,16 @@ and could leave the server running without a lock.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5174">#5174</a> <a href="https://github.com/apache/accumulo/issues/5035">#5035</a> <a href="https://github.com/apache/accumulo/issues/5502">#5502</a> <a href="https://github.com/apache/accumulo/issues/5439">#5439</a> Many improvements
 to the <code class="language-plaintext highlighter-rouge">accumulo-cluster</code> and <code class="language-plaintext highlighter-rouge">accumulo-service</code> scripts have been backported
 from the main branch. This includes syntax changes. Users should review the
-scripts for changes that may effect them.</li>
+scripts for changes that may effect them. Changes were made to the default
+<code class="language-plaintext highlighter-rouge">conf/accumulo-env.sh</code> file to support the changes in those scripts, so
+users should pay particular attention to the changes in that configuration file.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5688">#5688</a> Added option to the Shell config command to show experimental properties.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5689">#5689</a> Modified tokenizer in Shell to provide better support for json values.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5726">#5726</a> Added new configuration properties for the Compactor to specify backoff
 behavior when compactions are failing consecutively. This would likely occur when there
 is a misconfiguration. This change also includes new logging in the Compactor and
 Coordinator, and new metrics being emitted by the Compactor.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/5729">#5729</a> Monitor now supports hosting behind a proxy.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5729">#5729</a> Monitor now supports hosting behind a proxy by specifying a base directory.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5779">#5779</a> Admin serviceStatus command now report summaries per resource group.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5743">#5743</a> Added per table and per compaction erasure code configuration.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5720">#5720</a> Added ability to configure compactions differently per tablet and per output path.</li>
@@ -239,7 +236,7 @@ handled properly.</li>
 indefinitely reserved for a compaction that is no longer running.  This condition would continue until
 the tablet server hosting the tablet was restarted.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5543">#5543</a> <a href="https://github.com/apache/accumulo/issues/5552">#5552</a> <a href="https://github.com/apache/accumulo/issues/5543">#5543</a> Fixed multiple bugs that could destabilize external compactions.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/5707">#5707</a> Fixes a bug where an exteranl compaction would not start.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5707">#5707</a> Fixes a bug where an external compaction would not start.</li>
 </ul>
 
 <h3 id="metrics-improvements">Metrics Improvements</h3>
@@ -269,7 +266,7 @@ have more files than the maximum number of files per tablet.</li>
 
 <h3 id="semver-violations">Semver violations</h3>
 
-<p>The following are changes since 2.1.3 that violate semver.  Writing code that
+<p>The following are changes since 2.1.3 that violate semver. Writing code that
 uses these new methods will make it incompatible with 2.1.3 and earlier.</p>
 
 <table>

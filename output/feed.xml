@@ -6,10 +6,221 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Aug 2025 01:19:07 +0000</pubDate>
-    <lastBuildDate>Thu, 21 Aug 2025 01:19:07 +0000</lastBuildDate>
+    <pubDate>Thu, 21 Aug 2025 01:34:51 +0000</pubDate>
+    <lastBuildDate>Thu, 21 Aug 2025 01:34:51 +0000</lastBuildDate>
     <generator>Jekyll v4.3.4</generator>
     
+    
+      <item>
+        <title>Apache Accumulo 2.1.4</title>
+        <description>&lt;h2 id=&quot;about&quot;&gt;About&lt;/h2&gt;
+
+&lt;p&gt;Apache Accumulo 2.1.4 is a patch release of the 2.1 LTM line. It contains bug
+fixes and minor enhancements. This version supersedes earlier 2.1 releases
+and users upgrading to 2.1 should upgrade directly to this version instead of
+any prior 2.1 release.&lt;/p&gt;
+
+&lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5446&quot;&gt;#5446&lt;/a&gt; Many dependencies were updated, to include protobuf-java which
+was updated from 3.22.0 to 3.25.6 due to a vulnerability. Users may run into
+a runtime exception added in https://github.com/protocolbuffers/protobuf/pull/20084
+when using old generated Protobuf files. Users may need to address any compatibility issues
+with this version of protobuf-java, if their code also makes use of this library.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5073&quot;&gt;#5073&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5034&quot;&gt;#5034&lt;/a&gt; Added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo check-accumulo-properties&lt;/code&gt; command that can be
+run before an instance is initialized to check the properties file.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5193&quot;&gt;#5193&lt;/a&gt; Added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo admin signalShutdown&lt;/code&gt; command to signal the server
+process to initiate a graceful shutdown. Compactors will finish the major compaction
+that they are currently working on, then will exit. Scan Servers will return a busy
+signal to all clients for new scan requests, and will shutdown when all in-progress
+scans have closed. Tablet Servers will signal the Manager that they are shutting down,
+which should prevent assignment of tablets to that server, then they will unload all
+tablets and shut down. The Monitor, Manager, GarbageCollector, and CompactionCoordinator
+will shut down also. The last step in the shutdown process for all servers is to remove
+their lock in ZooKeeper.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5438&quot;&gt;#5438&lt;/a&gt; Added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo upgrade --prepare&lt;/code&gt; command which should be used after
+shutting down an instance in preparation for an upgrade. This will check that no Fate
+transactions exist, delete any ZooKeeper locks for server processes, and prohibit any
+server processes from being started.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4898&quot;&gt;#4898&lt;/a&gt; New way to compute bulk load plans.  This adds two new APIs for computing
+which tablets should load a rfile.  APIs were also added to serialize, deserialize, and
+merge load plans.  These primitives provide building blocks for doing distributed
+computation of load plans over a set of rfiles.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5169&quot;&gt;#5169&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5170&quot;&gt;#5170&lt;/a&gt; The TabletServer will halt itself when a walog write or
+minc failure occurs and the TabletServer lock is not held in ZooKeeper.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5145&quot;&gt;#5145&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5132&quot;&gt;#5132&lt;/a&gt; The Manager and TabletServer processes now have a background
+thread that can be enabled via the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.server.lock.verification.interval&lt;/code&gt; to
+validate that the process is holding the lock in ZooKeeper. The existing mechanism of relying
+on a Watcher to notify the process that the lock has been lost can be a problem due to the
+fact that there is a single thread in the ZooKeeper client that fires Watcher events. If the
+thread is currently waiting on a hung Watcher, then subsequent Watcher events will not fire
+and could leave the server running without a lock.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5174&quot;&gt;#5174&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5035&quot;&gt;#5035&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5502&quot;&gt;#5502&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5439&quot;&gt;#5439&lt;/a&gt; Many improvements
+to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-cluster&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-service&lt;/code&gt; scripts have been backported
+from the main branch. This includes syntax changes. Users should review the
+scripts for changes that may effect them. Changes were made to the default
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf/accumulo-env.sh&lt;/code&gt; file to support the changes in those scripts, so
+users should pay particular attention to the changes in that configuration file.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5688&quot;&gt;#5688&lt;/a&gt; Added option to the Shell config command to show experimental properties.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5689&quot;&gt;#5689&lt;/a&gt; Modified tokenizer in Shell to provide better support for json values.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5726&quot;&gt;#5726&lt;/a&gt; Added new configuration properties for the Compactor to specify backoff
+behavior when compactions are failing consecutively. This would likely occur when there
+is a misconfiguration. This change also includes new logging in the Compactor and
+Coordinator, and new metrics being emitted by the Compactor.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5729&quot;&gt;#5729&lt;/a&gt; Monitor now supports hosting behind a proxy by specifying a base directory.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5779&quot;&gt;#5779&lt;/a&gt; Admin serviceStatus command now report summaries per resource group.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5743&quot;&gt;#5743&lt;/a&gt; Added per table and per compaction erasure code configuration.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5720&quot;&gt;#5720&lt;/a&gt; Added ability to configure compactions differently per tablet and per output path.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;configuration-improvements&quot;&gt;Configuration Improvements&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4723&quot;&gt;#4723&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5239&quot;&gt;#5239&lt;/a&gt; Changes to properties &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tserver.session.idle.max&lt;/code&gt; and
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tserver.session.update.idle.max&lt;/code&gt; no longer require a TabletServer restart.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5397&quot;&gt;#5397&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5399&quot;&gt;#5399&lt;/a&gt; Added property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gc.threads.delete.wal&lt;/code&gt; to control the number of threads to use for
+deleting write-ahead logs and recovery files.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5341&quot;&gt;#5341&lt;/a&gt; Created an optimization in Bulk Import v2 to enable faster processing of bulk import files
+when loading into a sparse set of tablets in a large table. See new table property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table.bulk.metadata.skip.distance&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5628&quot;&gt;#5628&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5627&quot;&gt;#5627&lt;/a&gt; Made the number of threads the manager uses to
+scan the metadata to find tablets that need attention configurable.  This
+scan uses iterators that can have a large set of options, added a property to
+optionally compress these iterator options.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5633&quot;&gt;#5633&lt;/a&gt; Added a new property for server processes advertise address
+allowing different bind and advertise addresses.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5638&quot;&gt;#5638&lt;/a&gt; Added a new property to disable assignment and balancing when
+the number of tserver is below the configured value. Disabled by default.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5632&quot;&gt;#5632&lt;/a&gt; Improved handling fixed properties that require a server restart.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;notable-bug-fixes&quot;&gt;Notable Bug Fixes&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5033&quot;&gt;#5033&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5038&quot;&gt;#5038&lt;/a&gt; Group names in cluster.yaml must conform to bash variable name rules
+or an error will be raised when parsing the cluster.yaml file.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5221&quot;&gt;#5221&lt;/a&gt; The shell will now print to stdout, instead of stderr, when there is no terminal set. This
+will help with piping the output of the shell to other commands such as grep.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5396&quot;&gt;#5396&lt;/a&gt; Modified &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-cluster&lt;/code&gt; to stop GC and ScanServer processes first when stopping the
+cluster. These processes write to the metadata table, which can lead to slower shutdown times.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4868&quot;&gt;#4868&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/4871&quot;&gt;#4871&lt;/a&gt; Fixed listscans so that it shows a scan session id for batch scans instead
+of always showing zero.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4845&quot;&gt;#4845&lt;/a&gt; InstanceOperations.getActiveCompaction(String) did not handle the address of a
+Compactor process being passed in the parameter. This has been fixed.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5445&quot;&gt;#5445&lt;/a&gt; The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cf&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cq&lt;/code&gt; options for the DeleteMany and Grep shell commands were not being
+handled properly.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5570&quot;&gt;#5570&lt;/a&gt; Fixed race condition where an external compaction would be forgotten with its files
+indefinitely reserved for a compaction that is no longer running.  This condition would continue until
+the tablet server hosting the tablet was restarted.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5543&quot;&gt;#5543&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5552&quot;&gt;#5552&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5543&quot;&gt;#5543&lt;/a&gt; Fixed multiple bugs that could destabilize external compactions.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5707&quot;&gt;#5707&lt;/a&gt; Fixes a bug where an external compaction would not start.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;metrics-improvements&quot;&gt;Metrics Improvements&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4756&quot;&gt;#4756&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/4757&quot;&gt;#4757&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/4840&quot;&gt;#4840&lt;/a&gt; Added metric to indicate how many zombie scan threads are running
+in the TabletServer.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5011&quot;&gt;#5011&lt;/a&gt; Added queue tag to metrics emitted from the External Compactor processes.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5025&quot;&gt;#5025&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/4922&quot;&gt;#4922&lt;/a&gt; Added property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.log.metrics&lt;/code&gt; to enable metrics on
+the log4j2 or logback logging frameworks. Disabled by default.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;other-improvements&quot;&gt;Other Improvements&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4755&quot;&gt;#4755&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/5220&quot;&gt;#5220&lt;/a&gt; Fixed the help flag for the admin command so that it works for subcommands.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4819&quot;&gt;#4819&lt;/a&gt; Tablets that are closing will no longer wait on scans to complete. Instead they
+will try to interrupt the scan and then continue closing the tablet so that it can be migrated.
+It’s possible that a zombie scan thread could remain in the TabletServer, if the scan thread is
+blocked on something and does not die. Users should monitor the new zombie scan metric mentioned
+in the section above.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4867&quot;&gt;#4867&lt;/a&gt; Lowered the memory burden of listing a large number of External Compactors in the Monitor.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5026&quot;&gt;#5026&lt;/a&gt; Modified CompactionJobPrioritizer.createPriority to give a higher priority to tablets that
+have more files than the maximum number of files per tablet.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5400&quot;&gt;#5400&lt;/a&gt; Modified AESCryptoService to prevent the creation of overlapping streams.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;semver-violations&quot;&gt;Semver violations&lt;/h3&gt;
+
+&lt;p&gt;The following are changes since 2.1.3 that violate semver. Writing code that
+uses these new methods will make it incompatible with 2.1.3 and earlier.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Class&lt;/th&gt;
+      &lt;th&gt;Changes&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.client.admin.InstanceOperations&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set&amp;lt;String&amp;gt; getCompactors()&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.client.admin.compaction.CompactionConfigurer.InitParameters&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TabletId getTabletId()&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;URI getOutputFile()&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.client.rfile.RFile.WriterOptions&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WriterOptions withSplitResolver(LoadPlan.SplitResolver splitResolver)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.data.LoadPlan&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;String toJson()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadPlan fromJson(String json)&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadPlan compute(...)&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;interface SplitResolver&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.data.TabletId&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;of(TableId tableId, String endRow, String prevEndRow)&lt;/code&gt; and also added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Text&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;byte[]&lt;/code&gt; versions&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.iterators.IteratorEnvironment&lt;/td&gt;
+      &lt;td&gt;removed default methods that threw UnsupportedOperationException&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.spi.balancer.DoNothingBalancer&lt;/td&gt;
+      &lt;td&gt;This entire class was added&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.spi.balancer.TabletBalancer.BalanceParameters&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;String partitionName()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Map&amp;lt;String,TableId&amp;gt; getTablesToBalance()&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.spi.compaction.CompactionPlanner.PlanningParameters&lt;/td&gt;
+      &lt;td&gt;added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NamespaceId getNamespaceId()&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TabletId getTabletId()&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;o.a.a.core.spi.compaction.DefaultCompactionPlanner&lt;/td&gt;
+      &lt;td&gt;added a new configuration option &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tserver.compaction.major.service.&amp;lt;service&amp;gt;.opts.lowestRatio&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;requirements&quot;&gt;Requirements&lt;/h2&gt;
+
+&lt;p&gt;Accumulo 2.1.4 now requires JDK 17 to build, but still supports Java 11 runtime.&lt;/p&gt;
+
+&lt;h2 id=&quot;upgrading&quot;&gt;Upgrading&lt;/h2&gt;
+
+&lt;p&gt;View the &lt;a href=&quot;/docs/2.x/administration/upgrading&quot;&gt;Upgrading Accumulo documentation&lt;/a&gt; for guidance.&lt;/p&gt;
+
+&lt;h2 id=&quot;useful-links&quot;&gt;Useful Links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/compare/rel/2.1.3...apache:rel/2.1.4&quot;&gt;All Changes since 2.1.3&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/milestone/21&quot;&gt;All tickets related to this release&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Wed, 20 Aug 2025 00:00:00 +0000</pubDate>
+        <link>https://accumulo.apache.org/release/accumulo-2.1.4/</link>
+        <guid isPermaLink="true">https://accumulo.apache.org/release/accumulo-2.1.4/</guid>
+        
+        
+        <category>release</category>
+        
+      </item>
     
       <item>
         <title>Accumulo 4.0 Feature Preview</title>
@@ -219,7 +430,7 @@ creating a lot of tables.&lt;/li&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4461&quot;&gt;#4461&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/4522&quot;&gt;#4522&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/4577&quot;&gt;#4577&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/4492&quot;&gt;#4492&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/4740&quot;&gt;#4740&lt;/a&gt;, &lt;a href=&quot;https://github.com/apache/accumulo/issues/4470&quot;&gt;#4470&lt;/a&gt;
-Added new metrics. See &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;MetricsProducer&lt;/a&gt; for a full
+Added new metrics. See &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;MetricsProducer&lt;/a&gt; for a full
 list.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4459&quot;&gt;#4459&lt;/a&gt; Added the ability to multiple instances of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MeterRegistryFactory&lt;/code&gt; to export metrics
 to several destinations at the same time. See &lt;a href=&quot;/docs/2.x/configuration/server-properties#general_micrometer_factory&quot;&gt;general.micrometer.factory&lt;/a&gt;&lt;/li&gt;
@@ -1442,7 +1653,7 @@ instead.  The new compaction changes in 2.1 introduce new algorithms for optimal
 compactions across multiple thread pools, configuring a deprecated compaction strategy may result is
 missing out on the benefits of these new algorithms.&lt;/p&gt;
 
-&lt;p&gt;See the &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-tserver/2.1.3/org/apache/accumulo/tserver/compaction/CompactionStrategy.html&quot;&gt;javadoc&lt;/a&gt; for more
+&lt;p&gt;See the &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-tserver/2.1.4/org/apache/accumulo/tserver/compaction/CompactionStrategy.html&quot;&gt;javadoc&lt;/a&gt; for more
 information.&lt;/p&gt;
 
 &lt;p&gt;GitHub tickets related to these changes: &lt;a href=&quot;https://github.com/apache/accumulo/issues/564&quot;&gt;#564&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1605&quot;&gt;#1605&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1609&quot;&gt;#1609&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1649&quot;&gt;#1649&lt;/a&gt;&lt;/p&gt;
@@ -1569,13 +1780,13 @@ instead in any &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&g
 
 &lt;p&gt;The Hadoop Metrics2 framework is no longer being used to emit metrics from Accumulo. Accumulo is now
 using the &lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt; framework. Metric name and type changes have been
-documented in org.apache.accumulo.core.metrics.MetricsProducer, see the &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;javadoc&lt;/a&gt; for more information. See comments in &lt;a href=&quot;https://github.com/apache/accumulo/issues/2305&quot;&gt;#2305&lt;/a&gt; for an example of how to configure Accumulo to emit metrics to supported Micrometer sinks.
+documented in org.apache.accumulo.core.metrics.MetricsProducer, see the &lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/metrics/MetricsProducer.html&quot;&gt;javadoc&lt;/a&gt; for more information. See comments in &lt;a href=&quot;https://github.com/apache/accumulo/issues/2305&quot;&gt;#2305&lt;/a&gt; for an example of how to configure Accumulo to emit metrics to supported Micrometer sinks.
 &lt;a href=&quot;https://github.com/apache/accumulo/issues/1134&quot;&gt;#1134&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;new-spi-package&quot;&gt;New SPI Package&lt;/h3&gt;
 
 &lt;p&gt;A new Service Plugin Interface (SPI) package was created in the accumulo-core jar, at
-&lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.3/org/apache/accumulo/core/spi/package-summary.html&quot;&gt;org.apache.accumulo.core.spi&lt;/a&gt;, under which exists interfaces for the various pluggable
+&lt;a href=&quot;https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/package-summary.html&quot;&gt;org.apache.accumulo.core.spi&lt;/a&gt;, under which exists interfaces for the various pluggable
 components. See &lt;a href=&quot;https://github.com/apache/accumulo/issues/1900&quot;&gt;#1900&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1905&quot;&gt;#1905&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1880&quot;&gt;#1880&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1891&quot;&gt;#1891&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/1426&quot;&gt;#1426&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;minor-improvements&quot;&gt;Minor Improvements&lt;/h2&gt;
@@ -1801,181 +2012,6 @@ released after 2.0.0 and 2.0.1.&lt;/p&gt;
         
         
         <category>release</category>
-        
-      </item>
-    
-      <item>
-        <title>2.1.0 Metrics and Tracing Changes</title>
-        <description>&lt;p&gt;Metrics and Tracing changed in 2.1.0. This post explains the new implementations and provides examples on how to configure them.&lt;/p&gt;
-
-&lt;h1 id=&quot;metrics&quot;&gt;Metrics&lt;/h1&gt;
-
-&lt;p&gt;Accumulo was &lt;a href=&quot;https://issues.apache.org/jira/browse/ACCUMULO-1817&quot;&gt;modified&lt;/a&gt; in version 1.7.0 (2015) to use the Hadoop Metrics2 framework for capturing and emitting internal Accumulo metrics. &lt;a href=&quot;https://micrometer.io/&quot;&gt;Micrometer&lt;/a&gt;, a newer metrics framework, supports sending metrics to many popular &lt;a href=&quot;https://micrometer.io/docs/concepts#_supported_monitoring_systems&quot;&gt;monitoring systems&lt;/a&gt;. In Accumulo 2.1.0 support for the Hadoop Metrics2 framework has been removed in favor of using Micrometer. Metrics are disabled by default.&lt;/p&gt;
-
-&lt;p&gt;Micrometer has the concept of a &lt;a href=&quot;https://micrometer.io/docs/concepts#_registry&quot;&gt;MeterRegistry&lt;/a&gt;, which is used to create and emit metrics to the supported monitoring systems. Additionally, Micrometer supports sending metrics to multiple monitoring systems concurrently. Configuring Micrometer in Accumulo will require you to write a small peice of code to provide the MeterRegistry configuration. Specifically, you will need to create a class that implements &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/core/src/main/java/org/apache/accumulo/core/metrics/MeterRegistryFactory.java&quot;&gt;MeterRegistryFactory&lt;/a&gt;. Your implementation will need to create and configure the appropriate MeterRegistry. Additionally, you will need to add the MeterRegistry jar file and the jar file containing your MeterRegistryFactory implementation to Accumulo’s classpath. The page for each monitoring system that Micrometer supports contains instructions on how to configure the registry and which jar file is required.&lt;/p&gt;
-
-&lt;p&gt;Accumulo’s metrics integration test uses a &lt;a href=&quot;https://github.com/apache/accumulo/blob/main/test/src/main/java/org/apache/accumulo/test/metrics/TestStatsDRegistryFactory.java&quot;&gt;TestStatsDRegistryFactory&lt;/a&gt; to create and configure a &lt;a href=&quot;https://micrometer.io/docs/registry/statsD&quot;&gt;StatsD Meter Registry&lt;/a&gt;. The instructions below provide an example of how to use this class to emit Accumulo’s metrics to a Telegraf - InfluxDB - Grafana monitoring stack.&lt;/p&gt;
-
-&lt;h2 id=&quot;metrics-example&quot;&gt;Metrics Example&lt;/h2&gt;
-
-&lt;p&gt;This example uses a Docker container that contains Telegraf-InfluxDB-Grafana system. We will configure Accumulo to send metrics to the &lt;a href=&quot;https://www.influxdata.com/time-series-platform/telegraf/&quot;&gt;Telegraf&lt;/a&gt; component running in the Docker image. Telegraf will persist the metrics in &lt;a href=&quot;https://www.influxdata.com/products/influxdb-overview/&quot;&gt;InfluxDB&lt;/a&gt; and then we will visualize the metrics using &lt;a href=&quot;https://grafana.com/&quot;&gt;Grafana&lt;/a&gt;. This example assumes that you have installed Docker (or equivalent engine) and have an Accumulo database already installed and initialized. We will be installing some things, modifying the Accumulo configuration, and starting Accumulo.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Download the Telegraf-Influx-Grafana (TIG) Docker image
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker pull artlov/docker-telegraf-influxdb-grafana:latest
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Create directories for the Docker container
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p /tmp/metrics/influxdb
-chmod 777 /tmp/metrics/influxdb
-mkdir /tmp/metrics/grafana
-mkdir /tmp/metrics/grafana-dashboards
-mkdir -p /tmp/metrics/telegraf/conf
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Download Telegraf configuration and Grafana dashboard
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd /tmp/metrics/telegraf/conf
-wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/templates/telegraf.conf.tftpl
-cat telegraf.conf.tftpl | sed &quot;s/\${manager_ip}/localhost/&quot; &amp;gt; telegraf.conf
-cd /tmp/metrics/grafana-dashboards
-wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.json
-wget https://raw.githubusercontent.com/apache/accumulo-testing/main/contrib/terraform-testing-infrastructure/modules/config-files/files/grafana_dashboards/accumulo-dashboard.yaml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Start the TIG Docker container
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --ulimit nofile=66000:66000 -d --rm \
- --name tig-stack \
- -p 3003:3003 \
- -p 3004:8888 \
- -p 8086:8086 \
- -p 22022:22 \
- -p 8125:8125/udp \
- -v /tmp/metrics/influxdb:/var/lib/influxdb \
- -v /tmp/metrics/grafana:/var/lib/grafana \
- -v /tmp/metrics/telegraf/conf:/etc/telegraf \
- -v /tmp/metrics/grafana-dashboards:/etc/grafana/provisioning/dashboards \
- artlov/docker-telegraf-influxdb-grafana:latest
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Download Micrometer StatsD Meter Registry jar
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget -O micrometer-registry-statsd-1.9.1.jar https://search.maven.org/remotecontent?filepath=io/micrometer/micrometer-registry-statsd/1.9.1/micrometer-registry-statsd-1.9.1.jar
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;At a mininum you need to enable the metrics using the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.enabled&lt;/code&gt; and supply the name of the MeterRegistryFactory class using the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.factory&lt;/code&gt;. To enable &lt;a href=&quot;https://micrometer.io/docs/ref/jvm&quot;&gt;JVM&lt;/a&gt; metrics, use the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.micrometer.jvm.metrics.enabled&lt;/code&gt;. Modify the accumulo.properties configuration file by adding the properties below.
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Micrometer settings
-general.micrometer.enabled=true
-general.micrometer.jvm.metrics.enabled=true
-general.micrometer.factory=org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Copy the micrometer-registry-statsd-1.9.1.jar and accumulo-test.jar into the Accumulo lib directory&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;The TestStatsDRegistryFactory uses system properties to determine the host and port of the StatsD server. In this example the Telegraf component started in step 4 above contains a StatsD server listening on localhost:8125. Configure the TestStatsDRegistryFactory by adding the following system properties to the JAVA_OPTS variable in accumulo-env.sh.
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;-Dtest.meter.registry.host=127.0.0.1&quot;
-&quot;-Dtest.meter.registry.port=8125&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Start Accumulo.  You should see the following statement in the server log files
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[metrics.MetricsUtil] INFO : initializing metrics, enabled:true, class:org.apache.accumulo.test.metrics.TestStatsDRegistryFactory
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Log into Grafana (http://localhost:3003/) using the default credentials (root/root). Click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Home&lt;/code&gt; icon at the top, then click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Accumulo Micrometer Test Dashboard&lt;/code&gt;. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;a class=&quot;p-3 border rounded d-block&quot; href=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot;&gt;
-   &lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Grafana_Screenshot.png&quot; class=&quot;img-fluid rounded&quot; alt=&quot;Grafana Screenshot&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;tracing&quot;&gt;Tracing&lt;/h1&gt;
-
-&lt;p&gt;With the retirement of HTrace, Accumulo has selected to replace it’s tracing functionality with &lt;a href=&quot;https://opentelemetry.io/&quot;&gt;OpenTelemetry&lt;/a&gt; in version 2.1.0. Hadoop appears to be on the same &lt;a href=&quot;https://issues.apache.org/jira/browse/HADOOP-15566&quot;&gt;path&lt;/a&gt; which, when finished, should provide better insight into Accumulo’s use of HDFS. OpenTelemetry supports exporting Trace information to several different systems, to include &lt;a href=&quot;https://www.jaegertracing.io/&quot;&gt;Jaeger&lt;/a&gt;, &lt;a href=&quot;https://zipkin.io/&quot;&gt;Zipkin&lt;/a&gt;, and others. The HTrace trace spans in the Accumulo source code have been updated to use OpenTelemetry trace spans. If tracing is enabled, then Accumulo will use the OpenTelemetry implementation registered with the &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/blob/main/api/all/src/main/java/io/opentelemetry/api/GlobalOpenTelemetry.java&quot;&gt;GlobalOpenTelemetry&lt;/a&gt; object. Tracing is disabled by default and a no-op OpenTelemetry implementation is used.&lt;/p&gt;
-
-&lt;h2 id=&quot;tracing-example&quot;&gt;Tracing Example&lt;/h2&gt;
-
-&lt;p&gt;This example uses the OpenTelemetry Java Agent jar file to configure and export trace information to Jaeger. The OpenTelemetry Java Agent jar file bundles together the supported Java exporters, provides a way to &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure&quot;&gt;configure&lt;/a&gt; them, and registers them with the GlobalOpenTelemetry singleton that is used by Accumulo. An alternate method to supplying the OpenTelemetry dependencies, without using the Java Agent jar file, is to create a shaded jar with the OpenTelemetry &lt;a href=&quot;https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure&quot;&gt;autoconfigure&lt;/a&gt; module and it’s runtime dependencies and place the resulting shaded jar on the classpath. An example Maven pom.xml file to create the shaded jar is &lt;a href=&quot;https://github.com/apache/accumulo/pull/2259#issuecomment-965571339&quot;&gt;here&lt;/a&gt;. When using this alternate method you can skip step 2 and the uncommenting of the java agent in step 5 below.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Download Jaeger all-in-one Docker image
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  docker pull jaegertracing/all-in-one:1.35
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Download OpenTelemetry Java Agent (https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure)
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  wget -O opentelemetry-javaagent-1.15.0.jar https://search.maven.org/remotecontent?filepath=io/opentelemetry/javaagent/opentelemetry-javaagent/1.15.0/opentelemetry-javaagent-1.15.0.jar
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;To enable tracing, you need to set the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;general.opentelemetry.enabled&lt;/code&gt; property. Modify the accumulo.properties configuration file and add the following property.
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# OpenTelemetry settings
-general.opentelemetry.enabled=true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-
-    &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If you are using Accumulo 2.1.4 or newer, skip steps 4-5 below and follow the updated instructions in the &lt;a href=&quot;#updated-configuration-with-newer-versions-of-opentelemetry&quot;&gt;Updated Configuration with Newer Versions of OpenTelemetry&lt;/a&gt; section.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Configure the OpenTelemetry JavaAgent in accumulo-env.sh by uncommenting the following and updating the path to the java agent jar:
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ## Optionally setup OpenTelemetry SDK AutoConfigure
-  ## See https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure
-  #JAVA_OPTS=('-Dotel.traces.exporter=jaeger' '-Dotel.metrics.exporter=none' '-Dotel.logs.exporter=none' &quot;${JAVA_OPTS[@]}&quot;)
-  ## Optionally setup OpenTelemetry Java Agent
-  ## See https://github.com/open-telemetry/opentelemetry-java-instrumentation for more options
-  #JAVA_OPTS=('-javaagent:path/to/opentelemetry-javaagent.jar' &quot;${JAVA_OPTS[@]}&quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Start Jaeger Docker container
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -d --rm --name jaeger \
- -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
- -p 5775:5775/udp \
- -p 6831:6831/udp \
- -p 6832:6832/udp \
- -p 5778:5778 \
- -p 16686:16686 \
- -p 14268:14268 \
- -p 14250:14250 \
- -p 9411:9411 jaegertracing/all-in-one:1.35
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Start Accumulo.  You should see the following statement in the server log files
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[trace.TraceUtil] INFO : Trace enabled in Accumulo: yes, OpenTelemetry instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.v1_10.ApplicationOpenTelemetry110, Tracer instance: class io.opentelemetry.javaagent.instrumentation.opentelemetryapi.trace.ApplicationTracer
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;View traces in Jaeger UI at http://localhost:16686. You can select the service name on the left panel and click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Find Traces&lt;/code&gt; to view the trace information. If everything is working correctly, then you should see something like the image below.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;a class=&quot;p-3 border rounded d-block&quot; href=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot;&gt;
-   &lt;img src=&quot;/images/blog/202206_metrics_and_tracing/Jaeger_Screenshot.png&quot; class=&quot;img-fluid rounded&quot; alt=&quot;Jaeger Screenshot&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;updated-configuration-with-newer-versions-of-opentelemetry&quot;&gt;Updated Configuration with Newer Versions of OpenTelemetry&lt;/h2&gt;
-
-&lt;p&gt;The original tracing example above was written for Accumulo 2.1.0 which uses OpenTelemetry 1.19.0. Accumulo 2.1.4 has been updated to use OpenTelemetry 1.48.0, which requires different configuration. When working with Accumulo 2.1.4 or any deployment using OpenTelemetry 1.48.0 or newer, use OTLP (OpenTelemetry Protocol) instead of the direct Jaeger exporter.&lt;/p&gt;
-
-&lt;p&gt;Follow steps 1–3 from the &lt;a href=&quot;#tracing-example&quot;&gt;Tracing Example&lt;/a&gt; section, then use these updated steps in place of steps 4-5:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Configure the OpenTelemetry JavaAgent in accumulo-env.sh with OTLP export:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-Dotel.traces.exporter=otlp'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.exporter.otlp.endpoint=http://localhost:4317'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.metrics.exporter=none'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-Dotel.logs.exporter=none'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-javaagent:path/to/opentelemetry-javaagent.jar'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[@]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Start Jaeger with OTLP support:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; jaeger &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 16686:16686 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 4317:4317 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 4318:4318 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 5778:5778 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9411:9411 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  jaegertracing/jaeger:2.3.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;After completing these updated steps, continue with steps 7-8 from the original instructions to view traces in Jaeger.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 22 Jun 2022 00:00:00 +0000</pubDate>
-        <link>https://accumulo.apache.org/blog/2022/06/22/2.1.0-metrics-and-tracing.html</link>
-        <guid isPermaLink="true">https://accumulo.apache.org/blog/2022/06/22/2.1.0-metrics-and-tracing.html</guid>
-        
-        
-        <category>blog</category>
         
       </item>
     
