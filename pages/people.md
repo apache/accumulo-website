@@ -172,6 +172,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Randeep Singh       |                                                                   | [ET][ET]              |
 | Ravi Mutyala        | [Hortonworks][HORTONWORKS]                                        | [CT][CT]              |
 | Richard Eggert II   | [MasterPeace Solutions, Ltd][MASTERPEACE]                         | [ET][ET]              |
+| Robert Kurc         |                                                                   | [ET][ET]              |
 | Russell Carter Jr   | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Ryan Fishel         | [Cloudera][CLOUDERA]                                              |                       |
 | Ryan Leary          |                                                                   |                       |
