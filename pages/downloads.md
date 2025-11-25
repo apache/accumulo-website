@@ -3,6 +3,16 @@ title: Downloads
 permalink: /downloads/
 ---
 
+{% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
+{% assign downloadsLink = 'https://downloads.apache.org' %}
+{% assign glyphSave = '&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span>' %}
+{% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
+{% assign srcbinArray = 'src bin' | split: ' ' %}
+{% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
+{% assign btnSigStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
+{% assign btnHashStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
+{% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
+
 <script type="text/javascript">
 
 var updateLinks = function(mirror) {
@@ -51,23 +61,13 @@ var mirrorsCallback = function(json) {
 };
 
 // get mirrors when page is ready
-$(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirrorsCallback); });
+$(function() { $.getJSON("{{closerLink}}?as_json", mirrorsCallback); });
 
 </script>
 
 <div id="mirror_selection"></div>
 
 Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEYS].
-
-{% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
-{% assign downloadsLink = 'https://downloads.apache.org' %}
-{% assign glyphSave = '&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span>' %}
-{% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
-{% assign srcbinArray = 'src bin' | split: ' ' %}
-{% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
-{% assign btnSigStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
-{% assign btnHashStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
-{% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
 
 ## Current Releases
 
