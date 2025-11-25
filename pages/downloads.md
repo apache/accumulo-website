@@ -87,7 +87,7 @@ available in a future update to this site.
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
@@ -117,7 +117,7 @@ enhancements, and more.
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
@@ -146,7 +146,7 @@ that can be used separately from Accumulo.
 {% assign lnkSuffix = '/accumulo/accumulo-access/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
