@@ -109,11 +109,14 @@ Jekyll will print a local URL where the site can be viewed (usually,
 
 ### Testing using a Container environment
 
+Note: The example commands below use `podman`, but you can replace it with a
+compatible tool, such as `docker`.
+
 A containerized development environment can be built using the local
 Containerfile. You can build it with the following command:
 
 ```bash
-podman build -t webdev .
+podman build -t webdev -f Containerfile .
 ```
 
 This action will produce a `webdev` image, with all the website's build
