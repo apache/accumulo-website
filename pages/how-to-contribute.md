@@ -30,7 +30,7 @@ Any questions/ideas don't hesitate to [contact us][contact].
 | [Wikisearch][s]    | [Contribute][sc] [Issues][si]  | Example application that indexes and queries Wikipedia data |
 | [Proxy][p]         | [Issues][pi]                   | Apache Thrift service that exposes Accumulo to other languages |
 | [Maven plugin][m]  | [Issues][mi]                   | Maven plugin that runs Accumulo |
-| [Classloaders][c]  | [Issues][ci]                   | Apache Accumulo Classloader Extras |
+| [Classloaders][c]  | [Issues][ci]                   | Apache Accumulo ClassLoader Extras |
 | [Access][aa]       | [Issues][aai]                  | Apache Accumulo Access Control Library |
 
 ## Example Contribution workflow

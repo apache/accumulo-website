@@ -134,6 +134,27 @@ enhancements, and more.
 </div>
 
 
+{% assign linkVers = '1.0.0' %}
+### Accumulo ClassLoader Extras {{linkVers}}
+{: #accumulo-classloader-extras }
+
+The Accumulo ClassLoader Extras (accumulo-classloaders or accumulo-classloader-extras)
+library contains a variety of Java classloader-related utilities, or libraries to support
+those utilities, for use with Apache Accumulo.
+
+{% assign lnkFile = 'accumulo-classloader-extras-' | append: linkVers | append: '-' | append: 'source-release' | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/accumulo-classloader-extras/' | append: linkVers | append: '/' | append: lnkFile %}
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div>
+  <div class="btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
+</div>
+
+
 {% assign linkVers = '1.0.0-beta' %}
 ### Accumulo Access {{linkVers}}
 {: #accumulo-access }
