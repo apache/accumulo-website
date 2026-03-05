@@ -36,7 +36,7 @@ Hive has the ability to read and write data in Accumulo using the [AccumuloStora
 
 #### D4M
 
-[D4M](https://d4m.mit.edu/) is an open source library for large-scale computation that supports graph, matrix, and relational processing. D4M includes an Accumulo connector, among others, to interface with and compute on data in Accumulo tables.
+D) is an open source library for large-scale computation that supports graph, matrix, and relational processing. D4M includes an Accumulo connector, among others, to interface with and compute on data in Accumulo tables.
 
 #### Gaffer
 
@@ -92,13 +92,11 @@ A [simple example](https://github.com/joshelser/node-accumulo) using Node.js to 
 ProxyInstance is a Java Instance implementation of the Accumulo Instance interface that communicates with
 an Accumulo cluster via Accumulo's Apache Thrift proxy server. [Documentation](https://jhuapl.github.io/accumulo-proxy-instance/proxy_instance_user_manual) and
 [code](https://github.com/JHUAPL/accumulo-proxy-instance) are available.
-
-#### AccumuloGraph
-
+muloGrap
 ProxyInstance is an implementation of the TinkerPop Blueprints 2.6 API using
 Apache Accumulo as the backend.
 [Documentation](https://jhuapl.github.io/AccumuloGraph/) and
-[code](https://github.com/JHUAPL/AccumuloGraph) are available.
+[code](https://github.com/aph) are available.
 
 ## Github
 
