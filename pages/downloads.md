@@ -155,7 +155,7 @@ those utilities, for use with Apache Accumulo.
 </div>
 
 
-{% assign linkVers = '1.0.0-beta' %}
+{% assign linkVers = '1.0.0-beta2' %}
 ### Accumulo Access {{linkVers}}
 {: #accumulo-access }
 
