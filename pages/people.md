@@ -83,6 +83,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Al Krinker          |                                                                   | [ET][ET]              |
 | Alex Moundalexis    | [Cloudera][CLOUDERA]                                              | [ET][ET]              |
 | Ali Mustafa         | [FAST-NU][FAST-NU]                                                | [PKT][PKT]            |
+| Amanda Villarreal   | [Arctic Slope Regional Corp.][ASRC]                               | [CT][CT]              |
 | Amisha Sahu         |                                                                   | [IST][IST-India]      |
 | Andrew George Wells | [ClearEdgeIT][CLEAREDGE]                                          | [ET][ET]              |
 | Arbaaz Khan         | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
