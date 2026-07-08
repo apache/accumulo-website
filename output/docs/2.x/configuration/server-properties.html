@@ -52,7 +52,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a class="dropdown-item" href="/release/accumulo-2.1.4/">2.1.4 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.5/">2.1.5 (Latest LTM)</a></li>
             <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
             <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
@@ -542,10 +542,6 @@
       <td><strong>Available since:</strong> 1.10.0<br />When the gc runs it can make a lot of changes to the metadata, on completion,  to force the changes to be written to disk, the metadata and root tables can be flushed and possibly compacted. Legal values are: compact - which both flushes and compacts the metadata; flush - which flushes only (compactions may be triggered if required); or none.<br /><strong>type:</strong> GC_POST_ACTION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">flush</code></td>
     </tr>
     <tr>
-      <td><a name="gc_remove_in_use_candidates" class="prop"></a> gc.remove.in.use.candidates</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.3<br />GC will remove deletion candidates that are in-use from the metadata location. This is expected to increase the speed of subsequent GC runs.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">false</code></td>
-    </tr>
-    <tr>
       <td><a name="gc_safemode" class="prop"></a> gc.safemode</td>
       <td><strong>Available since:</strong> 2.1.0<br />Provides listing of files to be deleted but does not delete any files.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">false</code></td>
     </tr>
@@ -647,7 +643,7 @@
     </tr>
     <tr>
       <td><a name="general_opentelemetry_enabled" class="prop"></a> general.opentelemetry.enabled</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />Enables tracing functionality using OpenTelemetry (assuming OpenTelemetry is configured).<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />Enables OpenTelemetry traces for new spans in the server process that are not already part of an existing trace. Spans that are part of an existing trace, such as one originating in client code and propagated to the server over an RPC request, are always traced, regardless of this value. (Note: no tracing will occur if OpenTelemetry is not first configured for the JVM).<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">false</code></td>
     </tr>
     <tr>
       <td><a name="general_rpc_server_type" class="prop"></a> general.rpc.server.type</td>
@@ -663,7 +659,7 @@
     </tr>
     <tr>
       <td><a name="general_server_iter_opts_compression" class="prop"></a> general.server.iter.opts.compression</td>
-      <td><strong>Available since:</strong> 2.1.4<br />Compression algorithm name to use for server-side iterator options compression.<br /><strong>type:</strong> COMPRESSION_TYPE, <strong>zk mutable:</strong> no, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">none</code></td>
+      <td><strong>Available since:</strong> 2.1.4<br />Compression algorithm name to use for server-side iterator options compression.<br /><strong>type:</strong> COMPRESSION_TYPE, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">none</code></td>
     </tr>
     <tr>
       <td><a name="general_server_lock_verification_interval" class="prop"></a> general.server.lock.verification.interval</td>
@@ -695,7 +691,7 @@
     </tr>
     <tr>
       <td><a name="general_volume_chooser" class="prop"></a> general.volume.chooser</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.6.0<br />The class that will be used to select which volume will be used to create new files.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/fs/RandomVolumeChooser.html">org.apache.accumulo.core.spi.fs.RandomVolumeChooser</a></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.6.0<br />The class that will be used to select which volume will be used to create new files.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/fs/RandomVolumeChooser.html">org.apache.accumulo.core.spi.fs.RandomVolumeChooser</a></td>
     </tr>
     <tr>
       <td><a name="instance_prefix" class="prop"></a> <strong>instance.</strong>*</td>
@@ -707,7 +703,7 @@
     </tr>
     <tr>
       <td><a name="instance_crypto_opts_factory" class="prop"></a> instance.crypto.opts.factory</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />The class which provides crypto services for on-disk file encryption. The default does nothing. To enable encryption, replace this classname with an implementation of theorg.apache.accumulo.core.spi.crypto.CryptoFactory interface.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/crypto/NoCryptoServiceFactory.html">org.apache.accumulo.core.spi.crypto.NoCryptoServiceFactory</a></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />The class which provides crypto services for on-disk file encryption. The default does nothing. To enable encryption, replace this classname with an implementation of theorg.apache.accumulo.core.spi.crypto.CryptoFactory interface.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/crypto/NoCryptoServiceFactory.html">org.apache.accumulo.core.spi.crypto.NoCryptoServiceFactory</a></td>
     </tr>
     <tr>
       <td><a name="instance_crypto_opts_sensitive_prefix" class="prop"></a> <strong>instance.crypto.opts.sensitive.</strong>*</td>
@@ -747,15 +743,15 @@
     </tr>
     <tr>
       <td><a name="instance_security_authenticator" class="prop"></a> instance.security.authenticator</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The authenticator class that accumulo will use to determine if a user has privilege to perform an action.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.4/org/apache/accumulo/server/security/handler/ZKAuthenticator.html">org.apache.accumulo.server.security.handler.ZKAuthenticator</a></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The authenticator class that accumulo will use to determine if a user has privilege to perform an action.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.5/org/apache/accumulo/server/security/handler/ZKAuthenticator.html">org.apache.accumulo.server.security.handler.ZKAuthenticator</a></td>
     </tr>
     <tr>
       <td><a name="instance_security_authorizor" class="prop"></a> instance.security.authorizor</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The authorizor class that accumulo will use to determine what labels a user has privilege to see.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.4/org/apache/accumulo/server/security/handler/ZKAuthorizor.html">org.apache.accumulo.server.security.handler.ZKAuthorizor</a></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The authorizor class that accumulo will use to determine what labels a user has privilege to see.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.5/org/apache/accumulo/server/security/handler/ZKAuthorizor.html">org.apache.accumulo.server.security.handler.ZKAuthorizor</a></td>
     </tr>
     <tr>
       <td><a name="instance_security_permissionHandler" class="prop"></a> instance.security.permissionHandler</td>
-      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The permission handler class that accumulo will use to determine if a user has privilege to perform an action.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.4/org/apache/accumulo/server/security/handler/ZKPermHandler.html">org.apache.accumulo.server.security.handler.ZKPermHandler</a></td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 1.5.0<br />The permission handler class that accumulo will use to determine if a user has privilege to perform an action.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> no, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.5/org/apache/accumulo/server/security/handler/ZKPermHandler.html">org.apache.accumulo.server.security.handler.ZKPermHandler</a></td>
     </tr>
     <tr>
       <td><a name="instance_volume_config_prefix" class="prop"></a> <strong>instance.volume.config.</strong>*</td>
@@ -886,8 +882,12 @@
       <td><strong>Available since:</strong> 2.1.0 (since 1.8.0 as <em>master.status.threadpool.size</em>)<br />The number of threads to use when fetching the tablet server status for balancing.  Zero indicates an unlimited number of threads will be used.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">0</code></td>
     </tr>
     <tr>
+      <td><a name="manager_table_delete_optimization" class="prop"></a> manager.table.delete.optimization</td>
+      <td><strong>Available since:</strong> 2.1.5<br />When deleting a table the Manager will remove related table directories from  the storage volumes if there are no other references to the files in the  metadata table. When deleting a lot of tables this optimization can be costly.  Setting this value to false will skip this optimization and the table directory  cleanup will occur in the Garbage Collector instead.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
       <td><a name="manager_tablet_balancer" class="prop"></a> manager.tablet.balancer</td>
-      <td><strong>Available since:</strong> 2.1.0 (since 1.3.5 as <em>master.tablet.balancer</em>)<br />The balancer class that accumulo will use to make tablet assignment and migration decisions.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/balancer/TableLoadBalancer.html">org.apache.accumulo.core.spi.balancer.TableLoadBalancer</a></td>
+      <td><strong>Available since:</strong> 2.1.0 (since 1.3.5 as <em>master.tablet.balancer</em>)<br />The balancer class that accumulo will use to make tablet assignment and migration decisions.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/balancer/TableLoadBalancer.html">org.apache.accumulo.core.spi.balancer.TableLoadBalancer</a></td>
     </tr>
     <tr>
       <td><a name="manager_tablet_balancer_tserver_threshold" class="prop"></a> manager.tablet.balancer.tserver.threshold</td>
@@ -902,12 +902,16 @@
       <td><strong>Available since:</strong> 2.1.4<br />Maximum number of threads the TabletGroupWatcher will use in its BatchScanner to look for tablets that need maintenance.<br /><strong>type:</strong> COUNT, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">8</code></td>
     </tr>
     <tr>
+      <td><a name="manager_tservers_halt_grace_period" class="prop"></a> manager.tservers.halt.grace.period</td>
+      <td><strong>Available since:</strong> 2.1.5<br />Allows the manager to force tserver halting by setting the max duration of time spent attempting to halt a tserver  requests before deleting the tserver’s zlock. A value of zero (default) disables this feature.<br /><strong>type:</strong> TIMEDURATION, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">0</code></td>
+    </tr>
+    <tr>
       <td><a name="manager_wal_closer_implementation" class="prop"></a> manager.wal.closer.implementation</td>
-      <td><strong>Available since:</strong> 2.1.0<br />A class that implements a mechanism to steal write access to a write-ahead log.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.4/org/apache/accumulo/server/manager/recovery/HadoopLogCloser.html">org.apache.accumulo.server.manager.recovery.HadoopLogCloser</a></td>
+      <td><strong>Available since:</strong> 2.1.0<br />A class that implements a mechanism to steal write access to a write-ahead log.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.5/org/apache/accumulo/server/manager/recovery/HadoopLogCloser.html">org.apache.accumulo.server.manager.recovery.HadoopLogCloser</a></td>
     </tr>
     <tr>
       <td><del><a name="manager_walog_closer_implementation" class="prop"></a> manager.walog.closer.implementation</del></td>
-      <td><strong>Available since:</strong> 2.1.0 (since 1.5.0 as <em>master.walog.closer.implementation</em>)<br /><em>Deprecated since:</em> 2.1.0<br /><em>Replaced by:</em> <a href="#manager_wal_closer_implementation">manager.wal.closer.implementation</a><br /><del>A class that implements a mechanism to steal write access to a write-ahead log.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.4/org/apache/accumulo/server/manager/recovery/HadoopLogCloser.html">org.apache.accumulo.server.manager.recovery.HadoopLogCloser</a></del></td>
+      <td><strong>Available since:</strong> 2.1.0 (since 1.5.0 as <em>master.walog.closer.implementation</em>)<br /><em>Deprecated since:</em> 2.1.0<br /><em>Replaced by:</em> <a href="#manager_wal_closer_implementation">manager.wal.closer.implementation</a><br /><del>A class that implements a mechanism to steal write access to a write-ahead log.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-server-base/2.1.5/org/apache/accumulo/server/manager/recovery/HadoopLogCloser.html">org.apache.accumulo.server.manager.recovery.HadoopLogCloser</a></del></td>
     </tr>
     <tr>
       <td><del><a name="master_prefix" class="prop"></a> <strong>master.</strong>*</del></td>
@@ -1031,7 +1035,7 @@
     </tr>
     <tr>
       <td><del><a name="replication_work_assigner" class="prop"></a> replication.work.assigner</del></td>
-      <td><strong>Available since:</strong> 1.7.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>Replication WorkAssigner implementation to use.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-manager/2.1.4/org/apache/accumulo/manager/replication/UnorderedWorkAssigner.html">org.apache.accumulo.manager.replication.UnorderedWorkAssigner</a></del></td>
+      <td><strong>Available since:</strong> 1.7.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>Replication WorkAssigner implementation to use.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-manager/2.1.5/org/apache/accumulo/manager/replication/UnorderedWorkAssigner.html">org.apache.accumulo.manager.replication.UnorderedWorkAssigner</a></del></td>
     </tr>
     <tr>
       <td><del><a name="replication_work_assignment_sleep" class="prop"></a> replication.work.assignment.sleep</del></td>
@@ -1154,6 +1158,10 @@
       <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />if the ports above are in use, search higher ports until one is available.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes but requires restart of the sserver, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">true</code></td>
     </tr>
     <tr>
+      <td><a name="sserver_scan_allowed_tables_group_prefix" class="prop"></a> <strong>sserver.scan.allowed.tables.group.</strong>*</td>
+      <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.5<br />A regular expression that determines which tables are allowed to be scanned for servers in the specified group. The property name should end with the scan server group and the property value should take into account the table namespace and name. The default value disallows scans on tables in the accumulo namespace.</td>
+    </tr>
+    <tr>
       <td><a name="sserver_scan_executors_prefix" class="prop"></a> <strong>sserver.scan.executors.</strong>*</td>
       <td><strong>Experimental</strong><br /><strong>Available since:</strong> 2.1.0<br />Prefix for defining executors to service scans. See <a href="/docs/2.x/administration/scan-executors">scan executors</a> for an overview of why and how to use this property. For each executor the number of threads, thread priority, and an optional prioritizer can be configured. To configure a new executor, set <code class="language-plaintext highlighter-rouge">sserver.scan.executors.&lt;name&gt;.threads=&lt;number&gt;</code>.  Optionally, can also set <code class="language-plaintext highlighter-rouge">sserver.scan.executors.&lt;name&gt;.priority=&lt;number 1 to 10&gt;</code>, <code class="language-plaintext highlighter-rouge">sserver.scan.executors.&lt;name&gt;.prioritizer=&lt;class name&gt;</code>, and <code class="language-plaintext highlighter-rouge">sserver.scan.executors.&lt;name&gt;.prioritizer.opts.&lt;key&gt;=&lt;value&gt;</code>.</td>
     </tr>
@@ -1207,7 +1215,7 @@
     </tr>
     <tr>
       <td><a name="table_bloom_key_functor" class="prop"></a> table.bloom.key.functor</td>
-      <td><strong>Available since:</strong> 1.3.5<br />A function that can transform the key prior to insertion and check of bloom filter. org.apache.accumulo.core.file.keyfunctor.RowFunctor, org.apache.accumulo.core.file.keyfunctor.ColumnFamilyFunctor, and org.apache.accumulo.core.file.keyfunctor.ColumnQualifierFunctor are allowable values. One can extend any of the above mentioned classes to perform specialized parsing of the key.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/file/keyfunctor/RowFunctor.html">org.apache.accumulo.core.file.keyfunctor.RowFunctor</a></td>
+      <td><strong>Available since:</strong> 1.3.5<br />A function that can transform the key prior to insertion and check of bloom filter. org.apache.accumulo.core.file.keyfunctor.RowFunctor, org.apache.accumulo.core.file.keyfunctor.ColumnFamilyFunctor, and org.apache.accumulo.core.file.keyfunctor.ColumnQualifierFunctor are allowable values. One can extend any of the above mentioned classes to perform specialized parsing of the key.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/file/keyfunctor/RowFunctor.html">org.apache.accumulo.core.file.keyfunctor.RowFunctor</a></td>
     </tr>
     <tr>
       <td><a name="table_bloom_load_threshold" class="prop"></a> table.bloom.load.threshold</td>
@@ -1251,7 +1259,7 @@
     </tr>
     <tr>
       <td><a name="table_compaction_dispatcher" class="prop"></a> table.compaction.dispatcher</td>
-      <td><strong>Available since:</strong> 2.1.0<br />A configurable dispatcher that decides what compaction service a table should use.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/SimpleCompactionDispatcher.html">org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher</a></td>
+      <td><strong>Available since:</strong> 2.1.0<br />A configurable dispatcher that decides what compaction service a table should use.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/SimpleCompactionDispatcher.html">org.apache.accumulo.core.spi.compaction.SimpleCompactionDispatcher</a></td>
     </tr>
     <tr>
       <td><a name="table_compaction_dispatcher_opts_prefix" class="prop"></a> <strong>table.compaction.dispatcher.opts.</strong>*</td>
@@ -1299,7 +1307,7 @@
     </tr>
     <tr>
       <td><a name="table_constraint_prefix" class="prop"></a> <strong>table.constraint.</strong>*</td>
-      <td><strong>Available since:</strong> 1.3.5<br />Properties in this category are per-table properties that add constraints to a table. These properties start with the category prefix, followed by a number, and their values correspond to a fully qualified Java class that implements the Constraint interface.<br />For example:<br />table.constraint.1 = org.apache.accumulo.core.constraints.MyCustomConstraint<br />and:<br /> table.constraint.2 = my.package.constraints.MySecondConstraint.</td>
+      <td><strong>Available since:</strong> 1.3.5<br />Properties in this category are per-table properties that add constraints to a table. These properties start with the category prefix, followed by a number, and their values correspond to a fully qualified Java class that implements the Constraint interface.<br />For example:<br />table.constraint.2 = org.apache.accumulo.core.constraints.MyCustomConstraint<br />and:<br /> table.constraint.3 = my.package.constraints.MySecondConstraint.<br />Note that table.constraint.1 is a reserved, default table constraint.</td>
     </tr>
     <tr>
       <td><a name="table_crypto_opts_prefix" class="prop"></a> <strong>table.crypto.opts.</strong>*</td>
@@ -1319,7 +1327,7 @@
     </tr>
     <tr>
       <td><a name="table_durability" class="prop"></a> table.durability</td>
-      <td><strong>Available since:</strong> 1.7.0<br />The durability used to write to the write-ahead log. Legal values are: none, which skips the write-ahead log; log, which sends the data to the write-ahead log, but does nothing to make it durable; flush, which pushes data to the file system; and sync, which ensures the data is written to disk.<br /><strong>type:</strong> DURABILITY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">sync</code></td>
+      <td><strong>Available since:</strong> 1.7.0<br />The durability of writes to tables includes ensuring that mutations written by clients are persisted in the write-ahead log and that files written during a compaction are persisted to disk successfully. This property only configures the durability used to write to the write-ahead log. Legal values are: none, which skips the write-ahead log; log, which sends the data to the write-ahead log, but does nothing to make it durable; flush, which pushes data out of the JVM (likely to page cache); and sync, which ensures that each mutation is written to the physical disk. To configure the durability of files written during minor and major compactions, set the Hadoop property “dfs.datanode.synconclose” to “true”. This will ensure that the blocks of the files in HDFS are written to the physical disk as the compaction output files are written (Note that this may only apply to replicated files in HDFS).<br /><strong>type:</strong> DURABILITY, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">sync</code></td>
     </tr>
     <tr>
       <td><a name="table_failures_ignore" class="prop"></a> table.failures.ignore</td>
@@ -1399,7 +1407,7 @@
     </tr>
     <tr>
       <td><del><a name="table_majc_compaction_strategy" class="prop"></a> table.majc.compaction.strategy</del></td>
-      <td><strong>Available since:</strong> 1.6.0<br /><em>Deprecated since:</em> 2.1.0<br /><em>Replaced by:</em> <a href="#table_compaction_selector">table.compaction.selector</a><br /><del>See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/package-summary.html">org.apache.accumulo.core.spi.compaction</a>.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> empty</del></td>
+      <td><strong>Available since:</strong> 1.6.0<br /><em>Deprecated since:</em> 2.1.0<br /><em>Replaced by:</em> <a href="#table_compaction_selector">table.compaction.selector</a><br /><del>See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/package-summary.html">org.apache.accumulo.core.spi.compaction</a>.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> empty</del></td>
     </tr>
     <tr>
       <td><del><a name="table_majc_compaction_strategy_opts_prefix" class="prop"></a> <strong>table.majc.compaction.strategy.opts.</strong>*</del></td>
@@ -1423,7 +1431,7 @@
     </tr>
     <tr>
       <td><a name="table_scan_dispatcher" class="prop"></a> table.scan.dispatcher</td>
-      <td><strong>Available since:</strong> 2.0.0<br />This class is used to dynamically dispatch scans to configured scan executors.  Configured classes must implement <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/scan/ScanDispatcher.html">ScanDispatcher</a>. See <a href="/docs/2.x/administration/scan-executors">scan executors</a> for an overview of why and how to use this property. This property is ignored for the root and metadata table.  The metadata table always dispatches to a scan executor named <code class="language-plaintext highlighter-rouge">meta</code>.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</a></td>
+      <td><strong>Available since:</strong> 2.0.0<br />This class is used to dynamically dispatch scans to configured scan executors.  Configured classes must implement <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/scan/ScanDispatcher.html">ScanDispatcher</a>. See <a href="/docs/2.x/administration/scan-executors">scan executors</a> for an overview of why and how to use this property. This property is ignored for the root and metadata table.  The metadata table always dispatches to a scan executor named <code class="language-plaintext highlighter-rouge">meta</code>.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/scan/SimpleScanDispatcher.html">org.apache.accumulo.core.spi.scan.SimpleScanDispatcher</a></td>
     </tr>
     <tr>
       <td><a name="table_scan_dispatcher_opts_prefix" class="prop"></a> <strong>table.scan.dispatcher.opts.</strong>*</td>
@@ -1436,6 +1444,10 @@
     <tr>
       <td><a name="table_security_scan_visibility_default" class="prop"></a> table.security.scan.visibility.default</td>
       <td><strong>Available since:</strong> 1.3.5<br />The security label that will be assumed at scan time if an entry does not have a visibility expression.<br />Note: An empty security label is displayed as []. The scan results will show an empty visibility even if the visibility from this setting is applied to the entry.<br />CAUTION: If a particular key has an empty security label AND its table’s default visibility is also empty, access will ALWAYS be granted for users with permission to that table. Additionally, if this field is changed, all existing data with an empty visibility label will be interpreted with the new label on the next scan.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> empty</td>
+    </tr>
+    <tr>
+      <td><a name="table_shuffle_sources" class="prop"></a> table.shuffle.sources</td>
+      <td><strong>Available since:</strong> 2.1.5<br />Shuffle the opening order for Rfiles to reduce thread contention on file open operations.<br /><strong>type:</strong> BOOLEAN, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">false</code></td>
     </tr>
     <tr>
       <td><a name="table_split_endrow_size_max" class="prop"></a> table.split.endrow.size.max</td>
@@ -1487,7 +1499,7 @@
     </tr>
     <tr>
       <td><del><a name="trace_token_type" class="prop"></a> trace.token.type</del></td>
-      <td><strong>Available since:</strong> 1.5.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>An AuthenticationToken type supported by the authorizer.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> no</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">org.apache.accumulo.core.client.security.tokens.PasswordToken</a></del></td>
+      <td><strong>Available since:</strong> 1.5.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>An AuthenticationToken type supported by the authorizer.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> no</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/client/security/tokens/PasswordToken.html">org.apache.accumulo.core.client.security.tokens.PasswordToken</a></del></td>
     </tr>
     <tr>
       <td><del><a name="trace_user" class="prop"></a> trace.user</del></td>
@@ -1559,11 +1571,11 @@
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_default_planner" class="prop"></a> tserver.compaction.major.service.default.planner</td>
-      <td><strong>Available since:</strong> 2.1.0<br />Planner for default compaction service.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
+      <td><strong>Available since:</strong> 2.1.0<br />Planner for default compaction service.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_default_planner_opts_executors" class="prop"></a> tserver.compaction.major.service.default.planner.opts.executors</td>
-      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":2},{"name":"medium","type":"internal","maxSize":"128M","numThreads":2},{"name":"large","type":"internal","numThreads":2}]</code></td>
+      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":2},{"name":"medium","type":"internal","maxSize":"128M","numThreads":2},{"name":"large","type":"internal","numThreads":2}]</code></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_default_planner_opts_maxOpen" class="prop"></a> tserver.compaction.major.service.default.planner.opts.maxOpen</td>
@@ -1575,11 +1587,11 @@
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_meta_planner" class="prop"></a> tserver.compaction.major.service.meta.planner</td>
-      <td><strong>Available since:</strong> 2.1.0<br />Compaction planner for metadata table.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
+      <td><strong>Available since:</strong> 2.1.0<br />Compaction planner for metadata table.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_meta_planner_opts_executors" class="prop"></a> tserver.compaction.major.service.meta.planner.opts.executors</td>
-      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> JSON, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":2},{"name":"huge","type":"internal","numThreads":2}]</code></td>
+      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> JSON, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":2},{"name":"huge","type":"internal","numThreads":2}]</code></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_meta_planner_opts_maxOpen" class="prop"></a> tserver.compaction.major.service.meta.planner.opts.maxOpen</td>
@@ -1591,11 +1603,11 @@
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_root_planner" class="prop"></a> tserver.compaction.major.service.root.planner</td>
-      <td><strong>Available since:</strong> 2.1.0<br />Compaction planner for root tablet service.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
+      <td><strong>Available since:</strong> 2.1.0<br />Compaction planner for root tablet service.<br /><strong>type:</strong> CLASSNAME, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_root_planner_opts_executors" class="prop"></a> tserver.compaction.major.service.root.planner.opts.executors</td>
-      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.4/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":1},{"name":"huge","type":"internal","numThreads":1}]</code></td>
+      <td><strong>Available since:</strong> 2.1.0<br />See <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/2.1.5/org/apache/accumulo/core/spi/compaction/DefaultCompactionPlanner.html">org.apache.accumulo.core.spi.compaction.DefaultCompactionPlanner</a>.<br /><strong>type:</strong> STRING, <strong>zk mutable:</strong> yes, <strong>default value:</strong> <code class="language-plaintext highlighter-rouge">[{"name":"small","type":"internal","maxSize":"32M","numThreads":1},{"name":"huge","type":"internal","numThreads":1}]</code></td>
     </tr>
     <tr>
       <td><a name="tserver_compaction_major_service_root_planner_opts_maxOpen" class="prop"></a> tserver.compaction.major.service.root.planner.opts.maxOpen</td>
@@ -1703,7 +1715,7 @@
     </tr>
     <tr>
       <td><del><a name="tserver_replication_default_replayer" class="prop"></a> tserver.replication.default.replayer</del></td>
-      <td><strong>Available since:</strong> 1.7.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>Default AccumuloReplicationReplayer implementation.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-tserver/2.1.4/org/apache/accumulo/tserver/replication/BatchWriterReplicationReplayer.html">org.apache.accumulo.tserver.replication.BatchWriterReplicationReplayer</a></del></td>
+      <td><strong>Available since:</strong> 1.7.0<br /><em>Deprecated since:</em> 2.1.0<br /><del>Default AccumuloReplicationReplayer implementation.</del><br /><del><strong>type:</strong> CLASSNAME</del>, <del><strong>zk mutable:</strong> yes</del>, <del><strong>default value:</strong> <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-tserver/2.1.5/org/apache/accumulo/tserver/replication/BatchWriterReplicationReplayer.html">org.apache.accumulo.tserver.replication.BatchWriterReplicationReplayer</a></del></td>
     </tr>
     <tr>
       <td><del><a name="tserver_replication_replayer_prefix" class="prop"></a> <strong>tserver.replication.replayer.</strong>*</del></td>

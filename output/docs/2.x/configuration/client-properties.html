@@ -52,7 +52,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
-            <li><a class="dropdown-item" href="/release/accumulo-2.1.4/">2.1.4 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.5/">2.1.5 (Latest LTM)</a></li>
             <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
             <li><a class="dropdown-item" href="/release/">Archive</a></li>
           </ul>
@@ -460,7 +460,7 @@
       <td><a name="batch_writer_durability" class="prop"></a> batch.writer.durability</td>
       <td>default</td>
       <td>2.0.0</td>
-      <td>The durability used to write to the write-ahead log. Legal values are: none, which skips the write-ahead log; log, which sends the data to the write-ahead log, but does nothing to make it durable; flush, which pushes data to the file system; and sync, which ensures the data is written to disk. Setting this property will change the durability for the BatchWriter session. A value of “default” will use the table’s durability setting.</td>
+      <td>The durability of writes to tables includes ensuring that mutations written by clients are persisted in the write-ahead log and that files written during a compaction are persisted to disk successfully. This property only configures the durability used to write to the write-ahead log. Legal values are: none, which skips the write-ahead log; log, which sends the data to the write-ahead log, but does nothing to make it durable; flush, which pushes data out of the JVM (likely to page cache); and sync, which ensures that each mutation is written to the physical disk. To configure the durability of files written during minor and major compactions, set the Hadoop property “dfs.datanode.synconclose” to “true”. This will ensure that the blocks of the files in HDFS are written to the physical disk as the compaction output files are written (Note that this may only apply to replicated files in HDFS). Setting this property will change the durability for the BatchWriter session. A value of “default” will use the table’s durability setting.</td>
     </tr>
     <tr>
       <td><a name="batch_writer_latency_max" class="prop"></a> batch.writer.latency.max</td>
