@@ -43,8 +43,9 @@ option completes, then the user can start the server processes to complete the u
 process. The user will want to check the contents of the Manager log to observe the progress
 of the upgrade.
 
-The `accumulo upgrade --prepare` command will be included with the 2.1.4 and 3.1.0 releases
-to assist users in upgrading to the 4.0 release.
+The `accumulo upgrade --prepare` command will be included with the 2.1 and 3.1
+releases, starting with 2.1.4 and 3.1.0, to assist users in upgrading to the
+4.0 release.
 
 ## Upgrading from 1.10 or 2.0 to 2.1
 
