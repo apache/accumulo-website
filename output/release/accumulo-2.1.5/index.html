@@ -146,18 +146,34 @@ prior 2.1 release.</p>
 <h2 id="notable-changes">Notable Changes</h2>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/5998">#5998</a> Added property that allows user to specify whether or not
-RFiles should be shuffled when reading from a Tablet to try and reduce the
-number of scan threads that are waiting on the same file to opened.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5998">#5998</a> Added the <code class="language-plaintext highlighter-rouge">table.shuffle.sources</code> property that allows users
+to specify whether or not RFiles should be shuffled when reading from a
+Tablet to try and reduce the number of scan threads that are waiting on the
+same file to opened.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6040">#6040</a> <a href="https://github.com/apache/accumulo/issues/6075">#6075</a> Prior to 2.1.5 iterators that had the same
 priority would execute in a non-deterministic order. In 2.1.5 the iterators
 with the same priority will execute in the lexicographical order of the name
 property.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/6146">#6146</a> Added Scan Server property that allows user to control which
-tables are allowed to be used with Scan Servers.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6146">#6146</a> Added the <code class="language-plaintext highlighter-rouge">sserver.scan.allowed.tables.group.</code> Scan Server
+property prefix that allows user to control which tables are allowed to be
+used with Scan Servers.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6156">#6156</a> Scan Servers can now be used to scan offline tables.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6160">#6160</a> Accumulo 2.1.5 requires JDK 21 to build. For runtime the
 minimum required JDK version is 11.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5982">#5982</a> Adds function for bulk V2 to compute load plans based on
+the minimum and maximum row present within the RFile when splits are not
+present.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5974">#5974</a> Caches the log recovery decision to avoid redundant work
+in manager for log recovery.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/4096">#4096</a> Updates the createTable command to accept a property file on
+inital table creation via the <code class="language-plaintext highlighter-rouge">propFile</code> option.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6416">#6416</a> Removes the <code class="language-plaintext highlighter-rouge">gc.remove.in.use.candidates</code> experimental
+feature flag property enabling the behavior added in <a href="https://github.com/apache/accumulo/issues/3738">#3738</a></li>
+  <li><a href="https://github.com/apache/accumulo/issues/6219">#6219</a> Adds the property <code class="language-plaintext highlighter-rouge">manager.table.delete.optimization</code> which
+will skip the delete table optimization</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6049">#6049</a> Adds the property <code class="language-plaintext highlighter-rouge">manager.tservers.halt.grace.period</code> which
+defines the time duration before the Manager halts non-responsive tservers
+via lock removal.</li>
 </ul>
 
 <h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
@@ -173,15 +189,21 @@ property so that changes don’t require process restart.</li>
 periodically log summary information to include number of compactions running
 for each table, the number of compactor, queued compactions (max 100), and
 running compactions for each compaction queue.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/6029">#6029</a> Modified Monitor tables to support ‘all’ size option.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6148">#6148</a> Fixed shell commands <code class="language-plaintext highlighter-rouge">grep</code> and <code class="language-plaintext highlighter-rouge">deletemany</code> to honor the
 context classloader option.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6397">#6397</a> Fixes monitor to always show the Dead Tablet Servers table</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6012">#6012</a> Changes createTable command options to simplify table
+property behavior.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5937">#5937</a> Switched to using rendezvous hashing for scan server selection.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6307">#6307</a> Fixes multiple problems with scan timeout.</li>
 </ul>
 
 <h3 id="other-improvements">Other Improvements</h3>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/5928">#5928</a> Converted Scan Servers to use Rendezvous hashing.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6029">#6029</a> Modified Monitor tables to support ‘all’ size option.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/5928">#5928</a> Converted Scan Servers to use Rendezvous hashing to reduce 
+churn during scan server selection when adding or removing scan servers.</li>
   <li><a href="https://github.com/apache/accumulo/issues/5983">#5983</a> Added <code class="language-plaintext highlighter-rouge">-v</code> option to shell <code class="language-plaintext highlighter-rouge">getsplits</code> command to print split
 information that matches the supplied obfuscated extent.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6005">#6005</a> Added compaction output tmp file name to pre-compaction log
@@ -193,6 +215,9 @@ id from the table_locks directory in ZooKeeper to match the delete behavior
 of the <code class="language-plaintext highlighter-rouge">admin fate --delete</code> command.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6064">#6064</a> Updated log4j dependency to version 2.25.3.</li>
   <li><a href="https://github.com/apache/accumulo/issues/6067">#6067</a> Fixed <code class="language-plaintext highlighter-rouge">accumulo-cluster prune</code> bug with Scan Servers.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6437">#6437</a> Adds –dry-run option to Merge command.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6097">#6097</a> Only initializes vfs when deprecated prop is set.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6051">#6051</a> Fixes the shell fate delete command.</li>
 </ul>
 
 <h2 id="requirements">Requirements</h2>

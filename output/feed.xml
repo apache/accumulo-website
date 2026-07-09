@@ -6,8 +6,8 @@
 </description>
     <link>https://accumulo.apache.org/</link>
     <atom:link href="https://accumulo.apache.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 09 Jul 2026 03:07:39 +0000</pubDate>
-    <lastBuildDate>Thu, 09 Jul 2026 03:07:39 +0000</lastBuildDate>
+    <pubDate>Thu, 09 Jul 2026 06:25:32 +0000</pubDate>
+    <lastBuildDate>Thu, 09 Jul 2026 06:25:32 +0000</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
     
     
@@ -23,18 +23,34 @@ prior 2.1 release.&lt;/p&gt;
 &lt;h2 id=&quot;notable-changes&quot;&gt;Notable Changes&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5998&quot;&gt;#5998&lt;/a&gt; Added property that allows user to specify whether or not
-RFiles should be shuffled when reading from a Tablet to try and reduce the
-number of scan threads that are waiting on the same file to opened.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5998&quot;&gt;#5998&lt;/a&gt; Added the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table.shuffle.sources&lt;/code&gt; property that allows users
+to specify whether or not RFiles should be shuffled when reading from a
+Tablet to try and reduce the number of scan threads that are waiting on the
+same file to opened.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6040&quot;&gt;#6040&lt;/a&gt; &lt;a href=&quot;https://github.com/apache/accumulo/issues/6075&quot;&gt;#6075&lt;/a&gt; Prior to 2.1.5 iterators that had the same
 priority would execute in a non-deterministic order. In 2.1.5 the iterators
 with the same priority will execute in the lexicographical order of the name
 property.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6146&quot;&gt;#6146&lt;/a&gt; Added Scan Server property that allows user to control which
-tables are allowed to be used with Scan Servers.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6146&quot;&gt;#6146&lt;/a&gt; Added the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sserver.scan.allowed.tables.group.&lt;/code&gt; Scan Server
+property prefix that allows user to control which tables are allowed to be
+used with Scan Servers.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6156&quot;&gt;#6156&lt;/a&gt; Scan Servers can now be used to scan offline tables.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6160&quot;&gt;#6160&lt;/a&gt; Accumulo 2.1.5 requires JDK 21 to build. For runtime the
 minimum required JDK version is 11.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5982&quot;&gt;#5982&lt;/a&gt; Adds function for bulk V2 to compute load plans based on
+the minimum and maximum row present within the RFile when splits are not
+present.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5974&quot;&gt;#5974&lt;/a&gt; Caches the log recovery decision to avoid redundant work
+in manager for log recovery.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/4096&quot;&gt;#4096&lt;/a&gt; Updates the createTable command to accept a property file on
+inital table creation via the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;propFile&lt;/code&gt; option.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6416&quot;&gt;#6416&lt;/a&gt; Removes the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gc.remove.in.use.candidates&lt;/code&gt; experimental
+feature flag property enabling the behavior added in &lt;a href=&quot;https://github.com/apache/accumulo/issues/3738&quot;&gt;#3738&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6219&quot;&gt;#6219&lt;/a&gt; Adds the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;manager.table.delete.optimization&lt;/code&gt; which
+will skip the delete table optimization&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6049&quot;&gt;#6049&lt;/a&gt; Adds the property &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;manager.tservers.halt.grace.period&lt;/code&gt; which
+defines the time duration before the Manager halts non-responsive tservers
+via lock removal.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;notable-bug-fixes&quot;&gt;Notable Bug Fixes&lt;/h3&gt;
@@ -50,15 +66,21 @@ property so that changes don’t require process restart.&lt;/li&gt;
 periodically log summary information to include number of compactions running
 for each table, the number of compactor, queued compactions (max 100), and
 running compactions for each compaction queue.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6029&quot;&gt;#6029&lt;/a&gt; Modified Monitor tables to support ‘all’ size option.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6148&quot;&gt;#6148&lt;/a&gt; Fixed shell commands &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deletemany&lt;/code&gt; to honor the
 context classloader option.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6397&quot;&gt;#6397&lt;/a&gt; Fixes monitor to always show the Dead Tablet Servers table&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6012&quot;&gt;#6012&lt;/a&gt; Changes createTable command options to simplify table
+property behavior.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5937&quot;&gt;#5937&lt;/a&gt; Switched to using rendezvous hashing for scan server selection.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6307&quot;&gt;#6307&lt;/a&gt; Fixes multiple problems with scan timeout.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;other-improvements&quot;&gt;Other Improvements&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5928&quot;&gt;#5928&lt;/a&gt; Converted Scan Servers to use Rendezvous hashing.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6029&quot;&gt;#6029&lt;/a&gt; Modified Monitor tables to support ‘all’ size option.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5928&quot;&gt;#5928&lt;/a&gt; Converted Scan Servers to use Rendezvous hashing to reduce 
+churn during scan server selection when adding or removing scan servers.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/5983&quot;&gt;#5983&lt;/a&gt; Added &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-v&lt;/code&gt; option to shell &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;getsplits&lt;/code&gt; command to print split
 information that matches the supplied obfuscated extent.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6005&quot;&gt;#6005&lt;/a&gt; Added compaction output tmp file name to pre-compaction log
@@ -70,6 +92,9 @@ id from the table_locks directory in ZooKeeper to match the delete behavior
 of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin fate --delete&lt;/code&gt; command.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6064&quot;&gt;#6064&lt;/a&gt; Updated log4j dependency to version 2.25.3.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6067&quot;&gt;#6067&lt;/a&gt; Fixed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;accumulo-cluster prune&lt;/code&gt; bug with Scan Servers.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6437&quot;&gt;#6437&lt;/a&gt; Adds –dry-run option to Merge command.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6097&quot;&gt;#6097&lt;/a&gt; Only initializes vfs when deprecated prop is set.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apache/accumulo/issues/6051&quot;&gt;#6051&lt;/a&gt; Fixes the shell fate delete command.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;requirements&quot;&gt;Requirements&lt;/h2&gt;
