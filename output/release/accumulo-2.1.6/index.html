@@ -129,11 +129,6 @@
     </ul></nav>
 
 
-<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
-  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
-  Please view <a class="alert-link" href="/release/accumulo-2.1.6/">the latest release notes</a>.
-</div>
-
 
 
 <div class="alert alert-success" role="alert">
@@ -148,29 +143,35 @@ fixes and minor enhancements. This version supersedes earlier 2.1 releases
 and users upgrading to 2.1 should upgrade directly to this version instead of
 any prior 2.1 release.</p>
 
-<h2 id="notable-changes">Notable Changes</h2>
+<h2 id="important-security-fixes">Important Security Fixes</h2>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/6461">#6461</a> Hadoop minimum compatibility was changed from 3.0.x to 3.3.x
-to make use of a new API for opening files.</li>
-  <li><a href="https://github.com/apache/accumulo/issues/6460">#6460</a> Changes the API used for opening files that will reduce calls
-to the NameNode when the FileStatus has already been retrieved for the file.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6478">#6478</a> - This version fixes a security flaw discovered in 2.1.4 and
+2.1.5 that allowed an authenticated user without system permissions to issue
+a graceful shutdown request to all Accumulo services. This action could lead
+to a denial of service on an Accumulo cluster. While this action logged a
+message that the action was denied, the request would have been honored by
+the server, and the server would have still shut down.</li>
 </ul>
 
-<h3 id="notable-bug-fixes">Notable Bug Fixes</h3>
+<h2 id="other-notable-changes">Other Notable Changes</h2>
 
-<h3 id="other-improvements">Other Improvements</h3>
+<p>The following changes were made to improve performance and stability:</p>
 
 <ul>
-  <li><a href="https://github.com/apache/accumulo/issues/6449">#6449</a> Modifies the Garbage Collector to use a server-side filter
-when processing candidate files.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6449">#6449</a> - The Garbage Collector was modified to use a server-side
+filter when processing candidate files to reduce memory usage.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6470">#6470</a> - Some client code was updated to avoid some deadlocks that
+were possible if a user failed to close scanners before closing the
+AccumuloClient associated with them.</li>
+  <li><a href="https://github.com/apache/accumulo/issues/6450">#6450</a>, <a href="https://github.com/apache/accumulo/issues/6451">#6451</a> - Some data structures were changed throughout
+the code to set their expected size upon creation, in order to avoid
+resizing-related performance penalties.</li>
 </ul>
-
-<h3 id="semver-violations">Semver violations</h3>
 
 <h2 id="requirements">Requirements</h2>
 
-<p>Accumulo 2.1.6 requires JDK 21 to build, but still supports Java 11 runtime.</p>
+<p>This version requires JDK 21 to build, but still supports Java 11 runtime.</p>
 
 <h2 id="upgrading">Upgrading</h2>
 
