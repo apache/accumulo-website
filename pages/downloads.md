@@ -104,7 +104,7 @@ available in a future update to this site.
 </div>
 
 
-{% assign linkVers = '2.1.5' %}
+{% assign linkVers = '2.1.6' %}
 ### Accumulo {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
 {: #accumulo-latest-ltm }
 
