@@ -208,7 +208,7 @@ references to the file in the METADATA table and within the tablet server
 hosting the file can be resolved by Accumulo. An empty file can be created using
 the CreateEmpty utility:
 
-    $ accumulo org.apache.accumulo.core.file.rfile.CreateEmpty /path/to/empty/file/empty.rf
+    $ accumulo create-empty --type RFILE /path/to/empty/file/empty.rf
 
 The process is to delete the corrupt file and then move the empty file into its
 place (The generated empty file can be copied and used multiple times if necessary and does not need
@@ -249,21 +249,26 @@ metadata table!), the following process can be followed to create a valid, empty
 WAL file. Run the following commands as the Accumulo unix user (to ensure that
 the proper file permissions in HDFS)
 
-    $ echo -n -e '--- Log File Header (v2) ---\x00\x00\x00\x00' > empty.wal
+The create-empty utility can be used to create an empty wal file.
 
-The above creates a file with the text "--- Log File Header (v2) ---" and then
-four bytes. You should verify the contents of the file with a hexdump tool.
 
-Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS
-with the empty WAL.
+    $ accumulo create-empty --type WAL [filename]
 
-    $ hdfs dfs -moveFromLocal empty.wal /user/accumulo/empty.wal
-    $ hdfs dfs -mv /user/accumulo/empty.wal /accumulo/wal/tserver-4.example.com+10011/26abec5b-63e7-40dd-9fa1-b8ad2436606e
+Note the create-empty utility default type (or specifying `--type RFILE` will create an empty rfile) 
 
-After the corrupt WAL file has been replaced, the system should automatically recover.
-It may be necessary to restart the Accumulo Manager process as an exponential
-backup policy is used which could lead to a long wait before Accumulo will
-try to re-load the WAL file.
+Then, place this empty WAL in HDFS and then replace the corrupt WAL file in HDFS with the empty WAL for the 
+tserver / host pair with the following hdfs commands:
+
+    $ hadoop fs –rm /accumulo/wal/[tserver+port]/[uuid]; \
+    hadoop fs -mv /path/to/empty/file/empty.rf /accumulo/wal/[tserver+port]/[uuid]
+
+Note:
+- the `+` separator for port.
+- the wal file is the uuid, without an extension
+
+After the corrupt WAL file has been replaced, the system should automatically recover. It may be necessary to restart 
+the Accumulo Manager process as an exponential backup policy is used which could lead to a long wait before Accumulo 
+will try to re-load the WAL file.
 
 ## Zookeeper Failures
 
