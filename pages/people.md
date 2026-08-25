@@ -24,6 +24,7 @@ $(function() {
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
+| akhan         | [Arbaaz Khan](https://github.com/ArbaazKhan1)     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | alerman       | Adam Lerman                                       | [Red Drum][REDDRUM]                     | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
