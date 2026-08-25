@@ -22,5 +22,5 @@ Search results are limited to blog posts, release notes, and the 2.x documentati
 
 <table class="table table-striped"><tbody id="search_results"></tbody></table>
 
-<script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+<script src="/js/lunr/2.3.9/lunr.min.js"></script>
 <script src="/js/search.js"></script>

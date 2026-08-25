@@ -107,55 +107,74 @@ HTML styled "just right".
 Jekyll will print a local URL where the site can be viewed (usually,
 [http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
 
-### Testing using Docker environment 
+### Testing using a Container environment
+
+Note: The example commands below use `podman`, but you can replace it with a
+compatible tool, such as `docker`.
 
 A containerized development environment can be built using the local
-Dockerfile.
-
-
-A containerized development environment can be built using the local
-Dockerfile. You can build it with the following command:
+Containerfile. You can build it with the following command:
 
 ```bash
-docker build -t webdev .
+podman build -t webdev -f Containerfile .
 ```
 
 This action will produce a `webdev` image, with all the website's build
-prerequisites preinstalled. When a container is run from this image, it
-will perform a `jekyll serve` command with the polling option enabled,
-so that changes you make locally will be immediately reflected.
-
-When you run a container using the webdev image, your current working
-directory will be mounted, so that any changes made by the build inside
-the container will be reflected in your local workspace. This is done with
-the `-v` flag. To run the container, execute the following command:
+prerequisites preinstalled. When a container is run from this image, it will
+perform a `jekyll serve` command with the polling option enabled, so that
+changes you make locally will be immediately reflected after reloading the page
+in your browser. To run the container, execute the following command:
 
 ```bash
-docker run -d -v "$PWD":/mnt/workdir -p 4000:4000 webdev
+podman run -i -t --rm -v "$(pwd)":/mnt/workdir:Z -p 4000:4000 webdev
 ```
+
+Flags used in this command are as follows:
+
+* `-i` : run interactively, to send keyboard commands to the process
+* `-t` : allocate a psuedo-TTY, to send signals like with Ctrl-C to exit
+* `--rm` : clean up the container resources after exiting
+* `-v "$(pwd)":/mnt/workdir:Z` : mount your current working directory, so that
+  any changes made by the build inside the container will be reflected in the
+  local workspace on the host; `:Z` causes the host files to be labeled for
+  SELinux, so the container can access them; the most recent container running
+  will relabel for its own access; use lower-case `:z` instead, if you need the
+  directory to be shared across multiple running containers at the same time;
+  restore any labels to their system defaults with `restorecon -RFv .`.
+* `-p 4000:4000` : forward port TCP from the container to the host, so you can
+  view the served Jekyll site in a browser on the host
 
 While this container is running, you will be able to review the rendered website
 in your local browser at [http://127.0.0.1:4000/](http://127.0.0.1:4000/).
 
-
 Shell access can be obtained by overriding the default container command.
 
-This is useful for adding new gems, or modifying the Gemfile.lock for updating
-existing dependencies.
+This is useful for adding new gems to `Gemfile` or to run `bundle update` to
+update the existing dependencies in `Gemfile.lock`.
 
-When using shell access the local directory must be mounted to ensure
-the Gemfile and Gemfile.lock updates are reflected in your local
-environment so you can create a commit and submit a PR.
+When using shell access, the local directory must be mounted to ensure the
+`Gemfile` and `Gemfile.lock` updates are reflected in your local environment so
+you can create a commit and submit a PR.
+
+To do this, execute the same command as before, but with `/bin/bash` on the end:
 
 ```bash
-docker run -v "$PWD":/mnt/workdir -it webdev /bin/bash
+podman run -i -t --rm -v "$(pwd)":/mnt/workdir:Z -p 4000:4000 webdev /bin/bash
 ```
+
+You may need to manually delete the `_site` or `.jekyll-cache` directories if
+they already exist and are causing issues with the build.
 
 ## Publishing
 
 Changes pushed to our `main` branch will automatically trigger Jekyll to
 build our site from that branch and push the result to our `asf-site`
 branch, where they will be served on [our production site][production].
+
+If changes fail to be pushed to the `asf-site` branch then the buildbot build
+logs should be checked for failures.
+
+[Buildbot jekyll_websites](https://ci2.apache.org/#/builders/7)
 
 [Bundler]: https://bundler.io/
 [Jekyll]: https://jekyllrb.com/

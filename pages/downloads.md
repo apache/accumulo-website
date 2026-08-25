@@ -3,6 +3,16 @@ title: Downloads
 permalink: /downloads/
 ---
 
+{% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
+{% assign downloadsLink = 'https://downloads.apache.org' %}
+{% assign glyphSave = '&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span>' %}
+{% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
+{% assign srcbinArray = 'src bin' | split: ' ' %}
+{% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
+{% assign btnSigStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
+{% assign btnHashStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
+{% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
+
 <script type="text/javascript">
 
 var updateLinks = function(mirror) {
@@ -51,7 +61,7 @@ var mirrorsCallback = function(json) {
 };
 
 // get mirrors when page is ready
-$(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirrorsCallback); });
+$(function() { $.getJSON("{{closerLink}}?as_json", mirrorsCallback); });
 
 </script>
 
@@ -59,21 +69,11 @@ $(function() { $.getJSON("https://accumulo.apache.org/mirrors.cgi?as_json", mirr
 
 Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEYS].
 
-{% assign closerLink = 'https://www.apache.org/dyn/closer.lua' %}
-{% assign downloadsLink = 'https://downloads.apache.org' %}
-{% assign glyphSave = '&nbsp;<span class="fa-solid fa-cloud-arrow-down"></span>' %}
-{% assign glyphLock = '&nbsp;<span class="fa-solid fa-lock"></span>' %}
-{% assign srcbinArray = 'src bin' | split: ' ' %}
-{% assign btnDownloadStyle = 'class="btn btn-primary" style="text-transform: none; font-family: monospace"' %}
-{% assign btnSigStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
-{% assign btnHashStyle = 'class="btn btn-outline-secondary" style="font-family: monospace"' %}
-{% assign btnDocStyle = 'class="btn btn-secondary" style="text-transform: none; font-family: monospace; margin-bottom: 5px"' %}
-
 ## Current Releases
 
 {% assign linkVers = '3.0.0' %}
-### {{linkVers}} **Latest**{: .badge .bg-primary} **non-LTM**{: .badge .bg-warning}
-{: #latest }
+### Accumulo {{linkVers}} **non-LTM**{: .badge .bg-warning}
+{: #accumulo-nonltm }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest bleeding edge
 release, containing the newest features, bug fixes, performance enhancements,
@@ -87,7 +87,7 @@ available in a future update to this site.
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
@@ -104,9 +104,9 @@ available in a future update to this site.
 </div>
 
 
-{% assign linkVers = '2.1.2' %}
-### {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
-{: #latest }
+{% assign linkVers = '2.1.6' %}
+### Accumulo {{linkVers}} **Latest**{: .badge .bg-primary} **LTM**{: .badge .bg-success}
+{: #accumulo-latest-ltm }
 
 The {{linkVers}} release of Apache Accumulo&reg; is the latest release on the
 current stable generation, containing the newest bug fixes, performance
@@ -117,7 +117,7 @@ enhancements, and more.
 {% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
@@ -134,43 +134,53 @@ enhancements, and more.
 </div>
 
 
-{% assign linkVers = '1.10.4' %}
-### {{linkVers}} **Legacy**{: .badge .bg-secondary} **LTM**{: .badge .bg-success}
-{: #legacy }
+{% assign linkVers = '1.0.0' %}
+### Accumulo ClassLoader Extras {{linkVers}}
+{: #accumulo-classloader-extras }
 
-The most recent legacy (1.x) release of Apache Accumulo&reg; is version
-{{linkVers}}. This is the final release of the 1.10 series, which is now
-considered end-of-life. This means that code fixes that address bugs
-reported against this version will only be applied to future versions.
+The Accumulo ClassLoader Extras (accumulo-classloaders or accumulo-classloader-extras)
+library contains a variety of Java classloader-related utilities, or libraries to support
+those utilities, for use with Apache Accumulo.
 
-{% for srcbin in srcbinArray %}
-{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
-{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
+{% assign lnkFile = 'accumulo-classloader-extras-' | append: linkVers | append: '-' | append: 'source-release' | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/accumulo-classloader-extras/' | append: linkVers | append: '/' | append: lnkFile %}
 <div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
   <div class="btn-group me-2">
-    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
   </div>
   <div class="btn-group">
     <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
     <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
   </div>
 </div>
-{% endfor %}
-<div class="btn-group-sm" style="margin: 20px;">
-  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
-  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/accumulo_user_manual">User Manual</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/examples">Examples</a>
-  <a {{btnDocStyle}} href="{{site.baseurl}}/1.10/apidocs">Java API</a>
-</div>
 
+
+{% assign linkVers = '1.0.0-beta3' %}
+### Accumulo Access {{linkVers}}
+{: #accumulo-access }
+
+The Accumulo Access library provides the same functionality, semantics, and syntax as the
+Accumulo ColumnVisibility and VisibilityEvaluator classes in a standalone java library
+that can be used separately from Accumulo.
+
+{% assign lnkFile = 'accumulo-access-' | append: linkVers | append: '-' | append: 'source-release' | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/accumulo-access/' | append: linkVers | append: '/' | append: lnkFile %}
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div>
+  <div class="btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
+</div>
 
 ## <small><span class="fa-solid fa-circle-info" aria-hidden="true"></span></small> Legend
 {: #legend }
 
 **LTM**{: .badge .bg-success} / **non-LTM**{: .badge .bg-warning} indicates a [Long Term Maintenance][LTM] release or not
 
-**Latest**{: .badge .bg-primary} / **Legacy**{: .badge .bg-secondary} indicates the latest or previous generation
+**Latest**{: .badge .bg-primary} / **Legacy**{: .badge .bg-secondary} indicates the latest or previous generation when two LTM releases are being concurrently maintained
 
 
 ## Older releases
