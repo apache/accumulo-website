@@ -28,15 +28,17 @@ The source for these tags is at [\_plugins/links.rb](_plugins/links.rb).
 
 ### Updating Property Documentation for Releases
 
-Building Accumulo  generates `server-properties*.md` and `client-properties*.md`.
-To regenerate these, do the following.
+Building Accumulo generates `server-properties*.md`, `client-properties*.md`, and
+`metrics.md`. To regenerate these, do the following.
 
 ```bash
 ACCUMULO_SITE_CLONE=<accumulo website clone location, with main branch checked out>
-ACCUMULO_CLONE=<accumulo clone location>
+ACCUMULO_CLONE=<accumulo clone location, with the release tag checked out>
+# major version of that tag
+DOCS_VERSION=4
 cd "$ACCUMULO_CLONE"
 mvn package -DskipTests
-cp ./core/target/generated-docs/*.md "$ACCUMULO_SITE_CLONE"/_docs-2/configuration/
+cp ./core/target/generated-docs/*.md "$ACCUMULO_SITE_CLONE/_docs-$DOCS_VERSION/configuration/"
 ```
 
 ## Local Builds for Testing
