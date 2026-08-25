@@ -438,6 +438,46 @@
 <strong>Description:</strong> Reports 1 when process memory usage is above the threshold, reports 0 when memory is okay.</p>
 </div>
 <div class="metric-section">
+  <h3 id="accumulorecoveriessortsavgprogress">accumulo.recoveries.sorts.avg.progress</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The average percentage (0.0 - 99.9) of the in progress log sorts.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriessortsinprogress">accumulo.recoveries.sorts.in.progress</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of log sorts in progress.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriessortsruntimelongest">accumulo.recoveries.sorts.runtime.longest</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The time (in milliseconds) of the longest running log sort.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriestabletscompleted">accumulo.recoveries.tablets.completed</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of tablet recoveries completed</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriestabletsfailed">accumulo.recoveries.tablets.failed</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of tablet recoveries failed</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriestabletsinprogress">accumulo.recoveries.tablets.in.progress</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of tablet recoveries in progress</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriestabletsmutationsreplayed">accumulo.recoveries.tablets.mutations.replayed</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of mutations replayed for tablet recovery</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulorecoveriestabletsstarted">accumulo.recoveries.tablets.started</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> The number of tablet recoveries started</p>
+</div>
+<div class="metric-section">
   <h3 id="accumuloserveridle">accumulo.server.idle</h3>
   <p><strong>Type:</strong> GAUGE<br />
 <strong>Description:</strong> Indicates if the server is idle or not. The value will be 1 when idle and 0 when not idle.</p>
@@ -451,6 +491,16 @@
   <h3 id="accumulothriftidle">accumulo.thrift.idle</h3>
   <p><strong>Type:</strong> DISTRIBUTION_SUMMARY<br />
 <strong>Description:</strong> Time waiting to execute an RPC request.</p>
+</div>
+<div class="metric-section">
+  <h3 id="executorcompleted">executor.completed</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Task completed by a thread pool. Each thread pool emits this metric w/ a different tag.</p>
+</div>
+<div class="metric-section">
+  <h3 id="executorqueued">executor.queued</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Task queued for a thread pool. Each thread pool emits this metric w/ a different tag.</p>
 </div>
 
 <h2 id="compaction-metrics"><a id="compaction-metrics"></a>Compaction Metrics</h2>
@@ -466,6 +516,26 @@
   <h3 id="accumulocompactionentrieswritten">accumulo.compaction.entries.written</h3>
   <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Number of entries written by all compactions that have run on this compactor (majc) or tserver (minc).</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionmajccancelled">accumulo.compaction.majc.cancelled</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Number compactions that have been cancelled on this compactor</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionmajccompleted">accumulo.compaction.majc.completed</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Number compactions that have succeeded on this compactor</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionmajcfailed">accumulo.compaction.majc.failed</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Number compactions that have failed on this compactor</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionmajcfailuresconsecutive">accumulo.compaction.majc.failures.consecutive</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Number of consecutive compaction failures. Resets to zero on a successful compaction</p>
 </div>
 <div class="metric-section">
   <h3 id="accumulocompactionmajcinprogress">accumulo.compaction.majc.in_progress</h3>
@@ -496,6 +566,11 @@
   <h3 id="accumulocompactionmincstuck">accumulo.compaction.minc.stuck</h3>
   <p><strong>Type:</strong> LONG_TASK_TIMER<br />
 <strong>Description:</strong> Number and duration of stuck minor compactions.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionprocessterminated">accumulo.compaction.process.terminated</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Will report 1 if the Compactor terminates due to consecutive failures, else 0. Emitting this metric is a best effort before the process terminates</p>
 </div>
 <div class="metric-section">
   <h3 id="accumulocompactionqueuecount">accumulo.compaction.queue.count</h3>
@@ -548,7 +623,17 @@
 <strong>Description:</strong> Size of queued jobs in bytes.</p>
 </div>
 <div class="metric-section">
-  <h3 id="accumulocompactionsvcmisconfigured">accumulo.compaction.svc.misconfigured</h3>
+  <h3 id="accumulocompactionsvcmetamisconfigured">accumulo.compaction.svc.meta.misconfigured</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionsvcrootmisconfigured">accumulo.compaction.svc.root.misconfigured</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulocompactionsvcusermisconfigured">accumulo.compaction.svc.user.misconfigured</h3>
   <p><strong>Type:</strong> GAUGE<br />
 <strong>Description:</strong> A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.</p>
 </div>
@@ -603,9 +688,19 @@
 <strong>Description:</strong> Number of FATE operations in progress. The op type is designated by the <code class="language-plaintext highlighter-rouge">op.type</code> tag.</p>
 </div>
 <div class="metric-section">
+  <h3 id="accumulofateopsthreadsinactive">accumulo.fate.ops.threads.inactive</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Keeps track of the number of idle threads (not working on a fate operation) in the thread pool. The pool name can be found in the pool.name tag. The fate instance type can be found in the instanceType tag.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulofateopsthreadstotal">accumulo.fate.ops.threads.total</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Keeps track of the total number of threads in the thread pool. The pool name can be found in the pool.name tag. The fate instance type can be found in the instanceType tag.</p>
+</div>
+<div class="metric-section">
   <h3 id="accumulofatetx">accumulo.fate.tx</h3>
   <p><strong>Type:</strong> GAUGE<br />
-<strong>Description:</strong> The state is now in a tag (e.g., state=new, state=in.progress, state=failed, etc.).</p>
+<strong>Description:</strong> Count of FATE operations in a certain state. The state is now in a tag (e.g., state=new, state=in.progress, state=failed, etc.).</p>
 </div>
 
 <h2 id="garbage-collection-metrics"><a id="garbage-collection-metrics"></a>Garbage Collection Metrics</h2>
@@ -789,18 +884,23 @@
 
 <div class="metric-section">
   <h3 id="accumuloscanbusytimeoutcount">accumulo.scan.busy.timeout.count</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Count of the scans where a busy timeout happened.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanclose">accumulo.scan.close</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Number of calls to close a scan or multiscan.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscancontinue">accumulo.scan.continue</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Number of calls to continue a scan or multiscan.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumuloscanerrors">accumulo.scan.errors</h3>
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
+<strong>Description:</strong> Number of scan task that had an exception.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanfilesopen">accumulo.scan.files.open</h3>
@@ -809,42 +909,42 @@
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanpausedformemory">accumulo.scan.paused.for.memory</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Count of scans paused due to server being low on memory.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanqueries">accumulo.scan.queries</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Number of queries made during scans.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanqueryresults">accumulo.scan.query.results</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Query count. The rate can be derived from this metric.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanqueryresultsbytes">accumulo.scan.query.results.bytes</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Query byte count. The rate can be derived from this metric.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanqueryscannedentries">accumulo.scan.query.scanned.entries</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Count of scanned entries. The rate can be derived from this metric.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanresult">accumulo.scan.result</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> DISTRIBUTION_SUMMARY<br />
 <strong>Description:</strong> Results per scan.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanreturnearlyformemory">accumulo.scan.return.early.for.memory</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Count of scans that returned results early due to server being low on memory.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanstart">accumulo.scan.start</h3>
-  <p><strong>Type:</strong> COUNTER<br />
+  <p><strong>Type:</strong> FUNCTION_COUNTER<br />
 <strong>Description:</strong> Number of calls to start a scan or multiscan.</p>
 </div>
 <div class="metric-section">
@@ -854,7 +954,7 @@
 </div>
 <div class="metric-section">
   <h3 id="accumuloscanyields">accumulo.scan.yields</h3>
-  <p><strong>Type:</strong> GAUGE<br />
+  <p><strong>Type:</strong> DISTRIBUTION_SUMMARY<br />
 <strong>Description:</strong> Counts scans that have yielded.</p>
 </div>
 <div class="metric-section">
@@ -948,9 +1048,19 @@
 <strong>Description:</strong> The number of migrations that need to complete before the system is balanced.</p>
 </div>
 <div class="metric-section">
+  <h3 id="accumulomanagergoalstate">accumulo.manager.goal.state</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Manager goal state: -1=unknown, 0=CLEAN_STOP, 1=SAFE_MODE, 2=NORMAL.</p>
+</div>
+<div class="metric-section">
   <h3 id="accumulotabletmgmtmetaerrors">accumulo.tabletmgmt.meta.errors</h3>
   <p><strong>Type:</strong> GAUGE<br />
 <strong>Description:</strong> Error count encountered by the TabletGroupWatcher for the META data level.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulotabletmgmtmetarecovery">accumulo.tabletmgmt.meta.recovery</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Recovery count encountered by the TabletGroupWatcher for the META data level.</p>
 </div>
 <div class="metric-section">
   <h3 id="accumulotabletmgmtrooterrors">accumulo.tabletmgmt.root.errors</h3>
@@ -958,9 +1068,19 @@
 <strong>Description:</strong> Error count encountered by the TabletGroupWatcher for the ROOT data level.</p>
 </div>
 <div class="metric-section">
+  <h3 id="accumulotabletmgmtrootrecovery">accumulo.tabletmgmt.root.recovery</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Recovery count encountered by the TabletGroupWatcher for the ROOT data level.</p>
+</div>
+<div class="metric-section">
   <h3 id="accumulotabletmgmtusererrors">accumulo.tabletmgmt.user.errors</h3>
   <p><strong>Type:</strong> GAUGE<br />
 <strong>Description:</strong> Error count encountered by the TabletGroupWatcher for the USER data level.</p>
+</div>
+<div class="metric-section">
+  <h3 id="accumulotabletmgmtuserrecovery">accumulo.tabletmgmt.user.recovery</h3>
+  <p><strong>Type:</strong> GAUGE<br />
+<strong>Description:</strong> Recovery count encountered by the TabletGroupWatcher for the USER data level.</p>
 </div>
 
 
