@@ -33,6 +33,46 @@ Metrics that are generated across all server types.
 **Description:** Reports 1 when process memory usage is above the threshold, reports 0 when memory is okay.
 </div>
 <div markdown="1" class="metric-section">
+### accumulo.recoveries.sorts.avg.progress
+**Type:** GAUGE  
+**Description:** The average percentage (0.0 - 99.9) of the in progress log sorts.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.sorts.in.progress
+**Type:** GAUGE  
+**Description:** The number of log sorts in progress.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.sorts.runtime.longest
+**Type:** GAUGE  
+**Description:** The time (in milliseconds) of the longest running log sort.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.tablets.completed
+**Type:** GAUGE  
+**Description:** The number of tablet recoveries completed
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.tablets.failed
+**Type:** GAUGE  
+**Description:** The number of tablet recoveries failed
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.tablets.in.progress
+**Type:** GAUGE  
+**Description:** The number of tablet recoveries in progress
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.tablets.mutations.replayed
+**Type:** GAUGE  
+**Description:** The number of mutations replayed for tablet recovery
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.recoveries.tablets.started
+**Type:** GAUGE  
+**Description:** The number of tablet recoveries started
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.server.idle
 **Type:** GAUGE  
 **Description:** Indicates if the server is idle or not. The value will be 1 when idle and 0 when not idle.
@@ -46,6 +86,16 @@ Metrics that are generated across all server types.
 ### accumulo.thrift.idle
 **Type:** DISTRIBUTION_SUMMARY  
 **Description:** Time waiting to execute an RPC request.
+</div>
+<div markdown="1" class="metric-section">
+### executor.completed
+**Type:** FUNCTION_COUNTER  
+**Description:** Task completed by a thread pool. Each thread pool emits this metric w/ a different tag.
+</div>
+<div markdown="1" class="metric-section">
+### executor.queued
+**Type:** GAUGE  
+**Description:** Task queued for a thread pool. Each thread pool emits this metric w/ a different tag.
 </div>
 {::options parse_block_html="false" /}
 
@@ -64,6 +114,26 @@ Metrics specific to compactions, both minor and major. Metrics for major compact
 ### accumulo.compaction.entries.written
 **Type:** FUNCTION_COUNTER  
 **Description:** Number of entries written by all compactions that have run on this compactor (majc) or tserver (minc).
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.majc.cancelled
+**Type:** FUNCTION_COUNTER  
+**Description:** Number compactions that have been cancelled on this compactor
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.majc.completed
+**Type:** FUNCTION_COUNTER  
+**Description:** Number compactions that have succeeded on this compactor
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.majc.failed
+**Type:** FUNCTION_COUNTER  
+**Description:** Number compactions that have failed on this compactor
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.majc.failures.consecutive
+**Type:** GAUGE  
+**Description:** Number of consecutive compaction failures. Resets to zero on a successful compaction
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.compaction.majc.in_progress
@@ -94,6 +164,11 @@ Metrics specific to compactions, both minor and major. Metrics for major compact
 ### accumulo.compaction.minc.stuck
 **Type:** LONG_TASK_TIMER  
 **Description:** Number and duration of stuck minor compactions.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.process.terminated
+**Type:** FUNCTION_COUNTER  
+**Description:** Will report 1 if the Compactor terminates due to consecutive failures, else 0. Emitting this metric is a best effort before the process terminates
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.compaction.queue.count
@@ -146,7 +221,17 @@ Metrics specific to compactions, both minor and major. Metrics for major compact
 **Description:** Size of queued jobs in bytes.
 </div>
 <div markdown="1" class="metric-section">
-### accumulo.compaction.svc.misconfigured
+### accumulo.compaction.svc.meta.misconfigured
+**Type:** GAUGE  
+**Description:** A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.svc.root.misconfigured
+**Type:** GAUGE  
+**Description:** A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.compaction.svc.user.misconfigured
 **Type:** GAUGE  
 **Description:** A value of 1 indicates a misconfiguration in the compaction service, while a value of 0 indicates that the configuration is valid.
 </div>
@@ -207,9 +292,19 @@ Metrics that are generated by the Fate component in the Manager process.
 **Description:** Number of FATE operations in progress. The op type is designated by the `op.type` tag.
 </div>
 <div markdown="1" class="metric-section">
+### accumulo.fate.ops.threads.inactive
+**Type:** GAUGE  
+**Description:** Keeps track of the number of idle threads (not working on a fate operation) in the thread pool. The pool name can be found in the pool.name tag. The fate instance type can be found in the instanceType tag.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.fate.ops.threads.total
+**Type:** GAUGE  
+**Description:** Keeps track of the total number of threads in the thread pool. The pool name can be found in the pool.name tag. The fate instance type can be found in the instanceType tag.
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.fate.tx
 **Type:** GAUGE  
-**Description:** The state is now in a tag (e.g., state=new, state=in.progress, state=failed, etc.).
+**Description:** Count of FATE operations in a certain state. The state is now in a tag (e.g., state=new, state=in.progress, state=failed, etc.).
 </div>
 {::options parse_block_html="false" /}
 
@@ -402,18 +497,23 @@ Metrics specific to scans, which can be executed in the ScanServer or the Tablet
 {::options parse_block_html="true" /}
 <div markdown="1" class="metric-section">
 ### accumulo.scan.busy.timeout.count
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Count of the scans where a busy timeout happened.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.close
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of calls to close a scan or multiscan.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.continue
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of calls to continue a scan or multiscan.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.scan.errors
+**Type:** FUNCTION_COUNTER  
+**Description:** Number of scan task that had an exception.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.files.open
@@ -422,42 +522,42 @@ Metrics specific to scans, which can be executed in the ScanServer or the Tablet
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.paused.for.memory
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Count of scans paused due to server being low on memory.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.queries
-**Type:** GAUGE  
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of queries made during scans.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.query.results
-**Type:** GAUGE  
+**Type:** FUNCTION_COUNTER  
 **Description:** Query count. The rate can be derived from this metric.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.query.results.bytes
-**Type:** GAUGE  
+**Type:** FUNCTION_COUNTER  
 **Description:** Query byte count. The rate can be derived from this metric.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.query.scanned.entries
-**Type:** GAUGE  
+**Type:** FUNCTION_COUNTER  
 **Description:** Count of scanned entries. The rate can be derived from this metric.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.result
-**Type:** GAUGE  
+**Type:** DISTRIBUTION_SUMMARY  
 **Description:** Results per scan.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.return.early.for.memory
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Count of scans that returned results early due to server being low on memory.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.start
-**Type:** COUNTER  
+**Type:** FUNCTION_COUNTER  
 **Description:** Number of calls to start a scan or multiscan.
 </div>
 <div markdown="1" class="metric-section">
@@ -467,7 +567,7 @@ Metrics specific to scans, which can be executed in the ScanServer or the Tablet
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.scan.yields
-**Type:** GAUGE  
+**Type:** DISTRIBUTION_SUMMARY  
 **Description:** Counts scans that have yielded.
 </div>
 <div markdown="1" class="metric-section">
@@ -570,9 +670,19 @@ Metrics that are generated by the Manager process.
 **Description:** The number of migrations that need to complete before the system is balanced.
 </div>
 <div markdown="1" class="metric-section">
+### accumulo.manager.goal.state
+**Type:** GAUGE  
+**Description:** Manager goal state: -1=unknown, 0=CLEAN_STOP, 1=SAFE_MODE, 2=NORMAL.
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tabletmgmt.meta.errors
 **Type:** GAUGE  
 **Description:** Error count encountered by the TabletGroupWatcher for the META data level.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.tabletmgmt.meta.recovery
+**Type:** GAUGE  
+**Description:** Recovery count encountered by the TabletGroupWatcher for the META data level.
 </div>
 <div markdown="1" class="metric-section">
 ### accumulo.tabletmgmt.root.errors
@@ -580,9 +690,19 @@ Metrics that are generated by the Manager process.
 **Description:** Error count encountered by the TabletGroupWatcher for the ROOT data level.
 </div>
 <div markdown="1" class="metric-section">
+### accumulo.tabletmgmt.root.recovery
+**Type:** GAUGE  
+**Description:** Recovery count encountered by the TabletGroupWatcher for the ROOT data level.
+</div>
+<div markdown="1" class="metric-section">
 ### accumulo.tabletmgmt.user.errors
 **Type:** GAUGE  
 **Description:** Error count encountered by the TabletGroupWatcher for the USER data level.
+</div>
+<div markdown="1" class="metric-section">
+### accumulo.tabletmgmt.user.recovery
+**Type:** GAUGE  
+**Description:** Recovery count encountered by the TabletGroupWatcher for the USER data level.
 </div>
 {::options parse_block_html="false" /}
 
