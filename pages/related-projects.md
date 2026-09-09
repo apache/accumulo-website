@@ -13,6 +13,9 @@ or [edit this page and create a pull request](https://github.com/apache/accumulo
 
 ## Open source projects using Accumulo
 
+#### Apache Drill
+[Drill](https://drill.apache.org) is an open source massively parallel, schema-free federated query engine for running interactive analytic queries against data sets of all sizes.  With the new Accumulo plugin, users can query Accululo via Drill using standard SQL.  
+
 #### Apache Fluo
 
 [Fluo](https://fluo.apache.org) builds on Accumulo and enables low latency, continuous incremental processing of big data.
