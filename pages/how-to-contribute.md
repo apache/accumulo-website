@@ -60,6 +60,9 @@ Any questions/ideas don't hesitate to [contact us][contact].
 * Accumulo follows [semver] for its [public API](/api/).
 * Every file requires the ASF license header as described in [ASF Source Header][srcheaders].
 * Do not use Author Tags. The code is developed and owned by the community.
+* If you used Generative-AI to generate or assist in developing the change, then please be sure to:
+    * Follow the guidelines at https://www.apache.org/legal/generative-tooling.html
+    * Add a line near the end of your commit message containing `AI-Model-Used: <model>`.
 
 ## Helpful Links
 
