@@ -19,10 +19,12 @@ set in the following configuration locations (with increasing precedence):
 1. [Default](#default) - All properties have a default value
 2. [Site](#site) - Properties set in [accumulo.properties]
 3. [System](#system) - Properties set using shell or Java API that apply to entire Accumulo instance
-4. [Namespace](#namespace) - Table properties set using shell or Java API that apply to a table namespace
-5. [Table](#table) - Table properties set using shell or Java API that apply to a table.
+4. [Resource Group](#resourcegroup) - Property set using the shell or Java API that apply to processes in a Resource Group
+5. [Namespace](#namespace) - Table properties set using shell or Java API that apply to a table namespace
+6. [Table](#table) - Table properties set using shell or Java API that apply to a table.
 
-If a property is set in multiple locations, the value in the location with the highest precedence is used.
+If a property is set in multiple locations, the value in the location with the highest precedence is used. Note that starting
+with 4.0.0 table properties can only be specified in Namespace and Table configuration locations.
 
 These configuration locations are described in detail below:
 
@@ -65,6 +67,34 @@ The java api also supports adding, modifying and removing multiple properties in
 
 ```java
 client.instanceOperations().modifyProperties(properties -> {
+  properties.remove("table.file.max");
+  properties.put("table.bloom.enabled", "true");
+  properties.put("table.bloom.error.rate", "0.75");
+  properties.put("table.bloom.size", "128000");
+});
+```
+
+### ResourceGroup
+
+Resource Group configuration refers to [server properties] set for the processes running in a Resource Group. These settings are stored in ZooKeeper and can be identified
+by **zk mutable: yes** in their description on the [server properties] page. Resource Group configuration will override any System configuration set in ZooKeeper and
+any site configuration set in [accumulo.properties]. While most system configuration settings take effect immediately, some require a restart of the process which is
+indicated in the **zk mutable** section of their description. Resource Group configuration can be set using the following shell command:
+
+```console
+config -rg GROUP_NAME -s PROPERTY=VALUE
+```
+
+They can also be set using {% jlink org.apache.accumulo.core.client.admin.ResourceGroupOperations %} in the Java API:
+
+```java
+client.resourceGroupOperations().setProperty("table.durability", "flush");
+```
+
+The java api also supports adding, modifying and removing multiple properties in a single operation:
+
+```java
+client.resourceGroupOperations().modifyProperties(properties -> {
   properties.remove("table.file.max");
   properties.put("table.bloom.enabled", "true");
   properties.put("table.bloom.error.rate", "0.75");
