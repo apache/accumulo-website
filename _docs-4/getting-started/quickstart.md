@@ -25,11 +25,7 @@ process name referenced in this documentation.
 ## Setup for testing or development
 
 If you are setting up Accumulo for **testing or development,** consider using
-the following tools:
-
-* [Uno] sets up Accumulo on a single machine for development
-* [Muchos] sets up Accumulo on a cluster (optionally launched in Amazon EC2 and
-  Microsoft Azure VM)
+[Uno] to set up a single instance Accumulo cluster.
 
 If you are setting up Accumulo for a **production** environment, follow the
 instructions below.
@@ -138,7 +134,7 @@ instance.
 The following command will perform the initialization.
 
 ```
-accumulo init
+accumulo inst init
 ```
 
 The initialization command will prompt for the following information.
@@ -176,7 +172,7 @@ command followed by the service name. For example, to start only the tserver,
 run:
 
 ```
-accumulo tserver
+accumulo proc tserver
 ```
 
 The process will run in the foreground. Use ctrl-c to quit.
@@ -226,11 +222,9 @@ file contains sections that should be configured with a list of node names in ya
  * [monitor] : Node where Accumulo monitoring web server is run.
  * [tserver] : Accumulo worker processes. List all of the nodes where tablet
    servers should run.
- * [sserver] : Optional. List of all nodes where scan servers should run.
- * [compaction.coordinator] : Optional. Must specify one node. Can specify a few
-   for fault tolerance.
- * [compaction.compactor] : Optional. Accumulo external compactor processes. List of
+ * [compactor] : Accumulo external compactor processes. List of
    all nodes where compactors should run.
+ * [sserver] : Optional. List of all nodes where scan servers should run.
 
 The Accumulo, Hadoop, and Zookeeper software should be present at the same
 location on every node. Also, the files in the `conf` directory must be copied to
@@ -290,10 +284,8 @@ When finished, use the following commands to stop Accumulo:
 [manager]: {% durl configuration/files#managers %}
 [tserver]: {% durl configuration/files#tservers %}
 [tracer]: {% durl configuration/files#tracers %}
-[compaction.coordinator]: {% durl configuration/files#compaction%20coordinator %}
-[compaction.compactor]: {% durl configuration/files#compaction%20compactor %}
+[compactor]: {% durl configuration/files#compaction%20compactor %}
 [sserver]: {% durl configuration/files#sserver %}
-[Uno]: https://github.com/apache/fluo-uno
-[Muchos]: https://github.com/apache/fluo-muchos
+[Uno]: https://github.com/apache/accumulo-uno
 [Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html
 [ec-guide]: {% durl administration/erasure-coding %}
