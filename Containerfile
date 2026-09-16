@@ -2,7 +2,7 @@
 # making updates to the accumulo website without requiring the dev
 # to maintain a local ruby development environment.
 
-FROM ruby:3.2.2-slim-bullseye AS base
+FROM docker.io/library/ruby:3.2.2-slim-bookworm AS base
 
 RUN apt update && apt install -y --no-install-recommends \
     build-essential \
