@@ -88,7 +88,7 @@ config -rg GROUP_NAME -s PROPERTY=VALUE
 They can also be set using {% jlink org.apache.accumulo.core.client.admin.ResourceGroupOperations %} in the Java API:
 
 ```java
-client.resourceGroupOperations().setProperty("table.durability", "flush");
+client.resourceGroupOperations().setProperty("general.low.mem.protection.scan", "true");
 ```
 
 The java api also supports adding, modifying and removing multiple properties in a single operation:
