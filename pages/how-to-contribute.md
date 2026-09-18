@@ -63,7 +63,7 @@ Any questions/ideas don't hesitate to [contact us][contact].
 * If you used Generative-AI to generate or assist in developing the change, then please be sure to:
     * Follow the legal guidelines at https://www.apache.org/legal/generative-tooling.html
     * Consult the (draft) guidelines or best practices at: https://rai.apache.org/
-    * Add the AI model name and version used in your commit message, preferably in a tag
+    * Add the AI model name and version used in your commit message, preferably in a well-known tag (e.g. "Co-Authored-By:", or less commonly "Assisted-By:", or similar)
 
 ## Helpful Links
 
