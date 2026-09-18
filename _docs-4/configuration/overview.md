@@ -95,10 +95,10 @@ The java api also supports adding, modifying and removing multiple properties in
 
 ```java
 client.resourceGroupOperations().modifyProperties(properties -> {
-  properties.remove("table.file.max");
-  properties.put("table.bloom.enabled", "true");
-  properties.put("table.bloom.error.rate", "0.75");
-  properties.put("table.bloom.size", "128000");
+  properties.remove("general.block.cache.manager.class");
+  properties.put("general.low.mem.protection.scan", "true");
+  properties.put("general.server.iter.opts.compression", "zstd");
+  properties.put("tserver.summary.retrieval.threads", "128");
 });
 ```
 
