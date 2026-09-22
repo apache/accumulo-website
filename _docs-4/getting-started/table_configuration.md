@@ -344,6 +344,7 @@ in reduced read latency. Read the [Caching] documentation to learn more.
 ## Compaction
 
 See {% dlink administration/compaction %}
+
 ## Pre-splitting tables
 
 Accumulo will balance and distribute tables across servers. Before a
@@ -407,6 +408,9 @@ faster to set the split point and merge the entire table:
 
     root@myinstance> config -t myTable -s table.split.threshold=256M
     root@myinstance> merge -t myTable
+
+Automatic merging of tablets has been added in 4.0.0 and is described
+further in [merging].
 
 ## Delete Range
 
@@ -619,3 +623,4 @@ preserved.
 [Caching]: {% durl administration/caching %}
 [table.bloom.enabled]: {% purl table.bloom.enabled %}
 [table.file.compress.type]: {% purl table.file.compress.type %}
+[merging]: {% durl administration/merging %}
