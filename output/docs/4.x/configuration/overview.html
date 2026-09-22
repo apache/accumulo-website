@@ -425,11 +425,13 @@ set in the following configuration locations (with increasing precedence):</p>
   <li><a href="#default">Default</a> - All properties have a default value</li>
   <li><a href="#site">Site</a> - Properties set in <a href="/docs/4.x/configuration/files#accumuloproperties">accumulo.properties</a></li>
   <li><a href="#system">System</a> - Properties set using shell or Java API that apply to entire Accumulo instance</li>
+  <li><a href="#resourcegroup">Resource Group</a> - Property set using the shell or Java API that apply to processes in a Resource Group</li>
   <li><a href="#namespace">Namespace</a> - Table properties set using shell or Java API that apply to a table namespace</li>
   <li><a href="#table">Table</a> - Table properties set using shell or Java API that apply to a table.</li>
 </ol>
 
-<p>If a property is set in multiple locations, the value in the location with the highest precedence is used.</p>
+<p>If a property is set in multiple locations, the value in the location with the highest precedence is used. Note that starting
+with 4.0.0 table properties can only be specified in Namespace and Table configuration locations.</p>
 
 <p>These configuration locations are described in detail below:</p>
 
@@ -472,6 +474,31 @@ the following shell command:</p>
   <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.enabled"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
   <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.error.rate"</span><span class="o">,</span> <span class="s">"0.75"</span><span class="o">);</span>
   <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"table.bloom.size"</span><span class="o">,</span> <span class="s">"128000"</span><span class="o">);</span>
+<span class="o">});</span>
+</code></pre></div></div>
+
+<h3 id="resourcegroup">ResourceGroup</h3>
+
+<p>Resource Group configuration refers to <a href="/docs/4.x/configuration/server-properties">server properties</a> set for the processes running in a Resource Group. These settings are stored in ZooKeeper and can be identified
+by <strong>zk mutable: yes</strong> in their description on the <a href="/docs/4.x/configuration/server-properties">server properties</a> page. Resource Group configuration will override any System configuration set in ZooKeeper and
+any site configuration set in <a href="/docs/4.x/configuration/files#accumuloproperties">accumulo.properties</a>. While most system configuration settings take effect immediately, some require a restart of the process which is
+indicated in the <strong>zk mutable</strong> section of their description. Resource Group configuration can be set using the following shell command:</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">config -rg GROUP_NAME -s PROPERTY=VALUE
+</span></code></pre></div></div>
+
+<p>They can also be set using <a href="https://www.javadoc.io/static/org.apache.accumulo/accumulo-core/4.0.0-SNAPSHOT/org/apache/accumulo/core/client/admin/ResourceGroupOperations.html">ResourceGroupOperations</a> in the Java API:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">resourceGroupOperations</span><span class="o">().</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"general.low.mem.protection.scan"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>The java api also supports adding, modifying and removing multiple properties in a single operation:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">resourceGroupOperations</span><span class="o">().</span><span class="na">modifyProperties</span><span class="o">(</span><span class="n">properties</span> <span class="o">-&gt;</span> <span class="o">{</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="s">"general.block.cache.manager.class"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"general.low.mem.protection.scan"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"general.server.iter.opts.compression"</span><span class="o">,</span> <span class="s">"zstd"</span><span class="o">);</span>
+  <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"tserver.summary.retrieval.threads"</span><span class="o">,</span> <span class="s">"128"</span><span class="o">);</span>
 <span class="o">});</span>
 </code></pre></div></div>
 
