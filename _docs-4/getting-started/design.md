@@ -32,8 +32,7 @@ machines.
 
 ## Components
 
-An instance of Accumulo includes many TabletServers, one Garbage Collector process,
-one Manager server and many Clients.
+An instance of Accumulo includes one or more Managers, TabletServers, Compactors, and GarbageCollectors and many clients.
 
 ### Tablet Server
 
@@ -45,7 +44,7 @@ values from all the files it has created and the sorted in-memory
 store.
 
 TabletServers also perform recovery of a tablet
-that was previously on a server that failed, reapplying any writes
+that was previously on a Tablet Server that failed, reapplying any writes
 found in the write-ahead log to the tablet.
 
 ### Garbage Collector
@@ -57,22 +56,23 @@ They will perform leader election among themselves to choose a single active ins
 
 ### Manager
 
-The Accumulo Manager is responsible for detecting and responding to TabletServer
-failure. It tries to balance the load across TabletServer by assigning tablets carefully
+The Accumulo Manager is responsible for managing Tablet, FaTE transaction, and external
+compaction state across the cluster. It assigns and balances the Tablets across TabletServers
 and instructing TabletServers to unload tablets when necessary. The Manager ensures all
 tablets are assigned to one TabletServer each, and handles table creation, alteration,
 and deletion requests from clients. The Manager also coordinates startup, graceful
 shutdown and recovery of changes in write-ahead logs when Tablet servers fail.
 
-Multiple managers may be run. The managers will choose among themselves a single manager,
-and the others will become backups if the manager should fail.
+The Compaction Coordinator is a function that the primary Manager performs to coordinate
+the completion of major compactions using Compactor processes. The Coordinator is responsible
+for identifying what external compaction work needs to be done, and for communicating with the Compactors
+to assign work, get status updates, and cancel running external compactions.
 
-### Tracer
-
-The Accumulo Tracer process supports the distributed timing API provided by Accumulo.
-One to many of these processes can be run on a cluster which will write the timing
-information to a given Accumulo table for future reference. See the
-[tracing documentation][tracing] for more information.
+Multiple managers may be run concurrently. The managers will choose among themselves a single manager
+to act as the primary manager and the other managers will act as assistant managers. Clients will
+connect only to the primary manager. The assistant managers participate in the execution and
+management of FaTE transactions. The primary manager also participates in the execution and management
+of FaTE transactions, and also performs tablet management and compaction coordinator functions.
 
 ### Monitor
 
@@ -88,27 +88,20 @@ Multiple Monitors can be run to provide hot-standby support in the face of failu
 forwarding of logs from remote hosts to the Monitor, only one Monitor process should be active
 at one time. Leader election will be performed internally to choose the active Monitor.
 
-### Compactor (experimental)
+### Compactor
 
-The Accumulo Compactor process is an optional application that can be used to run compactions
+The Accumulo Compactor process is an application that can be used to run compactions
 outside of the TabletServer. One to many Compactors can be run on a cluster and each Compactor
 process performs one compaction at a time. The Compactor registers its existence in ZooKeeper
-and communicates with the Compaction Coordinator to retrieve its work and to register the
-completion status of the compaction. The Compactor process will continue to perform compactions
-in situations where normal in-TabletServer compactions would fail, such as TabletServer restart
-and Tablet re-hosting.
+and communicates with the Compaction Coordinator in the primary Manager to retrieve its work and to register the
+completion status of the compaction.
 
-### Compaction Coordinator (experimental)
+Compactors also perform the sorting phase of the write-ahead log recovery for tablets that were
+on a Tablet Server that failed. Once sorting completes, the tablet is assigned to a Tablet Server,
+which replays the sorted mutations. The Compactor looks for write-ahead log sorting work before
+requesting the next Major Compaction job.
 
-The Accumulo Compaction Coordinator is an optional application that is required to run compactions
-outside of the TabletServer. The Coordinator is responsible for communicating with the
-TabletServers, to identify what external compaction work needs to be done, and the Compactors
-to assign work, get status updates, and cancel running external compactions.
-
-Multiple Coordinators may be run. The Coordinators will choose among themselves a single active Coordinator,
-and the others will become backups if the active Coordinator should fail.
-
-### Scan Server (experimental)
+### Scan Server
 
 The Accumulo Scan Server is an optional application that can be used to run scans on a tablet's data
 outside of the Tablet Server. Many Scan Servers can be run on a cluster and each Scan Server may run
@@ -120,6 +113,11 @@ Tablet Server. The Scan Server does not have any of the Tablet data that may res
 in-memory maps and the tablet may reference files that have been compacted as tablet metadata can
 be cached within the Scan Server (See Scan Server configuration properties).
 
+Scan Servers can also perform the sorting phase of the write-ahead log recovery for tablets that were
+on a Tablet Server that failed. Once sorting completes, the tablet is assigned to a Tablet Server,
+which replays the sorted mutations. The server property `sserver.wal.sort.concurrent.max` controls
+the number of threads in the Scan Server that will perform the write-ahead log sorting.
+
 ### Client
 
 Accumulo has a client library that can be used to write applications that write and read
@@ -129,11 +127,11 @@ data to/from Accumulo. See the [Accumulo clients documentation][clients] for mor
 
 Accumulo stores data in tables, which are partitioned into tablets. Tablets are
 partitioned on row boundaries so that all of the columns and values for a particular
-row are found together within the same tablet. The Manager assigns Tablets to one
-TabletServer at a time. This enables row-level transactions to take place without
+row are found together within the same tablet. When required, the Manager assigns a Tablet to one
+TabletServer. This enables row-level transactions to take place without
 using distributed locking or some other complicated synchronization mechanism. As
 clients insert and query data, and as machines are added and removed from the
-cluster, the Manager migrates tablets to ensure they remain available and that the
+cluster, the Manager may migrate tablets to ensure they remain available and that the
 ingest and query load is balanced across the cluster.
 
 ![data distribution]({{ site.baseurl }}/images/docs/data_distribution.png)
@@ -171,18 +169,19 @@ locality group. The diagram below shows the logical view and HDFS file view of a
 
 ## Compactions
 
-In order to manage the number of files per tablet, periodically the TabletServer
-performs Major Compactions of files within a tablet, in which some set of RFiles
-are combined into one file. The previous files will eventually be removed by the
-Garbage Collector. This also provides an opportunity to permanently remove
-deleted key-value pairs by omitting key-value pairs suppressed by a delete entry
-when the new file is created. See the [compaction documentation][compaction]
-for more information.
+In order to manage the number of files per tablet the Manager will periodically
+identify the tablets that need a Major Compaction and will give the highest
+priority job to a Compactor process when it requests the next job. The Major
+Compaction will merge data from an input set of RFiles into a single output file.
+The previous files will eventually be removed by the Garbage Collector.
+This also provides an opportunity to permanently remove deleted key-value pairs
+by omitting key-value pairs suppressed by a delete entry when the new file is
+created. See the [compaction documentation][compaction] for more information.
 
 ## Splitting
 
-When a table is created it has one tablet. As the table grows its initial
-tablet eventually splits into two tablets. It's likely that one of these
+When a table is created without split points it will have one tablet. As the table grows its initial
+tablet eventually splits into two tablets. If hosted, it's likely that one of these
 tablets will migrate to another tablet server. As the table continues to grow,
 its tablets will continue to split and be migrated. The decision to
 automatically split a tablet is based on the size of a tablets files. The
@@ -194,7 +193,8 @@ splitting.
 
 As data is deleted from a table, tablets may shrink. Over time this can lead
 to small or empty tablets. To deal with this, the [merging of tablets][merging]
-was introduced in Accumulo 1.4.
+was introduced in Accumulo 1.4. Accumulo 4.0 introduces [automatic merging][merging2]
+of tablets to optionally automate merging of tablets based on configurable thresholds.
 
 ## Fault-Tolerance
 
@@ -209,7 +209,7 @@ grouped by tablet.  TabletServers can quickly apply the mutations from the sorte
 that are destined for the tablets they have now been assigned.
 
 TabletServer failures are noted on the Manager's monitor page, accessible via
-`http://manager-address:9995/monitor`.
+`http://monitor-address:9995`.
 
 ![failure handling]({{ site.baseurl }}/images/docs/failure_handling.png)
 
@@ -218,5 +218,6 @@ TabletServer failures are noted on the Manager's monitor page, accessible via
 [tracing]: {% durl troubleshooting/tracing %}
 [clients]: {% durl getting-started/clients %}
 [merging]: {% durl getting-started/table_configuration#merging-tablets %}
+[merging2]: {% durl administration/merging %}
 [compaction]: {% durl getting-started/table_configuration#compaction %}
 [caching]: {% durl administration/caching %}

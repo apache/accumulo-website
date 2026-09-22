@@ -64,9 +64,9 @@ can share a pool of datanodes.
 ### Manager fail over
 
 Multiple managers can be configured.  Zookeeper locks are used to determine
-which manager is active.  The remaining managers simply wait for the current
-manager to lose its lock.  Current manager state is held in the metadata table
-and Zookeeper.
+which manager is the primary manager.  The remaining managers will attempt to
+take on the primary manager role if the current primary manager loses its lock.
+Current manager state is held in the metadata table and Zookeeper.
 
 ### Logical time
 
@@ -305,14 +305,18 @@ Accumulo provides two BlockCacheManager implementations (LruBlockCacheManager an
 TinyLfuBlockCacheManager) that construct on-heap block caches. Users can provide
 alternate BlockCacheManager implementations using the property `tserver.cache.manager.class`.
 
+### On-Demand Tablet Unloader
+
+Tablets that have their availability set to on-demand can be unhosted. Accumulo has a default
+implementation that unloads idle tablets after a configurable amount of time.
+
 ## General Administration
 
 ### Monitor page
 
 The [Accumulo Monitor][monitor] provides basic information about the system health and
-performance.  It displays table sizes, ingest and query statistics, server
-load, and last-update information.  It also allows the user to view recent
-diagnostic logs and traces.
+performance.  It displays information about the server processes, table sizes, ingest,
+query and compaction statistics, FaTE and recovery information, and last-update information.
 
 <a class="p-3 border rounded d-block" href="/images/accumulo-monitor-1.png">
 <img src="/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
@@ -386,9 +390,8 @@ used to accommodate new data patterns in an existing table.
 
 ### Tablet Merging
 
-Tablet merging is a new feature. Merging of tablets can be requested in the
-shell; Accumulo does not merge tablets automatically. If desired, the METADATA
-tablets can be merged.
+Merging of tablets can be requested in the shell or tables can be configured to
+merge tablets automatically.
 
 ### Table Cloning
 
@@ -412,6 +415,13 @@ Compact each tablet that falls within a row range down to a single file.
 Added an operation to efficiently delete a range of rows from a table. Tablets
 that fall completely within a range are simply dropped. Tablets overlapping the
 beginning and end of the range are split, compacted, and then merged.
+
+### Tablet Hosting
+
+User table tablets are hosted optionally be default. Users can configure tablets
+for their tables to always or never be hosted. Optionally hosted tablets will be
+assigned to a Tablet Server if needed to support a user operation and then unhosted
+after a configurable period of time of inactivity.
 
 [FATE]: {% durl administration/fate %}
 [maven-accumulo-plugin]: {{ site.baseurl }}/release/accumulo-1.6.0/#maven-plugin
