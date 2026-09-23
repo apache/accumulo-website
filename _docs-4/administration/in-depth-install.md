@@ -31,32 +31,28 @@ communicate with HDFS. To achieve good ingest and query performance, sufficient
 network bandwidth must be available between any two machines.
 
 In addition to needing access to ports associated with HDFS and ZooKeeper, Accumulo will
-use the following default ports. Please make sure that they are open, or change
+use the following default ports and port ranges. Please make sure that they are open, or change
 their value in [accumulo.properties].
 
 |Port | Description | Property Name
 |-----|-------------|--------------
 |4445 | Shutdown Port (Accumulo MiniCluster) | n/a
-|9132 | Accumulo Compaction Coordinator | [compaction.coordinator.port.client]
-|9133 | Accumulo Compactor | [compactor.port.client]
+|9600-9699 | Accumulo Compactor | [compactor.port.client]
 |9995 | Accumulo HTTP monitor | [monitor.port.client]
-|9996 | Accumulo Scan Server | [sserver.port.client]
-|9997 | Accumulo Tablet Server | [tserver.port.client]
+|9700-9799 | Accumulo Scan Server | [sserver.port.client]
+|9800-9899 | Accumulo Tablet Server | [tserver.port.client]
 |9998 | Accumulo GC | [gc.port.client]
-|9999 | Accumulo Manager Server | [manager.port.client]
-|12234 | Accumulo Tracer | [trace.port.client]
+|9999-10009 | Accumulo Manager Server | [manager.port.client]
 |42424 | Accumulo Proxy Server | n/a
-|10001 | Accumulo Manager Replication service | [manager.replication.coordinator.port]
-|10002 | Accumulo TabletServer Replication service | [replication.receipt.service.port]
 
 In addition, the user can provide `0` and an ephemeral port will be chosen instead. This
 ephemeral port is likely to be unique and not already bound. Thus, configuring ports to
 use `0` instead of an explicit value, should, in most cases, work around any issues of
 running multiple distinct Accumulo instances (or any other process which tries to use the
-same default ports) on the same hardware. Finally, the `*.port.client` properties will work
-with the port range syntax (M-N) allowing the user to specify a range of ports for the
-service to attempt to bind. The ports in the range will be tried in a 1-up manner starting
-at the low end of the range to, and including, the high end of the range.
+same default ports) on the same hardware. The port range syntax (M-N) allows the user to
+specify a range of ports for the service to attempt to bind. The ports in the range will
+be tried in a 1-up manner starting at the low end of the range to, and including, the high
+end of the range.
 
 ## Download Tarball
 
@@ -100,7 +96,7 @@ exist in `conf/` and be properly configured. If you are using `accumulo-cluster`
 cluster, the `conf/` directory must also contain a `cluster.yaml` file. You can either create these files
 manually or run `accumulo-cluster create-config`.
 
-Logging is configured in [accumulo-env.sh] to use three log4j configuration files in `conf/`. The
+Logging is configured in [accumulo-env.sh] to use two log4j configuration files in `conf/`. The
 file used depends on the Accumulo command or service being run. Logging for most Accumulo services
 (i.e. Manager, TabletServer, Garbage Collector) is configured by [log4j2-service.properties]. All Accumulo commands (i.e `init`,
 `shell`, etc) are configured by [log4j2.properties].
@@ -204,17 +200,50 @@ performance to the write-ahead log file which will slow ingest.
 
 ### Cluster Specification
 
-If you are using `accumulo-cluster` to start a cluster, configure the following on the
-machine that will serve as the Accumulo manager:
+If you are using `accumulo-cluster` to manage a cluster, then you need to generate and
+modify the `cluster.yaml` file. The `cluster.yaml` file can be created by running
+`accumulo-cluster create-config` and will create the following file:
 
-1. Run `accumulo-cluster create-config` to create the `cluster.yaml` file.
-2. Write the IP address or domain name of the Accumulo Manager to the [manager] section.
-3. Write the IP addresses or domain name of the machines that will be TabletServers to the
-   [tserver] section.
+```
+manager:
+  servers_per_host: 1
+  hosts:
+    - localhost
 
-Note that if using domain names rather than IP addresses, DNS must be configured
-properly for all machines participating in the cluster. DNS can be a confusing source
-of errors.
+monitor:
+  - localhost
+
+gc:
+  - localhost
+
+tserver:
+  default:
+    servers_per_host: 1
+    hosts:
+      - localhost
+
+compactor:
+  default:
+    servers_per_host: 1
+    hosts:
+      - localhost
+
+sserver:
+  default:
+    servers_per_host: 1
+    hosts:
+      - localhost
+``` 
+
+For each server type you will need to modify the list of hosts using either
+IP address or domain name. If using domain names rather than IP addresses,
+then DNS must be configured properly for all machines participating in the cluster.
+
+In the example above the compactor, sserver, and tserver sections support
+the user specifying different resource groups. The example only contains the
+`default` resource group. When adding resource groups to this file, be sure
+to also add them to the `accumulo-env.sh` file and to create them using
+the command `accumulo inst init --add-resource-groups` command.
 
 ### Configure accumulo.properties
 
@@ -249,15 +278,14 @@ instance, Accumulo identifies `localhost:8020` as a different HDFS instance than
 ### Deploy Configuration
 
 Copy [accumulo-env.sh] and [accumulo.properties] from the `conf/` directory on the manager to all
-Accumulo tablet servers. The "host" configuration files `accumulo-cluster` only need to be on
+hosts running Accumulo server processes. The `cluster.yaml` file only needs to be on
 servers where that command is run.
 
 ### Sensitive Configuration Values
 
 Accumulo has a number of properties that can be specified via the [accumulo.properties]
-file which are sensitive in nature, [instance.secret] and `trace.token.property.password`
-are two common examples. Both of these properties, if compromised, have the ability
-to result in data being leaked to users who should not have access to that data.
+file which are sensitive in nature, [instance.secret] is an example. These sensitive properties,
+if compromised, have the ability to result in data being leaked to users who should not have access to that data.
 
 In Hadoop-2.6.0, a new CredentialProvider class was introduced which serves as a common
 implementation to abstract away the storage and retrieval of passwords from plaintext
@@ -324,38 +352,13 @@ consideration. There is no enforcement of these warnings via the API.
 Accumulo builds its Java classpath in [accumulo-env.sh]. This classpath can be viewed by running
 `accumulo classpath`.
 
-After an Accumulo application has started, it will load classes from the locations specified in the
-deprecated [general.classpaths] property. Additionally, Accumulo will load classes from the
-locations specified in the [general.dynamic.classpaths] property and will monitor and reload them if
-they change. The reloading feature is useful during the development and testing of iterators as new
-or modified iterator classes can be deployed to Accumulo without having to restart the database.
-
-Accumulo also has an alternate configuration for the classloader which will allow it to load classes
-from remote locations. This mechanism uses Apache Commons VFS which enables locations such as http
-and hdfs to be used. This alternate configuration also uses the [general.classpaths] property in the
-same manner described above. It differs in that you need to configure the [general.vfs.classpaths]
-property instead of the [general.dynamic.classpaths] property. As in the default configuration, this
-alternate configuration will also monitor the vfs locations for changes and reload if necessary.
-
 ##### ClassLoader Contexts
 
-With the addition of the VFS based classloader, we introduced the notion of classloader contexts. A
-context is identified by a name and references a set of locations from which to load classes and can
-be specified in the [accumulo.properties] file or added using the `config` command in the shell.
-Below is an example for specify the app1 context in the [accumulo.properties] file:
-
-```
-# Application A classpath, loads jars from HDFS and local file system
-general.vfs.context.classpath.app1=hdfs://localhost:8020/applicationA/classpath/.*.jar,file:///opt/applicationA/lib/.*.jar
-```
-
-The default behavior follows the Java ClassLoader contract in that classes, if they exist, are
-loaded from the parent classloader first. You can override this behavior by delegating to the parent
-classloader after looking in this classloader first. An example of this configuration is:
-
-```
-general.vfs.context.classpath.app1.delegation=post
-```
+Tables can be configured to use a context classloader to load classes from locations other
+than the server classpath. This enables users to deploy jars for their application external
+to the server classpath allowing them to effect a classpath change without restarting the Accumulo process.
+The property `general.context.class.loader.factory` allows the user to supply their own
+ContextClassLoaderFactory implementation.
 
 To use contexts in your application you can set the {% plink table.classpath.context %} on your
 tables or use the `setClassLoaderContext()` method on Scanner and BatchScanner passing in the name
@@ -364,13 +367,21 @@ and scan iterators to load classes from the locations defined by the context. Pa
 name to the scanners allows you to override the table setting to load only scan time iterators from
 a different location.
 
+The default ContextClassLoaderFactory implementation, URLContextClassLoaderFactory, uses
+a comma-separated list of jar paths as the context name and returns a URLClassLoader using
+the same paths. For example, to use the default implementation you would set the 
+{% plink table.classpath.context %} property to `file://path/one/jar1.jar,file://path/two/jar2.jar`
+
+An alternate ContextClassLoaderFactory implementation that supports additional features
+can be found at https://github.com/apache/accumulo-classloaders/tree/main/modules/caching-classloader.
+
 ## Initialization
 
 Accumulo must be initialized to create the structures it uses internally to locate
 data across the cluster. HDFS is required to be configured and running before
 Accumulo can be initialized.
 
-Once HDFS is started, initialization can be performed by executing `accumulo init`. This script will
+Once HDFS is started, initialization can be performed by executing `accumulo inst init`. This script will
 prompt for a name for this instance of Accumulo. The instance name is used to identify a set of
 tables and instance-specific settings. The script will then write some information into HDFS so
 Accumulo can start properly.
@@ -399,7 +410,7 @@ take some time for particular configurations.
 
 Update your `conf/cluster.yaml` file to account for the addition.
 
-Next, ssh to each of the hosts you want to add and run:
+Next, run `accumulo-cluster start` or ssh to each of the hosts you want to add and run:
 
 ```bash
 accumulo-service tserver start
@@ -415,7 +426,7 @@ If you need to take a node out of operation, you can trigger a graceful shutdown
 server. Accumulo will automatically rebalance the tablets across the available tablet servers.
 
 ```bash
-accumulo admin stop <host(s)> {<host> ...}
+accumulo proc stop-servers <host:port> {<host:port> ...}
 ```
 
 Alternatively, you can ssh to each of the hosts you want to remove and run:
@@ -424,10 +435,7 @@ Alternatively, you can ssh to each of the hosts you want to remove and run:
 accumulo-service tserver stop
 ```
 
-Be sure to update your `conf/cluster.yaml` file to account for the removal of these hosts. Bear in mind
-that the monitor will not re-read the tservers file automatically, so it will report the
-decommissioned servers as down; it's recommended that you restart the monitor so that the node list
-is up to date.
+Be sure to update your `conf/cluster.yaml` file to account for the removal of these hosts.
 
 The steps described to decommission a node can also be used (without removal of the host from the
 `conf/cluster.yaml` file) to gracefully stop a node. This will ensure that the tabletserver is cleanly
@@ -469,46 +477,16 @@ to be able to scale to using 10's of GB of RAM and 10's of CPU cores.
 
 Accumulo TabletServers bind certain ports on the host to accommodate remote procedure calls to/from
 other nodes. Running more than one TabletServer on a host requires that you set the environment
-variable `ACCUMULO_SERVICE_INSTANCE` to an instance number (i.e 1, 2) for each instance that is
-started. Also, set the these properties in [accumulo.properties]:
-
-* {% plink tserver.port.search %} = `true`
-* {% plink replication.receipt.service.port %} = `0`
-
-In order to start multiple TabletServers on a node, the `accumulo` command must be used:
+variable `ACCUMULO_CLUSTER_ARG` to the number of processes before starting the service with the
+`accumulo-service` command. For example:
 
 ```
-ACCUMULO_SERVICE_INSTANCE=1 ./bin/accumulo tserver &> ./logs/tserver1.out &
-ACCUMULO_SERVICE_INSTANCE=2 ./bin/accumulo tserver &> ./logs/tserver2.out &
+ACCUMULO_CLUSTER_ARG=2 ./bin/accumulo-service tserver start
 ```
 
 #### Running multiple TabletServers per node in Accumulo 2.1.0 and later
-Starting with Accumulo 2.1.0, the `accumulo-cluster` script can be used along with environment
-variable `NUM_TSERVERS` as a convenient alternative to the `accumulo` command to start / stop
-multiple TabletServers per node. For example, the following commands can be used to start / stop
-2 TabletServers on the current node:
-
-```
-NUM_TSERVERS=2 ./bin/accumulo-cluster start-here
-NUM_TSERVERS=2 ./bin/accumulo-cluster stop-here
-```
-
-To start / stop the entire Accumulo cluster with 2 TabletServers per worker node, use:
-
-```
-NUM_TSERVERS=2 ./bin/accumulo-cluster start
-NUM_TSERVERS=2 ./bin/accumulo-cluster stop
-```
-
-Other commands like `accumulo-cluster start-tservers` and `accumulo-cluster stop-tservers` support
-the use of `NUM_TSERVERS` to specify the number of TabletServers per worker node.
-
-When `accumulo-cluster` is used along with `NUM_TSERVERS` greater than 1, the resultant log files
-and redirected stdout / stderr files for each TabletServer running on the node have the instance
-number as part of their respective filenames.
-
-Lastly, starting with Accumulo 2.1.0 the `accumulo-env.sh` script ensures that Accumulo metrics
-are correctly associated with the respective instance number for each TabletServer on a node.
+The `accumulo-cluster` script supports starting multiple processes on the same node. See
+the scripts help output for more information.
 
 ## Logging
 
@@ -531,10 +509,10 @@ either when the tablets from the failed server are reassigned by the Manager (in
 case of a single TabletServer failure) or the next time Accumulo starts (in the event of
 failure during shutdown).
 
-Recovery is performed by asking a tablet server to sort the logs so that tablets can easily find
-their missing updates. The sort status of each file is displayed on Accumulo monitor status page.
-Once the recovery is complete any tablets involved should return to an `online` state. Until then
-those tablets will be unavailable to clients.
+Recovery is performed by asking a compactor, scan server, or tablet server processes to sort the
+logs so that tablets can easily find their missing updates. The sort status of each file is
+displayed on Accumulo monitor status page. Once the recovery is complete any tablets involved
+should return to an `online` state. Until then those tablets will be unavailable to clients.
 
 The Accumulo client library is configured to retry failed mutations and in many
 cases clients will be able to continue processing after the recovery process without
@@ -545,7 +523,7 @@ throwing an exception.
 The following steps will allow a non-HA instance to be migrated to an HA instance. Consider an HDFS
 URL `hdfs://namenode.example.com:8020` which is going to be moved to `hdfs://nameservice1`.
 
-Before moving HDFS over to the HA namenode, use `accumulo admin volumes` to confirm
+Before moving HDFS over to the HA namenode, use `accumulo inst list-volumes` to confirm
 that the only volume displayed is the volume from the current namenode's HDFS URL.
 
 ```
@@ -576,8 +554,8 @@ instance.volumes=hdfs://nameservice1/accumulo
 instance.volumes.replacements=hdfs://namenode.example.com:8020/accumulo hdfs://nameservice1/accumulo
 ```
 
-Run `accumulo init --add-volumes` and start up the accumulo cluster. Verify that the
-new nameservice volume shows up with `accumulo admin volumes`.
+Run `accumulo inst init --add-volumes` and start up the accumulo cluster. Verify that the
+new nameservice volume shows up with `accumulo inst list-volumes`.
 
 ```
 Listing volumes referenced in zookeeper
@@ -738,7 +716,6 @@ same version your Accumulo is built with.
 Please check the release notes for your Accumulo version or use the
 [mailing lists][contact] for more info.
 
-[compaction.coordinator.port.client]: {% purl compaction.coordinator.port.client %}
 [compactor.port.client]: {% purl compactor.port.client %}
 [contact]: {{ site.baseurl }}/contact-us
 [quick start]: {% durl getting-started/quickstart %}
@@ -753,7 +730,6 @@ Please check the release notes for your Accumulo version or use the
 [sserver.port.client]: {% purl sserver.port.client %}
 [gc.port.client]: {% purl gc.port.client %}
 [manager.port.client]: {% purl manager.port.client %}
-[trace.port.client]: {% purl trace.port.client %}
 [table.suspend.duration]: {% purl table.suspend.duration %}
 [manager.replication.coordinator.port]: {% purl manager.replication.coordinator.port %}
 [replication.receipt.service.port]: {% purl replication.receipt.service.port %}
@@ -775,7 +751,6 @@ Please check the release notes for your Accumulo version or use the
 [monitor-host]: {% durl configuration/files#monitor %}
 [manager]: {% durl configuration/files#manager %}
 [tserver]: {% durl configuration/files#tserver %}
-[tracers]: {% durl configuration/files#tracers %}
 [log4j2-service.properties]: {% durl configuration/files#log4j2-serviceproperties %}
 [log4j-monitor.properties]: {% durl configuration/files#log4j-monitorproperties %}
 [log4j2.properties]: {% durl configuration/files#log4j2properties %}
