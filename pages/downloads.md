@@ -71,11 +71,42 @@ Be sure to [verify your downloads][VERIFY_PROCEDURES] using [these KEYS][GPG_KEY
 
 ## Current Releases
 
+{% assign linkVers = '4.0.0-alpha-1' %}
+### Accumulo {{linkVers}} **Alpha**{: .badge .bg-danger}
+{: #accumulo-nonltm }
+
+The {{linkVers}} release of Apache Accumulo&reg; is an alpha release for an
+upcoming 4.0 major release. It contains new concepts and features, bug fixes,
+performance enhancements, and more that are expected to appear in a future LTM
+release. The linked 4.x documentation is still under construction and should be
+treated as alpha as well.
+
+{% for srcbin in srcbinArray %}
+{% assign lnkFile = 'accumulo-' | append: linkVers | append: '-' | append: srcbin | append: '.tar.gz' %}
+{% assign lnkSuffix = '/accumulo/' | append: linkVers | append: '/' | append: lnkFile %}
+<div class="d-flex flex-wrap justify-content-start align-items-start" style="margin-left: 20px; margin-bottom: 5px;">
+  <div class="btn-group me-2">
+    <a {{btnDownloadStyle}} href="{{closerLink}}{{lnkSuffix}}?action=download" link-suffix="{{lnkSuffix}}">{{lnkFile}}{{glyphSave}}</a>
+  </div>
+  <div class="btn-group">
+    <a {{btnSigStyle}} href="{{downloadsLink}}{{lnkSuffix}}.asc">ASC{{glyphLock}}</a>
+    <a {{btnHashStyle}} href="{{downloadsLink}}{{lnkSuffix}}.sha512">SHA{{glyphLock}}</a>
+  </div>
+</div>
+{% endfor %}
+<div class="btn-group-sm" style="margin: 20px;">
+  <a {{btnDocStyle}} href="{{site.baseurl}}/release/accumulo-{{linkVers}}">Release Notes</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo/blob/rel/{{linkVers}}/README.md">README</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/4.x">Online Documentation</a>
+  <a {{btnDocStyle}} href="https://github.com/apache/accumulo-examples">Examples</a>
+  <a {{btnDocStyle}} href="{{site.baseurl}}/docs/4.x/apidocs">Java API</a>
+</div>
+
 {% assign linkVers = '3.0.0' %}
 ### Accumulo {{linkVers}} **non-LTM**{: .badge .bg-warning}
 {: #accumulo-nonltm }
 
-The {{linkVers}} release of Apache Accumulo&reg; is the latest bleeding edge
+The {{linkVers}} release of Apache Accumulo&reg; is the latest non-LTM
 release, containing the newest features, bug fixes, performance enhancements,
 and more that are expected to appear in a future LTM release. The linked 2.x
 documentation is still largely applicable to 3.x for now, except those items
@@ -177,6 +208,8 @@ that can be used separately from Accumulo.
 
 ## <small><span class="fa-solid fa-circle-info" aria-hidden="true"></span></small> Legend
 {: #legend }
+
+**Alpha**{: .badge .bg-danger} / **Beta**{: .badge .bg-danger} indicates a non-final release that is not production ready
 
 **LTM**{: .badge .bg-success} / **non-LTM**{: .badge .bg-warning} indicates a [Long Term Maintenance][LTM] release or not
 
