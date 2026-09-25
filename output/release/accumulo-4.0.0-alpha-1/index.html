@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/fontawesome/fontawesome-free-6.6.0-web/css/all.css">
+<link rel="stylesheet" type="text/css" href="/css/datatables/bs5/dt-2.0.8/datatables.css">
+<link rel="stylesheet" type="text/css" href="/css/accumulo.css">
+
+<title>Apache Accumulo 4.0.0 Alpha 1</title>
+
+<script type="text/javascript" src="/js/jquery/3.7.1/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
+<script type="text/javascript" src="/js/datatables/bs5/dt-2.0.8/datatables.js"></script>
+<script type="text/javascript" src="https://www.apachecon.com/event-images/snippet.js"></script>
+<script type="text/javascript" src="/js/accumulo.js"></script>
+</head>
+<body style="padding-top: 100px">
+
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img alt="Apache Accumulo" id="nav-logo" src="/images/accumulo-logo.png" width="200">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-items">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-items">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/downloads">Download</a></li>
+        <li class="nav-item"><a class="nav-link" href="/tour">Tour</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Releases</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/release/accumulo-4.0.0-alpha-1/">4.0.0-alpha-1</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-3.0.0/">3.0.0 (Latest non-LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-2.1.6/">2.1.6 (Latest LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/accumulo-1.10.4/">1.10.4 (Legacy LTM)</a></li>
+            <li><a class="dropdown-item" href="/release/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Documentation</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/docs/2.x">User Manual (2.x)</a></li>
+            <li><a class="dropdown-item" href="/docs/2.x/apidocs">Javadocs (2.x)</a></li>
+            <li><a class="dropdown-item" href="/api">Public API</a></li>
+            <li><a class="dropdown-item" href="/quickstart-1.x">Quickstart (1.x)</a></li>
+            <li><a class="dropdown-item" href="/accumulo2-maven-plugin">Accumulo Maven Plugin</a></li>
+            <li><a class="dropdown-item" href="/1.10/accumulo_user_manual.html">User Manual (1.10)</a></li>
+            <li><a class="dropdown-item" href="/1.10/apidocs">Javadocs (1.10)</a></li>
+            <li><a class="dropdown-item" href="/external-docs">External Docs</a></li>
+            <li><a class="dropdown-item" href="/docs-archive/">Archive</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Community</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/contact-us">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/how-to-contribute">How To Contribute</a></li>
+            <li><a class="dropdown-item" href="/people">People</a></li>
+            <li><a class="dropdown-item" href="/related-projects">Related Projects</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <img alt="Apache Software Foundation" src="https://www.apache.org/foundation/press/kit/feather.svg" width="15"/>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.apache.org">Apache Homepage <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/licenses/">License <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/sponsorship">Sponsorship <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/security">Security <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/thanks">Thanks <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/conduct">Code of Conduct <span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/foundation/policies/privacy.html">Privacy Policy<span class="fa-solid fa-up-right-from-square"></span></a></li>
+            <li><a class="dropdown-item" href="https://www.apache.org/events/current-event.html">Current Event <span class="fa-solid fa-up-right-from-square"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div id="non-canonical" style="display: none; background-color: #F0E68C; padding-left: 1em;">
+          Visit the official site at: <a href="https://accumulo.apache.org">https://accumulo.apache.org</a>
+        </div>
+        <div id="content">
+          
+          <h1 class="title">Apache Accumulo 4.0.0 Alpha 1</h1>
+          
+          
+
+<p>24 Aug 2026</p>
+<nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
+      
+        <li class="page-item"><a class="page-link" href="/release/accumulo-3.0.0/">&laquo;&nbsp;Apache Accumulo 3.0.0</a></li>
+      
+    
+      
+    </ul></nav>
+
+
+<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">
+  These are <strong>draft</strong> release notes for a future release of Accumulo!<br>
+  Please view <a class="alert-link" href="/release/accumulo-2.1.6/">the latest release notes</a>.
+</div>
+
+
+
+<div class="alert alert-warning" role="alert">
+  This version is not a <a class="alert-link" href="/contributor/versioning#LTM">Long Term Maintenance (non-LTM)</a></strong> release.
+</div>
+
+
+<h2 id="warning">WARNING!!</h2>
+
+<p>This is a non-final tag / release for testing purposes to find bugs and broken features.
+Do not use this version in production. No support shall be provided for upgrades between
+this version and any other version.</p>
+
+<h2 id="about">About</h2>
+
+<p>Apache Accumulo 4.0.0 is a non-LTM major version release that contains
+a large number of internal changes that allow a lot of flexibility in
+the way that Accumulo is deployed with a small number of API changes.
+A high level overview of some of the changes are described in <a href="/blog/2024/10/07/accumulo4-preview.html">this</a>
+blog post.</p>
+
+<h2 id="notable-changes">Notable Changes</h2>
+
+<ul>
+  <li>
+    <p>Accumulo 4.0.0 requires Java 21 for compilation and Java 17 for runtime.</p>
+  </li>
+  <li>
+    <p>Bulk Import V1 has been removed. Users will need to migrate to Bulk Import V2.</p>
+  </li>
+  <li>
+    <p>Tablet merges no longer require a chop compaction on the participating files. To facilitate
+this the file entry in the tablet metadata now includes the range for the tablet data in
+the file.</p>
+  </li>
+  <li>
+    <p>FaTE locks include tablet ranges where possible to allow for concurrent FaTE operations
+on non-overlapping tablet ranges.</p>
+  </li>
+  <li>
+    <p>The CompactionCoordinator process no longer exists, its functionality was moved into the Manager.</p>
+  </li>
+  <li>
+    <p>Non-system tablets will be optionally hosted by default. Operations requiring a tablet to be
+hosted (live ingest and immediate consistency scans) will instruct the Manager to temporarily
+assign the Tablet. Users can change the default hosting semantics for Tablets when creating
+the table, using the TableOperations API, or the appropriate command in the Shell. Tablets
+that are temporarily assigned are unloaded according to the logic in the OnDemandTabletUnloader
+plugin being used, specified by the property ‘tserver.ondemand.tablet.unloader’. The default
+implementation will unload tablets that have not been used in 10 minutes, which can be changed
+by the property ‘tserver.ondemand.tablet.unloader.interval’.</p>
+  </li>
+  <li>
+    <p>Considering TabletServers optionally host Tablets, all Tablet management functions (e.g. merge,
+split, compaction initiation, bulk import, etc.) have been moved into the Manager. TabletServers no longer
+perform major compactions making Compactor processes mandatory (ScanServers remain an optional
+feature).</p>
+  </li>
+  <li>
+    <p>Tablets in a table can now be automatically merged. There is a manager property to control the
+interval at which tablets are checked and a table property to control the threshold for an
+automatic merge. Tablet mergeability can be specified at table creation time or using
+<code class="language-plaintext highlighter-rouge">TableOperations.putSplits</code>. The upgrade process sets the tablet mergeability to never for
+all existing tablets to preserve any user created split points. Tablet mergeability can be
+set when adding new splits and will be set to always when the split is created by the system
+based on user settings. See <a href="/docs/4.x/administration/merging">merging</a> for more information.</p>
+  </li>
+  <li>
+    <p>Split and Merge operations, which are now just metadata operations, can be much faster for tablets
+that are not hosted. For tablets that are hosted in a TabletServer, they are temporarily unloaded
+before the operation executes.</p>
+  </li>
+  <li>
+    <p>Multiple active Manager processes are supported. One active Manager is considered the “primary”
+Manager and the others are considered “assistant” Managers. Clients will connect to the primary
+Manager for Thrift operations requiring the Manager. If the primary Manager process dies then one
+of the assistant Managers will become the Primary. The assistant Managers participate in
+processing FaTE transactions, but not tablet management or coordinating major compactions.</p>
+  </li>
+  <li>
+    <p>New table property <code class="language-plaintext highlighter-rouge">table.compaction.minor.age</code> will cause a minor compaction to be
+initiated when the oldest key-value in a Tablets’ in-memory-map exceeds the value. This could
+be useful when using Scan Servers in conjunction with the Tablet Metadata expiration property.</p>
+  </li>
+  <li>
+    <p>The HostRegexTableLoadBalancer has been deprecated. Similar functionality can be achieved using
+the TableLoadBalancer and setting the property <code class="language-plaintext highlighter-rouge">table.custom.assignment.group</code> on a table
+that references a set of Tablet Servers using the same resource group name.</p>
+  </li>
+  <li>
+    <p>The Monitor has been re-worked to mostly use the metrics emitted by the various server processes.
+While the Monitor server does make some RPC calls, metrics will need to be enabled using the
+property <code class="language-plaintext highlighter-rouge">general.micrometer.enabled</code> on all server processes for the Monitor to work properly.
+Endpoints for retrieving the underlying data from the Monitor server in XML or JSON format have
+been removed. Users are encouraged to set up their own metric collection system for gathering
+and visualizing metric data.</p>
+  </li>
+  <li>
+    <p>Log recovery work may now be performed in Compactor, Scan Server, and Tablet Server processes.</p>
+  </li>
+  <li>
+    <p>User FaTE transactions are now stored in a table in the system namespace. System FaTE transactions
+remain stored in ZooKeeper.</p>
+  </li>
+  <li>
+    <p>Scan Server file references have been moved out of the metadata table and into their own table
+in the system namespace.</p>
+  </li>
+  <li>
+    <p>A Resource Group configuration layer has been added that allows the user to override system-level
+properties for resource group processes.</p>
+  </li>
+  <li>
+    <p>Table configuration properties are now only allowed in the Namespace and Table configuration layers.</p>
+  </li>
+  <li>
+    <p>The command line utilities have been updated. Run <code class="language-plaintext highlighter-rouge">accumulo --help</code> to see the changes. A bash
+completion script can be generated using the command <code class="language-plaintext highlighter-rouge">accumulo conf create-autocomplete-script</code>.</p>
+  </li>
+  <li>
+    <p>The number of threads used to process FaTE transactions can be configured by FaTE transaction type
+for both user and system FaTE transactions.</p>
+  </li>
+  <li>
+    <p>A change was made in 2.1.5 that allowed ScanServers to be used with un-hosted tablets. The only way
+to achieve this in 2.1 was to allow ScanServers to scan offline tables. In 4.0, ScanServers can scan
+tablets with all availability goals, so ScanServers don’t need or have the ability to scan offline tables.</p>
+  </li>
+</ul>
+
+<h2 id="api-changes-from-216">API Changes (from 2.1.6)</h2>
+
+<details>
+  <summary>Click to see API changes</summary>
+
+  <h3 id="additions">Additions</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Change</th>
+        <th>Object</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Abstract method was added.</td>
+        <td>method long org.apache.accumulo.core.client.admin.ActiveCompaction::getPausedCount()</td>
+      </tr>
+      <tr>
+        <td>Abstract method was added.</td>
+        <td>method org.apache.accumulo.core.client.admin.servers.ServerId org.apache.accumulo.core.client.admin.ActiveCompaction::getServerId()</td>
+      </tr>
+      <tr>
+        <td>Abstract method was added.</td>
+        <td>method org.apache.accumulo.core.client.admin.servers.ServerId org.apache.accumulo.core.client.admin.ActiveScan::getServerId()</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method boolean org.apache.accumulo.core.iterators.IteratorEnvironment::isRunningLowOnMemory()</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.lang.String org.apache.accumulo.core.client.admin.TableOperations::getNamespace(java.lang.String)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.time.Duration org.apache.accumulo.core.client.admin.InstanceOperations::getManagerTime() throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.List<org.apache.accumulo.core.client.admin.ActiveCompaction> org.apache.accumulo.core.client.admin.InstanceOperations::getActiveCompactions(java.util.Collection<org.apache.accumulo.core.client.admin.servers.ServerId>) throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</org.apache.accumulo.core.client.admin.servers.ServerId></org.apache.accumulo.core.client.admin.ActiveCompaction></td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.List<org.apache.accumulo.core.client.admin.ActiveScan> org.apache.accumulo.core.client.admin.InstanceOperations::getActiveScans(java.util.Collection<org.apache.accumulo.core.client.admin.servers.ServerId>) throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</org.apache.accumulo.core.client.admin.servers.ServerId></org.apache.accumulo.core.client.admin.ActiveScan></td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.Map&lt;java.lang.String, java.lang.String&gt; org.apache.accumulo.core.client.admin.InstanceOperations::getSystemProperties() throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.Set<org.apache.accumulo.core.client.admin.compaction.CompactableFile> org.apache.accumulo.core.client.admin.compaction.CompactionConfigurer.InputParameters::getSelectedFiles()</org.apache.accumulo.core.client.admin.compaction.CompactableFile></td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.Set<org.apache.accumulo.core.client.admin.servers.ServerId> org.apache.accumulo.core.client.admin.InstanceOperations::getServers(org.apache.accumulo.core.client.admin.servers.ServerId.Type)</org.apache.accumulo.core.client.admin.servers.ServerId></td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method java.util.Set<org.apache.accumulo.core.client.admin.servers.ServerId> org.apache.accumulo.core.client.admin.InstanceOperations::getServers(org.apache.accumulo.core.client.admin.servers.ServerId.Type, java.util.function.Predicate<org.apache.accumulo.core.data.ResourceGroupId>, java.util.function.BiPredicate&lt;java.lang.String, java.lang.Integer&gt;)</org.apache.accumulo.core.data.ResourceGroupId></org.apache.accumulo.core.client.admin.servers.ServerId></td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.client.admin.ResourceGroupOperations org.apache.accumulo.core.client.AccumuloClient::resourceGroupOperations()</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.client.admin.servers.ServerId org.apache.accumulo.core.client.admin.InstanceOperations::getServer(org.apache.accumulo.core.client.admin.servers.ServerId.Type, org.apache.accumulo.core.data.ResourceGroupId, java.lang.String, int)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFile.InputArguments.FencedPath[])</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.KeyBuilder.Build org.apache.accumulo.core.data.KeyBuilder.ColumnVisibilityStep::visibility(org.apache.accumulo.core.data.ByteSequence)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.KeyBuilder.ColumnFamilyStep org.apache.accumulo.core.data.KeyBuilder.RowStep::row(org.apache.accumulo.core.data.ByteSequence)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.KeyBuilder.ColumnQualifierStep org.apache.accumulo.core.data.KeyBuilder.ColumnFamilyStep::family(org.apache.accumulo.core.data.ByteSequence)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.KeyBuilder.ColumnVisibilityStep org.apache.accumulo.core.data.KeyBuilder.ColumnQualifierStep::qualifier(org.apache.accumulo.core.data.ByteSequence)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.Mutation.TimestampOptions org.apache.accumulo.core.data.Mutation.FamilyOptions::keyColumns(org.apache.accumulo.core.data.Key)</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.RowRange org.apache.accumulo.core.client.admin.compaction.CompactableFile::getRange()</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.accumulo.core.data.TabletId org.apache.accumulo.core.client.admin.compaction.CompactionSelector.SelectionParameters::getTabletId()</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.client.admin.TableOperations::getMaxRow(java.lang.String, org.apache.accumulo.core.security.Authorizations, org.apache.accumulo.core.data.RowRange) throws org.apache.accumulo.core.client.TableNotFoundException, org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method void org.apache.accumulo.core.client.admin.InstanceOperations::ping(org.apache.accumulo.core.client.admin.servers.ServerId) throws org.apache.accumulo.core.client.AccumuloException</td>
+      </tr>
+      <tr>
+        <td>Method was added to an interface.</td>
+        <td>method void org.apache.accumulo.core.client.admin.TableOperations::putSplits(java.lang.String, java.util.SortedMap&lt;org.apache.hadoop.io.Text, org.apache.accumulo.core.client.admin.TabletMergeability&gt;) throws org.apache.accumulo.core.client.TableNotFoundException, org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 id="removals">Removals</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Change</th>
+        <th>Object</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.admin.CompactionStrategyConfig</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.ClientConfiguration</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.Connector</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AbstractInputFormat&lt;K, V&gt;</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AccumuloFileOutputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AccumuloInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AccumuloMultiTableInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AccumuloOutputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.AccumuloRowInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.InputFormatBase&lt;K, V&gt;</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapred.RangeInputSplit</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AbstractInputFormat&lt;K, V&gt;</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AccumuloFileOutputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AccumuloInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AccumuloMultiTableInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AccumuloOutputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.AccumuloRowInputFormat</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.InputFormatBase&lt;K, V&gt;</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.InputTableConfig</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.lib.partition.KeyRangePartitioner</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.lib.partition.RangePartitioner</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.mapreduce.RangeInputSplit</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.replication.PeerExistsException</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.replication.PeerNotFoundException</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.core.client.ZooKeeperInstance</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>class org.apache.accumulo.minicluster.MiniAccumuloInstance</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>interface org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionHost</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>interface org.apache.accumulo.core.client.admin.ReplicationOperations</td>
+      </tr>
+      <tr>
+        <td>Class was removed.</td>
+        <td>interface org.apache.accumulo.core.client.Instance</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method boolean org.apache.accumulo.core.client.sample.AbstractHashSampler::isValidOption(java.lang.String)</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method int org.apache.accumulo.minicluster.MiniAccumuloConfig::getNumTservers()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method java.lang.String org.apache.accumulo.core.client.admin.InstanceOperations::getInstanceID()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method java.util.Collection<org.apache.hadoop.io.Text> org.apache.accumulo.core.client.admin.TableOperations::getSplits(java.lang.String, int) throws org.apache.accumulo.core.client.TableNotFoundException</org.apache.hadoop.io.Text></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method java.util.Collection<org.apache.hadoop.io.Text> org.apache.accumulo.core.client.admin.TableOperations::getSplits(java.lang.String) throws org.apache.accumulo.core.client.TableNotFoundException</org.apache.hadoop.io.Text></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method java.util.Set<java.lang.String> org.apache.accumulo.core.data.Mutation::getReplicationSources()</java.lang.String></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionHost org.apache.accumulo.core.client.admin.ActiveCompaction::getHost()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.admin.CompactionConfig org.apache.accumulo.core.client.admin.CompactionConfig::setCompactionStrategy(org.apache.accumulo.core.client.admin.CompactionStrategyConfig)</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.admin.CompactionStrategyConfig org.apache.accumulo.core.client.admin.CompactionConfig::getCompactionStrategy()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.admin.NewTableConfiguration org.apache.accumulo.core.client.admin.NewTableConfiguration::withoutDefaultIterators()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.admin.ReplicationOperations org.apache.accumulo.core.client.AccumuloClient::replicationOperations()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.ClientConfiguration org.apache.accumulo.minicluster.MiniAccumuloCluster::getClientConfig()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.client.Connector org.apache.accumulo.minicluster.MiniAccumuloCluster::getConnector(java.lang.String, java.lang.String) throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.conf.AccumuloConfiguration org.apache.accumulo.core.iterators.IteratorEnvironment::getConfig()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.iterators.SortedKeyValueIterator&lt;org.apache.accumulo.core.data.Key, org.apache.accumulo.core.data.Value&gt; org.apache.accumulo.core.iterators.IteratorEnvironment::reserveMapFileReader(java.lang.String) throws java.io.IOException</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.core.spi.common.ServiceEnvironment org.apache.accumulo.core.iterators.IteratorEnvironment::getServiceEnv()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.minicluster.MiniAccumuloConfig org.apache.accumulo.minicluster.MiniAccumuloConfig::setNumScanServers(int)</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.accumulo.minicluster.MiniAccumuloConfig org.apache.accumulo.minicluster.MiniAccumuloConfig::setNumTservers(int)</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.data.TabletId::getTableId()</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.admin.TableOperations::create(java.lang.String, boolean, org.apache.accumulo.core.client.admin.TimeType) throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException, org.apache.accumulo.core.client.TableExistsException</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.admin.TableOperations::create(java.lang.String, boolean) throws org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException, org.apache.accumulo.core.client.TableExistsException</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.admin.TableOperations::importDirectory(java.lang.String, java.lang.String, java.lang.String, boolean) throws org.apache.accumulo.core.client.TableNotFoundException, java.io.IOException, org.apache.accumulo.core.client.AccumuloException, org.apache.accumulo.core.client.AccumuloSecurityException</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.MutationsRejectedException::<init>(org.apache.accumulo.core.client.Instance, java.util.List<org.apache.accumulo.core.data.ConstraintViolationSummary>, java.util.Map&lt;org.apache.accumulo.core.data.TabletId, java.util.Set<org.apache.accumulo.core.client.security.SecurityErrorCode>&gt;, java.util.Collection<java.lang.String>, int, java.lang.Throwable)</java.lang.String></org.apache.accumulo.core.client.security.SecurityErrorCode></org.apache.accumulo.core.data.ConstraintViolationSummary></init></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.NamespaceNotEmptyException::<init>(org.apache.accumulo.core.clientImpl.thrift.ThriftTableOperationException)</init></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.client.TableOfflineException::<init>(org.apache.accumulo.core.client.Instance, java.lang.String)</init></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.data.ConditionalMutation::setReplicationSources(java.util.Set<java.lang.String>)</java.lang.String></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.data.Mutation::addReplicationSource(java.lang.String)</td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.data.Mutation::setReplicationSources(java.util.Set<java.lang.String>)</java.lang.String></td>
+      </tr>
+      <tr>
+        <td>Method was removed.</td>
+        <td>method void org.apache.accumulo.core.iterators.IteratorEnvironment::registerSideChannel(org.apache.accumulo.core.iterators.SortedKeyValueIterator&lt;org.apache.accumulo.core.data.Key, org.apache.accumulo.core.data.Value&gt;)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 id="other">Other</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Change</th>
+        <th>Old</th>
+        <th>New</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Method newly throws checked exceptions: java.lang.ReflectiveOperationException.</td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(java.lang.String, java.lang.Class<T>) throws java.lang.Exception</T></T></td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(java.lang.String, java.lang.Class<T>) throws java.lang.ReflectiveOperationException</T></T></td>
+      </tr>
+      <tr>
+        <td>Method newly throws checked exceptions: java.lang.ReflectiveOperationException.</td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(org.apache.accumulo.core.data.TableId, java.lang.String, java.lang.Class<T>) throws java.lang.Exception</T></T></td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(org.apache.accumulo.core.data.TableId, java.lang.String, java.lang.Class<T>) throws java.lang.ReflectiveOperationException</T></T></td>
+      </tr>
+      <tr>
+        <td>Method no longer throws checked exceptions: java.lang.Exception.</td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(java.lang.String, java.lang.Class<T>) throws java.lang.Exception</T></T></td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(java.lang.String, java.lang.Class<T>) throws java.lang.ReflectiveOperationException</T></T></td>
+      </tr>
+      <tr>
+        <td>Method no longer throws checked exceptions: java.lang.Exception.</td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(org.apache.accumulo.core.data.TableId, java.lang.String, java.lang.Class<T>) throws java.lang.Exception</T></T></td>
+        <td>method <T> T org.apache.accumulo.core.client.PluginEnvironment::instantiate(org.apache.accumulo.core.data.TableId, java.lang.String, java.lang.Class<T>) throws java.lang.ReflectiveOperationException</T></T></td>
+      </tr>
+      <tr>
+        <td>Method no longer throws checked exceptions: org.apache.accumulo.core.client.TableNotFoundException.</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.client.admin.FindMax::findMax(org.apache.accumulo.core.client.Scanner, org.apache.hadoop.io.Text, boolean, org.apache.hadoop.io.Text, boolean) throws org.apache.accumulo.core.client.TableNotFoundException</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.client.admin.FindMax::findMax(org.apache.accumulo.core.client.Scanner, org.apache.accumulo.core.data.RowRange)</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(java.lang.String[]), method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFile.InputArguments.FencedPath[])].</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(java.lang.String[]), method org.apache.accumulo.core.client.rfile.RFile.ScannerOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])].</td>
+        <td>none</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFile.InputArguments.FencedPath[])</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFile.InputArguments.FencedPath[]), method org.apache.accumulo.core.client.rfile.RFile.ScannerOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])].</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(java.lang.String[])</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.ScannerFSOptions org.apache.accumulo.core.client.rfile.RFile.InputArguments::from(java.lang.String[])</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method org.apache.accumulo.core.client.rfile.RFile.SummaryFSOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(java.lang.String[])].</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.SummaryOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.SummaryOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method org.apache.accumulo.core.client.rfile.RFile.SummaryOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(org.apache.accumulo.core.client.rfile.RFileSource[])].</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.SummaryFSOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(java.lang.String[])</td>
+        <td>method org.apache.accumulo.core.client.rfile.RFile.SummaryFSOptions org.apache.accumulo.core.client.rfile.RFile.SummaryInputArguments::from(java.lang.String[])</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, byte[][]) throws java.io.IOException].</td>
+        <td>method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, java.lang.String[]) throws java.io.IOException</td>
+        <td>method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, java.lang.String[]) throws java.io.IOException</td>
+      </tr>
+      <tr>
+        <td>Method only differs in the vararg type from some of its overloads: [method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, java.lang.String[]) throws java.io.IOException].</td>
+        <td>method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, byte[][]) throws java.io.IOException</td>
+        <td>method void org.apache.accumulo.core.client.rfile.RFileWriter::startNewLocalityGroup(java.lang.String, byte[][]) throws java.io.IOException</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 1 but is now on 0. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.MANAGER</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.MANAGER</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 2 but is now on 1. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionType.MAJOR</td>
+        <td>field org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionType.MAJOR</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 2 but is now on 1. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.ZOOKEEPER</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.ZOOKEEPER</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 3 but is now on 2. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionType.FULL</td>
+        <td>field org.apache.accumulo.core.client.admin.ActiveCompaction.CompactionType.FULL</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 3 but is now on 2. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.TABLET_SERVER</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.TABLET_SERVER</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 4 but is now on 3. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.GARBAGE_COLLECTOR</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.GARBAGE_COLLECTOR</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 6 but is now on 4. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.COMPACTOR</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.COMPACTOR</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 8 but is now on 5. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.MONITOR</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.MONITOR</td>
+      </tr>
+      <tr>
+        <td>The enum constant was defined on position 9 but is now on 6. The user code can break if it relies on the return value of the “ordinal()” method.</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.SCAN_SERVER</td>
+        <td>field org.apache.accumulo.minicluster.ServerType.SCAN_SERVER</td>
+      </tr>
+      <tr>
+        <td>The number of parameters of the method have changed.</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.client.admin.FindMax::findMax(org.apache.accumulo.core.client.Scanner, org.apache.hadoop.io.Text, boolean, org.apache.hadoop.io.Text, boolean) throws org.apache.accumulo.core.client.TableNotFoundException</td>
+        <td>method org.apache.hadoop.io.Text org.apache.accumulo.core.client.admin.FindMax::findMax(org.apache.accumulo.core.client.Scanner, org.apache.accumulo.core.data.RowRange)</td>
+      </tr>
+      <tr>
+        <td>The number of parameters of the method have changed.</td>
+        <td>method void org.apache.accumulo.core.client.TableDeletedException::<init>(java.lang.String, java.lang.Exception)</init></td>
+        <td>method void org.apache.accumulo.core.client.TableDeletedException::<init>(org.apache.accumulo.core.data.TableId)</init></td>
+      </tr>
+      <tr>
+        <td>The number of parameters of the method have changed.</td>
+        <td>method void org.apache.accumulo.core.security.VisibilityParseException::<init>(java.lang.String, byte[], int)</init></td>
+        <td>method void org.apache.accumulo.core.security.VisibilityParseException::<init>(org.apache.accumulo.access.InvalidAccessExpressionException)</init></td>
+      </tr>
+      <tr>
+        <td>The return type changed from ‘java.lang.String’ to  ‘org.apache.accumulo.core.data.TableId’.</td>
+        <td>method java.lang.String org.apache.accumulo.core.client.TableDeletedException::getTableId()</td>
+        <td>method org.apache.accumulo.core.data.TableId org.apache.accumulo.core.client.TableDeletedException::getTableId()</td>
+      </tr>
+      <tr>
+        <td>The return type changed from ‘org.apache.accumulo.core.clientImpl.TabletLocator’ to  ‘org.apache.accumulo.core.clientImpl.ClientTabletCache’.</td>
+        <td>method org.apache.accumulo.core.clientImpl.TabletLocator org.apache.accumulo.hadoopImpl.mapreduce.lib.InputConfigurator::getTabletLocator(java.lang.Class&lt;?&gt;, org.apache.hadoop.conf.Configuration, org.apache.accumulo.core.data.TableId)</td>
+        <td>method org.apache.accumulo.core.clientImpl.ClientTabletCache org.apache.accumulo.hadoopImpl.mapreduce.lib.InputConfigurator::getTabletLocator(java.lang.Class&lt;?&gt;, org.apache.hadoop.conf.Configuration, org.apache.accumulo.core.data.TableId)</td>
+      </tr>
+      <tr>
+        <td>Visibility was reduced from ‘public’ to ‘private’.</td>
+        <td>class org.apache.accumulo.core.iterators.user.ColumnAgeOffFilter.TTLSet</td>
+        <td>class org.apache.accumulo.core.iterators.user.ColumnAgeOffFilter.TTLSet</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
+<h2 id="upgrading">Upgrading</h2>
+
+<p>View the <a href="/docs/4.x/administration/upgrading">Upgrading Accumulo documentation</a> for guidance as
+the upgrade procedure has changed. Note that during the upgrade
+all user tablets will be set to have on-demand tablet availability.
+Users will need to change the tablet availability post-upgrade for
+tablets that they want always or never hosted on a tablet server.
+The upgrade process also sets the tablet mergeability to never for
+all existing tablets to preserve any user created split points.
+Tablet mergeability can be set when adding new splits and will be
+set to always when the split is created by the system based on user
+settings.</p>
+
+<h2 id="useful-links">Useful Links</h2>
+
+<ul>
+  <li><a href="https://github.com/apache/accumulo/milestone/20">All tickets related to this release</a></li>
+</ul>
+
+
+
+<hr>
+
+<p><strong>View all releases in the <a href="/release/">archive</a></strong></p>
+<nav aria-label="Navigate Release Notes"><ul class="pagination d-flex justify-content-between">
+      
+        <li class="page-item"><a class="page-link" href="/release/accumulo-3.0.0/">&laquo;&nbsp;Apache Accumulo 3.0.0</a></li>
+      
+    
+      
+    </ul></nav>
+
+        </div>
+
+        
+<footer>
+
+  <p><a href="https://www.apache.org/foundation/contributing"><img src="https://www.apache.org/images/SupportApache-small.png" alt="Support the ASF" id="asf-logo" height="100" /></a></p>
+
+  <p>Copyright © 2011-2026 <a href="https://www.apache.org">The Apache Software Foundation</a>.
+Licensed under the <a href="https://www.apache.org/licenses/">Apache License, Version 2.0</a>.</p>
+
+  <p>Apache®, the names of Apache projects and their logos, and the multicolor feather
+logo are registered trademarks or trademarks of The Apache Software Foundation
+in the United States and/or other countries.</p>
+
+</footer>
+
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
