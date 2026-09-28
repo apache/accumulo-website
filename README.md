@@ -109,6 +109,12 @@ HTML styled "just right".
 Jekyll will print a local URL where the site can be viewed (usually,
 [http://0.0.0.0:4000/](http://0.0.0.0:4000/)).
 
+To check internal links (also run in CI; scope is set in `Rakefile`):
+
+```bash
+bundle exec jekyll build && bundle exec rake links
+```
+
 ### Testing using a Container environment
 
 Note: The example commands below use `podman`, but you can replace it with a

@@ -17,29 +17,16 @@
 # under the License.
 #
 
-name: QA
+require 'html-proofer'
 
-on:
-  push:
-    branches: [ 'main', 'next-release' ]
-  pull_request:
-    branches: [ 'main', 'next-release' ]
-
-jobs:
-  jekyll:
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.2.2
-        bundler-cache: true
-    - name: Test site build
-      run: |
-        ruby --version
-        bundle exec jekyll build
-    - name: Check links
-      continue-on-error: true
-      run: bundle exec rake links
+# Internal link check; run `jekyll build` first
+task :links do
+  HTMLProofer.check_directory('./_site', {
+    disable_external: true,
+    check_internal_hash: true,
+    enforce_https: false,
+    allow_missing_href: true,
+    # only docs/4.x is checked for now
+    ignore_files: [%r{^\./_site/(?!docs/4\.x/)}, %r{/apidocs/}],
+  }).run
+end
