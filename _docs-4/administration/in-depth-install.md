@@ -177,7 +177,7 @@ native map.
 To adjust the size of the native map, modify the value of [tserver.memory.maps.max]. When increasing
 this value, it is also important to adjust the values below:
 
-* [table.compaction.minor.logs.threshold] - maximum number of write-ahead log files that a tablet
+* [tserver.wal.max.referenced] - maximum number of write-ahead log files that a tablet
   can reference before they will be automatically minor compacted
 * [tserver.wal.max.size] - maximum size of a write-ahead log.
 
@@ -185,7 +185,7 @@ The maximum size of the native maps for a server should be less than the product
 log maximum size and minor compaction threshold for log files:
 
 ```
-$table.compaction.minor.logs.threshold * $tserver.wal.max.size >= $tserver.memory.maps.max
+$tserver.wal.max.referenced * $tserver.wal.max.size >= $tserver.memory.maps.max
 ```
 
 This formula ensures that minor compactions won't be automatically triggered before the native
@@ -735,8 +735,8 @@ Please check the release notes for your Accumulo version or use the
 [replication.receipt.service.port]: {% purl replication.receipt.service.port %}
 [tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
 [tserver.memory.maps.max]: {% purl tserver.memory.maps.max %}
-[table.compaction.minor.logs.threshold]: {% purl table.compaction.minor.logs.threshold %}
 [tserver.wal.max.size]: {% purl tserver.wal.max.size %}
+[tserver.wal.max.referenced]: {% purl tserver.wal.max.referenced %}
 [tserver.wal.blocksize]: {% purl tserver.wal.blocksize %}
 [general.security.credential.provider.paths]: {% purl general.security.credential.provider.paths %}
 [general.classpaths]: {% purl general.classpaths %}
