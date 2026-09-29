@@ -362,7 +362,7 @@ ContextClassLoaderFactory implementation.
 
 To use contexts in your application you can set the {% plink table.class.loader.context %} on your
 tables or use the `setClassLoaderContext()` method on Scanner and BatchScanner passing in the name
-of the context, app1 in the example above. Setting the property on the table allows your minc, majc,
+of the context. Setting the property on the table allows your minc, majc,
 and scan iterators to load classes from the locations defined by the context. Passing the context
 name to the scanners allows you to override the table setting to load only scan time iterators from
 a different location.
