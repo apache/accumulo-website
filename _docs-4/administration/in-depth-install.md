@@ -179,13 +179,13 @@ this value, it is also important to adjust the values below:
 
 * [table.compaction.minor.logs.threshold] - maximum number of write-ahead log files that a tablet
   can reference before they will be automatically minor compacted
-* [tserver.walog.max.size] - maximum size of a write-ahead log.
+* [tserver.wal.max.size] - maximum size of a write-ahead log.
 
 The maximum size of the native maps for a server should be less than the product of the write-ahead
 log maximum size and minor compaction threshold for log files:
 
 ```
-$table.compaction.minor.logs.threshold * $tserver.walog.max.size >= $tserver.memory.maps.max
+$table.compaction.minor.logs.threshold * $tserver.wal.max.size >= $tserver.memory.maps.max
 ```
 
 This formula ensures that minor compactions won't be automatically triggered before the native
@@ -194,7 +194,7 @@ maps can be completely saturated.
 Subsequently, when increasing the size of the write-ahead logs, it can also be important
 to increase the HDFS block size that Accumulo uses when creating the files for the write-ahead log.
 This is controlled via [tserver.wal.blocksize]. A basic recommendation is that when
-[tserver.walog.max.size] is larger than 2GB in size, set [tserver.wal.blocksize] to 2GB.
+[tserver.wal.max.size] is larger than 2GB in size, set [tserver.wal.blocksize] to 2GB.
 Increasing the block size to a value larger than 2GB can result in decreased write
 performance to the write-ahead log file which will slow ingest.
 
@@ -360,7 +360,7 @@ to the server classpath allowing them to effect a classpath change without resta
 The property `general.context.class.loader.factory` allows the user to supply their own
 ContextClassLoaderFactory implementation.
 
-To use contexts in your application you can set the {% plink table.classpath.context %} on your
+To use contexts in your application you can set the {% plink table.class.loader.context %} on your
 tables or use the `setClassLoaderContext()` method on Scanner and BatchScanner passing in the name
 of the context, app1 in the example above. Setting the property on the table allows your minc, majc,
 and scan iterators to load classes from the locations defined by the context. Passing the context
@@ -370,7 +370,7 @@ a different location.
 The default ContextClassLoaderFactory implementation, URLContextClassLoaderFactory, uses
 a comma-separated list of jar paths as the context name and returns a URLClassLoader using
 the same paths. For example, to use the default implementation you would set the 
-{% plink table.classpath.context %} property to `file://path/one/jar1.jar,file://path/two/jar2.jar`
+{% plink table.class.loader.context %} property to `file://path/one/jar1.jar,file://path/two/jar2.jar`
 
 An alternate ContextClassLoaderFactory implementation that supports additional features
 can be found at https://github.com/apache/accumulo-classloaders/tree/main/modules/caching-classloader.
@@ -719,7 +719,7 @@ Please check the release notes for your Accumulo version or use the
 [compactor.port.client]: {% purl compactor.port.client %}
 [contact]: {{ site.baseurl }}/contact-us
 [quick start]: {% durl getting-started/quickstart %}
-[monitor]: {% durl administration/monitoring-metrics#monitor %}
+[monitor]: {% durl administration/monitoring-metrics#accumulo-monitor %}
 [config-mgmt]: {% durl configuration/overview %}
 [instance.volumes]: {% purl instance.volumes %}
 [instance.volumes.replacements]: {% purl instance.volumes.replacements %}
@@ -736,7 +736,7 @@ Please check the release notes for your Accumulo version or use the
 [tserver.memory.maps.native.enabled]: {% purl tserver.memory.maps.native.enabled %}
 [tserver.memory.maps.max]: {% purl tserver.memory.maps.max %}
 [table.compaction.minor.logs.threshold]: {% purl table.compaction.minor.logs.threshold %}
-[tserver.walog.max.size]: {% purl tserver.walog.max.size %}
+[tserver.wal.max.size]: {% purl tserver.wal.max.size %}
 [tserver.wal.blocksize]: {% purl tserver.wal.blocksize %}
 [general.security.credential.provider.paths]: {% purl general.security.credential.provider.paths %}
 [general.classpaths]: {% purl general.classpaths %}
