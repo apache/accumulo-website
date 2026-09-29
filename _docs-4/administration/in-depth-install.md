@@ -243,7 +243,7 @@ In the example above the compactor, sserver, and tserver sections support
 the user specifying different resource groups. The example only contains the
 `default` resource group. When adding resource groups to this file, be sure
 to also add them to the `accumulo-env.sh` file and to create them using
-the command `accumulo inst init --add-resource-groups` command.
+the command `accumulo inst init --add-resource-groups <comma-separated group names>`.
 
 ### Configure accumulo.properties
 
