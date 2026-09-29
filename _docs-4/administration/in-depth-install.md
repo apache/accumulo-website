@@ -484,7 +484,7 @@ variable `ACCUMULO_CLUSTER_ARG` to the number of processes before starting the s
 ACCUMULO_CLUSTER_ARG=2 ./bin/accumulo-service tserver start
 ```
 
-#### Running multiple TabletServers per node in Accumulo 2.1.0 and later
+#### Running multiple processes per node with accumulo-cluster
 The `accumulo-cluster` script supports starting multiple processes on the same node. See
 the scripts help output for more information.
 
