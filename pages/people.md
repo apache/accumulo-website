@@ -79,6 +79,12 @@ $(function() {
 | shickey       | Sean Hickey                                       |                                        | [PT][PT] | &#x2713;     |
 | shutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] | &#x2713;     |
 | ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] | &#x2713;     |
+
+## Emeritus Committers
+
+{: .table .table-striped .committers #committers-emeritus}
+| apache id     | name                                              | organization                           | timezone | PMC Emeritus |
+|---------------|---------------------------------------------------|----------------------------------------|----------|--------------|
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] | &#x2713;     |
 
 ## Contributors
