@@ -12,6 +12,14 @@ $(function() {
     var apacheid = $(obj).text();
     $(obj).html('<a href="https://people.apache.org/phonebook.html?uid=' + apacheid + '">' + apacheid + '</a>');
   });
+
+  $('table').each(function() {
+    var table = $(this);
+    table.find('thead tr').prepend('<th scope="col">#</th>');
+    table.find('tbody tr').each(function(i) {
+      $(this).prepend('<td>' + (i + 1) + '.</td>');
+    });
+  });
 });
 
 </script>
@@ -24,14 +32,16 @@ $(function() {
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
 | akhan         | [Arbaaz Khan](https://github.com/ArbaazKhan1)     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
-| alerman       | Adam Lerman                                       | [Red Drum][REDDRUM]                     | [ET][ET] |
+| alerman       | Adam Lerman                                       | [Red Drum][REDDRUM]                    | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | brianloss     | [Brian Loss](https://github.com/brianloss)        | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | busbey        | Sean Busbey                                       | [Cloudera][CLOUDERA]                   | [CT][CT] |
 | cawaring      | Chris Waring                                      |                                        |          |
 | cjnolet       | Corey J. Nolet                                    | [Tetra Concepts LLC][TETRA]            | [ET][ET] |
+| cshannon      | [Christopher L. Shannon](https://github.com/cshannon) | [Wrench.io, LLC][WRENCH]           | [ET][ET] |
 | ctubbsii      | [Christopher Tubbs](https://github.com/ctubbsii)  | [NSA][NSA]                             | [ET][ET] |
+| ddanielr      | [Daniel Roberts](https://github.com/ddanielr)     | [Sentinel Solutions][SENTINEL]         | [ET][ET] |
 | dlmarion      | Dave Marion                                       | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | domgarguilo   | [Dominic Garguilo](https://github.com/DomGarguilo)| [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
@@ -101,7 +111,6 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Craig Scheiderer    | [Arctic Slope Regional Corp.][ASRC]                               | [ET][ET]              |
 | Damon Brown         | [Tetra Concepts LLC][TETRA]                                       | [ET][ET]              |
 | Dane Magbuhos       |                                                                   | [ET][ET]              |
-| Daniel Roberts      | [Sentinel Solutions][SENTINEL]                                    | [ET][ET]              |
 | Dave Wang           | [Cloudera][CLOUDERA]                                              | [PT][PT]              |
 | David M. Lyle       |                                                                   |                       |
 | David Protzman      |                                                                   |                       |
