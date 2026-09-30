@@ -23,12 +23,10 @@ $(function() {
 |---------------|---------------------------------------------------|----------------------------------------|----------|
 | acordova      | Aaron Cordova                                     | [Koverse][KOVERSE]                     |          |
 | adamjshook    | Adam J. Shook                                     | [Datacatessen][DATACATESS]             | [ET][ET] |
-| afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] |
 | akhan         | [Arbaaz Khan](https://github.com/ArbaazKhan1)     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | alerman       | Adam Lerman                                       | [Red Drum][REDDRUM]                     | [ET][ET] |
 | bhavanki      | Bill Havanki                                      | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | billie        | Billie Rinaldi                                    | [Microsoft][MICROSOFT]                 | [ET][ET] |
-| bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] |
 | brianloss     | [Brian Loss](https://github.com/brianloss)        | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | busbey        | Sean Busbey                                       | [Cloudera][CLOUDERA]                   | [CT][CT] |
 | cawaring      | Chris Waring                                      |                                        |          |
@@ -37,12 +35,10 @@ $(function() {
 | dlmarion      | Dave Marion                                       | [Wrench.io, LLC][WRENCH]               | [ET][ET] |
 | domgarguilo   | [Dominic Garguilo](https://github.com/DomGarguilo)| [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | drew          | Drew Farris                                       | [Booz Allen Hamilton][BOOZ]            | [ET][ET] |
-| ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] |
 | edcoleman     | Ed Coleman                                        |                                        | [ET][ET] |
 | elserj        | Josh Elser                                        | [Hortonworks][HORTONWORKS]             | [ET][ET] |
 | hkeebler      | Holly Keebler                                     | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | ibella        | Ivan Bella                                        | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
-| jmanno        | [Jeffrey Manno](https://github.com/Manno15)       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | jmark99       | [Mark Owens](https://github.com/jmark99)          |                                        | [ET][ET] |
 | jtrost        | Jason Trost                                       | [Endgame][ENDGAME]                     |          |
 | krathbun      | [Kevin Rathbun](https://github.com/kevinrr888)    | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
@@ -51,13 +47,9 @@ $(function() {
 | mdrob         | Mike Drob                                         | [Cloudera][CLOUDERA]                   | [ET][ET] |
 | mjwall        | Michael Wall                                      | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] |
 | mmiller       | [Michael Miller](https://github.com/milleruntime) | [Centroid, LLC][CENTROID]              | [ET][ET] |
-| mwalch        | [Mike Walch](https://github.com/mikewalch)        | [Peterson Technologies][PETERSON]      | [ET][ET] |
 | ngf           | [Nick Felts](https://github.com/pircdef)          | [Praxis Engineering][PRAXIS]           | [ET][ET] |
 | phrocker      | [Marc Parisi](https://github.com/phrocker/)       | [Microsoft][MICROSOFT]                 | [ET][ET] |
 | rweeks        | Russ Weeks                                        | [PHEMI][PHEMI]                         | [PT][PT] |
-| shickey       | Sean Hickey                                       |                                        | [PT][PT] |
-| shutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] |
-| ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] |
 | vikrams       | Vikram Srivastava                                 | [Cloudera][CLOUDERA]                   | [PT][PT] |
 
 ## Committers Only
@@ -65,10 +57,18 @@ $(function() {
 {: .table .table-striped .committers #committers}
 | apache id     | name                                              | organization                           | timezone | PMC Emeritus |
 |---------------|---------------------------------------------------|----------------------------------------|----------|--------------|
+| afuchs        | Adam Fuchs                                        | [sqrrl][SQRRL]                         | [ET][ET] | &#x2713;     |
 | arvindsh      | Arvind Shyamsundar                                | [Microsoft][MICROSOFT]                 | [PT][PT] | &#x2713;     |
+| bimargulies   | Benson Margulies                                  | [Basis Technology Corp.][BASISTECH]    | [ET][ET] | &#x2713;     |
+| ecn           | Eric Newton                                       | [SW Complete Inc.][SWC]                | [ET][ET] | &#x2713;     |
 | jkucera       | John Kucera                                       |                                        | [ET][ET] |              |
+| jmanno        | [Jeffrey Manno](https://github.com/Manno15)       | [Arctic Slope Regional Corp.][ASRC]    | [ET][ET] | &#x2713;     |
 | knarendran    | Karthick Narendran                                | [Microsoft][MICROSOFT]                 |[BST][BST]| &#x2713;     |
 | medined       | David Medinets                                    |                                        |          | &#x2713;     |
+| mwalch        | [Mike Walch](https://github.com/mikewalch)        | [Peterson Technologies][PETERSON]      | [ET][ET] | &#x2713;     |
+| shickey       | Sean Hickey                                       |                                        | [PT][PT] | &#x2713;     |
+| shutchis      | Shana Hutchison                                   | [University of Washington][UW]         | [PT][PT] | &#x2713;     |
+| ujustgotbilld | William Slacum                                    | [Miner &amp; Kasch][MINERKASCH]        | [ET][ET] | &#x2713;     |
 | vines         | John Vines                                        | [sqrrl][SQRRL]                         | [ET][ET] | &#x2713;     |
 
 ## Contributors
