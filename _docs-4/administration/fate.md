@@ -36,6 +36,11 @@ a REPO is pushed onto a per-transaction REPO stack.  The top of the stack always
 next REPO the FATE transaction should execute.  When a REPO is successful it may return another
 REPO which is pushed on the stack.
 
+### FATE Storage
+
+In prior versions all FATE transaction information was stored in ZooKeeper. Accumulo 4.0 introduces
+a fate table in the system namespace that stores user initiated FATE transactions.
+
 ### FATE Structure in ZooKeeper
 
 The storage layer in ZooKeeper is organized by storing each FATE transaction in a unique path based
@@ -77,10 +82,10 @@ The `fate` admin command accepts a number of arguments for different functionali
 The command for launching the fate admin command is:
 
 ```
-> accumulo admin fate --[option]
+> accumulo inst fate --[option]
 ```
 
-The Accumulo admin help command option `accumulo admin -h` shows the expected usage information for the fate and
+The Accumulo help command option `accumulo inst fate -h` shows the expected usage information for the fate and
 other admin commands.
 
 ### List/Print
