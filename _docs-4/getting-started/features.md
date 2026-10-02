@@ -318,8 +318,8 @@ The [Accumulo Monitor][monitor] provides basic information about the system heal
 performance.  It displays information about the server processes, table sizes, ingest,
 query and compaction statistics, FaTE and recovery information, and last-update information.
 
-<a class="p-3 border rounded d-block" href="/images/accumulo-monitor-1.png">
-<img src="/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
+<a class="p-3 border rounded d-block" href="/images/accumulo4-monitor-1.png">
+<img src="/images/accumulo4-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
 </a>
 
 ### Tracing
