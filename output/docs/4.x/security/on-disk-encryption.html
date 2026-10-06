@@ -320,8 +320,6 @@
                   
                     <div class="row"><a href="/docs/4.x/administration/multivolume">Multi-Volume Installations</a></div>
                   
-                    <div class="row"><a href="/docs/4.x/administration/replication">Replication</a></div>
-                  
                     <div class="row"><a href="/docs/4.x/administration/caching">Caching</a></div>
                   
                     <div class="row"><a href="/docs/4.x/administration/compaction">Compactions</a></div>
@@ -430,7 +428,7 @@ is useful for general purpose on-disk encryption with no table context.</p>
 </code></pre></div></div>
 
 <p>The <code class="language-plaintext highlighter-rouge">GenericCryptoServiceFactory</code> requires configuring a crypto service to load and this can be done by setting the
-<a href="/docs/4.x/configuration/server-properties#general_custom_crypto_service">general.custom.crypto.service</a> property.  The value of this property is the
+<code class="language-plaintext highlighter-rouge">general.custom.crypto.service</code> property.  The value of this property is the
 class name of the service which will perform crypto on RFiles and WALs.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.custom.crypto.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
 </code></pre></div></div>
@@ -443,7 +441,7 @@ will load a crypto service configured by table.</p>
 </code></pre></div></div>
 
 <p>The <code class="language-plaintext highlighter-rouge">PerTableCryptoServiceFactory</code> requires configuring a crypto service to load for the table RFiles and this can be done by adding the
-<a href="/docs/4.x/configuration/server-properties#table_crypto_opts_service">table.crypto.opts.service</a> property to a table. Example in the accumulo shell:</p>
+<code class="language-plaintext highlighter-rouge">table.crypto.opts.service</code> property to a table. Example in the accumulo shell:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createtable table1 -prop table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
 </code></pre></div></div>
 <p>The <code class="language-plaintext highlighter-rouge">PerTableCryptoServiceFactory</code> also requires configuring a recovery and WAL crypto service by adding the following
@@ -454,7 +452,7 @@ general.custom.crypto.wal.service=org.apache.accumulo.core.spi.crypto.AESCryptoS
 
 <p>Out of the box, Accumulo provides the <code class="language-plaintext highlighter-rouge">AESCryptoService</code> for basic encryption needs.  This class provides AES encryption
 with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
-below is required by this crypto service to be set using the <a href="/docs/4.x/configuration/server-properties#general_custom_crypto_prefix">general.custom.crypto.*</a> prefix.</p>
+below is required by this crypto service to be set using the <a href="/docs/4.x/configuration/server-properties#general_custom_prefix">general.custom.*</a> prefix.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general.custom.crypto.key.uri=file:///secure/path/to/crypto-key-file
 </code></pre></div></div>
 <p>This property tells the crypto service where to find the file containing the key encryption key. The key file can be 16 or 32 bytes.
