@@ -191,7 +191,8 @@ Below are some changes in 2.0 that you should be aware of:
   ```
   accumulo convert-config -x old/accumulo-site.xml -p new/accumulo.properties
   ```
-* The following [server properties]({% durl configuration/server-properties %}) were deprecated for 2.0:
+* The following [server properties]({% durl configuration/server-properties %}) were deprecated in 2.0
+  and no longer exist in 4.x:
    * `general.classpaths`
    * `tserver.metadata.readahead.concurrent.max`
    * `tserver.readahead.concurrent.max`
