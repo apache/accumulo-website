@@ -78,12 +78,7 @@ multiple tablet servers are run for improved fault tolerance and performance.
 Contains a list of hosts where [ScanServer] processes should run. While only one host is needed, it is recommended
 that multiple ScanServers are run for improved performance.
 
-### compaction coordinator
-
-Contains a list of hosts where [CompactionCoordinator] processes should run. While only one host is needed,
-others can be specified to run standby CompactionCoordinators that can take over if the lead CompactionCoordinator fails.
-
-### compaction compactor
+### compactor
 
 Contains a list of hosts where [Compactor] processes should run. While only one host is needed, it is recommended that
 multiple Compactors are run for improved external compaction performance.
@@ -92,7 +87,6 @@ multiple Compactors are run for improved external compaction performance.
 [Manager]: {% durl getting-started/design#manager %}
 [Tablet Server]: {% durl getting-started/design#tablet-server %}
 [Monitor]: {% durl getting-started/design#monitor %}
-[CompactionCoordinator]: {% durl getting-started/design#compaction-coordinator-experimental %}
-[Compactor]: {% durl getting-started/design#compactor-experimental %}
-[ScanServer]: {% durl getting-started/design#scan-server-experimental %}
+[Compactor]: {% durl getting-started/design#compactor %}
+[ScanServer]: {% durl getting-started/design#scan-server %}
 [quick start]: {% durl getting-started/quickstart#configuring-accumulo %}
