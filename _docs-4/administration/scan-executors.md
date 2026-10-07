@@ -4,27 +4,30 @@ category: administration
 order: 8
 ---
 
-Accumulo scans operate by repeatedly fetching batches of data from a [tablet
-server][tserver].  On the tablet server side, a thread pool fetches batches.
-In Java threads pools are called executors.  By default, a single executor per
-tablet server handles all scans in FIFO order.  For some workloads, the single
-FIFO executor is suboptimal.  For example, consider many unimportant scans
-reading lots of data mixed with a few important scans reading small amounts of
-data.  The long scans noticeably increase the latency of the short scans.
-Accumulo offers two mechanisms to help improve situations like this: multiple
-scan executors and per executor prioritizers.  Additional scan executors can
-give tables dedicated resources.  For each scan executor, an optional
-prioritizer can reorder queued work.
+Accumulo scans operate by repeatedly fetching batches of data from a [scan
+server][sserver] or [tablet server][tserver]. On the server side, a thread
+pool fetches batches of key/value pairs in Java threads pools called scan
+executors. By default, a single executor handles all root and metadata scans
+and another executor is used for user tables, processing scans in FIFO order.
+For some workloads, the single FIFO executor is suboptimal.  For example,
+consider many unimportant scans reading lots of data mixed with a few important
+scans reading small amounts of data. The long scans noticeably increase the
+latency of the short scans. Accumulo offers two mechanisms to help improve
+situations like this: multiple scan executors and per executor prioritizers.
+Additional scan executors can give tables dedicated resources. For each scan
+executor, an optional prioritizer can reorder queued work.
 
 ### Configuring and using Scan Executors
 
-By default, Accumulo sets `tserver.scan.executors.default.threads=16` which
-creates the default scan executor.  To configure additional scan executors,
-chose a unique name and configure {% plink tserver.scan.executors.\* %}.  Setting
-the following causes each tablet server to create a scan executor with the
-specified threads.
+By default, Accumulo sets `sserver.scan.executors.default.threshold=16` and
+`tserver.scan.executors.default.threads=16` which creates the default scan
+executor.  To configure additional scan executors, chose a unique name and
+configure {% plink sserver.scan.executors.\* %} or  {% plink tserver.scan.executors.\* %}.
+Setting the following causes each server to create a scan executor
+with the specified threads.
 
 ```
+sserver.scan.executors.<name>.threads=<number>
 tserver.scan.executors.<name>.threads=<number>
 ```
 
@@ -78,7 +81,7 @@ config -s tserver.scan.executors.low.threads=1
 config -s tserver.scan.executors.high.threads=8
 ```
 
-Tablet servers should be restarted after configuring scan executors, then tables can be configured.
+Servers should be restarted after configuring scan executors, then tables can be configured.
 
 ```
 config -t LOW1 -s table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher
@@ -92,7 +95,7 @@ config -t HIGH -s table.scan.dispatcher.opts.executor=high
 While not necessary because it's the default, it is safer to also set
 `table.scan.dispatcher=org.apache.accumulo.core.spi.scan.SimpleScanDispatcher`
 for each table.  This ensures things work as expected in the case where
-`table.scan.dispatcher` was set at the system or namespace level.
+`table.scan.dispatcher` was set at the namespace level.
 
 ### Configuring and using Scan Prioritizers.
 
@@ -106,6 +109,7 @@ The following configures the IdleRatioScanPrioritizer for the `default` scan
 executor.
 
 ```
+sserver.scan.executors.default.prioritizer=org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer
 tserver.scan.executors.default.prioritizer=org.apache.accumulo.core.spi.scan.IdleRatioScanPrioritizer
 ```
 
@@ -143,7 +147,7 @@ The `SimpleScanDispatcher`, which is the default dispatcher, supports
 `executor.<type>=<executor>` options. When a scanner sets a hint of the form
 `scan_type=<type>` it will use the executor configured for that type.
 
-After restarting tservers, the following command will start a scan that uses
+After restarting servers, the following command will start a scan that uses
 the executor `special` with a priority of 3.  The scan dispatcher maps the scan
 type `gamma` to the executor `special`.  The prioritizer maps the scan type
 `gamma` to a priority of 3.
@@ -172,6 +176,7 @@ Other valid values are `disabled` which does not use data in the block caches,
 `enabled` which uses the block cache as it normally would and `table` which enables
 the block cache for the scan if it's enabled on the table.
 
-[tserver]: {{ page.docs_baseurl }}/getting-started/design#tablet-server-1
+[sserver]: {{ page.docs_baseurl }}/getting-started/design#scan-server
+[tserver]: {{ page.docs_baseurl }}/getting-started/design#tablet-server
 [setExecutionHints]: {% jurl org.apache.accumulo.core.client.ScannerBase#setExecutionHints-java.util.Map- %}
 
