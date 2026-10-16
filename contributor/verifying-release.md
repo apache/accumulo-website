@@ -66,6 +66,9 @@ versions for details on building against different Hadoop versions, or its relea
       applicable to all versions)
 
 The test file ScanConsistencyIT is a standalone-capable IT, and can be run as a test or from main.
+Additional test commands are available for release testing when the test jar is placed on the classpath. 
+This gives users access to some utilities to use for manual testing: TestIngest, TestMultiTableIngest,
+VerifyIngest, TestRandomDeletes.
 
 ### Cluster based
 
