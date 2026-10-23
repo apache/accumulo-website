@@ -196,7 +196,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Sapah Shah          |                                                                   |                       |
 | Scott Kuehn         |                                                                   |                       |
 | Seth Falco          | [Elypia][ELYPIA]                                                  | [GMT][GMT]/[BST][BST] |
-| Sharang Gupta       |                                                                   | [GMT][GMT]/[BST][BST] |
+| Sharang Gupta       | [THG][THG]                                                        | [GMT][GMT]/[BST][BST] |
 | Shawn Walker        |                                                                   |                       |
 | Shivakumar Gangamath|                                                                   | [IST][IST-India]      |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
@@ -276,6 +276,7 @@ ASF or the Apache Accumulo PMC.
 [SWC]: http://swcomplete.com
 [TERALYTICS]: https://www.teralytics.net
 [TETRA]: http://www.tetraconcepts.com
+[THG]: https://www.thg.com
 [TIBER]: https://www.tibertechnologies.com
 [UW]: https://www.washington.edu
 [WAVE]: https://www.wavestrike.com
