@@ -196,6 +196,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Sapah Shah          |                                                                   |                       |
 | Scott Kuehn         |                                                                   |                       |
 | Seth Falco          | [Elypia][ELYPIA]                                                  | [GMT][GMT]/[BST][BST] |
+| Sharang Gupta       |                                                                   | [GMT][GMT]/[BST][BST] |
 | Shawn Walker        |                                                                   |                       |
 | Shivakumar Gangamath|                                                                   | [IST][IST-India]      |
 | Steve Loughran      | [Hortonworks][HORTONWORKS]                                        | [GMT][GMT]/[BST][BST] |
