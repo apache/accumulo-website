@@ -14,39 +14,32 @@ The monitor can be viewed at:
  * [http://localhost:9995](http://localhost:9995) - if Accumulo is running locally (for development)
  * `http://<MONITOR_HOST>:9995/` - if Accumulo is running on a cluster
 
-The Overview page (shown below) contains some summary information about the Accumulo instance and graphs
-displaying various metrics over time. These include ingest and scan performance and other useful measurements.
+The Overview page (shown below) contains some summary information about the Accumulo instance deployment and
+instance, ingest, scan and compaction metrics.
 
-<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo-monitor-1.png">
-<img src="{{ site.baseurl }}/images/accumulo-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
+<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo4-monitor-1.png">
+<img src="{{ site.baseurl }}/images/accumulo4-monitor-1.png" class="img-fluid rounded" alt="monitor overview"/>
 </a>
 
-The Manager Server, Tablet Servers, and Tables pages display metrics grouped in different ways (e.g. by tablet server or by table).
-Metrics typically include number of entries (key/value pairs), ingest and query rates.
-The number of running scans, major and minor compactions are in the form _number_running_ (_number_queued_).
-Another important metric is hold time, which is the amount of time a tablet has been waiting but unable to flush its memory in a minor compaction.
+The Monitor pages under the Servers menu display metrics for the server processes. The metrics are grouped into
+separate tables where it makes sense to do so. Below is an example of the Managers page. The other pages under
+the Server menu have a similar design.
 
-<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo-monitor-2.png">
-<img src="{{ site.baseurl }}/images/accumulo-monitor-2.png" class="img-fluid rounded" alt="monitor manager"/>
+<a class="p-3 border rounded d-block" href="{{ site.baseurl }}/images/accumulo4-monitor-2.png">
+<img src="{{ site.baseurl }}/images/accumulo4-monitor-2.png" class="img-fluid rounded" alt="monitor manager"/>
 </a>
 
-The Server Activity page graphically displays tablet server status, with each server represented as a circle or square.
-Different metrics may be assigned to the nodes' color and speed of oscillation.
-The Overall Avg metric is only used on the Server Activity page, and represents the average of all the other metrics (after normalization).
-Similarly, the Overall Max metric picks the metric with the maximum normalized value.
+The Tables Monitor page shows summary information for each table. Clicking on the link for a table will
+take you to a page that shows more detailed information about that table.
 
-The Garbage Collector page displays a list of garbage collection cycles, the number of files found of each type (including deletion candidates in use and files actually deleted), and the length of the deletion cycle.
-The Traces page displays data for recent traces performed (see the following section for information on [tracing][tracing]).
-The Recent Logs page displays warning and error logs forwarded to the monitor from all Accumulo processes.
-Also, the XML and JSON links provide metrics in XML and JSON formats, respectively.
+The Activity drop-down has pages for Compaction, FaTE, Scan, and Tablet Recovery activity.
+The Alerts page contains messages about the state of the instance. There are toggles in the settings
+menu to show or hide the different alert priorities and categories.
 
 The Accumulo monitor does a best-effort to not display any sensitive information to users; however,
 the monitor is intended to be a tool used with care. It is not a production-grade webservice. It is
 a good idea to whitelist access to the monitor via an authentication proxy or firewall. It
 is strongly recommended that the Monitor is not exposed to any publicly-accessible networks.
-
-Things highlighted in yellow may be in need of attention.
-If anything is highlighted in red on the monitor page, it is something that definitely needs attention.
 
 ### SSL
 
