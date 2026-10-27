@@ -281,10 +281,10 @@ When finished, use the following commands to stop Accumulo:
 [accumulo-client.properties]: {% durl configuration/files#accumulo-clientproperties %}
 [gc]: {% durl configuration/files#gc %}
 [monitor]: {% durl configuration/files#monitor %}
-[manager]: {% durl configuration/files#managers %}
-[tserver]: {% durl configuration/files#tservers %}
+[manager]: {% durl configuration/files#manager %}
+[tserver]: {% durl configuration/files#tserver %}
 [tracer]: {% durl configuration/files#tracers %}
-[compactor]: {% durl configuration/files#compaction%20compactor %}
+[compactor]: {% durl configuration/files#compactor %}
 [sserver]: {% durl configuration/files#sserver %}
 [Uno]: https://github.com/apache/accumulo-uno
 [Erasure Coding]: https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HDFSErasureCoding.html

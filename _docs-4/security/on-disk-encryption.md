@@ -25,7 +25,7 @@ instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.GenericCryptoSe
 ```
 
 The `GenericCryptoServiceFactory` requires configuring a crypto service to load and this can be done by setting the
-{% plink general.custom.crypto.service %} property.  The value of this property is the
+`general.custom.crypto.service` property.  The value of this property is the
 class name of the service which will perform crypto on RFiles and WALs.
 ```
 general.custom.crypto.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
@@ -40,7 +40,7 @@ instance.crypto.opts.factory=org.apache.accumulo.core.spi.crypto.PerTableCryptoS
 ```
 
 The `PerTableCryptoServiceFactory` requires configuring a crypto service to load for the table RFiles and this can be done by adding the
-{% plink table.crypto.opts.service %} property to a table. Example in the accumulo shell:
+`table.crypto.opts.service` property to a table. Example in the accumulo shell:
 ```
 createtable table1 -prop table.crypto.opts.service=org.apache.accumulo.core.spi.crypto.AESCryptoService
 ```
@@ -53,7 +53,7 @@ general.custom.crypto.wal.service=org.apache.accumulo.core.spi.crypto.AESCryptoS
 
 Out of the box, Accumulo provides the `AESCryptoService` for basic encryption needs.  This class provides AES encryption
 with Galois/Counter Mode (GCM) for RFiles and Cipher Block Chaining (CBC) mode for WALs.  The additional property
-below is required by this crypto service to be set using the {% plink general.custom.crypto.\* %} prefix.
+below is required by this crypto service to be set using the {% plink general.custom.\* %} prefix.
 ```
 general.custom.crypto.key.uri=file:///secure/path/to/crypto-key-file
 ```
