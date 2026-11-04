@@ -181,6 +181,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Morgan Haskel       |                                                                   |                       |
 | Nguessan Kouame     |                                                                   |                       |
 | Nicolás Alarcón R.  |                                                                   | [CEST][CEST]          |
+| Nicholas Gratian    | [NSA][NSA]                                                        | [ET][ET]              |
 | Nikita Sirohi.      | [Ghost Locomotion][GHOST]                                         | [PT][PT]              |
 | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
 | Phil Eberhardt      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
