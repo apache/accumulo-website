@@ -180,6 +180,7 @@ GitHub also has a [contributor list][github-contributors] based on commits.
 | Mike Fagan          | [Arcus Research][ARCUS]                                           | [MT][MT]              |
 | Morgan Haskel       |                                                                   |                       |
 | Nguessan Kouame     |                                                                   |                       |
+| Nicholas Gratian    | [NSA][NSA]                                                        | [ET][ET]              |
 | Nicolás Alarcón R.  |                                                                   | [CEST][CEST]          |
 | Nikita Sirohi.      | [Ghost Locomotion][GHOST]                                         | [PT][PT]              |
 | Oren Falkowitz      | [sqrrl][SQRRL]                                                    | [ET][ET]              |
